@@ -1,0 +1,31 @@
+{% extends "base/base.html" %}
+{% block style %}{% endblock %}
+{% block title %}Inicio{% endblock %}
+{% block enc %}Inicio{% endblock %}
+{% block parrafo %}Pagina principal para IoT{% endblock %}
+{% block content %}
+<h2>Estos son los sensores:</h2> 
+<table>
+    <thead>
+        <th>Nombre</th>
+        <th>Tipo</th>
+    </thead>
+    <tbody>
+        {%for sensor in sensores %}
+        <tr>
+            <td>{{sensor.name}}</td>
+            <td>{{sensor.tipo}}</td>
+                
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+     {% endblock %}
+{% block script %}
+
+<script>
+    console.log('Esta es la consola.');
+</script>
+
+{% endblock %}

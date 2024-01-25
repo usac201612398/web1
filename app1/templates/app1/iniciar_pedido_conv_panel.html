@@ -1,0 +1,68 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block style %}{% endblock %}
+{% block title %}Pedido Convencional{% endblock %}
+{% block enc %}Panel{% endblock %}
+{% block parrafo %}Bienvenido al panel de pedidos de Semillas del Campo.{% endblock %}
+{% block content %}
+
+<link href="{% static '/style_pconvencional.css' %}" rel="stylesheet" type="text/css" >
+
+
+<h2>Pedido en proceso:</h2> 
+
+<div>
+
+  Envio: {{correlativo}}
+
+  &emsp;&emsp;
+
+  Usuario: <input id="id" type="text" value={{user.username}} readonly>
+  &emsp;&emsp;
+
+  <input id="date" type="date" value={{fecha}}>
+
+  &emsp;&emsp;&emsp;
+  Seleccione una opción:
+
+  <select name="rubros" id="Rub">
+    <option value="Otr">Otros</option>
+    <option value="Fito">Fitosanidad</option>
+    <option value="Ferti">Fertirriego</option>
+    <option value="Ind">Indirectos</option>
+  </select>
+
+  <br>
+  <br>
+  <br>
+</div>  
+
+<br>
+<br>
+<a href= "http://127.0.0.1:8000/app1/iniciar/pedido/convencional/carrito" target="_blank"><button>+</button></a>
+<input type="button" value="Agregar" class="add">
+<div id="taula2">
+<table id="tabla2" border="1" width="800px">
+  <thead id="enc3">
+    <tr class="header3">
+      <th style="width:50px;">CódigoItem</th>
+      <th style="width:275px;">DescripciónItem</th>
+      <th style="width:50px;">Cantidad</th>
+      <th style="width:50px;">u/m</th>
+      <th style="width:50px;">CódigoCentro</th>
+      <th style="width:275px;">DescripciónCentro</th>
+      <th style="width:50px;">*</th>
+    </tr>
+  </thead>
+  <tbody>
+
+  </tbody>
+</table>
+</div>
+
+
+<input type="button" value="Enviar" class="envio3">
+<script language="JavaScript" type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="{% static '/lib/pconvencional_panel.js' %}"></script>
+
+{% endblock %}

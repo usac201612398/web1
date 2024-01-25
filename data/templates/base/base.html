@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+{% block style %}{% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <title> {% block title %} Agropecuaria Popoyán, S.A. {% endblock %} </title>
+</head>
+<body>
+    
+    <h1> {% block enc %} Semillas del Campo, S.A. {% endblock %} </h1>
+    {% block parrafo %} 
+    <p>Párrafo 1.</p>
+    <p>Párrafo 2.</p>
+     {% endblock %}
+     {% block content %} 
+     {% endblock %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    {% block script %}  {% endblock %}
+</body>
+</html>

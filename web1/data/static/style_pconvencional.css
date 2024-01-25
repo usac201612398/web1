@@ -1,0 +1,218 @@
+
+#myInput {
+    /*  background-image: url('/css/searchicon.png'); /* Add a search icon to input */
+        background-position: 10px 12px; /* Position the search icon */
+        background-repeat: no-repeat; /* Do not repeat the icon image */
+        width: 250px; /* Full-width */
+        font-size: 16px; /* Increase font-size */
+        padding: 12px 20px 12px 40px; /* Add some padding */
+        border: 1px solid #ddd; /* Add a grey border */
+        margin-bottom: 12px; /* Add some space below the input */
+    }
+    
+    #myInput2 {
+    /*  background-image: url('/css/searchicon.png'); /* Add a search icon to input */
+        background-position: 10px 12px; /* Position the search icon */
+        background-repeat: no-repeat; /* Do not repeat the icon image */
+        width: 485px; /* Full-width */
+        font-size: 16px; /* Increase font-size */
+        padding: 12px 20px 12px 40px; /* Add some padding */
+        border: 1px solid #ddd; /* Add a grey border */
+        margin-bottom: 12px; /* Add some space below the input */
+    }
+    
+    #myInput3 {
+    /*  background-image: url('/css/searchicon.png'); /* Add a search icon to input */
+        background-position: 10px 12px; /* Position the search icon */
+        background-repeat: no-repeat; /* Do not repeat the icon image */
+        width: 250px; /* Full-width */
+        font-size: 16px; /* Increase font-size */
+        padding: 12px 20px 12px 40px; /* Add some padding */
+        border: 1px solid #ddd; /* Add a grey border */
+        margin-bottom: 12px; /* Add some space below the input */
+    }
+    
+    #myInput4 {
+    /*  background-image: url('/css/searchicon.png'); /* Add a search icon to input */
+        background-position: 10px 12px; /* Position the search icon */
+        background-repeat: no-repeat; /* Do not repeat the icon image */
+        width: 485px; /* Full-width */
+        font-size: 16px; /* Increase font-size */
+        padding: 12px 20px 12px 40px; /* Add some padding */
+        border: 1px solid #ddd; /* Add a grey border */
+        margin-bottom: 12px; /* Add some space below the input */
+    }
+    
+    #myTable {
+        border-collapse: collapse; /* Collapse borders */
+        width: 800px; /* Full-width */
+        border: 1px solid #ddd; /* Add a grey border */
+        font-size: 18px; /* Increase font-size */
+    }
+    
+    #myTable td, #myTable th {
+        text-align: left; /* Left-align text */
+        padding: 12px; /* Add padding */
+        font-weight: normal;
+        position: sticky;
+    }
+    
+    #myTable thead tr th { 
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background-color:grey;
+        text-align: center;
+        font-weight: bold;
+    }
+    
+    #myTable tr {
+        /* Add a bottom border to all table rows */
+        border-bottom: 1px solid #ddd;
+        font-weight: normal;
+    }
+    
+    #myTable tr.header, #myTable tr:hover {
+        /* Add a grey background color to the table header and on hover */
+        background-color: #f1f1f1;
+        font-weight: bold;
+        position: static;
+    
+    }
+    
+    #myTable2 {
+        border-collapse: collapse; /* Collapse borders */
+        width: 800px; /* Full-width */
+        border: 1px solid #ddd; /* Add a grey border */
+        font-size: 18px; /* Increase font-size */
+    }
+    
+    #myTable2 thead tr th { 
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background-color: grey;
+        text-align: center;
+        font-weight: bold;
+    }
+    
+    #myTable2 thead{ 
+        /* Add a bottom border to all table rows */
+        position: sticky;
+        top: 0;
+    }
+    
+    #myTable2 th, #myTable2 td {
+        text-align: left; /* Left-align text */
+        padding: 12px; /* Add padding */
+        font-weight: normal;
+    
+    }
+    
+    #myTable2 tr {
+        /* Add a bottom border to all table rows */
+        border-bottom: 1px solid #ddd;
+        font-weight: normal;
+    }
+    
+    #myTable2 tr.header, #myTable2 tr:hover {
+        /* Add a grey background color to the table header and on hover */
+        background-color: #f1f1f1;
+        font-weight: bold;     
+    }
+    
+    #tabla2 {
+    border-collapse: collapse; /* Collapse borders */
+    width: 800px; /* Full-width */
+    border: 1px solid #ddd; /* Add a grey border */
+    font-size: 18px; /* Increase font-size */
+    }
+    
+    #tabla2 th, #tabla2 td {
+    text-align: left; /* Left-align text */
+    padding: 12px; /* Add padding */
+    font-weight: normal;
+    
+    }
+    
+    #tabla2 thead tr th { 
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: grey;
+    text-align: center;
+    font-weight: bold;
+    }
+    
+    #tabla2 tr {
+    /* Add a bottom border to all table rows */
+    border-bottom: 1px solid #ddd;
+    font-weight: normal;
+    }
+    
+    #tabla2 tr.header, #tabla2 tr:hover {
+    /* Add a grey background color to the table header and on hover */
+    background-color: #f1f1f1;
+    font-weight: bold;
+    
+    }
+    
+    td {
+    border: 1px royalblue dotted;
+    width: 100px;
+    height: 50px;
+    text-align: center;
+    font-weight: bold;
+    }
+    
+    #taula {
+    height: 300px !important;
+    overflow: auto;
+    width: 800px;
+    }
+    
+    #taula2 {
+    height: 300px !important;
+    overflow: auto;
+    width: 800px;
+    }
+    
+    #centros {
+    height: 300px !important;
+    overflow: auto;
+    width: 800px;
+    }
+    
+    .box01{
+    width: 800px;
+    height: 45px;
+    display: flex;
+    align-items: flex-end;
+    }
+    
+    .box02{
+    width: 250px;
+    height: 45px;
+    }
+    
+    .box03{
+    width: 485px;
+    height: 45px;
+    }
+    
+    .box04{
+    width: 800px;
+    height: 45px;
+    display: flex;
+    align-items: flex-end;
+    }
+    
+    .box05{
+    width: 250px;
+    height: 45px;
+    }
+    
+    .box06{
+    width: 485px;
+    height: 45px;
+    }

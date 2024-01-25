@@ -1,0 +1,45 @@
+
+{% extends "base/base.html" %}
+{% load static %}
+{% block style %}
+{% endblock %}
+{% block title %}Semillas del Campo, S.A.{% endblock %}
+{% block enc %}Requisiciones Bodega{% endblock %}
+{% block parrafo %}Realiza pedidos en linea.{% endblock %}
+
+{% block content %}
+
+<link href="{% static '/main.css' %}" rel="stylesheet" type="text/css" />
+
+<div id = "header">
+    {% if user.is_authenticated %}
+        <p>Bienvenido, <b>{{user.username}} | <a href="{% url 'logout'%}">Logaut</a></b></p>
+        <br>
+        <div id="header">
+            <ul class="nav">
+                <li><a href="">Consultas</a></li>
+                <li><a href="">Pedidos</a>
+                    <ul>
+                        <li><a href="{% url 'iniciar_pedido_conv_carrito'%}">Convencional</a></li>
+                        <li><a href="{% url 'iniciar_pedido_conv_panel'%}">Masivo</a></li>
+                        <li><a href="">Distribucion</a></li>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    {% else %}
+        <p>Bienvenido, Por favor <a href="{%url 'login'%}">Login</a></p>
+    {% endif %}
+
+</div>
+
+<br>
+<br>
+<br>
+<div id="navegacion">
+    <p><a href="{% url 'homepage'%}">Home</a></p>
+
+</div>
+{% endblock %}
+{% block script %}{% endblock %}

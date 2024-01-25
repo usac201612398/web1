@@ -1,0 +1,89 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block style %}{% endblock %}
+{% block title %}Carrito{% endblock %}
+{% block enc %}Inicio{% endblock %}
+{% block parrafo %}Debe seleccionar el item de interés y el centro de costo a afectar.{% endblock %}
+{% block content %}
+
+<link href="{% static '/style_pconvencional.css' %}" rel="stylesheet" type="text/css" >
+
+
+
+<br>
+<br>
+<h2>Items:</h2> 
+
+<div class="box01">
+  <div class="box02"><input type="text" id="myInput" onkeyup="myFunction()" placeholder="Buscar por código..."></div>
+  <div class="box03"><input type="text" id="myInput2" onkeyup="myFunction2()" placeholder="Buscar por nombre..."></div>
+</div>
+
+
+<div id="taula">
+  <table id="myTable">
+    <thead id = "enc1">
+      <tr class="header">
+        <th style="width:100px;">Código</th>
+        <th style="width:500px;">Descripción</th>
+        <th style="width:100px;">Cantidad</th>
+        <th style="width:50px;">u/m</th>
+        <th style="width:50px;">*</th>
+      </tr>
+    </thead>
+    <tbody>
+    {%for sensor in sensores %}
+      <tr>
+        <td>{{sensor.código_articulo}}</td>
+        <td>{{sensor.artículo}}</td>
+        <td><input type="number"></td>
+        <td>{{sensor.unidad_medida}}</td>
+        <td><input type="button" value="Add" class="envio"></td>
+      </tr>
+             
+    {% endfor %}
+    </tbody>
+    
+  </table>
+</div>
+<br>
+<br>
+
+<h2>Centros de costo:</h2> 
+<div class="box04">
+  <div class="box05"><input type="text" id="myInput3" onkeyup="myFunction3()" placeholder="Buscar por código..."></div>
+  <div class="box06"><input type="text" id="myInput4" onkeyup="myFunction4()" placeholder="Buscar por nombre..."></div>
+</div>
+
+<div id="centros">
+  <table id="myTable2">
+    <thead id="enc2">
+      <tr class="header2">
+        <th style="width:100px;">Código</th>
+        <th style="width:600px;">Descripción</th>
+        <th style="width:50px">Encargado</th>
+        <th style="width:50px;">*</th>
+      </tr>
+    </thead>
+    <tbody>
+    {%for sensor in centros %}
+      <tr>
+        <td>{{sensor.centro}}</td>
+        <td>{{sensor.descripción}}</td>
+        <td>{{sensor.responsable}}</td>
+        <td><input type="button" value="Add" class="envio2"></td>
+      </tr>       
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<br>
+<input type="button" value="Confirmar" class="confirmar">
+
+<br>
+
+<script language="JavaScript" type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="{% static '/lib/pconvencional_carrito.js' %}"></script>
+
+{% endblock %}
