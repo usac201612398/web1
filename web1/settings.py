@@ -28,7 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-STATICFILES_DIRS = ['C:/Users/Brandon Portillo/OneDrive - USAID Agropecuaria Popoyán, S.A/Escritorio/BRPG/Laboratorio/web1/web1/data/static']
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'data/static')]
 # Application definition
 
 INSTALLED_APPS = [
@@ -78,10 +78,10 @@ WSGI_APPLICATION = 'web1.wsgi.application'
 
 DATABASES = {
     'default':{
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'bodega',
-        'PASSWORD': 'brandon_1',
-        'USER': 'root',
+        'ENGINE': 'django.db.backends.postgres',
+        'NAME': 'Bodega',
+        'PASSWORD': '1234',
+        'USER': 'postgres',
         'PORT': 3306,
         'HOST': 'localhost'
     },
