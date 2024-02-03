@@ -1,4 +1,3 @@
-
 """
 Django settings for web1 project.
 
@@ -27,9 +26,9 @@ SECRET_KEY = 'django-insecure-i%35q9sc8q^vah@$-wnd@mgjy&ct3kpf=(8x_)l=rsxrzy=ad_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.111.112.4']
+ALLOWED_HOSTS = []
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'web1/data/static')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, '/data/static')]
 # Application definition
 
 INSTALLED_APPS = [
@@ -131,9 +130,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR,"static/")
-MEDIA_ROOT = ''
-MEDIA_URL = ''
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
