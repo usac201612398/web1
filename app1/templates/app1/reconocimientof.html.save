@@ -1,0 +1,27 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block style %}{% endblock %}
+{% block title %}Registro{% endblock %}
+{% block enc %}Panel{% endblock %}
+{% block parrafo %}Bienvenido al sistema de registro de Semillas del Campo.{% endblock %}
+{% block content %}
+
+<link href="{% static '/style_pconvencional.css' %}" rel="stylesheet" type="text/css" >
+
+
+<h2>Pedido en proceso:</h2> 
+
+<div>
+
+  Envio: {{correlativo}}
+
+  &emsp;&emsp;
+
+  Usuario: <input id="id" type="text" value={{user.username}} readonly>
+  &em
+</div>  
+
+<script language="JavaScript" type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="{% static '/lib/pconvencional_panel.js' %}"></script>
+
+{% endblock %}

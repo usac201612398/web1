@@ -4,13 +4,7 @@ from django.http import HttpResponse, JsonResponse, FileResponse
 from django.views import View 
 from random import randint
 from app1.models import *
-import imageio as imread
-import cv2
 import os
-from io import BytesIO
-from PIL import Image
-import numpy as np
-import base64
 import datetime
 from django.views.decorators.csrf import csrf_exempt
 from django.template import RequestContext
@@ -19,7 +13,6 @@ from django.contrib.auth import authenticate, login, logout
 from app1.forms import LoginForm
 from rest_framework import serializers
 from rest_framework.views import APIView
-from rest_framework.response import Response
 from drf_extra_fields.fields import Base64ImageField
 # Create your views here.
 
@@ -106,32 +99,27 @@ def ajax_ejemplo(request):
 
     return JsonResponse(data)
 
-@csrf_exempt
-def registroPhoto(request):
-    mensaje = request.POST.get('array')
-    response = {'codigoP':0,'marcaT':0,'photo':0, 'photo':mensaje}
-    if mensaje!=None:
-         path = 'home/bportillo/Proyecto1/web1/app1/static/app1/muestra.jpg'
-         codigoP=1
-         marcaT = datetime.datetime.now()
-         new_mensaje = str(mensaje).replace('"','')
-         new_mensaje = new_mensaje[new_mensaje.index(',')+1:]
-         nparr= np.fromstring(base64.b64decode(new_mensaje),np.uint8)
-         img = cv2.imdecode(nparr,cv2.IMREAD_COLOR)
-         cv2.imwrite(path,img)
-#         bytes_decoded = base64.b64decode(new_mensaje)
-#         img = Image.open(BytesIO(bytes_decoded))
-#         img.save('prueba.jpg')
-#         out_jpg = img.convert('RGB')
-#         img_=out_jpg.save('imagen.jpg')
-#         cv2.imwrite('imagen.jpg',img)
-#         photo = Base64ImageField(new_mensaje)
-#         cv2.imwrite('Rostro',photo)
-         response = {'codigoP':codigoP,'marcaT':marcaT,'photo':new_mensaje}
-         return JsonResponse(response)
-    else:
-         response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None'}
-    return render(request,'app1/reconocimientof.html',response)
+class RegistroSerializerImagenJason(serializers.ModelSerializer):
+    photo = Base64ImageField(required=False)
+    class Meta:
+        model = registros
+        fields = ['codigoP','photo']
+
+
+class registroPhoto(APIView):
+    def get(self, request,*args):
+        print(str(self.parser_classes))
+        return Response({'parsers':' '.join(map(str,self.parser_classes))},status=204)
+    def post(self, request):
+        serializer = RegistroSerializerImageJason(data=request.data)
+        if serializer.is_valid():
+            print("valido")
+ 	    validated_data = serializer.validated_data
+#            registro = registro(**validated_data)
+#            registro.save()
+#            serializer_response = RegistroSerializerImageJason(registro)
+#            return Response(serializer_response.data,status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
 
 @csrf_exempt
 def registro(request):

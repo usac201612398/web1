@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-i%35q9sc8q^vah@$-wnd@mgjy&ct3kpf=(8x_)l=rsxrzy=ad_
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 ALLOWED_HOSTS = ['10.111.112.4']
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'web1/data/static')]
@@ -132,8 +132,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR,"static/")
-MEDIA_ROOT = ''
-MEDIA_URL = ''
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+MEDIA_URL = '/archivos/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
