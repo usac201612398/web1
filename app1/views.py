@@ -121,7 +121,7 @@ def registroPhoto(request):
          clases = []
          lista = os.listdir(path)
     #    registro = []
-    #    comp1 = 100
+         comp1 = 100
 
          for i in lista:
             imgdb = cv2.imread(f'{path}/{i}')
@@ -134,14 +134,36 @@ def registroPhoto(request):
             cod = fr.face_encodings(img)[0]
             listaCod.append(cod)
          path = 'home/bportillo/Proyecto1/web1/app1/static/app1/muestra.jpg'
-         codigoP=1
-         marcaT = datetime.datetime.now()
+         
          new_mensaje = str(mensaje).replace('"','')
          new_mensaje = new_mensaje[new_mensaje.index(',')+1:]
          nparr= np.fromstring(base64.b64decode(new_mensaje),np.uint8)
          img = cv2.imdecode(nparr,cv2.IMREAD_COLOR)
-         
-         response = {'codigoP':codigoP,'marcaT':marcaT,'photo':new_mensaje,'lista':clases}
+         frame2 = cv2.resize(img,(0,0),None,0.25,0.25)
+         rgb = cv2.cvtColor(frame2,cv2.COLOR_BGR2RGB)
+         faces = fr.face_locations(rgb)
+         facesCod = fr.face_encodings(rgb,faces)
+
+         for facecod, faceloc in zip(facesCod,faces):
+            
+            comparacion = fr.compare_faces(listaCod,facecod)
+            simi = fr.face_distance(listaCod,facecod)
+            min = np.argmin(simi)
+            
+            if comparacion[min]:
+                nombre = clases[min].upper()
+
+                yi, xf, yf, xi = faceloc
+                yi, xf, yf, xi = yi*4, xf*4, yf*4, xi*4
+
+                indice = comparacion.index(True)
+            
+            if comp1!= indice:
+                comp1 = indice
+
+            if comp1 == indice:
+                marcaT = datetime.datetime.now()
+                response = {'codigoP':nombre,'marcaT':marcaT,'photo':new_mensaje,'lista':clases}
          return JsonResponse(response)
     else:
          response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None'}
