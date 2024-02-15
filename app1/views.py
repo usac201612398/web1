@@ -110,6 +110,18 @@ def ajax_ejemplo(request):
 def registroPhoto(request):
     mensaje = request.POST.get('array')
     response = {'codigoP':0,'marcaT':0,'photo':0, 'photo':mensaje}
+    path = 'home/bportillo/Proyecto1/web1/app1/static/app1'
+    images = []
+    clases = []
+    lista = os.listdir(path)
+#    registro = []
+#    comp1 = 100
+
+    for i in lista:
+        imgdb = cv2.imread(f'{path}/{i}')
+        images.append(imgdb)
+        clases.append(os.path.splitext(i)[0])
+
     if mensaje!=None:
          path = 'home/bportillo/Proyecto1/web1/app1/static/app1/muestra.jpg'
          codigoP=1
@@ -118,7 +130,7 @@ def registroPhoto(request):
          new_mensaje = new_mensaje[new_mensaje.index(',')+1:]
          nparr= np.fromstring(base64.b64decode(new_mensaje),np.uint8)
          img = cv2.imdecode(nparr,cv2.IMREAD_COLOR)
-         cv2.imwrite(path,img)
+#         cv2.imwrite(path,img)
 #         bytes_decoded = base64.b64decode(new_mensaje)
 #         img = Image.open(BytesIO(bytes_decoded))
 #         img.save('prueba.jpg')
@@ -127,7 +139,7 @@ def registroPhoto(request):
 #         cv2.imwrite('imagen.jpg',img)
 #         photo = Base64ImageField(new_mensaje)
 #         cv2.imwrite('Rostro',photo)
-         response = {'codigoP':codigoP,'marcaT':marcaT,'photo':new_mensaje}
+         response = {'codigoP':codigoP,'marcaT':marcaT,'photo':new_mensaje,'lista':clases}
          return JsonResponse(response)
     else:
          response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None'}
