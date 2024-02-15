@@ -111,19 +111,20 @@ def ajax_ejemplo(request):
 def registroPhoto(request):
     mensaje = request.POST.get('array')
     response = {'codigoP':0,'marcaT':0,'photo':0, 'photo':mensaje}
-    path = 'home/bportillo/Proyecto1/web1/app1/static/app1'
-    images = []
-    clases = []
-    lista = os.listdir(path)
-#    registro = []
-#    comp1 = 100
-
-    for i in lista:
-        imgdb = cv2.imread(f'{path}/{i}')
-        images.append(imgdb)
-        clases.append(os.path.splitext(i)[0])
-    #rostrosCod = codRostros(images)
+    
     if mensaje!=None:
+         path = 'home/bportillo/Proyecto1/web1/app1/static/app1'
+         images = []
+         clases = []
+         lista = os.listdir(path)
+    #    registro = []
+    #    comp1 = 100
+
+         for i in lista:
+            imgdb = cv2.imread(f'{path}/{i}')
+            images.append(imgdb)
+            clases.append(os.path.splitext(i)[0])
+        #rostrosCod = codRostros(images)
          path = 'home/bportillo/Proyecto1/web1/app1/static/app1/muestra.jpg'
          codigoP=1
          marcaT = datetime.datetime.now()
