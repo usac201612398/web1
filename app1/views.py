@@ -1,11 +1,13 @@
 from django.conf import settings
+#import face_recognition as fr
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse, FileResponse
 from django.views import View 
 from random import randint
 from app1.models import *
 #import imageio as imread
-from app1.rf import *
+#from app1.rf import *
+
 import cv2
 import os
 #from io import BytesIO
@@ -22,6 +24,7 @@ from rest_framework import serializers
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from drf_extra_fields.fields import Base64ImageField
+import face_recognition as fr
 # Create your views here.
 
 def login_page(request):
@@ -124,7 +127,12 @@ def registroPhoto(request):
             imgdb = cv2.imread(f'{path}/{i}')
             images.append(imgdb)
             clases.append(os.path.splitext(i)[0])
-         rostrosCod = codRostros(images)
+#         rostrosCod = codRostros(images)
+         listaCod = []
+         for img in images:
+            img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+            cod = fr.face_encodings(img)[0]
+            listaCod.append(cod)
          path = 'home/bportillo/Proyecto1/web1/app1/static/app1/muestra.jpg'
          codigoP=1
          marcaT = datetime.datetime.now()
@@ -132,16 +140,8 @@ def registroPhoto(request):
          new_mensaje = new_mensaje[new_mensaje.index(',')+1:]
          nparr= np.fromstring(base64.b64decode(new_mensaje),np.uint8)
          img = cv2.imdecode(nparr,cv2.IMREAD_COLOR)
-#         cv2.imwrite(path,img)
-#         bytes_decoded = base64.b64decode(new_mensaje)
-#         img = Image.open(BytesIO(bytes_decoded))
-#         img.save('prueba.jpg')
-#         out_jpg = img.convert('RGB')
-#         img_=out_jpg.save('imagen.jpg')
-#         cv2.imwrite('imagen.jpg',img)
-#         photo = Base64ImageField(new_mensaje)
-#         cv2.imwrite('Rostro',photo)
-         response = {'codigoP':codigoP,'marcaT':marcaT,'photo':new_mensaje,'lista':rostrosCod}
+         
+         response = {'codigoP':codigoP,'marcaT':marcaT,'photo':new_mensaje,'lista':clases}
          return JsonResponse(response)
     else:
          response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None'}
