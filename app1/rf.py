@@ -1,7 +1,8 @@
-'''
+
 import cv2
 import numpy as np 
 import face_recognition as fr 
+'''
 import os
 import random
 from datetime import datetime
@@ -24,7 +25,7 @@ for i in lista:
     imgdb = cv2.imread(f'{path}/{i}')
     images.append(imgdb)
     clases.append(os.path.splitext(i)[0])
-
+'''
 def codRostros(images):
     listaCod = []
 
@@ -33,6 +34,7 @@ def codRostros(images):
         cod = fr.face_encodings(img)[0]
         listaCod.append(cod)
     return listaCod
+'''
 rostrosCod = codRostros(images)
 cap = cv2.VideoCapture(0)
 
