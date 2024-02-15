@@ -5,7 +5,7 @@ from django.views import View
 from random import randint
 from app1.models import *
 import imageio as imread
-from app1.rf import *
+#from app1.rf import *
 import cv2
 import os
 from io import BytesIO
@@ -122,7 +122,7 @@ def registroPhoto(request):
         imgdb = cv2.imread(f'{path}/{i}')
         images.append(imgdb)
         clases.append(os.path.splitext(i)[0])
-    rostrosCod = codRostros(images)
+    #rostrosCod = codRostros(images)
     if mensaje!=None:
          path = 'home/bportillo/Proyecto1/web1/app1/static/app1/muestra.jpg'
          codigoP=1
@@ -140,7 +140,7 @@ def registroPhoto(request):
 #         cv2.imwrite('imagen.jpg',img)
 #         photo = Base64ImageField(new_mensaje)
 #         cv2.imwrite('Rostro',photo)
-         response = {'codigoP':codigoP,'marcaT':marcaT,'photo':new_mensaje,'lista':rostrosCod}
+         response = {'codigoP':codigoP,'marcaT':marcaT,'photo':new_mensaje,'lista':clases}
          return JsonResponse(response)
     else:
          response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None'}
