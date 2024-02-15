@@ -4,12 +4,12 @@ from django.http import HttpResponse, JsonResponse, FileResponse
 from django.views import View 
 from random import randint
 from app1.models import *
-import imageio as imread
+#import imageio as imread
 #from app1.rf import *
 import cv2
 import os
-from io import BytesIO
-from PIL import Image
+#from io import BytesIO
+#from PIL import Image
 import numpy as np
 import base64
 import datetime
