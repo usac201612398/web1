@@ -9,8 +9,8 @@ from django.db import models
 
 class registros(models.Model):
     codigoP = models.BigIntegerField(blank=True, null=True)
+    nombreP = models.CharField(max_length=50)
     marcaT = models.DateTimeField()
-    photo = models.ImageField(blank='',default="",upload_to='fotos/')
 
     class Meta:
         managed = True
