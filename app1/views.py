@@ -121,7 +121,7 @@ def registroPhoto(request):
         mes = "0" + str(mes)
     fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
     mensaje = request.POST.get('array')
-    response = {'photo':mensaje, 'fecha': fecha_}
+    response = {'photo':mensaje, 'fecha': fecha}
     
     if mensaje!=None:
          path = 'home/bportillo/Proyecto1/web1/app1/static/app1'
