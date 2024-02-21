@@ -7,18 +7,6 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 
-class ingresoP(models.Model):
-    
-    codigoP = models.BigIntegerField(blank=True, null=True)
-    nombreP = models.CharField(max_length=50)
-    marcaT = models.DateTimeField()
-    fecha = models.DateField(blank=True, null=True)
-    origen = models.CharField(max_length=30)
-    evento = models.CharField(max_length=20)
-
-    class Meta:
-        managed = True
-        db_table = 't_ingresoP'
 
 class App1Measure(models.Model):
     id = models.BigAutoField(primary_key=True)
