@@ -112,8 +112,16 @@ def ajax_ejemplo(request):
 
 @csrf_exempt
 def registroPhoto(request):
+    now = datetime.datetime.now()
+    fecha = now.date()
+    dia= fecha.day
+    mes= fecha.month
+    año= fecha.year
+    if mes < 10:
+        mes = "0" + str(mes)
+    fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
     mensaje = request.POST.get('array')
-    response = {'codigoP':0,'marcaT':0,'photo':0, 'photo':mensaje}
+    response = {'photo':mensaje, 'fecha': fecha_}
     
     if mensaje!=None:
          path = 'home/bportillo/Proyecto1/web1/app1/static/app1'
