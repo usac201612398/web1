@@ -119,9 +119,9 @@ def registroPhoto(request):
     año= fecha.year
     if mes < 10:
         mes = "0" + str(mes)
-    fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
+    fecha_= "{}-{}-{}".format(str(dia),str(mes),str(año))
     mensaje = request.POST.get('array')
-    response = {'photo':mensaje, 'fecha': fecha}
+    response = {'photo':mensaje, 'fecha': fecha_}
     
     if mensaje!=None:
          path = 'home/bportillo/Proyecto1/web1/app1/static/app1'
@@ -179,14 +179,6 @@ def registroPhoto(request):
          response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None'}
     return render(request,'app1/reconocimientof.html',response)
 
-@csrf_exempt
-def registro(request):
-    mensaje = request.POST.get('data2',None)   
-    if mensaje!=None:
-        print(mensaje)
-    print("Nada")
-    context = {}
-    return render(request,'app1/reconocimientof.html',context)
 @csrf_exempt
 def vector_prueba(request):
 #    Sensor.objects.create(name='Presion Res1:' , tipo='Presion')
