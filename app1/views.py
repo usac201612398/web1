@@ -121,7 +121,7 @@ def registroPhoto(request):
         mes = "0" + str(mes)
     fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
     mensaje = request.POST.get('array')
-    response = {'photo':mensaje, 'fecha' : fecha_,}
+    
     
     if mensaje!=None:
          path = 'home/bportillo/Proyecto1/web1/app1/static/app1'
@@ -176,7 +176,8 @@ def registroPhoto(request):
                 ingresoP.objects.create(codigoP=codigoP,nombreP=nombre,marcaT=marcaT)
          return JsonResponse(response)
     else:
-         response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None'}
+         response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None', 'fecha' : fecha_}
+
     return render(request,'app1/reconocimientof.html',response)
 
 @csrf_exempt
