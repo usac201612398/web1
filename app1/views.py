@@ -123,8 +123,16 @@ def registroPhoto(request):
     
     for i in range(0):
         
-        total_entradas = ingresoP.objects.get(fecha = fecha_,evento = "Entrada")
-        
+        total_reg= ingresoP.objects.get(fecha = fecha_)
+        vec_eventos = total_reg.evento
+        tot_entrada = 0
+        tot_salida = 0
+        for i in vec_eventos:
+            if i =="Entrada":
+                tot_entrada = tot_entrada + 1
+            elif i == "Salida":
+                tot_salida=tot_salida + 1
+        total = tot_entrada-tot_salida
 #        ent = len(list(total_entradas.evento))
 #        total_salidas= ingresoP.objects.get(fecha = fecha_,evento = "Salida").evento
 #    if total_entradas ==None:
@@ -200,17 +208,17 @@ def registroPhoto(request):
                 elif eventoT =="Salida":
                     saludo = "Excelente día " + nombre
 
-                response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'respuesta':vector, 'saludo':saludo,'total':total_entradas}
+                response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'respuesta':vector, 'saludo':saludo,'total':total}
 #                ingresoP.objects.create(codigoP=codigoE,nombreP=nombre,marcaT=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
             else: 
                 nombre = "DESCONOCIDO"
                 saludo = "USUARIO NO REGISTRADO"
-                response = {'codigoP':nombre,'photo':new_mensaje,'respuesta':vector, 'saludo':saludo,'total':total_entradas}
+                response = {'codigoP':nombre,'photo':new_mensaje,'respuesta':vector, 'saludo':saludo,'total':total}
 #         response = {'photo':vector, 'imagen':new_mensaje}
          return JsonResponse(response)
     else:
          saludo = ""
-         response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None', 'fecha' : fecha_, 'saludo':saludo,'total':total_entradas}
+         response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None', 'fecha' : fecha_, 'saludo':saludo,'total':total}
 
     return render(request,'app1/reconocimientof.html',response)
 
