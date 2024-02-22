@@ -121,8 +121,7 @@ def registroPhoto(request):
         mes = "0" + str(mes)
     fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
     mensaje = request.POST.get('array')
-    
-    
+        
     if mensaje!=None:
          new_mensaje = str(mensaje).replace('[',  '')
          new_mensaje = new_mensaje.replace(']',  '')
@@ -134,7 +133,7 @@ def registroPhoto(request):
          for i in vector:
              fila.append(i)
              a +=1
-             if a ==5:
+             if a ==6:
                 matriz.append(fila)
                 fila=[]
                 a=1
