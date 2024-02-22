@@ -121,8 +121,15 @@ def registroPhoto(request):
         mes = "0" + str(mes)
     fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
     mensaje = request.POST.get('array')
-    total_entradas = ingresoP.object.values("evento").filter(evento="Entrada").count()
-    total_salidas = ingresoP.object.values("evento").filter(evento="Salida").count()
+    total_reg = ingresoP.objects.get(fecha=str(fecha_))
+    total_salidas = 0
+    total_entradas = 0
+    total_eve = total_reg.evento
+    for i in total_eve:
+        if i == "Entrada":
+            total_entradas = total_entradas + 1
+        elif i=="Salida":
+            total_salidas = total_salidas+1
     if total_entradas ==None:
         total_entradas=0
     if total_salidas==None:
