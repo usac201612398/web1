@@ -182,7 +182,7 @@ def registroPhoto(request):
                 marcaT = datetime.datetime.now()
                 response = {'codigoP':nombre,'marcaT':marcaT,'photo':matriz,'lista':clases}'''
 #                ingresoP.objects.create(codigoP=codigoP,nombreP=nombre,marcaT=marcaT)
-         response = {'photo':vector, 'photo': vector[5]}
+         response = {'photo':vector}
          return JsonResponse(response)
     else:
          response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None', 'fecha' : fecha_}
