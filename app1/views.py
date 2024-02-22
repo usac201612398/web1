@@ -136,7 +136,26 @@ def registroPhoto(request):
 #    if total_salidas==None:
 #        total_salidas=0 
     total = int(entradas)-int(salidas)
-    
+    path = 'home/bportillo/Proyecto1/web1/app1/static/app1'
+
+    images = []
+    clases = []
+    lista = os.listdir(path)
+#    registro = []
+    comp1 = 100
+
+    for i in lista:
+        imgdb = cv2.imread(f'{path}/{i}')
+        images.append(imgdb)
+        clases.append(os.path.splitext(i)[0])
+#         rostrosCod = codRostros(images)
+    porcentaje = int(len(clases))
+    listaCod = []
+    for img in images:
+        img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+        cod = fr.face_encodings(img)[0]
+        listaCod.append(cod)
+
     mensaje = request.POST.get('array')
 
     if mensaje!=None:
@@ -145,25 +164,6 @@ def registroPhoto(request):
          new_mensaje = new_mensaje.replace('"',  '')
          vector = new_mensaje.split(",")
 
-         path = 'home/bportillo/Proyecto1/web1/app1/static/app1'
-
-         images = []
-         clases = []
-         lista = os.listdir(path)
-    #    registro = []
-         comp1 = 100
-
-         for i in lista:
-            imgdb = cv2.imread(f'{path}/{i}')
-            images.append(imgdb)
-            clases.append(os.path.splitext(i)[0])
-#         rostrosCod = codRostros(images)
-         porcentaje = len(clases)
-         listaCod = []
-         for img in images:
-            img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
-            cod = fr.face_encodings(img)[0]
-            listaCod.append(cod)
          path = 'home/bportillo/Proyecto1/web1/app1/static/app1/muestra.jpg'
          new_mensaje = vector[3] + "," + vector[4]
          new_mensaje = new_mensaje.replace('"','')
@@ -205,7 +205,7 @@ def registroPhoto(request):
                 elif eventoT =="Salida":
                     saludo = "Excelente día " + nombre
 
-                response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'respuesta':vector, 'saludo':saludo,'total':total}
+                response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'respuesta':vector, 'saludo':saludo,'total':total,'p':porcentaje}
 #                ingresoP.objects.create(codigoP=codigoE,nombreP=nombre,marcaT=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
             else: 
                 nombre = "DESCONOCIDO"
@@ -215,7 +215,7 @@ def registroPhoto(request):
          return JsonResponse(response)
     else:
          saludo = ""
-         response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None', 'fecha' : fecha_, 'saludo':saludo,'total':total}
+         response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None', 'fecha' : fecha_, 'saludo':saludo,'total':total,'p':porcentaje}
 
     return render(request,'app1/reconocimientof.html',response)
 
