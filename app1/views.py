@@ -124,12 +124,12 @@ def registroPhoto(request):
     for i in range(0):
         
         total_entradas = ingresoP.objects.get(fecha = fecha_,evento = "Entrada").evento
-        total_salidas= ingresoP.objects.get(fecha = fecha_,evento = "Salida").evento
+#        total_salidas= ingresoP.objects.get(fecha = fecha_,evento = "Salida").evento
     if total_entradas ==None:
         total_entradas=0
-    if total_salidas==None:
-        total_salidas=0 
-    total = int(total_entradas)-int(total_salidas)
+#    if total_salidas==None:
+#        total_salidas=0 
+    total = int(total_entradas)
 
     mensaje = request.POST.get('array')
 
