@@ -123,8 +123,12 @@ def registroPhoto(request):
     lista = ['1']
     for i in lista:
         
-        total_reg= ingresoP.objects.filter(fecha = fecha_).filter(evento="Entrada")
-        entradas = len(total_reg)
+        total_ent= ingresoP.objects.filter(fecha = fecha_).filter(evento="Entrada")
+        entradas = len(total_ent)
+        total_sal= ingresoP.objects.filter(fecha = fecha_).filter(evento="Salida")
+        if total_sal == None:
+            salidas = 0
+        salidas = len(total_sal)
 #        ent = len(list(total_entradas.evento))
 #        total_salidas= ingresoP.objects.get(fecha = fecha_,evento = "Salida").evento
 #    if total_entradas ==None:
