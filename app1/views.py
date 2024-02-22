@@ -120,8 +120,8 @@ def registroPhoto(request):
     if mes < 10:
         mes = "0" + str(mes)
     fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
-    
-    for i in range(0):
+    lista = ['1']
+    for i in lista:
         
         total_reg= ingresoP.objects.get(fecha = fecha_)
         vec_eventos = total_reg.evento
