@@ -125,7 +125,7 @@ def registroPhoto(request):
         
         total_entradas = ingresoP.objects.get(fecha = fecha_,evento = "Entrada")
         ent = 0
-        for i in total_entradas.evento:
+        for i in total_entradas.fecha:
             ent = ent + 1
 #        ent = len(list(total_entradas.evento))
 #        total_salidas= ingresoP.objects.get(fecha = fecha_,evento = "Salida").evento
