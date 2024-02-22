@@ -136,7 +136,7 @@ def registroPhoto(request):
 #    if total_salidas==None:
 #        total_salidas=0 
     total = int(entradas)-int(salidas)
-    porcentaje = str(total) + "/" str(len(clases))
+    porcentaje = str(total) + "/" + str(len(clases))
     mensaje = request.POST.get('array')
 
     if mensaje!=None:
