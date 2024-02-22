@@ -120,18 +120,18 @@ def registroPhoto(request):
     if mes < 10:
         mes = "0" + str(mes)
     fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
-    lista = ['1']
-    for i in lista:
+    
+    for i in range(0):
         
-        total_reg= ingresoP.objects.filter(fecha = fecha_).filter(evento="Entrada")
-        entradas = len(total_reg)
-#        ent = len(list(total_entradas.evento))
-#        total_salidas= ingresoP.objects.get(fecha = fecha_,evento = "Salida").evento
-#    if total_entradas ==None:
-#        total_entradas=0
-#    if total_salidas==None:
-#        total_salidas=0 
-#    total = int(total_entradas)
+        total_reg_ent= ingresoP.objects.filter(fecha = fecha_).filter(evento="Entrada")
+        total_reg_sal= ingresoP.objects.filter(fecha = fecha_).filter(evento="Salida")
+        if total_reg_ent == None:
+            entradas = 0
+        if total_reg_sal == None:
+            salidas = 0
+        entradas = len(total_reg_ent)
+        salidas = len(total_reg_sal)
+        total = entradas-salidas
 
     mensaje = request.POST.get('array')
 
@@ -200,17 +200,17 @@ def registroPhoto(request):
                 elif eventoT =="Salida":
                     saludo = "Excelente día " + nombre
 
-                response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'respuesta':vector, 'saludo':saludo,'total':entradas}
+                response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'respuesta':vector, 'saludo':saludo,'total':total}
 #                ingresoP.objects.create(codigoP=codigoE,nombreP=nombre,marcaT=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
             else: 
                 nombre = "DESCONOCIDO"
                 saludo = "USUARIO NO REGISTRADO"
-                response = {'codigoP':nombre,'photo':new_mensaje,'respuesta':vector, 'saludo':saludo,'total':entradas}
+                response = {'codigoP':nombre,'photo':new_mensaje,'respuesta':vector, 'saludo':saludo,'total':total}
 #         response = {'photo':vector, 'imagen':new_mensaje}
          return JsonResponse(response)
     else:
          saludo = ""
-         response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None', 'fecha' : fecha_, 'saludo':saludo,'total':entradas}
+         response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None', 'fecha' : fecha_, 'saludo':saludo,'total':total}
 
     return render(request,'app1/reconocimientof.html',response)
 
