@@ -157,7 +157,7 @@ def registroPhoto(request):
             cod = fr.face_encodings(img)[0]
             listaCod.append(cod)
          path = 'home/bportillo/Proyecto1/web1/app1/static/app1/muestra.jpg'
-         
+         '''
          new_mensaje = str(matriz[4]).replace('"','')
          new_mensaje = new_mensaje[new_mensaje.index(',')+1:]
          nparr= np.fromstring(base64.b64decode(new_mensaje),np.uint8)
@@ -187,8 +187,9 @@ def registroPhoto(request):
             if comp1 == indice:
                 codigoP = 1
                 marcaT = datetime.datetime.now()
-                response = {'codigoP':nombre,'marcaT':marcaT,'photo':matriz,'lista':clases}
+                response = {'codigoP':nombre,'marcaT':marcaT,'photo':matriz,'lista':clases}'''
 #                ingresoP.objects.create(codigoP=codigoP,nombreP=nombre,marcaT=marcaT)
+         response = {'photo':matriz,'lista':clases}
          return JsonResponse(response)
     else:
          response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None', 'fecha' : fecha_}
