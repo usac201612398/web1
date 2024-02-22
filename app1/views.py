@@ -148,8 +148,6 @@ def registroPhoto(request):
             listaCod.append(cod)
          path = 'home/bportillo/Proyecto1/web1/app1/static/app1/muestra.jpg'
          new_mensaje = vector[3] + "," + vector[4]
-             
-         
          new_mensaje = new_mensaje.replace('"','')
          new_mensaje = new_mensaje[new_mensaje.index(',')+1:]
         
@@ -180,7 +178,7 @@ def registroPhoto(request):
             if comp1 == indice:
                 codigoP = 1
                 marcaT = datetime.datetime.now()
-                response = {'codigoP':nombre,'marcaT':marcaT,'photo':matriz,'lista':clases}
+                response = {'codigoP':nombre,'marcaT':marcaT,'photo':new_mensaje,'lista':clases}
 #                ingresoP.objects.create(codigoP=codigoP,nombreP=nombre,marcaT=marcaT)
 #         response = {'photo':vector, 'imagen':new_mensaje}
          return JsonResponse(response)
