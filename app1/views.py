@@ -165,7 +165,7 @@ def registroPhoto(request):
             min = np.argmin(simi)
             
             if comparacion[min]:
-                nombre = clases[min].upper()
+                codigoE = clases[min].upper()
 
                 yi, xf, yf, xi = faceloc
                 yi, xf, yf, xi = yi*4, xf*4, yf*4, xi*4
@@ -176,7 +176,7 @@ def registroPhoto(request):
                 comp1 = indice
 
             if comp1 == indice:
-                codigoP = 1
+                nombre = listaPersonal.objects.get(codigoP=str(codigoE))
                 marcaT = datetime.datetime.now()
                 
                 fechaT = vector[0]
@@ -187,8 +187,8 @@ def registroPhoto(request):
                 elif eventoT =="Salida":
                     saludo = "Excelente día " + nombre
 
-                response = {'codigoP':nombre,'marcaT':marcaT,'photo':new_mensaje,'respuesta':vector, 'saludo':saludo}
-                ingresoP.objects.create(codigoP=codigoP,nombreP=nombre,marcaT=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
+                response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'respuesta':vector, 'saludo':saludo}
+                ingresoP.objects.create(codigoP=codigoE,nombreP=nombre,marcaT=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
             else: 
                 nombre = "DESCONOCIDO"
                 saludo = "USUARIO NO REGISTRADO"
