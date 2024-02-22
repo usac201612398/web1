@@ -121,7 +121,7 @@ def registroPhoto(request):
         mes = "0" + str(mes)
     fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
     variable = 'Entrada'
-    total_reg = ingresoP.objects.all()
+    total_reg = ingresoP.objects.get(codigoP=1)
     
 
     mensaje = request.POST.get('array')
