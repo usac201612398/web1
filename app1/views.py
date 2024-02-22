@@ -123,7 +123,8 @@ def registroPhoto(request):
     
     for i in range(0):
         
-        total_entradas = ingresoP.objects.get(fecha = fecha_,evento = "Entrada").evento
+        total_entradas = ingresoP.objects.get(fecha = fecha_,evento = "Entrada")
+        ent = len(list(total_entradas.evento))
 #        total_salidas= ingresoP.objects.get(fecha = fecha_,evento = "Salida").evento
 #    if total_entradas ==None:
 #        total_entradas=0
@@ -198,17 +199,17 @@ def registroPhoto(request):
                 elif eventoT =="Salida":
                     saludo = "Excelente día " + nombre
 
-                response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'respuesta':vector, 'saludo':saludo, 'total':total_entradas}
+                response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'respuesta':vector, 'saludo':saludo, 'total':ent}
 #                ingresoP.objects.create(codigoP=codigoE,nombreP=nombre,marcaT=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
             else: 
                 nombre = "DESCONOCIDO"
                 saludo = "USUARIO NO REGISTRADO"
-                response = {'codigoP':nombre,'photo':new_mensaje,'respuesta':vector, 'saludo':saludo, 'total':total_entradas}
+                response = {'codigoP':nombre,'photo':new_mensaje,'respuesta':vector, 'saludo':saludo, 'total':ent}
 #         response = {'photo':vector, 'imagen':new_mensaje}
          return JsonResponse(response)
     else:
          saludo = ""
-         response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None', 'fecha' : fecha_, 'saludo':saludo, 'total':total_entradas}
+         response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None', 'fecha' : fecha_, 'saludo':saludo, 'total':ent}
 
     return render(request,'app1/reconocimientof.html',response)
 
