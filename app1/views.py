@@ -156,9 +156,11 @@ def registroPhoto(request):
             cod = fr.face_encodings(img)[0]
             listaCod.append(cod)
          path = 'home/bportillo/Proyecto1/web1/app1/static/app1/muestra.jpg'
-         for i in range(len(matriz)):
-             if i==4:
-                 prueba = matriz[i]
+         a = 0
+         for i in matriz:
+             if a == 4:
+                 prueba = i
+             a = a +1 
              
          '''
          new_mensaje = str(matriz[3]+","+matriz[4]).replace('"','')
