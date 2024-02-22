@@ -131,7 +131,7 @@ def registroPhoto(request):
         salidas = 0
         entradas = len(total_reg_ent)
 #        salidas = len(total_reg_sal)
-        total = entradas-salidas
+        total = int(entradas)-salidas
 
     mensaje = request.POST.get('array')
 
