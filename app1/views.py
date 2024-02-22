@@ -121,7 +121,9 @@ def registroPhoto(request):
         mes = "0" + str(mes)
     fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
     mensaje = request.POST.get('array')
-        
+    total_entradas = ingresoP.object.values("evento").filter(evento="Entrada").count()
+    total_salidas = ingresoP.object.values("evento").filter(evento="Salida").count()
+    total = total_entradas-total_salidas
     if mensaje!=None:
          new_mensaje = str(mensaje).replace('[',  '')
          new_mensaje = new_mensaje.replace(']',  '')
@@ -192,12 +194,12 @@ def registroPhoto(request):
             else: 
                 nombre = "DESCONOCIDO"
                 saludo = "USUARIO NO REGISTRADO"
-                response = {'codigoP':nombre,'photo':new_mensaje,'respuesta':vector, 'saludo':saludo}
+                response = {'codigoP':nombre,'photo':new_mensaje,'respuesta':vector, 'saludo':saludo, 'total':total}
 #         response = {'photo':vector, 'imagen':new_mensaje}
          return JsonResponse(response)
     else:
          saludo = ""
-         response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None', 'fecha' : fecha_, 'saludo':saludo}
+         response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None', 'fecha' : fecha_, 'saludo':saludo, 'total':total}
 
     return render(request,'app1/reconocimientof.html',response)
 
