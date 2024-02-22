@@ -158,7 +158,7 @@ def registroPhoto(request):
             images.append(imgdb)
             clases.append(os.path.splitext(i)[0])
 #         rostrosCod = codRostros(images)
-         porcentaje = str(total) + "/" + str(len(clases))
+         porcentaje = str(len(clases))
          listaCod = []
          for img in images:
             img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
