@@ -179,7 +179,11 @@ def registroPhoto(request):
                 codigoP = 1
                 marcaT = datetime.datetime.now()
                 response = {'codigoP':nombre,'marcaT':marcaT,'photo':new_mensaje,'respuesta':vector}
-                ingresoP.objects.create(codigoP=codigoP,nombreP=nombre,marcaT=marcaT,fecha=str(fecha),origen=str(vector[1]),evento=str(vector[2]))
+                fechaT = vector[0]
+                origenT = vector[1]
+                eventoT= vector[2]
+
+                ingresoP.objects.create(codigoP=codigoP,nombreP=nombre,marcaT=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
 #         response = {'photo':vector, 'imagen':new_mensaje}
          return JsonResponse(response)
     else:
