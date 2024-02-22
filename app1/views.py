@@ -171,7 +171,7 @@ def registroPhoto(request):
                 yi, xf, yf, xi = yi*4, xf*4, yf*4, xi*4
 
                 indice = comparacion.index(True)
-            
+
             if comp1!= indice:
                 comp1 = indice
 
@@ -188,8 +188,11 @@ def registroPhoto(request):
                     saludo = "Excelente día " + nombre
 
                 response = {'codigoP':nombre,'marcaT':marcaT,'photo':new_mensaje,'respuesta':vector, 'saludo':saludo}
-
                 ingresoP.objects.create(codigoP=codigoP,nombreP=nombre,marcaT=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
+            else: 
+                nombre = "DESCONOCIDO"
+                saludo = "USUARIO NO REGISTRADO"
+                response = {'codigoP':nombre,'photo':new_mensaje,'respuesta':vector, 'saludo':saludo}
 #         response = {'photo':vector, 'imagen':new_mensaje}
          return JsonResponse(response)
     else:
