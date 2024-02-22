@@ -156,7 +156,7 @@ def registroPhoto(request):
             cod = fr.face_encodings(img)[0]
             listaCod.append(cod)
          path = 'home/bportillo/Proyecto1/web1/app1/static/app1/muestra.jpg'
-         #prueba = matriz[3] + "," + matriz[4]
+         prueba = str(matriz[3]) + "," + str(matriz[4])
          '''
          new_mensaje = str(matriz[3]+","+matriz[4]).replace('"','')
          new_mensaje = new_mensaje[new_mensaje.index(',')+1:]
@@ -190,7 +190,7 @@ def registroPhoto(request):
                 marcaT = datetime.datetime.now()
                 response = {'codigoP':nombre,'marcaT':marcaT,'photo':matriz,'lista':clases}'''
 #                ingresoP.objects.create(codigoP=codigoP,nombreP=nombre,marcaT=marcaT)
-         response = {'photo':matriz,'lista':clases}
+         response = {'photo':matriz,'lista':prueba}
          return JsonResponse(response)
     else:
          response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None', 'fecha' : fecha_}
