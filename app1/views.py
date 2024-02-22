@@ -123,7 +123,11 @@ def registroPhoto(request):
     mensaje = request.POST.get('array')
     total_entradas = ingresoP.object.values("evento").filter(evento="Entrada").count()
     total_salidas = ingresoP.object.values("evento").filter(evento="Salida").count()
-    total = total_entradas-total_salidas
+    if total_entradas ==None:
+        total_entradas=0
+    if total_salidas==None:
+        total_salidas=0 
+    total = int(total_entradas)-int(total_salidas)
     if mensaje!=None:
          new_mensaje = str(mensaje).replace('[',  '')
          new_mensaje = new_mensaje.replace(']',  '')
