@@ -193,7 +193,8 @@ def registroPhoto(request):
 #         response = {'photo':vector, 'imagen':new_mensaje}
          return JsonResponse(response)
     else:
-         response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None', 'fecha' : fecha_, 'saludo':None}
+         saludo = ""
+         response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None', 'fecha' : fecha_, 'saludo':saludo}
 
     return render(request,'app1/reconocimientof.html',response)
 
