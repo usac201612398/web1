@@ -178,16 +178,22 @@ def registroPhoto(request):
             if comp1 == indice:
                 codigoP = 1
                 marcaT = datetime.datetime.now()
-                response = {'codigoP':nombre,'marcaT':marcaT,'photo':new_mensaje,'respuesta':vector}
+                
                 fechaT = vector[0]
                 origenT = vector[1]
                 eventoT= vector[2]
+                if eventoT == "Entrada":
+                    saludo = "Bienvenido " + nombre
+                elif eventoT =="Salida":
+                    saludo = "Excelente día " + nombre
+
+                response = {'codigoP':nombre,'marcaT':marcaT,'photo':new_mensaje,'respuesta':vector, 'saludo':saludo}
 
                 ingresoP.objects.create(codigoP=codigoP,nombreP=nombre,marcaT=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
 #         response = {'photo':vector, 'imagen':new_mensaje}
          return JsonResponse(response)
     else:
-         response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None', 'fecha' : fecha_}
+         response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None', 'fecha' : fecha_, 'saludo':None}
 
     return render(request,'app1/reconocimientof.html',response)
 

@@ -20,6 +20,15 @@ class ingresoP(models.Model):
         managed = True
         db_table = 't_ingresoP'
 
+class listaPersonal(models.Model):
+    
+    codigoP = models.BigIntegerField(blank=True, null=True)
+    nombreP = models.CharField(max_length=50)
+
+    class Meta:
+        managed = True
+        db_table = 't_listaPersonal'
+
 class App1Measure(models.Model):
     id = models.BigAutoField(primary_key=True)
     created = models.DateTimeField()
