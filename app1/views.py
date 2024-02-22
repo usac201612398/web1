@@ -152,7 +152,7 @@ def registroPhoto(request):
          
          new_mensaje = new_mensaje.replace('"','')
          new_mensaje = new_mensaje[new_mensaje.index(',')+1:]
-         '''
+        
          nparr= np.fromstring(base64.b64decode(new_mensaje),np.uint8)
          img = cv2.imdecode(nparr,cv2.IMREAD_COLOR)
          frame2 = cv2.resize(img,(0,0),None,0.25,0.25)
@@ -180,9 +180,9 @@ def registroPhoto(request):
             if comp1 == indice:
                 codigoP = 1
                 marcaT = datetime.datetime.now()
-                response = {'codigoP':nombre,'marcaT':marcaT,'photo':matriz,'lista':clases}'''
+                response = {'codigoP':nombre,'marcaT':marcaT,'photo':matriz,'lista':clases}
 #                ingresoP.objects.create(codigoP=codigoP,nombreP=nombre,marcaT=marcaT)
-         response = {'photo':vector, 'imagen':new_mensaje}
+#         response = {'photo':vector, 'imagen':new_mensaje}
          return JsonResponse(response)
     else:
          response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None', 'fecha' : fecha_}
