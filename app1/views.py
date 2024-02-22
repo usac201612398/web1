@@ -176,9 +176,9 @@ def registroPhoto(request):
                 comp1 = indice
 
             if comp1 == indice:
-                nombre = listaPersonal.objects.get(codigoP=str(codigoE))
+                nombreT = listaPersonal.objects.get(codigoP=str(codigoE))
                 marcaT = datetime.datetime.now()
-            #    nombre = "BRANDON"
+                nombre = nombreT.nombreP
                 fechaT = vector[0]
                 origenT = vector[1]
                 eventoT= vector[2]
