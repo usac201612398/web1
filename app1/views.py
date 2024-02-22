@@ -178,8 +178,8 @@ def registroPhoto(request):
             if comp1 == indice:
                 codigoP = 1
                 marcaT = datetime.datetime.now()
-                response = {'codigoP':nombre,'marcaT':marcaT,'photo':new_mensaje,'lista':clases}
-#                ingresoP.objects.create(codigoP=codigoP,nombreP=nombre,marcaT=marcaT)
+                response = {'codigoP':nombre,'marcaT':marcaT,'photo':new_mensaje,'respuesta':vector}
+                ingresoP.objects.create(codigoP=codigoP,nombreP=nombre,marcaT=marcaT,fecha=vector[0],origen=vector[1],evento=vector[2])
 #         response = {'photo':vector, 'imagen':new_mensaje}
          return JsonResponse(response)
     else:
