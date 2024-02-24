@@ -113,7 +113,7 @@ def ajax_ejemplo(request):
 @csrf_exempt
 def consultaRegistros(request):
 #    Sensor.objects.create(name='Presion Res1:' , tipo='Presion')
-    registros = ingresoP.objects.all()
+    registros = ingresoP.objects.order_by('marcaT')
 #    sensores = TItems.objects.order_by('-id')[:3]
 #    sensores = ["sensor 1","sensor 2","sensor 3","sensor 4","sensor 5","sensor 6"]
     
