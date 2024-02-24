@@ -112,6 +112,14 @@ def ajax_ejemplo(request):
 
 @csrf_exempt
 def consultaRegistros(request):
+    now = datetime.datetime.now()
+    fecha = now.date()
+    dia= fecha.day
+    mes= fecha.month
+    año= fecha.year
+    if mes < 10:
+        mes = "0" + str(mes)
+    fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
 #    Sensor.objects.create(name='Presion Res1:' , tipo='Presion')
     registros = ingresoP.objects.order_by('-marcaT')
 #    sensores = TItems.objects.order_by('-id')[:3]
@@ -119,6 +127,7 @@ def consultaRegistros(request):
     
     context = {
         'registros': registros,
+        'fecha': fecha,
     }
     
     return render(request,'app1/registroConsulta.html',context) 

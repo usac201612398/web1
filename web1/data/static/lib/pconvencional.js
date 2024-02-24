@@ -247,13 +247,34 @@ function myFunction4() {
 function myFunction5() {
   // Declare variables
   var input, table, tr, td, i, txtValue;
-  input = document.getElementById("date");
+  input = document.getElementById("myInput5");
   table = document.getElementById("myTable");
   tr = table.getElementsByTagName("tr");
 
   // Loop through all table rows, and hide those who don't match the search query
   for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[3];
+    td = tr[i].getElementsByTagName("td")[4];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.indexOf(input) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+
+function myFunction6() {
+  // Declare variables
+  var input, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput6");
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[5];
     if (td) {
       txtValue = td.textContent || td.innerText;
       if (txtValue.indexOf(input) > -1) {
