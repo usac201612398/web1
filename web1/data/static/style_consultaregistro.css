@@ -3,7 +3,7 @@
     /*  background-image: url('/css/searchicon.png'); /* Add a search icon to input */
         background-position: 10px 12px; /* Position the search icon */
         background-repeat: no-repeat; /* Do not repeat the icon image */
-        width: 150px; /* Full-width */
+        width: 125px; /* Full-width */
         font-size: 16px; /* Increase font-size */
         padding: 12px 20px 12px 40px; /* Add some padding */
         border: 1px solid #ddd; /* Add a grey border */
@@ -46,7 +46,7 @@
         /*  background-image: url('/css/searchicon.png'); /* Add a search icon to input */
             background-position: 10px 12px; /* Position the search icon */
             background-repeat: no-repeat; /* Do not repeat the icon image */
-            width: 150px; /* Full-width */
+            width: 125px; /* Full-width */
             font-size: 16px; /* Increase font-size */
             padding: 12px 20px 12px 40px; /* Add some padding */
             border: 1px solid #ddd; /* Add a grey border */
@@ -56,7 +56,7 @@
         /*  background-image: url('/css/searchicon.png'); /* Add a search icon to input */
             background-position: 10px 12px; /* Position the search icon */
             background-repeat: no-repeat; /* Do not repeat the icon image */
-            width: 150px; /* Full-width */
+            width: 125px; /* Full-width */
             font-size: 16px; /* Increase font-size */
             padding: 12px 20px 12px 40px; /* Add some padding */
             border: 1px solid #ddd; /* Add a grey border */
@@ -210,7 +210,7 @@
     }
     
     .box02{
-    width: 150px;
+    width: 125px;
     height: 45px;
     }
     
@@ -220,14 +220,14 @@
     }
     
     .box04{
-    width: 150px;
+    width: 125px;
     height: 45px;
     display: flex;
     align-items: flex-end;
     }
     
     .box05{
-    width: 150px;
+    width: 125px;
     height: 45px;
     }
     
