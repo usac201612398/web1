@@ -111,6 +111,19 @@ def ajax_ejemplo(request):
     return JsonResponse(data)
 
 @csrf_exempt
+def consultaRegistros(request):
+#    Sensor.objects.create(name='Presion Res1:' , tipo='Presion')
+    registros = ingresoP.objects.all()
+#    sensores = TItems.objects.order_by('-id')[:3]
+#    sensores = ["sensor 1","sensor 2","sensor 3","sensor 4","sensor 5","sensor 6"]
+    
+    context = {
+        'registros': registros,
+    }
+    
+    return render(request,'app1/registroConsulta.html',context) 
+
+@csrf_exempt
 def registroPhoto(request):
     now = datetime.datetime.now()
     fecha = now.date()

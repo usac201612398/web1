@@ -20,4 +20,5 @@ urlpatterns = [
     path("iniciar/pedido/convencional/carrito",views.vector_prueba3,name='iniciar_pedido_conv_carrito'),
     path("iniciar/pedido/convencional",views.vector_prueba4,name='iniciar_pedido_conv_panel'),
     path("registro",views.registroPhoto,name='reconocimientof'),
+    path("registro/consulta",views.consultaRegistros,name='registroConsulta'),
 ]
