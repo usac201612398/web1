@@ -210,28 +210,24 @@
     }
     
     .box02{
-    width: 250px;
+    width: 150px;
     height: 45px;
     }
     
     .box03{
-    width: 485px;
+    width: 285px;
     height: 45px;
     }
     
     .box04{
-    width: 800px;
+    width: 150px;
     height: 45px;
     display: flex;
     align-items: flex-end;
     }
     
     .box05{
-    width: 250px;
+    width: 150px;
     height: 45px;
     }
     
-    .box06{
-    width: 485px;
-    height: 45px;
-    }
