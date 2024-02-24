@@ -246,9 +246,8 @@ function myFunction4() {
 
 function myFunction5() {
   // Declare variables
-  var input, filter, table, tr, td, i, txtValue;
+  var input, table, tr, td, i, txtValue;
   input = document.getElementById("date");
-  filter = input.value.toUpperCase();
   table = document.getElementById("myTable");
   tr = table.getElementsByTagName("tr");
 
@@ -257,7 +256,7 @@ function myFunction5() {
     td = tr[i].getElementsByTagName("td")[3];
     if (td) {
       txtValue = td.textContent || td.innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      if (txtValue.indexOf(input) > -1) {
         tr[i].style.display = "";
       } else {
         tr[i].style.display = "none";
