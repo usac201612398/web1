@@ -14,7 +14,7 @@
     /*  background-image: url('/css/searchicon.png'); /* Add a search icon to input */
         background-position: 0% 0%; /* Position the search icon */
         background-repeat: no-repeat; /* Do not repeat the icon image */
-        width: 185px; /* Full-width */
+        width: 225px; /* Full-width */
         font-size: 16px; /* Increase font-size */
         padding: 12px 20px 12px 20px; /* Add some padding */
         border: 1px solid #ddd; /* Add a grey border */
@@ -46,7 +46,7 @@
         /*  background-image: url('/css/searchicon.png'); /* Add a search icon to input */
             background-position: 0% 0%; /* Position the search icon */
             background-repeat: no-repeat; /* Do not repeat the icon image */
-            width: 125px; /* Full-width */
+            width: 140px; /* Full-width */
             font-size: 16px; /* Increase font-size */
             padding: 12px 20px 12px 20px; /* Add some padding */
             border: 1px solid #ddd; /* Add a grey border */
@@ -56,7 +56,7 @@
         /*  background-image: url('/css/searchicon.png'); /* Add a search icon to input */
             background-position: 0% 0%; /* Position the search icon */
             background-repeat: no-repeat; /* Do not repeat the icon image */
-            width: 125px; /* Full-width */
+            width: 140px; /* Full-width */
             font-size: 16px; /* Increase font-size */
             padding: 12px 20px 12px 20px; /* Add some padding */
             border: 1px solid #ddd; /* Add a grey border */
@@ -215,17 +215,17 @@
     }
     
     .box03{
-    width: 185px;
+    width: 225px;
     height: 45px;
     }
     
     .box04{
-    width: 125px;
+    width: 140px;
     height: 45px;
     }
     
     .box05{
-    width: 125px;
+    width: 140px;
     height: 45px;
     }
     
