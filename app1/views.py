@@ -110,7 +110,7 @@ def ajax_ejemplo(request):
 
     return JsonResponse(data)
 
-@csrf_exempt
+#@csrf_exempt
 def consultaRegistros(request):
     now = datetime.datetime.now()
     fecha = now.date()
@@ -132,7 +132,7 @@ def consultaRegistros(request):
     
     return render(request,'app1/registroConsulta.html',context) 
 
-@csrf_exempt
+#@csrf_exempt
 def registroPhoto(request):
     now = datetime.datetime.now()
     fecha = now.date()
