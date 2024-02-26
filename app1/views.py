@@ -127,7 +127,7 @@ def consultaRegistros(request):
     
     context = {
         'registros': registros,
-        'fecha': fecha,
+        'fecha': fecha_,
     }
     
     return render(request,'app1/registroConsulta.html',context) 
