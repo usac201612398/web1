@@ -16,7 +16,7 @@ import numpy as np
 import base64
 import datetime
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import login_required
+#from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login, logout
@@ -112,7 +112,7 @@ def ajax_ejemplo(request):
     return JsonResponse(data)
 '''
 #@csrf_exempt
-@login_required
+#@login_required
 def consultaRegistros(request):
     now = datetime.datetime.now()
     fecha = now.date()
@@ -326,7 +326,7 @@ def repuesta(request):
     return JsonResponse(data)
 
 #@csrf_exempt
-@login_required
+#@login_required
 def vector_prueba2(request):
 
     despachos = TDespachos.objects.latest("envio")
@@ -424,7 +424,7 @@ def vector_prueba2(request):
 
 
 #@csrf_exempt
-@login_required
+#@login_required
 def vector_prueba4(request):
     despachos = TDespachos.objects.latest("envio")
     correlativo = int(str(despachos.envio))+1
@@ -480,7 +480,7 @@ def vector_prueba4(request):
     return render(request,'app1/iniciar_pedido_conv_panel.html',context) 
 
 #@csrf_exempt
-@login_required
+#@login_required
 def vector_prueba3(request):
 #    Sensor.objects.create(name='Presion Res1:' , tipo='Presion')
     items = TItem.objects.all()
