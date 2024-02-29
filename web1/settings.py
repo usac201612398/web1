@@ -14,6 +14,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+from django.http import HttpResponseRedirect
 from django.urls import reverse
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -138,7 +139,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LOGIN_URL = reverse('login')
+LOGIN_URL = HttpResponseRedirect(reverse('login'))
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
