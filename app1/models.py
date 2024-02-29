@@ -18,7 +18,7 @@ class ingresoP(models.Model):
 
     class Meta:
         managed = True
-        db_table = 't_ingresoP'
+        db_table = 't_ingresop'
 
 class listaPersonal(models.Model):
     
@@ -27,7 +27,7 @@ class listaPersonal(models.Model):
 
     class Meta:
         managed = True
-        db_table = 't_listaPersonal'
+        db_table = 't_listapersonal'
 
 class App1Measure(models.Model):
     id = models.BigAutoField(primary_key=True)
