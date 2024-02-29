@@ -135,7 +135,7 @@ def consultaRegistros(request):
     return render(request,'app1/registroConsulta.html',context) 
 
 #@csrf_exempt
-#@login_required
+@login_required
 def registroPhoto(request):
     now = datetime.datetime.now()
     fecha = now.date()
