@@ -243,7 +243,7 @@ def registroPhoto(request):
          response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None', 'fecha' : fecha_, 'saludo':saludo,'total':total,'p':porcentaje}
 
     return render(request,'app1/reconocimientof.html',response)
-@login_required
+#@login_required
 #@csrf_exempt
 def vector_prueba(request):
 #    Sensor.objects.create(name='Presion Res1:' , tipo='Presion')
@@ -301,7 +301,7 @@ def vector_prueba(request):
     return render(request,'app1/iniciar_pedido.html',context) 
 
 #@csrf_exempt
-@login_required
+#@login_required
 def repuesta(request):
 
     mensaje = request.POST.get('data', None)

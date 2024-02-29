@@ -139,7 +139,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LOGIN_URL = 'https://10.111.112.4/app1/login'
+LOGIN_URL = 'https://10.111.112.4/app1/login/'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
