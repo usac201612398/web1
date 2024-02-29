@@ -11,7 +11,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 
 """
-import django_microsoft_auth
+
 from pathlib import Path
 import os
 
