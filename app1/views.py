@@ -16,6 +16,7 @@ import numpy as np
 import base64
 import datetime
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login, logout
@@ -54,11 +55,11 @@ def login_page(request):
 def homepage(request):
     return render(request,'app1/homepage.html')
 
-
 def logout_view(request):
     logout(request)
     return redirect('homepage')
 
+'''
 class AboutView(View):
     def get(self, request):
         response = "Hola..."
@@ -109,8 +110,9 @@ def ajax_ejemplo(request):
     }
 
     return JsonResponse(data)
-
+'''
 #@csrf_exempt
+@login_required
 def consultaRegistros(request):
     now = datetime.datetime.now()
     fecha = now.date()
@@ -133,6 +135,7 @@ def consultaRegistros(request):
     return render(request,'app1/registroConsulta.html',context) 
 
 #@csrf_exempt
+@login_required
 def registroPhoto(request):
     now = datetime.datetime.now()
     fecha = now.date()
@@ -240,8 +243,8 @@ def registroPhoto(request):
          response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None', 'fecha' : fecha_, 'saludo':saludo,'total':total,'p':porcentaje}
 
     return render(request,'app1/reconocimientof.html',response)
-
-@csrf_exempt
+@login_required
+#@csrf_exempt
 def vector_prueba(request):
 #    Sensor.objects.create(name='Presion Res1:' , tipo='Presion')
     items = TItem.objects.all()
@@ -297,8 +300,8 @@ def vector_prueba(request):
                 
     return render(request,'app1/iniciar_pedido.html',context) 
 
-@csrf_exempt
-
+#@csrf_exempt
+@login_required
 def repuesta(request):
 
     mensaje = request.POST.get('data', None)
@@ -322,7 +325,8 @@ def repuesta(request):
 #    print(temporal)
     return JsonResponse(data)
 
-@csrf_exempt
+#@csrf_exempt
+@login_required
 def vector_prueba2(request):
 
     despachos = TDespachos.objects.latest("envio")
@@ -419,7 +423,8 @@ def vector_prueba2(request):
     return render(request,'app1/pedido_masivo.html',context) 
 
 
-@csrf_exempt
+#@csrf_exempt
+@login_required
 def vector_prueba4(request):
     despachos = TDespachos.objects.latest("envio")
     correlativo = int(str(despachos.envio))+1
@@ -474,7 +479,8 @@ def vector_prueba4(request):
     
     return render(request,'app1/iniciar_pedido_conv_panel.html',context) 
 
-@csrf_exempt
+#@csrf_exempt
+@login_required
 def vector_prueba3(request):
 #    Sensor.objects.create(name='Presion Res1:' , tipo='Presion')
     items = TItem.objects.all()
