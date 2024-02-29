@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'microsoft_auth',
     'app1',
     'ejemplo',
 ]
@@ -66,10 +68,29 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'microsoft_auth.context_processors.microsoft',
             ],
         },
     },
 ]
+AUTHENTICATION_BACKENDS = [
+    'microsoft_auth.backends.MicrosoftAuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend' # if you also want to use Django's authentication
+    # I recommend keeping this with at least one database superuser in case of unable to use others
+]
+
+MICROSOFT_AUTH_CLIENT_ID = 'd27b7533-221a-4742-b79d-9450ff8ffe26'
+MICROSOFT_AUTH_CLIENT_SECRET = 'd059da6c-7018-473b-87ac-a26c0b333106'
+# Tenant ID is also needed for single tenant applications
+# MICROSOFT_AUTH_TENANT_ID = 'your-tenant-id-from-apps.dev.microsoft.com'
+
+# pick one MICROSOFT_AUTH_LOGIN_TYPE value
+# Microsoft authentication
+# include Microsoft Accounts, Office 365 Enterpirse and Azure AD accounts
+MICROSOFT_AUTH_LOGIN_TYPE = 'ma'
+
+# Xbox Live authentication
+MICROSOFT_AUTH_LOGIN_TYPE = 'xbl'  # Xbox Live authentication
 
 WSGI_APPLICATION = 'web1.wsgi.application'
 
