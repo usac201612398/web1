@@ -7,6 +7,7 @@ from random import randint
 from app1.models import *
 #import imageio as imread
 #from app1.rf import *
+
 import cv2
 import os
 #from io import BytesIO
@@ -120,8 +121,6 @@ def consultaRegistros(request):
     año= fecha.year
     if mes < 10:
         mes = "0" + str(mes)
-    if dia < 10:
-        dia = "0" + str(dia)
     fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
 #    Sensor.objects.create(name='Presion Res1:' , tipo='Presion')
     registros = ingresoP.objects.order_by('-marcaT')
@@ -145,19 +144,17 @@ def registroPhoto(request):
     año= fecha.year
     if mes < 10:
         mes = "0" + str(mes)
-    if dia < 10:
-        dia = "0" + str(dia)
     fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
     lista = ['1']
-
     for i in lista:
                 
-        total_ent= Ingresop.objects.filter(fecha = fecha_).filter(evento="Entrada")
+        total_ent=  "BOOLEAN_CLAIM_MAPPING": {"is_staff": "user_is_staff",
+                              "is_superuser": "user_is_superuser"},.objects.filter(fecha = fecha_).filter(evento="Entrada")
         if total_ent == None:
             entradas = 0
         else:
             entradas = len(total_ent)
-        total_sal= Ingresop.objects.filter(fecha = fecha_).filter(evento="Salida")
+        total_sal= ingresoP.objects.filter(fecha = fecha_).filter(evento="Salida")
         if total_sal == None:
             salidas = 0
         else:
@@ -170,11 +167,13 @@ def registroPhoto(request):
 #        total_salidas=0 
     total = int(entradas)-int(salidas)
     path = 'home/bportillo/Proyecto1/web1/app1/static/app1'
+
     images = []
     clases = []
     lista = os.listdir(path)
 #    registro = []
     comp1 = 100
+
     for i in lista:
         imgdb = cv2.imread(f'{path}/{i}')
         images.append(imgdb)
@@ -199,58 +198,55 @@ def registroPhoto(request):
          new_mensaje = vector[3] + "," + vector[4]
          new_mensaje = new_mensaje.replace('"','')
          new_mensaje = new_mensaje[new_mensaje.index(',')+1:]
-         response = {'mensaje':new_mensaje}
         
-#         nparr= np.fromstring(base64.b64decode(new_mensaje),np.uint8)
-#         img = cv2.imdecode(nparr,cv2.IMREAD_COLOR)
-#         frame2 = cv2.resize(img,(0,0),None,0.25,0.25)
-#         rgb = cv2.cvtColor(frame2,cv2.COLOR_BGR2RGB)
-#         faces = fr.face_locations(rgb)
-#         facesCod = fr.face_encodings(rgb,faces)
+         nparr= np.fromstring(base64.b64decode(new_mensaje),np.uint8)
+         img = cv2.imdecode(nparr,cv2.IMREAD_COLOR)
+         frame2 = cv2.resize(img,(0,0),None,0.25,0.25)
+         rgb = cv2.cvtColor(frame2,cv2.COLOR_BGR2RGB)
+         faces = fr.face_locations(rgb)
+         facesCod = fr.face_encodings(rgb,faces)
 
-#         for facecod, faceloc in zip(facesCod,faces):
+         for facecod, faceloc in zip(facesCod,faces):
             
-#            comparacion = fr.compare_faces(listaCod,facecod)
-#            simi = fr.face_distance(listaCod,facecod)
-#            min = np.argmin(simi)
+            comparacion = fr.compare_faces(listaCod,facecod)
+            simi = fr.face_distance(listaCod,facecod)
+            min = np.argmin(simi)
             
-#            if comparacion[min]:
-#                codigoE = clases[min].upper()
+            if comparacion[min]:
+                codigoE = clases[min].upper()
 
-#                yi, xf, yf, xi = faceloc
-#                yi, xf, yf, xi = yi*4, xf*4, yf*4, xi*4
+                yi, xf, yf, xi = faceloc
+                yi, xf, yf, xi = yi*4, xf*4, yf*4, xi*4
 
-#                indice = comparacion.index(True)
+                indice = comparacion.index(True)
 
-#            if comp1!= indice:
-#                comp1 = indice
+            if comp1!= indice:
+                comp1 = indice
 
-#            if comp1 == indice:
-#                nombreT = Listapersonal.objects.get(codigoP=codigoE)
-#                marcaT = datetime.datetime.now()
-#                nombre = nombreT.nombreP
-#                fechaT = vector[0]
-#                origenT = vector[1]
-#                eventoT= vector[2]
-#                if eventoT == "Entrada":
-#                    saludo = "Bienvenido " + nombre
-#                elif eventoT =="Salida":
-#                    saludo = "Excelente día " + nombre
+            if comp1 == indice:
+                nombreT = listaPersonal.objects.get(codigoP=str(codigoE))
+                marcaT = datetime.datetime.now()
+                nombre = nombreT.nombreP
+                fechaT = vector[0]
+                origenT = vector[1]
+                eventoT= vector[2]
+                if eventoT == "Entrada":
+                    saludo = "Bienvenido " + nombre
+                elif eventoT =="Salida":
+                    saludo = "Excelente día " + nombre
 
-#                response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'respuesta':vector, 'saludo':saludo,'total':total,'p':porcentaje}
-#                ingresoP.objects.create(codigoP=codigoE,nombreP=nombre,marcaT=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
-#            else: 
-#                nombre = "DESCONOCIDO"
-#                saludo = "USUARIO NO REGISTRADO"
-#                response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo}
-##         response = {'photo':vector, 'imagen':new_mensaje}
-                return JsonResponse(response)
-
+                response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'respuesta':vector, 'saludo':saludo,'total':total,'p':porcentaje}
+                ingresoP.objects.create(codigoP=codigoE,nombreP=nombre,marcaT=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
+            else: 
+                nombre = "DESCONOCIDO"
+                saludo = "USUARIO NO REGISTRADO"
+                response = {'codigoP':nombre,'photo':new_mensaje,'respuesta':vector, 'saludo':saludo,'total':total}
+#         response = {'photo':vector, 'imagen':new_mensaje}
+         return JsonResponse(response)
     else:
          saludo = ""
          response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None', 'fecha' : fecha_, 'saludo':saludo,'total':total,'p':porcentaje}
 
-#         response = {'mensaje':new_mensaje}
     return render(request,'app1/reconocimientof.html',response)
 #@login_required
 #@csrf_exempt

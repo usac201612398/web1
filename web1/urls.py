@@ -21,5 +21,6 @@ urlpatterns = [
     path('app1/',include('app1.urls')),
     path('ejemplo/',include('ejemplo.urls')),
     path('admin/', admin.site.urls),
-#    path('microsoft/', include('microsoft_auth.urls', namespace='microsoft')),
+    path('oauth2/', include('django_auth_adfs.urls')),    
+#    path('microsoft_authentication/', include('microsoft_authentication.urls')),
 ]
