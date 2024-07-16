@@ -1,6 +1,6 @@
 from django.urls import path
 from app1 import views
-#from app1.views import *
+
 
 app_main ="app1"
 
@@ -21,5 +21,5 @@ urlpatterns = [
     path("iniciar/pedido/convencional",views.vector_prueba4,name='iniciar_pedido_conv_panel'),
     path("registro",views.registroPhoto,name='reconocimientof'),
     path("registro/consulta",views.consultaRegistros,name='registroConsulta'),
-    path("registro/consultaR",views.consultarR.as_view(), name = 'registroConsulta'),
+    path("registro/consultaR",views.consultaR.<a href="#" class="btn btn-success">¿Soy un botón o un enlace?</a>, name = 'consultaR'),
 ]

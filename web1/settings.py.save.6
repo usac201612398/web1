@@ -30,12 +30,11 @@ SECRET_KEY = 'django-insecure-i%35q9sc8q^vah@$-wnd@mgjy&ct3kpf=(8x_)l=rsxrzy=ad_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None
-#ALLOWED_HOSTS = ['popoyan.com.gt','sdc-iot.popoyan.com.gt','www.sdc-iot.popoyan.com.gt']
-ALLOWED_HOSTS = ['sdc-iot.popoyan.com.gt']
+ALLOWED_HOSTS = ['sdc-iot.popoyan.com.gt','www.sdc-iot.popoyan.com.gt']
+
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'web1/data/static')]
 # Application definition
-SECURE_SSL_REDIRECT = True
-SECURE_PROXY_SSL_HEADER=('HTTP_X_FORWARDED_PROTO','https')
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -96,7 +95,6 @@ TEMPLATES = [
 #}
 
 AUTHENTICATION_BACKENDS = [
-#        'djanto.contrib.auth.backends.ModelBackend',
 	'django_auth_adfs.backend.AdfsAuthCodeBackend',
 ]
 
@@ -110,12 +108,9 @@ tenant_id = '2e932f25-355e-45b3-bd8b-764aaf3fd625'
 
 
 AUTH_ADFS = {
-#    'SERVER': "sdc-iot.popoyan.com.gt",
     'AUDIENCE': client_id,
     'CLIENT_ID': client_id,
-#    'response_type':'code',
     'CLIENT_SECRET': client_secret,
-#    'SERVER_URL': 'https://sdc-iot.popoyan.com.gt/adfs',
     'CLAIM_MAPPING': {'first_name': 'given_name',
                       'last_name': 'family_name',
                       'email': 'upn'},
@@ -124,11 +119,10 @@ AUTH_ADFS = {
     'USERNAME_CLAIM': 'upn',
     'TENANT_ID': tenant_id,
     'RELYING_PARTY_ID': client_id,
-#    'CODE_VERIFIER': code_verifier,
-#    'CODE_CHALLENGE': code_challenge,
-#    'CODE_CHALLENGE_METHOD':'S256',
+
+
 #    'LOGIN_EXEMPT_URLS': ["api/", "public/"],
-#    'REDIRECT_URI': "https://sdc-iot.popoyan.com.gt/app1/registro",
+#    'REDIR_URI': "https://10.111.112.4/oauth2/login",
 }
 
 #MICROSOFT = {
@@ -191,12 +185,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-#LOGIN_URL = "https://sdc-iot.popoyan.com.gt/oauth2/callback"
+#LOGIN_URL = "microsoft_authentication/login"
 LOGIN_URL = 'django_auth_adfs:login'
 #LOGIN_URL = "https://10.111.112.4/app1/login/"
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = ''
 #MICROSOFT_CREATE_NEW_DJANGO_USER = True  
 #MICROSOFT_NEW_DJANGO_USER_IS_STAFF = True  
 LANGUAGE_CODE = 'en-us'
@@ -219,4 +213,3 @@ MEDIA_URL = '/archivos/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-

@@ -26,6 +26,30 @@ from rest_framework.response import Response
 from drf_extra_fields.fields import Base64ImageField
 import face_recognition as fr
 # Create your views here.
+from django.views.generic import TemplateView
+from openpyxl import Workbook
+import  secrets
+import hashlib
+import base64
+from  urllib.parse import urlencode
+
+def login_with_adfs(request):
+
+    code_verifier=secrets.token_urlsafe(43)
+    code_verifier_bytes = code_verifier.encode('utf-8')
+    code_challenge = base64.urlsafe_b64encode(hashlib.sha256(code_verifier_bytes).digest()).decode('utf-8').rstrip('=')
+    adfs_authorize_url='https://sdc-iot.popoyan.com.gt/oauth2/callback'
+    params = {
+
+        'client_id': 'd27b7533-221a-4742-b79d-9450ff8ffe26',
+        'response_type':'code',
+        'redirect_uri': 'https://sdc-iot.popoyan.com.gt/app1/registro',
+        'code_challenge':code_challenge,
+        'code_challenge_method':'S256',
+    
+    }
+    authorize_url=adfs_authorize_url + '?' + urlencode(params)
+    return redirect(authorize_url)
 
 def login_page(request):
     message = None
@@ -58,6 +82,34 @@ def logout_view(request):
     logout(request)
     return redirect('homepage')
 
+class consultarR(TemplateView):
+    def get(self,request,*args,**kwargs):
+        asistencias = Ingresop.objects.all()
+        wb = Workbook()
+        ws = wb.active
+        ws['B1'] = 'Reporte de Asistencias'
+        ws.merge_cells('B1:G1')
+        ws['B3'] = 'Codigop'
+        ws['C3'] = 'Nomprep'
+        ws['D3'] = 'Fecha/Hora'
+        ws['E3'] = 'Fecha'
+        ws['F3'] = 'Origen'
+        ws['G3'] = 'Evento'
+        cont =  4
+        for asistencia in asistencias:
+            ws.cell(row = cont, column = 2).value = asistencia.codigop
+            ws.cell(row = cont, column = 3).value = asistencia.nombrep
+            ws.cell(row = cont, column = 4).value = asistencia.marcat
+            ws.cell(row = cont, column = 5).value = asistencia.fecha
+            ws.cell(row = cont, column = 6).value = asistencia.origen
+            ws.cell(row = cont, column = 7).value = asistencia.evento
+            cont = cont + 1 
+        nombre_archivo = "ReporteAutorExcel.xlsx"
+        response = HttpResponse(content_type = "application/ms-excel")
+        content = "attachment; filename = {0}".format(nombre_archivo)
+        response['Content-Disposition'] = content
+        wb.save(response)
+        return response
 '''
 class AboutView(View):
     def get(self, request):
@@ -123,8 +175,9 @@ def consultaRegistros(request):
     if dia < 10:
         dia = "0" + str(dia)
     fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
+
 #    Sensor.objects.create(name='Presion Res1:' , tipo='Presion')
-    registros = ingresoP.objects.order_by('-marcaT')
+    registros = Ingresop.objects.order_by('-marcat')
 #    sensores = TItems.objects.order_by('-id')[:3]
 #    sensores = ["sensor 1","sensor 2","sensor 3","sensor 4","sensor 5","sensor 6"]
     
@@ -151,7 +204,7 @@ def registroPhoto(request):
     lista = ['1']
 
     for i in lista:
-                
+
         total_ent= Ingresop.objects.filter(fecha = fecha_).filter(evento="Entrada")
         if total_ent == None:
             entradas = 0
@@ -188,69 +241,70 @@ def registroPhoto(request):
         listaCod.append(cod)
 
     mensaje = request.POST.get('array')
-
+    
     if mensaje!=None:
          new_mensaje = str(mensaje).replace('[',  '')
          new_mensaje = new_mensaje.replace(']',  '')
          new_mensaje = new_mensaje.replace('"',  '')
          vector = new_mensaje.split(",")
-
-         path = 'home/bportillo/Proyecto1/web1/app1/static/app1/muestra.jpg'
+#         path = 'home/bportillo/Proyecto1/web1/app1/static/app1/muestra.jpg'
          new_mensaje = vector[3] + "," + vector[4]
          new_mensaje = new_mensaje.replace('"','')
          new_mensaje = new_mensaje[new_mensaje.index(',')+1:]
-         response = {'mensaje':new_mensaje}
+#         response = {'mensaje':new_mensaje , 'vector':vector, 'saludo':"Brandon"}
         
-#         nparr= np.fromstring(base64.b64decode(new_mensaje),np.uint8)
-#         img = cv2.imdecode(nparr,cv2.IMREAD_COLOR)
-#         frame2 = cv2.resize(img,(0,0),None,0.25,0.25)
-#         rgb = cv2.cvtColor(frame2,cv2.COLOR_BGR2RGB)
-#         faces = fr.face_locations(rgb)
-#         facesCod = fr.face_encodings(rgb,faces)
-
-#         for facecod, faceloc in zip(facesCod,faces):
+         nparr= np.fromstring(base64.b64decode(new_mensaje),np.uint8)
+         img = cv2.imdecode(nparr,cv2.IMREAD_COLOR)
+         frame2 = cv2.resize(img,(0,0),None,0.25,0.25)
+         rgb = cv2.cvtColor(frame2,cv2.COLOR_BGR2RGB)
+         faces = fr.face_locations(rgb)
+         facesCod = fr.face_encodings(rgb,faces)
+         contador = 0
+         for facecod, faceloc in zip(facesCod,faces):
             
-#            comparacion = fr.compare_faces(listaCod,facecod)
-#            simi = fr.face_distance(listaCod,facecod)
-#            min = np.argmin(simi)
-            
-#            if comparacion[min]:
-#                codigoE = clases[min].upper()
+            comparacion = fr.compare_faces(listaCod,facecod)
+            simi = fr.face_distance(listaCod,facecod)
+            min = np.argmin(simi)
 
-#                yi, xf, yf, xi = faceloc
-#                yi, xf, yf, xi = yi*4, xf*4, yf*4, xi*4
+            contador = contador + 1
+            if comparacion[min]:
+                codigoE = clases[min].upper()
 
-#                indice = comparacion.index(True)
+                yi, xf, yf, xi = faceloc
+                yi, xf, yf, xi = yi*4, xf*4, yf*4, xi*4
 
-#            if comp1!= indice:
-#                comp1 = indice
+                #indice = comparacion.index(True)
 
-#            if comp1 == indice:
-#                nombreT = Listapersonal.objects.get(codigoP=codigoE)
-#                marcaT = datetime.datetime.now()
-#                nombre = nombreT.nombreP
-#                fechaT = vector[0]
-#                origenT = vector[1]
-#                eventoT= vector[2]
-#                if eventoT == "Entrada":
-#                    saludo = "Bienvenido " + nombre
-#                elif eventoT =="Salida":
-#                    saludo = "Excelente día " + nombre
+            #if comp1!= indice:
+            #    comp1 = indice
 
-#                response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'respuesta':vector, 'saludo':saludo,'total':total,'p':porcentaje}
-#                ingresoP.objects.create(codigoP=codigoE,nombreP=nombre,marcaT=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
-#            else: 
-#                nombre = "DESCONOCIDO"
-#                saludo = "USUARIO NO REGISTRADO"
-#                response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo}
+            #if comp1 == indice:
+                nombreT = Listapersonal.objects.get(codigop=str(codigoE))
+                #nombreT = "Brandon"
+                marcaT = datetime.datetime.now()
+                nombre = nombreT.nombrep
+                #nombre = nombreT
+                fechaT = vector[0]
+                origenT = vector[1]
+                eventoT= vector[2]
+                if eventoT == "Entrada":
+                    saludo = "Bienvenido " + nombre
+                elif eventoT =="Salida":
+                    saludo = "Excelente día " + nombre
+
+                response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje}
+                Ingresop.objects.create(codigop=codigoE,nombrep=nombre,marcat=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
+         if contador == 0:    
+             nombre = "DESCONOCIDO"
+             saludo = "USUARIO NO REGISTRADO"
+             response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector}
 ##         response = {'photo':vector, 'imagen':new_mensaje}
-                return JsonResponse(response)
+         return JsonResponse(response)
 
     else:
          saludo = ""
          response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None', 'fecha' : fecha_, 'saludo':saludo,'total':total,'p':porcentaje}
-
-#         response = {'mensaje':new_mensaje}
+##         response = {'mensaje':new_mensaje}
     return render(request,'app1/reconocimientof.html',response)
 #@login_required
 #@csrf_exempt
