@@ -15,11 +15,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 
-
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start developmen    t settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -46,7 +43,6 @@ INSTALLED_APPS = [
 #    'django.contrib.sites',
     'app1',
     'ejemplo',
-#    'microsoft_authentication',
     'django_auth_adfs',
 ]
 
@@ -85,37 +81,20 @@ TEMPLATES = [
     },
 ]
 
-#MICROSOFT = {
-#"app_id": "d27b7533-221a-4742-b79d-9450ff8ffe26",
-#"app_secret": "870297c7-b58d-41e3-ba3f-4789615748e9",
-#"redirect": "https://10.111.112.4/microsoft/auth-callback/",
-#"scopes": ["user.read"],
-#"authority": "https://login.microsoftonline.com/common", # or using tenant "https://login.microsoftonline.com/{tenant}",
-#"valid_email_domains": ["10.111.112.4"],
-#"logout_uri": "https://10.111.112.4/logout"
-#}
-
 AUTHENTICATION_BACKENDS = [
 #        'djanto.contrib.auth.backends.ModelBackend',
 	'django_auth_adfs.backend.AdfsAuthCodeBackend',
 ]
 
-#MICROSOFT_AUTH_CLIENT_ID = 'd27b7533-221a-4742-b79d-9450ff8ffe26'
-#MICROSOFT_AUTH_CLIENT_SECRET = '870297c7-b58d-41e3-ba3f-4789615748e9'
-# Tenant ID is also needed for single tenant applications
-# MICROSOFT_AUTH_TENANT_ID = 'your-tenant-id-from-apps.dev.microsoft.com'
 client_id = 'd27b7533-221a-4742-b79d-9450ff8ffe26'
 client_secret =  '0Rj8Q~.0DAXFskEPZtfM~~FwXAp7lFzHifz6Ib1n'
 tenant_id = '2e932f25-355e-45b3-bd8b-764aaf3fd625'
 
-
 AUTH_ADFS = {
-#    'SERVER': "sdc-iot.popoyan.com.gt",
+
     'AUDIENCE': client_id,
     'CLIENT_ID': client_id,
-#    'response_type':'code',
     'CLIENT_SECRET': client_secret,
-#    'SERVER_URL': 'https://sdc-iot.popoyan.com.gt/adfs',
     'CLAIM_MAPPING': {'first_name': 'given_name',
                       'last_name': 'family_name',
                       'email': 'upn'},
@@ -124,32 +103,9 @@ AUTH_ADFS = {
     'USERNAME_CLAIM': 'upn',
     'TENANT_ID': tenant_id,
     'RELYING_PARTY_ID': client_id,
-#    'CODE_VERIFIER': code_verifier,
-#    'CODE_CHALLENGE': code_challenge,
-#    'CODE_CHALLENGE_METHOD':'S256',
-#    'LOGIN_EXEMPT_URLS': ["api/", "public/"],
-#    'REDIRECT_URI': "https://sdc-iot.popoyan.com.gt/app1/registro",
 }
 
-#MICROSOFT = {
-#    "app_id": client_id,
-#    "app_secret": client_secret,
-#    "redirect": "http://localhost:8000/microsoft_authentication/callback",
-#    "scopes": ["user.read"],
-#    "authority": "https://login.microsoftonline.com/common",  # or using tenant "https://login.microsoftonline.com/{tenant}",
-#    "valid_email_domains": ["@popoyan.com.gt"],
-#    "logout_uri": "http://localhost:8000/admin/logout"
-#}
-# pick one MICROSOFT_AUTH_LOGIN_TYPE value
-# Microsoft authentication
-# include Microsoft Accounts, Office 365 Enterpirse and Azure AD accounts
-#MICROSOFT_AUTH_LOGIN_TYPE = 'ma'
-
-# Xbox Live authentication
-#MICROSOFT_AUTH_LOGIN_TYPE = 'xbl'  # Xbox Live authentication
-
 WSGI_APPLICATION = 'web1.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -191,14 +147,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-#LOGIN_URL = "https://sdc-iot.popoyan.com.gt/oauth2/callback"
 LOGIN_URL = 'django_auth_adfs:login'
-#LOGIN_URL = "https://10.111.112.4/app1/login/"
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 LOGIN_REDIRECT_URL = '/'
-#MICROSOFT_CREATE_NEW_DJANGO_USER = True  
-#MICROSOFT_NEW_DJANGO_USER_IS_STAFF = True  
+
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'America/Guatemala'

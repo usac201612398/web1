@@ -28,28 +28,6 @@ import face_recognition as fr
 # Create your views here.
 from django.views.generic import TemplateView
 from openpyxl import Workbook
-import  secrets
-import hashlib
-import base64
-from  urllib.parse import urlencode
-
-def login_with_adfs(request):
-
-    code_verifier=secrets.token_urlsafe(43)
-    code_verifier_bytes = code_verifier.encode('utf-8')
-    code_challenge = base64.urlsafe_b64encode(hashlib.sha256(code_verifier_bytes).digest()).decode('utf-8').rstrip('=')
-    adfs_authorize_url='https://sdc-iot.popoyan.com.gt/oauth2/callback'
-    params = {
-
-        'client_id': 'd27b7533-221a-4742-b79d-9450ff8ffe26',
-        'response_type':'code',
-        'redirect_uri': 'https://sdc-iot.popoyan.com.gt/app1/registro',
-        'code_challenge':code_challenge,
-        'code_challenge_method':'S256',
-    
-    }
-    authorize_url=adfs_authorize_url + '?' + urlencode(params)
-    return redirect(authorize_url)
 
 def login_page(request):
     message = None
@@ -110,58 +88,7 @@ class consultarR(TemplateView):
         response['Content-Disposition'] = content
         wb.save(response)
         return response
-'''
-class AboutView(View):
-    def get(self, request):
-        response = "Hola..."
-        return HttpResponse(response)
     
-def index(request):
-    context = {
-       'variable1':10,
-       'variable2': 20,
-       'lista':[1,2,3,4]     
-    }
-
-    return render(request,'app1/index.html',context)
-
-
-
-def random_json(request):
-    data = {
-        'descripcion' : 'Se genera un valor random.',
-        'response' : 'Tipo Json',
-        'comentario' : 'Jason es parecido a python dicts',
-        'numero' : randint(1,1000),
-
-    }
-    
-    return JsonResponse(data)
-
-def transferir_archivos(request):
-    path = os.path.join(settings.BASE_DIR, 'app1/static/app1/imagen.png')
-    f = open(path,'rb')
-    return FileResponse(f,as_attachment=False,filename='imagen.png')
-
-def mostrar_sensores(request):
-    Sensor.objects.create(name='Presion Res1:' , tipo='Presion')
-#    sensores = Sensor.objects.all()
-    sensores = Sensor.objects.order_by('-id')[:3]
-    
-    context = {
-        'sensores': sensores,
-    }
-
-    return render(request,'app1/mostrar_sensores.html',context)
-
-def ajax_ejemplo(request):
-
-    data = {
-        'message' : f'Mensaje del servidor. Código es: {randint(100,1000000)}'
-    }
-
-    return JsonResponse(data)
-'''
 #@csrf_exempt
 #@login_required
 def consultaRegistros(request):
