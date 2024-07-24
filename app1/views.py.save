@@ -1,0 +1,378 @@
+from django.conf import settings
+from django.shortcuts import render
+from django.http import HttpResponse, JsonResponse, FileResponse
+from django.views import View 
+from random import randint
+from app1.models import *
+import os
+import datetime
+from django.views.decorators.csrf import csrf_exempt
+from django.template import RequestContext
+from django.shortcuts import redirect
+from django.contrib.auth import authenticate, login, logout
+from app1.forms import LoginForm
+from rest_framework import serializers
+from rest_framework.views import APIView
+from drf_extra_fields.fields import Base64ImageField
+# Create your views here.
+
+def login_page(request):
+    message = None
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = request.POST['username']
+            password = request.POST['password']
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                if user.is_active:
+                    login(request,user)
+                    message = "Te has identificado de modo correcto"
+                    
+                else:
+                    message = "Tu usuario está inactivo"
+            else: 
+                message = "Nombre de usuario y/o password incorrecto"
+    else:
+        form = LoginForm()
+    context ={'message':message,
+                'form':form
+    }
+    return render(request,'app1/login.html',context)
+
+def homepage(request):
+    return render(request,'app1/homepage.html')
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('homepage')
+
+class AboutView(View):
+    def get(self, request):
+        response = "Hola..."
+        return HttpResponse(response)
+    
+def index(request):
+    context = {
+       'variable1':10,
+       'variable2': 20,
+       'lista':[1,2,3,4]     
+    }
+
+    return render(request,'app1/index.html',context)
+
+
+
+def random_json(request):
+    data = {
+        'descripcion' : 'Se genera un valor random.',
+        'response' : 'Tipo Json',
+        'comentario' : 'Jason es parecido a python dicts',
+        'numero' : randint(1,1000),
+
+    }
+    
+    return JsonResponse(data)
+
+def transferir_archivos(request):
+    path = os.path.join(settings.BASE_DIR, 'app1/static/app1/imagen.png')
+    f = open(path,'rb')
+    return FileResponse(f,as_attachment=False,filename='imagen.png')
+
+def mostrar_sensores(request):
+    Sensor.objects.create(name='Presion Res1:' , tipo='Presion')
+#    sensores = Sensor.objects.all()
+    sensores = Sensor.objects.order_by('-id')[:3]
+    
+    context = {
+        'sensores': sensores,
+    }
+
+    return render(request,'app1/mostrar_sensores.html',context)
+
+def ajax_ejemplo(request):
+
+    data = {
+        'message' : f'Mensaje del servidor. Código es: {randint(100,1000000)}'
+    }
+
+    return JsonResponse(data)
+
+class RegistroSerializerImagenJason(serializers.ModelSerializer):
+    photo = Base64ImageField(required=False)
+    class Meta:
+        model = registros
+        fields = ['codigoP','photo']
+
+
+class registroPhoto(APIView):
+    def get(self, request,*args):
+        print(str(self.parser_classes))
+        return Response({'parsers':' '.join(map(str,self.parser_classes))},status=204)
+    def post(self, request):
+        serializer = RegistroSerializerImageJason(data=request.data)
+        if serializer.is_valid():
+            print("valido")
+ 	    validated_data = serializer.validated_data
+#            registro = registro(**validated_data)
+#            registro.save()
+#            serializer_response = RegistroSerializerImageJason(registro)
+#            return Response(serializer_response.data,status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
+
+@csrf_exempt
+def registro(request):
+    mensaje = request.POST.get('data2',None)   
+    if mensaje!=None:
+        print(mensaje)
+    print("Nada")
+    context = {}
+    return render(request,'app1/reconocimientof.html',context)
+@csrf_exempt
+def vector_prueba(request):
+#    Sensor.objects.create(name='Presion Res1:' , tipo='Presion')
+    items = TItem.objects.all()
+    centros = TCentros.objects.all()
+    despachos = TDespachos.objects.latest("envio")
+#    sensores = TItems.objects.order_by('-id')[:3]
+#    sensores = ["sensor 1","sensor 2","sensor 3","sensor 4","sensor 5","sensor 6"]
+    now = datetime.datetime.now()
+    fecha = now.date()
+    dia= fecha.day
+    mes= fecha.month
+    año= fecha.year
+    if mes < 10:
+        mes = "0" + str(mes)
+    fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
+    requis = str(despachos.envio)  
+    context = {
+        'sensores': items,
+        'centros': centros,
+        'fecha' : fecha_,
+        'correlativo' : str(despachos),
+    }
+
+    mensaje = request.POST.get('array', None)
+
+    if mensaje != None:
+        new_mensaje = str(mensaje).replace('[',  '')
+        new_mensaje = new_mensaje.replace(']',  '')
+        new_mensaje = new_mensaje.replace('"',  '')
+        vector = new_mensaje.split(",")
+        a = 1
+        matriz = []
+        fila = []
+        for i in vector:
+            fila.append(i)
+            a +=1
+            if a ==11:
+                matriz.append(fila)
+                fila=[]
+                a=1
+
+        if requis == str(TDespachos.objects.latest("envio").envio):
+                requis = int(requis) + 1
+
+        items = TItems.objects.all()
+        centros = TCentros.objects.all()
+        for i in range(len(matriz)):
+            print(matriz[i])
+            
+            if i > 0:
+#                print(f'TDespachos.objects.create(mtemporal={now} , fecha={fecha_},origen="RLemus",rubro={matriz[i][7]},citem={matriz[i][0]},cantidad={matriz[i][2]},ccentro={matriz[i][4]})')
+                TDespachos.objects.create(mtemporal=now , fecha=matriz[i][8],envio=requis,origen=matriz[i][9],rubro=matriz[i][7],citem=matriz[i][0],cantidad=matriz[i][2],ccentro=matriz[i][4])
+                
+    return render(request,'app1/iniciar_pedido.html',context) 
+
+@csrf_exempt
+
+def repuesta(request):
+
+    mensaje = request.POST.get('data', None)
+    print(f'data: {mensaje}')
+#    EjemploMedicion.objects.create(valor=valor_aleatorio)
+#   mediciones = EjemploMedicion.objects.order_by('-created')[:5]
+#    nombre = request.POST.get('nombre',None)
+#    carnet = request.POST.get('carnet',None)
+#    edad = request.POST.get('edad',None)
+#    print(nombre,carnet,edad)
+
+    temporal = list()
+
+#    for medicion in mediciones:
+#        temporal.append(medicion.valor)
+
+    data = {
+        'mediciones': mensaje
+    }
+
+#    print(temporal)
+    return JsonResponse(data)
+
+@csrf_exempt
+def vector_prueba2(request):
+
+    despachos = TDespachos.objects.latest("envio")
+    correlativo = int(str(despachos.envio))+1
+    now = datetime.datetime.now()
+
+    fecha = now.date()
+    dia= fecha.day
+    mes= fecha.month
+    año= fecha.year
+    
+    if mes < 10:
+        mes = "0" + str(mes)
+    fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
+
+   
+    context = {
+        "fecha" : fecha_,
+        "correlativo" : correlativo,
+        "pedido": "",
+    }
+
+    mensaje = request.POST.get('array', None)
+    requis = str(despachos.envio)
+
+    if mensaje != None:
+        new_mensaje = str(mensaje).replace('[',  '')
+        new_mensaje = new_mensaje.replace(']',  '')
+        new_mensaje = new_mensaje.replace('"',  '')
+        vector = new_mensaje.split(",")
+        a = 1
+        if vector[0] != "excel-file":
+            matriz = []
+            fila = []
+            print(vector[0])
+            for i in vector:
+                fila.append(i)
+                a +=1
+
+                if a == 8:
+                    matriz.append(fila)
+                    fila=[]
+                    a=1
+            
+            if requis == str(TDespachos.objects.latest("envio").envio):
+                    requis = int(requis) + 1
+
+            now = datetime.datetime.now()
+#            despachos=TDespachos.objects.filter(envio=int(requis)-1)   
+            for i in matriz:
+
+                itemrow=TItems.objects.get(código_articulo=str(i[1]))
+                centrorow=TCentros.objects.get(centro=str(i[3]))
+                TDespachos.objects.create(mtemporal=now , fecha=i[6],envio=requis,origen=i[5],rubro=i[4],citem=i[1],cantidad=i[2],ccentro=i[3])
+ 
+        else:
+            matriz = []
+            fila = []
+            
+            for i in vector:
+                
+                fila.append(i)
+                a +=1
+
+                if a == 5:
+                    matriz.append(fila)
+                    fila=[]
+                    a=1
+                
+#            for i in range(len(matriz)):
+
+#                if i > 0:
+#                    pass
+    #                itemrow=TItems.objects.get(código_articulo=str(matriz[i][0]))
+    #                centrorow=TCentros.objects.get(centro=str(matriz[i][2]))
+    #                itemrow.artículo
+    #                itemrow.unidad_medida
+    #                centrorow.descripción
+    #                print(f'TDespachos.objects.create(mtemporal={now} , fecha={fecha_},origen="RLemus",rubro={matriz[i][7]},citem={matriz[i][0]},cantidad={matriz[i][2]},ccentro={matriz[i][4]})')
+    #                TDespachos.objects.create(mtemporal=now , fecha=matriz[i][4],envio=requis,origen=matriz[i][5],rubro=matriz[i][3],citem=matriz[i][0],cantidad=matriz[i][1],ccentro=matriz[i][2])
+            pedido = []
+#            despachos=TDespachos.objects.filter(envio=int(requis)-1)   
+            for i in matriz:
+                itemrow=TItems.objects.get(código_articulo=str(i[1]))
+                centrorow=TCentros.objects.get(centro=str(i[3]))
+
+                pedido.append([i[1],itemrow.artículo,i[2],itemrow.unidad_medida,i[3],centrorow.descripción])
+            respuesta = {
+            "pedido": pedido,
+            } 
+            return JsonResponse(respuesta)
+  
+    
+    return render(request,'app1/pedido_masivo.html',context) 
+
+
+@csrf_exempt
+def vector_prueba4(request):
+    despachos = TDespachos.objects.latest("envio")
+    correlativo = int(str(despachos.envio))+1
+    now = datetime.datetime.now()
+
+    fecha = now.date()
+    dia= fecha.day
+    mes= fecha.month
+    año= fecha.year
+    
+    if mes < 10:
+        mes = "0" + str(mes)
+    fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
+
+   
+    context = {
+        "fecha" : fecha_,
+        "correlativo" : correlativo,
+        "pedido": "",
+    }
+
+    mensaje = request.POST.get('array', None)
+    
+    if mensaje != None:
+        
+        new_mensaje = str(mensaje).replace('[',  '')
+        new_mensaje = new_mensaje.replace(']',  '')
+        new_mensaje = new_mensaje.replace('"',  '')
+        vector = new_mensaje.split(",")
+        pedido = []
+        for i in range(len(vector)):
+            if i ==0:
+                itemrow=TItems.objects.get(código_articulo=str(vector[i]))
+                pedido.append(itemrow.artículo)
+                pedido.append(itemrow.unidad_medida)
+            if i == 2:
+                centrorow=TCentros.objects.get(centro=str(vector[i]))
+                pedido.append(centrorow.descripción)
+        vector.extend(pedido)
+
+        #                TDespachos.objects.create(mtemporal=now , fecha=matriz[i][4],envio=requis,origen=matriz[i][5],rubro=matriz[i][3],citem=matriz[i][0],cantidad=matriz[i][1],ccentro=matriz[i][2])
+#            despachos=TDespachos.objects.filter(envio=int(requis)-1)   
+        
+
+        print(vector)
+
+        respuesta = {
+        "pedido": vector,
+        } 
+
+        return JsonResponse(respuesta)
+    
+    return render(request,'app1/iniciar_pedido_conv_panel.html',context) 
+
+@csrf_exempt
+def vector_prueba3(request):
+#    Sensor.objects.create(name='Presion Res1:' , tipo='Presion')
+    items = TItem.objects.all()
+    centros = TCentros.objects.all()
+#    sensores = TItems.objects.order_by('-id')[:3]
+#    sensores = ["sensor 1","sensor 2","sensor 3","sensor 4","sensor 5","sensor 6"]
+    
+    context = {
+        'sensores': items,
+        'centros': centros,
+    }
+    
+    return render(request,'app1/iniciar_pedido_conv_carrito.html',context) 
