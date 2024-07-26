@@ -20,7 +20,23 @@
 <div class="columns"> 
     <div class="column is-half"> 
         <div class="column is-one-twice"> 
-            <input class="input" id="date" type="date" value={{fecha}}>
+            <div class="control has-icons-left has-icons-right"> 
+                <input class="input" id="date" type="date" value={{fecha}}>
+            </div>
+            <div class="select"> 
+                <select name="Lugar" id="Lug">
+                    <option value="a">Valle</option>
+                    <option value="b">Rio</option>
+                    <option value="c">Planta</option>
+                    <option value="d">San Lorenzo</option>
+                </select>
+            </div>
+            <div class="select"> 
+                <select name="Evento" id="ev">
+                    <option value="e">Entrada</option>
+                    <option value="f">Salida</option>
+                </select>
+            </div>
         </div>
         <div class="column is-one-twice"> 
             Usuario: <input class="input" id = "id" type= "text" value = {{user.username}} readonly >
@@ -28,24 +44,6 @@
     </div>
     
 </div>
-
-<div class="columns"> 
-    <div class="select"> 
-        <select name="Lugar" id="Lug">
-            <option value="a">Valle</option>
-            <option value="b">Rio</option>
-            <option value="c">Planta</option>
-            <option value="d">San Lorenzo</option>
-        </select>
-    </div>
-    <div class="select"> 
-        <select name="Evento" id="ev">
-            <option value="e">Entrada</option>
-            <option value="f">Salida</option>
-        </select>
-    </div>
-</div>
-
 
 <section class="cam-container">
 	<div><button class="start-btn">Registrar</button></div>
