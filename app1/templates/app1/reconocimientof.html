@@ -44,10 +44,28 @@
             overflow: hidden;
             max-width: 100%;
             background: #000;
-            margin: 0;
+    
     }
 
     .video-container video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+  
+    }
+    .image-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+   
+    }
+
+    .image-container img {
         position: absolute;
         top: 0;
         left: 0;
@@ -109,19 +127,16 @@
 </div>
 
 <div class="container">
-    <section class="cam-container">
-        
-        <div class="video-container">
-            <video class="video" autoplay></video>
-        </div>
-        
-    </section>  
-</div>
-<div class="container">
+
+    <div class="video-container">
+        <video class="video" autoplay></video>
+    </div>
     <div class="image-container"></div>
         <div class="canvas-wrap"><canvas class="canvas" width="420" height="340"><img src="" class="photo" alt="photo"/></canvas></div>
     </div>
+    
 </div>
+
 <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
 <script language="JavaScript" type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript" src="{% static '/lib/cam.js' %}"></script>
