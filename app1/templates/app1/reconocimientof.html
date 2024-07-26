@@ -12,57 +12,64 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
 
 <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
-
-</head>
-
 <style>
-    .form-group {
-        display: flex;
-        gap: 10px; /* Espacio entre los inputs */
+    .container {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Divide el contenedor en dos mitades iguales */
+        gap: 10px; /* Espacio entre las mitades */
     }
 
-    .form-group input {
-        flex: 1; /* Hace que los inputs se expandan para ocupar el espacio disponible */
+    .half {
+        display: grid;
+        grid-template-rows: repeat(2, 1fr); /* Divide cada mitad en dos filas iguales */
+        grid-template-columns: repeat(2, 1fr); /* Divide cada mitad en dos columnas iguales */
+        gap: 10px; /* Espacio entre las secciones */
+    }
+
+    .box {
+        background-color: #f0f0f0;
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
     }
 </style>
+</head>
+
+
 
 <h2 class="subtitle">Reconocimiento Facial:</h2> 
-<div class="columns"> 
 
-    <div class="column is-half"> 
+<div class="container"> 
+    <div class="half"> 
         <div class="container">
-            <div class="form-group">
-                <div class="column is-one-third">
-                    <div class="control"> 
-                        <form>
-                            <div>
-                                <label for="fecha">Fecha:</label>
-                                <input class="input" id="date" type="date" value={{fecha}}>
-                            </div>
-                        </form>      
+            
+            <div class="box">
+                <form>
+                    <div>
+                        <label for="fecha">Fecha:</label>
+                        <input class="input" id="date" type="date" value={{fecha}}>
                     </div>
-                </div>
-                <div class="column is-one-third">
-                    <div class="select"> 
-                        <select name="Lugar" id="Lug">
-                            <option value="a">Valle</option>
-                            <option value="b">Rio</option>
-                            <option value="c">Planta</option>
-                            <option value="d">San Lorenzo</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="column is-one-third">
-                    <div class="select"> 
-                        <select name="Evento" id="ev">
-                            <option value="e">Entrada</option>
-                            <option value="f">Salida</option>
-                        </select>
-                    </div>
-                </div>
-                
+                </form>      
             </div>
+            <div class="box">
+                <div class="select"> 
+                    <select name="Lugar" id="Lug">
+                        <option value="a">Valle</option>
+                        <option value="b">Rio</option>
+                        <option value="c">Planta</option>
+                        <option value="d">San Lorenzo</option>
+                    </select>
+                </div>
+            </div>
+            <div class="box">
+                <div class="select"> 
+                    <select name="Evento" id="ev">
+                        <option value="e">Entrada</option>
+                        <option value="f">Salida</option>
+                    </select>
+                </div>
+            </div>
+                
         </div>
         <div class="column is-one-twice"> 
             Usuario: <input class="input" id = "id" type= "text" value = {{user.username}} readonly >
