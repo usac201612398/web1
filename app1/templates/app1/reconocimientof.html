@@ -18,12 +18,15 @@
 
 <h2 class="subtitle">Reconocimiento Facial:</h2> 
 <div class="columns"> 
-    <div class="column is-one-twice"> 
-        <input class="input" id="date" type="date" value={{fecha}}>
+    <div class="column is-half"> 
+        <div class="column is-one-twice"> 
+            <input class="input" id="date" type="date" value={{fecha}}>
+        </div>
+        <div class="column is-one-twice"> 
+            Usuario: <input class="input" id = "id" type= "text" value = {{user.username}} readonly >
+        </div>
     </div>
-    <div class="column is-one-twice"> 
-        Usuario: <input class="input" id = "id" type= "text" value = {{user.username}} readonly >
-    </div>
+    
 </div>
 
 <div class="columns"> 
@@ -50,6 +53,7 @@
 	<div class="canvas-wrap"><canvas class="canvas" width="420" height="340"><img src="" class="photo" alt="photo"/></canvas></div>
 
 </section>
+
 <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
 <script language="JavaScript" type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript" src="{% static '/lib/cam.js' %}"></script>
