@@ -55,7 +55,26 @@
         height: 100%;
   
     }
-    
+
+    .image-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+   
+    }
+
+    .image-container img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+  
+    }
+
     .canvas-container {
         position: relative;
         width: 100%;
@@ -127,8 +146,10 @@
     <div class="video-container">
         <video class="video" autoplay></video>
     </div>
-    <div class="canvas-container"></div>
-        <div class="canvas-wrap"><canvas class="canvas" ><img src="" class="photo" alt="photo"/></canvas></div>
+    <div class="img-container"></div>
+        <div class="canvas-container"></div>
+            <div class="canvas-wrap"><canvas class="canvas" ><img src="" class="photo" alt="photo"/></canvas></div>
+        </div>
     </div>
     
 </div>
