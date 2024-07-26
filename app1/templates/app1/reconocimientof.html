@@ -47,12 +47,13 @@
     }
 
     .video-container video {
-        position: center;
+        position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
     }
+    
 </style>
 </head>
 
@@ -102,17 +103,19 @@
 </div>
     
 
+<div><button class="start-btn">Registrar</button></div>
 
-<section class="cam-container">
     <div class="container">
-        <div><button class="start-btn">Registrar</button></div>
+        
         <div class="video-container">
             <video class="video" autoplay></video>
         </div>
         
-        <div class="canvas-wrap"><canvas class="canvas" width="420" height="340"><img src="" class="photo" alt="photo"/></canvas></div>
+        <div class="canvas-wrap">
+            <canvas class="canvas" width="420" height="340"><img src="" class="photo" alt="photo"/></canvas>
+        </div>
     </div>	
-</section>
+
 
 <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
 <script language="JavaScript" type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
