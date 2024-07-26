@@ -30,37 +30,39 @@
 <div class="columns"> 
 
     <div class="column is-half"> 
-        <div class="form-group">
-            <div class="column is-one-third">
-                <div class="control"> 
-                    <form>
-                        <div>
-                            <label for="fecha">Fecha:</label>
-                            <input class="input" id="date" type="date" value={{fecha}}>
-                        </div>
-                    </form>      
+        <div class="container">
+            <div class="form-group">
+                <div class="column is-one-third">
+                    <div class="control"> 
+                        <form>
+                            <div>
+                                <label for="fecha">Fecha:</label>
+                                <input class="input" id="date" type="date" value={{fecha}}>
+                            </div>
+                        </form>      
+                    </div>
                 </div>
-            </div>
-            <div class="column is-one-third">
-                <div class="select"> 
-                    <select name="Lugar" id="Lug">
-                        <option value="a">Valle</option>
-                        <option value="b">Rio</option>
-                        <option value="c">Planta</option>
-                        <option value="d">San Lorenzo</option>
-                    </select>
+                <div class="column is-one-third">
+                    <div class="select"> 
+                        <select name="Lugar" id="Lug">
+                            <option value="a">Valle</option>
+                            <option value="b">Rio</option>
+                            <option value="c">Planta</option>
+                            <option value="d">San Lorenzo</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
 
-            <div class="column is-one-third">
-                <div class="select"> 
-                    <select name="Evento" id="ev">
-                        <option value="e">Entrada</option>
-                        <option value="f">Salida</option>
-                    </select>
+                <div class="column is-one-third">
+                    <div class="select"> 
+                        <select name="Evento" id="ev">
+                            <option value="e">Entrada</option>
+                            <option value="f">Salida</option>
+                        </select>
+                    </div>
                 </div>
+                
             </div>
-            
         </div>
         <div class="column is-one-twice"> 
             Usuario: <input class="input" id = "id" type= "text" value = {{user.username}} readonly >
