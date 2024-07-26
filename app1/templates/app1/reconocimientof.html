@@ -37,6 +37,17 @@
             margin: 20px; /* Aplica un margen de 20px alrededor del párrafo */
     }
 
+    .image-container {
+        text-align: center; /* Centra la imagen dentro del contenedor */
+        padding: 20px; /* Agrega un poco de espacio alrededor */
+    }
+
+    .image-container img {
+        max-width: 100%; /* Hace que la imagen sea responsiva */
+        height: auto; /* Mantiene la proporción de la imagen */
+        border-radius: 8px; /* Opcional: agrega bordes redondeados */
+    }
+
     .video-container {
             position: relative;
             padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
@@ -111,11 +122,13 @@
             <video class="video" autoplay></video>
         </div>
         
-        <div class="canvas-wrap">
-            <canvas class="canvas" width="420" height="340"><img src="" class="photo" alt="photo"/></canvas>
-        </div>
+        
     </div>	
-
+    <div class="image-container">
+        <div class="canvas-wrap">
+            <canvas class="canvas"><img src="" class="photo" alt="photo"/></canvas>
+        </div>
+    </div>
 
 <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
 <script language="JavaScript" type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
