@@ -70,19 +70,6 @@
         height: 100%;
     }
 
-    .bordered-input {
-        border: 2px solid #4A90E2; /* Color y grosor del borde */
-        border-radius: 5px; /* Bordes redondeados */
-        padding: 10px; /* Espacio interno */
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra */
-        transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Transición suave */
-    }
-    .bordered-input:focus {
-        border-color: #007BFF; /* Color del borde al enfocar */
-        box-shadow: 0 0 8px rgba(0, 123, 255, 0.5); /* Sombra al enfocar */
-        outline: none; /* Elimina el contorno predeterminado */
-    }
-    
 </style>
 </head>
 
@@ -97,7 +84,7 @@
             <form>
                 <div>
                     <label for="fecha">Fecha:</label>
-                    <input class="border-input" id="date" type="date" value={{fecha}}>
+                    <input class="input" id="date" type="date" value={{fecha}}>
                 </div>
             </form>      
         </div>
@@ -125,11 +112,11 @@
         </div>      
     
         <div class="box">
-            Contador: <input class="border-input" id = "id2" type= "text" value = {{total}} readonly >
+            Contador: <input class="input" id = "id2" type= "text" value = {{total}} readonly >
         </div>
 
         <div class="box"> 
-            Usuario: <input class="border-input" id = "id" type= "text" value = {{user.username}} readonly >
+            Usuario: <input class="input" id = "id" type= "text" value = {{user.username}} readonly >
         </div>
 
     </div>
