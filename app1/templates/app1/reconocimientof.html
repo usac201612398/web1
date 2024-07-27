@@ -86,13 +86,16 @@
             <form>
                 <div>
                     <label for="fecha">Fecha:</label>
+                </div>
+                <div>
                     <input class="input" id="date" type="date" value={{fecha}}>
                 </div>
             </form>      
         </div>
 
         <div class="box">
-            <label for="finca">Región:</label>
+            <div><label for="finca">Región:</label></div>
+            
             <div class="select"> 
                 <select name="Lugar" id="Lug">
                     <option value="a">Valle</option>
@@ -104,7 +107,7 @@
         </div>
 
         <div class="box">
-            <label for="momento">Evento:</label> 
+            <div><label for="momento">Evento:</label></div>
             <div class="select">
                 <select name="Evento" id="ev">
                     <option value="e">Entrada</option>
@@ -114,12 +117,12 @@
         </div>      
     
         <div class="box">
-            <label for="cont">Contador:</label> 
+            <div><label for="cont">Contador:</label></div>
             <input class="input" id = "id2" type= "text" value = {{total}} readonly >
         </div>
 
         <div class="box"> 
-            <label for="usuario">Usuario:</label> 
+            <div><label for="usuario">Usuario:</label></div>
             <input class="input" id = "id" type= "text" value = {{user.username}} readonly >
         </div>
 
