@@ -19,6 +19,11 @@
         gap: 10px; /* Espacio entre las mitades */
     }
 
+    .half {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr); /* Divide cada mitad en dos columnas iguales */
+        gap: 5px; /* Espacio entre las secciones */
+    }
     .box {
         background-color: #f0f0f0;
         border: 1px solid #ddd;
@@ -113,7 +118,7 @@
         <div class="box"> 
             Usuario: <input class="input" id = "id" type= "text" value = {{user.username}} readonly >
         </div>
-        
+
     </div>
 </div>
     
