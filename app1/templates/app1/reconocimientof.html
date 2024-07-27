@@ -92,26 +92,20 @@
         </div>
 
         <div class="box">
-            <div class="columns is-centered">
-                <div class="column is-half">
-                    <div class="select is-fullwidth">
-                        <div class="select"> 
-                            <label for="finca">Región:</label>
-                            <select name="Lugar" id="Lug">
-                                <option value="a">Valle</option>
-                                <option value="b">Rio</option>
-                                <option value="c">Planta</option>
-                                <option value="d">San Lorenzo</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
+            <label for="finca">Región:</label>
+            <div class="select"> 
+                <select name="Lugar" id="Lug">
+                    <option value="a">Valle</option>
+                    <option value="b">Rio</option>
+                    <option value="c">Planta</option>
+                    <option value="d">San Lorenzo</option>
+                </select>
             </div>
         </div>
 
         <div class="box">
+            <label for="momento">Evento:</label> 
             <div class="select">
-                <label for="momento">Evento:</label> 
                 <select name="Evento" id="ev">
                     <option value="e">Entrada</option>
                     <option value="f">Salida</option>
@@ -120,11 +114,13 @@
         </div>      
     
         <div class="box">
-            Contador: <input class="input" id = "id2" type= "text" value = {{total}} readonly >
+            <label for="cont">Contador:</label> 
+            <input class="input" id = "id2" type= "text" value = {{total}} readonly >
         </div>
 
         <div class="box"> 
-            Usuario: <input class="input" id = "id" type= "text" value = {{user.username}} readonly >
+            <label for="usuario">Usuario:</label> 
+            <input class="input" id = "id" type= "text" value = {{user.username}} readonly >
         </div>
 
     </div>
