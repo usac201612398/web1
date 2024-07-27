@@ -70,6 +70,10 @@
         height: 100%;
     }
 
+    .select-wrapper {
+        margin: 20px;
+    }
+
 </style>
 </head>
 
@@ -90,14 +94,20 @@
         </div>
 
         <div class="box">
-            <div class="select"> 
-                <label for="finca">Región:</label>
-                <select name="Lugar" id="Lug">
-                    <option value="a">Valle</option>
-                    <option value="b">Rio</option>
-                    <option value="c">Planta</option>
-                    <option value="d">San Lorenzo</option>
-                </select>
+            <div class="columns is-centered">
+                <div class="column is-half">
+                    <div class="select is-fullwidth">
+                        <div class="select"> 
+                            <label for="finca">Región:</label>
+                            <select name="Lugar" id="Lug">
+                                <option value="a">Valle</option>
+                                <option value="b">Rio</option>
+                                <option value="c">Planta</option>
+                                <option value="d">San Lorenzo</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
