@@ -24,6 +24,7 @@
         grid-template-columns: repeat(5, 1fr); /* Divide cada mitad en dos columnas iguales */
         gap: 5px; /* Espacio entre las secciones */
     }
+
     .box {
         background-color: #f0f0f0;
         border: 1px solid #ddd;
@@ -70,8 +71,6 @@
         height: 100%;
     }
 
-
-
 </style>
 </head>
 
@@ -84,9 +83,7 @@
 
         <div class="box">
             <form>
-                <div>
-                    <label for="fecha">Fecha:</label>
-                </div>
+                <div><label for="fecha">Fecha:</label></div>
                 <div>
                     <input class="input" id="date" type="date" value={{fecha}}>
                 </div>
@@ -118,12 +115,16 @@
     
         <div class="box">
             <div><label for="cont">Contador:</label></div>
-            <input class="input" id = "id2" type= "text" value = {{total}} readonly >
+            <div>
+                <input class="input" id = "id2" type= "text" value = {{total}} readonly >
+            </div>
         </div>
 
         <div class="box"> 
             <div><label for="usuario">Usuario:</label></div>
-            <input class="input" id = "id" type= "text" value = {{user.username}} readonly >
+            <div>
+                <input class="input" id = "id" type= "text" value = {{user.username}} readonly >
+            </div>
         </div>
 
     </div>
