@@ -17,12 +17,12 @@
         display: grid;
         /* grid-template-columns: 1fr 1fr; */ /* Divide el contenedor en dos mitades iguales */
         gap: 2px; /* Espacio entre las mitades */
-        
+        grid-template-rows: 1fr;
     }
 
     .half {
         display: grid;
-        grid-template-columns:  repeat(auto-fill, minmax(100px,1fr)); /* Divide cada mitad en dos columnas iguales */
+        grid-template-columns:  repeat(5,1fr); /* Divide cada mitad en dos columnas iguales */
         gap: 5px; /* Espacio entre las secciones */
         white-space: nowrap; 
     }
