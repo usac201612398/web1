@@ -51,6 +51,21 @@
         height: 100%;    
     }
 
+    .flex-container {
+        display: flex;
+        flex-wrap: wrap; /* Permite que los elementos se envuelvan si no hay suficiente espacio */
+        gap: 5px; /* Espacio entre columnas */
+    
+    }
+
+    .flex-item {
+        background-color: #f0f0f0;
+        border: 1px solid #ddd;
+        flex: 1 1 auto; /* Los elementos crecen y se reducen según el contenido y el espacio disponible */
+        padding: 10px;
+        box-sizing: border-box; /* Incluye padding en el ancho total del elemento */
+    }
+
     .texto-con-margen {
         margin: 20px; /* Aplica un margen de 20px alrededor del párrafo */
     }
@@ -118,8 +133,8 @@
 <h2 class="subtitle"><p class="texto-con-margen"> Reconocimiento Facial:</p></h2> 
 
 <div class = "container"> 
-    <div class="half">
-        <div class="box">
+    <div class="flex-container">
+        <div class="flex-item">
             <form>
                 <div><label for="fecha">Fecha:</label></div>
                 <div>
@@ -128,7 +143,7 @@
             </form>      
         </div>
 
-        <div class="box">
+        <div class="flex-item">
             <div><label for="finca">Región:</label></div>
             
             <div class="select"> 
@@ -141,7 +156,7 @@
             </div>
         </div>
 
-        <div class="box">
+        <div class="flex-item">
             <div><label for="momento">Evento:</label></div>
             <div class="select">
                 <select name="Evento" id="ev">
@@ -151,14 +166,14 @@
             </div>
         </div>      
     
-        <div class="box">
+        <div class="flex-item">
             <div><label for="cont">Contador:</label></div>
             <div>
                 <input class="input" id = "id2" type= "text" value = {{total}} readonly >
             </div>
         </div>
 
-        <div class="box"> 
+        <div class="flex-item"> 
 
             <div><label for="usuario">Usuario:</label></div>
             <div class="input-container">
