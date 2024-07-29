@@ -14,6 +14,15 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
 <style>
     
+    input {
+      width: 100%; /* Ancho del campo de entrada */
+      white-space: nowrap; /* Evita que el texto se ajuste a una nueva línea */
+      overflow: hidden; /* Oculta el texto que se desborda */
+      text-overflow: ellipsis; /* Muestra puntos suspensivos si el texto es demasiado largo */
+      box-sizing: border-box; /* Incluye el padding y el borde en el ancho del input */
+      padding: 8px; /* Padding interno del input */
+    }
+
     .container {
         display: grid;
         height: 100%;  /* Divide el contenedor en dos mitades iguales */ 
@@ -147,7 +156,7 @@
         <div class="box"> 
 
             <div><label for="usuario">Usuario:</label></div>
-            <div class="control input-container">
+            <div class="input-container">
                 <input class="input is-fullwidth" id = "id" type= "text" value = {{user.username}} readonly >
             </div>
 
