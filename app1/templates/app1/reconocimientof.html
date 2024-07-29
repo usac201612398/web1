@@ -35,12 +35,11 @@
     }
 
     .half {
-        display: grid;
+        display: flex;
         height: 100%;
         grid-template-columns:  repeat(auto-fit, minmax(min-content, auto)); /* Divide cada mitad en dos columnas iguales */
         gap: 5px; /* Espacio entre columnas */
         text-align: center;
-        display: flex;
     }
 
     .box {
@@ -133,8 +132,8 @@
 <h2 class="subtitle"><p class="texto-con-margen"> Reconocimiento Facial:</p></h2> 
 
 <div class = "container"> 
-    <div class="flex-container">
-        <div class="flex-item">
+    <div class="half">
+        <div class="box">
             <form>
                 <div><label for="fecha">Fecha:</label></div>
                 <div>
@@ -143,7 +142,7 @@
             </form>      
         </div>
 
-        <div class="flex-item">
+        <div class="box">
             <div><label for="finca">Región:</label></div>
             
             <div class="select"> 
@@ -156,7 +155,7 @@
             </div>
         </div>
 
-        <div class="flex-item">
+        <div class="box">
             <div><label for="momento">Evento:</label></div>
             <div class="select">
                 <select name="Evento" id="ev">
@@ -166,14 +165,14 @@
             </div>
         </div>      
     
-        <div class="flex-item">
+        <div class="box">
             <div><label for="cont">Contador:</label></div>
             <div>
                 <input class="input" id = "id2" type= "text" value = {{total}} readonly >
             </div>
         </div>
 
-        <div class="flex-item"> 
+        <div class="box"> 
 
             <div><label for="usuario">Usuario:</label></div>
             <div class="input-container">
