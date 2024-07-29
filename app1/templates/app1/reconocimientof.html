@@ -22,11 +22,10 @@
 
     .half {
         display: grid;
-        grid-template-columns: repeat(5, 1fr); /* Divide cada mitad en dos columnas iguales */
+        grid-template-columns:  repeat(auto-fill, minmax(100px, 1fr)); /* Divide cada mitad en dos columnas iguales */
         gap: 5px; /* Espacio entre las secciones */
         box-sizing: border-box;
         white-space: nowrap; 
-        height: 100px;
     }
 
     .box {
