@@ -16,6 +16,7 @@
     .container {
         background-color: #f20808;
         display: grid;
+        white-space: nowrap; 
         /* grid-template-columns: 1fr 1fr; */ /* Divide el contenedor en dos mitades iguales */ 
     }
 
@@ -23,15 +24,14 @@
         display: grid;
         grid-template-rows: 1fr;
         grid-template-columns:  repeat(5,1fr); /* Divide cada mitad en dos columnas iguales */
+        gap: 5px; /* Espacio entre columnas */
         text-align: center;
-        white-space: nowrap; 
     }
 
     .box {
         background-color: #f0f0f0;
         border: 1px solid #ddd;
         padding: 10px;
-        white-space: nowrap; 
     }
 
     .texto-con-margen {
