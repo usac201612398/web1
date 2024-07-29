@@ -14,9 +14,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
 <style>
     .container {
-        background-color: #f20808;
         display: grid;
-        /* grid-template-columns: 1fr 1fr; */ /* Divide el contenedor en dos mitades iguales */ 
+        grid-template-rows: 1fr; */ /* Divide el contenedor en dos mitades iguales */ 
     }
 
     .half {
@@ -81,7 +80,6 @@
 
 <div class="container"> 
     <div class="half">
-
         <div class="box">
             <form>
                 <div><label for="fecha">Fecha:</label></div>
@@ -129,7 +127,6 @@
             </div>
 
         </div>
-
     </div>
 </div>
     
@@ -152,6 +149,7 @@
         
     </div> 
 </div>
+
 <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
 <script language="JavaScript" type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript" src="{% static '/lib/cam.js' %}"></script>
