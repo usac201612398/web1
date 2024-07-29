@@ -16,7 +16,7 @@
     .container {
         display: grid;
         /* grid-template-columns: 1fr 1fr; */ /* Divide el contenedor en dos mitades iguales */
-        gap: 10px; /* Espacio entre las mitades */
+        gap: 5px; /* Espacio entre las mitades */
     }
 
     .half {
@@ -78,54 +78,57 @@
 <h2 class="title"><p class="texto-con-margen"> Bienvenido al sistema de registro de Semillas del Campo SA</p></h2>
 <h2 class="subtitle"><p class="texto-con-margen"> Reconocimiento Facial:</p></h2> 
 
-<div class="half">
+<div class="container"> 
+    <div class="half">
 
-    <div class="box">
-        <form>
-            <div><label for="fecha">Fecha:</label></div>
-            <div>
-                <input class="input" id="date" type="date" value={{fecha}}>
+        <div class="box">
+            <form>
+                <div><label for="fecha">Fecha:</label></div>
+                <div>
+                    <input class="input" id="date" type="date" value={{fecha}}>
+                </div>
+            </form>      
+        </div>
+
+        <div class="box">
+            <div><label for="finca">Región:</label></div>
+            
+            <div class="select"> 
+                <select name="Lugar" id="Lug">
+                    <option value="a">Valle</option>
+                    <option value="b">Rio</option>
+                    <option value="c">Planta</option>
+                    <option value="d">San Lorenzo</option>
+                </select>
             </div>
-        </form>      
-    </div>
-
-    <div class="box">
-        <div><label for="finca">Región:</label></div>
-        
-        <div class="select"> 
-            <select name="Lugar" id="Lug">
-                <option value="a">Valle</option>
-                <option value="b">Rio</option>
-                <option value="c">Planta</option>
-                <option value="d">San Lorenzo</option>
-            </select>
         </div>
-    </div>
 
-    <div class="box">
-        <div><label for="momento">Evento:</label></div>
-        <div class="select">
-            <select name="Evento" id="ev">
-                <option value="e">Entrada</option>
-                <option value="f">Salida</option>
-            </select>
+        <div class="box">
+            <div><label for="momento">Evento:</label></div>
+            <div class="select">
+                <select name="Evento" id="ev">
+                    <option value="e">Entrada</option>
+                    <option value="f">Salida</option>
+                </select>
+            </div>
+        </div>      
+    
+        <div class="box">
+            <div><label for="cont">Contador:</label></div>
+            <div>
+                <input class="input" id = "id2" type= "text" value = {{total}} readonly >
+            </div>
         </div>
-    </div>      
 
-    <div class="box">
-        <div><label for="cont">Contador:</label></div>
-        <div>
-            <input class="input" id = "id2" type= "text" value = {{total}} readonly >
+        <div class="box"> 
+
+            <div><label for="usuario">Usuario:</label></div>
+            <div>
+                <input class="input" id = "id" type= "text" value = {{user.username}} readonly >
+            </div>
         </div>
-    </div>
 
-    <div class="box"> 
-        <div><label for="usuario">Usuario:</label></div>
-        <div>
-            <input class="input" id = "id" type= "text" value = {{user.username}} readonly >
-        </div>
     </div>
-
 </div>
     
 <div class = "container">
