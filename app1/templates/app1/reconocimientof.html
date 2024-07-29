@@ -16,13 +16,13 @@
     
     .container {
         display: grid;
-        grid-template-rows: 1fr;  /* Divide el contenedor en dos mitades iguales */ 
+        height: 100%;  /* Divide el contenedor en dos mitades iguales */ 
         overflow: hidden;
     }
 
     .half {
         display: grid;
-        grid-template-rows: 1fr;
+        height: 100%;
         grid-template-columns:  1fr 1fr 1fr 1fr 3fr; /* Divide cada mitad en dos columnas iguales */
         gap: 5px; /* Espacio entre columnas */
         text-align: center;
@@ -33,7 +33,8 @@
         background-color: #f0f0f0;
         border: 1px solid #ddd;
         padding: 10px;
-        flex: auto;     
+        flex: auto; 
+        height: 100%;    
     }
 
     .texto-con-margen {
