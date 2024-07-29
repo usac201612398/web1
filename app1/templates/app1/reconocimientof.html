@@ -18,7 +18,7 @@
       width: 200px; /* Ancho del contenedor del input */
       overflow: hidden; /* Asegura que el contenedor no muestre el desbordamiento */
     }
-    
+
     input {
       width: 100%; /* Ancho del campo de entrada */
       white-space: nowrap; /* Evita que el texto se ajuste a una nueva línea */
@@ -30,14 +30,14 @@
 
     .container {
         display: grid;
-        height: 100%;  /* Divide el contenedor en dos mitades iguales */ 
+        height: 100%;
         overflow: hidden;
     }
 
     .half {
         display: grid;
         height: 100%;
-        grid-template-columns:  1fr 1fr 1fr 1fr 3fr; /* Divide cada mitad en dos columnas iguales */
+        grid-template-columns:  repeat(auto-fill, minmax(150px, 1fr)); /* Divide cada mitad en dos columnas iguales */
         gap: 5px; /* Espacio entre columnas */
         text-align: center;
         display: flex;
