@@ -17,12 +17,14 @@
         display: grid;
         /* grid-template-columns: 1fr 1fr; */ /* Divide el contenedor en dos mitades iguales */
         gap: 2px; /* Espacio entre las mitades */
+        box-sizing: border-box;
     }
 
     .half {
         display: grid;
         grid-template-columns: repeat(5, 1fr); /* Divide cada mitad en dos columnas iguales */
         gap: 5px; /* Espacio entre las secciones */
+        box-sizing: border-box;
     }
 
     .box {
@@ -30,6 +32,7 @@
         border: 1px solid #ddd;
         padding: 10px;
         text-align: center;
+        box-sizing: border-box;
     }
 
     .texto-con-margen {
