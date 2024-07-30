@@ -3,11 +3,111 @@
 {% block style %}{% endblock %}
 <head>
     <meta charset="UTF-8">
+    <meta name= "viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+
     <title> {% block title %} Agropecuaria Popoyán, S.A. {% endblock %} </title>
+    <style>
+    
+    .text-left {
+        text-align: left;
+    }
+
+    .footer {
+            background-color: #f5f5f5;
+            padding: 1.5rem 0;
+        }
+
+    .texto-con-margen {
+        margin: 20px; /* Aplica un margen de 20px alrededor del párrafo */
+    }
+
+    .text-right {
+        text-align: right; /* Alinea el texto a la derecha */
+        padding-right: 20px; /* Agrega espacio interno a la derecha */
+        width: 100%; /* Ancho del contenedor para ver el efecto del margen */
+    }
+
+    .dropdown-content {
+        margin-left: 20px;
+        border-radius: 8px;
+    }
+    .dropdown-item:hover {
+        background-color: #f5f5f5;
+    }
+    /* Ocultar submenús por defecto */
+    .navbar-dropdown {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 1000;
+        background-color: white;
+    }
+
+    /* Mostrar submenú cuando el ítem está activo */
+    .navbar-item.has-dropdown.is-active .navbar-dropdown {
+        display: block;
+    }
+
+    .navbar-menu.is-active {
+        display: block;
+        flex-direction: column;
+    }
+    
+    </style>
 </head>
+
+
 <body>
     
     <h1> {% block enc %} Semillas del Campo, S.A. {% endblock %} </h1>
+    {% if user.is_authenticated %}
+        <div class="text-right">
+            <p>Bienvenido, <b>{{user.username}} | <a href="{% url 'logout'%}">Logaut</a></b></p>
+            <br>
+        </div>
+        
+        <nav class="navbar is-link">
+
+            <div class="navbar-brand">
+                <a class="navbar-item" href="#">
+                    <strong>Mi Sitio</strong>
+                </a>
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+    
+            <div id="navbarMenu" class="navbar-menu">
+                <div class="navbar-start">
+                    
+                    <a class="navbar-item" href="{% url 'homepage'%}">Inicio</a>
+                    <a class="navbar-item" href="{% url 'reconocimientof'%}">Panel</a>
+                    <a class="navbar-item" href="#">Sobre Nosotros</a>
+
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                            Consultas
+                        </a>
+                        <div class="navbar-dropdown">
+                            <a class="navbar-item" href="{% url 'exportar_excel'%}">Convencional</a>
+                            <a class="navbar-item" href="{% url 'registroConsulta'%}">Descriptivo</a>
+                        </div>
+                    </div>
+    
+                    <a class="navbar-item" href="#">Contacto</a>
+                </div>
+            </div>
+        </nav>
+
+    {% else %}
+        <p class="texto-con-margen">Bienvenido, por favor identifiquese <a href="{%url 'login'%}">Login</a></p>
+    {% endif %}
     {% block parrafo %} 
     <p>Párrafo 1.</p>
     <p>Párrafo 2.</p>
