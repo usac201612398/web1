@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-i%35q9sc8q^vah@$-wnd@mgjy&ct3kpf=(8x_)l=rsxrzy=ad_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 #ALLOWED_HOSTS = ['popoyan.com.gt','sdc-iot.popoyan.com.gt','www.sdc-iot.popoyan.com.gt']
 ALLOWED_HOSTS = ['sdc-iot.popoyan.com.gt']
