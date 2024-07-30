@@ -22,4 +22,5 @@ urlpatterns = [
     path("registro",views.registroPhoto,name='reconocimientof'),
     path("registro/consulta",views.consultaRegistros,name='registroConsulta'),
     path("registro/consultaR",views.consultarR.as_view(), name = 'registroConsulta'),
+    path('exportar_excel/', views.exportar_excel, name='exportar_excel'),
 ]

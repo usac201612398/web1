@@ -46,6 +46,30 @@ def upload_image(request):
         form = ImageUploadForm()
     return render(request, 'upload.html', {'form': form})
 
+def exportar_excel(request):
+    # Crea un libro de Excel y una hoja
+    wb = Workbook()
+    ws = wb.active
+    ws.title = 'Datos'
+
+    # Obtén los datos de tu modelo
+    datos = Ingresop.objects.order_by('-marcat')
+
+    # Agrega los encabezados
+    ws.append([field.name for field in Ingresop._meta.fields])
+
+    # Agrega los datos
+    for obj in datos:
+        ws.append([getattr(obj, field.name) for field in Ingresop._meta.fields])
+
+    # Crea una respuesta HTTP que sirva el archivo Excel
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=datos.xlsx'
+
+    # Guarda el libro de Excel en la respuesta
+    wb.save(response)
+
+    return response
 def login_page(request):
     message = None
     if request.method == "POST":
