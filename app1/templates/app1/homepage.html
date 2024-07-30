@@ -32,14 +32,15 @@
         text-align: left; /* Alinea el texto a la derecha */
         padding-left: 20px; /* Agrega espacio interno a la derecha */
         border: 1px solid #ccc;
-        width: 300px; /* Ancho del contenedor para ver el efecto del margen */
+        width: 100%; /* Ancho del contenedor para ver el efecto del margen */
     }
     
 </style>
 
 <h2 class="title"><p class="texto-con-margen">Semillas del Campo, S.A.</p></h2>
 <h2 class="subtitle"><p class="texto-con-margen">¡Gestiona el control de ingresos y salidas del personal!</p></h2>
-<div>
+<body>
+
     {% if user.is_authenticated %}
         <div class="text-left">
             <p>Bienvenido, <b>{{user.username}} | <a href="{% url 'logout'%}">Logaut</a></b></p>
@@ -62,7 +63,7 @@
         <p class="texto-con-margen">Bienvenido, por favor <a href="{%url 'login'%}">Login</a></p>
     {% endif %}
 
-</div>
+</body>
 
 <br>
 <br>
