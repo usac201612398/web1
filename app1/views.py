@@ -62,14 +62,15 @@ def exportar_excel(request):
 
     # Agrega los datos
     for obj in datos:
-        row = []
-        for field in Ingresop._meta.fields:
-            value = getattr(obj, field.name)
-            if isinstance(value, datetime):
-                if not timezone.is_aware(value):
-                    value = timezone.make_aware(value)
-            row.append(value)
-        ws.append(row)
+            row = []
+            for field in Ingresop._meta.fields:
+                value = getattr(obj, field.name)
+                if isinstance(value, datetime):
+                    # Elimina la zona horaria si está presente
+                    if value.tzinfo is not None:
+                        value = value.replace(tzinfo=None)
+                row.append(value)
+            ws.append(row)
     # Crea una respuesta HTTP que sirva el archivo Excel
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = 'attachment; filename=datos.xlsx'
