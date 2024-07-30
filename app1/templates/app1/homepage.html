@@ -54,7 +54,29 @@
     .dropdown-item:hover {
         background-color: #f5f5f5;
     }
-    
+    /* Ocultar submenús por defecto */
+    .navbar-dropdown {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 1000;
+    }
+
+    /* Mostrar submenú cuando el ítem está activo */
+    .navbar-item.has-dropdown.is-active .navbar-dropdown {
+        display: block;
+    }
+
+    /* Menú de navegación en dispositivos móviles */
+    .navbar-menu {
+        display: none;
+    }
+
+    .navbar-menu.is-active {
+        display: flex;
+        flex-direction: column;
+    }
 </style>
 
 <h2 class="title"><p class="texto-con-margen">Semillas del Campo, S.A.</p></h2>
@@ -159,7 +181,6 @@
     document.addEventListener('DOMContentLoaded', () => {
             // Manejo del menú hamburguesa en dispositivos móviles
             const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
-
             if ($navbarBurgers.length > 0) {
                 $navbarBurgers.forEach(el => {
                     el.addEventListener('click', () => {
@@ -176,9 +197,9 @@
 
             dropdownItems.forEach(item => {
                 item.addEventListener('click', (e) => {
-                    e.stopPropagation();
+                    e.stopPropagation(); // Evita que el evento se propague al documento
                     const dropdown = item.querySelector('.navbar-dropdown');
-                    dropdown.classList.toggle('is-active');
+                    dropdown.classList.toggle('is-active'); // Alterna la visibilidad del submenú
                 });
 
                 item.addEventListener('touchstart', (e) => {
