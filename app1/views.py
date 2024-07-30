@@ -29,6 +29,7 @@ import face_recognition as fr
 from django.views.generic import TemplateView
 from openpyxl import Workbook
 from .forms import ImageUploadForm
+from django.utils import timezone
 
 def upload_image(request):
     if request.method == 'POST':
@@ -60,8 +61,14 @@ def exportar_excel(request):
 
     # Agrega los datos
     for obj in datos:
-        ws.append([getattr(obj, field.name) for field in Ingresop._meta.fields])
-
+        row = []
+        for field in Ingresop._meta.fields:
+            value = getattr(obj, field.name)
+            if isinstance(value, datetime):
+                if not timezone.is_aware(value):
+                    value = timezone.make_aware(value)
+            row.append(value)
+        ws.append(row)
     # Crea una respuesta HTTP que sirva el archivo Excel
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = 'attachment; filename=datos.xlsx'
