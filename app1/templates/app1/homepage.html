@@ -52,8 +52,8 @@
         background-color: #f5f5f5;
     }
     
-    .custom-navbar {
-        background-color: #4ae27a; /* Azul personalizado */
+    .custom-navbar .navbar-dropdown {
+        background-color: #4a90e2; /* Azul personalizado */
     }
 </style>
 
@@ -66,7 +66,7 @@
             <p>Bienvenido, <b>{{user.username}} | <a href="{% url 'logout'%}">Logaut</a></b></p>
             <br>
         </div>
-
+        
         <nav class="navbar is-success">
 
             <div class="navbar-brand">
