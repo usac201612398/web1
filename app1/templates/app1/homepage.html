@@ -206,7 +206,6 @@
                 item.addEventListener('touchstart', (e) => {
                     e.stopPropagation(); // Evita que el toque se propague a otros elementos
                     const dropdown = item.querySelector('.navbar-dropdown');
-                    item.classList.toggle('is-active');
                     dropdown.classList.toggle('is-active');
                 });
             });
@@ -215,7 +214,7 @@
             document.addEventListener('click', () => {
                 dropdownItems.forEach(item => {
                     const dropdown = item.querySelector('.navbar-dropdown');
-                    item.classList.toggle('is-active');
+                    item.classList.remove('is-active');
                     dropdown.classList.remove('is-active');
 
                 });
