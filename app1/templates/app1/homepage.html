@@ -16,146 +16,36 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
-    
-<style>
-
-    .image-container {
-        text-align: center;
-    }
-
-    .image-container img {
-        max-width: 100%; /* Opcional: asegura que la imagen no se desborde del contenedor */
-        height: auto; /* Opcional: mantiene la proporción de la imagen */
-    }
-
-    .text-left {
-        text-align: left;
-    }
-
-    .footer {
-            background-color: #f5f5f5;
-            padding: 1.5rem 0;
-        }
-
-    .texto-con-margen {
-        margin: 20px; /* Aplica un margen de 20px alrededor del párrafo */
-    }
-
-    .text-right {
-        text-align: right; /* Alinea el texto a la derecha */
-        padding-right: 20px; /* Agrega espacio interno a la derecha */
-        width: 100%; /* Ancho del contenedor para ver el efecto del margen */
-    }
-
-    .dropdown-content {
-        margin-left: 20px;
-        border-radius: 8px;
-    }
-    .dropdown-item:hover {
-        background-color: #f5f5f5;
-    }
-    /* Ocultar submenús por defecto */
-    .navbar-dropdown {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        z-index: 1000;
-        background-color: white;
-    }
-
-    /* Mostrar submenú cuando el ítem está activo */
-    .navbar-item.has-dropdown.is-active .navbar-dropdown {
-        display: block;
-    }
-
-    .navbar-menu.is-active {
-        display: block;
-        flex-direction: column;
-    }
-
-</style>
 
 <h2 class="title"><p class="texto-con-margen">Semillas del Campo, S.A.</p></h2>
 <h2 class="subtitle"><p class="texto-con-margen">¡Gestiona el control de ingresos y salidas del personal!</p></h2>
 <body>
 
-    {% if user.is_authenticated %}
-        <div class="text-right">
-            <p>Bienvenido, <b>{{user.username}} | <a href="{% url 'logout'%}">Logaut</a></b></p>
-            <br>
-        </div>
-        
-        <nav class="navbar is-link">
 
-            <div class="navbar-brand">
-                <a class="navbar-item" href="#">
-                    <strong>Mi Sitio</strong>
-                </a>
-                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                </a>
+{% if user.is_authenticated %}
+    <br>
+    <br>
+    <br>
+    <div class="image-container">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide"><img src="{% static 'img/ccippp.jpg' %}" alt="Imagen 1"></div>
+                <div class="swiper-slide"><img src="{% static 'img/logo.png' %}" alt="Imagen 2"></div>
+                <div class="swiper-slide"><img src="{% static 'img/cosecha.jpg' %}" alt="Imagen 3"></div>
             </div>
-    
-            <div id="navbarMenu" class="navbar-menu">
-                <div class="navbar-start">
-                    
-                    <a class="navbar-item" href="{% url 'homepage'%}">Inicio</a>
-                    <a class="navbar-item" href="{% url 'reconocimientof'%}">Panel</a>
-                    <a class="navbar-item" href="#">Sobre Nosotros</a>
-
-                    <div class="navbar-item has-dropdown is-hoverable">
-                        <a class="navbar-link">
-                            Consultas
-                        </a>
-                        <div class="navbar-dropdown">
-                            <a class="navbar-item" href="{% url 'exportar_excel'%}">Convencional</a>
-                            <a class="navbar-item" href="{% url 'registroConsulta'%}">Descriptivo</a>
-                        </div>
-                    </div>
-    
-                    <a class="navbar-item" href="#">Contacto</a>
-                </div>
-            </div>
-        </nav>
-
-    {% else %}
-        <p class="texto-con-margen">Bienvenido, por favor identifiquese <a href="{%url 'login'%}">Login</a></p>
-    {% endif %}
-
-
-<br>
-<br>
-<br>
-<div class="image-container">
-    <div class="swiper-container">
-        <div class="swiper-wrapper">
-            <div class="swiper-slide"><img src="{% static 'img/ccippp.jpg' %}" alt="Imagen 1"></div>
-            <div class="swiper-slide"><img src="{% static 'img/logo.png' %}" alt="Imagen 2"></div>
-            <div class="swiper-slide"><img src="{% static 'img/cosecha.jpg' %}" alt="Imagen 3"></div>
+            <!-- Añadir paginación -->
+            <div class="swiper-pagination"></div>
+            <!-- Añadir botones de navegación -->
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
         </div>
-        <!-- Añadir paginación -->
-        <div class="swiper-pagination"></div>
-        <!-- Añadir botones de navegación -->
-        <div class="swiper-button-next"></div>
-        <div class="swiper-button-prev"></div>
+
     </div>
+{% else %}
+    <p class="texto-con-margen">Bienvenido, por favor identifiquese <a href="{%url 'login'%}">Login</a></p>
+{% endif %}
 
-</div>
 
-<footer class="footer">
-    <div class="container">
-        <div class="columns">
-            <div class="column">
-                <p class="has-text-centered">
-                    © 2024 Semillas del Campo SA. Todos los derechos reservados.
-                </p>
-            </div>
-        </div>
-    </div>
-</footer>
 </body>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>

@@ -60,9 +60,7 @@
     </style>
 </head>
 
-
 <body>
-    
     <h1> {% block enc %} Semillas del Campo, S.A. {% endblock %} </h1>
     {% if user.is_authenticated %}
         <div class="text-right">
@@ -114,6 +112,17 @@
      {% endblock %}
      {% block content %} 
      {% endblock %}
+     <footer class="footer">
+        <div class="container">
+            <div class="columns">
+                <div class="column">
+                    <p class="has-text-centered">
+                        © 2024 Semillas del Campo SA. Todos los derechos reservados.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     {% block script %}  {% endblock %}
 </body>
