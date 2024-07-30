@@ -12,7 +12,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="{% static '/main.css' %}" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <style>
+    
+    .text-left {
+        text-align: left;
+    }
+
     .footer {
             background-color: #f5f5f5;
             padding: 1.5rem 0;
@@ -21,13 +27,15 @@
     .texto-con-margen {
         margin: 20px; /* Aplica un margen de 20px alrededor del párrafo */
     }
+
+    
 </style>
 
 <h2 class="title"><p class="texto-con-margen">Semillas del Campo, S.A.</p></h2>
 <h2 class="subtitle"><p class="texto-con-margen">¡Gestiona el control de ingresos y salidas del personal!</p></h2>
-<div id = "header">
+<div>
     {% if user.is_authenticated %}
-        <p class="texto-con-margen">Bienvenido, <b>{{user.username}} | <a href="{% url 'logout'%}">Logaut</a></b></p>
+        <p class="text-left">Bienvenido, <b>{{user.username}} | <a href="{% url 'logout'%}">Logaut</a></b></p>
         <br>
         <div id="header">
             <ul class="nav">
