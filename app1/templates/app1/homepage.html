@@ -1,6 +1,7 @@
 
 {% extends "base/base.html" %}
 {% load static %}
+{% load media %}
 {% block style %}
 {% endblock %}
 {% block title %}{% endblock %}
@@ -8,7 +9,7 @@
 {% block parrafo %}{% endblock %}
 
 {% block content %}
-{% load static %}
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="{% static '/main.css' %}" rel="stylesheet" type="text/css" />
@@ -68,7 +69,7 @@
 <br>
 <br>
 
-<img src="{% static 'img/ccippp.jpg' %}"class="photo" alt="Portada" width="340" height="680">
+<img src="{% media 'img/ccippp.jpg' %}"class="photo" alt="Portada" width="340" height="680">
 <footer class="footer">
     <div class="container">
         <div class="columns">
