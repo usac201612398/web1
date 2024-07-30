@@ -197,6 +197,7 @@
                 item.addEventListener('click', (e) => {
                     e.stopPropagation(); // Evita que el clic se propague a otros elementos
                     const dropdown = item.querySelector('.navbar-dropdown');
+                    item.classList.toggle('is-active');
                     dropdown.classList.toggle('is-active'); // Alterna la visibilidad del submenú
                     console.log(dropdown);   
                 });
