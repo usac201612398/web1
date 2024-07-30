@@ -28,6 +28,23 @@ import face_recognition as fr
 # Create your views here.
 from django.views.generic import TemplateView
 from openpyxl import Workbook
+from .forms import ImageUploadForm
+
+def upload_image(request):
+    if request.method == 'POST':
+        form = ImageUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            # Maneja el archivo cargado
+            image = form.cleaned_data['image']
+            # Guarda la imagen en el sistema de archivos
+            image_path = settings.MEDIA_ROOT / image.name
+            with open(image_path, 'wb+') as destination:
+                for chunk in image.chunks():
+                    destination.write(chunk)
+            return redirect('success')  # Redirige a una página de éxito
+    else:
+        form = ImageUploadForm()
+    return render(request, 'upload.html', {'form': form})
 
 def login_page(request):
     message = None
