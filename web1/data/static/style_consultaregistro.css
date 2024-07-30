@@ -207,7 +207,8 @@
     height: 45px;
     display: flex;
     align-items: flex-start;
-    margin: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
     background: #f1f1f1;
     }
     
