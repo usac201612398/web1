@@ -8,7 +8,8 @@
 {% block parrafo %}Realiza pedidos en linea.{% endblock %}
 
 {% block content %}
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="{% static '/main.css' %}" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
 <style>
@@ -47,17 +48,18 @@
     <p><a href="{% url 'homepage'%}">Home</a></p>
 
 </div>
-
+<body>
 <footer class="footer">
     <div class="container">
         <div class="columns">
             <div class="column">
                 <p class="has-text-centered">
-                    © 2024 Mi Empresa. Todos los derechos reservados.
+                    © 2024 Semillas del Campo SA. Todos los derechos reservados.
                 </p>
             </div>
         </div>
     </div>
 </footer>
+</body>
 {% endblock %}
 {% block script %}{% endblock %}
