@@ -33,6 +33,14 @@
       padding: 8px; /* Padding interno del input */
     }
 
+    .centered-input {
+        text-align: center;
+        padding: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        width: 100%;
+        box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+    }
     .container {
         display: grid;
         height: 100%;
@@ -173,7 +181,7 @@
         <div class="box">
             <div><label for="cont">Contador:</label></div>
             <div>
-                <input class="input" id = "id2" type= "text" value = {{total}} readonly >
+                <input class="centered-input" id = "id2" type= "text" value = {{total}} readonly >
             </div>
         </div>
 
