@@ -59,6 +59,8 @@
         display: none; /* Oculta el menú por defecto */
         position: absolute;
         z-index: 1000;
+        top: 100%;
+        left: 0;
     }
     /* Muestra el menú cuando está activo */
     .navbar-item.is-active .navbar-dropdown {
@@ -66,7 +68,7 @@
     }
 
     .navbar-menu.is-active {
-        display: block; /* Muestra el menú cuando está activo */
+        display: flex; /* Muestra el menú cuando está activo */
     }
 
     
