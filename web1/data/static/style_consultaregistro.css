@@ -213,8 +213,10 @@
     }
     
     .box02{
-    width: auto;
-    height: 100%;
+      border: 1px solid #ddd;
+      padding: 10px;
+      flex: auto; 
+      height: 100%;  
     }
     
     
