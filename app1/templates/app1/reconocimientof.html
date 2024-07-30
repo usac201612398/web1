@@ -67,6 +67,10 @@
         margin: 20px; /* Aplica un margen de 20px alrededor del párrafo */
     }
 
+    .text-right {
+        text-align: right;
+    }
+    
     .video-container {
         position: relative;
         padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
@@ -129,8 +133,8 @@
 <h2 class="title"><p class="texto-con-margen"> Bienvenido al sistema de registro de Semillas del Campo SA</p></h2>
 <h2 class="subtitle"><p class="texto-con-margen"> Reconocimiento Facial:</p></h2> 
 <br>
-<div id="navegacion">
-    <p><a href="{% url 'homepage'%}">Home</a></p>
+<div id="text-right">
+    <p class="texto-con-margen"><a href="{% url 'homepage'%}">Home</a></p>
 </div>
 <br>
 <div class = "container"> 
