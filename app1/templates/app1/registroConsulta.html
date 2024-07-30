@@ -24,21 +24,20 @@
       height: 100%;    
   }
 
-  .columns {
-    margin: 0; /* Elimina márgenes no deseados */
-  }
-  .column {
-    padding: 0; /* Ajusta el padding para crear espacio entre inputs */
-  }
-  .input {
-    width: 100%; /* Asegura que los inputs llenen su columna */
+  .inputs-row {
+    display: flex;
+    justify-content: space-between; /* Distribuye el espacio uniformemente */
+    gap: 10px; /* Espacio entre los inputs, ajusta según sea necesario */
+    margin: 0;
   }
 
-  .swiper-container {
-    padding: 0; /* Elimina padding en el contenedor si es necesario */
+  .input {
+    flex: 1; /* Permite que los inputs se expandan uniformemente */
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
   }
 
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
 <link href="{% static '/style_consultaregistro.css' %}" rel="stylesheet" type="text/css" >
 <h2 class="title"><p class="texto-con-margen">Registro de ingresos</p></h2>
 <h2 class="subtitle"><p class="texto-con-margen">¡Revisa el control de ingresos y salidas del personal!</p></h2>
@@ -61,19 +60,19 @@
 </div>  
 <br>
 <div class="container">
-  <div class="columns is-gapless">
-      <div class="column is-3 input-container">
+  <div class="inputs-row">
+
         <input class="input" type="text" id="myInput" onkeyup="myFunction()" placeholder="Buscar por código...">
-      </div>
-      <div class="column is-3 input-container">
+
+
         <input class="input" type="text" id="myInput2" onkeyup="myFunction2()" placeholder="Buscar por nombre...">
-      </div>
-      <div class="column is-3 input-container">
+
+
         <input class="input" type="text" id="myInput5" onkeyup="myFunction5()" placeholder="Buscar origen...">
-      </div>
-      <div class="column is-3 input-container">
+
+
         <input class="input" type="text" id="myInput6" onkeyup="myFunction6()" placeholder="Buscar por evento...">
-      </div>
+
   </div>
 </div>
 
