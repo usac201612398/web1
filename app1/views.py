@@ -66,9 +66,9 @@ def exportar_excel(request):
             for field in Ingresop._meta.fields:
                 value = getattr(obj, field.name)
                 if isinstance(value, datetime):
-                    # Elimina la zona horaria si está presente
+                    # Convertir a cadena de texto con información de zona horaria
                     if value.tzinfo is not None:
-                        value = value.replace(tzinfo=None)
+                        value = value.isoformat()
                 row.append(value)
             ws.append(row)
     # Crea una respuesta HTTP que sirva el archivo Excel
