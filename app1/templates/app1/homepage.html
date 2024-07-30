@@ -67,6 +67,11 @@
         display: block; /* Muestra el menú cuando está activo */
     }
 
+    .navbar-menu {
+        display: flex;
+        flex-direction: column;
+    }
+
     .navbar-menu.is-active {
         display: flex; /* Muestra el menú cuando está activo */
     }
@@ -174,53 +179,46 @@
     });
 
     document.addEventListener('DOMContentLoaded', () => {
-        // Manejo del menú hamburguesa en dispositivos móviles
-        const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+            // Manejo del menú hamburguesa en dispositivos móviles
+            const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
 
-        if ($navbarBurgers.length > 0) {
-            $navbarBurgers.forEach(el => {
-                el.addEventListener('click', () => {
-                    const target = el.dataset.target;
-                    const $target = document.getElementById(target);
-                    el.classList.toggle('is-active');
-                    $target.classList.toggle('is-active');
+            if ($navbarBurgers.length > 0) {
+                $navbarBurgers.forEach(el => {
+                    el.addEventListener('click', () => {
+                        const target = el.dataset.target;
+                        const $target = document.getElementById(target);
+                        el.classList.toggle('is-active');
+                        $target.classList.toggle('is-active');
+                    });
+                });
+            }
+
+            // Manejo de los submenús
+            const dropdownItems = document.querySelectorAll('.navbar-item.has-dropdown');
+
+            dropdownItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const dropdown = item.querySelector('.navbar-dropdown');
+                    dropdown.classList.toggle('is-active');
+                });
+
+                item.addEventListener('touchstart', (e) => {
+                    e.stopPropagation();
+                    const dropdown = item.querySelector('.navbar-dropdown');
+                    dropdown.classList.toggle('is-active');
                 });
             });
-        }
 
-        // Manejo de los submenús
-        const dropdownItems = document.querySelectorAll('.navbar-item.has-dropdown');
-
-        dropdownItems.forEach(item => {
-            item.addEventListener('click', (e) => {
-                e.stopPropagation(); // Evita que el evento se propague al documento
-                const dropdown = item.querySelector('.navbar-dropdown');
-                dropdown.classList.toggle('is-active'); // Alterna la visibilidad del submenú
-            });
-
-            item.addEventListener('touchstart', (e) => {
-                e.stopPropagation();
-                const dropdown = item.querySelector('.navbar-dropdown');
-                dropdown.classList.toggle('is-active');
-            });
-        });
-
-        // Cierra los submenús si se hace clic fuera de ellos
-        document.addEventListener('click', () => {
-            dropdownItems.forEach(item => {
-                const dropdown = item.querySelector('.navbar-dropdown');
-                dropdown.classList.remove('is-active');
-            });
-        });
-
-        document.addEventListener('touchstart', () => {
-            dropdownItems.forEach(item => {
-                const dropdown = item.querySelector('.navbar-dropdown');
-                dropdown.classList.remove('is-active');
+            // Cierra los submenús si se hace clic fuera de ellos
+            document.addEventListener('click', () => {
+                dropdownItems.forEach(item => {
+                    const dropdown = item.querySelector('.navbar-dropdown');
+                    dropdown.classList.remove('is-active');
+                });
             });
         });
         
-    });
 </script>
 {% endblock %}
 {% block script %}{% endblock %}
