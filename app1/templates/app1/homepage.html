@@ -44,15 +44,8 @@
         width: 100%; /* Ancho del contenedor para ver el efecto del margen */
     }
 
-    .navbar {
-        display: flex;
-        justify-content: center; /* Centra horizontalmente el contenido del contenedor */
-        padding: 0;
-        margin: 0;
-        background-color:  #f5f5f5;
-    }
-
     .dropdown-content {
+        margin-left: 20px;
         border-radius: 8px;
     }
     .dropdown-item:hover {
@@ -72,7 +65,7 @@
 
         <nav class="navbar is-primary">
             <div class="navbar-brand">
-                <a class="navbar-item" href="#">
+                <a class="navbar-item" href="{% url 'homepage'%}">
                     <strong>Mi Sitio</strong>
                 </a>
                 <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
@@ -84,17 +77,16 @@
     
             <div id="navbarMenu" class="navbar-menu">
                 <div class="navbar-start">
-                    <a class="navbar-item" href="#">Inicio</a>
+                    <a class="navbar-item" href="{% url 'reconocimientof'%}">Panel</a>
                     <a class="navbar-item" href="#">Sobre Nosotros</a>
     
                     <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-link">
-                            Servicios
+                            Consultas
                         </a>
                         <div class="navbar-dropdown">
-                            <a class="navbar-item" href="#">Servicio 1</a>
-                            <a class="navbar-item" href="#">Servicio 2</a>
-                            <a class="navbar-item" href="#">Servicio 3</a>
+                            <a class="navbar-item" href="#">Convencional</a>
+                            <a class="navbar-item" href="#">Descriptivo</a>
                         </div>
                     </div>
     
@@ -103,18 +95,6 @@
             </div>
         </nav>
 
-        <div class="navbar">
-            <ul class="nav">
-                <li><a href="{% url 'reconocimientof'%}">Panel</a></li>
-                <li><a href="">Consultas</a>
-                    <ul>
-                        <li><a href="{% url 'iniciar_pedido_conv_carrito'%}">Convencional</a></li>
-                        <li><a href="{% url 'iniciar_pedido_conv_panel'%}">Analisis</a></li>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
     {% else %}
         <p class="texto-con-margen">Bienvenido, por favor identifiquese <a href="{%url 'login'%}">Login</a></p>
     {% endif %}
