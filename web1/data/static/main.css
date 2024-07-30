@@ -18,8 +18,8 @@ ul, ol {
 }
 
 .nav > li {
-  float:left;
-  border-radius: 8px;
+  position: relative;
+  margin: 0;
 
 }
 
@@ -34,13 +34,13 @@ ul, ol {
 
 .nav li a:hover {
   background-color:#434343;
-  border-radius: 8px;
 }
 
 .nav li ul {
   display:none;
   position:absolute;
   min-width:140px;
+  
 }
 
 .nav li:hover > ul {
@@ -54,4 +54,41 @@ ul, ol {
 .nav li ul li ul {
   right:-140px;
   top:0px;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%); /* Centra el menú desplegable horizontalmente */
+  background-color: #f9f9f9;
+  min-width: 160px;
+  border-radius: 8px; /* Esquinas curvas para el menú desplegable */
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content li {
+  border-bottom: 1px solid #ddd; /* Línea divisoria entre los ítems */
+}
+
+.dropdown-content li:last-child {
+  border-bottom: none;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  border-radius: 8px; /* Esquinas curvas para los ítems del menú */
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+.nav > li:hover .dropdown-content {
+  display: block;
 }
