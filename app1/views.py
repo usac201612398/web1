@@ -30,7 +30,6 @@ from django.views.generic import TemplateView
 from openpyxl import Workbook
 from .forms import ImageUploadForm
 from django.utils import timezone
-from datetime import datetime
 import pytz
 def upload_image(request):
     if request.method == 'POST':
