@@ -53,7 +53,7 @@ def exportar_excel(request):
     ws.title = 'Datos'
 
     # Obtén los datos de tu modelo
-    datos = Ingresop.objects.order_by('-marcat')
+    datos = Ingresop.objects.all()
 
     # Agrega los encabezados
     ws.append([field.name for field in Ingresop._meta.fields])
