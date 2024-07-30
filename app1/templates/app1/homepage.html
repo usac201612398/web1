@@ -3,9 +3,9 @@
 {% load static %}
 {% block style %}
 {% endblock %}
-{% block title %}Semillas del Campo, S.A.{% endblock %}
-{% block enc %}Requisiciones Bodega{% endblock %}
-{% block parrafo %}Realiza pedidos en linea.{% endblock %}
+{% block title %}{% endblock %}
+{% block enc %}{% endblock %}
+{% block parrafo %}{% endblock %}
 
 {% block content %}
 <meta charset="UTF-8">
@@ -17,10 +17,17 @@
             background-color: #f5f5f5;
             padding: 1.5rem 0;
         }
+
+    .texto-con-margen {
+        margin: 20px; /* Aplica un margen de 20px alrededor del párrafo */
+    }
 </style>
+
+<h2 class="title"><p class="texto-con-margen">Semillas del Campo, S.A.</p></h2>
+<h2 class="subtitle"><p class="texto-con-margen"></p>¡Gestiona el control de ingresos y salidas del personal!</h2>
 <div id = "header">
     {% if user.is_authenticated %}
-        <p>Bienvenido, <b>{{user.username}} | <a href="{% url 'logout'%}">Logaut</a></b></p>
+        <p class="texto-con-margen">Bienvenido, <b>{{user.username}} | <a href="{% url 'logout'%}">Logaut</a></b></p>
         <br>
         <div id="header">
             <ul class="nav">
@@ -36,7 +43,7 @@
             </ul>
         </div>
     {% else %}
-        <p>Bienvenido, Por favor <a href="{%url 'login'%}">Login</a></p>
+        <p class="texto-con-margen">Bienvenido, por favor <a href="{%url 'login'%}">Login</a></p>
     {% endif %}
 
 </div>
@@ -45,7 +52,7 @@
 <br>
 <br>
 <div id="navegacion">
-    <p><a href="{% url 'homepage'%}">Home</a></p>
+    <p class="texto-con-margen"><a href="{% url 'homepage'%}">Home</a></p>
 
 </div>
 <body>
