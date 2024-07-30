@@ -81,13 +81,18 @@
                 <a class="navbar-item" href="{% url 'homepage'%}">
                     <strong>Mi Sitio</strong>
                 </a>
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
             </div>
     
             <div id="navbarMenu" class="navbar-menu">
                 <div class="navbar-start">
                     <a class="navbar-item" href="{% url 'reconocimientof'%}">Panel</a>
                     <a class="navbar-item" href="#">Sobre Nosotros</a>
-    
+
                     <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-link">
                             Consultas
