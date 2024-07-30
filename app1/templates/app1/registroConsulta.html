@@ -7,7 +7,6 @@
 {% block content %}
 <style>
 
-  
 
   .half {
         display: flex;
@@ -29,10 +28,14 @@
     margin: 0; /* Elimina márgenes no deseados */
   }
   .column {
-    padding: 0 5px; /* Ajusta el padding para crear espacio entre inputs */
+    padding: 0; /* Ajusta el padding para crear espacio entre inputs */
   }
   .input {
     width: 100%; /* Asegura que los inputs llenen su columna */
+  }
+
+  .swiper-container {
+    padding: 0; /* Elimina padding en el contenedor si es necesario */
   }
 
 </style>
@@ -58,7 +61,7 @@
 </div>  
 <br>
 <div class="container">
-  <div class="columns">
+  <div class="columns is-gapless">
       <div class="column is-3 input-container">
         <input class="input" type="text" id="myInput" onkeyup="myFunction()" placeholder="Buscar por código...">
       </div>
