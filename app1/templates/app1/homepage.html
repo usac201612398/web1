@@ -69,15 +69,11 @@
         display: block;
     }
 
-    /* Mostrar el menú en dispositivos móviles */
-    .navbar-menu {
-        display: none;
-    }
-
     .navbar-menu.is-active {
         display: block;
         flex-direction: column;
     }
+
 </style>
 
 <h2 class="title"><p class="texto-con-margen">Semillas del Campo, S.A.</p></h2>
@@ -202,7 +198,7 @@
                     e.stopPropagation(); // Evita que el clic se propague a otros elementos
                     const dropdown = item.querySelector('.navbar-dropdown');
                     dropdown.classList.toggle('is-active'); // Alterna la visibilidad del submenú
-
+                    console.log("Click");   
                 });
 
                 // Manejo táctil en dispositivos móviles
@@ -210,7 +206,7 @@
                     e.stopPropagation(); // Evita que el toque se propague a otros elementos
                     const dropdown = item.querySelector('.navbar-dropdown');
                     dropdown.classList.toggle('is-active');
-
+                    console.log("Touch");
                 });
             });
 
