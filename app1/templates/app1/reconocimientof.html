@@ -63,21 +63,6 @@
         height: 100%;    
     }
 
-    .flex-container {
-        display: flex;
-        flex-wrap: wrap; /* Permite que los elementos se envuelvan si no hay suficiente espacio */
-        gap: 5px; /* Espacio entre columnas */
-    
-    }
-
-    .flex-item {
-        background-color: #f0f0f0;
-        border: 1px solid #ddd;
-        flex: 1 1 auto; /* Los elementos crecen y se reducen según el contenido y el espacio disponible */
-        padding: 10px;
-        box-sizing: border-box; /* Incluye padding en el ancho total del elemento */
-    }
-
     .texto-con-margen {
         margin: 20px; /* Aplica un margen de 20px alrededor del párrafo */
     }
@@ -143,7 +128,11 @@
 
 <h2 class="title"><p class="texto-con-margen"> Bienvenido al sistema de registro de Semillas del Campo SA</p></h2>
 <h2 class="subtitle"><p class="texto-con-margen"> Reconocimiento Facial:</p></h2> 
-
+<br>
+<div id="navegacion">
+    <p><a href="{% url 'homepage'%}">Home</a></p>
+</div>
+<br>
 <div class = "container"> 
     <div class="half">
         <div class="box">
