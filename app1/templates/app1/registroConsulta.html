@@ -29,14 +29,15 @@
       height: 100%;    
   }
 
-  .box02 {
-
-      
-      padding: 10px;
-      flex:content;
-      overflow:hidden;
-      height: 100%;  
-    }
+  .columns {
+    margin: 0; /* Elimina márgenes no deseados */
+  }
+  .column {
+    padding: 0 5px; /* Ajusta el padding para crear espacio entre inputs */
+  }
+  .input {
+    width: 100%; /* Asegura que los inputs llenen su columna */
+  }
 
 </style>
 <link href="{% static '/style_consultaregistro.css' %}" rel="stylesheet" type="text/css" >
