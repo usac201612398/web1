@@ -31,7 +31,7 @@ from openpyxl import Workbook
 from .forms import ImageUploadForm
 from django.utils import timezone
 from datetime import datetime
-
+import pytz
 def upload_image(request):
     if request.method == 'POST':
         form = ImageUploadForm(request.POST, request.FILES)
@@ -57,20 +57,26 @@ def exportar_excel(request):
     # Obtén los datos de tu modelo
     datos = Ingresop.objects.all()
 
+    
+
+    # Especifica la zona horaria deseada
+    zona_horaria_deseada = pytz.timezone('America/Guatemala')  # Cambia esto según sea necesario
+
     # Agrega los encabezados
     ws.append([field.name for field in Ingresop._meta.fields])
-
-    # Agrega los datos
+    # Agrega los datos  
     for obj in datos:
-            row = []
-            for field in Ingresop._meta.fields:
-                value = getattr(obj, field.name)
-                if isinstance(value, datetime):
-                    # Convertir a cadena de texto con información de zona horaria
-                    if value.tzinfo is not None:
-                        value = value.isoformat()
-                row.append(value)
-            ws.append(row)
+        row = []
+        for field in Ingresop._meta.fields:
+            value = getattr(obj, field.name)
+            if isinstance(value, datetime):
+                # Convertir a la zona horaria deseada
+                if value.tzinfo is not None:
+                    value = value.astimezone(zona_horaria_deseada)
+                    value = value.replace(tzinfo=None)  # Eliminar la zona horaria para ser compatible con Excel
+            row.append(value)
+        ws.append(row)
+    
     # Crea una respuesta HTTP que sirva el archivo Excel
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = 'attachment; filename=datos.xlsx'
