@@ -19,9 +19,12 @@
 
 <h2 class="title"><p class="texto-con-margen">Semillas del Campo, S.A.</p></h2>
 <h2 class="subtitle"><p class="texto-con-margen">¡Gestiona el control de ingresos y salidas del personal!</p></h2>
+<style>
+    .image-container {
+        justify-content: center;
+    }
+</style>
 <body>
-
-
 {% if user.is_authenticated %}
     <br>
     <br>
@@ -49,6 +52,7 @@
 </body>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+
 <script>
     var swiper = new Swiper('.swiper-container', {
         loop: true,
@@ -64,53 +68,7 @@
             prevEl: '.swiper-button-prev',
         },
     });
-
-    document.addEventListener('DOMContentLoaded', () => {
-            // Manejo del menú hamburguesa en dispositivos móviles
-            const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
-
-            if ($navbarBurgers.length > 0) {
-                $navbarBurgers.forEach(el => {
-                    el.addEventListener('click', () => {
-                        const target = el.dataset.target;
-                        const $target = document.getElementById(target);
-                        el.classList.toggle('is-active');
-                        $target.classList.toggle('is-active');
-                    });
-                });
-            }
-
-            // Manejo de los submenús
-            const dropdownItems = document.querySelectorAll('.navbar-item.has-dropdown');
-
-            dropdownItems.forEach(item => {
-                item.addEventListener('click', (e) => {
-                    e.stopPropagation(); // Evita que el clic se propague a otros elementos
-                    const dropdown = item.querySelector('.navbar-dropdown');
-                    item.classList.toggle('is-active');
-                    dropdown.classList.toggle('is-active'); // Alterna la visibilidad del submenú
- 
-                });
-
-                // Manejo táctil en dispositivos móviles
-                item.addEventListener('touchstart', (e) => {
-                    e.stopPropagation(); // Evita que el toque se propague a otros elementos
-                    const dropdown = item.querySelector('.navbar-dropdown');
-                    dropdown.classList.toggle('is-active');
-                });
-            });
-
-            // Cierra los submenús si se hace clic fuera de ellos
-            document.addEventListener('click', () => {
-                dropdownItems.forEach(item => {
-                    const dropdown = item.querySelector('.navbar-dropdown');
-                    item.classList.remove('is-active');
-                    dropdown.classList.remove('is-active');
-
-                });
-            });
-        });
-
 </script>
+
 {% endblock %}
 {% block script %}{% endblock %}
