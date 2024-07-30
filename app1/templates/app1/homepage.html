@@ -55,6 +55,19 @@
         background-color: #f5f5f5;
     }
 
+    .navbar-dropdown {
+        display: none; /* Oculta el menú por defecto */
+    }
+    /* Muestra el menú cuando está activo */
+    .navbar-item.is-active .navbar-dropdown {
+        display: block; /* Muestra el menú cuando está activo */
+    }
+
+    .navbar-menu.is-active {
+        display: block; /* Muestra el menú cuando está activo */
+    }
+
+    
 </style>
 
 <h2 class="title"><p class="texto-con-margen">Semillas del Campo, S.A.</p></h2>
@@ -157,6 +170,7 @@
     });
 
     document.addEventListener('DOMContentLoaded', () => {
+        // Manejo del menú hamburguesa en dispositivos móviles
         const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
 
         if ($navbarBurgers.length > 0) {
