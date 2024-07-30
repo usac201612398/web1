@@ -206,7 +206,6 @@
                     e.stopPropagation(); // Evita que el toque se propague a otros elementos
                     const dropdown = item.querySelector('.navbar-dropdown');
                     dropdown.classList.toggle('is-active');
-                    console.log("Touch");
                 });
             });
 
@@ -215,6 +214,7 @@
                 dropdownItems.forEach(item => {
                     const dropdown = item.querySelector('.navbar-dropdown');
                     dropdown.classList.remove('is-active');
+                    console.log(dropdown); 
                 });
             });
         });
