@@ -22,6 +22,7 @@ ul, ol {
 
 .nav li a {
   background-color:#000;
+  border-radius: 8px;
   color:#fff;
   text-decoration:none;
   padding:10px 12px;
