@@ -56,17 +56,19 @@
             <br>
         </div>
         <div class="navbar">
-            <div class="dropdown">
-                <button class="dropbtn">Menú</button>
-                <div class="dropdown-content">
-                    <a href="#">Opción 1</a>
-                    <a href="#">Opción 2</a>
-                    <a href="#">Opción 3</a>
-                </div>
-            </div>
+            <ul class="nav">
+                <li><a href="">Panel</a></li>
+                <li><a href="">Consultas</a>
+                    <ul>
+                        <li><a href="{% url 'iniciar_pedido_conv_carrito'%}">Convencional</a></li>
+                        <li><a href="{% url 'iniciar_pedido_conv_panel'%}">Analisis</a></li>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
         </div>
     {% else %}
-        <p class="texto-con-margen">Bienvenido, por favor <a href="{%url 'login'%}">Login</a></p>
+        <p class="texto-con-margen">Bienvenido, por favor identifiquese <a href="{%url 'login'%}">Login</a></p>
     {% endif %}
 
 
