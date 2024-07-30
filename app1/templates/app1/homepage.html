@@ -103,19 +103,37 @@
 <br>
 <br>
 <br>
-
-<div class="swiper-container">
-    <div class="swiper-wrapper">
-        <div class="swiper-slide"><img src="{% static 'img/ccippp.jpg' %}" alt="Imagen 1"></div>
-        <div class="swiper-slide"><img src="{% static 'img/ccippp.jpg' %}" alt="Imagen 2"></div>
-        <div class="swiper-slide"><img src="{% static 'img/ccippp.jpg' %}" alt="Imagen 3"></div>
+<div class="image-container">
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide"><img src="{% static 'img/ccippp.jpg' %}" alt="Imagen 1"></div>
+            <div class="swiper-slide"><img src="{% static 'img/logo.png' %}" alt="Imagen 2"></div>
+            <div class="swiper-slide"><img src="{% static 'img/cosecha.jpg' %}" alt="Imagen 3"></div>
+        </div>
+        <!-- Añadir paginación -->
+        <div class="swiper-pagination"></div>
+        <!-- Añadir botones de navegación -->
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
     </div>
-    <!-- Añadir paginación -->
-    <div class="swiper-pagination"></div>
-    <!-- Añadir botones de navegación -->
-    <div class="swiper-button-next"></div>
-    <div class="swiper-button-prev"></div>
+
 </div>
+
+
+
+<footer class="footer">
+    <div class="container">
+        <div class="columns">
+            <div class="column">
+                <p class="has-text-centered">
+                    © 2024 Semillas del Campo SA. Todos los derechos reservados.
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+</body>
+
 <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
 <script>
     var swiper = new Swiper('.swiper-container', {
@@ -133,21 +151,5 @@
         },
     });
 </script>
-
-<div class="image-container">
-    <img src="{% static 'img/ccippp.jpg' %}"class="photo" alt="Portada" width="340" height="680">
-</div>
-<footer class="footer">
-    <div class="container">
-        <div class="columns">
-            <div class="column">
-                <p class="has-text-centered">
-                    © 2024 Semillas del Campo SA. Todos los derechos reservados.
-                </p>
-            </div>
-        </div>
-    </div>
-</footer>
-</body>
 {% endblock %}
 {% block script %}{% endblock %}
