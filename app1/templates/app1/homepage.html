@@ -28,6 +28,12 @@
         margin: 20px; /* Aplica un margen de 20px alrededor del párrafo */
     }
 
+    .text-right {
+        text-align: right; /* Alinea el texto a la derecha */
+        padding-right: 20px; /* Agrega espacio interno a la derecha */
+        border: 1px solid #ccc;
+        width: 300px; /* Ancho del contenedor para ver el efecto del margen */
+    }
     
 </style>
 
@@ -35,8 +41,10 @@
 <h2 class="subtitle"><p class="texto-con-margen">¡Gestiona el control de ingresos y salidas del personal!</p></h2>
 <div>
     {% if user.is_authenticated %}
-        <p class="text-left">Bienvenido, <b>{{user.username}} | <a href="{% url 'logout'%}">Logaut</a></b></p>
-        <br>
+        <div class="text-right">
+            <p>Bienvenido, <b>{{user.username}} | <a href="{% url 'logout'%}">Logaut</a></b></p>
+            <br>
+        </div>
         <div id="header">
             <ul class="nav">
                 <li><a href="">Consultas</a></li>
