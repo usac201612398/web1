@@ -31,22 +31,19 @@ from openpyxl import Workbook
 from .forms import ImageUploadForm
 from django.utils import timezone
 import pytz
-from django.contrib.auth import logout as django_logout
-from django.views.generic import View
+from django.contrib.auth import logout
+from django.http import HttpResponseRedirect
+from oauth2_provider.models import AccessToken
 
-class LogoutView(View):
-    def get(self, request):
-        # URL base de logout en ADFS
-        adfs_logout_url = settings.ADFS_LOGOUT_URL
-        
-        # Redirigir al usuario a la URL de logout en ADFS
-        return redirect(adfs_logout_url)
+def logout(request):
+    # Revocar el token de acceso
+    token = AccessToken.objects.get(token=request.GET.get('token'))
+    token.delete()
 
-def logout_complete(request):
-    # Realizar cualquier acción adicional después de que el usuario haya completado el logout en ADFS
-    # Por ejemplo, cerrar sesión local en Django si es necesario
-    # Después, redirigir al usuario a la página principal u otra página deseada
-    return redirect('/')
+    # Cerrar la sesión en Django
+    logout(request)
+    # Redirigir a la página de inicio de sesión u otra página según tu flujo de la aplicación
+    return HttpResponseRedirect('/app1/registro')
 
 def exportar_excel(request):
     # Crea un libro de Excel y una hoja
