@@ -102,7 +102,6 @@ AUTH_ADFS = {
     'MIRROR_GROUPS': True,
     'USERNAME_CLAIM': 'upn',
     'TENANT_ID': tenant_id,
-    'ADFS_SERVER': 'https://sdc-iot.popoyan.com.gt/adfs',
     'RELYING_PARTY_ID': client_id,
 }
 
