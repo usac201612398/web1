@@ -41,17 +41,28 @@
   }
 
   .table-container {
-  position: relative; /* Asegura que los elementos internos se posicionen correctamente */
-  width: 100%; /* Hace que el contenedor ocupe todo el ancho disponible */
-  height: 640px; /* Ajusta según el tamaño deseado */
-  margin: 20px;
-  overflow: hidden; /* Oculta cualquier contenido que exceda el contenedor */
-}
+    width: 100%;
+    height: 200px; /* Altura de ejemplo */
+    overflow: auto;
+  }
 
-tbody {
-  max-height: 640px; /* Ajusta según el tamaño deseado */
-  overflow-y: auto; /* Permite el desplazamiento vertical */
-}
+  .table-container table {
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  .table-container table thead {
+    position: -webkit-sticky; /* Safari... */
+    position: sticky;
+    top: 0;
+    left: 0;
+  }
+
+  .table-container table thead th,
+  .table-container table tbody td {
+    border: 1px solid #000;
+    background-color: #FFF;
+  }
 
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
