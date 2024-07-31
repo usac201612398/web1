@@ -65,6 +65,7 @@
     #myTable {
         border-collapse: collapse; /* Collapse borders */
         width: 100%; /* Full-width */
+        max-width: 100%;
         border: 1px solid #ddd; /* Add a grey border */
         font-size: 18px; /* Increase font-size */
     }
@@ -188,14 +189,19 @@
         height: 640px; /* Altura fija para el desplazamiento vertical */
         overflow-y: auto; /* Desplazamiento vertical */
         overflow-x: auto; /* Desplazamiento horizontal si es necesario */
-        width: 100%;
+        width: 100%; /* Ocupa el 100% del ancho del contenedor padre */
         margin-left: 20px;
         margin-right: 20px;
         display: flex; /* Usa Flexbox para centrar la tabla */
         justify-content: center; /* Centra horizontalmente */
-        align-items: flex-start;
+        align-items: flex-start; 
     }
     
+    #taula table {
+        width: 100%; /* Ancho completo del contenedor */
+        max-width: 100%; /* Asegura que la tabla no exceda el ancho del contenedor */
+        border-collapse: collapse;
+    }
     #taula2 {
     height: 300px !important;
     overflow: auto;
