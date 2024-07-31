@@ -37,9 +37,8 @@
   }
 
   .table-container {
-    max-height: 400px; /* Ajusta el valor según tus necesidades */
-    overflow-y: auto;
-    position: relative;
+    max-width: 100%;
+    overflow-x: auto;
   }
 
   .table-container table {
@@ -47,22 +46,22 @@
     border-collapse: collapse;
   }
 
-  .table-container thead {
-    position: -webkit-sticky; /* Para navegadores basados en WebKit como Safari */
+  .table-container thead th {
+    position: -webkit-sticky; /* Safari */
     position: sticky;
     top: 0;
-    background: #fff; /* Color de fondo para el encabezado */
-    z-index: 1; /* Asegura que el encabezado quede sobre el cuerpo de la tabla */
+    background-color: #fff; /* Fondo blanco para el encabezado */
+    z-index: 10; /* Asegura que el encabezado esté sobre las filas */
   }
 
-  .table-container th,
-  .table-container td {
+  .table-container th, .table-container td {
     padding: 0.75rem;
+    text-align: left;
     border: 1px solid #ddd;
   }
 
   .table-container th {
-    background: #f5f5f5; /* Ajusta el color del encabezado según sea necesario */
+    background-color: #f5f5f5;
   }
 
 </style>
@@ -70,6 +69,7 @@
 <link href="{% static '/style_consultaregistro.css' %}" rel="stylesheet" type="text/css" >
 <h2 class="title"><p class="texto-con-margen">Registro de ingresos</p></h2>
 <h2 class="subtitle"><p class="texto-con-margen">¡Revisa el control de ingresos y salidas del personal!</p></h2>
+
 
 <div class="container">
   <div class="half">
@@ -88,6 +88,7 @@
   </div> 
 </div>  
 <br>
+  
 <div class="container">
   <div class="inputs-row">
 
@@ -99,39 +100,40 @@
   </div>
 </div>
 
-<br>
-<br>
-<div class="container">
-  
-  <h1 class="subtitle">[...]</h1>
-  <div class="table-container">
-    <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-        <thead>
-            <tr>
-              <th>Código</th>
-              <th>Nombre</th>
-              <th>DateTime</th>
-              <th>Fecha</th>
-              <th>Origen</th>
-              <th>Evento</th>
-            </tr>
-        </thead>
-        <tbody>
-          {%for registro in registros %} 
-          <tr> 
-            <td>{{registro.codigop}}</td>
-            <td>{{registro.nombrep}}</td>
-            <td>{{registro.marcat}}</td>
-            <td>{{registro.fecha}}</td>
-            <td>{{registro.origen}}</td>
-            <td>{{registro.evento}}</td>
-          </tr> 
-        {% endfor %}
-        </tbody>
-    </table>
-  </div>
-</div>
 
+<br>
+<br>
+
+<section class="section">
+  <div class="container">
+    <div class="table-container">
+      <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+          <thead>
+              <tr>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>DateTime</th>
+                <th>Fecha</th>
+                <th>Origen</th>
+                <th>Evento</th>
+              </tr>
+          </thead>
+          <tbody>
+            {%for registro in registros %} 
+            <tr> 
+              <td>{{registro.codigop}}</td>
+              <td>{{registro.nombrep}}</td>
+              <td>{{registro.marcat}}</td>
+              <td>{{registro.fecha}}</td>
+              <td>{{registro.origen}}</td>
+              <td>{{registro.evento}}</td>
+            </tr> 
+          {% endfor %}
+          </tbody>
+      </table>
+    </div>
+  </div>
+</section>
 <div id="taula">
   <table id="myTable">
     <thead id = "enc1">
