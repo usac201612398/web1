@@ -81,36 +81,7 @@
   /* Estilos específicos para pantallas pequeñas */
   @media (max-width: 768px) {
     table {
-      border: 0;
-    }
-
-    thead {
-      display: none; /* Oculta el encabezado de la tabla en pantallas pequeñas */
-    }
-
-    tr {
-      display: block;
-      margin-bottom: 10px;
-    }
-
-    td {
-      display: block;
-      text-align: right;
-      position: relative;
-      padding-left: 50%;
-      padding-right: 10px;
-      border: none;
-    }
-
-    td::before {
-      content: attr(data-label); /* Usa el atributo data-label para mostrar el nombre de la columna */
-      position: absolute;
-      left: 0;
-      width: 50%;
-      padding-left: 10px;
-      font-weight: bold;
-      white-space: nowrap;
-      background: #f5f5f5;
+      width: 1000px; /* Ajusta según el contenido de la tabla */
     }
   }
 
