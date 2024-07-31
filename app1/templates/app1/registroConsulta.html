@@ -7,25 +7,25 @@
 {% block content %}
 <style>
 
-.container {
+  .container {
     /* Asegura que el contenedor tenga el ancho completo disponible */
     max-width: 100%;
   }
 
   .half {
-        display: flex;
-        height: 100%;
-        grid-template-columns:  repeat(auto-fit, minmax(min-content, max-content)); /* Divide cada mitad en dos columnas iguales */
-        gap: 5px; /* Espacio entre columnas */
-        text-align: center;
-    }
+    display: flex;
+    height: 100%;
+    grid-template-columns:  repeat(auto-fit, minmax(min-content, max-content)); /* Divide cada mitad en dos columnas iguales */
+    gap: 5px; /* Espacio entre columnas */
+    text-align: center;
+  }
 
   .box {
-      background-color: #5f5f5f;
-      border: 1px solid #ddd;
-      padding: 10px;
-      flex: auto; 
-      height: 100%;    
+    background-color: #5f5f5f;
+    border: 1px solid #ddd;
+    padding: 10px;
+    flex: auto; 
+    height: 100%;    
   }
 
   .inputs-row {
@@ -41,7 +41,7 @@
   }
 
   .table-container {
-    max-width: 100%;
+
     height: 640px;
     overflow-x: auto;
     overflow-y: auto; /* Desplazamiento vertical */
