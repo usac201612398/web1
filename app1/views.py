@@ -33,15 +33,17 @@ from django.utils import timezone
 import pytz
 from django.contrib.auth import logout as django_logout
 
-def logout_view(request):
-    # Cerrar sesión localmente en Django
-    django_logout(request)
-    
-    # Construir la URL de logout de ADFS
-    adfs_logout_url = f"{settings.ADFS_LOGOUT_URL}?post_logout_redirect_uri={settings.LOGIN_REDIRECT_URI}"
-    
-    # Redirigir al usuario a la URL de logout de ADFS
-    return redirect(adfs_logout_url)
+def custom_logout(request):
+    # Cierra la sesión del usuario en Django
+    logout(request)
+
+    # Redirige al usuario a la página de inicio de sesión de ADFS
+    adfs_logout_url = getattr(settings, 'LOGOUT_REDIRECT_URI', None)
+    if adfs_logout_url:
+        return redirect(adfs_logout_url)
+
+    # Si no hay URL de ADFS para redirigir, redirige a una página por defecto
+    return redirect('/')
 
 def exportar_excel(request):
     # Crea un libro de Excel y una hoja
