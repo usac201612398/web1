@@ -31,7 +31,7 @@ from openpyxl import Workbook
 from .forms import ImageUploadForm
 from django.utils import timezone
 import pytz
-from django.contrib.auth import logout
+from django.contrib.auth import logout as django_logout
 
 def logout(request):
     # Opcional: revocar el token de acceso de OAuth2 si es necesario
