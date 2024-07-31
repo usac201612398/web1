@@ -52,7 +52,7 @@
             border: 1px solid #ddd; /* Add a grey border */
             margin-bottom: 12px; /* Add some space below the input */
     }
-    
+
     #myInput6 {
         /*  background-image: url('/css/searchicon.png'); /* Add a search icon to input */
             background-position: 0% 0%; /* Position the search icon */
@@ -67,7 +67,6 @@
     #myTable {
         border-collapse: collapse; /* Collapse borders */
         width: 100%; /* Full-width */
-        max-width: 100%;
         border: 1px solid #ddd; /* Add a grey border */
         font-size: 18px; /* Increase font-size */
     }
@@ -199,11 +198,6 @@
         align-items: flex-start; 
     }
     
-    #taula table {
-        width: 100%; /* Ancho completo del contenedor */
-        max-width: 100%; /* Asegura que la tabla no exceda el ancho del contenedor */
-        border-collapse: collapse;
-    }
     #taula2 {
     height: 300px !important;
     overflow: auto;
