@@ -40,6 +40,14 @@
     box-sizing: border-box; /* Incluye padding y border en el ancho total */
   }
 
+  .table-wrapper {
+    position: relative;
+    overflow: hidden; /* Oculta el scroll de los contenedores internos */
+    width: 100%;
+    height: 640px;
+    margin: 20px;
+  }
+
   .table-container {
     height: 640px;
     overflow: auto; /* Desplazamiento vertical */
@@ -51,7 +59,7 @@
   .table-container table {
     width: 100%;
     border-collapse: collapse; /* Asegura que los bordes de las celdas se colapsen */
-    table-layout: auto;
+    table-layout: fixed;
   }
 
   .table-container thead {
