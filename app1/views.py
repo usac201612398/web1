@@ -32,18 +32,17 @@ from .forms import ImageUploadForm
 from django.utils import timezone
 import pytz
 from django.contrib.auth import logout as django_logout
+from django.urls import reverse
+from django.http import HttpResponseRedirect
 
-def custom_logout(request):
+def adfs_logout(request):
     # Cierra la sesión del usuario en Django
     logout(request)
-
-    # Redirige al usuario a la página de inicio de sesión de ADFS
-    adfs_logout_url = getattr(settings, 'LOGOUT_REDIRECT_URI', None)
-    if adfs_logout_url:
-        return redirect(adfs_logout_url)
-
-    # Si no hay URL de ADFS para redirigir, redirige a una página por defecto
-    return redirect('/')
+    # Obtener el URL de logout de ADFS
+    logout_url = settings.ADFS_LOGOUT_URL
+    # Puedes agregar un parámetro para redirigir después del logout, si es necesario
+    redirect_url = f'{logout_url}?post_logout_redirect_uri={request.build_absolute_uri(reverse("logout"))}'
+    return HttpResponseRedirect(redirect_url)
 
 def exportar_excel(request):
     # Crea un libro de Excel y una hoja
