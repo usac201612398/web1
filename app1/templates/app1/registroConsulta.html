@@ -40,30 +40,6 @@
     box-sizing: border-box; /* Incluye padding y border en el ancho total */
   }
 
-  .table-container {
-    width: 100%;
-    height: 200px; /* Altura de ejemplo */
-    overflow: auto;
-  }
-
-  .table-container table {
-    border-collapse: separate;
-    border-spacing: 0;
-  }
-
-  .table-container table thead {
-    position: -webkit-sticky; /* Safari... */
-    position: sticky;
-    top: 0;
-    left: 0;
-  }
-
-  .table-container table thead th,
-  .table-container table tbody td {
-    border: 1px solid #000;
-    background-color: #FFF;
-  }
-
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
 <h2 class="title"><p class="texto-con-margen">Registro de ingresos</p></h2>
@@ -85,31 +61,33 @@
   <div class="columns">
     <div class="column is-12">
       <div class="table-container">
-        <table class="table is-striped is-hoverable is is-fullwidth" id="myTable">
-          <thead id = "enc1">
-            <tr class="header">
-              <th >Código</th>
-              <th >Nombre</th>
-              <th >DateTime</th>
-              <th >Fecha</th>
-              <th >Origen</th>
-              <th >Evento</th>
-            </tr>
-          </thead>
-          <tbody>
-          {%for registro in registros %} 
-          <tr> 
-              <td>{{registro.codigop}}</td>
-              <td>{{registro.nombrep}}</td>
-              <td>{{registro.marcat}}</td>
-              <td>{{registro.fecha}}</td>
-              <td>{{registro.origen}}</td>
-              <td>{{registro.evento}}</td>
-            </tr> 
-                  
-          {% endfor %}
-          </tbody>
-        </table>
+        <div class="table-wrapper">
+          <table class="table is-striped is-hoverable is is-fullwidth" id="myTable">
+            <thead id = "enc1">
+              <tr class="header">
+                <th >Código</th>
+                <th >Nombre</th>
+                <th >DateTime</th>
+                <th >Fecha</th>
+                <th >Origen</th>
+                <th >Evento</th>
+              </tr>
+            </thead>
+            <tbody>
+            {%for registro in registros %} 
+            <tr> 
+                <td>{{registro.codigop}}</td>
+                <td>{{registro.nombrep}}</td>
+                <td>{{registro.marcat}}</td>
+                <td>{{registro.fecha}}</td>
+                <td>{{registro.origen}}</td>
+                <td>{{registro.evento}}</td>
+              </tr> 
+                    
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
