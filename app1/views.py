@@ -39,17 +39,16 @@ from django.contrib.auth.views import LogoutView as BaseLogoutView
 
 class LogoutView(BaseLogoutView):
     def dispatch(self, request, *args, **kwargs):
-        # Cerrar sesión en ADFS antes de cerrar la sesión local en Django
+        # Redirigir primero al logout en ADFS
         adfs_logout_url = settings.ADFS_LOGOUT_URL
         post_logout_redirect_uri = request.build_absolute_uri(reverse('logout_complete'))
-        # Redirigir al usuario primero al logout de ADFS
         return HttpResponseRedirect(f'{adfs_logout_url}&post_logout_redirect_uri={post_logout_redirect_uri}')
 
 def logout_complete(request):
-    # Cerrar sesión local en Django
+    # Aquí puedes realizar cualquier acción adicional después de que el usuario haya cerrado sesión en ambos sistemas
+    # Por ejemplo, cerrar sesión local en Django
     django_logout(request)
-    # Redirigir al usuario a la página de inicio
-    return redirect('/')
+    return redirect('app1/registro')
 
 def exportar_excel(request):
     # Crea un libro de Excel y una hoja

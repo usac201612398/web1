@@ -65,7 +65,7 @@
     {% if user.is_authenticated %}
         <div class="text-right">
             <br>
-            <p>Bienvenido, <b>{{user.username}} | <a href="{% url 'adfs_logout'%}">Logaut</a></b></p>
+            <p>Bienvenido, <b>{{user.username}} | <a href="{% url 'logout'%}">Logaut</a></b></p>
             <br>
         </div>
         
