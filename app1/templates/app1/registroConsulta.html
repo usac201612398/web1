@@ -42,7 +42,7 @@
 
   .table-container {
     height: 640px;
-    overflow: auto;
+    overflow: auto; /* Desplazamiento horizontal y vertical */
     display: flex; /* Usa Flexbox para centrar la tabla */
     justify-content: center; /* Centra horizontalmente */
     margin: 20px;
@@ -58,48 +58,48 @@
   }
 
   .table-container thead {
-  width: calc(100% - 17px); /* Ajusta el ancho si hay barra de desplazamiento vertical */
-  background-color: #f5f5f5; /* Color de fondo del encabezado */
-}
+    width: calc(100% - 17px); /* Ajusta el ancho si hay barra de desplazamiento vertical */
+    background-color: #f5f5f5; /* Color de fondo del encabezado */
+  }
 
-.table-container tbody {
-  height: 300px; /* Ajusta según el tamaño deseado */
-  overflow-y: auto; /* Permite el desplazamiento vertical */
-}
+  .table-container tbody {
+    height: 300px; /* Ajusta según el tamaño deseado */
+    overflow-y: auto; /* Permite el desplazamiento vertical */
+  }
 
-.table-container th, .table-container td {
-  width: 150px; /* Ajusta el ancho de las celdas según sea necesario */
-  padding: 8px;
-  overflow: hidden;
-  white-space: nowrap;
-  box-sizing: border-box;
-  text-align: left; /* Alinea el texto a la izquierda, puedes cambiar según tus necesidades */
-}
+  .table-container th, .table-container td {
+    width: 150px; /* Ajusta el ancho de las celdas según sea necesario */
+    padding: 8px;
+    overflow: hidden;
+    white-space: nowrap;
+    box-sizing: border-box;
+    text-align: left; /* Alinea el texto a la izquierda, puedes cambiar según tus necesidades */
+  }
 
-.table-container th {
-  background-color: #f5f5f5; /* Color de fondo del encabezado */
-  position: sticky; /* Mantiene las cabeceras en su lugar cuando haces scroll */
-  top: 0; /* Ajusta el top según sea necesario */
-  z-index: 1; /* Asegura que las cabeceras estén por encima del cuerpo de la tabla */
-}
+  .table-container th {
+    background-color: #f5f5f5; /* Color de fondo del encabezado */
+    position: sticky; /* Mantiene las cabeceras en su lugar cuando haces scroll */
+    top: 0; /* Ajusta el top según sea necesario */
+    z-index: 1; /* Asegura que las cabeceras estén por encima del cuerpo de la tabla */
+  }
 
-.table-container td {
-  border-top: 1px solid #ddd; /* Añade una línea entre las filas */
-}
+  .table-container td {
+    border-top: 1px solid #ddd; /* Añade una línea entre las filas */
+  }
 
-/* Opcional: Estilo para el contenedor para mejorar la visibilidad */
-.table-container::-webkit-scrollbar {
-  width: 8px; /* Ajusta el ancho del scrollbar horizontal */
-}
+  /* Opcional: Estilo para el contenedor para mejorar la visibilidad */
+  .table-container::-webkit-scrollbar {
+    width: 8px; /* Ajusta el ancho del scrollbar horizontal */
+  }
 
-.table-container::-webkit-scrollbar-thumb {
-  background: #888; /* Color del scrollbar */
-  border-radius: 4px; /* Bordes redondeados del scrollbar */
-}
+  .table-container::-webkit-scrollbar-thumb {
+    background: #888; /* Color del scrollbar */
+    border-radius: 4px; /* Bordes redondeados del scrollbar */
+  }
 
-.table-container::-webkit-scrollbar-thumb:hover {
-  background: #555; /* Color del scrollbar al pasar el mouse */
-}
+  .table-container::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Color del scrollbar al pasar el mouse */
+  }
   
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
