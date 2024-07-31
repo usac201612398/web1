@@ -63,14 +63,8 @@
   <div class="inputs-row">
 
         <input class="input" type="text" id="myInput" onkeyup="myFunction()" placeholder="Buscar por código...">
-
-
         <input class="input" type="text" id="myInput2" onkeyup="myFunction2()" placeholder="Buscar por nombre...">
-
-
         <input class="input" type="text" id="myInput5" onkeyup="myFunction5()" placeholder="Buscar origen...">
-
-
         <input class="input" type="text" id="myInput6" onkeyup="myFunction6()" placeholder="Buscar por evento...">
 
   </div>
@@ -78,6 +72,34 @@
 
 <br>
 <br>
+<div class="container">
+  <h1 class="title">Tabla de Ejemplo</h1>
+  <table class="table is-fullwidth is-bordered is-striped is-narrow is-hoverable">
+      <thead>
+          <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>DateTime</th>
+            <th>Fecha</th>
+            <th>Origen</th>
+            <th>Evento</th>
+          </tr>
+      </thead>
+      <tbody>
+        {%for registro in registros %} 
+        <tr> 
+           <td>{{registro.codigop}}</td>
+           <td>{{registro.nombrep}}</td>
+           <td>{{registro.marcat}}</td>
+           <td>{{registro.fecha}}</td>
+           <td>{{registro.origen}}</td>
+           <td>{{registro.evento}}</td>
+         </tr> 
+       {% endfor %}
+      </tbody>
+  </table>
+</div>
+
 <div id="taula">
   <table id="myTable">
     <thead id = "enc1">
