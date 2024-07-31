@@ -6,7 +6,7 @@ app_main ="app1"
 
 urlpatterns = [
     path("homepage/", views.homepage, name="homepage"),
-    path("login/", views.login_page, name="login"),
+#    path("login/", views.login_page, name="login"),
     path("logout/", views.logout_view, name="logout"),
 #    path("about/",views.AboutView.as_view(),name='about'),
 #    path("", views.index, name="index"),

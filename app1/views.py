@@ -31,21 +31,13 @@ from openpyxl import Workbook
 from .forms import ImageUploadForm
 from django.utils import timezone
 import pytz
-def upload_image(request):
-    if request.method == 'POST':
-        form = ImageUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            # Maneja el archivo cargado
-            image = form.cleaned_data['image']
-            # Guarda la imagen en el sistema de archivos
-            image_path = settings.MEDIA_ROOT / image.name
-            with open(image_path, 'wb+') as destination:
-                for chunk in image.chunks():
-                    destination.write(chunk)
-            return redirect('success')  # Redirige a una página de éxito
-    else:
-        form = ImageUploadForm()
-    return render(request, 'upload.html', {'form': form})
+
+def logout_view(request):
+    # Construir la URL de logout de Azure AD
+    azure_logout_url = f"https://login.microsoftonline.com/{settings.AZURE_TENANT_ID}/oauth2/v2.0/logout"
+    
+    # Redirigir al usuario a la URL de logout de Azure AD
+    return redirect(azure_logout_url)
 
 def exportar_excel(request):
     # Crea un libro de Excel y una hoja
