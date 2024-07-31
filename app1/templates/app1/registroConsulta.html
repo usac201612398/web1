@@ -77,10 +77,48 @@
     border-top: 1px solid #ddd; /* Opcional: añade una línea entre las filas */
   }
 
-  /* Estilos específicos para pantallas pequeñas */
   @media (max-width: 768px) {
+    .table-container {
+      overflow: hidden; /* Oculta el desbordamiento */
+    }
+
     table {
-      width: 1000px; /* Ajusta según el contenido de la tabla */
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    thead {
+      display: none; /* Oculta el encabezado en dispositivos móviles */
+    }
+
+    tbody, tr {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px; /* Espacio entre filas */
+    }
+
+    td {
+      display: block;
+      text-align: right;
+      position: relative;
+      padding: 8px;
+      border-bottom: 1px solid #ddd;
+      width: 100%;
+    }
+
+    td::before {
+      content: attr(data-label);
+      position: absolute;
+      left: 0;
+      width: 45%;
+      padding-left: 10px;
+      font-weight: bold;
+      background: #f5f5f5;
+      white-space: nowrap;
+      top: 0;
+      height: 100%;
+      display: block;
+      box-sizing: border-box;
     }
   }
 
