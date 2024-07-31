@@ -154,7 +154,7 @@ LOGIN_REDIRECT_URL = '/'
 
 
 # URL base del servidor ADFS para cerrar sesión
-ADFS_LOGOUT_URL = 'https://sdc-iot.popoyan.com.gt/app1/adfs/ls/'
+
 
 LANGUAGE_CODE = 'en-us'
 
