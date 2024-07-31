@@ -160,7 +160,11 @@ def consultaRegistros(request):
     fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
 
 #    Sensor.objects.create(name='Presion Res1:' , tipo='Presion')
-    registros = Ingresop.objects.order_by('-marcat')
+    today = timezone.now().date()
+
+    # Filtrar los registros que tienen `created_at` en la fecha de hoy
+    registros = Ingresop.objects.filter(created_at__date=today)
+    registros = registros.order_by('-marcat')
 #    sensores = TItems.objects.order_by('-id')[:3]
 #    sensores = ["sensor 1","sensor 2","sensor 3","sensor 4","sensor 5","sensor 6"]
     
