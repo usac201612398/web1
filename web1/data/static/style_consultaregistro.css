@@ -52,6 +52,7 @@
             border: 1px solid #ddd; /* Add a grey border */
             margin-bottom: 12px; /* Add some space below the input */
     }
+    
     #myInput6 {
         /*  background-image: url('/css/searchicon.png'); /* Add a search icon to input */
             background-position: 0% 0%; /* Position the search icon */
@@ -62,6 +63,7 @@
             border: 1px solid #ddd; /* Add a grey border */
             margin-bottom: 12px; /* Add some space below the input */
         }
+
     #myTable {
         border-collapse: collapse; /* Collapse borders */
         width: 100%; /* Full-width */
