@@ -77,7 +77,11 @@
   .table-container td {
     border-top: 1px solid #ddd; /* Opcional: añade una línea entre las filas */
   }
-
+  @media (max-width: 768px) {
+      table {
+        /* Asegura que la tabla se ajuste al ancho del contenedor en pantallas pequeñas */
+      }
+    }
   @media (max-width: 768px) {
       thead {
         display: none; /* Oculta el encabezado en pantallas pequeñas */
