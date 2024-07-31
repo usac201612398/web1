@@ -111,36 +111,36 @@
 <br>
 <br>
 
-<section class="section">
-  <div class="container-table">
-    <div class="table-container">
-      <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-          <thead>
-              <tr>
-                <th>Código</th>
-                <th>Nombre</th>
-                <th>DateTime</th>
-                <th>Fecha</th>
-                <th>Origen</th>
-                <th>Evento</th>
-              </tr>
-          </thead>
-          <tbody>
-            {%for registro in registros %} 
-            <tr> 
-              <td>{{registro.codigop}}</td>
-              <td>{{registro.nombrep}}</td>
-              <td>{{registro.marcat}}</td>
-              <td>{{registro.fecha}}</td>
-              <td>{{registro.origen}}</td>
-              <td>{{registro.evento}}</td>
-            </tr> 
-          {% endfor %}
-          </tbody>
-      </table>
-    </div>
+
+<div class="container-table">
+  <div class="table-container">
+    <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+        <thead>
+            <tr>
+              <th>Código</th>
+              <th>Nombre</th>
+              <th>DateTime</th>
+              <th>Fecha</th>
+              <th>Origen</th>
+              <th>Evento</th>
+            </tr>
+        </thead>
+        <tbody>
+          {%for registro in registros %} 
+          <tr> 
+            <td>{{registro.codigop}}</td>
+            <td>{{registro.nombrep}}</td>
+            <td>{{registro.marcat}}</td>
+            <td>{{registro.fecha}}</td>
+            <td>{{registro.origen}}</td>
+            <td>{{registro.evento}}</td>
+          </tr> 
+        {% endfor %}
+        </tbody>
+    </table>
   </div>
-</section>
+</div>
+
 <div id="taula">
   <table id="myTable">
     <thead id = "enc1">
