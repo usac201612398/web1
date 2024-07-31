@@ -39,6 +39,7 @@
     flex: 1; /* Permite que los inputs se expandan uniformemente */
     box-sizing: border-box; /* Incluye padding y border en el ancho total */
   }
+
   .table-container {
     position: relative;
     width: 100%;
@@ -47,10 +48,6 @@
     overflow: hidden; /* Oculta cualquier contenido que exceda el contenedor */
   }
 
-  .table-wrapper {
-    overflow: auto; /* Permite el desplazamiento vertical y horizontal */
-    height: 100%; /* Asegura que el contenedor ocupe la altura completa del contenedor padre */
-  }
 
   table {
     width: 100%;
@@ -93,16 +90,16 @@
   }
 
   /* Estilo opcional para mejorar la visibilidad del scrollbar */
-  .table-wrapper::-webkit-scrollbar {
+  .table-container::-webkit-scrollbar {
     width: 8px; /* Ajusta el ancho del scrollbar vertical */
   }
 
-  .table-wrapper::-webkit-scrollbar-thumb {
+  .table-container::-webkit-scrollbar-thumb {
     background: #888; /* Color del scrollbar */
     border-radius: 4px; /* Bordes redondeados del scrollbar */
   }
 
-  .table-wrapper::-webkit-scrollbar-thumb:hover {
+  .table-container::-webkit-scrollbar-thumb:hover {
     background: #555; /* Color del scrollbar al pasar el mouse */
   }
 
@@ -127,33 +124,31 @@
   <div class="columns">
     <div class="column is-12">
       <div class="table-container">
-        <div class="table-wrapper">
-          <table class="table is-striped is-hoverable is is-fullwidth" id="myTable">
-            <thead id = "enc1">
-              <tr class="header">
-                <th >Código</th>
-                <th >Nombre</th>
-                <th >DateTime</th>
-                <th >Fecha</th>
-                <th >Origen</th>
-                <th >Evento</th>
-              </tr>
-            </thead>
-            <tbody>
-            {%for registro in registros %} 
-            <tr> 
-                <td>{{registro.codigop}}</td>
-                <td>{{registro.nombrep}}</td>
-                <td>{{registro.marcat}}</td>
-                <td>{{registro.fecha}}</td>
-                <td>{{registro.origen}}</td>
-                <td>{{registro.evento}}</td>
-              </tr> 
-                    
-            {% endfor %}
-            </tbody>
-          </table>
-        </div>
+        <table class="table is-striped is-hoverable is is-fullwidth" id="myTable">
+          <thead id = "enc1">
+            <tr class="header">
+              <th >Código</th>
+              <th >Nombre</th>
+              <th >DateTime</th>
+              <th >Fecha</th>
+              <th >Origen</th>
+              <th >Evento</th>
+            </tr>
+          </thead>
+          <tbody>
+          {%for registro in registros %} 
+          <tr> 
+              <td>{{registro.codigop}}</td>
+              <td>{{registro.nombrep}}</td>
+              <td>{{registro.marcat}}</td>
+              <td>{{registro.fecha}}</td>
+              <td>{{registro.origen}}</td>
+              <td>{{registro.evento}}</td>
+            </tr> 
+                  
+          {% endfor %}
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
