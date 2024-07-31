@@ -39,18 +39,13 @@ from django.contrib.auth.views import LogoutView as BaseLogoutView
 
 class LogoutView(BaseLogoutView):
     def dispatch(self, request, *args, **kwargs):
-        # Implementa el logout personalizado aquí, por ejemplo, cerrar sesión en ADFS antes de cerrar la sesión de Django
+        # Implementa cualquier lógica adicional aquí antes de cerrar sesión
+        # Por ejemplo, cerrar sesión en ADFS antes de cerrar la sesión local en Django
         return super().dispatch(request, *args, **kwargs)
-    
+
 def adfs_logout(request):
-    # Obtener la URL de logout de ADFS desde settings
-    adfs_logout_url = settings.ADFS_LOGOUT_URL
-    
-    # Construir la URL de redirección después del logout en ADFS
-    post_logout_redirect_uri = request.build_absolute_uri(reverse('logout_complete'))
-    
-    # Redirigir a la URL de logout de ADFS
-    return HttpResponseRedirect(f'{adfs_logout_url}&post_logout_redirect_uri={post_logout_redirect_uri}')
+    # Redirigir al usuario a la URL de logout de ADFS
+    return HttpResponseRedirect(settings.ADFS_LOGOUT_URL)
 
 def logout_complete(request):
     # Aquí puedes realizar cualquier acción adicional después de que el usuario haya cerrado sesión en ambos sistemas
