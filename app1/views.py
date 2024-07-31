@@ -31,10 +31,17 @@ from openpyxl import Workbook
 from .forms import ImageUploadForm
 from django.utils import timezone
 import pytz
+from django.contrib.auth import logout as django_logout
 
 def logout_view(request):
+    # Cerrar sesión localmente en Django
+    django_logout(request)
+    
     # Construir la URL de logout de Azure AD
-    azure_logout_url = f"https://login.microsoftonline.com/{settings.AZURE_TENANT_ID}/oauth2/v2.0/logout"
+    azure_logout_url = (
+        f"https://login.microsoftonline.com/{settings.tenant_id}/oauth2/v2.0/logout"
+        f"?post_logout_redirect_uri={settings.LOGOUT_REDIRECT_URI}"
+    )
     
     # Redirigir al usuario a la URL de logout de Azure AD
     return redirect(azure_logout_url)
