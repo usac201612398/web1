@@ -104,71 +104,35 @@
   </div>
 </div>
 
-
-<br>
-<br>
-
-
-<div class="container">
-  <div class="table-container">
-    <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-        <thead>
-            <tr>
-              <th>Código</th>
-              <th>Nombre</th>
-              <th>DateTime</th>
-              <th>Fecha</th>
-              <th>Origen</th>
-              <th>Evento</th>
-            </tr>
-        </thead>
-        <tbody>
-          {%for registro in registros %} 
-          <tr> 
-            <td>{{registro.codigop}}</td>
-            <td>{{registro.nombrep}}</td>
-            <td>{{registro.marcat}}</td>
-            <td>{{registro.fecha}}</td>
-            <td>{{registro.origen}}</td>
-            <td>{{registro.evento}}</td>
-          </tr> 
-        {% endfor %}
-        </tbody>
-    </table>
-  </div>
+<div id="taula">
+  <table id="myTable">
+    <thead id = "enc1">
+      <tr class="header">
+        <th >Código</th>
+        <th >Nombre</th>
+        <th >DateTime</th>
+        <th >Fecha</th>
+        <th >Origen</th>
+        <th >Evento</th>
+      </tr>
+    </thead>
+    <tbody>
+    {%for registro in registros %} 
+    <tr> 
+        <td>{{registro.codigop}}</td>
+        <td>{{registro.nombrep}}</td>
+        <td>{{registro.marcat}}</td>
+        <td>{{registro.fecha}}</td>
+        <td>{{registro.origen}}</td>
+        <td>{{registro.evento}}</td>
+      </tr> 
+            
+    {% endfor %}
+    </tbody>
+    
+  </table>
 </div>
-<br>
-<br>
-<div class="container">
-  <div id="taula">
-    <table id="myTable">
-      <thead id = "enc1">
-        <tr class="header">
-          <th >Código</th>
-          <th >Nombre</th>
-          <th >DateTime</th>
-          <th >Fecha</th>
-          <th >Origen</th>
-          <th >Evento</th>
-        </tr>
-      </thead>
-      <tbody>
-      {%for registro in registros %} 
-      <tr> 
-          <td>{{registro.codigop}}</td>
-          <td>{{registro.nombrep}}</td>
-          <td>{{registro.marcat}}</td>
-          <td>{{registro.fecha}}</td>
-          <td>{{registro.origen}}</td>
-          <td>{{registro.evento}}</td>
-        </tr> 
-              
-      {% endfor %}
-      </tbody>
-      
-    </table>
-  </div>
-</div>
+
 <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
 <script language="JavaScript" type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript" src="{% static '/lib/pconvencional.js' %}"></script>
