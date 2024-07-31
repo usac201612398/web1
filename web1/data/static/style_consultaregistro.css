@@ -185,11 +185,15 @@
     }
     
     #taula {
-        height: 640px !important;
-        overflow-y: auto;
+        height: 640px; /* Altura fija para el desplazamiento vertical */
+        overflow-y: auto; /* Desplazamiento vertical */
+        overflow-x: auto; /* Desplazamiento horizontal si es necesario */
         width: 100%;
         margin-left: 20px;
         margin-right: 20px;
+        display: flex; /* Usa Flexbox para centrar la tabla */
+        justify-content: center; /* Centra horizontalmente */
+        align-items: flex-start;
     }
     
     #taula2 {
