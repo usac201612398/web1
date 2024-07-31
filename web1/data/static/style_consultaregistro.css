@@ -190,9 +190,7 @@
         height: 640px; /* Altura fija para el desplazamiento vertical */
         overflow: auto;
         width: 100%; /* Ocupa el 100% del ancho del contenedor padre */
-        display: flex; /* Usa Flexbox para centrar la tabla */
-        justify-content: center; /* Centra horizontalmente */
-
+        
     }
     
     #taula2 {
