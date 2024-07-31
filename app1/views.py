@@ -35,14 +35,21 @@ from django.contrib.auth import logout as django_logout
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.views import LogoutView as BaseLogoutView
+from urllib.parse import urlencode
 
-
-class LogoutView(BaseLogoutView):
-    def dispatch(self, request, *args, **kwargs):
-        # Redirigir primero al logout en ADFS
+class LogoutView(View):
+    def get(self, request):
+        # URL de logout en ADFS
         adfs_logout_url = settings.ADFS_LOGOUT_URL
+        
+        # URL a la que se redirigirá después del logout en ADFS
         post_logout_redirect_uri = request.build_absolute_uri(reverse('logout_complete'))
-        return HttpResponseRedirect(f'{adfs_logout_url}&post_logout_redirect_uri={post_logout_redirect_uri}')
+        
+        # Construir la URL completa con los parámetros
+        full_adfs_logout_url = f'{adfs_logout_url}?{urlencode({"post_logout_redirect_uri": post_logout_redirect_uri})}'
+        
+        # Redirigir al usuario a la URL de logout en ADFS
+        return redirect(full_adfs_logout_url)
 
 def logout_complete(request):
     # Aquí puedes realizar cualquier acción adicional después de que el usuario haya cerrado sesión en ambos sistemas
