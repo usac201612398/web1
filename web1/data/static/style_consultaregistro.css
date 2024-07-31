@@ -185,11 +185,11 @@
     }
     
     #taula {
-    height: 640px !important;
-    overflow-y: auto;
-    width: 100%;
-    margin-left: 20px;
-    margin-right: 20px;
+        height: 640px !important;
+        overflow-y: auto;
+        width: 100%;
+        margin-left: 20px;
+        margin-right: 20px;
     }
     
     #taula2 {
