@@ -132,34 +132,32 @@
 </div>
 
 <div class="container">
-  <div class="table-wrapper">
-    <div class="table-container" id="tuala" >
-      <table class="table is-striped custom-table" id="myTable">
-        <thead id = "enc1">
-          <tr class="header">
-            <th >Código</th>
-            <th >Nombre</th>
-            <th >DateTime</th>
-            <th >Fecha</th>
-            <th >Origen</th>
-            <th >Evento</th>
-          </tr>
-        </thead>
-        <tbody>
-        {%for registro in registros %} 
-        <tr> 
-            <td>{{registro.codigop}}</td>
-            <td>{{registro.nombrep}}</td>
-            <td>{{registro.marcat}}</td>
-            <td>{{registro.fecha}}</td>
-            <td>{{registro.origen}}</td>
-            <td>{{registro.evento}}</td>
-          </tr> 
-                
-        {% endfor %}
-        </tbody>
-      </table>
-    </div>
+  <div class="table-container" id="tuala" >
+    <table class="table is-striped custom-table" id="myTable">
+      <thead id = "enc1">
+        <tr class="header">
+          <th >Código</th>
+          <th >Nombre</th>
+          <th >DateTime</th>
+          <th >Fecha</th>
+          <th >Origen</th>
+          <th >Evento</th>
+        </tr>
+      </thead>
+      <tbody>
+      {%for registro in registros %} 
+      <tr> 
+          <td>{{registro.codigop}}</td>
+          <td>{{registro.nombrep}}</td>
+          <td>{{registro.marcat}}</td>
+          <td>{{registro.fecha}}</td>
+          <td>{{registro.origen}}</td>
+          <td>{{registro.evento}}</td>
+        </tr> 
+              
+      {% endfor %}
+      </tbody>
+    </table>
   </div>
 </div>
 
