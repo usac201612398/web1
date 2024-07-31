@@ -89,7 +89,7 @@ AUTHENTICATION_BACKENDS = [
 client_id = 'd27b7533-221a-4742-b79d-9450ff8ffe26'
 client_secret =  '0Rj8Q~.0DAXFskEPZtfM~~FwXAp7lFzHifz6Ib1n'
 tenant_id = '2e932f25-355e-45b3-bd8b-764aaf3fd625'
-
+ADFS_SERVER = "sdc-iot.popoyan.com.gt"
 AUTH_ADFS = {
 
     'AUDIENCE': client_id,
