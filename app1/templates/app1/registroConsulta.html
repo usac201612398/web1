@@ -64,15 +64,15 @@
 
   .table-container thead {
     display: table; /* Mantiene el comportamiento de tabla para el encabezado */
-    width: 100%; /* Asegura que el encabezado ocupe el 100% del contenedor */
+    width: calc(100% - 17px); /* Asegura que el encabezado ocupe el 100% del contenedor */
     background-color: #f5f5f5; /* Color de fondo del encabezado */
     position: sticky; /* Fija el encabezado en la parte superior al hacer scroll */
     top: 0; /* Asegura que el encabezado esté pegado al borde superior */
-    z-index: 1; /* Asegura que el encabezado esté encima del cuerpo de la tabla */
+    z-index: 2; /* Asegura que el encabezado esté encima del cuerpo de la tabla */
   }
 
   .table-container tbody {
-    display: block;
+    display: table;
     width: 100%;
     overflow-y: auto;
     height: 640px; /* Ajusta según el tamaño deseado */
