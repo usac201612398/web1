@@ -32,10 +32,7 @@ from .forms import ImageUploadForm
 from django.utils import timezone
 import pytz
 from django.contrib.auth import logout as django_logout
-from django.urls import reverse
-from django.http import HttpResponseRedirect
-from django.contrib.auth.views import LogoutView as BaseLogoutView
-from urllib.parse import urlencode
+from django.views.generic import View
 
 class LogoutView(View):
     def get(self, request):
@@ -46,10 +43,10 @@ class LogoutView(View):
         return redirect(adfs_logout_url)
 
 def logout_complete(request):
-    # Aquí puedes realizar cualquier acción adicional después de que el usuario haya cerrado sesión en ambos sistemas
-    # Por ejemplo, cerrar sesión local en Django
-    django_logout(request)
-    return redirect('app1/registro')
+    # Realizar cualquier acción adicional después de que el usuario haya completado el logout en ADFS
+    # Por ejemplo, cerrar sesión local en Django si es necesario
+    # Después, redirigir al usuario a la página principal u otra página deseada
+    return redirect('/')
 
 def exportar_excel(request):
     # Crea un libro de Excel y una hoja
