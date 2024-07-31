@@ -31,15 +31,12 @@ from openpyxl import Workbook
 from .forms import ImageUploadForm
 from django.utils import timezone
 import pytz
-from django.contrib.auth import logout as django_logout
+from django.contrib.auth import logout
 
-def logout(request):
-    # Opcional: revocar el token de acceso de OAuth2 si es necesario
-    # (depende de cómo se maneje la autorización y el flujo OAuth2)
+def logout_view(request):
 
     # Cerrar la sesión en Django
     logout(request)
-
     # Redirigir a la página de inicio de sesión u otra página según tu flujo de la aplicación
     return redirect('/app1/registro')
 
