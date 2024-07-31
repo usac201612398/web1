@@ -36,6 +36,13 @@
     box-sizing: border-box; /* Incluye padding y border en el ancho total */
   }
 
+  .scrollable-vertical {
+    height: 200px; /* Ajusta la altura del contenedor según sea necesario */
+    overflow-y: scroll; /* Muestra la barra de desplazamiento vertical */
+    border: 1px solid #ccc; /* Borde para visualizar el contenedor */
+    padding: 10px; /* Espaciado interno */
+  }
+
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
 <link href="{% static '/style_consultaregistro.css' %}" rel="stylesheet" type="text/css" >
@@ -72,8 +79,8 @@
 
 <br>
 <br>
-<div class="container">
-  <h1 class="title">Tabla de Ejemplo</h1>
+<div class="scrollable-vertical">
+  <h1 class="title">[...]</h1>
   <table class="table is-fullwidth is-bordered is-striped is-narrow is-hoverable">
       <thead>
           <tr>
