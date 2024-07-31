@@ -7,8 +7,10 @@ app_main ="app1"
 urlpatterns = [
     path("homepage/", views.homepage, name="homepage"),
 #    path("login/", views.login_page, name="login"),
+
+    path('adfs-logout/', views.adfs_logout, name='adfs_logout'),
+    path('logout-complete/', views.BaseLogoutView.as_view(), name='logout_complete'),  # Puedes crear una vista personalizada para confirmar el logout si lo deseas
     path("logout/", views.LogoutView.as_view(), name="logout"),
-    path("adfs-logout/", views.adfs_logout, name="adfs_logout"),
 #    path("about/",views.AboutView.as_view(),name='about'),
 #    path("", views.index, name="index"),
 #    path("json/random/",views.random_json,name='random_json'),

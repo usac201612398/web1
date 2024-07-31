@@ -34,15 +34,24 @@ import pytz
 from django.contrib.auth import logout as django_logout
 from django.urls import reverse
 from django.http import HttpResponseRedirect
+from django.contrib.auth.views import LogoutView as BaseLogoutView
+
+
+class LogoutView(BaseLogoutView):
+    def dispatch(self, request, *args, **kwargs):
+        # Implementa el logout personalizado aquí, por ejemplo, cerrar sesión en ADFS antes de cerrar la sesión de Django
+        return super().dispatch(request, *args, **kwargs)
+    
 
 def adfs_logout(request):
-    # Cierra la sesión del usuario en Django
-    logout(request)
-    # Obtener el URL de logout de ADFS
-    logout_url = settings.ADFS_LOGOUT_URL
-    # Puedes agregar un parámetro para redirigir después del logout, si es necesario
-    redirect_url = f'{logout_url}?post_logout_redirect_uri={request.build_absolute_uri(reverse("logout"))}'
-    return HttpResponseRedirect(redirect_url)
+    # Obtener la URL de logout de ADFS desde settings
+    adfs_logout_url = settings.ADFS_LOGOUT_URL
+    
+    # Construir la URL de redirección después del logout en ADFS
+    post_logout_redirect_uri = request.build_absolute_uri(reverse('logout_complete'))
+    
+    # Redirigir a la URL de logout de ADFS
+    return HttpResponseRedirect(f'{adfs_logout_url}&post_logout_redirect_uri={post_logout_redirect_uri}')
 
 def exportar_excel(request):
     # Crea un libro de Excel y una hoja
