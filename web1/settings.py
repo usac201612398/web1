@@ -156,7 +156,7 @@ LOGIN_REDIRECT_URL = '/'
 # URL base del servidor ADFS para cerrar sesión
 ADFS_LOGOUT_URL = 'https://sdc-iot.popoyan.com.gt/adfs/ls/?wa=wsignout1.0'
 LOGOUT_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/adfs-logout/'
+
 
 # URL a la que ADFS debe redirigir después de cerrar sesión
 LOGIN_REDIRECT_URI = 'https://sdc-iot.popoyan.com.gt/oauth2/callback'
