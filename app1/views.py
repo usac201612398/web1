@@ -37,14 +37,14 @@ def logout_view(request):
     # Cerrar sesión localmente en Django
     django_logout(request)
     
-    # Construir la URL de logout de Azure AD
-    azure_logout_url = (
-        f"https://login.microsoftonline.com/{settings.tenant_id}/oauth2/v2.0/logout"
-        f"?post_logout_redirect_uri={settings.LOGOUT_REDIRECT_URI}"
+    # Construir la URL de logout de ADFS
+    adfs_logout_url = (
+        f"{settings.ADFS_SERVER}/adfs/ls/?wa=wsignout1.0"
+        f"&p:RedirectUri={settings.LOGOUT_REDIRECT_URI}"
     )
     
-    # Redirigir al usuario a la URL de logout de Azure AD
-    return redirect(azure_logout_url)
+    # Redirigir al usuario a la URL de logout de ADFS
+    return redirect(adfs_logout_url)
 
 def exportar_excel(request):
     # Crea un libro de Excel y una hoja

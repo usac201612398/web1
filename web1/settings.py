@@ -102,6 +102,7 @@ AUTH_ADFS = {
     'MIRROR_GROUPS': True,
     'USERNAME_CLAIM': 'upn',
     'TENANT_ID': tenant_id,
+    'ADFS_SERVER': 'https://sdc-iot.popoyan.com.gt/adfs',
     'RELYING_PARTY_ID': client_id,
 }
 
@@ -151,7 +152,7 @@ LOGIN_URL = 'django_auth_adfs:login'
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URI = 'https://sdc-iot.popoyan.com.gt/logout'
+LOGOUT_REDIRECT_URI = 'django_auth_adfs:login'
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'America/Guatemala'
