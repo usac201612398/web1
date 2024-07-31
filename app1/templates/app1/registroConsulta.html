@@ -89,10 +89,22 @@
 
   .table-container td {
     border-top: 1px solid #ddd; /* Opcional: añade una línea entre las filas */
+    width: auto;
   }
 
-  .table-container td, .table-container th {
-    min-width: 100px; /* Asegura que las celdas tengan un ancho mínimo para mostrar el contenido */
+
+  /* Estilo opcional para mejorar la visibilidad del scrollbar */
+  .table-container::-webkit-scrollbar {
+    width: 8px; /* Ajusta el ancho del scrollbar horizontal */
+  }
+
+  .table-container::-webkit-scrollbar-thumb {
+    background: #888; /* Color del scrollbar */
+    border-radius: 4px; /* Bordes redondeados del scrollbar */
+  }
+
+  .table-container::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Color del scrollbar al pasar el mouse */
   }
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
