@@ -151,6 +151,10 @@ LOGIN_URL = 'django_auth_adfs:login'
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 LOGIN_REDIRECT_URL = '/'
+# URL base del servidor ADFS
+ADFS_LOGOUT_URL = 'https://sdc-iot.popoyan.com.gt/adfs/ls/?wa=wsignout1.0'
+
+# URL a la que se redirige después de cerrar sesión
 LOGOUT_REDIRECT_URI = 'django_auth_adfs:login'
 LANGUAGE_CODE = 'en-us'
 

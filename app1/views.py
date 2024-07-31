@@ -38,10 +38,7 @@ def logout_view(request):
     django_logout(request)
     
     # Construir la URL de logout de ADFS
-    adfs_logout_url = (
-        f"{settings.ADFS_SERVER}/adfs/ls/?wa=wsignout1.0"
-        f"&p:RedirectUri={settings.LOGOUT_REDIRECT_URI}"
-    )
+    adfs_logout_url = f"{settings.ADFS_LOGOUT_URL}?post_logout_redirect_uri={settings.LOGOUT_REDIRECT_URI}"
     
     # Redirigir al usuario a la URL de logout de ADFS
     return redirect(adfs_logout_url)
