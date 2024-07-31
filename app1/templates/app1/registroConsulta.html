@@ -40,73 +40,6 @@
     box-sizing: border-box; /* Incluye padding y border en el ancho total */
   }
 
-  
-  .table-container {
-    height: 640px;
-    overflow: auto; /* Desplazamiento vertical */
-    display: flex; /* Usa Flexbox para centrar la tabla */
-    justify-content: center; /* Centra horizontalmente */
-    margin: 20px;
-  }
-
-  .table-container table {
-    width: 100%;
-    border-collapse: collapse; /* Asegura que los bordes de las celdas se colapsen */
-    table-layout: auto;
-  }
-
-  .table-container thead {
-    display: table; /* Mantiene el comportamiento de tabla para el encabezado */
-    width: 100%; /* Asegura que el encabezado ocupe el 100% del contenedor */
-    background-color: #f5f5f5; /* Color de fondo del encabezado */
-    position: sticky; /* Fija el encabezado en la parte superior al hacer scroll */
-    top: 0; /* Asegura que el encabezado esté pegado al borde superior */
-    z-index: 1; /* Asegura que el encabezado esté encima del cuerpo de la tabla */
-  }
-
-  .table-container tbody {
-    display: block;
-    width: 100%;
-    overflow-y: auto;
-    height: 640px; /* Ajusta según el tamaño deseado */
-  }
-
-  .table-container th, .table-container td {
-    /* width: 150px; */ /* Ajusta el ancho de las celdas según sea necesario */
-    padding: 8px;
-    overflow: hidden;
-    box-sizing: border-box;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-  }
-
-  .table-container th {
-    background-color: #f5f5f5; /* Cambia el color de fondo del encabezado si lo deseas */
-    position: sticky;
-    top: 0; /* Ajusta el top según sea necesario */
-    z-index: 2;
-  }
-
-  .table-container td {
-    border-top: 1px solid #ddd; /* Opcional: añade una línea entre las filas */
-  }
-
-
-  /* Estilo opcional para mejorar la visibilidad del scrollbar */
-  .table-container::-webkit-scrollbar {
-    width: 8px; /* Ajusta el ancho del scrollbar horizontal */
-  }
-
-  .table-container::-webkit-scrollbar-thumb {
-    background: #888; /* Color del scrollbar */
-    border-radius: 4px; /* Bordes redondeados del scrollbar */
-  }
-
-  .table-container::-webkit-scrollbar-thumb:hover {
-    background: #555; /* Color del scrollbar al pasar el mouse */
-  }
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
 <h2 class="title"><p class="texto-con-margen">Registro de ingresos</p></h2>
@@ -125,32 +58,36 @@
 </div>
 
 <div class="container">
-  <div class="table-container" id="tuala" >
-    <table class="table is-striped custom-table" id="myTable">
-      <thead id = "enc1">
-        <tr class="header">
-          <th >Código</th>
-          <th >Nombre</th>
-          <th >DateTime</th>
-          <th >Fecha</th>
-          <th >Origen</th>
-          <th >Evento</th>
-        </tr>
-      </thead>
-      <tbody>
-      {%for registro in registros %} 
-      <tr> 
-          <td>{{registro.codigop}}</td>
-          <td>{{registro.nombrep}}</td>
-          <td>{{registro.marcat}}</td>
-          <td>{{registro.fecha}}</td>
-          <td>{{registro.origen}}</td>
-          <td>{{registro.evento}}</td>
-        </tr> 
-              
-      {% endfor %}
-      </tbody>
-    </table>
+  <div class="columns">
+    <div class="column is-12">
+      <div class="table-container" id="tuala" >
+        <table class="table is-striped is-hoverable is is-fullwidth" id="myTable">
+          <thead id = "enc1">
+            <tr class="header">
+              <th >Código</th>
+              <th >Nombre</th>
+              <th >DateTime</th>
+              <th >Fecha</th>
+              <th >Origen</th>
+              <th >Evento</th>
+            </tr>
+          </thead>
+          <tbody>
+          {%for registro in registros %} 
+          <tr> 
+              <td>{{registro.codigop}}</td>
+              <td>{{registro.nombrep}}</td>
+              <td>{{registro.marcat}}</td>
+              <td>{{registro.fecha}}</td>
+              <td>{{registro.origen}}</td>
+              <td>{{registro.evento}}</td>
+            </tr> 
+                  
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>
 
