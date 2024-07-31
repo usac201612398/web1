@@ -42,83 +42,65 @@
 
   .table-container {
     height: 640px;
-    overflow-x: auto;
-    overflow-y: auto; /* Desplazamiento vertical */
+    overflow: auto;
     display: flex; /* Usa Flexbox para centrar la tabla */
     justify-content: center; /* Centra horizontalmente */
     margin: 20px;
   }
 
-  .table-container thead {
-    display: table;
-    width: 100%; /* Opcional: asegura que las columnas se mantengan en su lugar */
-  }
-
-  .table-container tbody {
-    display: block;
+  .table-container table {
     width: 100%;
-    overflow-y: auto;
-    height: 300px; /* Ajusta según el tamaño deseado */
-    table-layout: auto;
+    border-collapse: collapse; /* Asegura que los bordes de las celdas se colapsen */
   }
 
-  .table-container th, .table-container td {
-    width: 150px; /* Ajusta el ancho de las celdas según sea necesario */
-    padding: 8px;
-    overflow: hidden;
-    white-space: nowrap;
-    box-sizing: border-box;
+  .table-container thead, .table-container tbody {
+    display: block;
   }
 
-  .table-container th {
-    background-color: #f5f5f5; /* Cambia el color de fondo del encabezado si lo deseas */
-  }
+  .table-container thead {
+  width: calc(100% - 17px); /* Ajusta el ancho si hay barra de desplazamiento vertical */
+  background-color: #f5f5f5; /* Color de fondo del encabezado */
+}
 
-  .table-container td {
-    border-top: 1px solid #ddd; /* Opcional: añade una línea entre las filas */
-  }
-  @media (max-width: 768px) {
-      table {
-        /* Asegura que la tabla se ajuste al ancho del contenedor en pantallas pequeñas */
-      }
-    }
-  @media (max-width: 768px) {
-      thead {
-        display: none; /* Oculta el encabezado en pantallas pequeñas */
-      }
+.table-container tbody {
+  height: 300px; /* Ajusta según el tamaño deseado */
+  overflow-y: auto; /* Permite el desplazamiento vertical */
+}
 
-      tbody, tr {
-        display: block;
-        width: 100%;
-        margin-bottom: 10px; /* Espacio entre filas */
-      }
+.table-container th, .table-container td {
+  width: 150px; /* Ajusta el ancho de las celdas según sea necesario */
+  padding: 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  box-sizing: border-box;
+  text-align: left; /* Alinea el texto a la izquierda, puedes cambiar según tus necesidades */
+}
 
-      td {
-        display: block;
-        text-align: right;
-        position: relative;
-        padding: 8px;
-        border-bottom: 1px solid #ddd;
-        width: 100%;
-        box-sizing: border-box;
-      }
+.table-container th {
+  background-color: #f5f5f5; /* Color de fondo del encabezado */
+  position: sticky; /* Mantiene las cabeceras en su lugar cuando haces scroll */
+  top: 0; /* Ajusta el top según sea necesario */
+  z-index: 1; /* Asegura que las cabeceras estén por encima del cuerpo de la tabla */
+}
 
-      td::before {
-        content: attr(data-label); /* Muestra el nombre de la columna */
-        position: absolute;
-        left: 0;
-        width: 45%;
-        padding-left: 10px;
-        font-weight: bold;
-        background: #f5f5f5;
-        white-space: nowrap;
-        top: 0;
-        height: 100%;
-        display: block;
-        box-sizing: border-box;
-      }
-    }
+.table-container td {
+  border-top: 1px solid #ddd; /* Añade una línea entre las filas */
+}
 
+/* Opcional: Estilo para el contenedor para mejorar la visibilidad */
+.table-container::-webkit-scrollbar {
+  width: 8px; /* Ajusta el ancho del scrollbar horizontal */
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background: #888; /* Color del scrollbar */
+  border-radius: 4px; /* Bordes redondeados del scrollbar */
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color del scrollbar al pasar el mouse */
+}
+  
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
 <h2 class="title"><p class="texto-con-margen">Registro de ingresos</p></h2>
