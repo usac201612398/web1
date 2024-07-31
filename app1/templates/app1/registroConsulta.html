@@ -65,6 +65,7 @@
     width: 150px; /* Ajusta el ancho de las celdas según sea necesario */
     padding: 8px;
     overflow: hidden;
+    white-space: nowrap;
     box-sizing: border-box;
   }
 
@@ -81,24 +82,6 @@
 <h2 class="title"><p class="texto-con-margen">Registro de ingresos</p></h2>
 <h2 class="subtitle"><p class="texto-con-margen">¡Revisa el control de ingresos y salidas del personal!</p></h2>
 
-
-<div class="container">
-  <div class="half">
-    <div class="box">
-      <div><label for="fecha">Usuario:</label></div>
-      <div><input class="input" id="id" type="text" value={{user.username}} readonly></div>
-    </div>
-    <div class="box">
-      <form>
-        <div><label for="fecha">Fecha:</label></div>
-        <div>
-            <input class="input" id="date" type="date" value={{fecha}}>
-        </div>
-      </form>  
-    </div>
-  </div> 
-</div>  
-<br>
   
 <div class="container">
   <div class="inputs-row">
