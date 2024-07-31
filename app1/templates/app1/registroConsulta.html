@@ -40,6 +40,77 @@
     box-sizing: border-box; /* Incluye padding y border en el ancho total */
   }
 
+  .table-container {
+  position: relative; /* Asegura que los elementos internos se posicionen correctamente */
+  width: 100%; /* Hace que el contenedor ocupe todo el ancho disponible */
+  height: 640px; /* Ajusta según el tamaño deseado */
+  margin: 20px;
+  overflow: hidden; /* Oculta cualquier contenido que exceda el contenedor */
+}
+
+.table-wrapper {
+  overflow: auto; /* Permite el desplazamiento vertical y horizontal */
+  width: 100%;
+  height: 100%; /* Hace que el contenedor ocupe la altura completa del contenedor padre */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse; /* Asegura que los bordes de las celdas se colapsen */
+  table-layout: fixed; /* Asegura que las columnas tengan un ancho fijo */
+}
+
+thead {
+  display: table; /* Mantiene el comportamiento de tabla para el encabezado */
+  width: 100%; /* Asegura que el encabezado ocupe el 100% del contenedor */
+  background-color: #f5f5f5; /* Color de fondo del encabezado */
+  position: sticky; /* Fija el encabezado en la parte superior al hacer scroll */
+  top: 0; /* Asegura que el encabezado esté pegado al borde superior */
+  z-index: 2; /* Asegura que el encabezado esté encima del cuerpo de la tabla */
+}
+
+tbody {
+  display: block; /* Permite el desplazamiento vertical del cuerpo de la tabla */
+  width: 100%; /* Asegura que el cuerpo ocupe el 100% del contenedor */
+  max-height: 300px; /* Ajusta según el tamaño deseado */
+  overflow-y: auto; /* Permite el desplazamiento vertical */
+}
+
+th, td {
+  padding: 8px;
+  overflow: hidden;
+  box-sizing: border-box;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: left;
+  border-bottom: 1px solid #ddd; /* Añade una línea entre las filas */
+}
+
+th {
+  background-color: #f5f5f5; /* Color de fondo del encabezado */
+  position: sticky; /* Mantiene las cabeceras en su lugar cuando haces scroll */
+  top: 0; /* Ajusta el top según sea necesario */
+  z-index: 2; /* Asegura que las cabeceras estén por encima del cuerpo de la tabla */
+}
+
+td {
+  border-top: 1px solid #ddd; /* Opcional: añade una línea entre las filas */
+}
+
+/* Estilo opcional para mejorar la visibilidad del scrollbar */
+.table-wrapper::-webkit-scrollbar {
+  width: 8px; /* Ajusta el ancho del scrollbar vertical */
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: #888; /* Color del scrollbar */
+  border-radius: 4px; /* Bordes redondeados del scrollbar */
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color del scrollbar al pasar el mouse */
+}
+
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
 <h2 class="title"><p class="texto-con-margen">Registro de ingresos</p></h2>
