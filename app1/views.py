@@ -227,7 +227,7 @@ def registroPhoto(request):
                 coincidencia = Ingresop.objects.filter(codigop=str(codigoE))
 
                 if coincidencia.exists():
-                    coincidencia = coincidencia.first()  # O el método que necesites para obtener el primer objeto
+                    coincidencia = coincidencia.last()  # O el método que necesites para obtener el primer objeto
                     if coincidencia.codigop == int(codigoE):
                         war = coincidencia.fecha
                         if str(fecha_) == str(coincidencia.fecha):
