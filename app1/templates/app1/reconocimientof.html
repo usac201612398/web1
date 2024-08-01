@@ -257,24 +257,26 @@ button.addEventListener("click", () => {
 				console.log(data2);
 				var fecha = document.getElementById('date');
 				var origen = document.getElementById('Lug'),
-					value = origen.value,
-					text = origen.options[select.selectedIndex].innerText;
+					value_or = origen.value,
+					text_or = origen.options[origen.selectedIndex].innerText;
 				var evento = document.getElementById('ev'),
-					value = evento.value,
-					text = evento.options[select.selectedIndex].innerText; 
+					value_ev = evento.value,
+					text_ev = evento.options[evento.selectedIndex].innerText; 
 				datos.push(fecha);
-				datos.push(origen);
-				datos.push(evento);
+				datos.push(text_or);
+				datos.push(text_ev);
+                datos.push(data2)
 				console.log(datos);
 				$.ajax({
 					type: 'POST',
 					dataType: "json",
-					data: {'array': JSON.stringify(data2)},
+					data: {'array': JSON.stringify(datos)},
 					url: 'https://sdc-iot.popoyan.com.gt/app1/registro',
 					headers: {'X-CSRFToken': csrftoken} 
 				}).then(function(response){
 					
 					console.log(response);
+                    alert(response.saludo);
 					
 				});	
 		}, 1000); // Ejemplo de delay de 1 segundo (1000 milisegundos)
