@@ -286,7 +286,7 @@ def registroPhoto(request):
              saludo = "USUARIO NO REGISTRADO"
              response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'cola': cola}
              return JsonResponse(response)
-         if len(cola) == 5 :
+         if len(cola) >= 5 :
              cola = []
          '''
              bandera.append(False)    
