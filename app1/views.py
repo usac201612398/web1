@@ -224,7 +224,7 @@ def registroPhoto(request):
             #    comp1 = indice
 
             #if comp1 == indice:
-                coindicencia = Ingresop.objects.get(codigop=str(codigoE))
+                coindicencia = Ingresop.objects.get(codigop=codigoE)
                 lca = coindicencia.nombrep
                 
                 #if str(codigoE) == str(coindicencia.codigop) and str(vector[0])==str(fecha_) and str(vector[1])==str(coindicencia.origen) and str(vector[2])==str(coindicencia.evento):
