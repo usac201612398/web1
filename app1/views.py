@@ -224,8 +224,8 @@ def registroPhoto(request):
             #    comp1 = indice
 
             #if comp1 == indice:
-                #coindicencia = Ingresop.objects.get(codigop=codigoE)
-                #lca = coindicencia.nombrep
+                coindicencia = Ingresop.objects.get(codigop=int(codigoE))
+                lca = coindicencia.nombrep
                 
                 #if str(codigoE) == str(coindicencia.codigop) and str(vector[0])==str(fecha_) and str(vector[1])==str(coindicencia.origen) and str(vector[2])==str(coindicencia.evento):
                 #    saludo = "El usuario " + coindicencia.nombrep + " ya registró hoy su " + coindicencia.evento + " en " + coindicencia.origen
@@ -244,7 +244,7 @@ def registroPhoto(request):
                 elif eventoT =="Salida":
                     saludo = "Excelente día " + nombre
 
-                response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'lca': codigoE}
+                response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'lca': lca}
                 Ingresop.objects.create(codigop=codigoE,nombrep=nombre,marcat=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
          if contador == 0:    
              nombre = "DESCONOCIDO"
