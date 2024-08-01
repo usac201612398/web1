@@ -225,26 +225,26 @@ def registroPhoto(request):
 
             #if comp1 == indice:
                 coindicencia = Ingresop.objects.get(codigop=str(codigoE))
-                if str(codigoE) == str(coindicencia.codigop) and str(vector[0])==str(fecha_) and str(vector[1])==str(coindicencia.origen) and str(vector[2])==str(coindicencia.evento):
-                    saludo = "El usuario " + coindicencia.nombrep + " ya registró hoy su " + coindicencia.evento + " en " + coindicencia.origen
-                    response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector}
-                else:
-                    nombreT = Listapersonal.objects.get(codigop=str(codigoE))
-                        
-                    #nombreT = "Brandon"
-                    marcaT = datetime.datetime.now()
-                    nombre = nombreT.nombrep
-                    #nombre = nombreT
-                    fechaT = vector[0]
-                    origenT = vector[1]
-                    eventoT= vector[2]
-                    if eventoT == "Entrada":
-                        saludo = "Bienvenido " + nombre
-                    elif eventoT =="Salida":
-                        saludo = "Excelente día " + nombre
 
-                    response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje}
-                    Ingresop.objects.create(codigop=codigoE,nombrep=nombre,marcat=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
+                #if str(codigoE) == str(coindicencia.codigop) and str(vector[0])==str(fecha_) and str(vector[1])==str(coindicencia.origen) and str(vector[2])==str(coindicencia.evento):
+                #    saludo = "El usuario " + coindicencia.nombrep + " ya registró hoy su " + coindicencia.evento + " en " + coindicencia.origen
+                #    response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector}
+                #else:
+                nombreT = Listapersonal.objects.get(codigop=str(codigoE))
+                #nombreT = "Brandon"
+                marcaT = datetime.datetime.now()
+                nombre = nombreT.nombrep
+                #nombre = nombreT
+                fechaT = vector[0]
+                origenT = vector[1]
+                eventoT= vector[2]
+                if eventoT == "Entrada":
+                    saludo = "Bienvenido " + nombre
+                elif eventoT =="Salida":
+                    saludo = "Excelente día " + nombre
+
+                response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'coincidencia' : coindicencia}
+                Ingresop.objects.create(codigop=codigoE,nombrep=nombre,marcat=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
          if contador == 0:    
              nombre = "DESCONOCIDO"
              saludo = "USUARIO NO REGISTRADO"
