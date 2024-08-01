@@ -224,11 +224,13 @@ def registroPhoto(request):
             #    comp1 = indice
 
             #if comp1 == indice:
-                coindicencia = Ingresop.objects.get(codigop=str(codigoE))
-                lca = []
-                for i in coindicencia:
-                    
-                    lca.append(i)
+                coincidencia = Ingresop.objects.filter(codigop=str(codigoE))
+
+                if coincidencia.exists():
+                    coincidencia = coincidencia.first()  # O el método que necesites para obtener el primer objeto
+                    # Realizar operaciones con 'coincidencia'
+                else:
+                    coincidencia = None 
                 
                 #if str(codigoE) == str(coindicencia.codigop) and str(vector[0])==str(fecha_) and str(vector[1])==str(coindicencia.origen) and str(vector[2])==str(coindicencia.evento):
                 #    saludo = "El usuario " + coindicencia.nombrep + " ya registró hoy su " + coindicencia.evento + " en " + coindicencia.origen
@@ -247,7 +249,7 @@ def registroPhoto(request):
                 elif eventoT =="Salida":
                     saludo = "Excelente día " + nombre
 
-                response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'lca': lca}
+                response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'lca': coincidencia}
                 Ingresop.objects.create(codigop=codigoE,nombrep=nombre,marcat=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
          if contador == 0:    
              nombre = "DESCONOCIDO"
