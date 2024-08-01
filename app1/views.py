@@ -231,7 +231,8 @@ def registroPhoto(request):
                     if coincidencia.codigop == int(codigoE):
                         if str(vector[0]) == str(coincidencia.fecha):
                             if str(vector[1])== coincidencia.origen:
-                                war = "match origen"
+                                if str(vector[2] == coincidencia.evento):
+                                    war = "match evento"
                     # Realizar operaciones con 'coincidencia'
                 else:
                     coincidencia = None 
