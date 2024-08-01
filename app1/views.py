@@ -264,9 +264,10 @@ def registroPhoto(request):
                                 saludo = "Excelente día " + nombre
 
                             response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'prob': probabilidad, 'recur':elemento}
+                            cola = []
                             Ingresop.objects.create(codigop=codigoE,nombrep=nombre,marcat=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
                             return JsonResponse(response)
-                            cola = []
+                            
                             # Realizar operaciones con 'coincidencia'
 
                 #if str(codigoE) == str(coindicencia.codigop) and str(vector[0])==str(fecha_) and str(vector[1])==str(coindicencia.origen) and str(vector[2])==str(coindicencia.evento):
@@ -275,6 +276,12 @@ def registroPhoto(request):
                 #else:
             
          if contador_ == 0:
+             bandera=[]
+             nombre = "DESCONOCIDO"
+             saludo = "USUARIO NO REGISTRADO"
+             response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector}
+             return JsonResponse(response)
+         '''
              bandera.append(False)    
              
          if len(bandera)==5:
@@ -282,12 +289,9 @@ def registroPhoto(request):
              for i in bandera:
                  if i == True:
                      aum = aum + 1
-             if aum > 0:
-                bandera=[]
-                nombre = "DESCONOCIDO"
-                saludo = "USUARIO NO REGISTRADO"
-                response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector}
-                return JsonResponse(response)
+             if aum > 0: 
+         '''
+             
 
         ##         response = {'photo':vector, 'imagen':new_mensaje}
          #return JsonResponse(response)
