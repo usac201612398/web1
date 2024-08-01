@@ -153,12 +153,6 @@
      
                     });
     
-                    // Manejo táctil en dispositivos móviles
-                    item.addEventListener('touchstart', (e) => {
-                        e.stopPropagation(); // Evita que el toque se propague a otros elementos
-                        const dropdown = item.querySelector('.navbar-dropdown');
-                        dropdown.classList.toggle('is-active');
-                    });
                 });
     
                 // Cierra los submenús si se hace clic fuera de ellos
@@ -179,7 +173,7 @@
             document.getElementById("navbar-dropdown").classList.toggle("active");
         }
 
-        // Función para obtener el nombre de la clase al hacer clic en una opción
+        // Función para obtener el nombreGQ7VWUCuKRZ8 de la clase al hacer clic en una opción
         function getOptionClassName(option) {
             var className = option.className.trim();
             alert("Nombre de la clase: " + className);
