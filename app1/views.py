@@ -221,6 +221,7 @@ def registroPhoto(request):
                 yi, xf, yf, xi = faceloc
                 yi, xf, yf, xi = yi*4, xf*4, yf*4, xi*4
                 cola.append(codigoE)
+                '''
                 if len(cola) == 5:
                     contador = Counter()
                     contador.update(cola)
@@ -231,35 +232,35 @@ def registroPhoto(request):
                     probabilidad = repeticiones/5
 
                 #indice = comparacion.index(True)
-
+                '''
             #if comp1!= indice:
             #    comp1 = indice
 
             #if comp1 == indice:
-                    coincidencia = Ingresop.objects.filter(codigop=str(elemento))
+                coincidencia = Ingresop.objects.filter(codigop=str(codigoE))
 
-                    if coincidencia.exists():
-                        coincidencia = coincidencia.last()  # O el método que necesites para obtener el primer objeto
-                        if coincidencia.codigop == int(elemento) and str(vector[0]) == str(coincidencia.fecha) and str(vector[1])== coincidencia.origen and str(vector[2] == coincidencia.evento):
-                            saludo = "El usuario " + coincidencia.nombrep + " ya registró hoy su " + coincidencia.evento + " en " + coincidencia.origen
-                            response = {'codigoP':elemento,'photo':new_mensaje, 'saludo':saludo, 'aux':vector}
-                        else:
+                if coincidencia.exists():
+                    coincidencia = coincidencia.last()  # O el método que necesites para obtener el primer objeto
+                    if coincidencia.codigop == int(codigoE) and str(vector[0]) == str(coincidencia.fecha) and str(vector[1])== coincidencia.origen and str(vector[2] == coincidencia.evento):
+                        saludo = "El usuario " + coincidencia.nombrep + " ya registró hoy su " + coincidencia.evento + " en " + coincidencia.origen
+                        response = {'codigoP':codigoE,'photo':new_mensaje, 'saludo':saludo, 'aux':vector}
+                    else:
 
-                            nombreT = Listapersonal.objects.get(codigop=str(elemento))
-                            #nombreT = "Brandon"
-                            marcaT = datetime.datetime.now()
-                            nombre = nombreT.nombrep
-                            #nombre = nombreT
-                            fechaT = vector[0]
-                            origenT = vector[1]
-                            eventoT= vector[2]
-                            if eventoT == "Entrada":
-                                saludo = "Bienvenido " + nombre
-                            elif eventoT =="Salida":
-                                saludo = "Excelente día " + nombre
+                        nombreT = Listapersonal.objects.get(codigop=str(codigoE))
+                        #nombreT = "Brandon"
+                        marcaT = datetime.datetime.now()
+                        nombre = nombreT.nombrep
+                        #nombre = nombreT
+                        fechaT = vector[0]
+                        origenT = vector[1]
+                        eventoT= vector[2]
+                        if eventoT == "Entrada":
+                            saludo = "Bienvenido " + nombre
+                        elif eventoT =="Salida":
+                            saludo = "Excelente día " + nombre
 
-                            response = {'codigoP':elemento,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'probabilidad': probabilidad}
-                            Ingresop.objects.create(codigop=elemento,nombrep=nombre,marcat=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
+                        response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje}
+                        Ingresop.objects.create(codigop=codigoE,nombrep=nombre,marcat=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
                         # Realizar operaciones con 'coincidencia'
 
                 #if str(codigoE) == str(coindicencia.codigop) and str(vector[0])==str(fecha_) and str(vector[1])==str(coindicencia.origen) and str(vector[2])==str(coindicencia.evento):
