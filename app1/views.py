@@ -190,7 +190,7 @@ def registroPhoto(request):
         listaCod.append(cod)
     
     mensaje = request.POST.get('array')
-    
+    cola = []
     if mensaje!=None:
          new_mensaje = str(mensaje).replace('[',  '')
          new_mensaje = new_mensaje.replace(']',  '')
