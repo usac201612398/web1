@@ -269,7 +269,7 @@ def registroPhoto(request):
                             saludo = "Excelente día " + nombre
 
                         response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'cola': cola}
-                        cola = []
+                       
                         Ingresop.objects.create(codigop=codigoE,nombrep=nombre,marcat=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
                         return JsonResponse(response)
                         
@@ -286,6 +286,8 @@ def registroPhoto(request):
              saludo = "USUARIO NO REGISTRADO"
              response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'cola': cola}
              return JsonResponse(response)
+         if len(cola) == 5 :
+             cola = []
          '''
              bandera.append(False)    
              
