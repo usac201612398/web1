@@ -138,6 +138,8 @@ def consultaRegistros(request):
 #@login_required
 
 def registroPhoto(request):
+    global cola
+    global bandera
     now = datetime.datetime.now()
     fecha = now.date()
     dia= fecha.day
@@ -218,7 +220,7 @@ def registroPhoto(request):
             contador_ = contador_ + 1
 
             if comparacion[min]:
-                   
+                
                 codigoE = clases[min].upper()
                 #bandera.append(True)
                 yi, xf, yf, xi = faceloc
@@ -276,7 +278,7 @@ def registroPhoto(request):
                 #else:
             
          if contador_ == 0:
-             bandera=[]
+             cola.append(False)
              nombre = "DESCONOCIDO"
              saludo = "USUARIO NO REGISTRADO"
              response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector}
