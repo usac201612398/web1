@@ -209,6 +209,77 @@
 
 <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
 <script language="JavaScript" type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script type="text/javascript" src="{% static '/lib/cam.js' %}"></script>
 
+<script>
+
+"use strict";
+
+const video = document.querySelector(".video");
+const canvas = document.querySelector(".canvas");
+
+const button = document.querySelector(".start-btn");
+
+const photo = document.querySelector(".photo");
+
+const constraints = {
+	video: {width:420, height:340},
+	audio: false,
+};
+
+const getVideo = async () => {
+	try{
+		const stream = await navigator.mediaDevices.getUserMedia(constraints);
+		handleSucces(stream);
+		console.log(stream);
+	} catch (error){
+		console.log(error);
+	}
+};
+
+const handleSucces = (stream) => {
+	video.srcObject = stream;
+	video.play();
+};
+
+getVideo();
+
+button.addEventListener("click", () => {
+	const context = canvas.getContext("2d");
+	console.log("aqui");
+	for (let index=0; index < 5; index++){
+		console.log(index);
+		setTimeout(function() {
+				context.drawImage(video,0,0,420,340);
+				const data2 = canvas.toDataURL("image/png");
+				var datos = []
+				photo.setAttribute("src",data2);	
+				console.log(typeof data2);
+				console.log(data2);
+				var fecha = document.getElementById('date');
+				var origen = document.getElementById('Lug'),
+					value = origen.value,
+					text = origen.options[select.selectedIndex].innerText;
+				var evento = document.getElementById('ev'),
+					value = evento.value,
+					text = evento.options[select.selectedIndex].innerText; 
+				datos.push(fecha);
+				datos.push(origen);
+				datos.push(evento);
+				console.log(datos);
+				$.ajax({
+					type: 'POST',
+					dataType: "json",
+					data: {'array': JSON.stringify(data2)},
+					url: 'https://sdc-iot.popoyan.com.gt/app1/registro',
+					headers: {'X-CSRFToken': csrftoken} 
+				}).then(function(response){
+					
+					console.log(response);
+					
+				});	
+		}, 1000); // Ejemplo de delay de 1 segundo (1000 milisegundos)
+	}// Código que se ejecutará después del delay (opcional)
+});
+
+</script>
 {% endblock %}
