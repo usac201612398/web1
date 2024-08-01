@@ -1,22 +1,17 @@
 from django.conf import settings
-#import face_recognition as fr
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse, FileResponse
 from django.views import View 
 from random import randint
 from app1.models import *
-#import imageio as imread
-#from app1.rf import *
 import cv2
 import os
-#from io import BytesIO
-#from PIL import Image
 import numpy as np
 import base64
 import datetime
-from django.views.decorators.csrf import csrf_exempt
+#from django.views.decorators.csrf import csrf_exempt
 #from django.contrib.auth.decorators import login_required
-from django.template import RequestContext
+#from django.template import RequestContext
 from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login, logout
 from app1.forms import LoginForm
@@ -25,7 +20,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from drf_extra_fields.fields import Base64ImageField
 import face_recognition as fr
-# Create your views here.
 from django.views.generic import TemplateView
 from openpyxl import Workbook
 from .forms import ImageUploadForm
@@ -33,6 +27,8 @@ from django.utils import timezone
 import pytz
 from django.contrib.auth import logout
 from datetime import datetime
+# Create your views here.
+
 def logout_view(request):
 
     # Cerrar la sesión en Django
@@ -49,8 +45,6 @@ def exportar_excel(request):
 
     # Obtén los datos de tu modelo
     datos = Ingresop.objects.all()
-
-    
 
     # Especifica la zona horaria deseada
     zona_horaria_deseada = pytz.timezone('America/Guatemala')  # Cambia esto según sea necesario
@@ -109,36 +103,6 @@ def logout_view(request):
     logout(request)
     return redirect('homepage')
 
-#@login_required
-class consultarR(TemplateView):
-    def get(self,request,*args,**kwargs):
-        asistencias = Ingresop.objects.all()
-        wb = Workbook()
-        ws = wb.active
-        ws['B1'] = 'Reporte de Asistencias'
-        ws.merge_cells('B1:G1')
-        ws['B3'] = 'Codigop'
-        ws['C3'] = 'Nomprep'
-        ws['D3'] = 'Fecha/Hora'
-        ws['E3'] = 'Fecha'
-        ws['F3'] = 'Origen'
-        ws['G3'] = 'Evento'
-        cont =  4
-        for asistencia in asistencias:
-            ws.cell(row = cont, column = 2).value = asistencia.codigop
-            ws.cell(row = cont, column = 3).value = asistencia.nombrep
-            ws.cell(row = cont, column = 4).value = asistencia.marcat
-            ws.cell(row = cont, column = 5).value = asistencia.fecha
-            ws.cell(row = cont, column = 6).value = asistencia.origen
-            ws.cell(row = cont, column = 7).value = asistencia.evento
-            cont = cont + 1 
-        nombre_archivo = "ReporteAutorExcel.xlsx"
-        response = HttpResponse(content_type = "application/ms-excel")
-        content = "attachment; filename = {0}".format(nombre_archivo)
-        response['Content-Disposition'] = content
-        wb.save(response)
-        return response
-    
 #@csrf_exempt
 #@login_required
 def consultaRegistros(request):
@@ -171,6 +135,7 @@ def consultaRegistros(request):
 
 #@csrf_exempt
 #@login_required
+
 def registroPhoto(request):
     now = datetime.datetime.now()
     fecha = now.date()
@@ -260,7 +225,10 @@ def registroPhoto(request):
             #    comp1 = indice
 
             #if comp1 == indice:
+                #if codigoE == Ingresop.objects.get(codigop=str(codigoE)).codigop and vector[]:
+
                 nombreT = Listapersonal.objects.get(codigop=str(codigoE))
+                
                 #nombreT = "Brandon"
                 marcaT = datetime.datetime.now()
                 nombre = nombreT.nombrep
@@ -287,8 +255,8 @@ def registroPhoto(request):
          response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None', 'fecha' : fecha_, 'saludo':saludo,'total':total,'p':porcentaje}
 ##         response = {'mensaje':new_mensaje}
     return render(request,'app1/reconocimientof.html',response)
-#@login_required
-#@csrf_exempt
+
+'''
 def vector_prueba(request):
 #    Sensor.objects.create(name='Presion Res1:' , tipo='Presion')
     items = TItem.objects.all()
@@ -538,3 +506,4 @@ def vector_prueba3(request):
     }
     
     return render(request,'app1/iniciar_pedido_conv_carrito.html',context) 
+'''
