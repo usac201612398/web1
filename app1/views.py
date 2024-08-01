@@ -28,6 +28,7 @@ import pytz
 from django.contrib.auth import logout
 from collections import Counter
 # Create your views here.
+cola = []
 
 def logout_view(request):
 
@@ -214,16 +215,15 @@ def registroPhoto(request):
 
             contador = contador + 1
             if comparacion[min]:
-
+                   
                 codigoE = clases[min].upper()
                 
                 yi, xf, yf, xi = faceloc
                 yi, xf, yf, xi = yi*4, xf*4, yf*4, xi*4
-                cola = cola.append(codigoE)
+                cola.append(codigoE)
                 if len(cola) == 5:
                     contador = Counter()
-                    for lista in cola:
-                        contador.update(lista)
+                    contador.update(cola)
                         # Encontrar el elemento más común y cuántas veces aparece
                     elemento_mas_comun = contador.most_common(1)[0]
                     elemento = elemento_mas_comun[0]
