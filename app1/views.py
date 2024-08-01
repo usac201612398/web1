@@ -221,7 +221,7 @@ def registroPhoto(request):
                 yi, xf, yf, xi = faceloc
                 yi, xf, yf, xi = yi*4, xf*4, yf*4, xi*4
                 cola.append(codigoE)
-                '''
+                
                 if len(cola) == 5:
                     contador = Counter()
                     contador.update(cola)
@@ -232,7 +232,7 @@ def registroPhoto(request):
                     probabilidad = repeticiones/5
 
                 #indice = comparacion.index(True)
-                '''
+                
             #if comp1!= indice:
             #    comp1 = indice
 
@@ -243,7 +243,7 @@ def registroPhoto(request):
                     coincidencia = coincidencia.last()  # O el método que necesites para obtener el primer objeto
                     if coincidencia.codigop == int(codigoE) and str(vector[0]) == str(coincidencia.fecha) and str(vector[1])== coincidencia.origen and str(vector[2] == coincidencia.evento):
                         saludo = "El usuario " + coincidencia.nombrep + " ya registró hoy su " + coincidencia.evento + " en " + coincidencia.origen
-                        response = {'codigoP':codigoE,'photo':new_mensaje, 'saludo':saludo, 'aux':vector}
+                        response = {'codigoP':codigoE,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'prob':probabilidad,'recur':elemento}
                     else:
 
                         nombreT = Listapersonal.objects.get(codigop=str(codigoE))
@@ -259,7 +259,7 @@ def registroPhoto(request):
                         elif eventoT =="Salida":
                             saludo = "Excelente día " + nombre
 
-                        response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje}
+                        response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'prob': probabilidad, 'recur':elemento}
                         Ingresop.objects.create(codigop=codigoE,nombrep=nombre,marcat=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
                         # Realizar operaciones con 'coincidencia'
 
