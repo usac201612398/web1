@@ -228,6 +228,8 @@ def registroPhoto(request):
 
                 if coincidencia.exists():
                     coincidencia = coincidencia.first()  # O el método que necesites para obtener el primer objeto
+                    if coincidencia.codigop == int(codigoE):
+                        war = "match codigo"
                     # Realizar operaciones con 'coincidencia'
                 else:
                     coincidencia = None 
@@ -249,7 +251,7 @@ def registroPhoto(request):
                 elif eventoT =="Salida":
                     saludo = "Excelente día " + nombre
 
-                response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'lca': coincidencia.nombrep}
+                response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'lca': war}
                 Ingresop.objects.create(codigop=codigoE,nombrep=nombre,marcat=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
          if contador == 0:    
              nombre = "DESCONOCIDO"
