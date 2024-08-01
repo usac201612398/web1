@@ -224,24 +224,27 @@ def registroPhoto(request):
             #    comp1 = indice
 
             #if comp1 == indice:
-                #if codigoE == Ingresop.objects.get(codigop=str(codigoE)).codigop and vector[]:
+                coindicencia = Ingresop.objects.get(codigop=str(codigoE))
+                if codigoE == coindicencia.codigop and vector[0]==fecha_ and vector[1]==coindicencia.origen and vector[2]==coindicencia.evento:
+                    saludo = "El usuario " + coindicencia.nombrep + " ya registró hoy su " + coindicencia.evento + " en " + coindicencia.origen
+                    response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector}
+                else:
+                    nombreT = Listapersonal.objects.get(codigop=str(codigoE))
+                        
+                    #nombreT = "Brandon"
+                    marcaT = datetime.datetime.now()
+                    nombre = nombreT.nombrep
+                    #nombre = nombreT
+                    fechaT = vector[0]
+                    origenT = vector[1]
+                    eventoT= vector[2]
+                    if eventoT == "Entrada":
+                        saludo = "Bienvenido " + nombre
+                    elif eventoT =="Salida":
+                        saludo = "Excelente día " + nombre
 
-                nombreT = Listapersonal.objects.get(codigop=str(codigoE))
-                
-                #nombreT = "Brandon"
-                marcaT = datetime.datetime.now()
-                nombre = nombreT.nombrep
-                #nombre = nombreT
-                fechaT = vector[0]
-                origenT = vector[1]
-                eventoT= vector[2]
-                if eventoT == "Entrada":
-                    saludo = "Bienvenido " + nombre
-                elif eventoT =="Salida":
-                    saludo = "Excelente día " + nombre
-
-                response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje}
-                Ingresop.objects.create(codigop=codigoE,nombrep=nombre,marcat=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
+                    response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje}
+                    Ingresop.objects.create(codigop=codigoE,nombrep=nombre,marcat=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
          if contador == 0:    
              nombre = "DESCONOCIDO"
              saludo = "USUARIO NO REGISTRADO"
