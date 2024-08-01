@@ -225,7 +225,7 @@ def registroPhoto(request):
 
             #if comp1 == indice:
                 coindicencia = Ingresop.objects.get(codigop=str(codigoE))
-                if codigoE == coindicencia.codigop and vector[0]==fecha_ and vector[1]==coindicencia.origen and vector[2]==coindicencia.evento:
+                if str(codigoE) == str(coindicencia.codigop) and str(vector[0])==str(fecha_) and str(vector[1])==str(coindicencia.origen) and str(vector[2])==str(coindicencia.evento):
                     saludo = "El usuario " + coindicencia.nombrep + " ya registró hoy su " + coindicencia.evento + " en " + coindicencia.origen
                     response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector}
                 else:
