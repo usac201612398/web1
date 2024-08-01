@@ -261,9 +261,7 @@ def registroPhoto(request):
                             response = {'codigoP':elemento,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'probabilidad': probabilidad}
                             Ingresop.objects.create(codigop=elemento,nombrep=nombre,marcat=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
                         # Realizar operaciones con 'coincidencia'
-                    else:
-                        coincidencia = None 
-                
+
                 #if str(codigoE) == str(coindicencia.codigop) and str(vector[0])==str(fecha_) and str(vector[1])==str(coindicencia.origen) and str(vector[2])==str(coindicencia.evento):
                 #    saludo = "El usuario " + coindicencia.nombrep + " ya registró hoy su " + coindicencia.evento + " en " + coindicencia.origen
                 #    response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector}
