@@ -284,7 +284,7 @@ def registroPhoto(request):
              cola.append(False)
              nombre = "DESCONOCIDO"
              saludo = "USUARIO NO REGISTRADO"
-             response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector}
+             response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'cola': cola}
              return JsonResponse(response)
          '''
              bandera.append(False)    
