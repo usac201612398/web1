@@ -29,7 +29,7 @@ from django.contrib.auth import logout
 from collections import Counter
 # Create your views here.
 cola = []
-
+bandera = []
 def logout_view(request):
 
     # Cerrar la sesión en Django
@@ -206,18 +206,21 @@ def registroPhoto(request):
          rgb = cv2.cvtColor(frame2,cv2.COLOR_BGR2RGB)
          faces = fr.face_locations(rgb)
          facesCod = fr.face_encodings(rgb,faces)
-         contador = 0
+
+         contador_ = 0
+
          for facecod, faceloc in zip(facesCod,faces):
             
             comparacion = fr.compare_faces(listaCod,facecod)
             simi = fr.face_distance(listaCod,facecod)
             min = np.argmin(simi)
 
-            contador = contador + 1
+            contador_ = contador_ + 1
+
             if comparacion[min]:
                    
                 codigoE = clases[min].upper()
-                
+                bandera.append(True)
                 yi, xf, yf, xi = faceloc
                 yi, xf, yf, xi = yi*4, xf*4, yf*4, xi*4
                 cola.append(codigoE)
@@ -237,43 +240,57 @@ def registroPhoto(request):
             #    comp1 = indice
 
             #if comp1 == indice:
-                coincidencia = Ingresop.objects.filter(codigop=str(codigoE))
+                    coincidencia = Ingresop.objects.filter(codigop=str(codigoE))
 
-                if coincidencia.exists():
-                    coincidencia = coincidencia.last()  # O el método que necesites para obtener el primer objeto
-                    if coincidencia.codigop == int(codigoE) and str(vector[0]) == str(coincidencia.fecha) and str(vector[1])== coincidencia.origen and str(vector[2] == coincidencia.evento):
-                        saludo = "El usuario " + coincidencia.nombrep + " ya registró hoy su " + coincidencia.evento + " en " + coincidencia.origen
-                        response = {'codigoP':codigoE,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'prob':probabilidad,'recur':elemento}
-                    else:
+                    if coincidencia.exists():
+                        coincidencia = coincidencia.last()  # O el método que necesites para obtener el primer objeto
+                        if coincidencia.codigop == int(codigoE) and str(vector[0]) == str(coincidencia.fecha) and str(vector[1])== coincidencia.origen and str(vector[2] == coincidencia.evento):
+                            saludo = "El usuario " + coincidencia.nombrep + " ya registró hoy su " + coincidencia.evento + " en " + coincidencia.origen
+                            response = {'codigoP':codigoE,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'prob':probabilidad,'recur':elemento}
+                            return JsonResponse(response)
+                        else:
 
-                        nombreT = Listapersonal.objects.get(codigop=str(codigoE))
-                        #nombreT = "Brandon"
-                        marcaT = datetime.datetime.now()
-                        nombre = nombreT.nombrep
-                        #nombre = nombreT
-                        fechaT = vector[0]
-                        origenT = vector[1]
-                        eventoT= vector[2]
-                        if eventoT == "Entrada":
-                            saludo = "Bienvenido " + nombre
-                        elif eventoT =="Salida":
-                            saludo = "Excelente día " + nombre
+                            nombreT = Listapersonal.objects.get(codigop=str(codigoE))
+                            #nombreT = "Brandon"
+                            marcaT = datetime.datetime.now()
+                            nombre = nombreT.nombrep
+                            #nombre = nombreT
+                            fechaT = vector[0]
+                            origenT = vector[1]
+                            eventoT= vector[2]
+                            if eventoT == "Entrada":
+                                saludo = "Bienvenido " + nombre
+                            elif eventoT =="Salida":
+                                saludo = "Excelente día " + nombre
 
-                        response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'prob': probabilidad, 'recur':elemento}
-                        Ingresop.objects.create(codigop=codigoE,nombrep=nombre,marcat=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
-                        # Realizar operaciones con 'coincidencia'
+                            response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'prob': probabilidad, 'recur':elemento}
+                            Ingresop.objects.create(codigop=codigoE,nombrep=nombre,marcat=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
+                            return JsonResponse(response)
+                            cola = []
+                            # Realizar operaciones con 'coincidencia'
 
                 #if str(codigoE) == str(coindicencia.codigop) and str(vector[0])==str(fecha_) and str(vector[1])==str(coindicencia.origen) and str(vector[2])==str(coindicencia.evento):
                 #    saludo = "El usuario " + coindicencia.nombrep + " ya registró hoy su " + coindicencia.evento + " en " + coindicencia.origen
                 #    response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector}
                 #else:
-               
-         if contador == 0:    
-             nombre = "DESCONOCIDO"
-             saludo = "USUARIO NO REGISTRADO"
-             response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector}
-##         response = {'photo':vector, 'imagen':new_mensaje}
-         return JsonResponse(response)
+            
+         if contador_ == 0:
+             bandera.append(False)    
+             
+         if len(bandera)==5:
+             aum = 0
+             for i in bandera:
+                 if i == True:
+                     aum = aum + 1
+             if aum > 0:
+                bandera=[]
+                nombre = "DESCONOCIDO"
+                saludo = "USUARIO NO REGISTRADO"
+                response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector}
+                return JsonResponse(response)
+
+        ##         response = {'photo':vector, 'imagen':new_mensaje}
+         #return JsonResponse(response)
 
     else:
          saludo = ""
