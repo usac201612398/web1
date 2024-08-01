@@ -32,7 +32,7 @@ from .forms import ImageUploadForm
 from django.utils import timezone
 import pytz
 from django.contrib.auth import logout
-
+from datetime import datetime
 def logout_view(request):
 
     # Cerrar la sesión en Django
