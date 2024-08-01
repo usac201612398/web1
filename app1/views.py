@@ -235,7 +235,8 @@ def registroPhoto(request):
                     elemento = elemento_mas_comun[0]
                     repeticiones = elemento_mas_comun[1]
                     probabilidad = repeticiones/5
-                    return JsonResponse({'elemento': elemento, 'prob': probabilidad})
+                    response = {'elemento': elemento, 'prob': probabilidad}
+                    
                 #indice = comparacion.index(True)
                 
             #if comp1!= indice:
@@ -283,7 +284,7 @@ def registroPhoto(request):
              nombre = "DESCONOCIDO"
              saludo = "USUARIO NO REGISTRADO"
              response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector}
-             return JsonResponse(response)
+         return JsonResponse(response)
          '''
              bandera.append(False)    
              
