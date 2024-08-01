@@ -232,8 +232,8 @@ def registroPhoto(request):
                 else:
                     coincidencia = None 
                 if coincidencia != None:
-                    if str(codigoE) == str(coincidencia.codigop) and str(vector[0])==str(fecha_) and str(vector[1])==str(coincidencia.origen) and str(vector[2])==str(coincidencia.evento):
-                        saludo = "El usuario " + coincidencia.nombrep + " ya registró hoy su " + coincidencia.evento + " en " + coincidencia.origen
+                    if str(codigoE) == str(coincidencia.codigop):
+                        saludo = "El usuario " + coincidencia.nombrep + " ya registró hoy su "
                         response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector}
                     else:
                         nombreT = Listapersonal.objects.get(codigop=str(codigoE))
