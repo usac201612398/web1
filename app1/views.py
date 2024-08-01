@@ -38,7 +38,7 @@ def logout_view(request):
     # Cerrar la sesión en Django
     logout(request)
     # Redirigir a la página de inicio de sesión u otra página según tu flujo de la aplicación
-    return redirect('/app1/registro')
+    return redirect('/app1/homepage')
 
 def exportar_excel(request):
     # Crea un libro de Excel y una hoja
