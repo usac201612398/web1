@@ -228,6 +228,7 @@ def registroPhoto(request):
                 cola.append(codigoE)
                 
                 if len(cola) == 5:
+                    print(len(cola))
                     contador = Counter()
                     contador.update(cola)
                         # Encontrar el elemento más común y cuántas veces aparece
