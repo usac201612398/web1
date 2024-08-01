@@ -41,6 +41,17 @@ def logout_view(request):
     return redirect('/app1/homepage')
 
 def exportar_excel(request):
+    mensaje = request.POST.get('array')
+    
+    if mensaje!=None:
+        new_mensaje = str(mensaje).replace('[',  '')
+        new_mensaje = new_mensaje.replace(']',  '')
+        new_mensaje = new_mensaje.replace('"',  '')
+        vector = new_mensaje.split(",")
+#         path = 'home/bportillo/Proyecto1/web1/app1/static/app1/muestra.jpg'
+        new_mensaje = vector[3] + "," + vector[4]
+        new_mensaje = new_mensaje.replace('"','')
+        new_mensaje = new_mensaje[new_mensaje.index(',')+1:]
     # Crea un libro de Excel y una hoja
     wb = Workbook()
     ws = wb.active
