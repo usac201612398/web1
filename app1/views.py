@@ -220,7 +220,7 @@ def registroPhoto(request):
             if comparacion[min]:
                    
                 codigoE = clases[min].upper()
-                bandera.append(True)
+                #bandera.append(True)
                 yi, xf, yf, xi = faceloc
                 yi, xf, yf, xi = yi*4, xf*4, yf*4, xi*4
                 cola.append(codigoE)
