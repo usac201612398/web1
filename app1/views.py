@@ -236,33 +236,33 @@ def registroPhoto(request):
             #    comp1 = indice
 
             #if comp1 == indice:
-                coincidencia = Ingresop.objects.filter(codigop=str(elemento))
+                    coincidencia = Ingresop.objects.filter(codigop=str(elemento))
 
-                if coincidencia.exists():
-                    coincidencia = coincidencia.last()  # O el método que necesites para obtener el primer objeto
-                    if coincidencia.codigop == int(elemento) and str(vector[0]) == str(coincidencia.fecha) and str(vector[1])== coincidencia.origen and str(vector[2] == coincidencia.evento):
-                        saludo = "El usuario " + coincidencia.nombrep + " ya registró hoy su " + coincidencia.evento + " en " + coincidencia.origen
-                        response = {'codigoP':elemento,'photo':new_mensaje, 'saludo':saludo, 'aux':vector}
+                    if coincidencia.exists():
+                        coincidencia = coincidencia.last()  # O el método que necesites para obtener el primer objeto
+                        if coincidencia.codigop == int(elemento) and str(vector[0]) == str(coincidencia.fecha) and str(vector[1])== coincidencia.origen and str(vector[2] == coincidencia.evento):
+                            saludo = "El usuario " + coincidencia.nombrep + " ya registró hoy su " + coincidencia.evento + " en " + coincidencia.origen
+                            response = {'codigoP':elemento,'photo':new_mensaje, 'saludo':saludo, 'aux':vector}
+                        else:
+
+                            nombreT = Listapersonal.objects.get(codigop=str(elemento))
+                            #nombreT = "Brandon"
+                            marcaT = datetime.datetime.now()
+                            nombre = nombreT.nombrep
+                            #nombre = nombreT
+                            fechaT = vector[0]
+                            origenT = vector[1]
+                            eventoT= vector[2]
+                            if eventoT == "Entrada":
+                                saludo = "Bienvenido " + nombre
+                            elif eventoT =="Salida":
+                                saludo = "Excelente día " + nombre
+
+                            response = {'codigoP':elemento,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'probabilidad': probabilidad}
+                            Ingresop.objects.create(codigop=elemento,nombrep=nombre,marcat=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
+                        # Realizar operaciones con 'coincidencia'
                     else:
-
-                        nombreT = Listapersonal.objects.get(codigop=str(elemento))
-                        #nombreT = "Brandon"
-                        marcaT = datetime.datetime.now()
-                        nombre = nombreT.nombrep
-                        #nombre = nombreT
-                        fechaT = vector[0]
-                        origenT = vector[1]
-                        eventoT= vector[2]
-                        if eventoT == "Entrada":
-                            saludo = "Bienvenido " + nombre
-                        elif eventoT =="Salida":
-                            saludo = "Excelente día " + nombre
-
-                        response = {'codigoP':elemento,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'probabilidad': probabilidad}
-                        Ingresop.objects.create(codigop=elemento,nombrep=nombre,marcat=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
-                    # Realizar operaciones con 'coincidencia'
-                else:
-                    coincidencia = None 
+                        coincidencia = None 
                 
                 #if str(codigoE) == str(coindicencia.codigop) and str(vector[0])==str(fecha_) and str(vector[1])==str(coindicencia.origen) and str(vector[2])==str(coindicencia.evento):
                 #    saludo = "El usuario " + coindicencia.nombrep + " ya registró hoy su " + coindicencia.evento + " en " + coindicencia.origen
