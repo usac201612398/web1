@@ -42,8 +42,6 @@ def logout_view(request):
 
 def exportar_excel(request):
     
-    
-    
     # Crea un libro de Excel y una hoja
     wb = Workbook()
     ws = wb.active
