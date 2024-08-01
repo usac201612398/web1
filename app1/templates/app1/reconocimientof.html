@@ -245,13 +245,16 @@ getVideo();
 
 button.addEventListener("click", () => {
 	const context = canvas.getContext("2d");
-	console.log("aqui");
-	for (let index=0; index < 5; index++){
-		console.log(index);
-		setTimeout(function() {
-				context.drawImage(video,0,0,420,340);
-				const data2 = canvas.toDataURL("image/png");
-				var datos = []
+	console.log("Comenzando captura de imágenes...");
+    let index = 0;
+    const intervalo = setInterval(function() {
+        if (index < 5) {
+            console.log("Capturando imagen #" + (index + 1));
+            context.drawImage(video, 0, 0, 420, 340);
+            const data2 = canvas.toDataURL("image/png");
+
+            // Obtener datos adicionales
+            var datos = []
 				photo.setAttribute("src",data2);	
 				console.log(typeof data2);
 				console.log(data2);
@@ -279,8 +282,14 @@ button.addEventListener("click", () => {
                     alert(response.saludo);
 					
 				});	
-		}, 1000); // Ejemplo de delay de 1 segundo (1000 milisegundos)
-	}// Código que se ejecutará después del delay (opcional)
+
+            index++;
+        } else {
+            console.log("Finalizada la captura de imágenes.");
+            clearInterval(intervalo); // Detener el intervalo después de capturar 5 imágenes
+        }
+    }, 1000); // Capturar una imagen cada segundo (1000 milisegundos)
+	
 });
 
 </script>
