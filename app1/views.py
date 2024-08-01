@@ -235,13 +235,14 @@ def registroPhoto(request):
                     elemento = elemento_mas_comun[0]
                     repeticiones = elemento_mas_comun[1]
                     probabilidad = repeticiones/5
-
+                    return JsonResponse({'elemento': elemento, 'prob': probabilidad})
                 #indice = comparacion.index(True)
                 
             #if comp1!= indice:
             #    comp1 = indice
 
             #if comp1 == indice:
+                    '''
                     coincidencia = Ingresop.objects.filter(codigop=str(codigoE))
 
                     if coincidencia.exists():
@@ -276,7 +277,7 @@ def registroPhoto(request):
                 #    saludo = "El usuario " + coindicencia.nombrep + " ya registró hoy su " + coindicencia.evento + " en " + coindicencia.origen
                 #    response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector}
                 #else:
-            
+            '''
          if contador_ == 0:
              cola.append(False)
              nombre = "DESCONOCIDO"
