@@ -26,6 +26,7 @@ from .forms import ImageUploadForm
 from django.utils import timezone
 import pytz
 from django.contrib.auth import logout
+from collections import Counter
 # Create your views here.
 
 def logout_view(request):
@@ -184,7 +185,7 @@ def registroPhoto(request):
         img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
         cod = fr.face_encodings(img)[0]
         listaCod.append(cod)
-
+    
     mensaje = request.POST.get('array')
     
     if mensaje!=None:
@@ -213,10 +214,21 @@ def registroPhoto(request):
 
             contador = contador + 1
             if comparacion[min]:
-                codigoE = clases[min].upper()
 
+                codigoE = clases[min].upper()
+                
                 yi, xf, yf, xi = faceloc
                 yi, xf, yf, xi = yi*4, xf*4, yf*4, xi*4
+                cola = cola.append(codigoE)
+                if len(cola) == 5:
+                    contador = Counter()
+                    for lista in cola:
+                        contador.update(lista)
+                        # Encontrar el elemento más común y cuántas veces aparece
+                    elemento_mas_comun = contador.most_common(1)[0]
+                    elemento = elemento_mas_comun[0]
+                    repeticiones = elemento_mas_comun[1]
+                    probabilidad = repeticiones/5
 
                 #indice = comparacion.index(True)
 
@@ -224,15 +236,16 @@ def registroPhoto(request):
             #    comp1 = indice
 
             #if comp1 == indice:
-                coincidencia = Ingresop.objects.filter(codigop=str(codigoE))
+                coincidencia = Ingresop.objects.filter(codigop=str(elemento))
 
                 if coincidencia.exists():
                     coincidencia = coincidencia.last()  # O el método que necesites para obtener el primer objeto
-                    if coincidencia.codigop == int(codigoE) and str(vector[0]) == str(coincidencia.fecha) and str(vector[1])== coincidencia.origen and str(vector[2] == coincidencia.evento):
+                    if coincidencia.codigop == int(elemento) and str(vector[0]) == str(coincidencia.fecha) and str(vector[1])== coincidencia.origen and str(vector[2] == coincidencia.evento):
                         saludo = "El usuario " + coincidencia.nombrep + " ya registró hoy su " + coincidencia.evento + " en " + coincidencia.origen
-                        response = {'codigoP':codigoE,'photo':new_mensaje, 'saludo':saludo, 'aux':vector}
+                        response = {'codigoP':elemento,'photo':new_mensaje, 'saludo':saludo, 'aux':vector}
                     else:
-                        nombreT = Listapersonal.objects.get(codigop=str(codigoE))
+
+                        nombreT = Listapersonal.objects.get(codigop=str(elemento))
                         #nombreT = "Brandon"
                         marcaT = datetime.datetime.now()
                         nombre = nombreT.nombrep
@@ -245,8 +258,8 @@ def registroPhoto(request):
                         elif eventoT =="Salida":
                             saludo = "Excelente día " + nombre
 
-                        response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'lca': war}
-                        Ingresop.objects.create(codigop=codigoE,nombrep=nombre,marcat=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
+                        response = {'codigoP':elemento,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'probabilidad': probabilidad}
+                        Ingresop.objects.create(codigop=elemento,nombrep=nombre,marcat=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
                     # Realizar operaciones con 'coincidencia'
                 else:
                     coincidencia = None 
