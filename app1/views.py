@@ -26,7 +26,6 @@ from .forms import ImageUploadForm
 from django.utils import timezone
 import pytz
 from django.contrib.auth import logout
-from datetime import datetime
 # Create your views here.
 
 def logout_view(request):
@@ -56,7 +55,7 @@ def exportar_excel(request):
         row = []
         for field in Ingresop._meta.fields:
             value = getattr(obj, field.name)
-            if isinstance(value, datetime):
+            if isinstance(value, datetime.datetime):
                 # Convertir a la zona horaria deseada
                 if value.tzinfo is not None:
                     value = value.astimezone(zona_horaria_deseada)
