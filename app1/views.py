@@ -229,9 +229,9 @@ def registroPhoto(request):
                 if coincidencia.exists():
                     coincidencia = coincidencia.last()  # O el método que necesites para obtener el primer objeto
                     if coincidencia.codigop == int(codigoE):
-                        war = coincidencia.fecha
                         if str(vector[0]) == str(coincidencia.fecha):
-                            war = "match fecha"
+                            if str(vector[1])== coincidencia.origen:
+                                war = "match origen"
                     # Realizar operaciones con 'coincidencia'
                 else:
                     coincidencia = None 
