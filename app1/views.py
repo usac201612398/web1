@@ -229,7 +229,7 @@ def registroPhoto(request):
                 yi, xf, yf, xi = yi*4, xf*4, yf*4, xi*4
                 #cola=[]
                 cola.append(codigoE)
-
+                bandera.append([vector[5],cola])
                 '''
                 if len(cola) == 5:
                     print(len(cola))
@@ -308,6 +308,7 @@ def registroPhoto(request):
              #bandera = []
              
              cola.append(False)
+             bandera.append([vector[5],cola])
              nombre = "DESCONOCIDO"
              saludo = "USUARIO NO REGISTRADO"
              response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
