@@ -247,8 +247,9 @@ getVideo();
 button.addEventListener("click", () => {
     const context = canvas.getContext("2d");
     console.log("Comenzando captura de imágenes...");
-    let index = 0;
-    const intervalo = setInterval(function() {
+    
+    // Función para capturar una foto y enviarla al servidor
+    function capturarYEnviarFoto(index) {
         if (index < 3) {
             console.log("Capturando imagen #" + (index + 1));
             context.drawImage(video, 0, 0, 420, 340);
@@ -270,6 +271,8 @@ button.addEventListener("click", () => {
             datos.push(data2);
             datos.push(String(index));
             console.log(datos);
+
+            // Realizar la solicitud AJAX al servidor
             $.ajax({
                 type: 'POST',
                 dataType: "json",
@@ -277,28 +280,22 @@ button.addEventListener("click", () => {
                 url: 'https://sdc-iot.popoyan.com.gt/app1/registro',
                 headers: {'X-CSRFToken': csrftoken} 
             }).then(function(response){
-                // console.log(response);
-                // alert(response.saludo);
+                console.log(response);
+                alert(response.saludo);
 
-                // Incrementar el índice después de recibir la respuesta del servidor
-                index++;
-
-                // Si se han capturado menos de 3 imágenes, continuar el intervalo
-                if (index < 3) {
-                    console.log("Esperando antes de capturar la siguiente imagen...");
-                } else {
-                    console.log("Finalizada la captura de imágenes.");
-                    clearInterval(intervalo); // Detener el intervalo después de capturar 3 imágenes
-                }
+                // Llamar recursivamente para enviar la siguiente foto
+                capturarYEnviarFoto(index + 1);
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 console.error('Error en la solicitud AJAX:', textStatus, errorThrown);
                 // Puedes manejar el error aquí según sea necesario
             });
         } else {
             console.log("Finalizada la captura de imágenes.");
-            clearInterval(intervalo); // Detener el intervalo si ya se capturaron 3 imágenes
         }
-    }, 1000); // Capturar una imagen cada 3 segundos (3000 milisegundos)
+    }
+
+    // Comenzar el proceso enviando la primera foto (índice inicial 0)
+    capturarYEnviarFoto(0);
 });
 
 
