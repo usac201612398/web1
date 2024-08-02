@@ -31,7 +31,6 @@ from collections import Counter
 cola = []
 bandera = []
 matriz = []
-revision = 0
 
 def logout_view(request):
 
@@ -144,7 +143,6 @@ def registroPhoto(request):
     global cola
     global bandera
     global matriz
-    global revision
 
     now = datetime.datetime.now()
     fecha = now.date()
@@ -217,7 +215,7 @@ def registroPhoto(request):
          facesCod = fr.face_encodings(rgb,faces)
 
          contador_ = 0
-
+         revision = 0
          for facecod, faceloc in zip(facesCod,faces):
             
             comparacion = fr.compare_faces(listaCod,facecod)
@@ -233,7 +231,7 @@ def registroPhoto(request):
                 #cola=[]
                 #bandera = []
                 cola.append(codigoE)
-                bandera.append([revision,vector[5]])
+                bandera.append([str(revision) + " reconc",vector[5]])
                 '''
                 if len(cola) == 5:
                     print(len(cola))
@@ -266,9 +264,9 @@ def registroPhoto(request):
                             #matriz.extend(bandera)
                             saludo = "Listo"
                             response = {'codigoP':codigoE,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
-                            #bandera=[]
-                            #cola = []
-                            #matriz = []
+                            bandera=[]
+                            cola = []
+                            matriz = []
                         
                     return JsonResponse(response)
                 else:
@@ -295,9 +293,9 @@ def registroPhoto(request):
                         #matriz.extend(bandera)
                         saludo = "Listo"
                         response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
-                        #bandera=[]
-                        #cola = []
-                        #matriz = []
+                        bandera=[]
+                        cola = []
+                        matriz = []
 
                     return JsonResponse(response)
                         
@@ -307,12 +305,13 @@ def registroPhoto(request):
                 #    saludo = "El usuario " + coindicencia.nombrep + " ya registró hoy su " + coindicencia.evento + " en " + coindicencia.origen
                 #    response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector}
                 #else:
-            
+         revision = 0  
          if contador_ == 0:
              #bandera = []
              #cola = []
+             revision = revision + 1
              cola.append(False)
-             bandera.append(vector[5])
+             bandera.append([str(revision) + " Desc",vector[5]])
              nombre = "DESCONOCIDO"
              saludo = "USUARIO NO REGISTRADO"
              response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
@@ -322,9 +321,9 @@ def registroPhoto(request):
                  #matriz.extend(bandera)
                  saludo = "Listo"
                  response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
-                 #bandera=[]
-                 #cola = []
-                 #matriz = []
+                 bandera=[]
+                 cola = []
+                 matriz = []
              return JsonResponse(response)
          
         ##         response = {'photo':vector, 'imagen':new_mensaje}
