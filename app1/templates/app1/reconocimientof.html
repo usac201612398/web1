@@ -288,7 +288,8 @@ button.addEventListener("click", async () => {
             }).then(function(response){
                 console.log("Respuesta recibida del servidor para imagen #" + (index + 1));
                 console.log(response);
-                alert(response.saludo);
+                if (response.saludo) {alert(response.saludo);}
+                
                 resolve(); // Resolver la promesa para continuar con la siguiente foto
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 console.error('Error en la solicitud AJAX:', textStatus, errorThrown);
