@@ -267,35 +267,35 @@ def registroPhoto(request):
                             matriz = []
                         
                             return JsonResponse(response)
-                    else:
+                else:
 
-                        nombreT = Listapersonal.objects.get(codigop=str(codigoE))
-                        #nombreT = "Brandon"
-                        marcaT = datetime.datetime.now()
-                        nombre = nombreT.nombrep
-                        #nombre = nombreT
-                        fechaT = vector[0]
-                        origenT = vector[1]
-                        eventoT= vector[2]
-                        if eventoT == "Entrada":
-                            saludo = "Bienvenido " + nombre
-                        elif eventoT =="Salida":
-                            saludo = "Excelente día " + nombre
+                    nombreT = Listapersonal.objects.get(codigop=str(codigoE))
+                    #nombreT = "Brandon"
+                    marcaT = datetime.datetime.now()
+                    nombre = nombreT.nombrep
+                    #nombre = nombreT
+                    fechaT = vector[0]
+                    origenT = vector[1]
+                    eventoT= vector[2]
+                    if eventoT == "Entrada":
+                        saludo = "Bienvenido " + nombre
+                    elif eventoT =="Salida":
+                        saludo = "Excelente día " + nombre
 
+                    response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
+                    
+                    Ingresop.objects.create(codigop=codigoE,nombrep=nombre,marcat=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
+                    
+                    if int(vector[5]) == 4 :
+                        matriz.extend(cola)
+                        matriz.extend(bandera)
+                        saludo = "Listo"
                         response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
-                       
-                        Ingresop.objects.create(codigop=codigoE,nombrep=nombre,marcat=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
-                        
-                        if int(vector[5]) == 4 :
-                            matriz.extend(cola)
-                            matriz.extend(bandera)
-                            saludo = "Listo"
-                            response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
-                            bandera=[]
-                            cola = []
-                            matriz = []
+                        bandera=[]
+                        cola = []
+                        matriz = []
 
-                            return JsonResponse(response)
+                        return JsonResponse(response)
                         
                         # Realizar operaciones con 'coincidencia'
 
