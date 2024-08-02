@@ -259,7 +259,7 @@ def registroPhoto(request):
                         saludo = "El usuario " + coincidencia.nombrep + " ya registró hoy su " + coincidencia.evento + " en " + coincidencia.origen
                         response = {'codigoP':codigoE,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
                         
-                        if int(vector[5]) == 4 :
+                        if int(vector[5]) == 5 :
                             matriz.extend(cola)
                             #matriz.extend(bandera)
                             saludo = "Listo"
@@ -288,7 +288,7 @@ def registroPhoto(request):
                     
                     Ingresop.objects.create(codigop=codigoE,nombrep=nombre,marcat=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
                     
-                    if int(vector[5]) == 4 :
+                    if int(vector[5]) == 5 :
                         matriz.extend(cola)
                         #matriz.extend(bandera)
                         saludo = "Listo"
@@ -316,7 +316,7 @@ def registroPhoto(request):
              saludo = "USUARIO NO REGISTRADO"
              response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
              
-             if int(vector[5]) == 4 :
+             if int(vector[5]) == 5 :
                  matriz.extend(cola)
                  #matriz.extend(bandera)
                  saludo = "Listo"
