@@ -216,6 +216,7 @@ def registroPhoto(request):
 
          contador_ = 0
          revision = 0
+
          for facecod, faceloc in zip(facesCod,faces):
             
             comparacion = fr.compare_faces(listaCod,facecod)
@@ -232,24 +233,6 @@ def registroPhoto(request):
                 #bandera = []
                 cola.append(codigoE)
                 bandera.append([str(revision) + " reconc",vector[5]])
-                '''
-                if len(cola) == 5:
-                    print(len(cola))
-                    contador = Counter()
-                    contador.update(cola)
-                        # Encontrar el elemento más común y cuántas veces aparece
-                    elemento_mas_comun = contador.most_common(1)[0]
-                    elemento = elemento_mas_comun[0]
-                    repeticiones = elemento_mas_comun[1]
-                    probabilidad = repeticiones/5
-                    response = {'elemento': elemento, 'prob': probabilidad}
-                '''    
-                #indice = comparacion.index(True)
-                
-                #if comp1!= indice:
-                #    comp1 = indice
-
-                #if comp1 == indice:
                     
                 coincidencia = Ingresop.objects.filter(codigop=str(codigoE))
 
@@ -257,13 +240,19 @@ def registroPhoto(request):
                     coincidencia = coincidencia.last()  # O el método que necesites para obtener el primer objeto
                     if coincidencia.codigop == int(codigoE) and str(vector[0]) == str(coincidencia.fecha) and str(vector[1])== coincidencia.origen and str(vector[2] == coincidencia.evento):
                         saludo = "El usuario " + coincidencia.nombrep + " ya registró hoy su " + coincidencia.evento + " en " + coincidencia.origen
-                        response = {'codigoP':codigoE,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
+                        response = {'codigoP':codigoE,'photo':new_mensaje,  'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
                         
                         if int(vector[5]) == 5 :
                             matriz.extend(cola)
+                            contador = Counter()
+                            contador.update(matriz)
+                                # Encontrar el elemento más común y cuántas veces aparece
+                            elemento_mas_comun = contador.most_common(1)[0]
+                            elemento = elemento_mas_comun[0]
+                            repeticiones = elemento_mas_comun[1]
+                            probabilidad = repeticiones/5
                             #matriz.extend(bandera)
-                            saludo = "Listo"
-                            response = {'codigoP':codigoE,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
+                            response = {'codigoP':codigoE,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera, 'comun': elemento, 'prob': probabilidad}
                             bandera=[]
                             cola = []
                             matriz = []
@@ -284,15 +273,20 @@ def registroPhoto(request):
                     elif eventoT =="Salida":
                         saludo = "Excelente día " + nombre
 
-                    response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
-                    
-                    Ingresop.objects.create(codigop=codigoE,nombrep=nombre,marcat=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
-                    
+                    response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'total':total,'p':porcentaje, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
+                         
                     if int(vector[5]) == 5 :
                         matriz.extend(cola)
+                        contador = Counter()
+                        contador.update(matriz)
+                            # Encontrar el elemento más común y cuántas veces aparece
+                        elemento_mas_comun = contador.most_common(1)[0]
+                        elemento = elemento_mas_comun[0]
+                        repeticiones = elemento_mas_comun[1]
+                        probabilidad = repeticiones/5
+                        Ingresop.objects.create(codigop=codigoE,nombrep=nombre,marcat=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
                         #matriz.extend(bandera)
-                        saludo = "Listo"
-                        response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
+                        response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera,'comun':elemento,'prob':probabilidad}
                         bandera=[]
                         cola = []
                         matriz = []
@@ -312,15 +306,21 @@ def registroPhoto(request):
              revision = revision + 1
              cola.append(False)
              bandera.append([str(revision) + " Desc",vector[5]])
+             contador = Counter()
+             contador.update(matriz)
+                # Encontrar el elemento más común y cuántas veces aparece
+             elemento_mas_comun = contador.most_common(1)[0]
+             elemento = elemento_mas_comun[0]
+             repeticiones = elemento_mas_comun[1]
+             probabilidad = repeticiones/5
              nombre = "DESCONOCIDO"
              saludo = "USUARIO NO REGISTRADO"
-             response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
+             response = {'codigoP':nombre,'photo':new_mensaje, 'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
              
              if int(vector[5]) == 5 :
                  matriz.extend(cola)
                  #matriz.extend(bandera)
-                 saludo = "Listo"
-                 response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
+                 response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera, 'comun':elemento, 'prob':probabilidad}
                  bandera=[]
                  cola = []
                  matriz = []
