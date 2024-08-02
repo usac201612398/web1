@@ -30,6 +30,7 @@ from collections import Counter
 # Create your views here.
 cola = []
 bandera = []
+matriz = []
 def logout_view(request):
 
     # Cerrar la sesión en Django
@@ -140,6 +141,8 @@ def consultaRegistros(request):
 def registroPhoto(request):
     global cola
     global bandera
+    global matriz
+
     now = datetime.datetime.now()
     fecha = now.date()
     dia= fecha.day
@@ -283,14 +286,17 @@ def registroPhoto(request):
             
          if contador_ == 0:
              
-             cola.append(False)
+             bandera.append(False)
              nombre = "DESCONOCIDO"
              saludo = "USUARIO NO REGISTRADO"
-             response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'cola': cola}
+             response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'bandera': bandera}
              return JsonResponse(response)
          
-         if len(cola) >= 5 :
-             cola = []
+         if int(vector[5]) == 5 :
+             matriz.extend(cola)
+             matriz.extend(bandera)
+             response = {'matriz': matriz}
+             return JsonResponse(response)
         
          '''
              bandera.append(False)    
