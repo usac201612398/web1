@@ -269,7 +269,7 @@ def registroPhoto(request):
                         
                             return JsonResponse(response)
                 else:
-
+                    
                     nombreT = Listapersonal.objects.get(codigop=str(codigoE))
                     #nombreT = "Brandon"
                     marcaT = datetime.datetime.now()
