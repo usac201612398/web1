@@ -225,7 +225,6 @@ def registroPhoto(request):
             if comparacion[min]:
                 
                 codigoE = clases[min].upper()
-                #bandera.append(True)
                 yi, xf, yf, xi = faceloc
                 yi, xf, yf, xi = yi*4, xf*4, yf*4, xi*4
                 #cola=[]
@@ -245,10 +244,10 @@ def registroPhoto(request):
                 '''    
                 #indice = comparacion.index(True)
                 
-            #if comp1!= indice:
-            #    comp1 = indice
+                #if comp1!= indice:
+                #    comp1 = indice
 
-            #if comp1 == indice:
+                #if comp1 == indice:
                     
                 coincidencia = Ingresop.objects.filter(codigop=str(codigoE))
 
@@ -323,21 +322,6 @@ def registroPhoto(request):
                  matriz = []
              return JsonResponse(response)
          
-         
-
-        
-         '''
-             bandera.append(False)    
-             
-         if len(bandera)==5:
-             aum = 0
-             for i in bandera:
-                 if i == True:
-                     aum = aum + 1
-             if aum > 0: 
-         '''
-             
-
         ##         response = {'photo':vector, 'imagen':new_mensaje}
          #return JsonResponse(response)
 
