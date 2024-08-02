@@ -144,6 +144,7 @@ def registroPhoto(request):
     global cola
     global bandera
     global matriz
+    global revision
 
     now = datetime.datetime.now()
     fecha = now.date()
