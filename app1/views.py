@@ -259,7 +259,7 @@ def registroPhoto(request):
                         
                         if int(vector[5]) == 4 :
                             matriz.extend(cola)
-                            matriz.extend(bandera)
+                            #matriz.extend(bandera)
                             saludo = "Listo"
                             response = {'codigoP':codigoE,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
                             bandera=[]
@@ -288,7 +288,7 @@ def registroPhoto(request):
                     
                     if int(vector[5]) == 4 :
                         matriz.extend(cola)
-                        matriz.extend(bandera)
+                        #matriz.extend(bandera)
                         saludo = "Listo"
                         response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
                         bandera=[]
@@ -307,14 +307,14 @@ def registroPhoto(request):
          if contador_ == 0:
              #bandera = []
              
-             bandera.append(False)
+             cola.append(False)
              nombre = "DESCONOCIDO"
              saludo = "USUARIO NO REGISTRADO"
              response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
              
              if int(vector[5]) == 4 :
                  matriz.extend(cola)
-                 matriz.extend(bandera)
+                 #matriz.extend(bandera)
                  saludo = "Listo"
                  response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
                  bandera=[]
