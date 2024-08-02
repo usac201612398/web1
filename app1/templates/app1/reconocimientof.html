@@ -248,7 +248,7 @@ button.addEventListener("click", () => {
 	console.log("Comenzando captura de imágenes...");
     let index = 0;
     const intervalo = setInterval(function() {
-        if (index < 5) {
+        if (index < 3) {
             console.log("Capturando imagen #" + (index + 1));
             context.drawImage(video, 0, 0, 420, 340);
             const data2 = canvas.toDataURL("image/png");
