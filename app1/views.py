@@ -231,7 +231,6 @@ def registroPhoto(request):
                 #cola=[]
                 cola.append(codigoE)
 
-                
                 '''
                 if len(cola) == 5:
                     print(len(cola))
