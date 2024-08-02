@@ -266,9 +266,9 @@ def registroPhoto(request):
                             #matriz.extend(bandera)
                             saludo = "Listo"
                             response = {'codigoP':codigoE,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
-                            bandera=[]
-                            cola = []
-                            matriz = []
+                            #bandera=[]
+                            #cola = []
+                            #matriz = []
                         
                     return JsonResponse(response)
                 else:
@@ -295,9 +295,9 @@ def registroPhoto(request):
                         #matriz.extend(bandera)
                         saludo = "Listo"
                         response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
-                        bandera=[]
-                        cola = []
-                        matriz = []
+                        #bandera=[]
+                        #cola = []
+                        #matriz = []
 
                     return JsonResponse(response)
                         
@@ -322,9 +322,9 @@ def registroPhoto(request):
                  #matriz.extend(bandera)
                  saludo = "Listo"
                  response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
-                 bandera=[]
-                 cola = []
-                 matriz = []
+                 #bandera=[]
+                 #cola = []
+                 #matriz = []
              return JsonResponse(response)
          
         ##         response = {'photo':vector, 'imagen':new_mensaje}
