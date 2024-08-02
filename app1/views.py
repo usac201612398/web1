@@ -228,8 +228,8 @@ def registroPhoto(request):
                 #bandera.append(True)
                 yi, xf, yf, xi = faceloc
                 yi, xf, yf, xi = yi*4, xf*4, yf*4, xi*4
-                
-                cola.append(codigoE)
+                cola=[]
+                #cola.append(codigoE)
                 '''
                 if len(cola) == 5:
                     print(len(cola))
@@ -285,8 +285,8 @@ def registroPhoto(request):
                 #else:
             
          if contador_ == 0:
-             
-             bandera.append(False)
+             bandera = []
+             #bandera.append(False)
              nombre = "DESCONOCIDO"
              saludo = "USUARIO NO REGISTRADO"
              response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'bandera': bandera, 'vector': vector[5]}
@@ -295,6 +295,7 @@ def registroPhoto(request):
          if int(vector[5]) == 5 :
              matriz.extend(cola)
              matriz.extend(bandera)
+             matriz=[]
              response = {'matriz': matriz}
              return JsonResponse(response)
         
