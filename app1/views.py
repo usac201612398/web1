@@ -263,7 +263,7 @@ def registroPhoto(request):
                             matriz.extend(cola)
                             matriz.extend(bandera)
                             saludo = "Listo"
-                            response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'vector': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
+                            response = {'codigoP':codigoE,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'vector': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
                             bandera=[]
                             cola = []
                             matriz = []
