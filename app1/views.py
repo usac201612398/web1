@@ -255,7 +255,7 @@ def registroPhoto(request):
                     coincidencia = coincidencia.last()  # O el método que necesites para obtener el primer objeto
                     if coincidencia.codigop == int(codigoE) and str(vector[0]) == str(coincidencia.fecha) and str(vector[1])== coincidencia.origen and str(vector[2] == coincidencia.evento):
                         saludo = "El usuario " + coincidencia.nombrep + " ya registró hoy su " + coincidencia.evento + " en " + coincidencia.origen
-                        response = {'codigoP':codigoE,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'cola': cola}
+                        response = {'codigoP':codigoE,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'cola': cola, 'NoElem': vector[5]}
                         return JsonResponse(response)
                     else:
 
@@ -289,7 +289,7 @@ def registroPhoto(request):
              bandera.append(False)
              nombre = "DESCONOCIDO"
              saludo = "USUARIO NO REGISTRADO"
-             response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'bandera': bandera}
+             response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'bandera': bandera, 'vector': vector[5]}
              return JsonResponse(response)
          
          if int(vector[5]) == 5 :
