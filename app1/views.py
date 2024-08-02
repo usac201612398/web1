@@ -324,7 +324,7 @@ def registroPhoto(request):
              revision = revision + 1
              cola.append("DESCONOCIDO")
              bandera.append([str(revision) + " Desc",vector[5]])
-             
+             nombre = "DESCONOCIDO"
              response = {'codigoP':nombre,'photo':new_mensaje, 'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
              
              if int(vector[5]) == 5 :
