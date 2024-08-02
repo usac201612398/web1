@@ -31,6 +31,8 @@ from collections import Counter
 cola = []
 bandera = []
 matriz = []
+revision = 0
+
 def logout_view(request):
 
     # Cerrar la sesión en Django
@@ -195,6 +197,7 @@ def registroPhoto(request):
     mensaje = request.POST.get('array')
    
     if mensaje!=None:
+         
          new_mensaje = str(mensaje).replace('[',  '')
          new_mensaje = new_mensaje.replace(']',  '')
          new_mensaje = new_mensaje.replace('"',  '')
@@ -220,17 +223,16 @@ def registroPhoto(request):
             simi = fr.face_distance(listaCod,facecod)
             min = np.argmin(simi)
 
-            
-
             if comparacion[min]:
                 contador_ = contador_ + 1
                 codigoE = clases[min].upper()
                 yi, xf, yf, xi = faceloc
                 yi, xf, yf, xi = yi*4, xf*4, yf*4, xi*4
+                revision = revision+1
                 #cola=[]
                 #bandera = []
                 cola.append(codigoE)
-                bandera.append(vector[5])
+                bandera.append([revision,vector[5]])
                 '''
                 if len(cola) == 5:
                     print(len(cola))
