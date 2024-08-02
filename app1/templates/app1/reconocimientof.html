@@ -246,18 +246,17 @@ getVideo();
 
 button.addEventListener("click", () => {
     const context = canvas.getContext("2d");
-    console.log("Comenzando captura de imágenes...");
-    
+    console.log("Comenzando captura y envío de imágenes...");
+
     // Función para capturar una foto y enviarla al servidor
     function capturarYEnviarFoto(index) {
-        if (index < 3) {
+        if (index < 5) {
             console.log("Capturando imagen #" + (index + 1));
             context.drawImage(video, 0, 0, 420, 340);
             const data2 = canvas.toDataURL("image/png");
 
             // Obtener datos adicionales
             var datos = [];
-            photo.setAttribute("src", data2);
             var fecha = document.getElementById('date').value;
             var origen = document.getElementById('Lug'),
                 value_or = origen.value,
@@ -283,14 +282,17 @@ button.addEventListener("click", () => {
                 console.log(response);
                 alert(response.saludo);
 
-                // Llamar recursivamente para enviar la siguiente foto
+                // Llamar recursivamente para enviar la siguiente foto después de recibir respuesta del servidor
                 capturarYEnviarFoto(index + 1);
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 console.error('Error en la solicitud AJAX:', textStatus, errorThrown);
                 // Puedes manejar el error aquí según sea necesario
+
+                // Llamar recursivamente para enviar la siguiente foto en caso de error también
+                capturarYEnviarFoto(index + 1);
             });
         } else {
-            console.log("Finalizada la captura de imágenes.");
+            console.log("Finalizada la captura y envío de imágenes.");
         }
     }
 
