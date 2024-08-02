@@ -220,17 +220,17 @@ def registroPhoto(request):
             simi = fr.face_distance(listaCod,facecod)
             min = np.argmin(simi)
 
-            contador_ = contador_ + 1
+            
 
             if comparacion[min]:
-                
+                contador_ = contador_ + 1
                 codigoE = clases[min].upper()
                 yi, xf, yf, xi = faceloc
                 yi, xf, yf, xi = yi*4, xf*4, yf*4, xi*4
-                cola=[]
-                bandera = []
-                #cola.append(codigoE)
-                #bandera.append([vector[5],cola])
+                #cola=[]
+                #bandera = []
+                cola.append(codigoE)
+                bandera.append([vector[5],cola])
                 '''
                 if len(cola) == 5:
                     print(len(cola))
@@ -306,10 +306,10 @@ def registroPhoto(request):
                 #else:
             
          if contador_ == 0:
-             bandera = []
-             cola = []
-             #cola.append(False)
-             #bandera.append([vector[5],cola])
+             #bandera = []
+             #cola = []
+             cola.append(False)
+             bandera.append([vector[5],cola])
              nombre = "DESCONOCIDO"
              saludo = "USUARIO NO REGISTRADO"
              response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
