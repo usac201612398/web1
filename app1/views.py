@@ -266,7 +266,7 @@ def registroPhoto(request):
                             cola = []
                             matriz = []
                         
-                        return JsonResponse(response)
+                            return JsonResponse(response)
                     else:
 
                         nombreT = Listapersonal.objects.get(codigop=str(codigoE))
@@ -295,7 +295,7 @@ def registroPhoto(request):
                             cola = []
                             matriz = []
 
-                        return JsonResponse(response)
+                            return JsonResponse(response)
                         
                         # Realizar operaciones con 'coincidencia'
 
@@ -320,7 +320,7 @@ def registroPhoto(request):
                  bandera=[]
                  cola = []
                  matriz = []
-             return JsonResponse(response)
+                 return JsonResponse(response)
          
         ##         response = {'photo':vector, 'imagen':new_mensaje}
          #return JsonResponse(response)
