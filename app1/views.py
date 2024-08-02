@@ -228,8 +228,8 @@ def registroPhoto(request):
                 #bandera.append(True)
                 yi, xf, yf, xi = faceloc
                 yi, xf, yf, xi = yi*4, xf*4, yf*4, xi*4
-                cola=[]
-                #cola.append(codigoE)
+                #cola=[]
+                cola.append(codigoE)
 
                 
                 '''
@@ -257,13 +257,13 @@ def registroPhoto(request):
                     coincidencia = coincidencia.last()  # O el método que necesites para obtener el primer objeto
                     if coincidencia.codigop == int(codigoE) and str(vector[0]) == str(coincidencia.fecha) and str(vector[1])== coincidencia.origen and str(vector[2] == coincidencia.evento):
                         saludo = "El usuario " + coincidencia.nombrep + " ya registró hoy su " + coincidencia.evento + " en " + coincidencia.origen
-                        response = {'codigoP':codigoE,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'cola': cola, 'NoElem': vector[5]}
+                        response = {'codigoP':codigoE,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
                         
                         if int(vector[5]) == 4 :
                             matriz.extend(cola)
                             matriz.extend(bandera)
                             saludo = "Listo"
-                            response = {'codigoP':codigoE,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'vector': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
+                            response = {'codigoP':codigoE,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
                             bandera=[]
                             cola = []
                             matriz = []
@@ -284,7 +284,7 @@ def registroPhoto(request):
                         elif eventoT =="Salida":
                             saludo = "Excelente día " + nombre
 
-                        response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'cola': cola}
+                        response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
                        
                         Ingresop.objects.create(codigop=codigoE,nombrep=nombre,marcat=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
                         
@@ -292,7 +292,7 @@ def registroPhoto(request):
                             matriz.extend(cola)
                             matriz.extend(bandera)
                             saludo = "Listo"
-                            response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'vector': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
+                            response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
                             bandera=[]
                             cola = []
                             matriz = []
@@ -307,19 +307,18 @@ def registroPhoto(request):
                 #else:
             
          if contador_ == 0:
-             bandera = []
+             #bandera = []
              
-             #bandera.append(False)
+             bandera.append(False)
              nombre = "DESCONOCIDO"
              saludo = "USUARIO NO REGISTRADO"
-             response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'bandera': bandera, 'vector': vector[5]}
+             response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
              
              if int(vector[5]) == 4 :
                  matriz.extend(cola)
                  matriz.extend(bandera)
-                 #matriz=[]
                  saludo = "Listo"
-                 response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'bandera': bandera, 'vector': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
+                 response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
                  bandera=[]
                  cola = []
                  matriz = []
