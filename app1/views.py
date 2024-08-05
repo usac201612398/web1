@@ -366,6 +366,7 @@ def registroPhoto(request):
                              eventoT= vector[2]
                              Ingresop.objects.create(codigop=elemento,nombrep=nombre,marcat=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)   
                 #matriz.extend(bandera)
+                
                  response = {'codigoP':nombre,'photo':new_mensaje, 'saludo':saludo, 'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera, 'comun':elemento, 'prob':probabilidad}
                  bandera=[]
                  cola = []
