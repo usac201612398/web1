@@ -252,6 +252,7 @@ def registroPhoto(request):
                             repeticiones = elemento_mas_comun[1]
                             probabilidad = repeticiones/5
                             if elemento == "DESCONOCIDO":
+                                nombre = "DESCONOCIDO"
                                 saludo = "USUARIO NO REGISTRADO"
                             else:
                                 nombreT = Listapersonal.objects.get(codigop=str(elemento))
@@ -290,6 +291,7 @@ def registroPhoto(request):
                         probabilidad = repeticiones/5
 
                         if elemento == "DESCONOCIDO":
+                            nombre = "DESCONOCIDO"
                             saludo = "USUARIO NO REGISTRADO"
                         else:
                             nombreT = Listapersonal.objects.get(codigop=str(elemento))
