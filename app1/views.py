@@ -263,10 +263,54 @@ def registroPhoto(request):
                             bandera=[]
                             cola = []
                             matriz = []
+                    else:
+                        nombreT = Listapersonal.objects.get(codigop=str(codigoE))
+                        #nombreT = "Brandon"
+                        nombre = nombreT.nombrep
+                        marcaT = datetime.datetime.now()
+                        #nombre = nombreT
+                        fechaT = vector[0]
+                        origenT = vector[1]
+                        eventoT= vector[2]
+                        
+
+                        response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'total':total,'p':porcentaje, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
+                            
+                        if int(vector[5]) == 5 :
+
+                            matriz.extend(cola)
+                            contador = Counter()
+                            contador.update(matriz)
+                                # Encontrar el elemento más común y cuántas veces aparece
+                            elemento_mas_comun = contador.most_common(1)[0]
+                            elemento = elemento_mas_comun[0]
+                            repeticiones = elemento_mas_comun[1]
+                            probabilidad = repeticiones/5
+
+                            if elemento == "DESCONOCIDO":
+                                nombre = "DESCONOCIDO"
+                                saludo = "USUARIO NO REGISTRADO"
+                            else:
+                                nombreT = Listapersonal.objects.get(codigop=str(elemento))
+                                nombre = nombreT.nombrep
+
+                                if eventoT == "Entrada":
+                                    saludo = "Bienvenido " + nombre
+                                elif eventoT =="Salida":
+                                    saludo = "Excelente día " + nombre
+                                marcaT = datetime.datetime.now()
+
+                                Ingresop.objects.create(codigop=elemento,nombrep=nombre,marcat=marcaT,fecha=fechaT,origen=origenT,evento=eventoT)
+                            #matriz.extend(bandera)
+                            response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'saludo':saludo,'total':total,'p':porcentaje, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera,'comun':elemento,'prob':probabilidad}
+                            bandera=[]
+                            cola = []
+                            matriz = []
+
+                        
                         
                     return JsonResponse(response)
                 else:
-                    
                     nombreT = Listapersonal.objects.get(codigop=str(codigoE))
                     #nombreT = "Brandon"
                     nombre = nombreT.nombrep
@@ -278,7 +322,7 @@ def registroPhoto(request):
                     
 
                     response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'total':total,'p':porcentaje, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
-                         
+                        
                     if int(vector[5]) == 5 :
 
                         matriz.extend(cola)
@@ -309,9 +353,8 @@ def registroPhoto(request):
                         bandera=[]
                         cola = []
                         matriz = []
-
-                    return JsonResponse(response)
                         
+                    return JsonResponse(response)    
                         # Realizar operaciones con 'coincidencia'
 
                 #if str(codigoE) == str(coindicencia.codigop) and str(vector[0])==str(fecha_) and str(vector[1])==str(coindicencia.origen) and str(vector[2])==str(coindicencia.evento):
