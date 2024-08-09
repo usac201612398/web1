@@ -5,5 +5,5 @@ class salidasFrutaForm(forms.ModelForm):
     class Meta:
         model = salidasFruta
         fields = ['finca', 'viaje', 'encargado', 'orden', 'cultivo', 'variedad', 'cajas']
-    finca = forms.ModelChoiceField(queryset=usuariosAppFruta.objects.alL())
+    finca = forms.ModelChoiceField(queryset=usuariosAppFruta.objects.all())
     encargado = forms.ModelChoiceField(queryset=usuariosAppFruta.objects.none())
