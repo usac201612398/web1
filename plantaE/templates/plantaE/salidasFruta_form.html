@@ -23,15 +23,15 @@
         $('#id_category').change(function() {
             var categoryId = $(this).val();
             $.ajax({
-                url: '{% url "load_products" %}',
+                url: '{% url "load_dataUsuario" %}',
                 data: {
-                    'category_id': categoryId
+                    'category_id': user.username
                 },
                 success: function(data) {
                     $('#id_name').html('');
-                    $.each(data.products, function(index, product) {
+                    $.each(data.datos, function(index, product) {
                         $('#id_name').append(
-                            $('<option>').text(product.name).attr('value', product.id)
+                            $('<option>').text(product.finca).attr('value', product.encargado)
                         );
                     });
                 }
