@@ -20,7 +20,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-        $('#id_category').change(function() {
+        $('#viaje').change(function() {
             var categoryId = $(this).val();
             $.ajax({
                 url: '{% url "load_dataUsuario" %}',
