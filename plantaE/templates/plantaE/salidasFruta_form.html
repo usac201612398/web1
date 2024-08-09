@@ -7,11 +7,11 @@
     <h1>{{ form.instance.pk|yesno:"Edit Registro,Create Registro" }}</h1>
     <form method="post" id = "formFruta">
         {% csrf_token %}
-        {{ if user.username='brandon.portillo@popoyan.com.gt'}}
+        {% if user.username == 'brandon.portillo@popoyan.com.gt'%}
             origen = "RIO"
-        {{else}}
+        {%else%}
 
-        {{end if}}
+        {%end if%}
         <label for="opcion1">Opción 1:</label>
         <select id="opcion1" name="opcion1">
             <option value="">Selecciona una opción</option>
