@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ registros.title }}</title>
+</head>
+<body>
+    <h1>{{ registros.title }}</h1>
+    <p>{{ registros.content }}</p>
+    <a href="{% url 'salidasFruta_update' salidas.pk %}">Edit</a>
+    <a href="{% url 'salidasFruta_delete' salidas.pk %}">Delete</a>
+    <a href="{% url 'salidasFruta_list' %}">Back to list</a>
+</body>
+</html>

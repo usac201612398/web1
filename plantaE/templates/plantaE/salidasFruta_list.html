@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>salidasFruta</title>
+</head>
+<body>
+    <h1>salidasFruta</h1>
+    <a href="{% url 'salidasFruta_create' %}">Create new Registro</a>
+    <ul>
+        {% for article in registros %}
+            <li>
+                <a href="{% url 'salidasFruta_detail' article.pk %}">{{ article.title }}</a>
+                <a href="{% url 'salidasFruta_update' article.pk %}">Edit</a>
+                <a href="{% url 'salidasFruta_delete' article.pk %}">Delete</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
