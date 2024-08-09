@@ -8,31 +8,35 @@
     <form method="post" id = "formFruta">
         {% csrf_token %}
         {% if user.username == 'brandon.portillo@popoyan.com.gt'%}
-            {% with my_variable='RIO' %}
-            <!-- Usa my_variable aquí -->
-                <label for="opcion1">Finca:</label>
-                <select id="opcion1" name="opcion1">
-                    <option value="">Selecciona una opción</option>
-                    <option value="grupo1">{{my_variable}}</option>
-                </select>
-            {% endwith %}
         {% else %}
-
         {% endif %}
-        
+        {{ form.as_p }}
 
-        <label for="opcion2">Viaje:</label>
-        <select id="opcion2" name="opcion2">
-            <option value="grupo1">Viaje 1</option>
-            <option value="grupo2">Viaje 2</option>
-            <option value="grupo3">Viaje 3</option>
-            <option value="grupo4">Viaje 4</option>
-            <option value="grupo5">Viaje 5</option>
-            <option value="grupo6">Viaje 6</option>
-            <!-- Opciones se llenarán mediante JavaScript -->
-        </select>
         <button type="submit">Save</button>
     </form>
     <a href="{% url 'salidasFruta_list' %}">Back to list</a>
+
 </body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#id_category').change(function() {
+            var categoryId = $(this).val();
+            $.ajax({
+                url: '{% url "load_products" %}',
+                data: {
+                    'category_id': categoryId
+                },
+                success: function(data) {
+                    $('#id_name').html('');
+                    $.each(data.products, function(index, product) {
+                        $('#id_name').append(
+                            $('<option>').text(product.name).attr('value', product.id)
+                        );
+                    });
+                }
+            });
+        });
+    });
+</script>
 </html>

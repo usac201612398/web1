@@ -1,9 +1,14 @@
 from django.shortcuts import render
-
+from django.http import JsonResponse
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect
-from .models import salidasFruta
+from .models import salidasFruta, usuariosAppFruta
 from .forms import salidasFrutaForm
+
+def load_dataUsuario(request):
+    correo_id = request.GET.get('category_id')
+    datos = usuariosAppFruta.objects.filter(category_id=correo_id).values('finca', 'encargado')
+    return JsonResponse({'datos': list(datos)})
 
 def article_list(request):
     salidas = salidasFruta.objects.all()
