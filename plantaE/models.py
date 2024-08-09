@@ -9,7 +9,7 @@ class salidasFruta(models.Model):
     orden = models.CharField(max_length=20)
     cultivo = models.CharField(max_length=45)
     variedad = models.CharField(max_length=40)
-    cajas = models.IntegerField(max_length=20)
+    cajas = models.IntegerField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
