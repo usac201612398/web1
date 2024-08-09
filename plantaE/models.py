@@ -2,8 +2,9 @@ from django.db import models
 
 # Create your models here.
 class salidasFruta(models.Model):
+    op_finca = [('VALLE'),('RIO'),('CIP'),('FLE'),('PASTORIA')]
     id = models.AutoField(primary_key=True)
-    finca = models.CharField(max_length=25)
+    finca = models.CharField(max_length=25,choices=op_finca)
     viaje = models.CharField(max_length=20)
     encargado = models.CharField(max_length=30)
     orden = models.CharField(max_length=20)
