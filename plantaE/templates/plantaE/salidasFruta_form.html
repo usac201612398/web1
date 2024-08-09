@@ -5,9 +5,29 @@
 </head>
 <body>
     <h1>{{ form.instance.pk|yesno:"Edit Registro,Create Registro" }}</h1>
-    <form method="post">
+    <form method="post" id = "formFruta">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ if user.username='brandon.portillo@popoyan.com.gt'}}
+            origen = "RIO"
+        {{else}}
+
+        {{end if}}
+        <label for="opcion1">Opción 1:</label>
+        <select id="opcion1" name="opcion1">
+            <option value="">Selecciona una opción</option>
+            <option value="grupo1">{{origen}}</option>
+        </select>
+
+        <label for="opcion2">Opción 2:</label>
+        <select id="opcion2" name="opcion2">
+            <option value="grupo1">Viaje 1</option>
+            <option value="grupo2">Viaje 2</option>
+            <option value="grupo3">Viaje 3</option>
+            <option value="grupo4">Viaje 4</option>
+            <option value="grupo5">Viaje 5</option>
+            <option value="grupo6">Viaje 6</option>
+            <!-- Opciones se llenarán mediante JavaScript -->
+        </select>
         <button type="submit">Save</button>
     </form>
     <a href="{% url 'salidasFruta_list' %}">Back to list</a>
