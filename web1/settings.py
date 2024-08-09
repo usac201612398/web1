@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 #    'django.contrib.sites',
     'app1',
     'ejemplo',
+    'plantaE',
     'django_auth_adfs',
 ]
 
