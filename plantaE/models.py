@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 class usuariosAppFruta(models.Model):
-    correo = models.CharField(primary_key=True,max_length=75, blank=False)
+    correo = models.CharField(primary_key=True,max_length=75, blank=True)
     encargado = models.CharField(max_length=30)
     finca = models.CharField(max_length=25)
     
@@ -21,7 +21,7 @@ class salidasFruta(models.Model):
     cultivo = models.CharField(max_length=45)
     variedad = models.CharField(max_length=40)
     cajas = models.IntegerField(blank=True, null=True)
-    correo = models.CharField(max_length=75, blank=False)
+    correo = models.ForeignKey(usuariosAppFruta, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
