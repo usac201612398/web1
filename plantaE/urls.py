@@ -2,7 +2,7 @@ from django.urls import path
 from plantaE import views
 #from app1.views import *
 
-app_main ="app1"
+app_main ="plantaE"
 
 urlpatterns = [
 #    path("homepage/", views.homepage, name="homepage"),
