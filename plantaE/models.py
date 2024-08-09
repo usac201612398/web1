@@ -21,7 +21,7 @@ class salidasFruta(models.Model):
     cultivo = models.CharField(max_length=45)
     variedad = models.CharField(max_length=40)
     cajas = models.IntegerField(blank=True, null=True)
-    correo = models.ForeignKey(usuariosAppFruta, on_delete=models.CASCADE)
+    correo = models.ForeignKey(usuariosAppFruta, on_delete=models.CASCADE, default='')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
