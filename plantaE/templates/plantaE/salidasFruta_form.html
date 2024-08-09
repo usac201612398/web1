@@ -8,14 +8,17 @@
     <form method="post" id = "formFruta">
         {% csrf_token %}
         {% if user.username == 'brandon.portillo@popoyan.com.gt'%}
-            origen = "RIO"
+            {% with my_variable='RIO' %}
+            <!-- Usa my_variable aquí -->
+                <p>{{ my_variable }}</p>
+            {% endwith %}
         {% else %}
 
         {% endif %}
         <label for="opcion1">Finca:</label>
         <select id="opcion1" name="opcion1">
             <option value="">Selecciona una opción</option>
-            <option value="grupo1">{{origen}}</option>
+            <option value="grupo1">{{my_variable}}</option>
         </select>
 
         <label for="opcion2">Viaje:</label>
