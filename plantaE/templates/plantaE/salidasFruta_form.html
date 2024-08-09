@@ -28,6 +28,7 @@
                     'category_id': user.username
                 },
                 success: function(data) {
+                    console.log(Response)
                     $('#id_name').html('');
                     $.each(data.datos, function(index, product) {
                         $('#id_name').append(
