@@ -9,9 +9,9 @@
         {% csrf_token %}
         {% if user.username == 'brandon.portillo@popoyan.com.gt'%}
             origen = "RIO"
-        {%else%}
+        {% else %}
 
-        {%end if%}
+        {% endif %}
         <label for="opcion1">Finca:</label>
         <select id="opcion1" name="opcion1">
             <option value="">Selecciona una opción</option>
