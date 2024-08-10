@@ -61,7 +61,7 @@
                     $('#id_encargado').html('');
                     // Recorre los productos recibidos y añade opciones al campo 'name'
                     $.each(data.datos, function(index, product) {
-                        console.log(product.finca);
+                        console.log(product.encargado);
                         $('#id_encargado').append(
                             $('<option>').text(product.encargado).attr('value', product.encargado)
                         );
@@ -69,8 +69,8 @@
 
                     $('#id_correo').html('');
                     // Recorre los productos recibidos y añade opciones al campo 'name'
-                    $.each(data.datos, function(index, product) {
-                        console.log(product.finca);
+                    $.each(data.correo, function(index, product) {
+                        console.log(product.correo);
                         $('#id_correo').append(
                             $('<option>').text(product.correo).attr('value', product.correo)
                         );
