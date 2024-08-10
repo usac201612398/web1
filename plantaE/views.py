@@ -17,6 +17,11 @@ def load_dataUsuario(request):
     adicionales = datosProduccion.objects.filter(finca=list(datos)[0]['finca'],status="Abierta").values('orden')
     return JsonResponse({'datos': list(datos),'correo':correo_id,'adicionales':list(adicionales)})
 
+def load_dataUsuario2(request):
+    ordenSelect = request.GET.get('category_id')
+    adicionales = datosProduccion.objects.filter(orden=ordenSelect,status="Abierta").values('cultivo')
+    return JsonResponse({'datos': list(adicionales)})
+
 def article_list(request):
     salidas = salidasFruta.objects.all()
     return render(request, 'plantaE/salidasFruta_list.html', {'registros': salidas})

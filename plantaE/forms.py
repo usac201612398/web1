@@ -9,3 +9,4 @@ class salidasFrutaForm(forms.ModelForm):
     encargado = forms.ModelChoiceField(queryset=usuariosAppFruta.objects.none())
     correo = forms.ModelChoiceField(queryset=usuariosAppFruta.objects.none())
     orden = forms.ModelChoiceField(queryset=datosProduccion.objects.none())
+    cultivo = forms.ModelChoiceField(queryset=datosProduccion.objects.none())
