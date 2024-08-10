@@ -16,16 +16,18 @@ class salidasFruta(models.Model):
     op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
     op_variedad = [('BAMANO','BAMANO'),('DUNNE','DUNNE'),('IVORINO','IVORINO'),('KM 5512','KM 5512'),('NEBULA','NEBULA'),('ROJO','ROJO'),('AMARILLO','AMARILLO'),('ANARANJADO','ANARANJADO')]
     op_encargado = [('Brandon Portillo','Brandon Portillo'),('Isaías García','Isaías García')]
-    correo = [('brandon.portillo@popoyan.com.gt','brandon.portillo@popoyan.com.gt')]
+    op_finca = [('VALLE'),('VALLE'),('RIO','RIO'),('CIP','CIP'),('FLE','FLE'),('FLA','FLA')]
+    op_correo = [('brandon.portillo@popoyan.com.gt','brandon.portillo@popoyan.com.gt')]
+    
     id = models.AutoField(primary_key=True)
-    finca = models.CharField(max_length=25,choices='')
+    finca = models.CharField(max_length=25,choices=op_finca)
     viaje = models.CharField(max_length=20, choices=op_viajes)
-    encargado = models.CharField(max_length=30,choices='')
+    encargado = models.CharField(max_length=30,choices=op_encargado)
     orden = models.CharField(max_length=20,choices='')
     cultivo = models.CharField(max_length=45,choices=op_cultivo)
-    variedad = models.CharField(max_length=40,choices='')
+    variedad = models.CharField(max_length=40,choices=op_variedad)
     cajas = models.IntegerField(blank=True, null=True)
-    correo = models.CharField(max_length=75, blank=True,choices='')
+    correo = models.CharField(max_length=75, blank=True,choices=op_correo)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
