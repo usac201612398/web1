@@ -21,7 +21,7 @@ class salidasFruta(models.Model):
     cultivo = models.CharField(max_length=45)
     variedad = models.CharField(max_length=40)
     cajas = models.IntegerField(blank=True, null=True)
-    correo = models.ForeignKey(usuariosAppFruta, on_delete=models.CASCADE, default='')
+    correo = models.CharField(max_length=75, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -29,9 +29,10 @@ class salidasFruta(models.Model):
         return self.id
 
 class datosProduccion(models.Model):
-    
+
+    op_finca = [('VALLE','VALLE'),('RIO','RIO'),('CIP', 'CIP'),('FLE','FLE'),('PASTORIA','PASTORIA')]
     id = models.AutoField(primary_key=True)
-    finca = models.ForeignKey(salidasFruta, on_delete=models.CASCADE, default='')
+    finca = models.CharField(max_length=25,choices=op_finca)
     orden = models.CharField(max_length=30)
     cultivo = models.CharField(max_length=35)
     area = models.FloatField(blank=True, null=True)
