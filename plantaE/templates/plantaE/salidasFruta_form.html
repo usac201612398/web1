@@ -52,7 +52,6 @@
                     $('#id_finca').html('');
                     // Recorre los productos recibidos y añade opciones al campo 'name'
                     $.each(data.datos, function(index, product) {
-                        console.log(product.finca);
                         $('#id_finca').append(
                             $('<option>').text(product.finca).attr('value', product.finca)
                         );
@@ -61,7 +60,6 @@
                     $('#id_encargado').html('');
                     // Recorre los productos recibidos y añade opciones al campo 'name'
                     $.each(data.datos, function(index, product) {
-                        console.log(product.encargado);
                         $('#id_encargado').append(
                             $('<option>').text(product.encargado).attr('value', product.encargado)
                         );
