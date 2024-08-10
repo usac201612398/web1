@@ -12,5 +12,5 @@ class salidasFrutaForm(forms.ModelForm):
     class Meta:
     
         model = salidasFruta
-        fields = ['finca', 'viaje', 'encargado', 'orden', 'cultivo', 'variedad','correo', 'cajas']
+        fields = ['finca',  'cajas']
     
