@@ -7,9 +7,6 @@
     <h1>{{ form.instance.pk|yesno:"Edit Registro,Create Registro" }}</h1>
     <form method="post" id = "formFruta">
         {% csrf_token %}
-        {% if user.username == 'brandon.portillo@popoyan.com.gt'%}
-        {% else %}
-        {% endif %}
         {{ form.as_p }}
 
         <button type="submit">Save</button>
@@ -60,6 +57,25 @@
                             $('<option>').text(product.finca).attr('value', product.finca)
                         );
                     });
+
+                    $('#id_encargado').html('');
+                    // Recorre los productos recibidos y añade opciones al campo 'name'
+                    $.each(data.datos, function(index, product) {
+                        console.log(product.finca);
+                        $('#id_encargado').append(
+                            $('<option>').text(product.encargado).attr('value', product.encargado)
+                        );
+                    });
+
+                    $('#id_correo').html('');
+                    // Recorre los productos recibidos y añade opciones al campo 'name'
+                    $.each(data.datos, function(index, product) {
+                        console.log(product.finca);
+                        $('#id_correo').append(
+                            $('<option>').text(product.correo).attr('value', product.correo)
+                        );
+                    });
+
                 },
                 error: function(xhr, status, error) {
                     console.error('Error:', error);  // Maneja errores de la solicitud
