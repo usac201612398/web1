@@ -56,4 +56,4 @@ class detallesProduccion(models.Model):
     variedad = models.CharField(max_length=35, blank=True)
     
     def __str__(self):
-        return (str(self.finca) + " | " + str(self.orden)+ " | " + str(self.temporada)+ " | " + str(self.status) )
+        return (str(self.cultivo) + " | " + str(self.variedad) )
