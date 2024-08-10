@@ -17,35 +17,44 @@
     <a href="{% url 'salidasFruta_list' %}">Back to list</a>
 
 </body>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-        // Realiza la solicitud AJAX cuando se carga la página
-        function loadProducts() {
-            var categoryId = $('#id_category').val(); // Obtén el valor de la categoría seleccionada
+        // Función para cargar productos basados en la categoría seleccionada
+        function loadProducts(categoryId) {
             $.ajax({
-                url: '{% url "load_dataUsuario" %}',  // URL de la vista AJAX
+                url: '{% url "obtener_nombre_usuario" %}',  // URL para la vista AJAX
                 data: {
-                    'category_id': request.user.username
+                    'category_id': categoryId  // Envia el ID de la categoría como parámetro
                 },
                 success: function(data) {
-                    $('#id_name').html('');  // Limpia las opciones del campo de productos
-                    $.each(data.products, function(index, product) {
-                        console.log(response)
+                    // Limpia las opciones actuales del campo 'name'
+                    $('#id_name').html('');
+                    // Recorre los productos recibidos y añade opciones al campo 'name'
+                    $.each(data.datos, function(index, product) {
                         $('#id_name').append(
-                            $('<option>').text(product.name).attr('value', product.id)
+                            $('<option>').text(product.encargado).attr('value', product.id)
                         );
                     });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);  // Maneja errores de la solicitud
                 }
             });
         }
 
         // Llama a la función de carga de productos al cargar la página
-        loadProducts();
+        var initialCategoryId = $('#id_category').val();  // Obtiene el valor inicial del campo 'category'
+        if (initialCategoryId) {
+            console.log(initialCategoryId);
+            loadProducts(initialCategoryId);
+        }
 
-        // Escucha el cambio en el campo de categoría para actualizar los productos
+        // Escucha el cambio en el campo 'category' y actualiza los productos
         $('#id_category').change(function() {
-            loadProducts();
+            var categoryId = $(this).val();  // Obtiene el ID de la categoría seleccionada
+            loadProducts(categoryId);  // Llama a la función para cargar productos
         });
     });
 </script>

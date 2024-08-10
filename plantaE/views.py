@@ -5,6 +5,12 @@ from django.shortcuts import get_object_or_404, redirect
 from .models import salidasFruta, usuariosAppFruta
 from .forms import salidasFrutaForm
 
+
+def obtener_nombre_usuario(request):
+    # Obtén el nombre de usuario del usuario autenticado
+    nombre_usuario = request.user.username
+    return JsonResponse({'username': nombre_usuario})
+
 def load_dataUsuario(request):
     correo_id = request.GET.get('category_id')
     datos = usuariosAppFruta.objects.filter(category_id=correo_id).values('finca', 'encargado')
