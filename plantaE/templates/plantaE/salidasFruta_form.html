@@ -22,22 +22,43 @@
 <script>
     $(document).ready(function() {
         // Función para cargar productos basados en la categoría seleccionada
-        function loadProducts(categoryId) {
+        function consultarUsuario() {
             $.ajax({
                 url: '{% url "obtener_nombre_usuario" %}',  // URL para la vista AJAX
+                data: {
+                    'category_id': "Consulta"  // Envia el ID de la categoría como parámetro
+                },
+                success: function(data) {
+                    // Limpia las opciones actuales del campo 'name'
+                    console.log(data);
+                    var initialCategoryId =data.username;  // Obtiene el valor inicial del campo 'category'
+                    if (initialCategoryId) {
+                        console.log(initialCategoryId);
+                        loadProducts(initialCategoryId);
+                    }
+                    
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);  // Maneja errores de la solicitud
+                }
+            });
+        }
+        function loadProducts(categoryId) {
+            $.ajax({
+                url: '{% url "load_dataUsuario" %}',  // URL para la vista AJAX
                 data: {
                     'category_id': categoryId  // Envia el ID de la categoría como parámetro
                 },
                 success: function(data) {
                     // Limpia las opciones actuales del campo 'name'
                     console.log(data);
-                    $('#id_name').html('');
+                    $('#id_finca').html('');
                     // Recorre los productos recibidos y añade opciones al campo 'name'
                     $.each(data.datos, function(index, product) {
-                        console.log(product.encargado);
+                        console.log(product.finca);
                         console.log(product.id);
                         $('#id_name').append(
-                            $('<option>').text(product.encargado).attr('value', product.id)
+                            $('<option>').text(product.finca).attr('value', product.id)
                         );
                     });
                 },
@@ -48,17 +69,7 @@
         }
 
         // Llama a la función de carga de productos al cargar la página
-        var initialCategoryId = $('#id_correo').val();  // Obtiene el valor inicial del campo 'category'
-        if (initialCategoryId) {
-            console.log(initialCategoryId);
-            loadProducts(initialCategoryId);
-        }
-
-        // Escucha el cambio en el campo 'category' y actualiza los productos
-        $('#id_correo').change(function() {
-            var categoryId = $(this).val();  // Obtiene el ID de la categoría seleccionada
-            loadProducts(categoryId);  // Llama a la función para cargar productos
-        });
+        
     });
 </script>
 </html>
