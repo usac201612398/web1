@@ -33,36 +33,27 @@ def article_detail(request, pk):
     return render(request, 'plantaE/salidasFruta_detail.html', {'registros': salidas})
 
 def article_create(request):
-
     if request.method == 'POST':
         form = salidasFrutaForm(request.POST)
         if form.is_valid():
+            # Registro de datos para depuración
             logger.debug(f"Finca: {form.cleaned_data['finca']}")
             logger.debug(f"Cultivo: {form.cleaned_data['cultivo']}")
             logger.debug(f"Encargado: {form.cleaned_data['encargado']}")
             logger.debug(f"Variedad: {form.cleaned_data['variedad']}")
             logger.debug(f"Orden: {form.cleaned_data['orden']}")
             logger.debug(f"Correo: {form.cleaned_data['correo']}")
-            instancia = form.save(commit=False)
-            finca = form.cleaned_data['finca']
-            cultivo = form.cleaned_data['cultivo']
-            encargado = form.cleaned_data['encargado']
-            variedad = form.cleaned_data['variedad']
-            orden = form.cleaned_data['orden']
-            correo = form.cleaned_data['correo']
-            instancia.finca = finca  # O usa otro atributo de `categoria_seleccionada`
-            instancia.cultivo = cultivo
-            instancia.encargado = encargado
-            instancia.variedad = variedad
-            instancia.orden = orden
-            instancia.correo = correo
-            instancia.save()
-            return redirect('salidasFruta_list') 
-        
+            
+            instancia = form.save(commit=False)  # Crea la instancia sin guardar en la base de datos aún
+            instancia.save()  # Guarda la instancia en la base de datos
+            
+            return redirect('salidasFruta_list')  # Redirige a la lista o a otra página
+
         else:
-            return JsonResponse({'errores': form.errors}, status=400)        
+            return JsonResponse({'errores': form.errors}, status=400)
     else:
-        form =salidasFrutaForm()
+        form = salidasFrutaForm()  # Crea un formulario vacío
+
     return render(request, 'plantaE/salidasFruta_form.html', {'form': form})
 
 def article_update(request, pk):
