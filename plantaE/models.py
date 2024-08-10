@@ -15,14 +15,14 @@ class salidasFruta(models.Model):
     op_viajes = [('Viaje 1','Viaje 1'),('Viaje 2','Viaje 2'),('Viaje 3', 'Viaje 3'),('Viaje 4','Viaje 4'),('Viaje 5','Viaje 5'),('Viaje 6','Viaje 6')]
     
     id = models.AutoField(primary_key=True)
-    finca = models.CharField(max_length=25)
+    finca = models.CharField(max_length=25,choices='')
     viaje = models.CharField(max_length=20, choices=op_viajes)
-    encargado = models.CharField(max_length=30)
-    orden = models.CharField(max_length=20)
-    cultivo = models.CharField(max_length=45)
-    variedad = models.CharField(max_length=40)
+    encargado = models.CharField(max_length=30,choices='')
+    orden = models.CharField(max_length=20,choices='')
+    cultivo = models.CharField(max_length=45,choices='')
+    variedad = models.CharField(max_length=40,choices='')
     cajas = models.IntegerField(blank=True, null=True)
-    correo = models.CharField(max_length=75, blank=True)
+    correo = models.CharField(max_length=75, blank=True,choices='')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
