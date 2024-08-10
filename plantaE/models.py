@@ -28,3 +28,13 @@ class salidasFruta(models.Model):
     def __str__(self):
         return self.id
 
+class datosProduccion(models.Model):
+    
+    id = models.AutoField(primary_key=True)
+    finca = models.ForeignKey(salidasFruta, on_delete=models.CASCADE, default='')
+    orden = models.CharField(max_length=30)
+    cultivo = models.CharField(max_length=35)
+    area = models.FloatField(blank=True, null=True)
+    
+    def __str__(self):
+        return self.id
