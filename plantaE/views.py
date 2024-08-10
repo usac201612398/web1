@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect
-from .models import salidasFruta, usuariosAppFruta, datosProduccion
+from .models import salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion
 from .forms import salidasFrutaForm
 
 
@@ -19,8 +19,9 @@ def load_dataUsuario(request):
 
 def load_dataUsuario2(request):
     ordenSelect = request.GET.get('category_id')
-    adicionales = datosProduccion.objects.filter(orden=ordenSelect,status="Abierta").values('cultivo')
-    return JsonResponse({'datos': list(adicionales)})
+    cultivo= datosProduccion.objects.filter(orden=ordenSelect,status="Abierta").values('cultivo')
+    variedad = detallesProduccion.objects.filter(cultivo=list(cultivo)[0]['cultivo']).values('variedad')
+    return JsonResponse({'datos': list(cultivo),'variedad':variedad})
 
 def article_list(request):
     salidas = salidasFruta.objects.all()
