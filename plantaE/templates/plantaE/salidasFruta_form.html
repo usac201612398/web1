@@ -30,10 +30,12 @@
                 },
                 success: function(data) {
                     // Limpia las opciones actuales del campo 'name'
-                    console.log(data)
+                    console.log(data);
                     $('#id_name').html('');
                     // Recorre los productos recibidos y añade opciones al campo 'name'
                     $.each(data.datos, function(index, product) {
+                        console.log(product.encargado);
+                        console.log(product.id);
                         $('#id_name').append(
                             $('<option>').text(product.encargado).attr('value', product.id)
                         );
