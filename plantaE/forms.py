@@ -1,5 +1,5 @@
 from django import forms
-from .models import salidasFruta, usuariosAppFruta
+from .models import salidasFruta, usuariosAppFruta, datosProduccion
 
 class salidasFrutaForm(forms.ModelForm):
     class Meta:
@@ -7,3 +7,5 @@ class salidasFrutaForm(forms.ModelForm):
         fields = ['finca', 'viaje', 'encargado', 'orden', 'cultivo', 'variedad','correo', 'cajas']
     finca = forms.ModelChoiceField(queryset=usuariosAppFruta.objects.all())
     encargado = forms.ModelChoiceField(queryset=usuariosAppFruta.objects.none())
+    correo = forms.ModelChoiceField(queryset=usuariosAppFruta.objects.none())
+    orden = forms.ModelChoiceField(queryset=datosProduccion.objects.none())
