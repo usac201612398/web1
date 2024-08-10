@@ -44,19 +44,24 @@ def article_create(request):
     if request.method == 'POST':
         form = salidasFrutaForm(request.POST)
         if form.is_valid():
+            instancia = form.save(commit=False)
             finca = form.cleaned_data['finca']
             cultivo = form.cleaned_data['cultivo']
             encargado = form.cleaned_data['encargado']
             variedad = form.cleaned_data['variedad']
             orden = form.cleaned_data['orden']
             correo = form.cleaned_data['correo']
-
-            if finca in VALID_OPTIONS['finca'] or cultivo in VALID_OPTIONS['cultivo'] or encargado in VALID_OPTIONS['encargado'] or variedad in VALID_OPTIONS['variedad'] or orden in VALID_OPTIONS[orden] or correo in VALID_OPTIONS[correo]:
-                form.save()
-                return redirect('salidasFruta_list')
-            else:
-                return JsonResponse({'errores': form.errors}, status=400)
+            instancia.finca = str(finca.id)  # O usa otro atributo de `categoria_seleccionada`
+            instancia.cultivo = str(cultivo.id)
+            instancia.encargado = str(encargado.id)
+            instancia.variedad = str(variedad.id)
+            instancia.orden = str(orden.id)
+            instancia.correo = str(correo.id)
+            instancia.save()
+            return redirect('salidasFruta_list') 
         
+        else:
+            return JsonResponse({'errores': form.errors}, status=400)        
     else:
         form =salidasFrutaForm()
     return render(request, 'plantaE/salidasFruta_form.html', {'form': form})
