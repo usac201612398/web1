@@ -18,7 +18,7 @@ class salidasFruta(models.Model):
     op_encargado = [('Brandon Portillo','Brandon Portillo'),('Isaías García','Isaías García')]
     op_finca = [('VALLE','VALLE'),('RIO','RIO'),('CIP','CIP'),('FLE','FLE'),('FLA','FLA')]
     op_correo = [('brandon.portillo@popoyan.com.gt','brandon.portillo@popoyan.com.gt')]
-    op_orden = ['60202046','60206054','60206055','60206056']
+    op_orden = [('60202046','60202046'),('60206054','60206054'),('60206055','60206055'),('60206056','60206056')]
     
     id = models.AutoField(primary_key=True)
     finca = models.CharField(max_length=25,choices=op_finca)
