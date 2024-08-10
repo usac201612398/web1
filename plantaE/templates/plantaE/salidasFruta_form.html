@@ -20,23 +20,32 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-        $('#viaje').change(function() {
-            var categoryId = $(this).val();
+        // Realiza la solicitud AJAX cuando se carga la página
+        function loadProducts() {
+            var categoryId = $('#id_category').val(); // Obtén el valor de la categoría seleccionada
             $.ajax({
-                url: '{% url "load_dataUsuario" %}',
+                url: '{% url "load_products" %}',  // URL de la vista AJAX
                 data: {
                     'category_id': user.username
                 },
                 success: function(data) {
-                    console.log(Response)
-                    $('#id_name').html('');
-                    $.each(data.datos, function(index, product) {
+                    $('#id_name').html('');  // Limpia las opciones del campo de productos
+                    $.each(data.products, function(index, product) {
+                        console.log(response)
                         $('#id_name').append(
-                            $('<option>').text(product.finca).attr('value', product.encargado)
+                            $('<option>').text(product.name).attr('value', product.id)
                         );
                     });
                 }
             });
+        }
+
+        // Llama a la función de carga de productos al cargar la página
+        loadProducts();
+
+        // Escucha el cambio en el campo de categoría para actualizar los productos
+        $('#id_category').change(function() {
+            loadProducts();
         });
     });
 </script>
