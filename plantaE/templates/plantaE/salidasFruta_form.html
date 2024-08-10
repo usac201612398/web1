@@ -69,12 +69,9 @@
 
                     $('#id_correo').html('');
                     // Recorre los productos recibidos y añade opciones al campo 'name'
-                    $.each(data.correo, function(index, product) {
-                        console.log(product.correo);
-                        $('#id_correo').append(
-                            $('<option>').text(product.correo).attr('value', product.correo)
-                        );
-                    });
+                    $('#id_correo').append(
+                        $('<option>').text(data.correo).attr('value', data.correo)
+                    );
 
                 },
                 error: function(xhr, status, error) {
