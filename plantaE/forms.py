@@ -8,9 +8,9 @@ class salidasFrutaForm(forms.ModelForm):
     correo = forms.ModelChoiceField(queryset=usuariosAppFruta.objects.all())
     orden = forms.ModelChoiceField(queryset=datosProduccion.objects.all())
     cultivo = forms.ModelChoiceField(queryset=datosProduccion.objects.all())
-    variedad = forms.ModelChoiceField(queryset=detallesProduccion.objects.all())
+    variedad = forms.ModelChoiceField(queryset=detallesProduccion.objects.none())
     class Meta:
     
         model = salidasFruta
-        fields = ['viaje',  'cajas']
+        fields = ['viaje', 'cajas', 'finca', 'encargado', 'correo', 'orden', 'cultivo', 'variedad']
     

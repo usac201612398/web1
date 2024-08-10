@@ -32,15 +32,7 @@ def article_detail(request, pk):
     return render(request, 'plantaE/salidasFruta_detail.html', {'registros': salidas})
 
 def article_create(request):
-    VALID_OPTIONS= {
 
-        'finca':{'RIO','VALLE','CIP','FLE','PASTORIA'},
-        'cultivo':{'MEDLEY','CHERRY','GRAPE','GRAPE ORGANICO','CHERRY ORGANICO','BLOCKY','BLOCKY ORGANICO','MINI','MINI ORGANICO','ROJO'},
-        'encargado' : {'Brandon Portillo', 'Isaías García'},
-        'variedad': {'BAMANO','IVORINO','DUNNE','KM 5512','NEBULA'},
-        'orden': {'60202046','60206054','60206055','60206056'},
-        'correo': {'brandon.portillo@popoyan.com.gt'}
-    }
     if request.method == 'POST':
         form = salidasFrutaForm(request.POST)
         if form.is_valid():
@@ -51,12 +43,12 @@ def article_create(request):
             variedad = form.cleaned_data['variedad']
             orden = form.cleaned_data['orden']
             correo = form.cleaned_data['correo']
-            instancia.finca = str(finca.id)  # O usa otro atributo de `categoria_seleccionada`
-            instancia.cultivo = str(cultivo.id)
-            instancia.encargado = str(encargado.id)
-            instancia.variedad = str(variedad.id)
-            instancia.orden = str(orden.id)
-            instancia.correo = str(correo.id)
+            instancia.finca = finca  # O usa otro atributo de `categoria_seleccionada`
+            instancia.cultivo = cultivo
+            instancia.encargado = encargado
+            instancia.variedad = variedad
+            instancia.orden = orden
+            instancia.correo = correo
             instancia.save()
             return redirect('salidasFruta_list') 
         
