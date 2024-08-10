@@ -16,7 +16,7 @@ class salidasFruta(models.Model):
     op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
     op_variedad = [('BAMANO','BAMANO'),('DUNNE','DUNNE'),('IVORINO','IVORINO'),('KM 5512','KM 5512'),('NEBULA','NEBULA'),('ROJO','ROJO'),('AMARILLO','AMARILLO'),('ANARANJADO','ANARANJADO')]
     op_encargado = [('Brandon Portillo','Brandon Portillo'),('Isaías García','Isaías García')]
-    op_finca = [('VALLE'),('VALLE'),('RIO','RIO'),('CIP','CIP'),('FLE','FLE'),('FLA','FLA')]
+    op_finca = [('VALLE','VALLE'),('RIO','RIO'),('CIP','CIP'),('FLE','FLE'),('FLA','FLA')]
     op_correo = [('brandon.portillo@popoyan.com.gt','brandon.portillo@popoyan.com.gt')]
     
     id = models.AutoField(primary_key=True)
