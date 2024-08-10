@@ -45,4 +45,4 @@ class datosProduccion(models.Model):
 
     
     def __str__(self):
-        return (str(self.finca) + " | " + str(self.orden)+ " | " + str(self.temporada)+ " | " + str(self.status) )
+        return (str(self.finca) + " | " + str(self.orden) + " | " + str(self.cultivo) + " | " + str(self.temporada)+ " | " + str(self.status) )
