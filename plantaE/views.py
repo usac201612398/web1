@@ -56,8 +56,7 @@ def article_create(request):
                 return redirect('salidasFruta_list')
             else:
                 return JsonResponse({'errores': form.errors}, status=400)
-        else:
-            return JsonResponse({'errores': form.errors}, status=400)
+        
     else:
         form =salidasFrutaForm()
     return render(request, 'plantaE/salidasFruta_form.html', {'form': form})
