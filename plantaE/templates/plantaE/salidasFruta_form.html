@@ -106,6 +106,9 @@
                     });
 
                     $('#id_variedad').html('');
+                    $('#id_variedad').append(
+                        $('<option>').text('').attr('value','')
+                    );
                     // Recorre los productos recibidos y añade opciones al campo 'name'
                     $.each(data.variedad, function(index, product) {
                         $('#id_variedad').append(
