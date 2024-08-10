@@ -2,12 +2,13 @@ from django.db import models
 
 # Create your models here.
 class usuariosAppFruta(models.Model):
+
     correo = models.CharField(primary_key=True,max_length=75, blank=True)
     encargado = models.CharField(max_length=30)
     finca = models.CharField(max_length=25)
     
     def __str__(self):
-        return self.correo
+        return (self.finca + " | " + self.encargado)
     
 class salidasFruta(models.Model):
     
@@ -26,7 +27,7 @@ class salidasFruta(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.id
+        return (str(self.finca) + str(self.encargado)+ " | " + str(self.viaje)+ " | " + str(self.cultivo)+ " | " + str(self.variedad) )
 
 class datosProduccion(models.Model):
 
@@ -44,4 +45,4 @@ class datosProduccion(models.Model):
 
     
     def __str__(self):
-        return str(self.id)
+        return (str(self.finca) + " | " + str(self.orden)+ " | " + str(self.temporada)+ " | " + str(self.status) )
