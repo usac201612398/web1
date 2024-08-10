@@ -31,11 +31,17 @@ class salidasFruta(models.Model):
 class datosProduccion(models.Model):
 
     op_finca = [('VALLE','VALLE'),('RIO','RIO'),('CIP', 'CIP'),('FLE','FLE'),('PASTORIA','PASTORIA')]
+    op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
+    op_status = [('Abierta','Abierta'),('Cerrada','Cerrada')]
+    op_temporada = [('Temp 2023-2024'),('Temp 2024-2025')]
     id = models.AutoField(primary_key=True)
     finca = models.CharField(max_length=25,choices=op_finca)
     orden = models.CharField(max_length=30)
-    cultivo = models.CharField(max_length=35)
+    cultivo = models.CharField(max_length=35, choices=op_cultivo)
     area = models.FloatField(blank=True, null=True)
+    temporada = models.CharField(max_length=45, choices=op_temporada)
+    status = models.CharField(max_length=35, choices=op_status)
+
     
     def __str__(self):
         return self.id
