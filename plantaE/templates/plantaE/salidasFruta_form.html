@@ -27,13 +27,11 @@
                 },
                 success: function(data) {
                     // Limpia las opciones actuales del campo 'name'
-                    console.log(data);
                     var initialCategoryId =data.username;  // Obtiene el valor inicial del campo 'category'
                     if (initialCategoryId) {
-                        console.log(initialCategoryId);
                         loadProducts(initialCategoryId);
                     }
-                    
+                
                 },
                 error: function(xhr, status, error) {
                     console.error('Error:', error);  // Maneja errores de la solicitud
