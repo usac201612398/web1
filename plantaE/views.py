@@ -14,7 +14,7 @@ def obtener_nombre_usuario(request):
 def load_dataUsuario(request):
     correo_id = request.GET.get('category_id')
     datos = usuariosAppFruta.objects.filter(correo=correo_id).values('finca', 'encargado')
-    return JsonResponse({'datos': list(datos)})
+    return JsonResponse({'datos': list(datos),'correo':correo_id})
 
 def article_list(request):
     salidas = salidasFruta.objects.all()
