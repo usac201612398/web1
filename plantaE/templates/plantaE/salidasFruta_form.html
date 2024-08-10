@@ -19,7 +19,7 @@
 <script>
     $(document).ready(function() {
         // Función para cargar productos basados en la categoría seleccionada
-        function consultarUsuario() {
+        function authUsuario() {
             $.ajax({
                 url: '{% url "obtener_nombre_usuario" %}',  // URL para la vista AJAX
                 data: {
@@ -69,13 +69,21 @@
                         $('<option>').text(data.correo).attr('value', data.correo)
                     );
 
+                    $('#id_orden').html('');
+                    // Recorre los productos recibidos y añade opciones al campo 'name'
+                    $.each(data.adicionales, function(index, product) {
+                        $('#id_orden').append(
+                            $('<option>').text(product.orden).attr('value', product.orden)
+                        );
+                    });
+
                 },
                 error: function(xhr, status, error) {
                     console.error('Error:', error);  // Maneja errores de la solicitud
                 }
             });
         }
-        consultarUsuario();
+        authUsuario();
         // Llama a la función de carga de productos al cargar la página
         
     });
