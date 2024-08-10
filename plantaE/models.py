@@ -46,3 +46,14 @@ class datosProduccion(models.Model):
     
     def __str__(self):
         return (str(self.finca) + " | " + str(self.orden)+ " | " + str(self.temporada)+ " | " + str(self.status) )
+    
+class detallesProduccion(models.Model):
+
+    op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
+    
+    id = models.AutoField(primary_key=True)
+    cultivo = models.CharField(max_length=35, choices=op_cultivo,blank=True)
+    variedad = models.CharField(max_length=35, blank=True)
+    
+    def __str__(self):
+        return (str(self.finca) + " | " + str(self.orden)+ " | " + str(self.temporada)+ " | " + str(self.status) )
