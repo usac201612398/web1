@@ -56,9 +56,8 @@
                     // Recorre los productos recibidos y añade opciones al campo 'name'
                     $.each(data.datos, function(index, product) {
                         console.log(product.finca);
-                        console.log(product.id);
-                        $('#id_name').append(
-                            $('<option>').text(product.finca).attr('value', product.id)
+                        $('#id_finca').append(
+                            $('<option>').text(product.finca).attr('value', product.finca)
                         );
                     });
                 },
