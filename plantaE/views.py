@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+import logging
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect
 from .models import salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion
 from .forms import salidasFrutaForm
-
+logger = logging.getLogger(__name__)
 
 def obtener_nombre_usuario(request):
     # Obtén el nombre de usuario del usuario autenticado
@@ -36,6 +37,12 @@ def article_create(request):
     if request.method == 'POST':
         form = salidasFrutaForm(request.POST)
         if form.is_valid():
+            logger.debug(f"Finca: {form.cleaned_data['finca']}")
+            logger.debug(f"Cultivo: {form.cleaned_data['cultivo']}")
+            logger.debug(f"Encargado: {form.cleaned_data['encargado']}")
+            logger.debug(f"Variedad: {form.cleaned_data['variedad']}")
+            logger.debug(f"Orden: {form.cleaned_data['orden']}")
+            logger.debug(f"Correo: {form.cleaned_data['correo']}")
             instancia = form.save(commit=False)
             finca = form.cleaned_data['finca']
             cultivo = form.cleaned_data['cultivo']
