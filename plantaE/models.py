@@ -27,7 +27,7 @@ class salidasFruta(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return (str(self.finca) + str(self.encargado)+ " | " + str(self.viaje)+ " | " + str(self.cultivo)+ " | " + str(self.variedad) )
+        return (str(self.finca) + str(self.encargado) + " | " + str(self.viaje)+ " | " + str(self.orden))
 
 class datosProduccion(models.Model):
 
@@ -45,4 +45,4 @@ class datosProduccion(models.Model):
 
     
     def __str__(self):
-        return (str(self.finca) + " | " + str(self.orden) + " | " + str(self.cultivo) + " | " + str(self.temporada)+ " | " + str(self.status) )
+        return (str(self.finca) + " | " + str(self.orden)+ " | " + str(self.temporada)+ " | " + str(self.status) )
