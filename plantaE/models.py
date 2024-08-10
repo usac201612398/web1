@@ -35,12 +35,12 @@ class datosProduccion(models.Model):
     op_status = [('Abierta','Abierta'),('Cerrada','Cerrada')]
     op_temporada = [('Temp 2023-2024','Temp 2023-2024'),('Temp 2024-2025','Temp 2024-2025')]
     id = models.AutoField(primary_key=True)
-    finca = models.CharField(max_length=25,choices=op_finca)
-    orden = models.CharField(max_length=30)
-    cultivo = models.CharField(max_length=35, choices=op_cultivo)
+    finca = models.CharField(max_length=25,choices=op_finca,blank=True)
+    orden = models.CharField(max_length=30,blank=True)
+    cultivo = models.CharField(max_length=35, choices=op_cultivo,blank=True)
     area = models.FloatField(blank=True, null=True)
-    temporada = models.CharField(max_length=45, choices=op_temporada)
-    status = models.CharField(max_length=35, choices=op_status)
+    temporada = models.CharField(max_length=45, choices=op_temporada,blank=True)
+    status = models.CharField(max_length=35, choices=op_status,blank=True)
 
     
     def __str__(self):
