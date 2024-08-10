@@ -24,7 +24,7 @@
         function loadProducts() {
             var categoryId = $('#id_category').val(); // Obtén el valor de la categoría seleccionada
             $.ajax({
-                url: '{% url "load_products" %}',  // URL de la vista AJAX
+                url: '{% url "load_dataUsuario" %}',  // URL de la vista AJAX
                 data: {
                     'category_id': user.username
                 },
