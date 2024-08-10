@@ -1,5 +1,5 @@
 from django import forms
-from .models import salidasFruta, usuariosAppFruta, datosProduccion
+from .models import salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion
 
 class salidasFrutaForm(forms.ModelForm):
     class Meta:
@@ -10,3 +10,4 @@ class salidasFrutaForm(forms.ModelForm):
     correo = forms.ModelChoiceField(queryset=usuariosAppFruta.objects.none())
     orden = forms.ModelChoiceField(queryset=datosProduccion.objects.none())
     cultivo = forms.ModelChoiceField(queryset=datosProduccion.objects.none())
+    variedad = forms.ModelChoiceField(queryset=detallesProduccion.objects.none())
