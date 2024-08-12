@@ -5,7 +5,7 @@ import logging
 from django.shortcuts import get_object_or_404, redirect
 from .models import salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion
 from .forms import salidasFrutaForm
-from django import forms
+
 logger = logging.getLogger(__name__)
 
 def obtener_nombre_usuario(request):
@@ -40,13 +40,13 @@ def article_create(request):
         form = salidasFrutaForm(request.POST)
         if form.is_valid():
             try:
-                instancia = form.save()
+                form.save()
             except Exception as e:
                 # Manejar excepciones específicas (por ejemplo, UniqueConstraintError)
                 return JsonResponse({'error': str(e)}, status=400)
             return redirect('salidasFruta_list')
         else:
-            print(form.errors)  # Imprimir errores para depuración
+             # Imprimir errores para depuración
             return JsonResponse({'errores': form.errors}, status=400)
     else:
         form = salidasFrutaForm()
