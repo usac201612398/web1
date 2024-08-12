@@ -37,14 +37,9 @@ def article_create(request):
     if request.method == 'POST':
         form = salidasFrutaForm(request.POST)
         if form.is_valid():
-            logger.debug(f"Finca: {form.cleaned_data['finca']}")
-            logger.debug(f"Cultivo: {form.cleaned_data['cultivo']}")
-            logger.debug(f"Encargado: {form.cleaned_data['encargado']}")
-            logger.debug(f"Variedad: {form.cleaned_data['variedad']}")
-            logger.debug(f"Orden: {form.cleaned_data['orden']}")
-            logger.debug(f"Correo: {form.cleaned_data['correo']}")
+            logger.debug("Si es valido")
             instancia = form.save(commit=False)
-            
+
             instancia.save()
             return redirect('salidasFruta_list') 
         
