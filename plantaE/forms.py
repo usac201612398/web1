@@ -13,9 +13,9 @@ class salidasFrutaForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if 'cultivo' in self.data:
-            cultivo_id = int(self.data['cultivo'])
+            cultivo_id = str(self.data['cultivo'])
             self.fields['variedad'].queryset = detallesProduccion.objects.filter(cultivo=cultivo_id)
-            
+
     class Meta:
     
         model = salidasFruta
