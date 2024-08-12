@@ -21,14 +21,14 @@ class salidasFruta(models.Model):
     op_orden = [('60202046','60202046'),('60206054','60206054'),('60206055','60206055'),('60206056','60206056')]
     
     id = models.AutoField(primary_key=True)
-    finca = models.CharField(max_length=25,choices=op_finca)
-    viaje = models.CharField(max_length=20, choices=op_viajes)
-    encargado = models.CharField(max_length=30,choices=op_encargado)
-    orden = models.CharField(max_length=20,choices=op_orden)
-    cultivo = models.CharField(max_length=45,choices=op_cultivo)
-    variedad = models.CharField(max_length=40,choices=op_variedad)
+    finca = models.CharField(max_length=25,choices=op_finca,null=True)
+    viaje = models.CharField(max_length=20, choices=op_viajes,null=True)
+    encargado = models.CharField(max_length=30,choices=op_encargado,null=True)
+    orden = models.CharField(max_length=20,choices=op_orden,null=True)
+    cultivo = models.CharField(max_length=45,choices=op_cultivo,null=True)
+    variedad = models.CharField(max_length=40,choices=op_variedad,null=True)
     cajas = models.IntegerField(blank=True, null=True)
-    correo = models.CharField(max_length=75, blank=True,choices=op_correo)
+    correo = models.CharField(max_length=75, blank=True,choices=op_correo,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
