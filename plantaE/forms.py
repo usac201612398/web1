@@ -9,6 +9,13 @@ class salidasFrutaForm(forms.ModelForm):
     orden = forms.ModelChoiceField(queryset=datosProduccion.objects.all())
     cultivo = forms.ModelChoiceField(queryset=datosProduccion.objects.all())
     variedad = forms.ModelChoiceField(queryset=detallesProduccion.objects.none())
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if 'cultivo' in self.data:
+            cultivo_id = int(self.data['cultivo'])
+            self.fields['variedad'].queryset = detallesProduccion.objects.filter(cultivo=cultivo_id)
+            
     class Meta:
     
         model = salidasFruta
