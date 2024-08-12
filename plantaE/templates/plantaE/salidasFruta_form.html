@@ -52,7 +52,8 @@
                     // Recorre los productos recibidos y añade opciones al campo 'name'
                     $.each(data.datos, function(index, product) {
                         $('#id_finca').append(
-                            $('<option>').text(product.finca).attr('value', product.finca)
+                            $('<option>').text(text(product.finca)).attr('value', text(product.finca))
+                                
                         );
                     });
 
@@ -60,14 +61,14 @@
                     // Recorre los productos recibidos y añade opciones al campo 'name'
                     $.each(data.datos, function(index, product) {
                         $('#id_encargado').append(
-                            $('<option>').text(product.encargado).attr('value', product.encargado)
+                            $('<option>').text(text(product.encargado)).attr('value', text(product.encargado))
                         );
                     });
 
                     $('#id_correo').html('');
                     // Recorre los productos recibidos y añade opciones al campo 'name'
                     $('#id_correo').append(
-                        $('<option>').text(data.correo).attr('value', data.correo)
+                        $('<option>').text(text(data.correo)).attr('value', text(data.correo))
                     );
 
                     $('#id_orden').html('');
@@ -77,7 +78,7 @@
                     // Recorre los productos recibidos y añade opciones al campo 'name'
                     $.each(data.adicionales, function(index, product) {
                         $('#id_orden').append(
-                            $('<option>').text(product.orden).attr('value', product.orden)
+                            $('<option>').text(text(product.orden)).attr('value', text(product.orden))
                         );
                     });
 
@@ -101,7 +102,8 @@
                     // Recorre los productos recibidos y añade opciones al campo 'name'
                     $.each(data.datos, function(index, product) {
                         $('#id_cultivo').append(
-                            $('<option>').text(product.cultivo).attr('value', product.cultivo)
+                            $('<option>').text(text(product.cultivo)).attr('value', text(product.cultivo))
+                            
                         );
                     });
 
@@ -112,8 +114,10 @@
                     // Recorre los productos recibidos y añade opciones al campo 'name'
                     $.each(data.variedad, function(index, product) {
                         $('#id_variedad').append(
-                            $('<option>').text(product.variedad).attr('value', product.variedad)
+                            $('<option>').text(text(product.variedad)).attr('value', text(product.variedad))
+                            
                         );
+                        console.log(product.variedad);
                     });
 
 
