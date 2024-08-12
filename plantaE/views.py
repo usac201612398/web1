@@ -33,16 +33,7 @@ def article_detail(request, pk):
     salidas = get_object_or_404(salidasFruta, pk=pk)
     return render(request, 'plantaE/salidasFruta_detail.html', {'registros': salidas})
 
-class salidasFrutaForm(forms.ModelForm):
-    # ... (tu código existente)
 
-    def clean(self):
-        cleaned_data = super().clean()
-        # Aquí puedes agregar validaciones personalizadas
-        # Por ejemplo, verifica si el campo "cajas" es un número positivo
-        if cleaned_data.get('cajas') <= 0:
-            self.add_error('cajas', 'El número de cajas debe ser mayor a cero.')
-        return cleaned_data
 
 def article_create(request):
     if request.method == 'POST':
