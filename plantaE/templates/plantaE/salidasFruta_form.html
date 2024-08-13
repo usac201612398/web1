@@ -4,7 +4,7 @@
     <title>Registro Form</title>
 </head>
 <body>
-    <h1>{{ form.instance.pk|yesno:"Editar Registro,Crear Registro" }}</h1>
+    <h1 class="roboto">{{ form.instance.pk|yesno:"Editar Registro,Crear Registro" }}</h1>
     <form method="post" id = "formFruta">
         {% csrf_token %}
         <div class = "row">
