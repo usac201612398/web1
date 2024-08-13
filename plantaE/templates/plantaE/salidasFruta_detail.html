@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{ registros.title }}</title>
+    <title>{{ registros.id }}</title>
 </head>
 <body>
-    <h1>{{ registros.title }}</h1>
-    <p>{{ registros.content }}</p>
+    <h1>{{ registros.id }}</h1>
+    <p>{{ registros.viaje }}</p>
     <a href="{% url 'salidasFruta_update' salidas.pk %}">Edit</a>
     <a href="{% url 'salidasFruta_delete' salidas.pk %}">Delete</a>
     <a href="{% url 'salidasFruta_list' %}">Back to list</a>
