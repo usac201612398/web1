@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{ registros.id }}</title>
+    <title>Detalles</title>
 </head>
 <body>
     <h1>{{ registros.id }}</h1>
+    <p>{{ registros.finca }}</p>
+    <p>{{ registros.encargado }}</p>
     <p>{{ registros.viaje }}</p>
+    <p>{{ registros.cajas }}</p>
+    <p>{{ registros.orden }}</p>
+    <p>{{ registros.cultivo }}</p>
+    <p>{{ registros.variedad }}</p>
     <a href="{% url 'salidasFruta_update' registros.pk %}">Edit</a>
     <a href="{% url 'salidasFruta_delete' registros.pk %}">Delete</a>
-    <a href="{% url 'salidasFruta_list' %}">Back to list</a>
+    <a href="{% url 'salidasFruta_list' %}">Regresar a panel</a>
 </body>
 </html>
