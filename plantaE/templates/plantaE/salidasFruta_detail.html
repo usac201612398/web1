@@ -6,8 +6,8 @@
 <body>
     <h1>{{ registros.id }}</h1>
     <p>{{ registros.viaje }}</p>
-    <a href="{% url 'salidasFruta_update' salidas.pk %}">Edit</a>
-    <a href="{% url 'salidasFruta_delete' salidas.pk %}">Delete</a>
+    <a href="{% url 'salidasFruta_update' registros.pk %}">Edit</a>
+    <a href="{% url 'salidasFruta_delete' registros.pk %}">Delete</a>
     <a href="{% url 'salidasFruta_list' %}">Back to list</a>
 </body>
 </html>
