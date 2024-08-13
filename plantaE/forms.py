@@ -5,14 +5,14 @@ from crispy_forms.layout import Submit, Layout, Fieldset, Div
 class salidasFrutaForm(forms.ModelForm):
     op_viajes = [('Viaje 1','Viaje 1'),('Viaje 2','Viaje 2'),('Viaje 3', 'Viaje 3'),('Viaje 4','Viaje 4'),('Viaje 5','Viaje 5'),('Viaje 6','Viaje 6')]
     
-    correo = forms.ChoiceField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de correo electrónico
-    encargado = forms.ChoiceField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
-    finca = forms.ChoiceField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
-    viaje = forms.ChoiceField(choices=op_viajes,widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    correo = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de correo electrónico
+    encargado = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    finca = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    viaje = forms.CharField(choices=op_viajes,widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
-    orden = forms.ChoiceField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
-    cultivo = forms.ChoiceField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
-    variedad = forms.ChoiceField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    orden = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    cultivo = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    variedad = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
 
     class Meta:
     
@@ -22,12 +22,7 @@ class salidasFrutaForm(forms.ModelForm):
         def __init__(self, *args, **kwargs):
 
             super().__init__(*args, **kwargs)
-            self.fields['correo'].queryset = usuariosAppFruta.objects.all()
-            self.fields['finca'].queryset = usuariosAppFruta.objects.all()
-            self.fields['encargado'].queryset = usuariosAppFruta.objects.all()
-            self.fields['orden'].queryset = datosProduccion.objects.all()
-            self.fields['cultivo'].queryset = datosProduccion.objects.all()
-            self.fields['variedad'].queryset = detallesProduccion.objects.all()
+            
             self.helper = FormHelper()
             self.helper.form_method = 'post'
             self.helper.add_input(Submit('submit','Guardar'))
