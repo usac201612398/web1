@@ -21,8 +21,9 @@
                     <tr><td>Orden:</td><td>{{ registros.orden }} </td></tr> 
                     <tr><td>Cultivo:</td><td>{{ registros.cultivo }} </td></tr> 
                     <tr><td>Variedad:</td><td>{{ registros.variedad }} </td></tr>
-                    <tr><td>Creado:</td><td>{{ registros.created_ad }} </td></tr> 
-                    <tr><td>Modificado:</td><td>{{ registros.updated_ad }} </td></tr>  
+                    <tr><td>Creado:</td><td>{{ registros.created_at }} </td></tr> 
+                    <tr><td>Modificado:</td><td>{{ registros.updated_at }} </td></tr>  
+                    <tr><td><a href="{% url 'salidasFruta_update' registros.pk %}">Edit</a></td><td><a href="{% url 'salidasFruta_delete' registros.pk %}">Delete</a></td></tr> 
                 </tbody>
                 </table>
             </div>
@@ -30,8 +31,10 @@
         </div>
         </div>
 
-    <a href="{% url 'salidasFruta_update' registros.pk %}">Edit</a>
-    <a href="{% url 'salidasFruta_delete' registros.pk %}">Delete</a>
-    <a href="{% url 'salidasFruta_list' %}">Regresar a panel</a>
+    <div class="container">
+        <a href="{% url 'salidasFruta_list' %}">Regresar a panel</a>
+    </div>
+    
+    
 </body>
 </html>
