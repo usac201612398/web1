@@ -16,10 +16,10 @@ class salidasFrutaForm(forms.ModelForm):
             self.helper.add_input(Submit('submit','Guardar'))
             self.helper.layout = Layout(
                 Fieldset(
-                    'viaje',
-                    'finca',
-                    'encargado',
-                    'correo',
+                    Div('viaje', css_class='form-group col-md-6'),
+                    Div('finca', css_class='form-group col-md-6'),
+                    Div('encargado', css_class='form-group col-md-6'),
+                    Div('correo', css_class='form-group col-md-6'),
                     Div('orden', css_class='form-group col-md-6'),
                     Div('cultivo', css_class='form-group col-md-6'),
                     Div('variedad',css_class='form-group col-md-6'),
