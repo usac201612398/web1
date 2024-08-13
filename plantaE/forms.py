@@ -8,7 +8,7 @@ class salidasFrutaForm(forms.ModelForm):
     correo = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de correo electrónico
     encargado = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
     finca = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
-    viaje = forms.CharField(choices=op_viajes,widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    viaje = forms.ChoiceField(choices=op_viajes,widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
     orden = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
     cultivo = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
