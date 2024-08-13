@@ -11,11 +11,12 @@ class salidasFrutaForm(forms.ModelForm):
     orden = forms.ChoiceField(widget=forms.ChoiceField(attrs={'class': 'my-input'}))
     cultivo = forms.ChoiceField(widget=forms.ChoiceField(attrs={'class': 'my-input'}))
     variedad = forms.ChoiceField(widget=forms.ChoiceField(attrs={'class': 'my-input'}))
+
     class Meta:
     
         model = salidasFruta
         fields = ['correo','viaje','encargado',  'finca', 'cajas',  'orden', 'cultivo', 'variedad']
-        '''
+        
         def __init__(self, *args, **kwargs):
 
             super().__init__(*args, **kwargs)
@@ -49,4 +50,4 @@ class salidasFrutaForm(forms.ModelForm):
                     css_class='container' 
                 )
             )
-        '''
+        
