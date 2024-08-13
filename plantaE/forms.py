@@ -22,6 +22,12 @@ class salidasFrutaForm(forms.ModelForm):
         def __init__(self, *args, **kwargs):
 
             super().__init__(*args, **kwargs)
+            self.fields['correo'].queryset = usuariosAppFruta.objects.all()
+            self.fields['finca'].queryset = usuariosAppFruta.objects.all()
+            self.fields['encargado'].queryset = usuariosAppFruta.objects.all()
+            self.fields['orden'].queryset = datosProduccion.objects.all()
+            self.fields['cultivo'].queryset = datosProduccion.objects.all()
+            self.fields['variedad'].queryset = detallesProduccion.objects.all()
             self.helper = FormHelper()
             self.helper.form_method = 'post'
             self.helper.add_input(Submit('submit','Guardar'))
