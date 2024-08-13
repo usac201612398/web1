@@ -18,6 +18,7 @@ class salidasFrutaForm(forms.ModelForm):
 
             self.helper.layout = Layout(
                 Fieldset(
+                    'Información de Salida',
                     Div(
                         Div('viaje', css_class='form-group col-md-6'),
                         Div('finca', css_class='form-group col-md-6'),
@@ -37,6 +38,7 @@ class salidasFrutaForm(forms.ModelForm):
                         Div('variedad', css_class='form-group col-md-6'),
                         Div('cajas', css_class='form-group col-md-6'),
                         css_class='row'
-                    )
+                    ),
+                    css_class='container' 
                 )
             )
