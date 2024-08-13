@@ -1,5 +1,5 @@
 from django import forms
-from .models import salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion
+from .models import salidasFruta
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Fieldset, Div
 class salidasFrutaForm(forms.ModelForm):
@@ -13,11 +13,12 @@ class salidasFrutaForm(forms.ModelForm):
     orden = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
     cultivo = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
     variedad = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
-
+    estructura = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    
     class Meta:
     
         model = salidasFruta
-        fields = ['correo','viaje','encargado',  'finca', 'cajas',  'orden', 'cultivo', 'variedad']
+        fields = ['correo','viaje','encargado',  'finca', 'cajas',  'orden', 'cultivo','estructura', 'variedad']
         
         def __init__(self, *args, **kwargs):
 

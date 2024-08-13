@@ -213,6 +213,18 @@
                         );
                     });
 
+                    $('#id_estructura').html('');
+                    $('#id_estructura').append(
+                        $('<option>').text('').attr('value','')
+                    );
+                    // Recorre los productos recibidos y añade opciones al campo 'name'
+                    $.each(data.estructura, function(index, product) {
+                        $('#id_estructura').append(
+                            $('<option>').text(product.estructura.toString()).attr('value', product.estructura.toString())
+                            
+                        );
+                    });
+
 
                 },
                 error: function(xhr, status, error) {
