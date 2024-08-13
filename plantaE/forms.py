@@ -3,14 +3,14 @@ from .models import salidasFruta, usuariosAppFruta, datosProduccion, detallesPro
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Fieldset, Div
 class salidasFrutaForm(forms.ModelForm):
-    correo = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de correo electrónico
-    encargado = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
-    finca = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
-    viaje = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
+    correo = forms.ChoiceField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de correo electrónico
+    encargado = forms.ChoiceField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    finca = forms.ChoiceField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    viaje = forms.ChoiceField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
-    orden = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
-    cultivo = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
-    variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
+    orden = forms.ChoiceField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    cultivo = forms.ChoiceField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    variedad = forms.ChoiceField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
 
     class Meta:
     
