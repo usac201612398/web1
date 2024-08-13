@@ -32,7 +32,7 @@
                 <tbody>
                 {%for registro in registros %} 
                 <tr> 
-                    <td> <a href="{% url 'salidasFruta_detail' article.pk %}">{{ registro.id }}</a></td>
+                    <td> <a href="{% url 'salidasFruta_detail' registro.pk %}">{{ registro.id }}</a></td>
                     <td>{{registro.finca}}</td>
                     <td>{{registro.encargado}}</td>
                     <td>{{registro.viaje}}</td>
@@ -40,8 +40,8 @@
                     <td>{{registro.orden}}</td>
                     <td>{{registro.cultivo}}</td>
                     <td>{{registro.variedad}}</td>
-                    <th ><a href="{% url 'salidasFruta_update' article.pk %}">Edit</a></th>
-                    <th ><a href="{% url 'salidasFruta_delete' article.pk %}">Delete</a></th>
+                    <th ><a href="{% url 'salidasFruta_update' registro.pk %}">Edit</a></th>
+                    <th ><a href="{% url 'salidasFruta_delete' registro.pk %}">Delete</a></th>
                     </tr> 
                         
                 {% endfor %}
