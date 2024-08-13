@@ -7,7 +7,10 @@
     <h1>{{ form.instance.pk|yesno:"Edit Registro,Create Registro" }}</h1>
     <form method="post" id = "formFruta">
         {% csrf_token %}
-        {{ form.as_p }}
+        <div class="form-group">
+            <label for="nombre">Correo:</label>
+            {{ form.correo}}
+          </div>
 
         <button type="submit">Save</button>
     </form>
