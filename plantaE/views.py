@@ -6,8 +6,6 @@ from django.shortcuts import get_object_or_404, redirect
 from .models import salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion
 from .forms import salidasFrutaForm
 
-logger = logging.getLogger(__name__)
-
 def obtener_nombre_usuario(request):
     # Obtén el nombre de usuario del usuario autenticado
     nombre_usuario = request.user.username
@@ -32,8 +30,6 @@ def article_list(request):
 def article_detail(request, pk):
     salidas = get_object_or_404(salidasFruta, pk=pk)
     return render(request, 'plantaE/salidasFruta_detail.html', {'registros': salidas})
-
-
 
 def article_create(request):
     if request.method == 'POST':

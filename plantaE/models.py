@@ -33,7 +33,7 @@ class salidasFruta(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return (str(self.finca) + str(self.encargado) + " | " + str(self.viaje)+ " | " + str(self.orden))
+        return (str(self.finca)+ " | " + str(self.encargado) + " | " + str(self.viaje)+ " | " + str(self.orden))
 
 class datosProduccion(models.Model):
 
