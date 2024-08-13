@@ -9,7 +9,8 @@
         {% csrf_token %}
         <div class = "row">
             <div class="col-md-6">
-                <label for="correo">Correo:</label>
+
+                {{ form.correo.label}}
                 {{ form.correo}}
             </div>
             <div class="col-md-6">
