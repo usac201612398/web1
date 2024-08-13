@@ -7,38 +7,41 @@
     <h1>{{ form.instance.pk|yesno:"Edit Registro,Create Registro" }}</h1>
     <form method="post" id = "formFruta">
         {% csrf_token %}
-        <div class="form-group">
-            <label for="correo">Correo:</label>
-            {{ form.correo}}
+        <div class = "row">
+            <div class="col-md-6">
+                <label for="correo">Correo:</label>
+                {{ form.correo}}
+            </div>
+            <div class="col-md-6">
+                <label for="finca">Finca:</label>
+                {{ form.finca}}
+            </div>
+            <div class="col-md-6">
+                <label for="encargado">Encargado:</label>
+                {{ form.encargado}}
+            </div>
+            <div class="col-md-6">
+                <label for="viaje">Viaje:</label>
+                {{ form.viaje}}
+            </div>
+            <div class="col-md-6">
+                <label for="cajas">Cajas:</label>
+                {{ form.cajas}}
+            </div>
+            <div class="col-md-6">
+                <label for="orden">Orden:</label>
+                {{ form.orden}}
+            </div>
+            <div class="col-md-6">
+                <label for="cultivo">Cultivo:</label>
+                {{ form.cultivo}}
+            </div>
+            <div class="col-md-6">
+                <label for="variedad">Variedad:</label>
+                {{ form.variedad}}
+            </div>
         </div>
-        <div class="form-group">
-            <label for="finca">Finca:</label>
-            {{ form.finca}}
-        </div>
-        <div class="form-group">
-            <label for="encargado">Encargado:</label>
-            {{ form.encargado}}
-        </div>
-        <div class="form-group">
-            <label for="viaje">Viaje:</label>
-            {{ form.viaje}}
-        </div>
-        <div class="form-group">
-            <label for="cajas">Cajas:</label>
-            {{ form.cajas}}
-        </div>
-        <div class="form-group">
-            <label for="orden">Orden:</label>
-            {{ form.orden}}
-        </div>
-        <div class="form-group">
-            <label for="cultivo">Cultivo:</label>
-            {{ form.cultivo}}
-        </div>
-        <div class="form-group">
-            <label for="variedad">Variedad:</label>
-            {{ form.variedad}}
-        </div>
+        
 
         <button type="submit">Save</button>
     </form>
