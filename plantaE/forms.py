@@ -22,7 +22,7 @@ class salidasFrutaForm(forms.ModelForm):
                     'correo',
                     'orden',
                     'cultivo',
-                    'variedad',
+                    Div('variedad',css_class='form-group col-md-6'),
                     Div('cajas', css_class='col-md-6')
                 )
             )
