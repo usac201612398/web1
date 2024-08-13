@@ -9,42 +9,73 @@
         {% csrf_token %}
         <div class = "row">
             <div class="col-md-6">
-
-                {{ form.correo.label}}
-                {{ form.correo}}
+                <div class="form-group row">
+                    <label for="correo" class="col-sm-2 col-form-label">Correo:</label>
+                    <div class="col-sm-10">
+                        {{ form.correo }}
+                    </div>
+                </div>
             </div>
             <div class="col-md-6">
-                <label for="finca">Finca:</label>
-                {{ form.finca}}
+                <div class="form-group row">
+                    <label for="finca" class="col-sm-2 col-form-label">Finca:</label>
+                    <div class="col-sm-10">
+                        {{ form.finca }}
+                    </div>
+                </div>
             </div>
             <div class="col-md-6">
-                <label for="encargado">Encargado:</label>
-                {{ form.encargado}}
+                <div class="form-group row">
+                    <label for="encargado" class="col-sm-2 col-form-label">Encargado:</label>
+                    <div class="col-sm-10">
+                        {{ form.encargado }}
+                    </div>
+                </div>
             </div>
             <div class="col-md-6">
-                <label for="viaje">Viaje:</label>
-                {{ form.viaje}}
+                <div class="form-group row">
+                    <label for="viaje" class="col-sm-2 col-form-label">Viaje:</label>
+                    <div class="col-sm-10">
+                        {{ form.viaje }}
+                    </div>
+                </div>
             </div>
             <div class="col-md-6">
-                <label for="cajas">Cajas:</label>
-                {{ form.cajas}}
+                <div class="form-group row">
+                    <label for="cajas" class="col-sm-2 col-form-label">Cajas:</label>
+                    <div class="col-sm-10">
+                        {{ form.cajas }}
+                    </div>
+                </div>
             </div>
             <div class="col-md-6">
-                <label for="orden">Orden:</label>
-                {{ form.orden}}
+                <div class="form-group row">
+                    <label for="orden" class="col-sm-2 col-form-label">Orden:</label>
+                    <div class="col-sm-10">
+                        {{ form.orden }}
+                    </div>
+                </div>
             </div>
             <div class="col-md-6">
-                <label for="cultivo">Cultivo:</label>
-                {{ form.cultivo}}
+                <div class="form-group row">
+                    <label for="cultivo" class="col-sm-2 col-form-label">Cultivo:</label>
+                    <div class="col-sm-10">
+                        {{ form.cultivo }}
+                    </div>
+                </div>
             </div>
             <div class="col-md-6">
-                <label for="variedad">Variedad:</label>
-                {{ form.variedad}}
+                <div class="form-group row">
+                    <label for="variedad" class="col-sm-2 col-form-label">Variedad:</label>
+                    <div class="col-sm-10">
+                        {{ form.variedad }}
+                    </div>
+                </div>
             </div>
         </div>
         
 
-        <button type="submit">Save</button>
+        <button type="submit">Enviar</button>
     </form>
     <a href="{% url 'salidasFruta_list' %}">Back to list</a>
 
