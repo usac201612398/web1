@@ -3,12 +3,19 @@ from .models import salidasFruta, usuariosAppFruta, datosProduccion, detallesPro
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Fieldset, Div
 class salidasFrutaForm(forms.ModelForm):
-    
+    correo = forms.ChoiceField(widget=forms.ChoiceField(attrs={'class': 'my-input'}))
+    encargado = forms.ChoiceField(widget=forms.ChoiceField(attrs={'class': 'my-input'}))
+    finca = forms.ChoiceField(widget=forms.ChoiceField(attrs={'class': 'my-input'}))
+    viaje = forms.ChoiceField(widget=forms.ChoiceField(attrs={'class': 'my-input'}))
+    cajas = forms.IntegerField(widget=forms.IntegerField(attrs={'class': 'my-input'}))
+    orden = forms.ChoiceField(widget=forms.ChoiceField(attrs={'class': 'my-input'}))
+    cultivo = forms.ChoiceField(widget=forms.ChoiceField(attrs={'class': 'my-input'}))
+    variedad = forms.ChoiceField(widget=forms.ChoiceField(attrs={'class': 'my-input'}))
     class Meta:
     
         model = salidasFruta
         fields = ['correo','viaje','encargado',  'finca', 'cajas',  'orden', 'cultivo', 'variedad']
-
+        '''
         def __init__(self, *args, **kwargs):
 
             super().__init__(*args, **kwargs)
@@ -42,3 +49,4 @@ class salidasFrutaForm(forms.ModelForm):
                     css_class='container' 
                 )
             )
+        '''
