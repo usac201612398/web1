@@ -4,13 +4,13 @@
     <title>Registro Form</title>
 </head>
 <body>
-    <h1>{{ form.instance.pk|yesno:"Edit Registro,Create Registro" }}</h1>
+    <h1>{{ form.instance.pk|yesno:"Editar Registro,Crear Registro" }}</h1>
     <form method="post" id = "formFruta">
         {% csrf_token %}
         <div class = "row">
             <div class="col-md-6">
                 <div class="form-group row">
-                    <label for="correo" class="col-sm-2 col-form-label">Correo:</label>
+                    <label for="correo" class="col-sm-3 col-form-label">Correo:</label>
                     <div class="col-sm-10">
                         {{ form.correo }}
                     </div>
@@ -18,7 +18,7 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group row">
-                    <label for="finca" class="col-sm-2 col-form-label">Finca:</label>
+                    <label for="finca" class="col-sm-3 col-form-label">Finca:</label>
                     <div class="col-sm-10">
                         {{ form.finca }}
                     </div>
@@ -26,7 +26,7 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group row">
-                    <label for="encargado" class="col-sm-2 col-form-label">Encargado:</label>
+                    <label for="encargado" class="col-sm-3 col-form-label">Encargado:</label>
                     <div class="col-sm-10">
                         {{ form.encargado }}
                     </div>
@@ -34,7 +34,7 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group row">
-                    <label for="viaje" class="col-sm-2 col-form-label">Viaje:</label>
+                    <label for="viaje" class="col-sm-3 col-form-label">Viaje:</label>
                     <div class="col-sm-10">
                         {{ form.viaje }}
                     </div>
@@ -42,7 +42,7 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group row">
-                    <label for="cajas" class="col-sm-2 col-form-label">Cajas:</label>
+                    <label for="cajas" class="col-sm-3 col-form-label">Cajas:</label>
                     <div class="col-sm-10">
                         {{ form.cajas }}
                     </div>
@@ -50,7 +50,7 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group row">
-                    <label for="orden" class="col-sm-2 col-form-label">Orden:</label>
+                    <label for="orden" class="col-sm-3 col-form-label">Orden:</label>
                     <div class="col-sm-10">
                         {{ form.orden }}
                     </div>
@@ -58,7 +58,7 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group row">
-                    <label for="cultivo" class="col-sm-2 col-form-label">Cultivo:</label>
+                    <label for="cultivo" class="col-sm-3 col-form-label">Cultivo:</label>
                     <div class="col-sm-10">
                         {{ form.cultivo }}
                     </div>
@@ -66,7 +66,7 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group row">
-                    <label for="variedad" class="col-sm-2 col-form-label">Variedad:</label>
+                    <label for="variedad" class="col-sm-3 col-form-label">Variedad:</label>
                     <div class="col-sm-10">
                         {{ form.variedad }}
                     </div>
