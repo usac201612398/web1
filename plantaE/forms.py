@@ -75,4 +75,6 @@ class recepcionesForm(forms.ModelForm):
     
         model = Recepciones
         fields = ['recepcion','fecha','finca', 'cajas',  'libras', 'orden','cultivo','estructura', 'variedad','observaciones','status']
-             
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.fields['observaciones'].required = False        
