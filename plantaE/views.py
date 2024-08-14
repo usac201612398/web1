@@ -3,7 +3,7 @@ from django.http import JsonResponse
 import logging
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect
-from .models import salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion
+from .models import salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras
 from .forms import salidasFrutaForm
 
 def obtener_nombre_usuario(request):
@@ -21,7 +21,7 @@ def load_dataUsuario2(request):
     ordenSelect = request.GET.get('category_id')
     cultivo= datosProduccion.objects.filter(orden=ordenSelect,status="Abierta").values('cultivo')
     variedad = detallesProduccion.objects.filter(cultivo=list(cultivo)[0]['cultivo']).values('variedad')
-    estructura = detallesProduccion.objects.filter(orden=ordenSelect).values('estructura')
+    estructura = detallesEstructuras.objects.filter(orden=ordenSelect).values('estructura')
     return JsonResponse({'datos': list(cultivo),'variedad':list(variedad),'variedad':list(estructura)})
 
 def article_list(request):
