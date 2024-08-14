@@ -58,6 +58,7 @@ class salidasFrutaForm(forms.ModelForm):
 
 class recepcionesForm(forms.ModelForm):
     op_status = [('Pendiente',''),('En proceso','En proceso')]
+
     recepcion = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
     fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'my-input'}))
     finca = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
@@ -68,7 +69,7 @@ class recepcionesForm(forms.ModelForm):
     variedad = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
     estructura = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
     observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
-    status = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    status = forms.CharField(choices=op_status,widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
 
 
     class Meta:
