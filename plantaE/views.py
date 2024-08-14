@@ -66,3 +66,22 @@ def article_delete(request, pk):
         salidas.delete()
         return redirect('salidasFruta_list')
     return render(request, 'plantaE/salidasFruta_confirm_delete.html', {'registros': salidas})
+
+def recepciones_list(request):
+    salidas = salidasFruta.objects.all()
+    return render(request, 'plantaE/recepcionesFruta_list.html', {'registros': salidas})
+
+def recepciones_detail(request, pk):
+    salidas = get_object_or_404(salidasFruta, pk=pk)
+    return render(request, 'plantaE/recepcionesFruta_detail.html', {'registros': salidas})
+
+def  recepciones_update(request, pk):
+    salidas = get_object_or_404(salidasFruta, pk=pk)
+    if request.method == 'POST':
+        form = salidasFrutaForm(request.POST, instance=salidas)
+        if form.is_valid():
+            form.save()
+            return redirect('recepcionesFruta_list')
+    else:
+        form = salidasFrutaForm(instance=salidas)
+    return render(request, 'plantaE/recepcionesFruta_form.html', {'form': form})

@@ -15,5 +15,7 @@ urlpatterns = [
     path('salidasFruta/new/', views.article_create, name='salidasFruta_create'),
     path('salidasFruta/<int:pk>/edit/', views.article_update, name='salidasFruta_update'),
     path('salidasFruta/<int:pk>/delete/', views.article_delete, name='salidasFruta_delete'),
-
+    path('recepcionesFruta/<int:pk>/edit/', views.recepciones_update, name='recepcionesFruta_update'),
+    path("recepcionesFruta",views.recepciones_list,name='recepcionesFruta_list'),
+    path('recepcionesFruta/<int:pk>/', views.recepciones_detail, name='recepcionesFruta_detail'),
 ]
