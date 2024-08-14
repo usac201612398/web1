@@ -69,11 +69,11 @@ def article_delete(request, pk):
 
 def recepciones_list(request):
     salidas = salidasFruta.objects.all()
-    return render(request, 'plantaE/recepcionesFruta_list.html', {'registros': salidas})
+    return render(request, 'plantaE/recepciones_list.html', {'registros': salidas})
 
 def recepciones_detail(request, pk):
     salidas = get_object_or_404(salidasFruta, pk=pk)
-    return render(request, 'plantaE/recepcionesFruta_detail.html', {'registros': salidas})
+    return render(request, 'plantaE/recepciones_detail.html', {'registros': salidas})
 
 def  recepciones_update(request, pk):
     salidas = get_object_or_404(salidasFruta, pk=pk)
@@ -84,4 +84,4 @@ def  recepciones_update(request, pk):
             return redirect('recepcionesFruta_list')
     else:
         form = salidasFrutaForm(instance=salidas)
-    return render(request, 'plantaE/recepcionesFruta_form.html', {'form': form})
+    return render(request, 'plantaE/recepciones_form.html', {'form': form})
