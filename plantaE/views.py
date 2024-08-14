@@ -85,3 +85,4 @@ def  recepciones_update(request, pk):
     else:
         form =  recepcionesForm(instance=salidas)
     return render(request, 'plantaE/recepciones_form.html', {'form': form})
+
