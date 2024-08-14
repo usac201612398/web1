@@ -22,7 +22,7 @@ def load_dataUsuario2(request):
     cultivo= datosProduccion.objects.filter(orden=ordenSelect,status="Abierta").values('cultivo')
     variedad = detallesProduccion.objects.filter(cultivo=list(cultivo)[0]['cultivo']).values('variedad')
     estructura = detallesEstructuras.objects.filter(orden=ordenSelect).values('estructura')
-    return JsonResponse({'datos': list(cultivo),'variedad':list(variedad),'variedad':list(estructura),'orden':ordenSelect})
+    return JsonResponse({'datos': list(cultivo),'variedad':list(variedad),'estructura':list(estructura),'orden':ordenSelect})
 
 def article_list(request):
     salidas = salidasFruta.objects.all()
