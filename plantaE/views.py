@@ -3,8 +3,8 @@ from django.http import JsonResponse
 import logging
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect
-from .models import salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras
-from .forms import salidasFrutaForm
+from .models import salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones
+from .forms import salidasFrutaForm, recepcionesForm
 
 def obtener_nombre_usuario(request):
     # Obtén el nombre de usuario del usuario autenticado
@@ -68,20 +68,20 @@ def article_delete(request, pk):
     return render(request, 'plantaE/salidasFruta_confirm_delete.html', {'registros': salidas})
 
 def recepciones_list(request):
-    salidas = salidasFruta.objects.all()
+    salidas = Recepciones.objects.all()
     return render(request, 'plantaE/recepciones_list.html', {'registros': salidas})
 
 def recepciones_detail(request, pk):
-    salidas = get_object_or_404(salidasFruta, pk=pk)
+    salidas = get_object_or_404(Recepciones, pk=pk)
     return render(request, 'plantaE/recepciones_detail.html', {'registros': salidas})
 
 def  recepciones_update(request, pk):
-    salidas = get_object_or_404(salidasFruta, pk=pk)
+    salidas = get_object_or_404(Recepciones, pk=pk)
     if request.method == 'POST':
-        form = salidasFrutaForm(request.POST, instance=salidas)
+        form = recepcionesForm(request.POST, instance=salidas)
         if form.is_valid():
             form.save()
             return redirect('recepcionesFruta_list')
     else:
-        form = salidasFrutaForm(instance=salidas)
+        form =  recepcionesForm(instance=salidas)
     return render(request, 'plantaE/recepciones_form.html', {'form': form})
