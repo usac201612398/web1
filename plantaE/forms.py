@@ -69,8 +69,7 @@ class recepcionesForm(forms.ModelForm):
     variedad = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
     estructura = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
     observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
-    status = forms.CharField(choices=op_status,widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
-
+    status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'my-input'}))
 
     class Meta:
     
