@@ -30,7 +30,7 @@ class salidasFruta(models.Model):
     variedad = models.CharField(max_length=40,choices=op_variedad,null=True)
     cajas = models.IntegerField(blank=True, null=True)
     correo = models.CharField(max_length=75, blank=True,choices=op_correo,null=True)
-    estructura=models.CharField(max_length=40,choices=op_variedad,null=True)
+    estructura=models.CharField(max_length=40,choices=op_estructura,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
