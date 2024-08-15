@@ -186,7 +186,7 @@ class Recepciones(models.Model):
     status = models.CharField(max_length=25, choices=op_status,blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
-
+    
     class Meta:
         managed = False
         db_table = 'recepciones'

@@ -3,7 +3,7 @@ from django.http import JsonResponse
 import logging
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect
-from .models import salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad
+from .models import salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo
 from .forms import salidasFrutaForm, recepcionesForm, ccalidadForm
 
 def obtener_nombre_usuario(request):
@@ -130,3 +130,15 @@ def ccalidad_delete(request, pk):
         salidas.delete()
         return redirect('ccalidad_list')
     return render(request, 'plantaE/ccalidad_confirm_delete.html', {'registros': salidas})
+
+def obtener_llave_recepcion(request):
+    # Obtén el nombre de usuario del usuario autenticado
+    llave_recepcion = Recepciones.objects.values('criterio').distinct('criterio')
+    causa_rechazo = Recepciones.objects.all().values('causa')
+    return JsonResponse({'llaves': list(llave_recepcion),'causa':list(causa_rechazo)})
+
+def load_ccalidadparam(request):
+    llave_recepcion = request.GET.get('category_id')
+    datos = Recepciones.objects.filter(criterio=llave_recepcion).values('recepcion').distinct()
+    
+    return JsonResponse({'datos': list(datos)})

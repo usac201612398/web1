@@ -101,4 +101,78 @@
     }
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Función para cargar productos basados en la categoría seleccionada
+        function actualizarLlave() {
+            $.ajax({
+                url: '{% url "obtener_llave_recepcion" %}',  // URL para la vista AJAX
+                data: {
+                    'category_id': "Consulta"  // Envia el ID de la categoría como parámetro
+                },
+                success: function(data) {
+                    // Limpia las opciones actuales del campo 'name'
+                    var initialCategoryId =data.llaves;  // Obtiene el valor inicial del campo 'category'
+                    var initialCategoryId2 = data.causa;
+                    if (initialCategoryId) {
+                        $('#id_llave').html('');
+                        // Recorre los productos recibidos y añade opciones al campo 'name'
+                        $.each(initialCategoryId, function(index, product) {
+                            $('#id_llave').append(
+                                $('<option>').text(product.criterio.toString()).attr('value', product.criterio.toString())      
+                            );
+                        });
+                    }
+                    if (initialCategoryId2) {
+                        $('#id_causarechazo').html('');
+                        // Recorre los productos recibidos y añade opciones al campo 'name'
+                        $.each(initialCategoryId2, function(index, product) {
+                            $('#id_causarechazo').append(
+                                $('<option>').text(product.causa.toString()).attr('value', product.causa.toString())      
+                            );
+                        });
+                    }
+
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);  // Maneja errores de la solicitud
+                }
+            });
+        }
+        function loadProducts(categoryId) {
+            $.ajax({
+                url: '{% url "load_ccalidadparam" %}',  // URL para la vista AJAX
+                data: {
+                    'category_id': categoryId  // Envia el ID de la categoría como parámetro
+                },
+                success: function(data) {
+                    // Limpia las opciones actuales del campo 'name'
+                    console.log(data);
+
+                    $('#id_recepcion').html('');
+                    $('#id_recepcion').append(
+                        $('<option>').text('').attr('value','')
+                    );
+                    // Recorre los productos recibidos y añade opciones al campo 'name'
+                    $.each(data.datos, function(index, product) {
+                        $('#id_recepcion').append(
+                            $('<option>').text(product.recepcion.toString()).attr('value', product.recepcion.toString())
+                        );
+                    });
+
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);  // Maneja errores de la solicitud
+                }
+            });
+        }
+        $('#id_llave').change(function() {
+            var categoryId = $(this).val();  // Obtiene el ID de la categoría seleccionada
+            loadProducts(categoryId);  // Llama a la función para cargar productos
+        });
+        
+        // Llama a la función de carga de productos al cargar la página
+        
+    });
+</script>
 </html>
