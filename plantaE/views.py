@@ -86,4 +86,4 @@ def recepciones_update(request, pk):
             return JsonResponse({'errores': form.errors}, status=400)
     else:
         form = recepcionesForm(instance=salidas)
-    return render(request, 'plantaE/recepcionesFruta_form.html', {'form': form})
+    return render(request, 'plantaE/recepciones_form.html', {'form': form})
