@@ -75,14 +75,15 @@ def recepciones_detail(request, pk):
     salidas = get_object_or_404(Recepciones, pk=pk)
     return render(request, 'plantaE/recepciones_detail.html', {'registros': salidas})
 
-def  recepciones_update(request, pk):
+def recepciones_update(request, pk):
     salidas = get_object_or_404(Recepciones, pk=pk)
     if request.method == 'POST':
         form = recepcionesForm(request.POST, instance=salidas)
         if form.is_valid():
             form.save()
             return redirect('recepcionesFruta_list')
+        else:
+            return JsonResponse({'errores': form.errors}, status=400)
     else:
-        form =  recepcionesForm(instance=salidas)
-    return render(request, 'plantaE/recepciones_form.html', {'form': form})
-
+        form = recepcionesForm(instance=salidas)
+    return render(request, 'plantaE/recepcionesFruta_form.html', {'form': form})
