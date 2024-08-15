@@ -156,7 +156,8 @@
                 success: function(data) {
                     // Limpia las opciones actuales del campo 'name'
                     // Recorre los productos recibidos y añade opciones al campo 'name'
-                    $('#id_porcentaje').html(data.valor.toString());
+                    $('#id_porcentaje').html('');
+                    $('#mi_porcentaje').val(data.valor);
                     $('#id_recepcion').html('');
                     $.each(data.datos, function(index, product) {
                        
