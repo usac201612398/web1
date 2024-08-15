@@ -116,9 +116,7 @@
                     var initialCategoryId2 = data.causa;
                     if (initialCategoryId) {
                         
-                        $('#id_llave').append(
-                            $('<option>').text('').attr('value','')
-                        );
+                        
                         // Recorre los productos recibidos y añade opciones al campo 'name'
                         $.each(initialCategoryId, function(index, product) {
                             $('#id_llave').append(
@@ -129,9 +127,7 @@
                     }
                     if (initialCategoryId2) {
                         
-                        $('#id_causarechazo').append(
-                            $('<option>').text('').attr('value','')
-                        );
+                
                         // Recorre los productos recibidos y añade opciones al campo 'name'
                         $.each(initialCategoryId2, function(index, product) {
                             $('#id_causarechazo').append(
