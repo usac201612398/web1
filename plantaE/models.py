@@ -142,7 +142,7 @@ class Boletas(models.Model):
     cajas = models.BigIntegerField(blank=True, null=True)
     librasxcaja = models.DecimalField(max_digits=65535, decimal_places=65535, blank=True, null=True)
     libras = models.DecimalField(max_digits=65535, decimal_places=65535, blank=True, null=True)
-    created = models.DateTimeField(blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True,blank=True, null=True)
 
     class Meta:
         managed = False
@@ -154,13 +154,13 @@ class Ccalidad(models.Model):
     registro = models.BigAutoField(primary_key=True)
     recepcion = models.BigIntegerField(blank=True, null=True)
     causarechazo = models.CharField(max_length=100, blank=True, null=True)
-    porcentaje = models.DecimalField(max_digits=65535, decimal_places=65535, blank=True, null=True)
+    porcentaje = models.DecimalField(max_digits=3, decimal_places=2, blank=True, null=True)
     fecha = models.DateField(blank=True, null=True)
     llave = models.CharField(max_length=200, blank=True, null=True)
-    status2 = models.CharField(max_length=25, choices=op_status2, blank=True, null=True)
-    created = models.DateTimeField(blank=True, null=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    status2 = models.CharField(max_length=25, blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     observaciones = models.CharField(max_length=125, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
 
     class Meta:
         managed = False
@@ -184,7 +184,7 @@ class Recepciones(models.Model):
     llave2 = models.CharField(max_length=200, blank=True, null=True)
     criterio = models.CharField(max_length=85, blank=True, null=True)
     status = models.CharField(max_length=25, choices=op_status,blank=True, null=True)
-    created = models.DateTimeField(blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -195,7 +195,7 @@ class causasRechazo(models.Model):
     
     registro = models.BigAutoField(primary_key=True)
     causa = models.CharField(max_length=75, blank=True, null=True)
-    created = models.DateTimeField(blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
