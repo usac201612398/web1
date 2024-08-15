@@ -94,7 +94,7 @@ class ccalidadForm(forms.ModelForm):
     class Meta:
     
         model = Ccalidad
-        fields = ['recepcion','fecha','porcentaje', 'status2',  'llave', 'causarechazo','observaciones']
+        fields = ['recepcion','fecha','porcentaje', 'status2', 'llave', 'causarechazo','observaciones']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
