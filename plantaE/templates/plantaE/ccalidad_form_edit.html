@@ -112,33 +112,17 @@
                 },
                 success: function(data) {
                     // Limpia las opciones actuales del campo 'name'
-                    var initialCategoryId =data.llaves;  // Obtiene el valor inicial del campo 'category'
                     var initialCategoryId2 = data.causa;
-                    if (initialCategoryId) {
-                        $('#id_llave').html('');
-                        $('#id_llave').append(
-                            $('<option>').text('').attr('value','')
-                        );
-                        // Recorre los productos recibidos y añade opciones al campo 'name'
-                        $.each(initialCategoryId, function(index, product) {
-                            $('#id_llave').append(
-                                $('<option>').text(product.criterio.toString()).attr('value', product.criterio.toString())      
-                            );
-                        });
-                        
-                    }
+                    
                     if (initialCategoryId2) {
                         $('#id_causarechazo').html('');
-                        $('#id_causarechazo').append(
-                            $('<option>').text('').attr('value','')
-                        );
                         // Recorre los productos recibidos y añade opciones al campo 'name'
                         $.each(initialCategoryId2, function(index, product) {
                             $('#id_causarechazo').append(
                                 $('<option>').text(product.causa.toString()).attr('value', product.causa.toString())      
                             );
                         });
-                        
+                        loadProducts(data.llave_recepcion);  
                     }
 
                 },
@@ -158,14 +142,7 @@
                     // Recorre los productos recibidos y añade opciones al campo 'name'
                     $('#id_porcentaje').html('');
                     $('#id_porcentaje').val(data.valor);
-                    $('#id_recepcion').html('');
-                    console.log(data.valor);
-                    $.each(data.datos, function(index, product) {
-                       
-                        $('#id_recepcion').append(
-                            $('<option>').text(product.recepcion.toString()).attr('value', product.recepcion.toString())
-                        );
-                    });
+                    
 
                 },
                 error: function(xhr, status, error) {
@@ -173,10 +150,6 @@
                 }
             });
         }
-        $('#id_llave').change(function() {
-            var categoryId = $(this).val();  // Obtiene el ID de la categoría seleccionada
-            loadProducts(categoryId);  // Llama a la función para cargar productos
-        });
 
         actualizarLlave();
         

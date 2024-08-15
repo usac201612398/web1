@@ -123,7 +123,7 @@ def ccalidad_update(request, pk):
             return redirect('ccalidad_list')
     else:
         form = ccalidadForm(instance=salidas)
-    return render(request, 'plantaE/ccalidad_form.html', {'form': form})
+    return render(request, 'plantaE/ccalidad_form_edit.html', {'form': form})
 
 def ccalidad_delete(request, pk):
     salidas = get_object_or_404(Ccalidad, pk=pk)
@@ -136,7 +136,7 @@ def obtener_llave_recepcion(request):
     # Obtén el nombre de usuario del usuario autenticado
     llave_recepcion = Recepciones.objects.values('criterio').distinct('criterio')
     causa_rechazo = causasRechazo.objects.all().values('causa')
-    return JsonResponse({'llaves': list(llave_recepcion),'causa':list(causa_rechazo)})
+    return JsonResponse({'llaves': list(llave_recepcion),'causa':list(causa_rechazo),'llave':llave_recepcion})
 
 def load_ccalidadparam(request):
     llave_recepcion = request.GET.get('category_id')
