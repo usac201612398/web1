@@ -136,7 +136,7 @@ def obtener_llave_recepcion(request):
     # Obtén el nombre de usuario del usuario autenticado
     llave_recepcion = Recepciones.objects.values('criterio').distinct('criterio')
     causa_rechazo = causasRechazo.objects.all().values('causa')
-    return JsonResponse({'llaves': list(llave_recepcion),'causa':list(causa_rechazo),'llave':llave_recepcion})
+    return JsonResponse({'llaves': list(llave_recepcion),'causa':list(causa_rechazo)})
 
 def load_ccalidadparam(request):
     llave_recepcion = request.GET.get('category_id')

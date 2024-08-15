@@ -122,7 +122,7 @@
                                 $('<option>').text(product.causa.toString()).attr('value', product.causa.toString())      
                             );
                         });
-                        loadProducts(data.llave_recepcion);  
+                         
                     }
 
                 },
@@ -152,7 +152,7 @@
         }
 
         actualizarLlave();
-        
+        loadProducts( $('#id_llave').val());
         // Llama a la función de carga de productos al cargar la página
         
     });
