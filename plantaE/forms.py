@@ -81,7 +81,7 @@ class recepcionesForm(forms.ModelForm):
         self.fields['observaciones'].required = False
 
 class ccalidadForm(forms.ModelForm):
-    op_status2 = [('Pendiente',''),('','Inspeccionado')]
+    op_status2 = [('Pendiente',''),('Inspeccionado','Inspeccionado')]
 
     recepcion = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'my-input'}))
