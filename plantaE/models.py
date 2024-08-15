@@ -149,15 +149,18 @@ class Boletas(models.Model):
         db_table = 'boletas'
 
 class Ccalidad(models.Model):
+    op_status2 = [('Pendiente',''),('En proceso','En proceso')]
+
     registro = models.BigAutoField(primary_key=True)
     recepcion = models.BigIntegerField(blank=True, null=True)
     causarechazo = models.CharField(max_length=100, blank=True, null=True)
     porcentaje = models.DecimalField(max_digits=65535, decimal_places=65535, blank=True, null=True)
     fecha = models.DateField(blank=True, null=True)
     llave = models.CharField(max_length=200, blank=True, null=True)
-    status1 = models.CharField(max_length=25, blank=True, null=True)
-    status2 = models.CharField(max_length=25, blank=True, null=True)
+    status2 = models.CharField(max_length=25, choices=op_status2, blank=True, null=True)
     created = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    observaciones = models.CharField(max_length=125, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -187,3 +190,14 @@ class Recepciones(models.Model):
     class Meta:
         managed = False
         db_table = 'recepciones'
+
+class causasRechazo(models.Model):
+    
+    registro = models.BigAutoField(primary_key=True)
+    causa = models.CharField(max_length=75, blank=True, null=True)
+    created = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.registro)
+   
