@@ -139,6 +139,6 @@ def obtener_llave_recepcion(request):
 
 def load_ccalidadparam(request):
     llave_recepcion = request.GET.get('category_id')
-    #datos = Recepciones.objects.filter(criterio=llave_recepcion).values('recepcion').distinct('recepcion')
+    datos = Recepciones.objects.filter(criterio=llave_recepcion).values('recepcion').distinct('recepcion')
     
-    return JsonResponse({'datos': llave_recepcion})
+    return JsonResponse({'datos': list(datos)})
