@@ -141,5 +141,9 @@ def obtener_llave_recepcion(request):
 def load_ccalidadparam(request):
     llave_recepcion = request.GET.get('category_id')
     datos = Recepciones.objects.filter(criterio=llave_recepcion).values('recepcion').distinct('recepcion')
-    valor = 1-Ccalidad.objects.filter(llave=llave_recepcion).aggregate(suma=Sum('porcentaje'))['suma']
+    valor = Ccalidad.objects.filter(llave=llave_recepcion).aggregate(suma=Sum('porcentaje'))['suma']
+    if valor != None:
+        valor = 1-float(Ccalidad.objects.filter(llave=llave_recepcion).aggregate(suma=Sum('porcentaje'))['suma'])
+    else:
+        valor=1
     return JsonResponse({'datos': list(datos),'valor':valor})
