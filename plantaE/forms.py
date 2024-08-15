@@ -63,7 +63,7 @@ class recepcionesForm(forms.ModelForm):
     fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'my-input'}))
     finca = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
-    libras = forms.DecimalField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
+    libras = forms.DecimalField(widget=forms.DecimalField(attrs={'class': 'my-input'}))  # Campo numérico
     orden = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
     cultivo = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
     variedad = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
