@@ -3,8 +3,8 @@ from django.http import JsonResponse
 import logging
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect
-from .models import salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones
-from .forms import salidasFrutaForm, recepcionesForm
+from .models import salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad
+from .forms import salidasFrutaForm, recepcionesForm, ccalidadForm
 
 def obtener_nombre_usuario(request):
     # Obtén el nombre de usuario del usuario autenticado
@@ -87,3 +87,46 @@ def recepciones_update(request, pk):
     else:
         form = recepcionesForm(instance=salidas)
     return render(request, 'plantaE/recepciones_form.html', {'form': form})
+
+def ccalidad_list(request):
+    salidas = Ccalidad.objects.all()
+    return render(request, 'plantaE/ccalidad_list.html', {'registros': salidas})
+
+def ccalidad_detail(request, pk):
+    salidas = get_object_or_404(Ccalidad, pk=pk)
+    return render(request, 'plantaE/ccalidad_detail.html', {'registros': salidas})
+
+def ccalidad_create(request):
+    if request.method == 'POST':
+        form = ccalidadForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+            except Exception as e:
+                # Manejar excepciones específicas (por ejemplo, UniqueConstraintError)
+                return JsonResponse({'error': str(e)}, status=400)
+            return redirect('ccalidad_list')
+        else:
+             # Imprimir errores para depuración
+            return JsonResponse({'errores': form.errors}, status=400)
+    else:
+        form = ccalidadForm()
+    return render(request, 'plantaE/ccalidad_form.html', {'form': form})
+
+def ccalidad_update(request, pk):
+    salidas = get_object_or_404(Ccalidad, pk=pk)
+    if request.method == 'POST':
+        form = ccalidadForm(request.POST, instance=salidas)
+        if form.is_valid():
+            form.save()
+            return redirect('ccalidad_list')
+    else:
+        form = ccalidadForm(instance=salidas)
+    return render(request, 'plantaE/ccalidad_form.html', {'form': form})
+
+def ccalidad_delete(request, pk):
+    salidas = get_object_or_404(Ccalidad, pk=pk)
+    if request.method == 'POST':
+        salidas.delete()
+        return redirect('ccalidad_list')
+    return render(request, 'plantaE/ccalidad_confirm_delete.html', {'registros': salidas})

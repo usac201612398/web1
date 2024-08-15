@@ -18,4 +18,9 @@ urlpatterns = [
     path('recepcionesFruta/<int:pk>/edit/', views.recepciones_update, name='recepcionesFruta_update'),
     path("recepcionesFruta",views.recepciones_list,name='recepcionesFruta_list'),
     path('recepcionesFruta/<int:pk>/', views.recepciones_detail, name='recepcionesFruta_detail'),
+    path("ccalidad",views.ccalidad_list,name='ccalidad_list'),
+    path('ccalidad/<int:pk>/', views.ccalidad_detail, name='ccalidad_detail'),
+    path('ccalidad/new/', views.ccalidad_create, name='ccalidad_create'),
+    path('ccalidad/<int:pk>/edit/', views.ccalidad_update, name='ccalidad_update'),
+    path('ccalidad/<int:pk>/delete/', views.ccalidad_delete, name='ccalidad_delete'),
 ]
