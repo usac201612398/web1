@@ -157,7 +157,7 @@ class Ccalidad(models.Model):
     porcentaje = models.DecimalField(max_digits=3, decimal_places=2, blank=True, null=True)
     fecha = models.DateField(blank=True, null=True)
     llave = models.CharField(max_length=200, blank=True, null=True)
-    status2 = models.CharField(max_length=25, blank=True, null=True)
+    status2 = models.CharField(max_length=25, choices=op_status2,blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     observaciones = models.CharField(max_length=125, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
@@ -186,7 +186,7 @@ class Recepciones(models.Model):
     status = models.CharField(max_length=25, choices=op_status,blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
-    
+
     class Meta:
         managed = False
         db_table = 'recepciones'
