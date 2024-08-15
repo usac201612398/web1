@@ -125,7 +125,7 @@
                                 $('<option>').text(product.criterio.toString()).attr('value', product.criterio.toString())      
                             );
                         });
-                        console.log(initialCategoryId);
+                        
                     }
                     if (initialCategoryId2) {
                         $('#id_causarechazo').html('');
@@ -138,7 +138,7 @@
                                 $('<option>').text(product.causa.toString()).attr('value', product.causa.toString())      
                             );
                         });
-                        console.log(initialCategoryId2);
+                        
                     }
 
                 },
@@ -155,12 +155,6 @@
                 },
                 success: function(data) {
                     // Limpia las opciones actuales del campo 'name'
-                    console.log(data);
-
-                    $('#id_recepcion').html('');
-                    $('#id_recepcion').append(
-                        $('<option>').text('').attr('value','')
-                    );
                     // Recorre los productos recibidos y añade opciones al campo 'name'
                     $.each(data.datos, function(index, product) {
                         $('#id_recepcion').append(

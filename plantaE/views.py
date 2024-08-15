@@ -5,6 +5,7 @@ import logging
 from django.shortcuts import get_object_or_404, redirect
 from .models import salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo
 from .forms import salidasFrutaForm, recepcionesForm, ccalidadForm
+from django.db.models import Sum
 
 def obtener_nombre_usuario(request):
     # Obtén el nombre de usuario del usuario autenticado
@@ -140,5 +141,5 @@ def obtener_llave_recepcion(request):
 def load_ccalidadparam(request):
     llave_recepcion = request.GET.get('category_id')
     datos = Recepciones.objects.filter(criterio=llave_recepcion).values('recepcion').distinct('recepcion')
-    
-    return JsonResponse({'datos': list(datos)})
+    valor = 1-Ccalidad.objects.filter(llave=llave_recepcion).aggregate(suma=Sum('porcentaje'))['suma']
+    return JsonResponse({'datos': list(datos),'valor':valor})
