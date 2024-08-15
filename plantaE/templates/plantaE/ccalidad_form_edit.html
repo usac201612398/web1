@@ -115,8 +115,9 @@
                     var initialCategoryId =data.llaves;  // Obtiene el valor inicial del campo 'category'
                     var initialCategoryId2 = data.causa;
                     if (initialCategoryId) {
-                        $('#id_llave').html('');
-                        
+                        $('#id_llave').append(
+                            $('<option>').text('').attr('value','')
+                        );
                         // Recorre los productos recibidos y añade opciones al campo 'name'
                         
                         
