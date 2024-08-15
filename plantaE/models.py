@@ -149,7 +149,7 @@ class Boletas(models.Model):
         db_table = 'boletas'
 
 class Ccalidad(models.Model):
-    op_status2 = [('Pendiente',''),('En proceso','En proceso')]
+    op_status2 = [('Pendiente',''),('Inspeccionado','Inspeccionado')]
 
     registro = models.BigAutoField(primary_key=True)
     recepcion = models.BigIntegerField(blank=True, null=True)
