@@ -123,7 +123,7 @@ def ccalidad_update(request, pk):
             return redirect('ccalidad_list')
     else:
         form = ccalidadForm(instance=salidas)
-    return render(request, 'plantaE/ccalidad_form_edit.html', {'form': form})
+    return render(request, 'plantaE/ccalidad_form.html', {'form': form})
 
 def ccalidad_delete(request, pk):
     salidas = get_object_or_404(Ccalidad, pk=pk)
