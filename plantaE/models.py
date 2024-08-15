@@ -175,7 +175,7 @@ class Recepciones(models.Model):
     estructura = models.CharField(max_length=50, blank=True, null=True)
     variedad = models.CharField(max_length=50, blank=True, null=True)
     cajas = models.BigIntegerField(blank=True, null=True)
-    libras = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    libras = models.FloatField(blank=True, null=True)
     observaciones = models.CharField(max_length=125, blank=True, null=True)
     cultivo = models.CharField(max_length=50, blank=True, null=True)
     llave2 = models.CharField(max_length=200, blank=True, null=True)
