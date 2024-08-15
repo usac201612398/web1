@@ -122,6 +122,7 @@
                                 $('<option>').text(product.criterio.toString()).attr('value', product.criterio.toString())      
                             );
                         });
+                        console.log(initialCategoryId);
                     }
                     if (initialCategoryId2) {
                         $('#id_causarechazo').html('');
@@ -131,6 +132,7 @@
                                 $('<option>').text(product.causa.toString()).attr('value', product.causa.toString())      
                             );
                         });
+                        console.log(initialCategoryId2);
                     }
 
                 },
@@ -170,6 +172,8 @@
             var categoryId = $(this).val();  // Obtiene el ID de la categoría seleccionada
             loadProducts(categoryId);  // Llama a la función para cargar productos
         });
+
+        actualizarLlave();
         
         // Llama a la función de carga de productos al cargar la página
         
