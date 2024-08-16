@@ -106,36 +106,56 @@
         // Función para cargar productos basados en la categoría seleccionada
         function actualizarLlave() {
             $.ajax({
+                url: '{% url "load_ccalidad_update_aux" %}',  // URL para la vista AJAX
+                data: {
+                    'category_id': "Consulta"  // Envia el ID de la categoría como parámetro
+                },
+                success: function(data) {
+                    // Limpia las opciones actuales del campo 'name'
+                    $('#id_llave').html('');
+                    $('#id_llave').append(
+                        $('<option>').text('').attr('value',data.llave.toString())
+                    );
+                    $('#id_recepcion').html('');
+                    $('#id_recepcion').append(
+                        $('<option>').text('').attr('value',data.recepcion.toString())
+                    );       
+                    loadProducts(data.llave);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);  // Maneja errores de la solicitud
+                }
+            });
+        }
+        function loadProducts(categoryId) {
+            $.ajax({
+                url: '{% url "load_ccalidadparam" %}',  // URL para la vista AJAX
+                data: {
+                    'category_id': categoryId  // Envia el ID de la categoría como parámetro
+                },
+                success: function(data) {
+                    // Limpia las opciones actuales del campo 'name'
+                    // Recorre los productos recibidos y añade opciones al campo 'name'
+                    
+                    $('#id_porcentaje').html('');
+                    $('#id_porcentaje').val(data.valor);
+
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);  // Maneja errores de la solicitud
+                }
+            });
+        }
+        function actualizarCausas() {
+            $.ajax({
                 url: '{% url "obtener_llave_recepcion" %}',  // URL para la vista AJAX
                 data: {
                     'category_id': "Consulta"  // Envia el ID de la categoría como parámetro
                 },
                 success: function(data) {
                     // Limpia las opciones actuales del campo 'name'
-                    var initialCategoryId =data.llaves;  // Obtiene el valor inicial del campo 'category'
                     var initialCategoryId2 = data.causa;
-                    if (initialCategoryId) {
-                        // Obtener el elemento por su ID
-                        const miSelect1 = document.getElementById('llave');
-                        const miSelect2 = document.getElementById('recepcion');
-
-                    // Obtener el valor seleccionado
-                        const valorSeleccionado1 = miSelect1.value;
-                        const valorSeleccionado2 = miSelect2.value;
-                        console.log(valorSeleccionado1);
-                        console.log(valorSeleccionado2)
-                        $('#id_llave').html('');
-                        $('#id_llave').append(
-                            $('<option>').text('').attr('value','')
-                        );
-                        // Recorre los productos recibidos y añade opciones al campo 'name'
-                        $.each(initialCategoryId, function(index, product) {
-                            $('#id_llave').append(
-                                $('<option>').text(product.criterio.toString()).attr('value', product.criterio.toString())      
-                            );
-                        });
-                        
-                    }
+                    
                     if (initialCategoryId2) {
                         $('#id_causarechazo').html('');
                         $('#id_causarechazo').append(
@@ -156,40 +176,9 @@
                 }
             });
         }
-        function loadProducts(categoryId) {
-            $.ajax({
-                url: '{% url "load_ccalidadparam" %}',  // URL para la vista AJAX
-                data: {
-                    'category_id': categoryId  // Envia el ID de la categoría como parámetro
-                },
-                success: function(data) {
-                    // Limpia las opciones actuales del campo 'name'
-                    // Recorre los productos recibidos y añade opciones al campo 'name'
-                    
-                    $('#id_porcentaje').html('');
-                    $('#id_porcentaje').val(data.valor);
-                    $('#id_recepcion').html('');
-                    console.log(data.valor);
-                    $.each(data.datos, function(index, product) {
-                       
-                        $('#id_recepcion').append(
-                            $('<option>').text(product.recepcion.toString()).attr('value', product.recepcion.toString())
-                        );
-                    });
-
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error:', error);  // Maneja errores de la solicitud
-                }
-            });
-        }
-        $('#id_llave').change(function() {
-            var categoryId = $(this).val();  // Obtiene el ID de la categoría seleccionada
-            loadProducts(categoryId);  // Llama a la función para cargar productos
-        });
-
+    
         actualizarLlave();
-        
+        actualizarCausas();
         // Llama a la función de carga de productos al cargar la página
         
     });
