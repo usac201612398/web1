@@ -100,6 +100,31 @@
         /* Otros estilos personalizados */
     }
 </style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Función para cargar productos basados en la categoría seleccionada
+        function actualizarLlave() {
+            $.ajax({
+                url: '{% url "ccalidad_update" %}',  // URL para la vista AJAX
+                data: {
+                    'category_id': "Consulta"  // Envia el ID de la categoría como parámetro
+                },
+                success: function(data) {
+                    // Limpia las opciones actuales del campo 'name'
+                    Console.log(data);
 
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);  // Maneja errores de la solicitud
+                }
+            });
+        }
+        actualizarLlave();
+        
+        // Llama a la función de carga de productos al cargar la página
+        
+    });
+</script>
 
 </html>
