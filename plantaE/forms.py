@@ -81,7 +81,7 @@ class recepcionesForm(forms.ModelForm):
 
 class ccalidadForm(forms.ModelForm):
     op_status2 = [('Pendiente',''),('Inspeccionado','Inspeccionado')]
-
+    registro = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))
     recepcion = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'my-input'}))
     porcentaje= forms.DecimalField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
@@ -93,7 +93,7 @@ class ccalidadForm(forms.ModelForm):
     class Meta:
     
         model = Ccalidad
-        fields = ['recepcion','fecha','porcentaje', 'status2', 'llave', 'causarechazo','observaciones']
+        fields = ['registro','recepcion','fecha','porcentaje', 'status2', 'llave', 'causarechazo','observaciones']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

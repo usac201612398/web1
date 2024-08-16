@@ -11,6 +11,14 @@
         <div class = "row">
             <div class="col-md-6">
                 <div class="form-group row">
+                    <label for="registro" class="col-sm-3 col-form-label">Registro:</label>
+                    <div class="col-sm-9">
+                        {{ form.registro }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group row">
                     <label for="llave" class="col-sm-3 col-form-label">Llave:</label>
                     <div class="col-sm-9">
                         {{ form.llave }}
@@ -105,10 +113,11 @@
     $(document).ready(function() {
         // Función para cargar productos basados en la categoría seleccionada
         function actualizarLlave() {
+            Console.log($('#id_registro').val());
             $.ajax({
                 url: '{% url "load_ccalidad_update_aux" %}',  // URL para la vista AJAX
                 data: {
-                    'category_id': "Consulta"  // Envia el ID de la categoría como parámetro
+                    'category_id':   $('#id_registro').val()  // Envia el ID de la categoría como parámetro
                 },
                 success: function(data) {
                     // Limpia las opciones actuales del campo 'name'
@@ -120,7 +129,7 @@
                     $('#id_recepcion').append(
                         $('<option>').text('').attr('value',data.recepcion.toString())
                     );       
-                    loadProducts(data.llave);
+                   
                 },
                 error: function(xhr, status, error) {
                     console.error('Error:', error);  // Maneja errores de la solicitud
@@ -178,7 +187,6 @@
         }
     
         actualizarLlave();
-        actualizarCausas();
         // Llama a la función de carga de productos al cargar la página
         
     });
