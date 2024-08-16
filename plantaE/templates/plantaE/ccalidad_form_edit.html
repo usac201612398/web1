@@ -117,7 +117,7 @@
             $.ajax({
                 url: '{% url "load_ccalidad_update_aux" %}',  // URL para la vista AJAX
                 data: {
-                    'category_id':   $('#id_registro').val()  // Envia el ID de la categoría como parámetro
+                    'pk':   $('#id_registro').val()  // Envia el ID de la categoría como parámetro
                 },
                 success: function(data) {
                     // Limpia las opciones actuales del campo 'name'
