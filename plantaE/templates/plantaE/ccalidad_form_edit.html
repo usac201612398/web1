@@ -142,6 +142,27 @@
                     });    
                     
                     $("#id_causarechazo").val(data.causa_select.toString());
+                    loadProducts(data.llave)
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);  // Maneja errores de la solicitud
+                }
+            });
+        }
+        function loadProducts(categoryId) {
+            $.ajax({
+                url: '{% url "load_ccalidadparam" %}',  // URL para la vista AJAX
+                data: {
+                    'category_id': categoryId  // Envia el ID de la categoría como parámetro
+                },
+                success: function(data) {
+                    // Limpia las opciones actuales del campo 'name'
+                    // Recorre los productos recibidos y añade opciones al campo 'name'
+                    $('#id_porcentaje').html('');
+                    $('#id_porcentaje').val(data.valor);
+                    
+                
+
                 },
                 error: function(xhr, status, error) {
                     console.error('Error:', error);  // Maneja errores de la solicitud
