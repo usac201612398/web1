@@ -113,7 +113,7 @@
     $(document).ready(function() {
         // Función para cargar productos basados en la categoría seleccionada
         function actualizarLlave() {
-            console.log($('#id_registro').contents());
+            console.log($('#id_registro').val());
             $.ajax({
                 url: '{% url "load_ccalidad_update_aux" %}',  // URL para la vista AJAX
                 data: {
