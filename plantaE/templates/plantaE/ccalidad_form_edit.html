@@ -139,8 +139,9 @@
                         $('#id_causarechazo').append(
                             $('<option>').text(product.causa.toString()).attr('value', product.causa.toString())      
                         );
-                    });      
-                    $("#id_causarechazo").val(data.causa_select);
+                    });    
+                    console.log(data.causa_select.toString());  
+                    $("#id_causarechazo").val(data.causa_select.toString());
                 },
                 error: function(xhr, status, error) {
                     console.error('Error:', error);  // Maneja errores de la solicitud
