@@ -125,11 +125,11 @@
                     console.log(data.recepcion);
                     $('#id_llave').html('');
                     $('#id_llave').append(
-                        $('<option>').text('').attr('value',data.llave.toString())
+                        $('<option>').text(data.llave.toString()).attr('value',data.llave)
                     );
                     $('#id_recepcion').html('');
                     $('#id_recepcion').append(
-                        $('<option>').text('').attr('value',data.recepcion.toString())
+                        $('<option>').text(data.recepcion.toString()).attr('value',data.recepcion)
                     );       
                    
                 },
