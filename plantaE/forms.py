@@ -97,4 +97,5 @@ class ccalidadForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['observaciones'].required = False                
+        self.fields['observaciones'].required = False
+        self.fields['registro'].required = False             
