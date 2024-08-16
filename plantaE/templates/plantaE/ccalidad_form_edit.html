@@ -112,7 +112,19 @@
                 },
                 success: function(data) {
                     // Limpia las opciones actuales del campo 'name'
-                    Console.log(data);
+                    
+                    // Recorre los productos recibidos y añade opciones al campo 'name'
+                    $.each(data.llave, function(index, product) {
+                        $('#id_llave').append(
+                            $('<option>').text(product.llave.toString()).attr('value', product.llave.toString())      
+                        );
+                    });
+                    // Recorre los productos recibidos y añade opciones al campo 'name'
+                    $.each(data.recepcion, function(index, product) {
+                        $('#id_recepcion').append(
+                            $('<option>').text(product.recepcion.toString()).attr('value', product.recepcion.toString())      
+                        );
+                    });
 
                 },
                 error: function(xhr, status, error) {
