@@ -112,7 +112,7 @@
 <script>
     $(document).ready(function() {
         // Función para cargar productos basados en la categoría seleccionada
-        function actualizarLlave() {
+        function actualizarCampos() {
 
             $.ajax({
                 url: '{% url "load_ccalidad_update_aux" %}',  // URL para la vista AJAX
@@ -121,8 +121,7 @@
                 },
                 success: function(data) {
                     // Limpia las opciones actuales del campo 'name'
-                    console.log(data.llave);
-                    console.log(data.recepcion);
+
                     $('#id_llave').html('');
                     $('#id_llave').append(
                         $('<option>').text(data.llave.toString()).attr('value',data.llave)
@@ -130,57 +129,18 @@
                     $('#id_recepcion').html('');
                     $('#id_recepcion').append(
                         $('<option>').text(data.recepcion.toString()).attr('value',data.recepcion)
-                    );       
-                   
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error:', error);  // Maneja errores de la solicitud
-                }
-            });
-        }
-        function loadProducts(categoryId) {
-            $.ajax({
-                url: '{% url "load_ccalidadparam" %}',  // URL para la vista AJAX
-                data: {
-                    'category_id': categoryId  // Envia el ID de la categoría como parámetro
-                },
-                success: function(data) {
-                    // Limpia las opciones actuales del campo 'name'
+                    ); 
+                    $('#id_causarechazo').html('');
+                    $('#id_causarechazo').append(
+                        $('<option>').text('').attr('value','')
+                    );
                     // Recorre los productos recibidos y añade opciones al campo 'name'
-                    
-                    $('#id_porcentaje').html('');
-                    $('#id_porcentaje').val(data.valor);
-
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error:', error);  // Maneja errores de la solicitud
-                }
-            });
-        }
-        function actualizarCausas() {
-            $.ajax({
-                url: '{% url "obtener_llave_recepcion" %}',  // URL para la vista AJAX
-                data: {
-                    'category_id': "Consulta"  // Envia el ID de la categoría como parámetro
-                },
-                success: function(data) {
-                    // Limpia las opciones actuales del campo 'name'
-                    var initialCategoryId2 = data.causa;
-                    
-                    if (initialCategoryId2) {
-                        $('#id_causarechazo').html('');
+                    $.each(data.causas, function(index, product) {
                         $('#id_causarechazo').append(
-                            $('<option>').text('').attr('value','')
+                            $('<option>').text(product.causa.toString()).attr('value', product.causa.toString())      
                         );
-                        // Recorre los productos recibidos y añade opciones al campo 'name'
-                        $.each(initialCategoryId2, function(index, product) {
-                            $('#id_causarechazo').append(
-                                $('<option>').text(product.causa.toString()).attr('value', product.causa.toString())      
-                            );
-                        });
-                        
-                    }
-
+                    });      
+                    $("#id_causarechazo").val(data.causa_select);
                 },
                 error: function(xhr, status, error) {
                     console.error('Error:', error);  // Maneja errores de la solicitud
@@ -188,7 +148,7 @@
             });
         }
     
-        actualizarLlave();
+        actualizarCampos();
         // Llama a la función de carga de productos al cargar la página
         
     });
