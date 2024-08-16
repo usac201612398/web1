@@ -121,7 +121,8 @@
                 },
                 success: function(data) {
                     // Limpia las opciones actuales del campo 'name'
-                    console.log(data);
+                    console.log(data.llave);
+                    console.log(data.recepcion);
                     $('#id_llave').html('');
                     $('#id_llave').append(
                         $('<option>').text('').attr('value',data.llave.toString())
