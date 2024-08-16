@@ -130,7 +130,7 @@ def ccalidad_update_aux(request):
     pk = request.GET.get('pk')
     salidas = get_object_or_404(Ccalidad, pk=pk)
     causa_rechazo = causasRechazo.objects.all().values('causa')
-    return JsonResponse({'llave': salidas.llave,'recepcion':salidas.recepcion,'causa_select':salidas.causarechazo,'causas':causa_rechazo})
+    return JsonResponse({'llave': salidas.llave,'recepcion':salidas.recepcion,'causa_select':salidas.causarechazo,'causas':list(causa_rechazo)})
     
 
 def ccalidad_delete(request, pk):
