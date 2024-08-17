@@ -209,7 +209,7 @@ class inventarioProdTerm(models.Model):
     registro = models.BigAutoField(primary_key=True)
     fecha = models.DateField(blank=True, null=True)
     categoria = models.CharField(max_length=50, choices=op_categoria, blank=True, null=True)
-    cultivo = models.CharField(max_length=50, choices=op_cultivo blank=True, null=True)
+    cultivo = models.CharField(max_length=50, choices=op_cultivo, blank=True, null=True)
     proveedor = models.CharField(max_length=75, blank=True, null=True)
     calidad1 = models.CharField(max_length=200, blank=True, null=True)
     cajas = models.BigIntegerField(blank=True, null=True)
