@@ -200,4 +200,36 @@ class causasRechazo(models.Model):
 
     def __str__(self):
         return str(self.registro)
+
+class inventarioProdTerm(models.Model):
+    
+    op_categoria = [('Mastronardi','Mastronardi'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolucion','Devolucion')]
+    op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
+    
+    registro = models.BigAutoField(primary_key=True)
+    fecha = models.DateField(blank=True, null=True)
+    categoria = models.CharField(max_length=50, choices=op_categoria, blank=True, null=True)
+    cultivo = models.CharField(max_length=50, choices=op_cultivo blank=True, null=True)
+    proveedor = models.CharField(max_length=75, blank=True, null=True)
+    calidad1 = models.CharField(max_length=200, blank=True, null=True)
+    cajas = models.BigIntegerField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
+
+    def __str__(self):
+        return str(str(self.proveedor)+ " | " + str(self.calidad1))
+
+class productoTerm(models.Model):
+    op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
+    op_categoria = [('Mastronardi','Mastronardi'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolucion','Devolucion')]
+    registro = models.BigAutoField(primary_key=True)
+    cultivo = models.CharField(max_length=50, choices=op_cultivo, blank=True, null=True)
+    calidad1 = models.CharField(max_length=200, blank=True, null=True)
+    categoria = models.CharField(max_length=50, choices=op_categoria, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
+
+    def __str__(self):
+        return str(str(self.cultivo)+ " | " + str(self.calidad1))
+    
    
