@@ -105,11 +105,9 @@
                 },
                 success: function(data) {
                     // Limpia las opciones actuales del campo 'name'
-                    console.log(data.cultivo);
-                    console.log(data.categoria);
 
                     console.log(data.datos);
-                    var initialCategoryId =data.calidad1;  // Obtiene el valor inicial del campo 'category'
+                    var initialCategoryId =data.datos;  // Obtiene el valor inicial del campo 'category'
     
                     if (initialCategoryId) {
                         $('#id_calidad1').html('');
