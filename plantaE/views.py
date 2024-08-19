@@ -189,10 +189,10 @@ def inventarioProd_delete(request, pk):
     return render(request, 'plantaE/inventarioProd_confirm_delete.html', {'registros': salidas})
 
 def load_inventarioProdparam(request):
-    cultivo = request.GET.get('campo1')
-    categoria = request.GET.get('campo2')
+    cultivo_ = request.GET.get('campo1')
+    categoria_ = request.GET.get('campo2')
 
-    if cultivo != None and categoria != None:
-        datos = productoTerm.objects.filter(cultivo=cultivo,categoria=categoria).values('calidad1')
+    if cultivo_ != None and categoria_ != None:
+        datos = productoTerm.objects.filter(cultivo=cultivo_,categoria=categoria_).values('calidad1')
     
-    return JsonResponse({'datos': list(datos),'cultivo':cultivo,'categoria':categoria})
+    return JsonResponse({'datos': list(datos),'cultivo':cultivo_,'categoria':categoria_})

@@ -97,8 +97,6 @@
     $(document).ready(function() {
         // Función para cargar productos basados en la categoría seleccionada
         function loadProducts() {
-            console.log($('#id_cultivo').val());
-            console.log($('#id_categoria').val());
             $.ajax({
                 url: '{% url "load_inventarioProdparam" %}',  // URL para la vista AJAX
                 data: {
@@ -107,6 +105,10 @@
                 },
                 success: function(data) {
                     // Limpia las opciones actuales del campo 'name'
+                    console.log(data.cultivo);
+                    console.log(data.categoria);
+
+                    console.log(data.datos);
                     var initialCategoryId =data.calidad1;  // Obtiene el valor inicial del campo 'category'
     
                     if (initialCategoryId) {
