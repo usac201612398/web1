@@ -102,7 +102,7 @@ class Actpeso(models.Model):
         db_table = 'actpeso'
 
 class Boletas(models.Model):
-    
+
     registro = models.BigAutoField(primary_key=True)
     recepcion = models.BigIntegerField(blank=True, null=True)
     fecha = models.DateField(blank=True, null=True)
@@ -161,7 +161,8 @@ class Recepciones(models.Model):
     status = models.CharField(max_length=25, choices=op_status,blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
-
+    enviofruta = models.BigIntegerField(blank=True, null=True)
+    
     class Meta:
         managed = False
         db_table = 'recepciones'
