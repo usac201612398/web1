@@ -1,5 +1,5 @@
 from django import forms
-from .models import salidasFruta, Recepciones, Ccalidad
+from .models import salidasFruta, Recepciones, Ccalidad, inventarioProdTerm
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Fieldset, Div
 
@@ -98,4 +98,21 @@ class ccalidadForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['observaciones'].required = False
-        self.fields['registro'].required = False             
+        self.fields['registro'].required = False
+
+class inventarioFrutaForm(forms.ModelForm):
+    op_proveedor = [('RIO','RIO'),('VALLE','VALLE'),('CIP','CIP'),('','CIP')]
+    op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
+    op_categoria = [('Mastronardi','Mastronardi'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolucion','Devolucion')]
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'my-input'}))
+    proveedor = forms.ChoiceField(choices=op_proveedor,widget=forms.Select(attrs={'class': 'my-input'}))
+    cultivo = forms.ChoiceField(choices=op_cultivo,widget=forms.Select(attrs={'class': 'my-input'}))
+    categoria = forms.ChoiceField(choices= op_categoria,widget=forms.Select(attrs={'class': 'my-input'}))
+    calidad1 = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))
+    cajas = forms.DecimalField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
+
+    class Meta:
+    
+        model = inventarioProdTerm
+        fields = ['fecha','proveedor', 'cultivo', 'categoria', 'calidad1','cajas']
+       

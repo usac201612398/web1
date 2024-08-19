@@ -14,6 +14,7 @@ urlpatterns = [
     path('ajax/obtener-llave-recepcion/', views.obtener_llave_recepcion, name='obtener_llave_recepcion'),
     path('ajax/load-ccalidadparam/', views.load_ccalidadparam, name='load_ccalidadparam'),
     path('ajax/load-ccalidadaux/', views.ccalidad_update_aux, name='load_ccalidad_update_aux'),
+    path('ajax/load-inventarioProdparam/', views.load_inventarioProdparam, name='load_inventarioProdparam'),
     path('salidasFruta/<int:pk>/', views.article_detail, name='salidasFruta_detail'),
     path('salidasFruta/new/', views.article_create, name='salidasFruta_create'),
     path('salidasFruta/<int:pk>/edit/', views.article_update, name='salidasFruta_update'),
@@ -26,5 +27,9 @@ urlpatterns = [
     path('ccalidad/new/', views.ccalidad_create, name='ccalidad_create'),
     path('ccalidad/<int:pk>/edit/', views.ccalidad_update, name='ccalidad_update'),
     path('ccalidad/<int:pk>/delete/', views.ccalidad_delete, name='ccalidad_delete'),
+    path("inventarioProd",views.inventarioProd_list,name='inventarioProd_list'),
+    path('inventarioProd/<int:pk>/', views.inventarioProd_detail, name='inventarioProd_detail'),
+    path('inventarioProd/new/', views.inventarioProd_create, name='inventarioProd_create'),
+    path('inventarioProd/<int:pk>/delete/', views.inventarioProd_delete, name='inventarioProd_delete'),
     
 ]

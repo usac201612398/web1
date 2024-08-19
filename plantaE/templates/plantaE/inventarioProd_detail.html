@@ -27,16 +27,14 @@
                     
                     <tbody>
                         <tr><td>Id:</td><td>{{ registros.registro }} </td></tr>
-                        <tr><td>Llave:</td><td>{{ registros.llave }} </td></tr>
                         <tr><td>Fecha:</td><td>{{ registros.fecha }} </td></tr> 
-                        <tr><td>Recepcion:</td><td>{{ registros.recepcion }} </td></tr> 
-                        <tr><td>Causa (Rechazo):</td><td>{{ registros.causarechazo}} </td></tr> 
-                        <tr><td>Porcentaje:</td><td>{{registros.porcentaje}} </td></tr> 
-                        <tr><td>Status:</td><td>{{ registros.status2 }} </td></tr>
-                        <tr><td>Observaciones:</td><td>{{registros.observaciones}} </td></tr>
-                        <tr><td>Creado:</td><td>{{ registros.created }} </td></tr> 
-                        <tr><td>Modificado:</td><td>{{ registros.updated_at }} </td></tr>  
-                        <tr><td><a href="{% url 'ccalidad_update' registros.pk %}">Edit</a></td><td><a href="{% url 'ccalidad_delete' registros.pk %}">Delete</a></td></tr> 
+                        <tr><td>Productor:</td><td>{{ registros.proveedor }} </td></tr> 
+                        <tr><td>Cultivo:</td><td>{{ registros.cultivo}} </td></tr> 
+                        <tr><td>Calidad 1:</td><td>{{registros.calidad1}} </td></tr> 
+                        <tr><td>Categoria:</td><td>{{ registros.categoria }} </td></tr>
+                        <tr><td>Cajas:</td><td>{{registros.cajas}} </td></tr>
+                        <tr><td>Creado:</td><td>{{ registros.created_at }} </td></tr> 
+                        <tr><td><a href="{% url 'inventarioProd_delete' registros.pk %}">Delete</a></td><td>-</td></tr> 
                     </tbody>
                     </table>
                 </div>
@@ -44,7 +42,7 @@
         </div>
     </div>
 
-    <a href="{% url 'ccalidad_list' %}">Regresar a Panel</a>
+    <a href="{% url 'inventarioProd_list' %}">Regresar a Panel</a>
 
     
     

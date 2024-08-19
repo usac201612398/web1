@@ -3,8 +3,8 @@ from django.http import JsonResponse
 import logging
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect
-from .models import salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo
-from .forms import salidasFrutaForm, recepcionesForm, ccalidadForm
+from .models import salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm
+from .forms import salidasFrutaForm, recepcionesForm, ccalidadForm, inventarioFrutaForm
 from django.db.models import Sum
 
 def obtener_nombre_usuario(request):
@@ -155,3 +155,44 @@ def load_ccalidadparam(request):
     else:
         valor=1
     return JsonResponse({'datos': list(datos),'valor':valor})
+
+def inventarioProd_list(request):
+    salidas = inventarioProdTerm.objects.all()
+    return render(request, 'plantaE/inventarioProd_list.html', {'registros': salidas})
+
+def inventarioProd_detail(request, pk):
+    salidas = get_object_or_404(inventarioProdTerm, pk=pk)
+    return render(request, 'plantaE/inventarioProd_detail.html', {'registros': salidas})
+
+def inventarioProd_create(request):
+    if request.method == 'POST':
+        form = inventarioFrutaForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+            except Exception as e:
+                # Manejar excepciones específicas (por ejemplo, UniqueConstraintError)
+                return JsonResponse({'error': str(e)}, status=400)
+            return redirect('inventarioProd_list')
+        else:
+             # Imprimir errores para depuración
+            return JsonResponse({'errores': form.errors}, status=400)
+    else:
+        form = inventarioFrutaForm()
+    return render(request, 'plantaE/inventarioProd_form.html', {'form': form})
+
+def inventarioProd_delete(request, pk):
+    salidas = get_object_or_404(inventarioProdTerm, pk=pk)
+    if request.method == 'POST':
+        salidas.delete()
+        return redirect('inventarioProd_list')
+    return render(request, 'plantaE/inventarioProd_confirm_delete.html', {'registros': salidas})
+
+def load_inventarioProdparam(request):
+    cultivo = request.GET.get('campo1')
+    categoria = request.GET.get('campo2')
+
+    if cultivo != None and categoria != None:
+        datos = productoTerm.objects.filter(cultivo=cultivo,categoria=categoria).values('calidad1')
+    
+    return JsonResponse({'datos': list(datos)})
