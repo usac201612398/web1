@@ -195,4 +195,4 @@ def load_inventarioProdparam(request):
     if cultivo != None and categoria != None:
         datos = productoTerm.objects.filter(cultivo=cultivo,categoria=categoria).values('calidad1')
     
-    return JsonResponse({'datos': list(datos)})
+    return JsonResponse({'datos': list(datos),'cultivo':cultivo,'categoria':categoria})
