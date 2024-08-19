@@ -4,7 +4,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Fieldset, Div
 
 class salidasFrutaForm(forms.ModelForm):
-    op_viajes = [('Viaje 1','Viaje 1'),('Viaje 2','Viaje 2'),('Viaje 3', 'Viaje 3'),('Viaje 4','Viaje 4'),('Viaje 5','Viaje 5'),('Viaje 6','Viaje 6')]
+    op_viajes = [('','-'),('Viaje 1','Viaje 1'),('Viaje 2','Viaje 2'),('Viaje 3', 'Viaje 3'),('Viaje 4','Viaje 4'),('Viaje 5','Viaje 5'),('Viaje 6','Viaje 6')]
     
     correo = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de correo electrónico
     encargado = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
@@ -57,7 +57,7 @@ class salidasFrutaForm(forms.ModelForm):
             )
 
 class recepcionesForm(forms.ModelForm):
-    op_status = [('Pendiente',''),('En proceso','En proceso')]
+    op_status = [('Pendiente','-'),('En proceso','En proceso')]
     recepcion = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
     fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'my-input'}))
     finca = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
@@ -80,7 +80,7 @@ class recepcionesForm(forms.ModelForm):
         self.fields['observaciones'].required = False
 
 class ccalidadForm(forms.ModelForm):
-    op_status2 = [('Pendiente',''),('Inspeccionado','Inspeccionado')]
+    op_status2 = [('Pendiente','-'),('Inspeccionado','Inspeccionado')]
     registro = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))
     recepcion = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'my-input'}))
