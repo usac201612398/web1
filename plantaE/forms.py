@@ -115,4 +115,9 @@ class inventarioFrutaForm(forms.ModelForm):
     
         model = inventarioProdTerm
         fields = ['fecha','proveedor', 'cultivo', 'categoria', 'calidad1','cajas']
-       
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['cultivo'].empty_label = ""
+        self.fields['categoria'].empty_label = ""   
+        self.fields['proveedor'].empty_label = ""   
