@@ -101,13 +101,14 @@ class ccalidadForm(forms.ModelForm):
         self.fields['registro'].required = False
 
 class inventarioFrutaForm(forms.ModelForm):
-    op_proveedor = [('RIO','RIO'),('VALLE','VALLE'),('CIP','CIP'),('PASTORIA','PASTORIA')]
-    op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
-    op_categoria = [('Mastronardi','Mastronardi'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolucion','Devolucion')]
+
+    op_proveedor = [('','-'),('RIO','RIO'),('VALLE','VALLE'),('CIP','CIP'),('PASTORIA','PASTORIA')]
+    op_cultivo = [('','-'),('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
+    op_categoria = [('','-'),('Mastronardi','Mastronardi'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolucion','Devolucion')]
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'my-input'}))
-    proveedor = forms.ChoiceField(choices=op_proveedor, widget=forms.Select(attrs={'class': 'my-input'}, empty_label="Selecciona un proveedor"))
-    cultivo = forms.ChoiceField(choices=op_cultivo, widget=forms.Select(attrs={'class': 'my-input'}, empty_label="Selecciona un cultivo"))
-    categoria = forms.ChoiceField(choices=op_categoria, widget=forms.Select(attrs={'class': 'my-input'}, empty_label="Selecciona una categoría"))
+    proveedor = forms.ChoiceField(choices=op_proveedor, widget=forms.Select(attrs={'class': 'my-input'}))
+    cultivo = forms.ChoiceField(choices=op_cultivo, widget=forms.Select(attrs={'class': 'my-input'}))
+    categoria = forms.ChoiceField(choices=op_categoria, widget=forms.Select(attrs={'class': 'my-input'}))
     calidad1 = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))
     cajas = forms.DecimalField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
 
