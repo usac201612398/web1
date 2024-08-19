@@ -35,17 +35,17 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group row">
-                    <label for="calidad1" class="col-sm-3 col-form-label">Calidad 1:</label>
+                    <label for="categoria" class="col-sm-3 col-form-label">Categoria:</label>
                     <div class="col-sm-9">
-                        {{ form.calidad1 }}
+                        {{ form.categoria }}
                     </div>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group row">
-                    <label for="categoria" class="col-sm-3 col-form-label">Categoria:</label>
+                    <label for="calidad1" class="col-sm-3 col-form-label">Calidad 1:</label>
                     <div class="col-sm-9">
-                        {{ form.categoria }}
+                        {{ form.calidad1 }}
                     </div>
                 </div>
             </div>
@@ -56,7 +56,7 @@
                         {{ form.cajas }}
                     </div>
                 </div>
-            </div>¿
+            </div>
         </div>
         
 
@@ -106,7 +106,7 @@
                 success: function(data) {
                     // Limpia las opciones actuales del campo 'name'
 
-                    console.log(data.datos);
+
                     var initialCategoryId =data.datos;  // Obtiene el valor inicial del campo 'category'
     
                     if (initialCategoryId) {

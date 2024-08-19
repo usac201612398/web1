@@ -118,6 +118,6 @@ class inventarioFrutaForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['cultivo'].empty_label = ""
-        self.fields['categoria'].empty_label = ""   
-        self.fields['proveedor'].empty_label = ""   
+        self.fields['cultivo'].empty_label = "-"
+        self.fields['categoria'].empty_label = "-"   
+        self.fields['proveedor'].empty_label = "-"
