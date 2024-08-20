@@ -162,7 +162,7 @@ class Recepciones(models.Model):
     created = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
     enviofruta = models.BigIntegerField(blank=True, null=True)
-    
+
     class Meta:
         managed = False
         db_table = 'recepciones'
@@ -203,6 +203,8 @@ class productoTerm(models.Model):
     cultivo = models.CharField(max_length=50, choices=op_cultivo, blank=True, null=True)
     calidad1 = models.CharField(max_length=200, blank=True, null=True)
     categoria = models.CharField(max_length=50, choices=op_categoria, blank=True, null=True)
+    librasxcaja = models.FloatField(blank=True, null=True)
+    tipo = models.CharField(max_length=50, choices=op_cultivo, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
 
