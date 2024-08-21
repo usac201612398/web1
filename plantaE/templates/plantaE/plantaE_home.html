@@ -1,8 +1,15 @@
+
 {% extends "base/plantaEbase.html" %}
-<!DOCTYPE html>
-<html>
-<meta charset="UTF-8">
 {% load static %}
+{% block style %}
+{% endblock %}
+{% block title %}{% endblock %}
+{% block enc %}{% endblock %}
+{% block parrafo %}{% endblock %}
+
+{% block content %}
+
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="{% static '/main.css' %}" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
@@ -11,7 +18,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
 
 <h2 class="title"><p class="texto-con-margen">Semillas del Campo, S.A.</p></h2>
-<h2 class="subtitle"><p class="texto-con-margen">¡Supervisa el proceso de producción!</p></h2>
+<h2 class="subtitle"><p class="texto-con-margen">¡Gestiona procesos de producción!</p></h2>
 <style>
     .swiper-container {
         width: 100%;
@@ -29,8 +36,6 @@
         object-fit: contain; /* Ajusta la imagen sin distorsión */
     }
 </style>
-
-
 <body>
 {% if user.is_authenticated %}
     <br>
@@ -52,7 +57,7 @@
 
     </div>
 {% else %}
-    <p class="texto-con-margen">Bienvenido, por favor identifiquese <a href="{%url 'login'%}">Login</a></p>
+    
 {% endif %}
 
 
@@ -78,6 +83,5 @@
 </script>
 
 
-
-</body>
-</html>
+{% endblock %}
+{% block script %}{% endblock %}
