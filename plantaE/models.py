@@ -228,7 +228,7 @@ class productores(models.Model):
     def __str__(self):
         return str(self.productor)
 
-class productores(models.Model):
+class cultivos(models.Model):
     registro = models.BigAutoField(primary_key=True)
     cultivo = models.CharField(max_length=75, blank=True, null=True)
     
