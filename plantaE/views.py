@@ -196,3 +196,6 @@ def load_inventarioProdparam(request):
         datos = productoTerm.objects.filter(cultivo=cultivo_,categoria=categoria_).values('calidad1')
     
     return JsonResponse({'datos': list(datos),'cultivo':cultivo_,'categoria':categoria_})
+
+def plantaEhomepage(request):
+    return render(request,'plantaE/plantaE_home.html')
