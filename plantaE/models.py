@@ -60,7 +60,7 @@ class salidasFruta(models.Model):
     op_encargado = [('Brandon Portillo','Brandon Portillo'),('Isaías García','Isaías García')]
     op_finca = [('VALLE','VALLE'),('RIO','RIO'),('CIP','CIP'),('FLE','FLE'),('FLA','FLA')]
     op_correo = [('brandon.portillo@popoyan.com.gt','brandon.portillo@popoyan.com.gt')]
-    op_orden = [('64202046','64202046'),('64206054','64206054'),('64206055','64206055'),('64206056','64206056')]
+    op_orden = [('64202052','64202052'),('64206054','64206054'),('64206055','64206055'),('64206056','64206056')]
     op_estructura = [('CM1','CM1'),('CM2','CM2'),('CM3','CM3'),('CM4','CM4'),('CM5','CM5'),('CM6','CM6'),('CM7','CM7')]
     
     id = models.AutoField(primary_key=True)
@@ -210,5 +210,22 @@ class productoTerm(models.Model):
 
     def __str__(self):
         return str(str(self.cultivo)+ " | " + str(self.calidad1))
+
+class tipoCajas(models.Model):
+    registro = models.BigAutoField(primary_key=True)
+    tcaja = models.CharField(max_length=75, blank=True, null=True)
+    peso =  models.FloatField(blank=True, null=True)
+    
+
+    def __str__(self):
+        return str(self.tcaja)
+
+class productores(models.Model):
+    registro = models.BigAutoField(primary_key=True)
+    productor = models.CharField(max_length=75, blank=True, null=True)
+    
+
+    def __str__(self):
+        return str(self.productor)
     
    
