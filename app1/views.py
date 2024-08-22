@@ -102,6 +102,16 @@ def login_page(request):
 def homepage(request):
     return render(request,'app1/homepage.html')
 
+def obtener_nombre_usuario_rf(request):
+    # Obtén el nombre de usuario del usuario autenticado
+    nombre_usuario = request.user.username
+    return JsonResponse({'username': nombre_usuario})
+
+def load_dataUsuario_rf(request):
+    correo_id = request.GET.get('category_id')
+    datos = tregistros.objects.filter(correo=correo_id).values('area')
+    return JsonResponse({'datos': list(datos),'correo':correo_id})
+
 def logout_view(request):
     logout(request)
     return redirect('homepage')
