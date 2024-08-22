@@ -359,7 +359,7 @@ button.addEventListener("click", async () => {
 
                     // Recorre los productos recibidos y añade opciones al campo 'name'
                     $.each(data.datos, function(index, product) {
-                        $('#id_Lug').append(
+                        $('#Lug').append(
                             $('<option>').text(product.area.toString()).attr('value', product.area.toString())
                                 
                         );
