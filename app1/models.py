@@ -66,3 +66,8 @@ class Listapersonal(models.Model):
     class Meta:
         managed = False
         db_table = 'listapersonal'
+
+class tregistros(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    correo = models.CharField(max_length=100, blank=True, null=True)
+    area = models.CharField(max_length=50, blank=True, null=True)
