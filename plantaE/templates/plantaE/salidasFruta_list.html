@@ -47,8 +47,8 @@
                 {%for registro in registros %} 
                 <tr> 
                     <td> <a href="{% url 'salidasFruta_detail' registro.pk %}">{{ registro.id }}</a></td>
-                    <td>{{registro.finca}}</td>
                     <td>{{registro.fecha}}</td>
+                    <td>{{registro.finca}}</td>
                     <td>{{registro.encargado}}</td>
                     <td>{{registro.viaje}}</td>
                     <td>{{registro.cajas}}</td>
