@@ -6,7 +6,8 @@ from django.shortcuts import get_object_or_404, redirect
 from .models import salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm
 from .forms import salidasFrutaForm, recepcionesForm, ccalidadForm, inventarioFrutaForm
 from django.db.models import Sum
-from django.utils import timezone
+from django.utils import timezone+
+import datetime
 
 def obtener_nombre_usuario(request):
     # Obtén el nombre de usuario del usuario autenticado
