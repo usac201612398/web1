@@ -5,7 +5,7 @@ from crispy_forms.layout import Submit, Layout, Fieldset, Div
 
 class salidasFrutaForm(forms.ModelForm):
     op_viajes = [('','-'),('Viaje 1','Viaje 1'),('Viaje 2','Viaje 2'),('Viaje 3', 'Viaje 3'),('Viaje 4','Viaje 4'),('Viaje 5','Viaje 5'),('Viaje 6','Viaje 6')]
-    
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'my-input'}))
     correo = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de correo electrónico
     encargado = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
     finca = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
@@ -19,42 +19,7 @@ class salidasFrutaForm(forms.ModelForm):
     class Meta:
     
         model = salidasFruta
-        fields = ['correo','viaje','encargado',  'finca', 'cajas',  'orden', 'cultivo','estructura', 'variedad']
-        
-        def __init__(self, *args, **kwargs):
-
-            super().__init__(*args, **kwargs)
-            
-            self.helper = FormHelper()
-            self.helper.form_method = 'post'
-            self.helper.add_input(Submit('submit','Guardar'))
-
-            self.helper.layout = Layout(
-                Fieldset(
-                    'Información de Salida',
-                    Div(
-                        Div('viaje', css_class='form-group col-md-6'),
-                        Div('finca', css_class='form-group col-md-6'),
-                        css_class='row'
-                    ),
-                    Div(
-                        Div('encargado', css_class='form-group col-md-6'),
-                        Div('correo', css_class='form-group col-md-6'),
-                        css_class='row'
-                    ),
-                    Div(
-                        Div('orden', css_class='form-group col-md-6'),
-                        Div('cultivo', css_class='form-group col-md-6'),
-                        css_class='row'
-                    ),
-                    Div(
-                        Div('variedad', css_class='form-group col-md-6'),
-                        Div('cajas', css_class='form-group col-md-6'),
-                        css_class='row'
-                    ),
-                    css_class='container' 
-                )
-            )
+        fields = ['correo','fecha','viaje','encargado',  'finca', 'cajas',  'orden', 'cultivo','estructura', 'variedad']
 
 class recepcionesForm(forms.ModelForm):
     op_status = [('Pendiente','-'),('En proceso','En proceso')]

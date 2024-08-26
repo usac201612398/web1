@@ -64,6 +64,7 @@ class salidasFruta(models.Model):
     op_estructura = [('CM1','CM1'),('CM2','CM2'),('CM3','CM3'),('CM4','CM4'),('CM5','CM5'),('CM6','CM6'),('CM7','CM7')]
     
     id = models.AutoField(primary_key=True)
+    fecha = models.DateField(blank=True, null=True)
     finca = models.CharField(max_length=25,choices=op_finca,null=True)
     viaje = models.CharField(max_length=20, choices=op_viajes,null=True)
     encargado = models.CharField(max_length=30,choices=op_encargado,null=True)

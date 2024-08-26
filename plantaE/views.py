@@ -6,11 +6,22 @@ from django.shortcuts import get_object_or_404, redirect
 from .models import salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm
 from .forms import salidasFrutaForm, recepcionesForm, ccalidadForm, inventarioFrutaForm
 from django.db.models import Sum
+from django.utils import timezone
 
 def obtener_nombre_usuario(request):
     # Obtén el nombre de usuario del usuario autenticado
+    now = datetime.datetime.now()
+    fecha = now.date()
+    dia= fecha.day
+    mes= fecha.month
+    año= fecha.year
+    if mes < 10:
+        mes = "0" + str(mes)
+    if dia < 10:
+        dia = "0" + str(dia)
+    fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
     nombre_usuario = request.user.username
-    return JsonResponse({'username': nombre_usuario})
+    return JsonResponse({'username': nombre_usuario,'fecha':fecha_})
 
 def load_dataUsuario(request):
     correo_id = request.GET.get('category_id')
@@ -26,7 +37,12 @@ def load_dataUsuario2(request):
     return JsonResponse({'datos': list(cultivo),'variedad':list(variedad),'estructura':list(estructura),'orden':ordenSelect})
 
 def article_list(request):
-    salidas = salidasFruta.objects.all()
+
+    today = timezone.now().date()
+    salidas = salidasFruta.objects.filter(fecha=today)
+    salidas = salidas.order_by('-created_at')
+    
+
     return render(request, 'plantaE/salidasFruta_list.html', {'registros': salidas})
 
 def article_detail(request, pk):
@@ -69,7 +85,9 @@ def article_delete(request, pk):
     return render(request, 'plantaE/salidasFruta_confirm_delete.html', {'registros': salidas})
 
 def recepciones_list(request):
-    salidas = Recepciones.objects.all()
+    today = timezone.now().date()
+    salidas = Recepciones.filter(fecha=today)
+    salidas = salidas.order_by('-created_at')
     return render(request, 'plantaE/recepciones_list.html', {'registros': salidas})
 
 def recepciones_detail(request, pk):
