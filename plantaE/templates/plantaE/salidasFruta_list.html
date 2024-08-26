@@ -30,6 +30,7 @@
                 <thead id = "enc1">
                     <tr class="header">
                     <th >Llave</th>
+                    <th >Fecha</th>
                     <th >Finca</th>
                     <th >Encargado</th>
                     <th >Viaje</th>
@@ -47,6 +48,7 @@
                 <tr> 
                     <td> <a href="{% url 'salidasFruta_detail' registro.pk %}">{{ registro.id }}</a></td>
                     <td>{{registro.finca}}</td>
+                    <td>{{registro.fecha}}</td>
                     <td>{{registro.encargado}}</td>
                     <td>{{registro.viaje}}</td>
                     <td>{{registro.cajas}}</td>
