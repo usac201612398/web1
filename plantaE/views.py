@@ -87,7 +87,8 @@ def article_delete(request, pk):
 
 def recepciones_list(request):
     today = timezone.now().date()
-    salidas = Recepciones.filter(fecha=today)
+    #salidas = Recepciones.objects.filter(fecha=today)
+    salidas= Recepciones.objects.all()
     salidas = salidas.order_by('-created_at')
     return render(request, 'plantaE/recepciones_list.html', {'registros': salidas})
 
