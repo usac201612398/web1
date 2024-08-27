@@ -59,7 +59,7 @@ class salidasFruta(models.Model):
     op_variedad = [('BAMANO','BAMANO'),('DUNNE','DUNNE'),('IVORINO','IVORINO'),('KM 5512','KM 5512'),('NEBULA','NEBULA'),('ROJO','ROJO'),('AMARILLO','AMARILLO'),('ANARANJADO','ANARANJADO')]
     op_encargado = [('Brandon Portillo','Brandon Portillo'),('Isaías García','Isaías García')]
     op_finca = [('VALLE','VALLE'),('RIO','RIO'),('CIP','CIP'),('FLE','FLE'),('FLA','FLA')]
-    op_correo = [('brandon.portillo@popoyan.com.gt','brandon.portillo@popoyan.com.gt')]
+    op_correo = [('cosecha.rio@popoyan.com.gt','cosecha.rio@popoyan.com.gt')]
     op_orden = [('64202052','64202052'),('64206054','64206054'),('64206055','64206055'),('64206056','64206056')]
     op_estructura = [('CM1','CM1'),('CM2','CM2'),('CM3','CM3'),('CM4','CM4'),('CM5','CM5'),('CM6','CM6'),('CM7','CM7')]
     
