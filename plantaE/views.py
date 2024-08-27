@@ -86,10 +86,10 @@ def article_delete(request, pk):
     return render(request, 'plantaE/salidasFruta_confirm_delete.html', {'registros': salidas})
 
 def recepciones_list(request):
-    today = timezone.now().date()
+    #today = timezone.now().date()
     #salidas = Recepciones.objects.filter(fecha=today)
     salidas= Recepciones.objects.all()
-    salidas = salidas.order_by('-created_at')
+    salidas = salidas.order_by('-created')
     return render(request, 'plantaE/recepciones_list.html', {'registros': salidas})
 
 def recepciones_detail(request, pk):
