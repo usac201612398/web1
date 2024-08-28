@@ -50,7 +50,7 @@
                     <td>{{registro.categoria}}</td>
                     <td>{{registro.cajas}}</td>
                     <td>{{registro.created_at}}</td>
-                    <th ><a href="{% url 'inventarioProd_delete' registro.pk %}">Delete</a></th>
+                    <th ><a href="{% url 'inventarioProd_delete' registro.pk %}"><i class="fas fa-trash-alt"></i>Delete</a></th>
                     </tr> 
                         
                 {% endfor %}
