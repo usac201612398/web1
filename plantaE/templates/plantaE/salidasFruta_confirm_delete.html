@@ -15,12 +15,16 @@
 
     </style>
 </head>
+
 <body>
+    
     <h1>¿Está seguro de eliminar "{{ registros.title }}"?</h1>
     <form method="post">
         {% csrf_token %}
         <button type="submit">Confirmar</button>
     </form>
     <a href="{% url 'salidasFruta_list' %}">Cancelar</a>
+
 </body>
+
 </html>

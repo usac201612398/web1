@@ -96,6 +96,25 @@
 <script>
     $(document).ready(function() {
         // Función para cargar productos basados en la categoría seleccionada
+        
+        function authUsuario() {
+            $.ajax({
+                url: '{% url "obtenerfecha_invFruta" %}',  // URL para la vista AJAX
+                data: {
+                    'category_id': "Consulta"  // Envia el ID de la categoría como parámetro
+                },
+                success: function(data) {
+                    // Limpia las opciones actuales del campo 'name'
+                
+                    $('#id_fecha').val(data.fecha);
+                
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);  // Maneja errores de la solicitud
+                }
+            });
+        }
+
         function loadProducts() {
             $.ajax({
                 url: '{% url "load_inventarioProdparam" %}',  // URL para la vista AJAX

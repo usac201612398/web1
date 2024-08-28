@@ -24,6 +24,20 @@ def obtener_nombre_usuario(request):
     nombre_usuario = request.user.username
     return JsonResponse({'username': nombre_usuario,'fecha':fecha_})
 
+def obtenerfecha_invFruta(request):
+    # Obtén el nombre de usuario del usuario autenticado
+    now = datetime.datetime.now()
+    fecha = now.date()
+    dia= fecha.day
+    mes= fecha.month
+    año= fecha.year
+    if mes < 10:
+        mes = "0" + str(mes)
+    if dia < 10:
+        dia = "0" + str(dia)
+    fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
+    return JsonResponse({'fecha':fecha_})
+
 def load_dataUsuario(request):
     correo_id = request.GET.get('category_id')
     datos = usuariosAppFruta.objects.filter(correo=correo_id).values('finca', 'encargado')
@@ -164,7 +178,17 @@ def obtener_llave_recepcion(request):
     # Obtén el nombre de usuario del usuario autenticado
     llave_recepcion = Recepciones.objects.values('criterio').distinct('criterio')
     causa_rechazo = causasRechazo.objects.all().values('causa')
-    return JsonResponse({'llaves': list(llave_recepcion),'causa':list(causa_rechazo)})
+    now = datetime.datetime.now()
+    fecha = now.date()
+    dia= fecha.day
+    mes= fecha.month
+    año= fecha.year
+    if mes < 10:
+        mes = "0" + str(mes)
+    if dia < 10:
+        dia = "0" + str(dia)
+    fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
+    return JsonResponse({'llaves': list(llave_recepcion),'causa':list(causa_rechazo),'fecha':fecha_})
 
 def load_ccalidadparam(request):
     llave_recepcion = request.GET.get('category_id')
