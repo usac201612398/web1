@@ -260,7 +260,7 @@ def registroPhoto(request):
                             elemento_mas_comun = contador.most_common(1)[0]
                             elemento = elemento_mas_comun[0]
                             repeticiones = elemento_mas_comun[1]
-                            probabilidad = repeticiones/5
+                            probabilidad = repeticiones/2
                             if elemento == "DESCONOCIDO":
                                 nombre = "DESCONOCIDO"
                                 saludo = "USUARIO NO REGISTRADO"
@@ -295,7 +295,7 @@ def registroPhoto(request):
                             elemento_mas_comun = contador.most_common(1)[0]
                             elemento = elemento_mas_comun[0]
                             repeticiones = elemento_mas_comun[1]
-                            probabilidad = repeticiones/5
+                            probabilidad = repeticiones/2
 
                             if elemento == "DESCONOCIDO":
                                 nombre = "DESCONOCIDO"
@@ -342,7 +342,7 @@ def registroPhoto(request):
                         elemento_mas_comun = contador.most_common(1)[0]
                         elemento = elemento_mas_comun[0]
                         repeticiones = elemento_mas_comun[1]
-                        probabilidad = repeticiones/5
+                        probabilidad = repeticiones/2
 
                         if elemento == "DESCONOCIDO":
                             nombre = "DESCONOCIDO"
@@ -391,7 +391,7 @@ def registroPhoto(request):
                  elemento_mas_comun = contador.most_common(1)[0]
                  elemento = elemento_mas_comun[0]
                  repeticiones = elemento_mas_comun[1]
-                 probabilidad = repeticiones/5
+                 probabilidad = repeticiones/2
                  
                  if elemento == "DESCONOCIDO":
                      nombre = "DESCONOCIDO"
