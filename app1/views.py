@@ -252,7 +252,7 @@ def registroPhoto(request):
                         
                         response = {'codigoP':codigoE,'photo':new_mensaje,  'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
                         
-                        if int(vector[5]) == 5 :
+                        if int(vector[5]) == 2 :
                             matriz.extend(cola)
                             contador = Counter()
                             contador.update(matriz)
@@ -286,7 +286,7 @@ def registroPhoto(request):
 
                         response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'total':total,'p':porcentaje, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
                             
-                        if int(vector[5]) == 5 :
+                        if int(vector[5]) == 2 :
 
                             matriz.extend(cola)
                             contador = Counter()
@@ -333,7 +333,7 @@ def registroPhoto(request):
 
                     response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'total':total,'p':porcentaje, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
                         
-                    if int(vector[5]) == 5 :
+                    if int(vector[5]) == 2 :
 
                         matriz.extend(cola)
                         contador = Counter()
@@ -382,7 +382,7 @@ def registroPhoto(request):
              nombre = "DESCONOCIDO"
              response = {'codigoP':nombre,'photo':new_mensaje, 'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
              
-             if int(vector[5]) == 5 :
+             if int(vector[5]) == 2 :
                  
                  matriz.extend(cola)
                  contador = Counter()
