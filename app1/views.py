@@ -252,7 +252,7 @@ def registroPhoto(request):
                         
                         response = {'codigoP':codigoE,'photo':new_mensaje,  'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
                         
-                        if int(vector[5]) == 2 :
+                        if int(vector[5]) == 3 :
                             matriz.extend(cola)
                             contador = Counter()
                             contador.update(matriz)
@@ -260,7 +260,7 @@ def registroPhoto(request):
                             elemento_mas_comun = contador.most_common(1)[0]
                             elemento = elemento_mas_comun[0]
                             repeticiones = elemento_mas_comun[1]
-                            probabilidad = repeticiones/2
+                            probabilidad = repeticiones/3
                             if elemento == "DESCONOCIDO":
                                 nombre = "DESCONOCIDO"
                                 saludo = "USUARIO NO REGISTRADO"
@@ -286,7 +286,7 @@ def registroPhoto(request):
 
                         response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'total':total,'p':porcentaje, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
                             
-                        if int(vector[5]) == 2 :
+                        if int(vector[5]) == 3 :
 
                             matriz.extend(cola)
                             contador = Counter()
@@ -295,7 +295,7 @@ def registroPhoto(request):
                             elemento_mas_comun = contador.most_common(1)[0]
                             elemento = elemento_mas_comun[0]
                             repeticiones = elemento_mas_comun[1]
-                            probabilidad = repeticiones/2
+                            probabilidad = repeticiones/3
 
                             if elemento == "DESCONOCIDO":
                                 nombre = "DESCONOCIDO"
@@ -333,7 +333,7 @@ def registroPhoto(request):
 
                     response = {'codigoP':codigoE,'marcaT':marcaT,'photo':new_mensaje,'total':total,'p':porcentaje, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
                         
-                    if int(vector[5]) == 2 :
+                    if int(vector[5]) == 3 :
 
                         matriz.extend(cola)
                         contador = Counter()
@@ -342,7 +342,7 @@ def registroPhoto(request):
                         elemento_mas_comun = contador.most_common(1)[0]
                         elemento = elemento_mas_comun[0]
                         repeticiones = elemento_mas_comun[1]
-                        probabilidad = repeticiones/2
+                        probabilidad = repeticiones/3
 
                         if elemento == "DESCONOCIDO":
                             nombre = "DESCONOCIDO"
@@ -382,7 +382,7 @@ def registroPhoto(request):
              nombre = "DESCONOCIDO"
              response = {'codigoP':nombre,'photo':new_mensaje, 'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
              
-             if int(vector[5]) == 2 :
+             if int(vector[5]) == 3 :
                  
                  matriz.extend(cola)
                  contador = Counter()
@@ -391,7 +391,7 @@ def registroPhoto(request):
                  elemento_mas_comun = contador.most_common(1)[0]
                  elemento = elemento_mas_comun[0]
                  repeticiones = elemento_mas_comun[1]
-                 probabilidad = repeticiones/2
+                 probabilidad = repeticiones/3
                  
                  if elemento == "DESCONOCIDO":
                      nombre = "DESCONOCIDO"
