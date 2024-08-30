@@ -199,14 +199,6 @@
                             
                         );
                     });
-                    $('#id_variedad').html('');
-                    // Recorre los productos recibidos y añade opciones al campo 'name'
-                    $.each(data.datos, function(index, product) {
-                        $('#id_variedad').append(
-                            $('<option>').text(product.variedad.toString()).attr('value', product.variedad.toString())
-                            
-                        );
-                    });
 
                 },
                 error: function(xhr, status, error) {
@@ -214,11 +206,9 @@
                 }
             });
         }
-        $('#id_orden').change(function() {
-            var categoryId = $(this).val();  // Obtiene el ID de la categoría seleccionada
-            loadProducts2(categoryId);  // Llama a la función para cargar productos
-        });
+        
         authUsuario();
+        console.log($('#id_finca').val());
         loadProducts2($('#id_finca').val())
         // Llama a la función de carga de productos al cargar la página
         
