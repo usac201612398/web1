@@ -14,15 +14,14 @@ class salidasFrutaForm(forms.ModelForm):
     viaje = forms.ChoiceField(choices=op_viajes,widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
     orden = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
-    cultivo = forms.ChoiceField(choices=op_cultivo,widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
-    
-    #variedad = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    cultivo = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    variedad = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
     #estructura = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
     
     class Meta:
     
         model = salidasFruta
-        fields = ['correo','fecha','viaje','encargado',  'finca', 'cajas',  'orden', 'cultivo']
+        fields = ['correo','fecha','viaje','encargado',  'finca', 'cajas',  'orden', 'cultivo','variedad']
 
 class recepcionesForm(forms.ModelForm):
     op_status = [('Pendiente','-'),('En proceso','En proceso')]
