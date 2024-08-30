@@ -44,17 +44,15 @@ class recepcionesForm(forms.ModelForm):
     finca = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
     libras = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
-    orden = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
     cultivo = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
     variedad = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
-    estructura = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
     observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
     status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'my-input'}))
 
     class Meta:
     
         model = Recepciones
-        fields = ['recepcion','fecha','finca', 'cajas',  'libras', 'orden','cultivo','estructura', 'variedad','observaciones','status']
+        fields = ['recepcion','fecha','finca', 'cajas',  'libras', 'cultivo', 'variedad','observaciones','status']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

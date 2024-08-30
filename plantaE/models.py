@@ -186,8 +186,6 @@ class Recepciones(models.Model):
     fecha = models.DateField(blank=True, null=True)
     llave = models.CharField(max_length=200, blank=True, null=True)
     finca = models.CharField(max_length=75, blank=True, null=True)
-    orden = models.CharField(max_length=30, blank=True, null=True)
-    estructura = models.CharField(max_length=50, blank=True, null=True)
     variedad = models.CharField(max_length=50, blank=True, null=True)
     cajas = models.BigIntegerField(blank=True, null=True)
     libras = models.FloatField(blank=True, null=True)
