@@ -21,7 +21,7 @@
 </head>
 <body>
     <h1 class="roboto">Panel</h1>
-    <a href="{% url 'salidasFruta_create' %}">Agregar viaje</a>
+    <a href="{% url 'acumFruta_create' %}">Agregar viaje</a>
 
     
     <div class="container">
@@ -48,7 +48,7 @@
                 <tbody>
                 {%for registro in registros %} 
                 <tr> 
-                    <td> <a href="{% url 'salidasFruta_detail' registro.pk %}">{{ registro.id }}</a></td>
+                    <td> <a href="{% url 'acumFruta_detail' registro.pk %}">{{ registro.id }}</a></td>
                     <td>{{registro.fecha}}</td>
                     <td>{{registro.finca}}</td>
                     <td>{{registro.encargado}}</td>
@@ -58,8 +58,8 @@
                     <td>{{registro.cultivo}}</td>
                     <td>{{registro.estructura}}</td>
                     <td>{{registro.variedad}}</td>
-                    <th ><a href="{% url 'salidasFruta_update' registro.pk %}"> <i class="fas fa-edit"></i>Editar</a></th>
-                    <th ><a href="{% url 'salidasFruta_delete' registro.pk %}"><i class="fas fa-trash-alt"></i>Eliminar</a></th>
+                    <th ><a href="{% url 'acumFruta_update' registro.pk %}"> <i class="fas fa-edit"></i>Editar</a></th>
+                    <th ><a href="{% url 'acumFruta_delete' registro.pk %}"><i class="fas fa-trash-alt"></i>Eliminar</a></th>
                     </tr> 
                         
                 {% endfor %}

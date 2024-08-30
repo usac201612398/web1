@@ -80,6 +80,31 @@ class salidasFruta(models.Model):
     def __str__(self):
         return (str(self.finca)+ " | " + str(self.encargado) + " | " + str(self.viaje)+ " | " + str(self.cultivo))
 
+class AcumFruta(models.Model):
+    
+    op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
+    op_variedad = [('DUNNE','DUNNE'),('IVORINO','IVORINO'),('KM 5512','KM 5512'),('NEBULA','NEBULA'),('ROJO','ROJO'),('AMARILLO','AMARILLO'),('ANARANJADO','ANARANJADO')]
+    op_finca = [('VALLE','VALLE'),('RIO','RIO'),('CIP','CIP'),('FLE','FLE'),('FLA','FLA')]
+    op_correo = [('cosecha.rio@popoyan.com.gt','cosecha.rio@popoyan.com.gt')]
+    op_orden = [('64202052','64202052'),('64206054','64206054'),('64206055','64206055'),('64206056','64206056')]
+    op_estructura = [('CM1','CM1'),('CM2','CM2'),('CM3','CM3'),('CM4','CM4'),('CM5','CM5'),('CM6','CM6'),('CM7','CM7')]
+    
+    id = models.AutoField(primary_key=True)
+    fecha = models.DateField(blank=True, null=True)
+    finca = models.CharField(max_length=25,choices=op_finca,null=True)
+    orden = models.CharField(max_length=20,choices=op_orden,null=True)
+    cultivo = models.CharField(max_length=45,choices=op_cultivo,null=True)
+    variedad = models.CharField(max_length=40,choices=op_variedad,null=True)
+    cajas = models.IntegerField(blank=True, null=True)
+    correo = models.CharField(max_length=75, blank=True,choices=op_correo,null=True)
+    estructura=models.CharField(max_length=40,choices=op_estructura,null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return (str(self.finca)+ " | " + str(self.cultivo) + " | " + str(self.variedad)+ " | " + str(self.estructura))
+
+
 class cultivoxFinca(models.Model):
     
     op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]

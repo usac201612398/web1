@@ -1,5 +1,5 @@
 from django import forms
-from .models import salidasFruta, Recepciones, Ccalidad, inventarioProdTerm
+from .models import salidasFruta, Recepciones, Ccalidad, inventarioProdTerm,AcumFruta
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Fieldset, Div
 
@@ -15,12 +15,28 @@ class salidasFrutaForm(forms.ModelForm):
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
     cultivo = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
     variedad = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
-    #estructura = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    estructura = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
     
     class Meta:
     
         model = salidasFruta
         fields = ['correo','fecha','viaje','encargado',  'finca', 'cajas', 'cultivo','variedad']
+
+class acumFrutaForm(forms.ModelForm):
+    
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'my-input'}))
+    correo = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de correo electrónico
+    finca = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
+    orden = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    cultivo = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    variedad = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    estructura = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    
+    class Meta:
+    
+        model = AcumFruta
+        fields = ['correo','fecha', 'finca', 'cajas', 'orden','cultivo','variedad','estructura']
 
 class recepcionesForm(forms.ModelForm):
     op_status = [('Pendiente','-'),('En proceso','En proceso')]

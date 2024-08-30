@@ -3,8 +3,8 @@ from django.http import JsonResponse
 import logging
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect
-from .models import salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca
-from .forms import salidasFrutaForm, recepcionesForm, ccalidadForm, inventarioFrutaForm
+from .models import salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
+from .forms import salidasFrutaForm, recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
 from django.db.models import Sum
 from django.utils import timezone
 import datetime
@@ -42,7 +42,8 @@ def load_dataUsuario(request):
     correo_id = request.GET.get('category_id')
     datos = usuariosAppFruta.objects.filter(correo=correo_id).values('finca', 'encargado')
     adicionales = cultivoxFinca.objects.filter(finca=list(datos)[0]['finca']).values('cultivo').distinct('cultivo')
-    return JsonResponse({'datos': list(datos),'correo':correo_id,'adicionales':list(adicionales)})
+    adicionales_ = datosProduccion.objects.filter(finca=list(datos)[0]['finca']).values('orden').distinct('orden')
+    return JsonResponse({'datos': list(datos),'correo':correo_id,'adicionales':list(adicionales),'ordenes':adicionales_})
 
 def load_dataUsuario2(request):
     ordenSelect = request.GET.get('category_id')
@@ -59,12 +60,10 @@ def load_dataUsuario3(request):
     return JsonResponse({'datos': list(variedad)})
 
 def article_list(request):
-
     today = timezone.now().date()
     salidas = salidasFruta.objects.filter(fecha=today)
     salidas = salidas.order_by('-created_at')
     
-
     return render(request, 'plantaE/salidasFruta_list.html', {'registros': salidas})
 
 def article_detail(request, pk):
@@ -105,6 +104,45 @@ def article_delete(request, pk):
         salidas.delete()
         return redirect('salidasFruta_list')
     return render(request, 'plantaE/salidasFruta_confirm_delete.html', {'registros': salidas})
+
+def acumFruta_detail(request, pk):
+    salidas = get_object_or_404(AcumFruta, pk=pk)
+    return render(request, 'plantaE/AcumFrutaDia_detail.html', {'registros': salidas})
+
+def  acumFruta_create(request):
+    if request.method == 'POST':
+        form = acumFrutaForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+            except Exception as e:
+                # Manejar excepciones específicas (por ejemplo, UniqueConstraintError)
+                return JsonResponse({'error': str(e)}, status=400)
+            return redirect('acumFruta_list')
+        else:
+             # Imprimir errores para depuración
+            return JsonResponse({'errores': form.errors}, status=400)
+    else:
+        form = acumFrutaForm()
+    return render(request, 'plantaE/AcumFrutaDia_form.html', {'form': form})
+
+def acumFruta_update(request, pk):
+    salidas = get_object_or_404(AcumFruta, pk=pk)
+    if request.method == 'POST':
+        form = acumFrutaForm(request.POST, instance=salidas)
+        if form.is_valid():
+            form.save()
+            return redirect('acumFruta_list')
+    else:
+        form = acumFrutaForm(instance=salidas)
+    return render(request, 'plantaE/acumFrutaDia_form.html', {'form': form})
+
+def acumFruta_delete(request, pk):
+    salidas = get_object_or_404(AcumFruta, pk=pk)
+    if request.method == 'POST':
+        salidas.delete()
+        return redirect('acumFruta_list')
+    return render(request, 'plantaE/acumFruta_confirm_delete.html', {'registros': salidas})
 
 def recepciones_list(request):
     #today = timezone.now().date()

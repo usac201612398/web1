@@ -35,22 +35,6 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group row">
-                    <label for="encargado" class="col-sm-3 col-form-label">Encargado:</label>
-                    <div class="col-sm-9">
-                        {{ form.encargado }}
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group row">
-                    <label for="viaje" class="col-sm-3 col-form-label">Viaje:</label>
-                    <div class="col-sm-9">
-                        {{ form.viaje }}
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group row">
                     <label for="cajas" class="col-sm-3 col-form-label">Cajas:</label>
                     <div class="col-sm-9">
                         {{ form.cajas }}
@@ -94,7 +78,7 @@
 
         <button type="submit">Enviar</button>
     </form>
-    <a href="{% url 'salidasFruta_list' %}">Back to list</a>
+    <a href="{% url 'acumFruta_list' %}">Back to list</a>
 
 </body>
 <style>
@@ -169,14 +153,6 @@
                         );
                     });
 
-                    $('#id_encargado').html('');
-                    // Recorre los productos recibidos y añade opciones al campo 'name'
-                    $.each(data.datos, function(index, product) {
-                        $('#id_encargado').append(
-                            $('<option>').text(product.encargado.toString()).attr('value', product.encargado.toString())
-                        );
-                    });
-
                     $('#id_correo').html('');
                     // Recorre los productos recibidos y añade opciones al campo 'name'
                     $('#id_correo').append(
@@ -188,7 +164,7 @@
                         $('<option>').text('').attr('value','')
                     );
                     // Recorre los productos recibidos y añade opciones al campo 'name'
-                    $.each(data.adicionales, function(index, product) {
+                    $.each(data.adicionales_, function(index, product) {
                         $('#id_orden').append(
                             $('<option>').text(product.orden.toString()).attr('value', product.orden.toString())
                         );
