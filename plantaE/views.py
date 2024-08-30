@@ -110,7 +110,7 @@ def acumFruta_list(request):
     salidas = AcumFruta.objects.filter(fecha=today)
     salidas = salidas.order_by('-created_at')
     
-    return render(request, 'plantaE/acumFruta_list.html', {'registros': salidas})
+    return render(request, 'plantaE/AcumFrutaDia_list.html', {'registros': salidas})
 
 def acumFruta_detail(request, pk):
     salidas = get_object_or_404(AcumFruta, pk=pk)
@@ -142,14 +142,14 @@ def acumFruta_update(request, pk):
             return redirect('acumFruta_list')
     else:
         form = acumFrutaForm(instance=salidas)
-    return render(request, 'plantaE/acumFrutaDia_form.html', {'form': form})
+    return render(request, 'plantaE/AcumFrutaDia_form.html', {'form': form})
 
 def acumFruta_delete(request, pk):
     salidas = get_object_or_404(AcumFruta, pk=pk)
     if request.method == 'POST':
         salidas.delete()
         return redirect('acumFruta_list')
-    return render(request, 'plantaE/acumFruta_confirm_delete.html', {'registros': salidas})
+    return render(request, 'plantaE/AcumFruta_confirm_delete.html', {'registros': salidas})
 
 def recepciones_list(request):
     #today = timezone.now().date()
