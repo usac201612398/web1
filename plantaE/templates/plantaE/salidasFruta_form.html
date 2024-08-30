@@ -191,7 +191,8 @@
                             
                         );
                     });
-
+                    console.log($('#id_finca').val());
+                    loadProducts2($('#id_finca').val());
                 },
                 error: function(xhr, status, error) {
                     console.error('Error:', error);  // Maneja errores de la solicitud
@@ -200,8 +201,7 @@
         }
         
         authUsuario();
-        console.log($('#id_finca').val());
-        loadProducts2($('#id_finca').val());
+        
         // Llama a la función de carga de productos al cargar la página
         
     });
