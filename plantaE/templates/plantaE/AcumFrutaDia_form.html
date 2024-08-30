@@ -122,6 +122,7 @@
                 success: function(data) {
                     // Limpia las opciones actuales del campo 'name'
                     var initialCategoryId =data.username;  // Obtiene el valor inicial del campo 'category'
+                    console.log(initialCategoryId)    ;
                     if (initialCategoryId) {
                         loadProducts(initialCategoryId);
                     }
