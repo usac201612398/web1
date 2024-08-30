@@ -73,6 +73,22 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-6">
+                <div class="form-group row">
+                    <label for="estructura" class="col-sm-3 col-form-label">Estructura:</label>
+                    <div class="col-sm-9">
+                        {{ form.estructura }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group row">
+                    <label for="variedad" class="col-sm-3 col-form-label">Variedad:</label>
+                    <div class="col-sm-9">
+                        {{ form.variedad }}
+                    </div>
+                </div>
+            </div>
         </div>
         
 
@@ -167,6 +183,17 @@
                         $('<option>').text(data.correo.toString()).attr('value', data.correo.toString())
                     );
 
+                    $('#id_orden').html('');
+                    $('#id_orden').append(
+                        $('<option>').text('').attr('value','')
+                    );
+                    // Recorre los productos recibidos y añade opciones al campo 'name'
+                    $.each(data.adicionales, function(index, product) {
+                        $('#id_orden').append(
+                            $('<option>').text(product.orden.toString()).attr('value', product.orden.toString())
+                        );
+                    });
+
                 },
                 error: function(xhr, status, error) {
                     console.error('Error:', error);  // Maneja errores de la solicitud
@@ -175,7 +202,7 @@
         }
         function loadProducts2(categoryId) {
             $.ajax({
-                url: '{% url "load_dataUsuario3" %}',  // URL para la vista AJAX
+                url: '{% url "load_dataUsuario2" %}',  // URL para la vista AJAX
                 data: {
                     'category_id': categoryId  // Envia el ID de la categoría como parámetro
                 },
@@ -192,6 +219,31 @@
                         );
                     });
 
+                    $('#id_variedad').html('');
+                    $('#id_variedad').append(
+                        $('<option>').text('').attr('value','')
+                    );
+                    // Recorre los productos recibidos y añade opciones al campo 'name'
+                    $.each(data.variedad, function(index, product) {
+                        $('#id_variedad').append(
+                            $('<option>').text(product.variedad.toString()).attr('value', product.variedad.toString())
+                            
+                        );
+                    });
+
+                    $('#id_estructura').html('');
+                    $('#id_estructura').append(
+                        $('<option>').text('').attr('value','')
+                    );
+                    // Recorre los productos recibidos y añade opciones al campo 'name'
+                    $.each(data.estructura, function(index, product) {
+                        $('#id_estructura').append(
+                            $('<option>').text(product.estructura.toString()).attr('value', product.estructura.toString())
+                            
+                        );
+                    });
+
+
                 },
                 error: function(xhr, status, error) {
                     console.error('Error:', error);  // Maneja errores de la solicitud
@@ -203,7 +255,6 @@
             loadProducts2(categoryId);  // Llama a la función para cargar productos
         });
         authUsuario();
-        loadProducts2($('#id_finca').val())
         // Llama a la función de carga de productos al cargar la página
         
     });

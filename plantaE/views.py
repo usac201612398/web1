@@ -3,7 +3,7 @@ from django.http import JsonResponse
 import logging
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect
-from .models import salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm
+from .models import salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca
 from .forms import salidasFrutaForm, recepcionesForm, ccalidadForm, inventarioFrutaForm
 from django.db.models import Sum
 from django.utils import timezone
@@ -41,8 +41,8 @@ def obtenerfecha_invFruta(request):
 def load_dataUsuario(request):
     correo_id = request.GET.get('category_id')
     datos = usuariosAppFruta.objects.filter(correo=correo_id).values('finca', 'encargado')
-    adicionales = datosProduccion.objects.filter(finca=list(datos)[0]['finca'],status="Abierta").values('orden')
-    return JsonResponse({'datos': list(datos),'correo':correo_id,'adicionales':list(adicionales)})
+    #adicionales = datosProduccion.objects.filter(finca=list(datos)[0]['finca'],status="Abierta").values('orden')
+    return JsonResponse({'datos': list(datos),'correo':correo_id})
 
 def load_dataUsuario2(request):
     ordenSelect = request.GET.get('category_id')
@@ -50,6 +50,11 @@ def load_dataUsuario2(request):
     variedad = detallesProduccion.objects.filter(cultivo=list(cultivo)[0]['cultivo']).values('variedad')
     estructura = detallesEstructuras.objects.filter(orden=ordenSelect).values('estructura')
     return JsonResponse({'datos': list(cultivo),'variedad':list(variedad),'estructura':list(estructura),'orden':ordenSelect})
+
+def load_dataUsuario3(request):
+    fincaSelect = request.GET.get('category_id')
+    cultivo= cultivoxFinca.objects.filter(finca=fincaSelect).values('cultivo')
+    return JsonResponse({'datos': list(cultivo),'finca':fincaSelect})
 
 def article_list(request):
 

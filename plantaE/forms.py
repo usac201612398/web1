@@ -5,6 +5,8 @@ from crispy_forms.layout import Submit, Layout, Fieldset, Div
 
 class salidasFrutaForm(forms.ModelForm):
     op_viajes = [('','-'),('Viaje 1','Viaje 1'),('Viaje 2','Viaje 2'),('Viaje 3', 'Viaje 3'),('Viaje 4','Viaje 4'),('Viaje 5','Viaje 5'),('Viaje 6','Viaje 6'),('Viaje 7','Viaje 7'),('Viaje 8','Viaje 8')]
+    op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
+    
     fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'my-input'}))
     correo = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de correo electrónico
     encargado = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
@@ -12,14 +14,15 @@ class salidasFrutaForm(forms.ModelForm):
     viaje = forms.ChoiceField(choices=op_viajes,widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
     orden = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
-    cultivo = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
-    variedad = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
-    estructura = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    cultivo = forms.ChoiceField(choices=op_cultivo,widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    
+    #variedad = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    #estructura = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
     
     class Meta:
     
         model = salidasFruta
-        fields = ['correo','fecha','viaje','encargado',  'finca', 'cajas',  'orden', 'cultivo','estructura', 'variedad']
+        fields = ['correo','fecha','viaje','encargado',  'finca', 'cajas',  'orden', 'cultivo']
 
 class recepcionesForm(forms.ModelForm):
     op_status = [('Pendiente','-'),('En proceso','En proceso')]
