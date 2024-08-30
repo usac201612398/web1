@@ -195,6 +195,7 @@ class Recepciones(models.Model):
     criterio = models.CharField(max_length=85, blank=True, null=True)
     status = models.CharField(max_length=25, choices=op_status,blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True,blank=True, null=True)
+    classorigen = models.CharField(max_length=35, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
     enviofruta = models.BigIntegerField(blank=True, null=True)
 
