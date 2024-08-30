@@ -105,6 +105,13 @@ def article_delete(request, pk):
         return redirect('salidasFruta_list')
     return render(request, 'plantaE/salidasFruta_confirm_delete.html', {'registros': salidas})
 
+def acumFruta_list(request):
+    today = timezone.now().date()
+    salidas = AcumFruta.objects.filter(fecha=today)
+    salidas = salidas.order_by('-created_at')
+    
+    return render(request, 'plantaE/acumFruta_list.html', {'registros': salidas})
+
 def acumFruta_detail(request, pk):
     salidas = get_object_or_404(AcumFruta, pk=pk)
     return render(request, 'plantaE/AcumFrutaDia_detail.html', {'registros': salidas})

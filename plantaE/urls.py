@@ -22,6 +22,7 @@ urlpatterns = [
     path('salidasFruta/new/', views.article_create, name='salidasFruta_create'),
     path('salidasFruta/<int:pk>/edit/', views.article_update, name='salidasFruta_update'),
     path('salidasFruta/<int:pk>/delete/', views.article_delete, name='salidasFruta_delete'),
+    path("acumFruta",views.acumFruta_list,name='acumFruta_list'),
     path('acumFruta/<int:pk>/', views.acumFruta_detail, name='acumFruta_detail'),
     path('acumFruta/new/', views.acumFruta_create, name='acumFruta_create'),
     path('acumFruta/<int:pk>/edit/', views.acumFruta_update, name='acumFruta_update'),
