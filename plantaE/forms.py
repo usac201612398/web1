@@ -15,7 +15,6 @@ class salidasFrutaForm(forms.ModelForm):
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
     cultivo = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
     variedad = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
-    estructura = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
     
     class Meta:
     
