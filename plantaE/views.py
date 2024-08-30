@@ -41,8 +41,8 @@ def obtenerfecha_invFruta(request):
 def load_dataUsuario(request):
     correo_id = request.GET.get('category_id')
     datos = usuariosAppFruta.objects.filter(correo=correo_id).values('finca', 'encargado')
-    #adicionales = datosProduccion.objects.filter(finca=list(datos)[0]['finca'],status="Abierta").values('orden')
-    return JsonResponse({'datos': list(datos),'correo':correo_id})
+    adicionales = cultivoxFinca.objects.filter(finca=list(datos)[0]['finca']).values('cultivo').distinct('cultivo')
+    return JsonResponse({'datos': list(datos),'correo':correo_id,'adicionales':list(adicionales)})
 
 def load_dataUsuario2(request):
     ordenSelect = request.GET.get('category_id')
@@ -52,10 +52,11 @@ def load_dataUsuario2(request):
     return JsonResponse({'datos': list(cultivo),'variedad':list(variedad),'estructura':list(estructura),'orden':ordenSelect})
 
 def load_dataUsuario3(request):
-    fincaSelect = request.GET.get('category_id')
-    cultivo= cultivoxFinca.objects.filter(finca=fincaSelect).values('cultivo').distinct('cultivo')
+    cultivo_ = request.GET.get('category_id')
+    finca_ = request.GET.get('finca')
+    variedad= cultivoxFinca.objects.filter(finca=finca_,cultivo=cultivo_).values('variedad').distinct('variedad')
     #variedad = cultivoxFinca.objects.filter(cultivo=list(cultivo)[0]['cultivo']).values('variedad')
-    return JsonResponse({'datos': list(cultivo)})
+    return JsonResponse({'datos': list(variedad)})
 
 def article_list(request):
 

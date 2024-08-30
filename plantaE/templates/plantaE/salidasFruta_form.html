@@ -166,29 +166,42 @@
                     $('#id_correo').append(
                         $('<option>').text(data.correo.toString()).attr('value', data.correo.toString())
                     );
-                    console.log($('#id_finca').val());
-                    loadProducts2($('#id_finca').val());
+                    
+                    $('#id_cultivo').html('');
+                    $('#id_cultivo').append(
+                        $('<option>').text('').attr('value','')
+                    );
+                    // Recorre los productos recibidos y añade opciones al campo 'name'
+                    $.each(data.adicionales, function(index, product) {
+                        $('#id_cultivo').append(
+                            $('<option>').text(product.cultivo.toString()).attr('value', product.cultivo.toString())
+                        );
+                    });
                 },
                 error: function(xhr, status, error) {
                     console.error('Error:', error);  // Maneja errores de la solicitud
                 }
             });
         }
-        function loadProducts2(categoryId) {
+        function loadProducts2(categoryId,finca) {
             $.ajax({
                 url: '{% url "load_dataUsuario3" %}',  // URL para la vista AJAX
                 data: {
-                    'category_id': categoryId  // Envia el ID de la categoría como parámetro
+                    'category_id': categoryId,
+                    'finca': finca  // Envia el ID de la categoría como parámetro
                 },
                 success: function(data) {
                     // Limpia las opciones actuales del campo 'name'
                     console.log(data);
                     
-                    $('#id_cultivo').html('');
+                    $('#id_variedad').html('');
+                    $('#id_variedad').append(
+                        $('<option>').text('').attr('value','')
+                    );
                     // Recorre los productos recibidos y añade opciones al campo 'name'
                     $.each(data.datos, function(index, product) {
-                        $('#id_cultivo').append(
-                            $('<option>').text(product.cultivo.toString()).attr('value', product.cultivo.toString())
+                        $('#id_variedad').append(
+                            $('<option>').text(product.variedad.toString()).attr('value', product.variedad.toString())
                             
                         );
                     });
@@ -199,7 +212,11 @@
                 }
             });
         }
-        
+
+        $('#id_cultivo').change(function() {
+            var categoryId = $(this).val();  // Obtiene el ID de la categoría seleccionada
+            loadProducts2(categoryId, $('#id_finca').val());  // Llama a la función para cargar productos
+        });
         authUsuario();
         
         // Llama a la función de carga de productos al cargar la página
