@@ -218,14 +218,15 @@ class inventarioProdTerm(models.Model):
     op_proveedor = [('','-'),('RIO','RIO'),('VALLE','VALLE'),('CIP','CIP'),('PASTORIA','PASTORIA')]
     op_cultivo = [('','-'),('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
     op_categoria = [('','-'),('Mastronardi','Mastronardi'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolucion','Devolucion')]
-    
+    op_empaque = [('Cajas','Cajas'),('Libras','Libras')]
     registro = models.BigAutoField(primary_key=True)
     fecha = models.DateField(blank=True, null=True)
     categoria = models.CharField(max_length=50, choices=op_categoria, blank=True, null=True)
     cultivo = models.CharField(max_length=50, choices=op_cultivo, blank=True, null=True)
     proveedor = models.CharField(max_length=75, choices=op_proveedor,blank=True, null=True)
+    empaque = models.CharField(max_length=75, choices=op_empaque,blank=True, null=True)
     calidad1 = models.CharField(max_length=200, blank=True, null=True)
-    cajas = models.BigIntegerField(blank=True, null=True)
+    cantidad = models.BigIntegerField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
 

@@ -68,7 +68,7 @@ class ccalidadForm(forms.ModelForm):
     llave = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))
     causarechazo = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))
     observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-
+   
     class Meta:
     
         model = Ccalidad
@@ -80,18 +80,20 @@ class ccalidadForm(forms.ModelForm):
         self.fields['registro'].required = False
 
 class inventarioFrutaForm(forms.ModelForm):
-
+    op_empaque = [('Cajas','Cajas'),('Libras','Libras')]
     op_proveedor = [('','-'),('RIO','RIO'),('VALLE','VALLE'),('CIP','CIP'),('PASTORIA','PASTORIA')]
     op_cultivo = [('','-'),('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
     op_categoria = [('','-'),('Mastronardi','Mastronardi'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolucion','Devolucion')]
+    
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'my-input'}))
     proveedor = forms.ChoiceField(choices=op_proveedor, widget=forms.Select(attrs={'class': 'my-input'}))
     cultivo = forms.ChoiceField(choices=op_cultivo, widget=forms.Select(attrs={'class': 'my-input'}))
     categoria = forms.ChoiceField(choices=op_categoria, widget=forms.Select(attrs={'class': 'my-input'}))
     calidad1 = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))
-    cajas = forms.DecimalField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
+    empaque = forms.ChoiceField(choices=op_empaque, widget=forms.Select(attrs={'class': 'my-input'}))
+    cantidad = forms.DecimalField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
 
     class Meta:
     
         model = inventarioProdTerm
-        fields = ['fecha','proveedor', 'cultivo', 'categoria', 'calidad1','cajas']
+        fields = ['fecha','proveedor', 'cultivo', 'categoria', 'calidad1','empaque','cantidad']
