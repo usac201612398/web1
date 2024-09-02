@@ -250,7 +250,7 @@ def registroPhoto(request):
                     coincidencia = coincidencia.last()  # O el método que necesites para obtener el primer objeto
                     if coincidencia.codigop == int(codigoE) and str(vector[0]) == str(coincidencia.fecha) and str(vector[1])== coincidencia.origen and str(vector[2] == coincidencia.evento):
                         
-                        response = {'codigoP':codigoE,'photo':new_mensaje,  'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera}
+                        response = {'codigoP':codigoE,'photo':new_mensaje,  'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera, 'recorigen': vector[2],'coincorigen':coincidencia.evento}
                         
                         if int(vector[5]) == 3 :
                             matriz.extend(cola)
@@ -265,6 +265,8 @@ def registroPhoto(request):
                                 nombre = "DESCONOCIDO"
                                 saludo = "USUARIO NO REGISTRADO"
                             else:
+
+                                marcaT = datetime.datetime.now()
                                 nombreT = Listapersonal.objects.get(codigop=str(elemento))
                                 saludo = "El usuario " + nombreT.nombrep + " ya registró hoy su " + coincidencia.evento + " en " + coincidencia.origen
                            
