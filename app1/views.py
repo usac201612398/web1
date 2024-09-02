@@ -248,7 +248,7 @@ def registroPhoto(request):
 
                 if coincidencia.exists():
                     coincidencia = coincidencia.last()  # O el método que necesites para obtener el primer objeto
-                    if coincidencia.codigop == int(codigoE) and str(vector[0]) == str(coincidencia.fecha) and str(vector[1])== coincidencia.origen and str(vector[2] == coincidencia.evento):
+                    if coincidencia.codigop == int(codigoE) and str(vector[0]) == str(coincidencia.fecha) and str(vector[1])== coincidencia.origen and str(vector[2]) == coincidencia.evento:
                         
                         response = {'codigoP':codigoE,'photo':new_mensaje,  'aux':vector, 'NoElem': vector[5],'matriz': matriz, 'cola':cola, 'bandera':bandera, 'recorigen': vector[2],'coincorigen':coincidencia.evento}
                         
