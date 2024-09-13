@@ -107,7 +107,7 @@
                         <td>{{registro.cultivo}}</td>
                         <td>{{registro.estructura}}</td>
                         <td><input type="number"></td>
-                        <td><i class="fas fa-trash-alt"></i></td>
+                        <td><button class="eliminar"><i class="fas fa-trash-alt"></i></button></td>
                     </tr> 
                         
                 {% endfor %}
@@ -133,7 +133,14 @@
 </body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+const eliminarBotones = document.querySelectorAll('.eliminar');
 
+eliminarBotones.forEach(boton => {
+    boton.addEventListener('click', (event) => {
+        const fila = event.target.parentNode.parentNode;
+        fila.remove();
+    });
+});
 
 $(document).ready(function() {
         // Función para cargar productos basados en la categoría seleccionada
