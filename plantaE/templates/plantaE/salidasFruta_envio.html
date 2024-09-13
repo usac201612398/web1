@@ -100,6 +100,7 @@
                     <th >Cultivo</th>
                     <th >Estructura</th>
                     <th >Cajas</th>
+                    <th >Usuario</th>
                     <th >Eliminar</th>
                     </tr>
                 </thead>
@@ -113,6 +114,7 @@
                         <td>{{registro.orden}}</td>
                         <td>{{registro.cultivo}}</td>
                         <td>{{registro.estructura}}</td>
+                        <td>{{usuario}}</td>
                         <td><div contenteditable="true" class="editable-cell"></div></td>
                         <td><button class="eliminar"><i class="fas fa-trash-alt"></i></button></td>
                     </tr> 
@@ -144,7 +146,7 @@
 $('.envio3').on('click', function() {
     var resume_table = document.getElementById("myTable");
     var datos = []
-    for (var i = 0, row; row = resume_table.rows[i]; i++) {
+    for (var i = 1, row; row = resume_table.rows[i]; i++) {
       //alert(cell[i].innerText);
       filas = []
       for (var j = 0, col; col = row.cells[j]; j++) {
@@ -161,7 +163,23 @@ $('.envio3').on('click', function() {
 
     }
 
-    console.log(datos)
+    $.ajax({
+            url: '{% url "almacenar_plantilla" %}',  // URL para la vista AJAX
+            data: {
+                'data': datos  // Envia el ID de la categoría como parámetro
+            },
+            success: function(data) {
+                // Limpia las opciones actuales del campo 'name'
+                alert("Listo")
+
+                // Recorre los productos recibidos y añade opciones al campo 'name'
+                
+
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);  // Maneja errores de la solicitud
+            }
+        });
   });
 const eliminarBotones = document.querySelectorAll('.eliminar');
 
