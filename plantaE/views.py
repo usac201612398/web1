@@ -90,7 +90,7 @@ def article_create_plantilla(request):
     context = {
         'registros': list(estructura),
         'fecha': fecha_,
-        'encargado': list(datos)[0]['encargardo']
+        'encargado': list(datos)[0]['encargado']
     }
     
     return render(request, 'plantaE/salidasFruta_envio.html',context)
