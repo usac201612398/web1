@@ -112,7 +112,7 @@
                 success: function(data) {
                     // Limpia las opciones actuales del campo 'name'
                     console.log(data);
-                    $('#date').val(data.fecha);    
+ 
                     // Recorre los productos recibidos y añade opciones al campo 'name'
                     $.each(data.datos, function(index, product) {
                         $('#Lug').append(
