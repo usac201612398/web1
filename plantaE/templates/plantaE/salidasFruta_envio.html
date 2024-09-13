@@ -159,7 +159,7 @@ $(document).ready(function() {
     }
     function loadProducts(categoryId) {
         $.ajax({
-            url: '{% url "load_plantilla" %}',  // URL para la vista AJAX
+            url: '{% url "load_data_usuario" %}',  // URL para la vista AJAX
             data: {
                 'category_id': categoryId  // Envia el ID de la categoría como parámetro
             },
