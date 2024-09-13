@@ -85,12 +85,12 @@ def article_create_plantilla(request):
     
     nombre_usuario = request.user.username
     datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('finca','encargado')
-    estructura = detallesEstructuras.objects.filter(finca=list(datos)[0]['finca']).values('finca','orden','estructura','cultivo')
+    estructura = detallesEstructuras.objects.filter(finca=list(datos)[0]['finca']).values('finca','orden','estructura','cultivo').distinct()
    
     context = {
         'registros': list(estructura),
         'fecha': fecha_,
-        'datos': list(datos)
+        'encargado': list(datos)[0]['encargardo']
     }
     
     return render(request, 'plantaE/salidasFruta_envio.html',context)
