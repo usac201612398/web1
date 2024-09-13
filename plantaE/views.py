@@ -47,6 +47,14 @@ def load_dataUsuario(request):
     
     return JsonResponse({'datos': list(datos),'correo':correo_id,'adicionales':list(adicionales),'ordenes':list(adicionales_)})
 
+def load_plantilla(request):
+    finca = request.GET.get('finca')
+    fecha = request.GET.get('fecha')
+    nombre_usuario = request.user.username
+    datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('encargado')
+    estructura = detallesEstructuras.objects.filter(finca=finca).values('orden','estructura','cultivo')
+    return JsonResponse({'fecha': fecha,'estructura':list(estructura),'datos':datos})
+
 def load_dataUsuario2(request):
     ordenSelect = request.GET.get('category_id')
     cultivo= datosProduccion.objects.filter(orden=ordenSelect,status="Abierta").values('cultivo')

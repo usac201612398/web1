@@ -76,7 +76,6 @@
                     </select>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -188,6 +187,25 @@ $(document).ready(function() {
     $('#Via').change(function() {
         var categoryId = $(this).val();  // Obtiene el ID de la categoría seleccionada
         console.log(categoryId);
+
+        $.ajax({
+            url: '{% url "load_plantilla" %}',  // URL para la vista AJAX
+            data: {
+                'fecha': categoryId,  // Envia el ID de la categoría como parámetro
+                'finca': $('#Lug').val()
+            },
+            success: function(data) {
+                // Limpia las opciones actuales del campo 'name'
+                console.log(data);
+
+                // Recorre los productos recibidos y añade opciones al campo 'name'
+                
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);  // Maneja errores de la solicitud
+            }
+        });
+
     });
     authUsuario();
     // Llama a la función de carga de productos al cargar la página
