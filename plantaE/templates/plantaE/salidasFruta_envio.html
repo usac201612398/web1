@@ -64,6 +64,7 @@
                 
                 <div class="select"> 
                     <select name="Viaje" id="Via">
+                        <option value="">-</option>
                         <option value="Viaje 1">Viaje 1</option>
                         <option value="Viaje 2">Viaje 2</option>
                         <option value="Viaje 3">Viaje 3</option>
@@ -89,6 +90,7 @@
                     <th >Fecha</th>
                     <th >Finca</th>
                     <th >Viaje</th>
+                    <th >Encargado</th>
                     <th >Orden</th>
                     <th >Cultivo</th>
                     <th >Estructura</th>
@@ -102,6 +104,7 @@
                         <td>{{registro.fecha}}</td>
                         <td>{{registro.finca}}</td>
                         <td>{{registro.viaje}}</td>
+                        <td>{{registro.encargado}}</td>
                         <td>{{registro.orden}}</td>
                         <td>{{registro.cultivo}}</td>
                         <td>{{registro.estructura}}</td>
@@ -114,6 +117,18 @@
             </div>
             </div>
         </div>
+        </div>
+        <br>
+        <div class = "container"> 
+            <div class="half">
+                <div class="box">
+                    <form>
+                        <div>
+                            <input type="button" value="Enviar" class="envio3">
+                        </div>
+                    </form>      
+                </div>
+            </div>
         </div>
 
 </body>
@@ -170,7 +185,10 @@ $(document).ready(function() {
         });
     }
     
-
+    $('#Viajes').change(function() {
+        var categoryId = $(this).val();  // Obtiene el ID de la categoría seleccionada
+        console.log(categoryId);
+    });
     authUsuario();
     // Llama a la función de carga de productos al cargar la página
         
