@@ -63,7 +63,7 @@ def load_plantilla(request):
     datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('finca','encargado')
     estructura = detallesEstructuras.objects.filter(finca=list(datos)[0]['finca']).values('finca','orden','estructura','cultivo')
    
-    return JsonResponse({'fecha': fecha_,'estructura':list(estructura),'datos':list(datos)})
+    return JsonResponse({'z':list(datos)[0]['finca'],'fecha': fecha_,'estructura':list(estructura),'datos':list(datos)})
 
 def load_dataUsuario2(request):
     ordenSelect = request.GET.get('category_id')
