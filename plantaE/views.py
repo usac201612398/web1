@@ -70,6 +70,9 @@ def article_detail(request, pk):
     salidas = get_object_or_404(salidasFruta, pk=pk)
     return render(request, 'plantaE/salidasFruta_detail.html', {'registros': salidas})
 
+def article_create_plantilla(request):
+    return render(request, 'plantaE/salidasFruta_envio.html')
+
 def article_create(request):
     if request.method == 'POST':
         form = salidasFrutaForm(request.POST)
