@@ -72,7 +72,7 @@ def article_detail(request, pk):
     return render(request, 'plantaE/salidasFruta_detail.html', {'registros': salidas})
 
 def article_create_plantilla(request):
-    mensaje = request.POST.get('data')
+    mensaje = request.GET.get('data')
    
     if mensaje!=None:
         for i in mensaje:
