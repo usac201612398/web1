@@ -86,55 +86,55 @@
 
 $(document).ready(function() {
         // Función para cargar productos basados en la categoría seleccionada
-        function authUsuario() {
-            $.ajax({
-                url: '{% url "obtener_nombre_usuario" %}',  // URL para la vista AJAX
-                data: {
-                    'category_id': "Consulta"  // Envia el ID de la categoría como parámetro
-                },
-                success: function(data) {
-                    // Limpia las opciones actuales del campo 'name'
-                    var initialCategoryId =data.username;  // Obtiene el valor inicial del campo 'category'
-                    if (initialCategoryId) {
-                        console.log(initialCategoryId);
-                    }
-                
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error:', error);  // Maneja errores de la solicitud
+    function authUsuario() {
+        $.ajax({
+            url: '{% url "obtener_nombre_usuario" %}',  // URL para la vista AJAX
+            data: {
+                'category_id': "Consulta"  // Envia el ID de la categoría como parámetro
+            },
+            success: function(data) {
+                // Limpia las opciones actuales del campo 'name'
+                var initialCategoryId =data.username;  // Obtiene el valor inicial del campo 'category'
+                if (initialCategoryId) {
+                    console.log(initialCategoryId);
                 }
-            });
-        }
-        function loadProducts(categoryId) {
-            $.ajax({
-                url: '{% url "load_dataUsuario" %}',  // URL para la vista AJAX
-                data: {
-                    'category_id': categoryId  // Envia el ID de la categoría como parámetro
-                },
-                success: function(data) {
-                    // Limpia las opciones actuales del campo 'name'
-                    console.log(data);
- 
-                    // Recorre los productos recibidos y añade opciones al campo 'name'
-                    $.each(data.datos, function(index, product) {
-                        $('#Lug').append(
-                            $('<option>').text(product.area.toString()).attr('value', product.area.toString())
-                                
-                        );
-                        
-                    });
+            
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);  // Maneja errores de la solicitud
+            }
+        });
+    }
+    function loadProducts(categoryId) {
+        $.ajax({
+            url: '{% url "load_dataUsuario" %}',  // URL para la vista AJAX
+            data: {
+                'category_id': categoryId  // Envia el ID de la categoría como parámetro
+            },
+            success: function(data) {
+                // Limpia las opciones actuales del campo 'name'
+                console.log(data);
 
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error:', error);  // Maneja errores de la solicitud
-                }
-            });
-        }
-        
+                // Recorre los productos recibidos y añade opciones al campo 'name'
+                $.each(data.datos, function(index, product) {
+                    $('#Lug').append(
+                        $('<option>').text(product.area.toString()).attr('value', product.area.toString())
+                            
+                    );
+                    
+                });
 
-        authUsuario();
-        // Llama a la función de carga de productos al cargar la página
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);  // Maneja errores de la solicitud
+            }
+        });
+    }
+    
+
+    authUsuario();
+    // Llama a la función de carga de productos al cargar la página
         
-    });
+});
 
 </script>
