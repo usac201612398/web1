@@ -135,11 +135,10 @@
 <script>
 const eliminarBotones = document.querySelectorAll('.eliminar');
 
-eliminarBotones.forEach(boton => {
-    boton.addEventListener('click', (event) => {
-        const fila = event.target.parentNode.parentNode;
-        fila.remove();
-    });
+
+
+$(document).on('click', '.eliminar', function() {
+    $(this).closest('tr').remove();
 });
 
 $(document).ready(function() {
