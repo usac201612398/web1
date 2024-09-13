@@ -97,12 +97,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                {%for registro in registros %}
+                {%for registro in estructura %}
 
                     <tr> 
-                        <td>{{registro.fecha}}</td>
+                        <td>{{fecha}}</td>
                         <td>{{registro.finca}}</td>
-                        <td>{{registro.viaje}}</td>
+                        <td>{{datos.encargado}}</td>
+                        <td>{{viaje}}</td>
                         <td>{{registro.encargado}}</td>
                         <td>{{registro.orden}}</td>
                         <td>{{registro.cultivo}}</td>
@@ -191,8 +192,9 @@ $(document).ready(function() {
         $.ajax({
             url: '{% url "load_plantilla" %}',  // URL para la vista AJAX
             data: {
-                'fecha': categoryId,  // Envia el ID de la categoría como parámetro
-                'finca': $('#Lug').val()
+                'viaje': categoryId,  // Envia el ID de la categoría como parámetro
+                'finca': $('#Lug').val(),
+                'fecha': $('#date').val()
             },
             success: function(data) {
                 // Limpia las opciones actuales del campo 'name'
