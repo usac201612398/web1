@@ -80,7 +80,8 @@
         </div>
         </div>
 
-</body><script>
+</body>
+<script>
     $(document).ready(function() {
         // Función para cargar productos basados en la categoría seleccionada
         function authUsuario() {
@@ -94,7 +95,7 @@
                     var initialCategoryId =data.username;  // Obtiene el valor inicial del campo 'category'
                     if (initialCategoryId) {
                         console.log(initialCategoryId);
-                        
+                        loadProducts(initialCategoryId);
                     }
                 
                 },
