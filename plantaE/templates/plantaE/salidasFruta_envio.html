@@ -168,10 +168,11 @@ $('.envio3').on('click', function() {
             data: {
                 'data': datos  // Envia el ID de la categoría como parámetro
             },
+            
             success: function(data) {
                 // Limpia las opciones actuales del campo 'name'
                 alert("Listo")
-
+                console.log(data)
                 // Recorre los productos recibidos y añade opciones al campo 'name'
                 
 
@@ -181,6 +182,7 @@ $('.envio3').on('click', function() {
             }
         });
   });
+
 const eliminarBotones = document.querySelectorAll('.eliminar');
 
 

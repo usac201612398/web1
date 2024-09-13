@@ -77,7 +77,7 @@ def article_create_plantilla(request):
     if mensaje!=None:
         for i in mensaje:
             enviosFrutaPlantilla.objects.create(fecha=i[0],finca=i[1],viaje=i[8],encargado=[2],orden=i[3],cultivo=i[4],estructura=i[5],cajas=i[6],correo=i[9])
-                            
+        JsonResponse({'mensaje':mensaje})                    
     else: 
         now = datetime.datetime.now()
         fecha = now.date()
