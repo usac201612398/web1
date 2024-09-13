@@ -38,11 +38,13 @@ def obtenerfecha_invFruta(request):
     fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
     return JsonResponse({'fecha':fecha_})
 
+
 def load_dataUsuario(request):
     correo_id = request.GET.get('category_id')
     datos = usuariosAppFruta.objects.filter(correo=correo_id).values('finca', 'encargado')
     adicionales = cultivoxFinca.objects.filter(finca=list(datos)[0]['finca']).values('cultivo').distinct('cultivo')
     adicionales_ = datosProduccion.objects.filter(finca=list(datos)[0]['finca']).values('orden').distinct('orden')
+    
     return JsonResponse({'datos': list(datos),'correo':correo_id,'adicionales':list(adicionales),'ordenes':list(adicionales_)})
 
 def load_dataUsuario2(request):

@@ -96,6 +96,7 @@ $(document).ready(function() {
             success: function(data) {
                 // Limpia las opciones actuales del campo 'name'
                 var initialCategoryId =data.username;  // Obtiene el valor inicial del campo 'category'
+                $('#date').val(data.fecha);
                 if (initialCategoryId) {
                     console.log(initialCategoryId);
                     loadProducts(initialCategoryId);
@@ -120,7 +121,7 @@ $(document).ready(function() {
                 // Recorre los productos recibidos y añade opciones al campo 'name'
                 $.each(data.datos, function(index, product) {
                     $('#Lug').append(
-                        $('<option>').text(product.area.toString()).attr('value', product.area.toString())
+                        $('<option>').text(product.finca.toString()).attr('value', product.finca.toString())
                             
                     );
                     
