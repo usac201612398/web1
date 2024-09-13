@@ -46,9 +46,9 @@ class detallesEstructuras(models.Model):
     op_estructura = [('CM1','CM1'),('CM2','CM2'),('CM3','CM3'),('CM4','CM4'),('CM5','CM5'),('CM6','CM6'),('CM7','CM7')]
     op_finca =  [('RIO','RIO'),('VALLE','VALLE')]
     id = models.AutoField(primary_key=True)
-    finca = models.CharField(max_length=35, choices=op_cultivo,blank=True)
+    finca = models.CharField(max_length=35, choices=op_finca,blank=True)
     orden = models.CharField(max_length=30,blank=True)
-    cultivo = models.CharField(max_length=35, choices=op_finca,blank=True)
+    cultivo = models.CharField(max_length=35, choices=op_cultivo,blank=True)
     estructura = models.CharField(max_length=35, choices=op_estructura,blank=True)
 
     def __str__(self):
