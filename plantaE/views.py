@@ -48,13 +48,22 @@ def load_dataUsuario(request):
     return JsonResponse({'datos': list(datos),'correo':correo_id,'adicionales':list(adicionales),'ordenes':list(adicionales_)})
 
 def load_plantilla(request):
-    viaje = request.GET.get('viaje')
-    fecha = request.GET.get('fecha')
-    finca=request.GET.get('finca')
-    nombre_usuario = request.user.username
-    datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('encargado')
-    estructura = detallesEstructuras.objects.filter(finca=finca).values('finca','orden','estructura','cultivo')
-    return JsonResponse({'fecha': fecha,'viaje':viaje,'estructura':list(estructura),'datos':list(datos)})
+    now = datetime.datetime.now()
+    fecha = now.date()
+    dia= fecha.day
+    mes= fecha.month
+    año= fecha.year
+    if mes < 10:
+        mes = "0" + str(mes)
+    if dia < 10:
+        dia = "0" + str(dia)
+    fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
+    
+    nombre_usuario = request.GET.get('category_id')
+    datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('finca','encargado')
+    estructura = detallesEstructuras.objects.filter(finca=list(datos)[0]['finca']).values('finca','orden','estructura','cultivo')
+   
+    return JsonResponse({'fecha': fecha_,'estructura':list(estructura),'datos':list(datos)})
 
 def load_dataUsuario2(request):
     ordenSelect = request.GET.get('category_id')

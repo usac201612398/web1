@@ -88,7 +88,6 @@
                     <tr class="header">
                     <th >Fecha</th>
                     <th >Finca</th>
-                    <th >Viaje</th>
                     <th >Encargado</th>
                     <th >Orden</th>
                     <th >Cultivo</th>
@@ -103,8 +102,7 @@
                         <td>{{fecha}}</td>
                         <td>{{registro.finca}}</td>
                         <td>{{datos.encargado}}</td>
-                        <td>{{viaje}}</td>
-                        <td>{{registro.encargado}}</td>
+                        <td>{{datos.encargado}}</td>
                         <td>{{registro.orden}}</td>
                         <td>{{registro.cultivo}}</td>
                         <td>{{registro.estructura}}</td>
@@ -161,7 +159,7 @@ $(document).ready(function() {
     }
     function loadProducts(categoryId) {
         $.ajax({
-            url: '{% url "load_dataUsuario" %}',  // URL para la vista AJAX
+            url: '{% url "load_plantilla" %}',  // URL para la vista AJAX
             data: {
                 'category_id': categoryId  // Envia el ID de la categoría como parámetro
             },
@@ -185,30 +183,6 @@ $(document).ready(function() {
         });
     }
     
-    $('#Via').change(function() {
-        var categoryId = $(this).val();  // Obtiene el ID de la categoría seleccionada
-        console.log(categoryId);
-
-        $.ajax({
-            url: '{% url "load_plantilla" %}',  // URL para la vista AJAX
-            data: {
-                'viaje': categoryId,  // Envia el ID de la categoría como parámetro
-                'finca': $('#Lug').val(),
-                'fecha': $('#date').val()
-            },
-            success: function(data) {
-                // Limpia las opciones actuales del campo 'name'
-                console.log(data);
-
-                // Recorre los productos recibidos y añade opciones al campo 'name'
-                
-            },
-            error: function(xhr, status, error) {
-                console.error('Error:', error);  // Maneja errores de la solicitud
-            }
-        });
-
-    });
     authUsuario();
     // Llama a la función de carga de productos al cargar la página
         
