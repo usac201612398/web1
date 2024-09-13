@@ -32,7 +32,14 @@
             flex: auto; 
             height: 100%;    
         }
-
+        td {
+            padding: 0;
+        }
+        td input {
+            width: 100%;
+            border: none;
+            background: transparent;
+        }
 
     </style>
 </head>
@@ -106,7 +113,7 @@
                         <td>{{registro.orden}}</td>
                         <td>{{registro.cultivo}}</td>
                         <td>{{registro.estructura}}</td>
-                        <td><input type="number"></td>
+                        <td><div contenteditable="true" class="editable-cell"></div></td>
                         <td><button class="eliminar"><i class="fas fa-trash-alt"></i></button></td>
                     </tr> 
                         
@@ -142,7 +149,14 @@ $('.envio3').on('click', function() {
       filas = []
       for (var j = 0, col; col = row.cells[j]; j++) {
         //alert(col[j].innerText);
-        filas.push(col.innerText);
+        
+        if (j = 6) {
+            var data = $(this).closest("tr").find('input[type="number"]').val();
+            filas.push(data)
+        }
+        else {
+            filas.push(col.innerText);
+        }
       }
         var select = document.getElementById("Via"), //El <select>
             value = select.value, //El valor seleccionado
