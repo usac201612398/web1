@@ -164,7 +164,7 @@ $('.envio3').on('click', function() {
     }
 
     $.ajax({
-            url: '{% url "almacenar_plantilla" %}',  // URL para la vista AJAX
+            url: '{% url "salidasFruta_create_plantilla" %}',  // URL para la vista AJAX
             data: {
                 'data': datos  // Envia el ID de la categoría como parámetro
             },
