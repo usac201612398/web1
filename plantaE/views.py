@@ -95,6 +95,8 @@ def article_create_plantilla(request):
         estructura = detallesEstructuras.objects.filter(finca=list(datos)[0]['finca']).values('finca','orden','estructura','cultivo').distinct()
     
         context = {
+
+            'mensaje': mensaje,
             'usuario': nombre_usuario,
             'registros': list(estructura),
             'fecha': fecha_,
