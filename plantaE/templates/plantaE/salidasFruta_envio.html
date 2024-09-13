@@ -133,6 +133,28 @@
 </body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+
+$('.envio3').on('click', function() {
+    var resume_table = document.getElementById("myTable");
+    var datos = []
+    for (var i = 0, row; row = resume_table.rows[i]; i++) {
+      //alert(cell[i].innerText);
+      filas = []
+      for (var j = 0, col; col = row.cells[j]; j++) {
+        //alert(col[j].innerText);
+        filas.push(col.innerText);
+      }
+        var select = document.getElementById("Via"), //El <select>
+            value = select.value, //El valor seleccionado
+            text = select.options[select.selectedIndex].innerText;
+            filas.push(text);
+    
+      datos.push(filas);
+
+    }
+
+    console.log(datos)
+  });
 const eliminarBotones = document.querySelectorAll('.eliminar');
 
 
