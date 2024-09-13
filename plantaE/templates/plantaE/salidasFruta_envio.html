@@ -149,14 +149,8 @@ $('.envio3').on('click', function() {
       filas = []
       for (var j = 0, col; col = row.cells[j]; j++) {
         //alert(col[j].innerText);
+        filas.push(col.innerText);
         
-        if (j = 6) {
-            var data = $(this).closest("tr").find('input[type="number"]').val();
-            filas.push(data)
-        }
-        else {
-            filas.push(col.innerText);
-        }
       }
         var select = document.getElementById("Via"), //El <select>
             value = select.value, //El valor seleccionado
