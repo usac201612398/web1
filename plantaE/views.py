@@ -70,38 +70,39 @@ def article_list(request):
 def article_detail(request, pk):
     salidas = get_object_or_404(salidasFruta, pk=pk)
     return render(request, 'plantaE/salidasFruta_detail.html', {'registros': salidas})
-
-def article_create_plantilla(request):
+def guardar_plantilla(request):
     mensaje = request.GET.get('data')
    
-    if mensaje!=None:
-        for i in mensaje:
-            enviosFrutaPlantilla.objects.create(fecha=i[0],finca=i[1],viaje=i[8],encargado=[2],orden=i[3],cultivo=i[4],estructura=i[5],cajas=i[6],correo=i[9])
-        JsonResponse({'mensaje':mensaje})                    
-    else: 
-        now = datetime.datetime.now()
-        fecha = now.date()
-        dia= fecha.day
-        mes= fecha.month
-        año= fecha.year
-        if mes < 10:
-            mes = "0" + str(mes)
-        if dia < 10:
-            dia = "0" + str(dia)
-        fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
-        
-        nombre_usuario = request.user.username
-        datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('finca','encargado')
-        estructura = detallesEstructuras.objects.filter(finca=list(datos)[0]['finca']).values('finca','orden','estructura','cultivo').distinct()
-    
-        context = {
 
-            'mensaje': mensaje,
-            'usuario': nombre_usuario,
-            'registros': list(estructura),
-            'fecha': fecha_,
-            'encargado': list(datos)[0]['encargado']
-        }
+    for i in mensaje:
+        enviosFrutaPlantilla.objects.create(fecha=i[0],finca=i[1],viaje=i[8],encargado=[2],orden=i[3],cultivo=i[4],estructura=i[5],cajas=i[6],correo=i[9])
+    
+    JsonResponse({'mensaje':mensaje})                    
+
+def article_create_plantilla(request):
+    
+    now = datetime.datetime.now()
+    fecha = now.date()
+    dia= fecha.day
+    mes= fecha.month
+    año= fecha.year
+    if mes < 10:
+        mes = "0" + str(mes)
+    if dia < 10:
+        dia = "0" + str(dia)
+    fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
+    
+    nombre_usuario = request.user.username
+    datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('finca','encargado')
+    estructura = detallesEstructuras.objects.filter(finca=list(datos)[0]['finca']).values('finca','orden','estructura','cultivo').distinct()
+
+    context = {
+
+        'usuario': nombre_usuario,
+        'registros': list(estructura),
+        'fecha': fecha_,
+        'encargado': list(datos)[0]['encargado']
+    }
     
     return render(request, 'plantaE/salidasFruta_envio.html',context)
 

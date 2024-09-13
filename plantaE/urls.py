@@ -17,6 +17,7 @@ urlpatterns = [
     path('ajax/obtener-llave-recepcion/', views.obtener_llave_recepcion, name='obtener_llave_recepcion'),
     path('ajax/load-ccalidadparam/', views.load_ccalidadparam, name='load_ccalidadparam'),
     path('ajax/load-ccalidadaux/', views.ccalidad_update_aux, name='load_ccalidad_update_aux'),
+    path('ajax/guardar-plantilla/', views.guardar_plantilla, name='guardar_plantilla'),
     path('ajax/load-inventarioProdparam/', views.load_inventarioProdparam, name='load_inventarioProdparam'),
     path('salidasFruta/<int:pk>/', views.article_detail, name='salidasFruta_detail'),
     path('salidasFruta/new/', views.article_create, name='salidasFruta_create'),
