@@ -83,7 +83,7 @@ def article_create_plantilla(request):
         dia = "0" + str(dia)
     fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
     
-    nombre_usuario = request.GET.get('category_id')
+    nombre_usuario = request.user.username
     datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('finca','encargado')
     estructura = detallesEstructuras.objects.filter(finca=list(datos)[0]['finca']).values('finca','orden','estructura','cultivo')
    
