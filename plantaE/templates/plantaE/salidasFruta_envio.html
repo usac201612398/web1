@@ -85,7 +85,7 @@
         // Función para cargar productos basados en la categoría seleccionada
         function authUsuario() {
             $.ajax({
-                url: '{% url "obtener_nombre_usuario_rf" %}',  // URL para la vista AJAX
+                url: '{% url "obtener_nombre_usuario" %}',  // URL para la vista AJAX
                 data: {
                     'category_id': "Consulta"  // Envia el ID de la categoría como parámetro
                 },
@@ -105,7 +105,7 @@
         }
         function loadProducts(categoryId) {
             $.ajax({
-                url: '{% url "load_dataUsuario_rf" %}',  // URL para la vista AJAX
+                url: '{% url "load_dataUsuario" %}',  // URL para la vista AJAX
                 data: {
                     'category_id': categoryId  // Envia el ID de la categoría como parámetro
                 },
