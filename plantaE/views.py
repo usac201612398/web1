@@ -63,7 +63,7 @@ def load_plantilla(request):
     datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('finca','encargado')
     estructura = detallesEstructuras.objects.filter(finca=list(datos)[0]['finca']).values('finca','orden','estructura','cultivo')
    
-    return JsonResponse({'z':list(datos)[0]['finca'],'fecha': fecha_,'estructura':list(estructura),'datos':list(datos)})
+    return JsonResponse({'fecha': fecha_,'estructura':list(estructura),'datos':list(datos)})
 
 def load_dataUsuario2(request):
     ordenSelect = request.GET.get('category_id')
@@ -91,7 +91,28 @@ def article_detail(request, pk):
     return render(request, 'plantaE/salidasFruta_detail.html', {'registros': salidas})
 
 def article_create_plantilla(request):
-    return render(request, 'plantaE/salidasFruta_envio.html')
+    now = datetime.datetime.now()
+    fecha = now.date()
+    dia= fecha.day
+    mes= fecha.month
+    año= fecha.year
+    if mes < 10:
+        mes = "0" + str(mes)
+    if dia < 10:
+        dia = "0" + str(dia)
+    fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
+    
+    nombre_usuario = request.GET.get('category_id')
+    datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('finca','encargado')
+    estructura = detallesEstructuras.objects.filter(finca=list(datos)[0]['finca']).values('finca','orden','estructura','cultivo')
+   
+    context = {
+        'registros': estructura,
+        'fecha': fecha_,
+        'datos': datos
+    }
+    
+    return render(request, 'plantaE/salidasFruta_envio.html',context)
 
 def article_create(request):
     if request.method == 'POST':
