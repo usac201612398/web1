@@ -74,7 +74,7 @@ def guardar_plantilla(request):
     mensaje = request.POST.get('vector')
    
     
-    return JsonResponse({'mensaje':None})                
+    return JsonResponse({'mensaje':mensaje})                
 
 def article_create_plantilla(request):
     
