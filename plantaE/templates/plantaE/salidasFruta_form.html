@@ -127,6 +127,7 @@
                 url: '{% url "obtener_nombre_usuario" %}',  // URL para la vista AJAX
                 data: {
                     'category_id': "Consulta"  // Envia el ID de la categoría como parámetro
+                    
                 },
                 success: function(data) {
                     // Limpia las opciones actuales del campo 'name'
@@ -162,6 +163,14 @@
                                 
                         );
                     });
+                    $('#id_encargado').html('');
+                    // Recorre los productos recibidos y añade opciones al campo 'name'
+                    $.each(data.datos, function(index, product) {
+                        $('#id_encargado').append(
+                            $('<option>').text(product.encargado.toString()).attr('value', product.encargado.toString())
+                                
+                        );
+                    });
 
                     $('#id_correo').html('');
                     // Recorre los productos recibidos y añade opciones al campo 'name'
@@ -174,9 +183,9 @@
                         $('<option>').text('').attr('value','')
                     );
                     // Recorre los productos recibidos y añade opciones al campo 'name'
-                    $.each(data.ordenes, function(index, product) {
+                    $.each(data.adicionales_, function(index, product) {
                         $('#id_orden').append(
-                            $('<option>').text(product.orden.toString()).attr('value', product.orden.toString())
+                            $('<option>').text(product.toString()).attr('value', product.toString())
                         );
                     });
 
