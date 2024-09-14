@@ -166,7 +166,7 @@ $('.envio3').on('click', function() {
     $.ajax({
 
             url: '{% url "guardar_plantilla" %}',  // URL para la vista AJAX
-            type: 'POST',
+            type: 'GET',
             data: JSON.stringify(datos),
             contentType: 'application/json',
             
