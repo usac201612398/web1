@@ -183,7 +183,7 @@
                         $('<option>').text('').attr('value','')
                     );
                     // Recorre los productos recibidos y añade opciones al campo 'name'
-                    $.each(data.adicionales_, function(index, product) {
+                    $.each(data.ordenes, function(index, product) {
                         $('#id_orden').append(
                             $('<option>').text(product.orden.toString()).attr('value', product.orden.toString())
                         );
