@@ -63,13 +63,13 @@ def load_dataUsuario3(request):
 
 def article_list(request):
     today = timezone.now().date()
-    salidas = salidasFruta.objects.filter(fecha=today)
+    salidas = enviosFrutaPlantilla.objects.filter(fecha=today)
     salidas = salidas.order_by('-created_at')
     
     return render(request, 'plantaE/salidasFruta_list.html', {'registros': salidas})
 
 def article_detail(request, pk):
-    salidas = get_object_or_404(salidasFruta, pk=pk)
+    salidas = get_object_or_404(enviosFrutaPlantilla, pk=pk)
     return render(request, 'plantaE/salidasFruta_detail.html', {'registros': salidas})
 
 def guardar_plantilla(request):

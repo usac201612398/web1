@@ -36,9 +36,10 @@
                     <th >Finca</th>
                     <th >Encargado</th>
                     <th >Viaje</th>
-                    <th >Cajas</th>
                     <th >Cultivo</th>
-                    <th >Variedad</th>
+                    <th >Orden</th>
+                    <th >Estructura</th>
+                    <th >Cajas</th>
                     <th >Editar</th>
                     <th >Eliminar</th>
                     </tr>
@@ -51,9 +52,10 @@
                     <td>{{registro.finca}}</td>
                     <td>{{registro.encargado}}</td>
                     <td>{{registro.viaje}}</td>
-                    <td>{{registro.cajas}}</td>
                     <td>{{registro.cultivo}}</td>
-                    <td>{{registro.variedad}}</td>
+                    <td>{{registro.orden}}</td>
+                    <td>{{registro.estructura}}</td>
+                    <td>{{registro.cajas}}</td>
                     <th ><a href="{% url 'salidasFruta_update' registro.pk %}"> <i class="fas fa-edit"></i>Editar</a></th>
                     <th ><a href="{% url 'salidasFruta_delete' registro.pk %}"><i class="fas fa-trash-alt"></i>Eliminar</a></th>
                     </tr> 
