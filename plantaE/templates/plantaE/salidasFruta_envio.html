@@ -164,10 +164,11 @@ $('.envio3').on('click', function() {
     }
 
     $.ajax({
+
             url: '{% url "guardar_plantilla" %}',  // URL para la vista AJAX
-            data: {
-                'vector': datos  // Envia el ID de la categoría como parámetro
-            },
+            type: 'POST',
+            data: JSON.stringify(datos),
+            contentType: 'application/json',
             
             success: function(data) {
                 // Limpia las opciones actuales del campo 'name'
