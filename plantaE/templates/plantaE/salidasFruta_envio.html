@@ -162,7 +162,7 @@ $('.envio3').on('click', function() {
       datos.push(filas);
 
     }
-
+    console.log(datos);
     $.ajax({
 
             url: '{% url "guardar_plantilla" %}',  // URL para la vista AJAX
