@@ -128,7 +128,7 @@ def article_create(request):
     return render(request, 'plantaE/salidasFruta_form.html', {'form': form})
 
 def article_update(request, pk):
-    salidas = get_object_or_404(salidasFruta, pk=pk)
+    salidas = get_object_or_404(enviosFrutaPlantilla, pk=pk)
     if request.method == 'POST':
         form = salidasFrutaForm(request.POST, instance=salidas)
         if form.is_valid():
@@ -139,7 +139,7 @@ def article_update(request, pk):
     return render(request, 'plantaE/salidasFruta_form.html', {'form': form})
 
 def article_delete(request, pk):
-    salidas = get_object_or_404(salidasFruta, pk=pk)
+    salidas = get_object_or_404(enviosFrutaPlantilla, pk=pk)
     if request.method == 'POST':
         salidas.delete()
         return redirect('salidasFruta_list')
