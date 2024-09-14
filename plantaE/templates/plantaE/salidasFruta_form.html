@@ -67,9 +67,18 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group row">
-                    <label for="variedad" class="col-sm-3 col-form-label">Variedad:</label>
+                    <label for="estructura" class="col-sm-3 col-form-label">Estructura:</label>
                     <div class="col-sm-9">
-                        {{ form.variedad }}
+                        {{ form.estructura }}
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-6">
+                <div class="form-group row">
+                    <label for="orden" class="col-sm-3 col-form-label">Orden:</label>
+                    <div class="col-sm-9">
+                        {{ form.orden }}
                     </div>
                 </div>
             </div>
@@ -122,6 +131,7 @@
                 success: function(data) {
                     // Limpia las opciones actuales del campo 'name'
                     var initialCategoryId =data.username;  // Obtiene el valor inicial del campo 'category'
+                    
                     if (initialCategoryId) {
                         loadProducts(initialCategoryId);
                     }
@@ -153,74 +163,74 @@
                         );
                     });
 
-                    $('#id_encargado').html('');
-                    // Recorre los productos recibidos y añade opciones al campo 'name'
-                    $.each(data.datos, function(index, product) {
-                        $('#id_encargado').append(
-                            $('<option>').text(product.encargado.toString()).attr('value', product.encargado.toString())
-                        );
-                    });
-
                     $('#id_correo').html('');
                     // Recorre los productos recibidos y añade opciones al campo 'name'
                     $('#id_correo').append(
                         $('<option>').text(data.correo.toString()).attr('value', data.correo.toString())
                     );
-                    
-                    $('#id_cultivo').html('');
-                    $('#id_cultivo').append(
+
+                    $('#id_orden').html('');
+                    $('#id_orden').append(
                         $('<option>').text('').attr('value','')
                     );
                     // Recorre los productos recibidos y añade opciones al campo 'name'
-                    $.each(data.adicionales, function(index, product) {
-                        $('#id_cultivo').append(
-                            $('<option>').text(product.cultivo.toString()).attr('value', product.cultivo.toString())
+                    $.each(data.ordenes, function(index, product) {
+                        $('#id_orden').append(
+                            $('<option>').text(product.orden.toString()).attr('value', product.orden.toString())
                         );
                     });
+
                 },
                 error: function(xhr, status, error) {
                     console.error('Error:', error);  // Maneja errores de la solicitud
                 }
             });
         }
-        function loadProducts2(categoryId,finca) {
+        function loadProducts2(categoryId) {
             $.ajax({
-                url: '{% url "load_dataUsuario3" %}',  // URL para la vista AJAX
+                url: '{% url "load_dataUsuario2" %}',  // URL para la vista AJAX
                 data: {
-                    'category_id': categoryId,
-                    'finca': finca  // Envia el ID de la categoría como parámetro
+                    'category_id': categoryId  // Envia el ID de la categoría como parámetro
                 },
                 success: function(data) {
                     // Limpia las opciones actuales del campo 'name'
                     console.log(data);
                     
-                    $('#id_variedad').html('');
-                    $('#id_variedad').append(
-                        $('<option>').text('').attr('value','')
-                    );
+                    $('#id_cultivo').html('');
                     // Recorre los productos recibidos y añade opciones al campo 'name'
                     $.each(data.datos, function(index, product) {
-                        $('#id_variedad').append(
-                            $('<option>').text(product.variedad.toString()).attr('value', product.variedad.toString())
+                        $('#id_cultivo').append(
+                            $('<option>').text(product.cultivo.toString()).attr('value', product.cultivo.toString())
                             
                         );
                     });
-                    
+
+
+                    $('#id_estructura').html('');
+                    $('#id_estructura').append(
+                        $('<option>').text('').attr('value','')
+                    );
+                    // Recorre los productos recibidos y añade opciones al campo 'name'
+                    $.each(data.estructura, function(index, product) {
+                        $('#id_estructura').append(
+                            $('<option>').text(product.estructura.toString()).attr('value', product.estructura.toString())
+                            
+                        );
+                    });
+
+
                 },
                 error: function(xhr, status, error) {
                     console.error('Error:', error);  // Maneja errores de la solicitud
                 }
             });
         }
-
-        $('#id_cultivo').change(function() {
+        $('#id_orden').change(function() {
             var categoryId = $(this).val();  // Obtiene el ID de la categoría seleccionada
-            loadProducts2(categoryId, $('#id_finca').val());  // Llama a la función para cargar productos
+            loadProducts2(categoryId);  // Llama a la función para cargar productos
         });
         authUsuario();
-        
         // Llama a la función de carga de productos al cargar la página
         
     });
 </script>
-</html>
