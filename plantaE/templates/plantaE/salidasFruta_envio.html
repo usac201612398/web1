@@ -140,6 +140,7 @@
         </div>
 
 </body>
+<script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 
@@ -166,9 +167,10 @@ $('.envio3').on('click', function() {
     $.ajax({
 
             url: '{% url "guardar_plantilla" %}',  // URL para la vista AJAX
-            type: 'GET',
+            type: 'POST',
             data: JSON.stringify(datos),
             contentType: 'application/json',
+            headers: {'X-CSRFToken': csrftoken}, 
             
             success: function(data) {
                 // Limpia las opciones actuales del campo 'name'
