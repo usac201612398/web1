@@ -169,7 +169,8 @@ $('.envio3').on('click', function() {
 
             url: '{% url "guardar_plantilla" %}',  // URL para la vista AJAX
             type: 'POST',
-            data: JSON.stringify(datos),
+            dataType: "json",
+            data: {'array': JSON.stringify(datos)},
             contentType: 'application/json',
             headers: {'X-CSRFToken': csrftoken}, 
             
