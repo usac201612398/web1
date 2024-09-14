@@ -49,12 +49,11 @@ def load_dataUsuario(request):
 
 def load_dataUsuario2(request):
     ordenSelect = request.GET.get('category_id')
-    correo_id =  request.GET.get('usuario')
-    datos = usuariosAppFruta.objects.filter(correo=correo_id).values('finca', 'encargado')
+
     cultivo= datosProduccion.objects.filter(orden=ordenSelect,status="Abierta").values('cultivo')
     variedad = detallesProduccion.objects.filter(cultivo=list(cultivo)[0]['cultivo']).values('variedad')
     estructura = detallesEstructuras.objects.filter(orden=ordenSelect).values('estructura')
-    return JsonResponse({'datos': list(cultivo),'variedad':list(variedad),'estructura':list(estructura),'orden':ordenSelect,'datos':datos})
+    return JsonResponse({'datos': list(cultivo),'variedad':list(variedad),'estructura':list(estructura),'orden':ordenSelect})
 
 def load_dataUsuario3(request):
     cultivo_ = request.GET.get('category_id')
