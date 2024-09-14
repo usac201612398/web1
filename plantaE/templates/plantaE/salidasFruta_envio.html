@@ -84,6 +84,15 @@
                     </select>
                 </div>
             </div>
+
+            <div class="box">
+                <form>
+                    <div><label for="correo">Usuario:</label></div>
+                    <div>
+                        <input class="input" id="correo" type="date" value={{usuario}} readonly>
+                    </div>
+                </form>      
+            </div>
         </div>
     </div>
 
@@ -94,14 +103,11 @@
                 <table class="table is-striped is-hoverable is is-fullwidth" id="myTable">
                 <thead id = "enc1">
                     <tr class="header">
-                    <th >Fecha</th>
-                    <th >Finca</th>
                     <th >Encargado</th>
                     <th >Orden</th>
                     <th >Cultivo</th>
                     <th >Estructura</th>
                     <th >Cajas</th>
-                    <th >Usuario</th>
                     <th >Eliminar</th>
                     </tr>
                 </thead>
@@ -109,13 +115,10 @@
                 {%for registro in registros %}
 
                     <tr> 
-                        <td>{{fecha}}</td>
-                        <td>{{registro.finca}}</td>
                         <td>{{encargado}}</td>
                         <td>{{registro.orden}}</td>
                         <td>{{registro.cultivo}}</td>
                         <td>{{registro.estructura}}</td>
-                        <td>{{usuario}}</td>
                         <td><div contenteditable="true" class="editable-cell"></div></td>
                         <td><button class="eliminar"><i class="fas fa-trash-alt"></i></button></td>
                     </tr> 
@@ -147,6 +150,8 @@
 
 $('.envio3').on('click', function() {
     var resume_table = document.getElementById("myTable");
+    var fecha = document.getElementById('date').value;
+    var correo = document.getElementById('correo').value;
     var datos = []
     for (var i = 1, row; row = resume_table.rows[i]; i++) {
       //alert(cell[i].innerText);
@@ -160,7 +165,13 @@ $('.envio3').on('click', function() {
             value = select.value, //El valor seleccionado
             text = select.options[select.selectedIndex].innerText;
             filas.push(text);
-    
+
+        var origen = document.getElementById('Lug'),
+            value_or = origen.value,
+            text_or = origen.options[origen.selectedIndex].innerText;
+            filas.push(text_or);
+        filas.push(fecha);
+        filas.push(correo);
       datos.push(filas);
 
     }
@@ -186,6 +197,7 @@ $('.envio3').on('click', function() {
                 console.error('Error:', error);  // Maneja errores de la solicitud
             }
         });
+    window.location.href = 'https://sdc-iot.popoyan.com.gt/plantaE/salidasFruta';
   });
 
 const eliminarBotones = document.querySelectorAll('.eliminar');
