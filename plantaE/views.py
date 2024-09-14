@@ -71,7 +71,7 @@ def article_detail(request, pk):
     salidas = get_object_or_404(salidasFruta, pk=pk)
     return render(request, 'plantaE/salidasFruta_detail.html', {'registros': salidas})
 def guardar_plantilla(request):
-    mensaje = request.POST.get('vector')
+    mensaje = request.POST.get('array')
    
     
     return JsonResponse({'mensaje':mensaje})                
