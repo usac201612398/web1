@@ -166,11 +166,11 @@ $('.envio3').on('click', function() {
     }
     console.log(datos);
     $.ajax({
-
+            
             url: '{% url "guardar_plantilla" %}',  // URL para la vista AJAX
             type: 'POST',
             dataType: "json",
-            data: {'array': JSON.stringify(datos)},
+            data:  JSON.stringify({'array':datos}),
             contentType: 'application/json',
             headers: {'X-CSRFToken': csrftoken}, 
             

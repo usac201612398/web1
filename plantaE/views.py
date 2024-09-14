@@ -8,6 +8,7 @@ from .forms import salidasFrutaForm, recepcionesForm, ccalidadForm, inventarioFr
 from django.db.models import Sum
 from django.utils import timezone
 import datetime
+import json
 
 def obtener_nombre_usuario(request):
     # Obtén el nombre de usuario del usuario autenticado
@@ -72,7 +73,9 @@ def article_detail(request, pk):
     return render(request, 'plantaE/salidasFruta_detail.html', {'registros': salidas})
 
 def guardar_plantilla(request):
-    mensaje = request.POST.get('array')
+    data = json.loads(request.body)
+    mensaje = data['array']
+    #mensaje = request.POST.get('array')
    
     
     return JsonResponse({'mensaje':mensaje})                
