@@ -75,7 +75,7 @@ def guardar_plantilla(request):
     mensaje = request.POST.get('array')
    
     
-    return JsonResponse({'mensaje':'hola'})                
+    return JsonResponse({'mensaje':mensaje})                
 
 def article_create_plantilla(request):
     
