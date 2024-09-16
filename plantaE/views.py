@@ -64,13 +64,13 @@ def load_dataUsuario3(request):
 
 def article_list(request):
     today = timezone.now().date()
-    salidas = enviosFrutaPlantilla.objects.filter(fecha=today)
+    salidas = salidasFruta.objects.filter(fecha=today)
     salidas = salidas.order_by('-created_at')
     
     return render(request, 'plantaE/salidasFruta_list.html', {'registros': salidas})
 
 def article_detail(request, pk):
-    salidas = get_object_or_404(enviosFrutaPlantilla, pk=pk)
+    salidas = get_object_or_404(salidasFruta, pk=pk)
     return render(request, 'plantaE/salidasFruta_detail.html', {'registros': salidas})
 
 def guardar_plantilla(request):
@@ -129,7 +129,7 @@ def article_create(request):
     return render(request, 'plantaE/salidasFruta_form.html', {'form': form})
 
 def article_update(request, pk):
-    salidas = get_object_or_404(enviosFrutaPlantilla, pk=pk)
+    salidas = get_object_or_404(salidasFruta, pk=pk)
     if request.method == 'POST':
         form = salidasFrutaForm(request.POST, instance=salidas)
         if form.is_valid():
@@ -140,7 +140,7 @@ def article_update(request, pk):
     return render(request, 'plantaE/salidasFruta_form.html', {'form': form})
 
 def article_delete(request, pk):
-    salidas = get_object_or_404(enviosFrutaPlantilla, pk=pk)
+    salidas = get_object_or_404(salidasFruta, pk=pk)
     if request.method == 'POST':
         salidas.delete()
         return redirect('salidasFruta_list')
