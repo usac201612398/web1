@@ -191,6 +191,7 @@
             });
         }
         function loadProducts2(categoryId) {
+            console.log($('id_finca').val());
             $.ajax({
                 url: '{% url "load_dataUsuario3" %}',  // URL para la vista AJAX
                 data: {
