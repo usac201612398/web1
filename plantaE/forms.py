@@ -11,16 +11,15 @@ class salidasFrutaForm(forms.ModelForm):
     correo = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de correo electrónico
     encargado = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
     finca = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
-    orden = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
-    estructura = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    variedad = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
     viaje = forms.ChoiceField(choices=op_viajes,widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
     cultivo = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
     
     class Meta:
     
-        model = enviosFrutaPlantilla
-        fields = ['correo','fecha','viaje','encargado',  'finca', 'cajas', 'cultivo','estructura','orden']
+        model = salidasFruta
+        fields = ['correo','fecha','viaje','encargado',  'finca', 'cajas', 'cultivo','variedad']
 
 class acumFrutaForm(forms.ModelForm):
     

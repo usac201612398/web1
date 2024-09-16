@@ -59,14 +59,6 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group row">
-                    <label for="orden" class="col-sm-3 col-form-label">Orden:</label>
-                    <div class="col-sm-9">
-                        {{ form.orden }}
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group row">
                     <label for="cultivo" class="col-sm-3 col-form-label">Cultivo:</label>
                     <div class="col-sm-9">
                         {{ form.cultivo }}
@@ -77,7 +69,7 @@
                 <div class="form-group row">
                     <label for="estructura" class="col-sm-3 col-form-label">Estructura:</label>
                     <div class="col-sm-9">
-                        {{ form.estructura }}
+                        {{ form.variedad }}
                     </div>
                 </div>
 
@@ -179,16 +171,6 @@
                         $('<option>').text(data.correo.toString()).attr('value', data.correo.toString())
                     );
 
-                    $('#id_orden').html('');
-                    $('#id_orden').append(
-                        $('<option>').text('').attr('value','')
-                    );
-                    // Recorre los productos recibidos y añade opciones al campo 'name'
-                    $.each(data.ordenes, function(index, product) {
-                        $('#id_orden').append(
-                            $('<option>').text(product.orden.toString()).attr('value', product.orden.toString())
-                        );
-                    });
 
                 },
                 error: function(xhr, status, error) {
@@ -198,32 +180,22 @@
         }
         function loadProducts2(categoryId) {
             $.ajax({
-                url: '{% url "load_dataUsuario2" %}',  // URL para la vista AJAX
+                url: '{% url "load_dataUsuario3" %}',  // URL para la vista AJAX
                 data: {
                     'category_id': categoryId  // Envia el ID de la categoría como parámetro
                 },
                 success: function(data) {
                     // Limpia las opciones actuales del campo 'name'
                     console.log(data);
-                    
-                    $('#id_cultivo').html('');
-                    // Recorre los productos recibidos y añade opciones al campo 'name'
-                    $.each(data.datos, function(index, product) {
-                        $('#id_cultivo').append(
-                            $('<option>').text(product.cultivo.toString()).attr('value', product.cultivo.toString())
-                            
-                        );
-                    });
-
-
-                    $('#id_estructura').html('');
-                    $('#id_estructura').append(
+                
+                    $('#id_variedad').html('');
+                    $('#id_variedad').append(
                         $('<option>').text('').attr('value','')
                     );
                     // Recorre los productos recibidos y añade opciones al campo 'name'
-                    $.each(data.estructura, function(index, product) {
-                        $('#id_estructura').append(
-                            $('<option>').text(product.estructura.toString()).attr('value', product.estructura.toString())
+                    $.each(data.variedad, function(index, product) {
+                        $('#id_variedad').append(
+                            $('<option>').text(product.variedad.toString()).attr('value', product.variedad.toString())
                             
                         );
                     });
@@ -235,7 +207,7 @@
                 }
             });
         }
-        $('#id_orden').change(function() {
+        $('#id_cultivo').change(function() {
             var categoryId = $(this).val();  // Obtiene el ID de la categoría seleccionada
             loadProducts2(categoryId);  // Llama a la función para cargar productos
         });

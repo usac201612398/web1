@@ -21,7 +21,7 @@
 </head>
 <body>
     <h1 class="roboto">Panel</h1>
-    <a href="{% url 'salidasFruta_create_plantilla' %}">Agregar viaje</a>
+    <a href="{% url 'salidasFruta_create' %}">Agregar viaje</a>
 
     
     <div class="container">
@@ -37,8 +37,7 @@
                     <th >Encargado</th>
                     <th >Viaje</th>
                     <th >Cultivo</th>
-                    <th >Orden</th>
-                    <th >Estructura</th>
+                    <th >Variedad</th>
                     <th >Cajas</th>
                     <th >Editar</th>
                     <th >Eliminar</th>
@@ -53,8 +52,7 @@
                     <td>{{registro.encargado}}</td>
                     <td>{{registro.viaje}}</td>
                     <td>{{registro.cultivo}}</td>
-                    <td>{{registro.orden}}</td>
-                    <td>{{registro.estructura}}</td>
+                    <td>{{registro.variedad}}</td>
                     <td>{{registro.cajas}}</td>
                     <th ><a href="{% url 'salidasFruta_update' registro.pk %}"> <i class="fas fa-edit"></i>Editar</a></th>
                     <th ><a href="{% url 'salidasFruta_delete' registro.pk %}"><i class="fas fa-trash-alt"></i>Eliminar</a></th>
