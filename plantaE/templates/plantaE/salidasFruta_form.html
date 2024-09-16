@@ -170,7 +170,15 @@
                     $('#id_correo').append(
                         $('<option>').text(data.correo.toString()).attr('value', data.correo.toString())
                     );
-
+                    
+                    $('#id_cultivo').html('');
+                    // Recorre los productos recibidos y añade opciones al campo 'name'
+                    $.each(data.adicionales, function(index, product) {
+                        $('#id_cultivo').append(
+                            $('<option>').text(product.cultivo.toString()).attr('value', product.cultivo.toString())
+                                
+                        );
+                    });
 
                 },
                 error: function(xhr, status, error) {
