@@ -191,12 +191,12 @@
             });
         }
         function loadProducts2(categoryId) {
-            console.log($('id_finca').val());
+            console.log($('#id_finca').val());
             $.ajax({
                 url: '{% url "load_dataUsuario3" %}',  // URL para la vista AJAX
                 data: {
                     'category_id': categoryId,  // Envia el ID de la categoría como parámetro
-                    'finca': $('id_finca').val()
+                    'finca': $('#id_finca').val()
                 },
                 success: function(data) {
                     // Limpia las opciones actuales del campo 'name'
