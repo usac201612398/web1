@@ -170,8 +170,12 @@
                     $('#id_correo').append(
                         $('<option>').text(data.correo.toString()).attr('value', data.correo.toString())
                     );
+
                     
                     $('#id_cultivo').html('');
+                    $('#id_cultivo').append(
+                        $('<option>').text('').attr('value','')
+                    );
                     // Recorre los productos recibidos y añade opciones al campo 'name'
                     $.each(data.adicionales, function(index, product) {
                         $('#id_cultivo').append(
