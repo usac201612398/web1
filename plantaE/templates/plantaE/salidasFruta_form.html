@@ -67,7 +67,7 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group row">
-                    <label for="estructura" class="col-sm-3 col-form-label">Estructura:</label>
+                    <label for="variedad" class="col-sm-3 col-form-label">Variedad:</label>
                     <div class="col-sm-9">
                         {{ form.variedad }}
                     </div>
@@ -205,7 +205,7 @@
                         $('<option>').text('').attr('value','')
                     );
                     // Recorre los productos recibidos y añade opciones al campo 'name'
-                    $.each(data.variedad, function(index, product) {
+                    $.each(data.datos, function(index, product) {
                         $('#id_variedad').append(
                             $('<option>').text(product.variedad.toString()).attr('value', product.variedad.toString())
                             
