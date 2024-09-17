@@ -34,7 +34,7 @@ class acumFrutaForm(forms.ModelForm):
     
     class Meta:
     
-        model = enviosFrutaPlantilla
+        model = AcumFruta
         fields = ['correo','fecha', 'finca', 'cajas', 'orden','cultivo','variedad','estructura']
 
 class recepcionesForm(forms.ModelForm):
