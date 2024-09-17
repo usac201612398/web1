@@ -55,7 +55,7 @@ class detallesEstructuras(models.Model):
     variedad = models.CharField(max_length=40, choices=op_estructura,blank=True)
 
     def __str__(self):
-        return (str(self.orden) + " | " + str(self.estructura) )
+        return (str(self.finca) + " | " + str(self.orden) + " | " + str(self.estructura) + " | " + str(self.variedad)  )
 
 class salidasFruta(models.Model):
     
