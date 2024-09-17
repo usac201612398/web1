@@ -189,7 +189,7 @@ def acumFruta_delete(request, pk):
     if request.method == 'POST':
         salidas.delete()
         return redirect('acumFruta_list')
-    return render(request, 'plantaE/AcumFruta_confirm_delete.html', {'registros': salidas})
+    return render(request, 'plantaE/acumFruta_confirm_delete.html', {'registros': salidas})
 
 def recepciones_list(request):
     #today = timezone.now().date()
