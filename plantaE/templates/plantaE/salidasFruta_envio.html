@@ -177,12 +177,11 @@ $('.envio3').on('click', function() {
                 console.error('Error:', error);  // Maneja errores de la solicitud
             }
         });
-    window.location.href = 'https://sdc-iot.popoyan.com.gt/plantaE/salidasFruta';
+    
+        
   });
 
 const eliminarBotones = document.querySelectorAll('.eliminar');
-
-
 
 $(document).on('click', '.eliminar', function() {
     $(this).closest('tr').remove();
