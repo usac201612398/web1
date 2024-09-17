@@ -300,22 +300,4 @@ class cultivos(models.Model):
     def __str__(self):
         return str(self.cultivo)
     
-   
-class detallerec(models.Model):
-    op_status = [('Pendiente','-'),('En proceso','En proceso')]
-    registro = models.BigAutoField(primary_key=True)
-    recepcion = models.BigIntegerField(blank=True, null = True)
-    fecha = models.DateField(blank=True, null=True)
-    llave = models.CharField(max_length=200, blank = True, null = True)
-    finca = models.CharField(max_length= 75, blank = True, null =  True)
-    cajas = models.BigIntegerField(blank = True, null = True)
-    libras = models.FloatField(blank=True, null = True)
-    observaciones = models.CharField(max_length=125,blank=True, null = True)
-    cultivo = models.CharField(max_length=50, blank = True, null = True)
-    criterio = models.CharField(max_length=85, blank = True, null = True)
-    status = models.CharField(max_length=25, choices=op_status,blank=True,null = True)
-    created = models.DateTimeField(auto_now=True, blank=True,null = True)
-    classorigen = models.CharField(max_length=35, blank= True, null = True)
-    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
-    enviofruta = models.BigIntegerField(blank=True, null=True)
-
+GQ7VWUCuKRZ8
