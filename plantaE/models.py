@@ -52,7 +52,7 @@ class detallesEstructuras(models.Model):
     orden = models.CharField(max_length=30,blank=True)
     cultivo = models.CharField(max_length=35, choices=op_cultivo,blank=True)
     estructura = models.CharField(max_length=35, choices=op_estructura,blank=True)
-    variedad = models.CharField(max_length=40, choices=op_estructura,blank=True)
+    variedad = models.CharField(max_length=40, choices=op_variedad,blank=True)
 
     def __str__(self):
         return (str(self.finca) + " | " + str(self.orden) + " | " + str(self.estructura) + " | " + str(self.variedad)  )
