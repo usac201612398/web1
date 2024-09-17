@@ -79,7 +79,7 @@ def guardar_plantilla(request):
     #mensaje = request.POST.get('array')
     for i in mensaje:
         
-        enviosFrutaPlantilla.objects.create(fecha=i[8],finca=i[7],encargado=i[0],orden=i[1],cultivo=i[2],estructura=i[3],cajas=i[4],viaje=i[6],correo=i[9])
+        AcumFruta.objects.create(fecha=i[8],finca=i[7],orden=i[0],cultivo=i[1],estructura=i[2],variedad=i[3],cajas=i[4],correo=i[9])
         
     
     return JsonResponse({'mensaje':mensaje})                

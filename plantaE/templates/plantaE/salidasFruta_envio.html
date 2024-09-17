@@ -68,24 +68,6 @@
             </div>
 
             <div class="box">
-                <div><label for="viaje">Lote:</label></div>
-                
-                <div class="select"> 
-                    <select name="Viaje" id="Via">
-                        <option value="">-</option>
-                        <option value="Viaje 1">Viaje 1</option>
-                        <option value="Viaje 2">Viaje 2</option>
-                        <option value="Viaje 3">Viaje 3</option>
-                        <option value="Viaje 4">Viaje 4</option>
-                        <option value="Viaje 5">Viaje 5</option>
-                        <option value="Viaje 6">Viaje 6</option>
-                        <option value="Viaje 7">Viaje 7</option>
-                        <option value="Viaje 8">Viaje 8</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="box">
                 <form>
                     <div><label for="correo">Usuario:</label></div>
                     <div>
@@ -163,10 +145,6 @@ $('.envio3').on('click', function() {
         filas.push(col.innerText);
         
       }
-        var select = document.getElementById("Via"), //El <select>
-            value = select.value, //El valor seleccionado
-            text = select.options[select.selectedIndex].innerText;
-            filas.push(text);
 
         var origen = document.getElementById('Lug'),
             value_or = origen.value,
