@@ -45,11 +45,14 @@ class detallesEstructuras(models.Model):
     op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
     op_estructura = [('CM1','CM1'),('CM2','CM2'),('CM3','CM3'),('CM4','CM4'),('CM5','CM5'),('CM6','CM6'),('CM7','CM7')]
     op_finca =  [('RIO','RIO'),('VALLE','VALLE')]
+    op_variedad = [('DUNNE','DUNNE'),('IVORINO','IVORINO'),('KM 5512','KM 5512'),('NEBULA','NEBULA'),('ROJO','ROJO'),('AMARILLO','AMARILLO'),('ANARANJADO','ANARANJADO')]
+    
     id = models.AutoField(primary_key=True)
     finca = models.CharField(max_length=35, choices=op_finca,blank=True)
     orden = models.CharField(max_length=30,blank=True)
     cultivo = models.CharField(max_length=35, choices=op_cultivo,blank=True)
     estructura = models.CharField(max_length=35, choices=op_estructura,blank=True)
+    variedad = models.CharField(max_length=40, choices=op_estructura,blank=True)
 
     def __str__(self):
         return (str(self.orden) + " | " + str(self.estructura) )
@@ -288,7 +291,6 @@ class productores(models.Model):
     registro = models.BigAutoField(primary_key=True)
     productor = models.CharField(max_length=75, blank=True, null=True)
     
-
     def __str__(self):
         return str(self.productor)
 
@@ -296,7 +298,6 @@ class cultivos(models.Model):
     registro = models.BigAutoField(primary_key=True)
     cultivo = models.CharField(max_length=75, blank=True, null=True)
     
-
     def __str__(self):
         return str(self.cultivo)
     
