@@ -197,14 +197,22 @@ def recepciones_list(request):
     salidas= detallerec.objects.all()
     salidas2= detallerecaux.objects.all()
     salidas = salidas.order_by('-created').filter(status=None)
-    salidas2=salidas2.order_by('-created').filter(status="En Proceso")
+    
+    for i in salidas:
+        cajasacum = salidas2.order_by('-created').filter(status="En Proceso",recepcion=i.recepcion).aggregate(suma=Sum('cajas'))['sumacajas']
+        librasacum = salidas2.order_by('-created').filter(status="En Proceso",recepcion=i.recepcion).aggregate(suma=Sum('libras'))['sumalibras']    
+        if librasacum != None and cajasacum != None:
+            i.cajas = i.cajas - cajasacum
+            i.libras = i.libras - librasacum
+        
+
     #existenciaCajas = finca=list(salidas)[0]['cajas']
     #existenciaLibras = finca=list(salidas)[0]['libras']
     #rebajaCajas = finca=list(salidas2)[0]['cajas']
     #rebajaLibras = finca=list(salidas2)[0]['libras']
     #for i in len(salidas):
     #    existenciaCajas 
-    return render(request, 'plantaE/recepciones_list.html', {'registros': salidas,'salidas':list(salidas),'salidas2':list(salidas2)})
+    return render(request, 'plantaE/recepciones_list.html', {'registros': salidas})
 
 def recepciones_detail(request, pk):
     salidas = get_object_or_404(detallerec, pk=pk)
