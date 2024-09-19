@@ -195,7 +195,7 @@ def recepciones_list(request):
     #today = timezone.now().date()
     #salidas = Recepciones.objects.filter(fecha=today)
     salidas= detallerec.objects.all()
-    salidas = salidas.order_by('-created').filter(status='')
+    salidas = salidas.order_by('-created').filter(status=None)
     return render(request, 'plantaE/recepciones_list.html', {'registros': salidas})
 
 def recepciones_detail(request, pk):
