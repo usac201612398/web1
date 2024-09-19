@@ -3,7 +3,7 @@ from django.http import JsonResponse
 import logging
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect
-from .models import enviosFrutaPlantilla,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
+from .models import detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
 from .forms import salidasFrutaForm, recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
 from django.db.models import Sum
 from django.utils import timezone
@@ -194,16 +194,16 @@ def acumFruta_delete(request, pk):
 def recepciones_list(request):
     #today = timezone.now().date()
     #salidas = Recepciones.objects.filter(fecha=today)
-    salidas= Recepciones.objects.all()
+    salidas= detallerec.objects.all()
     salidas = salidas.order_by('-created')
     return render(request, 'plantaE/recepciones_list.html', {'registros': salidas})
 
 def recepciones_detail(request, pk):
-    salidas = get_object_or_404(Recepciones, pk=pk)
+    salidas = get_object_or_404(detallerec, pk=pk)
     return render(request, 'plantaE/recepciones_detail.html', {'registros': salidas})
 
 def recepciones_update(request, pk):
-    salidas = get_object_or_404(Recepciones, pk=pk)
+    salidas = get_object_or_404(detallerec, pk=pk)
     if request.method == 'POST':
         form = recepcionesForm(request.POST, instance=salidas)
         if form.is_valid():
