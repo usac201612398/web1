@@ -81,3 +81,34 @@
             </div>
         </div>
 </body>
+<script>
+$('.envio3').on('click', function() {
+    var resume_table = document.getElementById("myTable");
+    var fecha = document.getElementById('date').value;
+    var correo = document.getElementById('correo').value;
+    var datos = []
+    for (var i = 1, row; row = resume_table.rows[i]; i++) {
+      //alert(cell[i].innerText);
+      filas = []
+      for (var j = 0, col; col = row.cells[j]; j++) {
+        //alert(col[j].innerText);
+        
+
+        filas.push(col.innerText);
+        
+      }
+
+        var origen = document.getElementById('Lug'),
+            value_or = origen.value,
+            text_or = origen.options[origen.selectedIndex].innerText;
+            filas.push(text_or);
+        filas.push(fecha);
+        filas.push(correo);
+      datos.push(filas);
+
+    }
+    console.log(datos);
+
+  });
+</script>
+</html>
