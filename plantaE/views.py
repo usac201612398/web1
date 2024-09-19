@@ -199,11 +199,11 @@ def recepciones_list(request):
     salidas = salidas.order_by('-created').filter(status=None)
     
     for i in salidas:
-        cajasacum = salidas2.order_by('-created').filter(status="En Proceso",recepcion=i.recepcion).aggregate(suma=Sum('cajas'))['sumacajas']
-        librasacum = salidas2.order_by('-created').filter(status="En Proceso",recepcion=i.recepcion).aggregate(suma=Sum('libras'))['sumalibras']    
+        cajasacum = salidas2.order_by('-created').filter(status="En Proceso",recepcion=i.recepcion).aggregate(sumacajas=Sum('cajas'))['sumacajas']
+        librasacum = salidas2.order_by('-created').filter(status="En Proceso",recepcion=i.recepcion).aggregate(sumalibras=Sum('libras'))['sumalibras']    
         if librasacum != None and cajasacum != None:
-            i.cajas = i.cajas - cajasacum
-            i.libras = i.libras - librasacum
+            i.cajas = i.cajas - int(cajasacum)
+            i.libras = i.libras - float(librasacum)
         
 
     #existenciaCajas = finca=list(salidas)[0]['cajas']
