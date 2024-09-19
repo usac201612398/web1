@@ -3,7 +3,7 @@ from django.http import JsonResponse
 import logging
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect
-from .models import detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
+from .models import detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
 from .forms import salidasFrutaForm, recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
 from django.db.models import Sum
 from django.utils import timezone
@@ -192,11 +192,19 @@ def acumFruta_delete(request, pk):
     return render(request, 'plantaE/acumFruta_confirm_delete.html', {'registros': salidas})
 
 def recepciones_list(request):
-    #today = timezone.now().date()
+    today = timezone.now().date()
     #salidas = Recepciones.objects.filter(fecha=today)
     salidas= detallerec.objects.all()
+    salidas2= detallerecaux.objects.all()
     salidas = salidas.order_by('-created').filter(status=None)
-    return render(request, 'plantaE/recepciones_list.html', {'registros': salidas})
+    salidas2=salidas2.order_by('-created').filter(status="En Proceso")
+    #existenciaCajas = finca=list(salidas)[0]['cajas']
+    #existenciaLibras = finca=list(salidas)[0]['libras']
+    #rebajaCajas = finca=list(salidas2)[0]['cajas']
+    #rebajaLibras = finca=list(salidas2)[0]['libras']
+    #for i in len(salidas):
+    #    existenciaCajas 
+    return render(request, 'plantaE/recepciones_list.html', {'registros': salidas,'salidas':list(salidas),'salidas2':list(salidas2)})
 
 def recepciones_detail(request, pk):
     salidas = get_object_or_404(detallerec, pk=pk)
