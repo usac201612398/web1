@@ -204,7 +204,7 @@ def procesarrecepcion(request):
         salidas = detallerec.objects.get(recepcion=i[1])
         
         salidas2= detallerecaux.objects.all().filter(recepcion=i[1]).aggregate(sumalibras=Sum('libras'))['sumalibras']
-        registros.append([salidas,salidas2])
+        registros.append([salidas.libras,salidas2])
         if str(salidas2) == str(salidas.libras):
             salidas.status = "En proceso"
             salidas.save
