@@ -191,6 +191,16 @@ def acumFruta_delete(request, pk):
         return redirect('acumFruta_list')
     return render(request, 'plantaE/acumFruta_confirm_delete.html', {'registros': salidas})
 
+def procesarrecepcion(request):
+    data = json.loads(request.body)
+    mensaje = data['array']
+    #mensaje = request.POST.get('array')
+    #for i in mensaje:
+        
+    #    AcumFruta.objects.create(fecha=i[8],finca=i[7],orden=i[1],cultivo=i[2],estructura=i[3],variedad=i[4],cajas=i[5],correo=i[9])
+        
+    return JsonResponse({'mensaje':mensaje})   
+
 def recepciones_list(request):
     today = timezone.now().date()
     #salidas = Recepciones.objects.filter(fecha=today)

@@ -114,7 +114,7 @@ $('.envio3').on('click', function() {
 
     $.ajax({
             
-            url: '{% url "recepcionesFruta_list" %}',  // URL para la vista AJAX
+            url: '{% url "recepcionesFruta_process" %}',  // URL para la vista AJAX
             type: 'POST',
             dataType: "json",
             data:  JSON.stringify({'array':datos}),
