@@ -206,10 +206,8 @@ def procesarrecepcion(request):
         salidas2= detallerecaux.objects.all().filter(recepcion=i[1]).aggregate(sumalibras=Sum('libras'))['sumalibras']
         
         if str(salidas2) == str(salidas.libras):
-            registros.append([salidas.status,""])
             salidas.status = "En proceso"
-            registros.append(["",salidas.status])
-            salidas.save
+            salidas.save()
 
     return JsonResponse({'mensaje':mensaje,'registros':registros})   
 
