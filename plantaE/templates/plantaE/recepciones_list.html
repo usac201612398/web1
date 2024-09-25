@@ -113,6 +113,7 @@ $('.envio3').on('click', function() {
     console.log(datos);
 
     $.ajax({
+            
             url: '{% url "recepcionesFruta_list" %}',  // URL para la vista AJAX
             type: 'POST',
             dataType: "json",
@@ -125,13 +126,13 @@ $('.envio3').on('click', function() {
                 alert("Listo")
                 console.log(data)
                 // Recorre los productos recibidos y añade opciones al campo 'name'
+                
             },
             error: function(xhr, status, error) {
                 console.error('Error:', error);  // Maneja errores de la solicitud
             }
-
         });
-
+    
   });
 </script>
 </html>
