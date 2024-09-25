@@ -192,12 +192,22 @@ def acumFruta_delete(request, pk):
     return render(request, 'plantaE/acumFruta_confirm_delete.html', {'registros': salidas})
 
 def procesarrecepcion(request):
+    
     data = json.loads(request.body)
     mensaje = data['array']
     #mensaje = request.POST.get('array')
     for i in mensaje:
-        detallerecaux.objects.create(recepcion=i[1],fecha=i[2],finca=i[3],cultivo=i[4],cajas=i[5],correo=i[6],status="En proceso",observaciones=i[8])
+        ref=detallerec.objects.get(registro = i[0])
+        detallerecaux.objects.create(recepcion=i[1],fecha=i[2],finca=i[3],cultivo=i[4],cajas=i[5],correo=i[6],status="En proceso",observaciones=i[8],llave=ref.llave,criterio=ref.criterio)
+    
+    for i in mensaje:
+        salidas = detallerec.objects.get(recepcion=i[1])
         
+        salidas2= detallerecaux.objects.all().filter(recepcion=i[1]).aggregate(sumalibras=Sum('libras'))['sumalibras']
+        if salidas2 == salidas.libras:
+            salidas.status = "En proceso"
+            salidas.save
+
     return JsonResponse({'mensaje':mensaje})   
 
 def recepciones_list(request):
