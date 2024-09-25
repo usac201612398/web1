@@ -198,17 +198,18 @@ def procesarrecepcion(request):
     #mensaje = request.POST.get('array')
     for i in mensaje:
         ref=detallerec.objects.get(registro = i[0])
-        detallerecaux.objects.create(recepcion=i[1],fecha=str(ref.fecha),finca=i[3],cultivo=i[4],cajas=i[5],libras=i[6],status="En proceso",observaciones=i[8],llave=str(ref.fecha),criterio=str(ref.criterio))
-    
+        #detallerecaux.objects.create(recepcion=i[1],fecha=str(ref.fecha),finca=i[3],cultivo=i[4],cajas=i[5],libras=i[6],status="En proceso",observaciones=i[8],llave=str(ref.fecha),criterio=str(ref.criterio))
+    registros = []
     for i in mensaje:
         salidas = detallerec.objects.get(recepcion=i[1])
         
         salidas2= detallerecaux.objects.all().filter(recepcion=i[1]).aggregate(sumalibras=Sum('libras'))['sumalibras']
+        registros.append([salidas,salidas2])
         if str(salidas2) == str(salidas.libras):
             salidas.status = "En proceso"
             salidas.save
 
-    return JsonResponse({'mensaje':mensaje})   
+    return JsonResponse({'mensaje':mensaje,'registros':registros})   
 
 def recepciones_list(request):
     today = timezone.now().date()
