@@ -196,8 +196,7 @@ def procesarrecepcion(request):
     mensaje = data['array']
     #mensaje = request.POST.get('array')
     for i in mensaje:
-        i[7]="En Proceso"
-        #AcumFruta.objects.create(fecha=i[8],finca=i[7],orden=i[1],cultivo=i[2],estructura=i[3],variedad=i[4],cajas=i[5],correo=i[9])
+        detallerecaux.objects.create(recepcion=i[1],fecha=i[2],finca=i[3],cultivo=i[4],cajas=i[5],correo=i[6],status="En proceso",observaciones=i[8])
         
     return JsonResponse({'mensaje':mensaje})   
 
@@ -209,8 +208,8 @@ def recepciones_list(request):
     salidas = salidas.order_by('-created').filter(status=None)
     
     for i in salidas:
-        cajasacum = salidas2.order_by('-created').filter(status="En Proceso",recepcion=i.recepcion).aggregate(sumacajas=Sum('cajas'))['sumacajas']
-        librasacum = salidas2.order_by('-created').filter(status="En Proceso",recepcion=i.recepcion).aggregate(sumalibras=Sum('libras'))['sumalibras']    
+        cajasacum = salidas2.order_by('-created').filter(status="En proceso",recepcion=i.recepcion).aggregate(sumacajas=Sum('cajas'))['sumacajas']
+        librasacum = salidas2.order_by('-created').filter(status="En proceso",recepcion=i.recepcion).aggregate(sumalibras=Sum('libras'))['sumalibras']    
         if librasacum != None and cajasacum != None:
             i.cajas = i.cajas - int(cajasacum)
             i.libras = i.libras - float(librasacum)
