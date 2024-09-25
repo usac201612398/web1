@@ -198,7 +198,7 @@ def procesarrecepcion(request):
     #mensaje = request.POST.get('array')
     for i in mensaje:
         ref=detallerec.objects.get(registro = i[0])
-        detallerecaux.objects.create(recepcion=i[1],fecha=i[2],finca=i[3],cultivo=i[4],cajas=i[5],libras=i[6],status="En proceso",observaciones=i[8],llave=ref.llave,criterio=ref.criterio)
+        detallerecaux.objects.create(recepcion=i[1],fecha=detallerec.fecha,finca=i[3],cultivo=i[4],cajas=i[5],libras=i[6],status="En proceso",observaciones=i[8],llave=ref.llave,criterio=ref.criterio)
     
     for i in mensaje:
         salidas = detallerec.objects.get(recepcion=i[1])
