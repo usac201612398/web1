@@ -42,7 +42,7 @@
                     <th >Created</th>
                     <th >Updated</th>
                     <th >Editar</th>
-
+                    <th >Eliminar</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,6 +61,7 @@
                     <td>{{registro.created}}</td>
                     <td>{{registro.updated_at}}</td>
                     <th ><a href="{% url 'recepcionesFruta_update' registro.pk %}"><i class="fas fa-edit"></i></a></th>
+                    <td><button class="eliminar"><i class="fas fa-trash-alt"></i></button></td>
                     </tr> 
                         
                 {% endfor %}
@@ -86,6 +87,14 @@
 <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+
+
+const eliminarBotones = document.querySelectorAll('.eliminar');
+
+$(document).on('click', '.eliminar', function() {
+    $(this).closest('tr').remove();
+});
+
 $('.envio3').on('click', function() {
     var resume_table = document.getElementById("myTable");
     var datos = []
