@@ -329,7 +329,9 @@ def load_ccalidadparam(request):
     return JsonResponse({'datos': list(datos),'valor':valor})
 
 def inventarioProd_list(request):
-    salidas = inventarioProdTerm.objects.all()
+    today = timezone.now().date()
+    #salidas = Recepciones.objects.filter(fecha=today)
+    salidas = inventarioProdTerm.objects.filter(fecha=today)
     return render(request, 'plantaE/inventarioProd_list.html', {'registros': salidas})
 
 def inventarioProd_detail(request, pk):
