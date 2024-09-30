@@ -110,7 +110,7 @@ class AcumFruta(models.Model):
 
 class enviosFrutaPlantilla(models.Model):
     op_viajes = [('','-'),('Viaje 1','Viaje 1'),('Viaje 2','Viaje 2'),('Viaje 3', 'Viaje 3'),('Viaje 4','Viaje 4'),('Viaje 5','Viaje 5'),('Viaje 6','Viaje 6'),('Viaje 7','Viaje 7'),('Viaje 8','Viaje 8')]
-    op_encargado = [('Brandon Portillo','Brandon Portillo'),('Isaías García','Isaías García')]
+    op_encargado = [('Brandon Portillo','Brandon Portillo'),('Carlos Hernández','Carlos Hernández')]
     op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
     op_finca = [('VALLE','VALLE'),('RIO','RIO'),('CIP','CIP'),('FLE','FLE'),('FLA','FLA')]
     op_correo = [('cosecha.rio@popoyan.com.gt','cosecha.rio@popoyan.com.gt')]
