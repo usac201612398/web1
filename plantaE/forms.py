@@ -60,12 +60,10 @@ class recepcionesForm(forms.ModelForm):
         self.fields['observaciones'].required = False
 
 class ccalidadForm(forms.ModelForm):
-    op_status2 = [('Pendiente','-'),('Inspeccionado','Inspeccionado')]
+
     registro = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))
-    recepcion = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'my-input'}))
     porcentaje= forms.DecimalField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
-    status2 = forms.ChoiceField(choices=op_status2,widget=forms.Select(attrs={'class': 'my-input'}))
     llave = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))
     causarechazo = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))
     observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))

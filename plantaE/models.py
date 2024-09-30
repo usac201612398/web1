@@ -190,15 +190,12 @@ class Boletas(models.Model):
         db_table = 'boletas'
 
 class Ccalidad(models.Model):
-    op_status2 = [('Pendiente','-'),('Inspeccionado','Inspeccionado')]
 
     registro = models.BigAutoField(primary_key=True)
-    recepcion = models.BigIntegerField(blank=True, null=True)
     causarechazo = models.CharField(max_length=100, blank=True, null=True)
     porcentaje = models.DecimalField(max_digits=3, decimal_places=2, blank=True, null=True)
     fecha = models.DateField(blank=True, null=True)
     llave = models.CharField(max_length=200, blank=True, null=True)
-    status2 = models.CharField(max_length=25, choices=op_status2,blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     observaciones = models.CharField(max_length=125, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
