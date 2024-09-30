@@ -304,7 +304,7 @@ def ccalidad_delete(request, pk):
 
 def obtener_llave_recepcion(request):
     # Obtén el nombre de usuario del usuario autenticado
-    llave_recepcion = Recepciones.objects.values('criterio').distinct('criterio')
+    llave_recepcion = detallerec.objects.values('criterio').distinct('criterio')
     causa_rechazo = causasRechazo.objects.all().values('causa')
     now = datetime.datetime.now()
     fecha = now.date()
