@@ -29,11 +29,9 @@
                     <tr class="header">
                     <th >Id</th>
                     <th >Llave</th>
-                    <th >Recepcion</th>
                     <th >Fecha</th>
                     <th >Causa</th>
                     <th >Porcentaje</th>
-                    <th >Status</th>
                     <th >Observaciones</th>
                     <th >Created</th>
                     <th >Updated</th>
@@ -46,11 +44,9 @@
                 <tr> 
                     <td> <a href="{% url 'ccalidad_detail' registro.pk %}">{{ registro.registro }}</a></td>
                     <td>{{registro.llave}}</td>
-                    <td>{{registro.recepcion}}</td>
                     <td>{{registro.fecha}}</td>
                     <td>{{registro.causarechazo}}</td>
                     <td>{{registro.porcentaje}}</td>
-                    <td>{{registro.status2}}</td>
                     <td>{{registro.observaciones}}</td>
                     <td>{{registro.created}}</td>
                     <td>{{registro.updated_at}}</td>

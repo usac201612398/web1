@@ -19,14 +19,6 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group row">
-                    <label for="recepcion" class="col-sm-3 col-form-label">Recepción:</label>
-                    <div class="col-sm-9">
-                        {{ form.recepcion }}
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group row">
                     <label for="fecha" class="col-sm-3 col-form-label">Fecha:</label>
                     <div class="col-sm-9">
                         {{ form.fecha }}
@@ -46,14 +38,6 @@
                     <label for="causarechazo" class="col-sm-3 col-form-label">Causa (Rechazo):</label>
                     <div class="col-sm-9">
                         {{ form.causarechazo }}
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group row">
-                    <label for="status2" class="col-sm-3 col-form-label">Status:</label>
-                    <div class="col-sm-9">
-                        {{ form.status2 }}
                     </div>
                 </div>
             </div>
@@ -159,14 +143,7 @@
                     // Recorre los productos recibidos y añade opciones al campo 'name'
                     $('#id_porcentaje').html('');
                     $('#id_porcentaje').val(data.valor);
-                    $('#id_recepcion').html('');
-                    console.log(data.valor);
-                    $.each(data.datos, function(index, product) {
-                       
-                        $('#id_recepcion').append(
-                            $('<option>').text(product.recepcion.toString()).attr('value', product.recepcion.toString())
-                        );
-                    });
+                    
 
                 },
                 error: function(xhr, status, error) {

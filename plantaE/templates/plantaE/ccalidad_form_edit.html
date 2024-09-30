@@ -27,14 +27,6 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group row">
-                    <label for="recepcion" class="col-sm-3 col-form-label">Recepción:</label>
-                    <div class="col-sm-9">
-                        {{ form.recepcion }}
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group row">
                     <label for="fecha" class="col-sm-3 col-form-label">Fecha:</label>
                     <div class="col-sm-9">
                         {{ form.fecha }}
@@ -54,14 +46,6 @@
                     <label for="causarechazo" class="col-sm-3 col-form-label">Causa (Rechazo):</label>
                     <div class="col-sm-9">
                         {{ form.causarechazo }}
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group row">
-                    <label for="status2" class="col-sm-3 col-form-label">Status:</label>
-                    <div class="col-sm-9">
-                        {{ form.status2 }}
                     </div>
                 </div>
             </div>
@@ -126,10 +110,7 @@
                     $('#id_llave').append(
                         $('<option>').text(data.llave.toString()).attr('value',data.llave)
                     );
-                    $('#id_recepcion').html('');
-                    $('#id_recepcion').append(
-                        $('<option>').text(data.recepcion.toString()).attr('value',data.recepcion)
-                    ); 
+                    
                     $('#id_causarechazo').html('');
                     $('#id_causarechazo').append(
                         $('<option>').text('').attr('value','')
