@@ -48,8 +48,9 @@
 <body>
     <h1 class="roboto">Panel</h1>
     <br>
-    <div class = "container"> 
+    <div class = "container">
         <div class="half">
+
             <div class="box">
                 <form>
                     <div><label for="fecha">Fecha:</label></div>
@@ -61,7 +62,6 @@
 
             <div class="box">
                 <div><label for="prov">Proveedor:</label></div>
-                
                 <div class="select"> 
                     <select name="Proveedor" id="Pro">
                         <option value="">-</option>
@@ -71,9 +71,9 @@
                     </select>
                 </div>
             </div>
-            <div class="box"></div>
+
+            <div class="box">
                 <div><label for="cultivo">Cultivo:</label></div>
-                
                 <div class="select"> 
                     <select name="Cultivo" id="Cul">
                         <option value="">-</option>
@@ -86,7 +86,8 @@
                     </select>
                 </div>
             </div>
-            <div class="box"></div>
+
+            <div class="box">
                 <div><label for="categoria">Categoria:</label></div>
                 
                 <div class="select"> 
@@ -107,10 +108,10 @@
                         <input class="input" id="correo" type="text" value={{usuario}} readonly>
                     </div>
                 </form>      
-            </div>
-            
+            </div>    
         </div>
     </div>
+
     <div class="container">
         <button id="consultar">Consultar</button>
     </div>
