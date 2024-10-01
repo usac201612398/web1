@@ -97,9 +97,21 @@ def guardar_plantillaValle(request):
     data = json.loads(request.body)
     mensaje = data['array']
     #mensaje = request.POST.get('array')
+   
+    for elemento in mensaje:
+        elemento[5] = int(elemento[5])
+        
     df = pd.DataFrame(mensaje,columns=['Encargado','Orden','Cultivo','Estructura','Variedad','Cajas','Blank','Finca','Viaje','Fecha','Correo'])
     
-    resultado = df.groupby('Variedad', as_index=False)['Cajas'].sum()
+    resultado = df.groupby('Variedad').agg({
+        'Encargado': 'first',  # O 'last', 'min', 'max', etc.
+        'Cultivo': 'first',
+        'Finca': 'first',
+        'Viaje': 'first',
+        'Fecha': 'first',
+        'Correo': 'first',
+        'Cajas': 'sum'
+    }).reset_index()
     resultado_lista = resultado.to_dict(orient='records')
     '''
     for i in mensaje:
