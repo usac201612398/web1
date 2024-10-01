@@ -98,14 +98,16 @@ def guardar_plantillaValle(request):
     mensaje = data['array']
     #mensaje = request.POST.get('array')
     df = pd.DataFrame(mensaje,columns=['Encargado','Orden','Cultivo','Estructura','Variedad','Cajas','Blank','Finca','Viaje','Fecha','Correo'])
+    
     resultado = df.groupby('Variedad', as_index=False)['Cajas'].sum()
+    resultado_lista = resultado.to_dict(orient='records')
     '''
     for i in mensaje:
         
         AcumFruta.objects.create(fecha=i[9],finca=i[7],orden=i[1],cultivo=i[2],estructura=i[3],variedad=i[4],cajas=i[5],correo=i[10])
     
     '''
-    return JsonResponse({'mensaje':resultado})                  
+    return JsonResponse({'mensaje':resultado_lista})                  
 
 def article_create_plantilla(request):
     
