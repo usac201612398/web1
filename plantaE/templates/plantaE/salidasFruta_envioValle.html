@@ -75,6 +75,24 @@
                     </div>
                 </form>      
             </div>
+            <div class="box">
+                <form>
+                    <div><label for="viaje">Viaje:</label></div>
+                    <div class="select"> 
+                        <select name="viaje" id="Via">
+                            <option value="">-</option>
+                            <option value="Viaje 1">Viaje 1</option>
+                            <option value="Viaje 2">Viaje 2</option>
+                            <option value="Viaje 3">Viaje 3</option>
+                            <option value="Viaje 4">Viaje 4</option>
+                            <option value="Viaje 5">Viaje 5</option>
+                            <option value="Viaje 6">Viaje 6</option>
+                            <option value="Viaje 7">Viaje 7</option>
+                            <option value="Viaje 8">Viaje 8</option>
+                        </select>
+                    </div>
+                </form>      
+            </div>
         </div>
     </div>
 
@@ -152,6 +170,10 @@ $('.envio3').on('click', function() {
             value_or = origen.value,
             text_or = origen.options[origen.selectedIndex].innerText;
             filas.push(text_or);
+        var viaje = document.getElementById('Via'),
+            value_via = viaje.value,
+            text_via = viaje.options[viaje.selectedIndex].innerText;
+            filas.push(text_via);
         filas.push(fecha);
         filas.push(correo);
       datos.push(filas);
@@ -160,7 +182,7 @@ $('.envio3').on('click', function() {
     console.log(datos);
     $.ajax({
             
-            url: '{% url "guardar_plantilla" %}',  // URL para la vista AJAX
+            url: '{% url "guardar_plantillaValle" %}',  // URL para la vista AJAX
             type: 'POST',
             dataType: "json",
             data:  JSON.stringify({'array':datos}),
