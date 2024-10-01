@@ -41,6 +41,7 @@ urlpatterns = [
     path("inventarioProd",views.inventarioProd_list,name='inventarioProd_list'),
     path('inventarioProd/<int:pk>/', views.inventarioProd_detail, name='inventarioProd_detail'),
     path('inventarioProd/new/', views.inventarioProd_create, name='inventarioProd_create'),
+    path('inventarioProd/new/Plantilla', views.inventarioProd_guardarPlantilla, name='guardar_plantilla_inventario'),
     path('inventarioProd/<int:pk>/delete/', views.inventarioProd_delete, name='inventarioProd_delete'),
     
 ]
