@@ -64,7 +64,7 @@ class salidasFruta(models.Model):
     op_variedad = [('HATENO','HATENO'),('HIRULE','HIRULE'),('DUNNE','DUNNE'),('IVORINO','IVORINO'),('KM 5512','KM 5512'),('NEBULA','NEBULA'),('ROJO','ROJO'),('AMARILLO','AMARILLO'),('ANARANJADO','ANARANJADO')]
     op_encargado = [('Brandon Portillo','Brandon Portillo'),('Carlos Hernández','Carlos Hernández'),('Noel Bran','Noel Bran')]
     op_finca = [('VALLE','VALLE'),('RIO','RIO'),('CIP','CIP'),('FLE','FLE'),('FLA','FLA')]
-    op_correo = [('cosecha.rio@popoyan.com.gt','cosecha.rio@popoyan.com.gt')]
+    op_correo = [('cosecha.rio@popoyan.com.gt','cosecha.rio@popoyan.com.gt'),('cosecha.valle@popoyan.com.gt','cosecha.valle@popoyan.com.gt')]
     op_orden = [('64202052','64202052'),('64206054','64206054'),('64206055','64206055'),('64206056','64206056'),('64202048','64202048')]
     op_estructura = [('CM1','CM1'),('CM2','CM2'),('CM3','CM3'),('CM4','CM4'),('CM5','CM5'),('CM6','CM6'),('CM7','CM7'),('INV1','INV1'),('INV2','INV2')]
     id = models.AutoField(primary_key=True)
