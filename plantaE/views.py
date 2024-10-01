@@ -110,6 +110,32 @@ def article_create_plantilla(request):
     
     return render(request, 'plantaE/salidasFruta_envio.html',context)
 
+def article_create_plantillaValle(request):
+    
+    now = datetime.datetime.now()
+    fecha = now.date()
+    dia= fecha.day
+    mes= fecha.month
+    año= fecha.year
+    if mes < 10:
+        mes = "0" + str(mes)
+    if dia < 10:
+        dia = "0" + str(dia)
+    fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
+    
+    nombre_usuario = request.user.username
+    datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('finca','encargado')
+    estructura = detallesEstructuras.objects.filter(finca=list(datos)[0]['finca']).values('finca','orden','estructura','variedad','cultivo').distinct()
+    estructura = estructura.order_by('estructura')
+    context = {
+
+        'usuario': nombre_usuario,
+        'registros': list(estructura),
+        'fecha': fecha_,
+        'encargado': list(datos)[0]['encargado']
+    }
+    
+    return render(request, 'plantaE/salidasFruta_envioValle.html',context)
 
 def article_create(request):
     if request.method == 'POST':
