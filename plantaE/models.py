@@ -2,8 +2,8 @@ from django.db import models
 
 # Create your models here.
 class usuariosAppFruta(models.Model):
-
-    correo = models.CharField(primary_key=True,max_length=75, blank=True)
+    registro = models.AutoField(primary_key=True)
+    correo = models.CharField(max_length=75, blank=True)
     encargado = models.CharField(max_length=30)
     finca = models.CharField(max_length=25)
     
