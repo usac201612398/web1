@@ -340,7 +340,7 @@ def inventarioProd_detail(request, pk):
     return render(request, 'plantaE/inventarioProd_detail.html', {'registros': salidas})
 
 def guardar_plantilla_inventario(request):
-    return render(request, 'plantaE/inventarioProd_formPlantilla.html')
+    return JsonResponse("Hola")
 
 def inventarioProd_create(request):
     if request.method == 'POST':
