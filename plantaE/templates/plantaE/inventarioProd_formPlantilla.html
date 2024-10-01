@@ -177,6 +177,7 @@ document.getElementById('consultar').addEventListener('click', function() {
     })
     .then(response => response.json())
     .then(data => {
+        console.log(data)
         data.datos.forEach(item => {
             const fila = document.createElement('tr');
             fila.innerHTML = `<td>${item.calidad1}</td><td><div contenteditable="true" class="editable-cell"></div></td><td><div contenteditable="true" class="editable-cell"></div></td><td><button class="eliminar"><i class="fas fa-trash-alt"></i></button></td>`;
