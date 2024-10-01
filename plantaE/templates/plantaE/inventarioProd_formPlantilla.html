@@ -185,8 +185,6 @@ document.getElementById('consultar').addEventListener('click', function() {
     });
 });
 
-
-
 $('.envio3').on('click', function() {
     var resume_table = document.getElementById("myTable");
     var fecha = document.getElementById('date').value;
@@ -201,10 +199,18 @@ $('.envio3').on('click', function() {
         
       }
 
-        var origen = document.getElementById('Pro'),
-            value_or = origen.value,
-            text_or = origen.options[origen.selectedIndex].innerText;
-            filas.push(text_or);
+        var prov = document.getElementById('Pro'),
+            value_prov = prov.value,
+            text_prov = prov.options[prov.selectedIndex].innerText;
+            filas.push(text_prov);
+        var cult = document.getElementById('Cul'),
+            value_cult = cult.value,
+            text_cult = cult.options[cult.selectedIndex].innerText;
+            filas.push(text_cult);
+        var cat = document.getElementById('Cat'),
+            value_cat = cat.value,
+            text_cat = cat.options[cat.selectedIndex].innerText;
+            filas.push(text_cat);
         filas.push(fecha);
         filas.push(correo);
       datos.push(filas);
