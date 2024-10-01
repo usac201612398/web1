@@ -69,6 +69,13 @@ def article_list(request):
     
     return render(request, 'plantaE/salidasFruta_list.html', {'registros': salidas})
 
+def article_listValle(request):
+    today = timezone.now().date()
+    salidas = salidasFruta.objects.filter(fecha=today)
+    salidas = salidas.order_by('-created_at')
+    
+    return render(request, 'plantaE/salidasFruta_listValle.html', {'registros': salidas})
+
 def article_detail(request, pk):
     salidas = get_object_or_404(salidasFruta, pk=pk)
     return render(request, 'plantaE/salidasFruta_detail.html', {'registros': salidas})

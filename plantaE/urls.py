@@ -9,6 +9,7 @@ urlpatterns = [
 #    path('logout/', views.logout_view, name='logout'),
     path("",views.plantaEhomepage,name='plantaE_home'),
     path("salidasFruta",views.article_list,name='salidasFruta_list'),
+    path("salidasFrutaValle",views.article_listValle,name='salidasFruta_listValle'),
     path('ajax/load-dataUsuario/', views.load_dataUsuario, name='load_dataUsuario'),
     path('ajax/load-dataUsuario2/', views.load_dataUsuario2, name='load_dataUsuario2'),
     path('ajax/load-dataUsuario3/', views.load_dataUsuario3, name='load_dataUsuario3'),
