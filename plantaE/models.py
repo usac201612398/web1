@@ -252,22 +252,24 @@ class inventarioProdTerm(models.Model):
     proveedor = models.CharField(max_length=75, choices=op_proveedor,blank=True, null=True)
     empaque = models.CharField(max_length=75, choices=op_empaque,blank=True, null=True)
     calidad1 = models.CharField(max_length=200, blank=True, null=True)
-    cantidad = models.BigIntegerField(blank=True, null=True)
+    cajas = models.BigIntegerField(blank=True, null=True)
+    libras =  models.FloatField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
 
     def __str__(self):
-        return str(str(self.proveedor)+ " | " + str(self.calidad1))
+        return str(self.proveedor) + " | " + str(self.calidad1)
 
 class productoTerm(models.Model):
     op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
     op_categoria = [('Mastronardi','Mastronardi'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolucion','Devolucion')]
+    op_tipo = [('Tomate','Tomate'),('Chile','Chile')]
     registro = models.BigAutoField(primary_key=True)
     cultivo = models.CharField(max_length=50, choices=op_cultivo, blank=True, null=True)
     calidad1 = models.CharField(max_length=200, blank=True, null=True)
     categoria = models.CharField(max_length=50, choices=op_categoria, blank=True, null=True)
     librasxcaja = models.FloatField(blank=True, null=True)
-    tipo = models.CharField(max_length=50, choices=op_cultivo, blank=True, null=True)
+    tipo = models.CharField(max_length=50, choices=op_tipo, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
 

@@ -4,6 +4,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Fieldset, Div
 
 class salidasFrutaForm(forms.ModelForm):
+
     op_viajes = [('','-'),('Viaje 1','Viaje 1'),('Viaje 2','Viaje 2'),('Viaje 3', 'Viaje 3'),('Viaje 4','Viaje 4'),('Viaje 5','Viaje 5'),('Viaje 6','Viaje 6'),('Viaje 7','Viaje 7'),('Viaje 8','Viaje 8')]
     op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
     
@@ -79,6 +80,7 @@ class ccalidadForm(forms.ModelForm):
         self.fields['registro'].required = False
 
 class inventarioFrutaForm(forms.ModelForm):
+
     op_empaque = [('Cajas','Cajas'),('Libras','Libras')]
     op_proveedor = [('','-'),('RIO','RIO'),('VALLE','VALLE'),('CIP','CIP'),('PASTORIA','PASTORIA')]
     op_cultivo = [('','-'),('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
@@ -90,9 +92,10 @@ class inventarioFrutaForm(forms.ModelForm):
     categoria = forms.ChoiceField(choices=op_categoria, widget=forms.Select(attrs={'class': 'my-input'}))
     calidad1 = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))
     empaque = forms.ChoiceField(choices=op_empaque, widget=forms.Select(attrs={'class': 'my-input'}))
-    cantidad = forms.DecimalField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
+    cajas = forms.DecimalField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
+    libras = forms.DecimalField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
 
     class Meta:
-    
+        
         model = inventarioProdTerm
-        fields = ['fecha','proveedor', 'cultivo', 'categoria', 'calidad1','empaque','cantidad']
+        fields = ['fecha','proveedor', 'cultivo', 'categoria', 'calidad1','empaque','cajas','libras']

@@ -29,12 +29,13 @@
                         <tr><td>Id:</td><td>{{ registros.registro }} </td></tr>
                         <tr><td>Fecha:</td><td>{{ registros.fecha }} </td></tr> 
                         <tr><td>Productor:</td><td>{{ registros.proveedor }} </td></tr> 
-                        <tr><td>Cultivo:</td><td>{{ registros.cultivo}} </td></tr> 
-                        <tr><td>Calidad 1:</td><td>{{registros.calidad1}} </td></tr> 
+                        <tr><td>Cultivo:</td><td>{{ registros.cultivo }} </td></tr> 
+                        <tr><td>Calidad 1:</td><td>{{ registros.calidad1 }} </td></tr> 
                         <tr><td>Categoria:</td><td>{{ registros.categoria }} </td></tr>
-                        <tr><td>Tipo (Empaque):</td><td>{{registros.empaque}} </td></tr>
-                        <tr><td>Cantidad:</td><td>{{registros.cantidad}} </td></tr>
-                        <tr><td>Creado:</td><td>{{ registros.created_at }} </td></tr> 
+                        <tr><td>Tipo (Empaque):</td><td> {{registros.empaque}} </td></tr>
+                        <tr><td>Cajas:</td><td> {{registros.cajas}} </td></tr>
+                        <tr><td>Libras:</td><td> {{registros.libras}} </td></tr>
+                        <tr><td>Creado:</td><td> {{ registros.created_at }} </td></tr> 
                         <tr><td><a href="{% url 'inventarioProd_delete' registros.pk %}">Delete</a></td><td>-</td></tr> 
                     </tbody>
                     </table>

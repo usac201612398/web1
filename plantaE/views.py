@@ -110,6 +110,7 @@ def article_create_plantilla(request):
     
     return render(request, 'plantaE/salidasFruta_envio.html',context)
 
+
 def article_create(request):
     if request.method == 'POST':
         form = salidasFrutaForm(request.POST)
@@ -338,6 +339,16 @@ def inventarioProd_detail(request, pk):
     salidas = get_object_or_404(inventarioProdTerm, pk=pk)
     return render(request, 'plantaE/inventarioProd_detail.html', {'registros': salidas})
 
+
+def inventarioProd_create(request):
+    if request.method == 'POST':
+        opcion1 = request.POST.get('opcion1')
+        opcion2 = request.POST.get('opcion2')
+        # Filtra tus datos según la opción seleccionada
+        datos = inventarioProdTerm.objects.filter(cultivo=opcion1,categoria=opcion2).values('calidad1')  # Ajusta los campos
+        return JsonResponse(list(datos), safe=False)
+    return render(request, 'plantaE/inventarioProd_formPlantilla.html')
+'''
 def inventarioProd_create(request):
     if request.method == 'POST':
         form = inventarioFrutaForm(request.POST)
@@ -354,7 +365,7 @@ def inventarioProd_create(request):
     else:
         form = inventarioFrutaForm()
     return render(request, 'plantaE/inventarioProd_form.html', {'form': form})
-
+'''
 def inventarioProd_delete(request, pk):
     salidas = get_object_or_404(inventarioProdTerm, pk=pk)
     if request.method == 'POST':
