@@ -105,7 +105,7 @@ def guardar_plantillaValle(request):
         AcumFruta.objects.create(fecha=i[9],finca=i[7],orden=i[1],cultivo=i[2],estructura=i[3],variedad=i[4],cajas=i[5],correo=i[10])
     
     '''
-    return JsonResponse({'mensaje':list(resultado)})                  
+    return JsonResponse({'mensaje':resultado})                  
 
 def article_create_plantilla(request):
     
