@@ -64,14 +64,16 @@ def load_dataUsuario3(request):
 
 def article_list(request):
     today = timezone.now().date()
-    salidas = salidasFruta.objects.filter(fecha=today)
+    nombre_usuario = request.user.username
+    salidas = salidasFruta.objects.filter(fecha=today,correo=nombre_usuario)
     salidas = salidas.order_by('-created_at')
     
     return render(request, 'plantaE/salidasFruta_list.html', {'registros': salidas})
 
 def article_listValle(request):
     today = timezone.now().date()
-    salidas = salidasFruta.objects.filter(fecha=today)
+    nombre_usuario = request.user.username
+    salidas = salidasFruta.objects.filter(fecha=today,correo=nombre_usuario)
     salidas = salidas.order_by('-created_at')
     
     return render(request, 'plantaE/salidasFruta_listValle.html', {'registros': salidas})
