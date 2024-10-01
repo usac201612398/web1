@@ -100,7 +100,7 @@ def guardar_plantillaValle(request):
    
     for elemento in mensaje:
         elemento[5] = int(elemento[5])
-        
+
     df = pd.DataFrame(mensaje,columns=['Encargado','Orden','Cultivo','Estructura','Variedad','Cajas','Blank','Finca','Viaje','Fecha','Correo'])
     
     resultado = df.groupby('Variedad').agg({
@@ -113,12 +113,24 @@ def guardar_plantillaValle(request):
         'Cajas': 'sum'
     }).reset_index()
     resultado_lista = resultado.to_dict(orient='records')
-    '''
+     # Creación de registros en la base de datos
+    for i in resultado_lista:
+        salidasFruta.objects.create(
+            fecha=i['Fecha'],       # Ajusta el nombre según tu modelo
+            finca=i['Finca'],
+            encargado=i['Encargado'],
+            cultivo=i['Cultivo'],
+            variedad=i['Variedad'],
+            cajas=i['Cajas'],
+            viaje=i['Viaje'],
+            correo=i['Correo']
+        )
+    
     for i in mensaje:
         
         AcumFruta.objects.create(fecha=i[9],finca=i[7],orden=i[1],cultivo=i[2],estructura=i[3],variedad=i[4],cajas=i[5],correo=i[10])
     
-    '''
+    
     return JsonResponse({'mensaje':resultado_lista})                  
 
 def article_create_plantilla(request):
@@ -212,8 +224,11 @@ def article_delete(request, pk):
 
 def acumFruta_list(request):
     today = timezone.now().date()
-    salidas = AcumFruta.objects.filter(fecha=today)
+    nombre_usuario = request.user.username
+    salidas = AcumFruta.objects.filter(fecha=today,correo=nombre_usuario)
+    
     salidas = salidas.order_by('-created_at')
+    
     
     return render(request, 'plantaE/AcumFrutaDia_list.html', {'registros': salidas})
 
