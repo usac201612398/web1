@@ -9,6 +9,7 @@ from django.db.models import Sum
 from django.utils import timezone
 import datetime
 import json
+import pandas as pd
 
 def obtener_nombre_usuario(request):
     # Obtén el nombre de usuario del usuario autenticado
@@ -96,12 +97,15 @@ def guardar_plantillaValle(request):
     data = json.loads(request.body)
     mensaje = data['array']
     #mensaje = request.POST.get('array')
+    df = pd.DataFrame(mensaje,columns=['Encargado','Orden','Cultivo','Estructura','Variedad','Cajas','Blank','Finca','Viaje','Fecha','Correo'])
+    resultado = df.groupby('Variedad', as_index=False)['Cajas'].sum()
     '''
     for i in mensaje:
         
-        AcumFruta.objects.create(fecha=i[8],finca=i[7],orden=i[1],cultivo=i[2],estructura=i[3],variedad=i[4],cajas=i[5],correo=i[9])
+        AcumFruta.objects.create(fecha=i[9],finca=i[7],orden=i[1],cultivo=i[2],estructura=i[3],variedad=i[4],cajas=i[5],correo=i[10])
+    
     '''
-    return JsonResponse({'mensaje':mensaje})                  
+    return JsonResponse({'mensaje':list(resultado)})                  
 
 def article_create_plantilla(request):
     
