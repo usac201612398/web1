@@ -103,7 +103,7 @@ def guardar_plantillaValle(request):
 
     df = pd.DataFrame(mensaje,columns=['Encargado','Orden','Cultivo','Estructura','Variedad','Cajas','Blank','Finca','Viaje','Fecha','Correo'])
     
-    resultado = df.groupby('Variedad').agg({
+    resultado = df.groupby(['Variedad','Orden'] ).agg({
         'Encargado': 'first',  # O 'last', 'min', 'max', etc.
         'Cultivo': 'first',
         'Finca': 'first',
