@@ -272,7 +272,7 @@ class productoTerm(models.Model):
     tipo = models.CharField(max_length=50, choices=op_tipo, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
-    empaque= models.CharField(max_length=30, blank=True, null=True)
+    orden= models.CharField(max_length=30, blank=True, null=True)
 
     def __str__(self):
         return str(str(self.cultivo)+ " | " + str(self.calidad1))
