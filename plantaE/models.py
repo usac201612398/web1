@@ -174,8 +174,6 @@ class Boletas(models.Model):
     fecha = models.DateField(blank=True, null=True)
     finca = models.CharField(max_length=75, blank=True, null=True)
     orden = models.CharField(max_length=30, blank=True, null=True)
-    estructura = models.CharField(max_length=50, blank=True, null=True)
-    variedad = models.CharField(max_length=50, blank=True, null=True)
     proveedor = models.CharField(max_length=150, blank=True, null=True)
     cultivo = models.CharField(max_length=50, blank=True, null=True)
     calidad1 = models.CharField(max_length=200, blank=True, null=True)
