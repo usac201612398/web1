@@ -170,7 +170,7 @@ class Actpeso(models.Model):
 class Boletas(models.Model):
 
     registro = models.BigAutoField(primary_key=True)
-    recepcion = models.BigIntegerField(blank=True, null=True)
+    boleta = models.BigIntegerField(blank=True, null=True)
     fecha = models.DateField(blank=True, null=True)
     finca = models.CharField(max_length=75, blank=True, null=True)
     orden = models.CharField(max_length=30, blank=True, null=True)
