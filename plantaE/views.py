@@ -296,7 +296,7 @@ def recepciones_list(request):
     #salidas = Recepciones.objects.filter(fecha=today)
     salidas= detallerec.objects.all()
     salidas2= detallerecaux.objects.all()
-    salidas = salidas.order_by('created').filter(status=None)
+    salidas = salidas.order_by('recepcion').filter(status=None)
     
     for i in salidas:
         cajasacum = salidas2.order_by('-created').filter(status="En proceso",recepcion=i.recepcion).aggregate(sumacajas=Sum('cajas'))['sumacajas']
