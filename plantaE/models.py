@@ -157,7 +157,7 @@ class Actpeso(models.Model):
     finca = models.CharField(max_length=75, blank=True, null=True)
     tarimas = models.BigIntegerField(blank=True, null=True)
     cajas = models.BigIntegerField(blank=True, null=True)
-    libras = models.DecimalField(max_digits=65535, decimal_places=65535, blank=True, null=True)
+    libras = models.FloatField(blank=True, null=True)
     cultivo = models.CharField(max_length=50, blank=True, null=True)
     tipodecaja = models.CharField(max_length=85, blank=True, null=True)
     created = models.DateTimeField(blank=True, null=True)
@@ -181,8 +181,8 @@ class Boletas(models.Model):
     calidad1 = models.CharField(max_length=200, blank=True, null=True)
     calidad = models.CharField(max_length=50, blank=True, null=True)
     cajas = models.BigIntegerField(blank=True, null=True)
-    librasxcaja = models.DecimalField(max_digits=65535, decimal_places=65535, blank=True, null=True)
-    libras = models.DecimalField(max_digits=65535, decimal_places=65535, blank=True, null=True)
+    librasxcaja = models.FloatField(blank=True, null=True)
+    libras = models.FloatField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True,blank=True, null=True)
 
     class Meta:
