@@ -175,7 +175,7 @@ def article_create_plantillaValle(request):
     
     nombre_usuario = request.user.username
     datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('finca','encargado')
-    estructura = detallesEstructuras.objects.filter(finca=list(datos)[0]['finca'],encargado=list(datos)[1]['encargado']).values('finca','orden','estructura','variedad','cultivo').distinct()
+    estructura = detallesEstructuras.objects.filter(finca=list(datos)[0]['finca']).values('finca','orden','estructura','variedad','cultivo').distinct()
     estructura = estructura.order_by('orden')
     context = {
 
