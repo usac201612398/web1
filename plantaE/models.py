@@ -163,7 +163,6 @@ class Actpeso(models.Model):
     cultivo = models.CharField(max_length=50, blank=True, null=True)
     tipodecaja = models.CharField(max_length=85, blank=True, null=True)
     created = models.DateTimeField(blank=True, null=True)
-    variedad = models.CharField(max_length=50, blank=True, null=True)
 
     class Meta:
         managed = False

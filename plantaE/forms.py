@@ -29,7 +29,6 @@ class pesosForm(forms.ModelForm):
     llave = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de correo electrónico
     finca = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
     cultivo = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
-    variedad = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
     tarimas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
     libras = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
@@ -37,7 +36,7 @@ class pesosForm(forms.ModelForm):
     class Meta:
     
         model = Actpeso
-        fields = ['recepcion','fecha','llave',  'finca', 'cultivo','variedad','tarimas','cajas','libras']
+        fields = ['recepcion','fecha','llave',  'finca', 'cultivo','tarimas','cajas','libras']
 
 class acumFrutaForm(forms.ModelForm):
     
