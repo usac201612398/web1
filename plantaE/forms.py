@@ -1,5 +1,5 @@
 from django import forms
-from .models import salidasFruta, Recepciones, Ccalidad, inventarioProdTerm,AcumFruta, enviosFrutaPlantilla
+from .models import Actpeso,salidasFruta, Recepciones, Ccalidad, inventarioProdTerm,AcumFruta, enviosFrutaPlantilla
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Fieldset, Div
 
@@ -21,6 +21,23 @@ class salidasFrutaForm(forms.ModelForm):
     
         model = salidasFruta
         fields = ['correo','fecha','viaje','encargado',  'finca', 'cajas', 'cultivo','variedad']
+
+class pesosForm(forms.ModelForm):
+
+    recepcion = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'my-input'}))
+    llave = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de correo electrónico
+    finca = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    cultivo = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    variedad = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    tarimas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
+    cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
+    libras = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
+    
+    class Meta:
+    
+        model = Actpeso
+        fields = ['recepcion','fecha','llave',  'finca', 'cultivo','variedad','tarimas','cajas','libras']
 
 class acumFrutaForm(forms.ModelForm):
     

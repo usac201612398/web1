@@ -3,8 +3,8 @@ from django.http import JsonResponse
 import logging
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect
-from .models import Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
-from .forms import salidasFrutaForm, recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
+from .models import Actpeso,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
+from .forms import pesosForm,salidasFrutaForm, recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
 from django.db.models import Sum
 from django.utils import timezone
 import datetime
@@ -63,6 +63,17 @@ def load_dataUsuario3(request):
     #variedad = cultivoxFinca.objects.filter(cultivo=list(cultivo)[0]['cultivo']).values('variedad')
     return JsonResponse({'datos': list(variedad)})
 
+def pesos_list(request):
+    today = timezone.now().date()
+    salidas = Actpeso.objects.filter(fecha=today)
+    salidas = salidas.order_by('created_at')
+    
+    return render(request, 'plantaE/pesos_list.html', {'registros': salidas})
+
+def pesos_detail(request, pk):
+    salidas = get_object_or_404(Actpeso, pk=pk)
+    return render(request, 'plantaE/pesos_detail.html', {'registros': salidas})
+
 def article_list(request):
     today = timezone.now().date()
     nombre_usuario = request.user.username
@@ -70,6 +81,24 @@ def article_list(request):
     salidas = salidas.order_by('-created_at')
     
     return render(request, 'plantaE/salidasFruta_list.html', {'registros': salidas})
+
+def pesos_update(request, pk):
+    salidas = get_object_or_404(Actpeso, pk=pk)
+    if request.method == 'POST':
+        form = pesosForm(request.POST, instance=salidas)
+        if form.is_valid():
+            form.save()
+            return redirect('pesos_list')
+    else:
+        form = pesosForm(instance=salidas)
+    return render(request, 'plantaE/pesos_form.html', {'form': form})
+
+def pesos_delete(request, pk):
+    salidas = get_object_or_404(Actpeso, pk=pk)
+    if request.method == 'POST':
+        salidas.delete()
+        return redirect('pesos_list')
+    return render(request, 'plantaE/pesos_confirm_delete.html', {'registros': salidas})
 
 def article_listValle(request):
     today = timezone.now().date()

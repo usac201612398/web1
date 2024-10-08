@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VisualizarDetalles</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <style>
+
+        h1 {
+            margin: 15px;
+            font-family: Arial, sans-serif;
+        }
+
+        a {
+            margin: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+    </style>
+</head>
+<body>
+    <h1 class="roboto">Detalles</h1>
+    <div class="container">
+        <div class="columns">
+            <div class="column is-12">
+                <div class="table-container">
+                    <table class="table is-striped is-hoverable is is-fullwidth" id="myTable">
+                    
+                    <tbody>
+                        <tr><td>Key:</td><td>{{ registros.registro }} </td></tr>
+                        <tr><td>Fecha:</td><td>{{ registros.fecha }} </td></tr>
+                        <tr><td>Llave:</td><td>{{ registros.llave }} </td></tr>  
+                        <tr><td>Finca:</td><td>{{ registros.finca }} </td></tr> 
+                        <tr><td>Cultivo:</td><td>{{ registros.cultivo }} </td></tr>
+                        <tr><td>Variedad:</td><td>{{ registros.variedad }} </td></tr>
+                        <tr><td>Tarimas:</td><td>{{ registros.tarimas }} </td></tr> 
+                        <tr><td>Cajas:</td><td>{{ registros.cajas }} </td></tr>
+                        <tr><td>Libras:</td><td>{{ registros.libras }} </td></tr> 
+                        <tr><td>Creado:</td><td>{{ registros.created_at }} </td></tr>  
+                        <tr><td><a href="{% url 'pesos_update' registros.pk %}">Edit</a></td><td><a href="{% url 'pesos_delete' registros.pk %}">Delete</a></td></tr> 
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="{% url 'pesos_list' %}">Regresar a panel</a>
+
+</body>
+</html>
