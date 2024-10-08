@@ -35,7 +35,7 @@
                         <tr><td>Tarimas:</td><td>{{ registros.tarimas }} </td></tr> 
                         <tr><td>Cajas:</td><td>{{ registros.cajas }} </td></tr>
                         <tr><td>Libras:</td><td>{{ registros.libras }} </td></tr> 
-                        <tr><td>Creado:</td><td>{{ registros.created_at }} </td></tr>  
+                        <tr><td>Creado:</td><td>{{ registros.created }} </td></tr>  
                         <tr><td><a href="{% url 'pesos_update' registros.pk %}">Edit</a></td><td><a href="{% url 'pesos_delete' registros.pk %}">Delete</a></td></tr> 
                     </tbody>
                     </table>
