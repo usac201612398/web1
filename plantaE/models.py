@@ -46,7 +46,7 @@ class detallesEstructuras(models.Model):
     op_estructura = [('CM1','CM1'),('CM2','CM2'),('CM3','CM3'),('CM4','CM4'),('CM5','CM5'),('CM6','CM6'),('CM6A','CM6A'),('CM6B','CM6B'),('CM7','CM7'),('INV1','INV1'),('INV2','INV2')]
     op_finca =  [('RIO','RIO'),('VALLE','VALLE')]
     op_variedad = [('HATENO','HATENO'),('HIRULE','HIRULE'),('DORMA','DORMA'),('BAMANO','BAMANO'),('CHOCOSTAR','CHOCOSTAR'),('DUNNE','DUNNE'),('IVORINO','IVORINO'),('KM 5512','KM 5512'),('NEBULA','NEBULA'),('ROJO','ROJO'),('AMARILLO','AMARILLO'),('ANARANJADO','ANARANJADO')]
-    op_encargado = [('Brandon Portillo','Brandon Portillo'),('Carlos Hernández','Carlos Hernández'),('Nolberto Morales','Nolberto Morales')]
+    op_encargado = [('Brandon Portillo','Brandon Portillo'),('Carlos Hernández','Carlos Hernández'),('Nolberto Morales','Nolberto Morales'),('Rita Florian','Rita Florian')]
     
     id = models.AutoField(primary_key=True)
     finca = models.CharField(max_length=35, choices=op_finca,blank=True)
