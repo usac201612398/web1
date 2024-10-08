@@ -3,7 +3,7 @@ from django.http import JsonResponse
 import logging
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect
-from .models import detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
+from .models import Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
 from .forms import salidasFrutaForm, recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
 from django.db.models import Sum
 from django.utils import timezone
@@ -313,6 +313,14 @@ def recepciones_list(request):
     #for i in len(salidas):
     #    existenciaCajas 
     return render(request, 'plantaE/recepciones_list.html', {'registros': salidas})
+
+def boletas_list(request):
+    #today = timezone.now().date()
+    #salidas = Recepciones.objects.filter(fecha=today)
+    salidas= Boletas.objects.all()
+    salidas = salidas.order_by('boleta')
+     
+    return render(request, 'plantaE/boletas_list.html', {'registros': salidas})
 
 def recepciones_detail(request, pk):
     salidas = get_object_or_404(detallerec, pk=pk)
