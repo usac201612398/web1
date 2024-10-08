@@ -82,16 +82,6 @@ def article_list(request):
     
     return render(request, 'plantaE/salidasFruta_list.html', {'registros': salidas})
 
-def pesos_update(request, pk):
-    salidas = get_object_or_404(Actpeso, pk=pk)
-    if request.method == 'POST':
-        form = pesosForm(request.POST, instance=salidas)
-        if form.is_valid():
-            form.save()
-            return redirect('pesos_list')
-    else:
-        form = pesosForm(instance=salidas)
-    return render(request, 'plantaE/pesos_form.html', {'form': form})
 
 def pesos_delete(request, pk):
     salidas = get_object_or_404(Actpeso, pk=pk)

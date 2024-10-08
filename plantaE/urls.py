@@ -23,7 +23,6 @@ urlpatterns = [
     path('ajax/load-inventarioProdparam/', views.load_inventarioProdparam, name='load_inventarioProdparam'),
     path("pesos",views.pesos_list,name='pesos_list'),
     path('pesos/<int:pk>/', views.pesos_detail, name='pesos_detail'),
-    path('pesos/<int:pk>/edit/', views.pesos_update, name='pesos_update'),
     path('pesos/<int:pk>/delete/', views.pesos_delete, name='pesos_delete'),
     path('salidasFruta/<int:pk>/', views.article_detail, name='salidasFruta_detail'),
     path('salidasFruta/new/', views.article_create, name='salidasFruta_create'),

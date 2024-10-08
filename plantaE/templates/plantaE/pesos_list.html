@@ -40,7 +40,6 @@
                     <th >Cajas</th>
                     <th >Libras</th>
                     <th >Created</th>
-                    <th >Editar</th>
                     <th >Eliminar</th>
                     </tr>
                 </thead>
@@ -57,7 +56,6 @@
                     <td>{{registro.cajas}}</td>
                     <td>{{registro.libras}}</td>
                     <td>{{registro.created}}</td>
-                    <td><a href="{% url 'pesos_update' registro.pk %}"><i class="fas fa-edit"></i></a></td>
                     <td><a href="{% url 'pesos_delete' registro.pk %}"><i class="fas fa-trash-alt"></i>Eliminar</a></td>
                 </tr> 
                         
