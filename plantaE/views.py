@@ -360,6 +360,7 @@ def recepciones_update(request, pk):
 
 def ccalidad_list(request):
     salidas = Ccalidad.objects.all()
+
     return render(request, 'plantaE/ccalidad_list.html', {'registros': salidas})
 
 def ccalidad_detail(request, pk):
@@ -412,6 +413,19 @@ def ccalidad_delete(request, pk):
 def obtener_llave_recepcion(request):
     # Obtén el nombre de usuario del usuario autenticado
     llave_recepcion = detallerec.objects.values('criterio').distinct('criterio')
+    #valor = Ccalidad.objects.filter(llave=llave_recepcion).aggregate(suma=Sum('porcentaje'))['suma']
+    # Crea un diccionario para almacenar las sumas de porcentaje por llave
+    suma_por_llave = Ccalidad.objects.values('llave').annotate(suma=Sum('porcentaje'))
+
+    # Convierte el resultado a un diccionario para facilitar el acceso
+    suma_dict = {item['llave']: item['suma'] for item in suma_por_llave}
+
+    # Filtra las llaves_recepcion si su suma es igual a 1
+    llaves_recepcion_filtradas = [
+        llave for llave in llave_recepcion 
+        if suma_dict.get(llave['criterio'], 0) != 1
+    ]
+
     causa_rechazo = causasRechazo.objects.all().values('causa')
     now = datetime.datetime.now()
     fecha = now.date()
@@ -423,7 +437,7 @@ def obtener_llave_recepcion(request):
     if dia < 10:
         dia = "0" + str(dia)
     fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
-    return JsonResponse({'llaves': list(llave_recepcion),'causa':list(causa_rechazo),'fecha':fecha_})
+    return JsonResponse({'llaves': list(llaves_recepcion_filtradas),'causa':list(causa_rechazo),'fecha':fecha_})
 
 def load_ccalidadparam(request):
     llave_recepcion = request.GET.get('category_id')
@@ -431,8 +445,10 @@ def load_ccalidadparam(request):
     valor = Ccalidad.objects.filter(llave=llave_recepcion).aggregate(suma=Sum('porcentaje'))['suma']
     if valor != None:
         valor = 1-float(Ccalidad.objects.filter(llave=llave_recepcion).aggregate(suma=Sum('porcentaje'))['suma'])
+        
     else:
         valor=1
+    
     return JsonResponse({'datos': list(datos),'valor':valor})
 
 def inventarioProd_list(request):
