@@ -24,6 +24,7 @@ urlpatterns = [
     path('pesos/<int:pk>/delete/', views.pesos_delete, name='pesos_delete'),
     path('salidasFruta/<int:pk>/', views.article_detail, name='salidasFruta_detail'),
     path("salidasFruta/cuadre",views.cuadrar_RioDia,name='salidasFruta_cuadre'),
+    path("salidasFruta/cuadreValle",views.cuadrar_ValleDia,name='salidasFruta_cuadreValle'),
     path("salidasFruta",views.article_list,name='salidasFruta_list'),
     path("salidasFrutaValle",views.article_listValle,name='salidasFruta_listValle'),
     path('salidasFruta/new/', views.article_create, name='salidasFruta_create'),

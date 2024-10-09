@@ -185,6 +185,78 @@ def cuadrar_RioDia(request):
 
     return render(request, 'plantaE/salidasFruta_cuadre.html', {'registros': registros_finales, 'registros2': registros_finales2})
 
+def cuadrar_ValleDia(request):
+    today = timezone.now().date()
+    nombre_usuario = request.user.username
+     # Obtener todos los registros para el usuario y la fecha
+    registros = salidasFruta.objects.filter(fecha=today, correo=nombre_usuario)
+
+   # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
+    df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','variedad','cajas','created_at'])
+
+    # Agrupar por 'variedad' y sumar las 'cajas'
+    df_agrupado = df.groupby('variedad', as_index=False).agg(
+        total_cajas=('cajas', 'sum'),
+        cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
+        fecha=('fecha', 'first'),
+        variedad=('variedad', 'first'),
+        finca=('finca', 'first'),
+        created_at=('created_at', 'first')    # Conservar la primera fecha asociada
+    )
+
+    # Convertir el DataFrame a una lista de diccionarios para pasarlo a la plantilla
+    registros_finales = df_agrupado.to_dict(orient='records')
+
+    # Agrupar por 'cultivo' y sumar las 'cajas'
+    df_agrupado = df.groupby('cultivo', as_index=False).agg(
+        total_cajas=('cajas', 'sum'),
+        cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
+        fecha=('fecha', 'first'),
+        variedad=('variedad', 'first'),
+        finca=('finca', 'first'),
+        created_at=('created_at', 'first')    # Conservar la primera fecha asociada
+    )
+
+    registros_finales2 = df_agrupado.to_dict(orient='records')
+
+    if request.method == 'POST':
+        opcion1 = request.POST.get('opcion1')
+        opcion2 = request.POST.get('opcion2')
+         # Obtener todos los registros para el usuario y la fecha
+        registros = salidasFruta.objects.filter(fecha=opcion2,cultivo=opcion1,correo=nombre_usuario)
+
+    # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
+        df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','variedad','cajas','created_at'])
+
+        # Agrupar por 'variedad' y sumar las 'cajas'
+        df_agrupado = df.groupby('variedad', as_index=False).agg(
+            total_cajas=('cajas', 'sum'),
+            cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
+            fecha=('fecha', 'first'),
+            variedad=('variedad', 'first'),
+            finca=('finca', 'first'),
+            created_at=('created_at', 'first')    # Conservar la primera fecha asociada
+        )
+
+        # Convertir el DataFrame a una lista de diccionarios para pasarlo a la plantilla
+        registros_finales = df_agrupado.to_dict(orient='records')
+
+        # Agrupar por 'cultivo' y sumar las 'cajas'
+        df_agrupado = df.groupby('cultivo', as_index=False).agg(
+            total_cajas=('cajas', 'sum'),
+            cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
+            fecha=('fecha', 'first'),
+            variedad=('variedad', 'first'),
+            finca=('finca', 'first'),
+            created_at=('created_at', 'first')    # Conservar la primera fecha asociada
+        )
+
+        registros_finales2 = df_agrupado.to_dict(orient='records')
+        return JsonResponse({'datos': list(registros_finales),'opcion1':opcion1,'opcion2':opcion2,'resumen':registros_finales2}, safe=False)
+
+    return render(request, 'plantaE/salidasFruta_cuadreValle.html', {'registros': registros_finales, 'registros2': registros_finales2})
+
+
 def guardar_plantillaValle(request):
     data = json.loads(request.body)
     mensaje = data['array']
