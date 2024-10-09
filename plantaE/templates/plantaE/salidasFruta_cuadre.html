@@ -191,14 +191,14 @@ document.getElementById('consultar').addEventListener('click', function() {
         console.log(data)
         data.datos.forEach(item => {
             const fila = document.createElement('tr');
-            fila.innerHTML = `<td>${item.fecha}</td><td>${item.finca}</td><td>${item.cultivo}</td><td>${item.variedad}</td><td>${item.cajas}</td>`;
+            fila.innerHTML = `<td>${item.fecha}</td><td>${item.finca}</td><td>${item.cultivo}</td><td>${item.variedad}</td><td>${item.total_cajas}</td>`;
             
             tbody.appendChild(fila);
         });
 
         data.resumen.forEach(item => {
             const fila = document.createElement('tr');
-            fila.innerHTML = `<td>${item.fecha}</td><td>${item.finca}</td><td>${item.cultivo}</td><td>-</td><td>${item.cajas}</td>`;
+            fila.innerHTML = `<td>${item.fecha}</td><td>${item.finca}</td><td>${item.cultivo}</td><td>-</td><td>${item.total_cajas}</td>`;
             
             tbody2.appendChild(fila);
         });
