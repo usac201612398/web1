@@ -169,6 +169,12 @@ document.getElementById('consultar').addEventListener('click', function() {
             
             tbody.appendChild(fila);
         });
+        data.datos.forEach(item => {
+            const fila = document.createElement('tr');
+            fila.innerHTML = `<td>${item.id}</td><td>${item.fecha}</td><td>${item.finca}</td><td>${item.cajas}</td><td>${item.orden}</td><td>${item.cultivo}</td><td>${item.estructura}</td><td>${item.variedad}</td><td>-</td><td>-</td>`;
+            
+            tbody.appendChild(fila);
+        });
     });
 });
 
