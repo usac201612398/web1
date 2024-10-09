@@ -118,7 +118,7 @@ def cuadrar_RioDia(request):
     today = timezone.now().date()
     nombre_usuario = request.user.username
      # Obtener todos los registros para el usuario y la fecha
-    registros = salidasFruta.objects.filter(fecha=today, correo=nombre_usuario)
+    registros = salidasFruta.objects.filter(fecha='2024-10-08', correo=nombre_usuario)
 
    # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
     df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','variedad','cajas','created_at'])
