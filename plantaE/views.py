@@ -396,6 +396,7 @@ def acumFruta_list(request):
     
     return render(request, 'plantaE/AcumFrutaDia_list.html', {'registros': salidas})
 
+
 def acumFruta_detail(request, pk):
     salidas = get_object_or_404(AcumFruta, pk=pk)
     return render(request, 'plantaE/AcumFrutaDia_detail.html', {'registros': salidas})
@@ -612,13 +613,26 @@ def acumFruta_consulta(request):
         opcion2 = request.POST.get('opcion2')
         nombre_usuario = request.user.username
         # Filtra tus datos según la opción seleccionada
-        datos = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario).values('id','fecha','finca','orden','cultivo','variedad','cajas','estructura')  # Ajusta los campos
-         # Obtener todos los registros para el usuario y la fecha
+        datos = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario) 
+        # Obtener todos los registros para el usuario y la fecha
         registros = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario)
+        df = pd.DataFrame(list(datos.values()),columns=['id','fecha','finca','orden','cultivo','variedad','cajas','estructura'])
 
+        df_agrupado = df.groupby(['orden','estructura','variedad'], as_index=False).agg(
+            total_cajas=('cajas', 'sum'),
+            cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
+            fecha=('id', 'first'),
+            finca =('fecha', 'first'),
+            finca =('finca', 'first'),
+            finca =('orden', 'first'),
+            finca =('variedad', 'first'),
+            finca =('estructura', 'first')
+        )
+
+        registros_finales = df_agrupado.to_dict(orient='records')
         # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
         df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','cajas'])
-       
+
         # Agrupar por 'variedad' y sumar las 'cajas'
         df_agrupado = df.groupby('cultivo', as_index=False).agg(
             total_cajas=('cajas', 'sum'),
@@ -627,9 +641,48 @@ def acumFruta_consulta(request):
             finca =('finca', 'first')
         )
 
-        registros_finales = df_agrupado.to_dict(orient='records')
-        return JsonResponse({'datos': list(datos),'opcion1':opcion1,'opcion2':opcion2,'resumen':registros_finales}, safe=False)
+        registros_finales2 = df_agrupado.to_dict(orient='records')
+        return JsonResponse({'datos': registros_finales,'opcion1':opcion1,'opcion2':opcion2,'resumen':registros_finales2}, safe=False)
     return render(request, 'plantaE/AcumFrutaDia_list.html')
+
+
+def acumFruta_consulta(request):
+    if request.method == 'POST':
+        opcion1 = request.POST.get('opcion1')
+        opcion2 = request.POST.get('opcion2')
+        nombre_usuario = request.user.username
+        # Filtra tus datos según la opción seleccionada
+        datos = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario) 
+        # Obtener todos los registros para el usuario y la fecha
+        registros = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario)
+        df = pd.DataFrame(list(datos.values()),columns=['id','fecha','finca','orden','cultivo','variedad','cajas','estructura'])
+
+        df_agrupado = df.groupby(['orden','estructura','variedad'], as_index=False).agg(
+            total_cajas=('cajas', 'sum'),
+            cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
+            fecha=('id', 'first'),
+            finca =('fecha', 'first'),
+            finca =('finca', 'first'),
+            finca =('orden', 'first'),
+            finca =('variedad', 'first'),
+            finca =('estructura', 'first')
+        )
+
+        registros_finales = df_agrupado.to_dict(orient='records')
+        # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
+        df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','cajas'])
+
+        # Agrupar por 'variedad' y sumar las 'cajas'
+        df_agrupado = df.groupby('cultivo', as_index=False).agg(
+            total_cajas=('cajas', 'sum'),
+            cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
+            fecha=('fecha', 'first'),
+            finca =('finca', 'first')
+        )
+
+        registros_finales2 = df_agrupado.to_dict(orient='records')
+        return JsonResponse({'datos': registros_finales,'opcion1':opcion1,'opcion2':opcion2,'resumen':registros_finales2}, safe=False)
+    return render(request, 'plantaE/AcumFrutaDia_listValle.html')
 
 def inventarioProd_create(request):
     if request.method == 'POST':
