@@ -136,7 +136,18 @@ def cuadrar_RioDia(request):
     # Convertir el DataFrame a una lista de diccionarios para pasarlo a la plantilla
     registros_finales = df_agrupado.to_dict(orient='records')
 
-    return render(request, 'plantaE/salidasFruta_cuadre.html', {'registros': registros_finales})
+    # Agrupar por 'cultivo' y sumar las 'cajas'
+    df_agrupado = df.groupby('cultivo', as_index=False).agg(
+        total_cajas=('cajas', 'sum'),
+        cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
+        fecha=('fecha', 'first'),
+        variedad=('variedad', 'first'),
+        finca=('finca', 'first'),
+        created_at=('created_at', 'first')    # Conservar la primera fecha asociada
+    )
+
+    registros_finales2 = df_agrupado.to_dict(orient='records')
+    return render(request, 'plantaE/salidasFruta_cuadre.html', {'registros': registros_finales}, {'registros2': registros_finales2})
 
 def guardar_plantillaValle(request):
     data = json.loads(request.body)

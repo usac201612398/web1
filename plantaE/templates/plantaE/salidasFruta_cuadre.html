@@ -35,7 +35,6 @@
                     <th >Cultivo</th>
                     <th >Variedad</th>
                     <th >Cajas</th>
-                    <th >Created</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -47,7 +46,6 @@
                     <td>{{registro.cultivo}}</td>
                     <td>{{registro.variedad}}</td>
                     <td>{{registro.total_cajas}}</td>
-                    <td>{{registro.created_at}}</td>
                 </tr> 
                         
                 {% endfor %}
@@ -57,6 +55,39 @@
             </div>
         </div>
         </div>
+    <br>
+        <div class="container">
+            <div class="columns">
+                <div class="column is-12">
+                <div class="table-container">
+                    <table class="table is-striped is-hoverable is is-fullwidth" id="myTable">
+                    <thead id = "enc1">
+                        <tr class="header">
+                        <th >Fecha</th>
+                        <th >Finca</th>
+                        <th >Cultivo</th>
+                        <th >Variedad</th>
+                        <th >Cajas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {%for registro in registros2 %} 
+                    <tr> 
+                     
+                        <td>{{registro.fecha}}</td>
+                        <td>{{registro.finca}}</td>
+                        <td>{{registro.cultivo}}</td>
+                        <td>-</td>
+                        <td>{{registro.total_cajas}}</td>
+                    </tr> 
+                            
+                    {% endfor %}
+                    </tbody>
+                    </table>
+                </div>
+                </div>
+            </div>
+            </div>
         
 </body>
 
