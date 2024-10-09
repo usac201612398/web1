@@ -499,6 +499,14 @@ def inventarioProd_detail(request, pk):
     salidas = get_object_or_404(inventarioProdTerm, pk=pk)
     return render(request, 'plantaE/inventarioProd_detail.html', {'registros': salidas})
 
+def acumFruta_consulta(request):
+    if request.method == 'POST':
+        opcion1 = request.POST.get('opcion1')
+        opcion2 = request.POST.get('opcion2')
+        # Filtra tus datos según la opción seleccionada
+        datos = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2).values()  # Ajusta los campos
+        return JsonResponse({'datos': list(datos),'opcion1':opcion1,'opcion2':opcion2}, safe=False)
+    return render(request, 'plantaE/AcumFrutaDia_list.html')
 
 def inventarioProd_create(request):
     if request.method == 'POST':

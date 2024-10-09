@@ -36,6 +36,7 @@ urlpatterns = [
     path('acumFruta/new/', views.acumFruta_create, name='acumFruta_create'),
     path('acumFruta/<int:pk>/edit/', views.acumFruta_update, name='acumFruta_update'),
     path('acumFruta/<int:pk>/delete/', views.acumFruta_delete, name='acumFruta_delete'),
+    path('acumFruta/consulta/', views.acumFruta_consulta, name='acumFruta_consulta'),
     path('recepcionesFruta/<int:pk>/edit/', views.recepciones_update, name='recepcionesFruta_update'),
     path("recepcionesFruta/process",views.procesarrecepcion,name='recepcionesFruta_process'),
     path("recepcionesFruta",views.recepciones_list,name='recepcionesFruta_list'),

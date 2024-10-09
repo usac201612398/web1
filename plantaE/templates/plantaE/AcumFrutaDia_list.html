@@ -36,7 +36,7 @@
         td {
             padding: 0;
         }
-        
+
         td input {
             width: 100%;
             border: none;
@@ -149,7 +149,7 @@ document.getElementById('consultar').addEventListener('click', function() {
     // Limpiar la tabla antes de agregar nuevos datos
     tbody.innerHTML = '';
 
-    fetch('{% url "inventarioProd_create" %}', { // Asegúrate de poner la URL correcta
+    fetch('{% url "acumFruta_consulta" %}', { // Asegúrate de poner la URL correcta
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -165,7 +165,8 @@ document.getElementById('consultar').addEventListener('click', function() {
         console.log(data)
         data.datos.forEach(item => {
             const fila = document.createElement('tr');
-            fila.innerHTML = `<td>${item.calidad1}</td><td><div contenteditable="true" class="editable-cell"></div></td><td><div contenteditable="true" class="editable-cell"></div></td><td><button class="eliminar"><i class="fas fa-trash-alt"></i></button></td>`;
+            fila.innerHTML = `<td>${item.llave}</td><td>${item.fecha}</td><td>${item.finca}</td><td>${item.cajas}</td><td>${item.orden}</td><td>${item.cultivo}</td><td>${item.estructura}</td><td>${item.variedad}</td><td><a href="{% url 'acumFruta_update' registro.pk %}"> <i class="fas fa-edit"></i>Editar</a></td><td><a href="{% url 'acumFruta_delete' registro.pk %}"><i class="fas fa-trash-alt"></i>Eliminar</a></td>`;
+            
             tbody.appendChild(fila);
         });
     });
