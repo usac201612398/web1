@@ -504,7 +504,7 @@ def acumFruta_consulta(request):
         opcion1 = request.POST.get('opcion1')
         opcion2 = request.POST.get('opcion2')
         # Filtra tus datos según la opción seleccionada
-        datos = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2).values()  # Ajusta los campos
+        datos = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2).values('llave','fecha','finca','orden','cultivo','variedad','cajas','estructura')  # Ajusta los campos
         return JsonResponse({'datos': list(datos),'opcion1':opcion1,'opcion2':opcion2}, safe=False)
     return render(request, 'plantaE/AcumFrutaDia_list.html')
 
