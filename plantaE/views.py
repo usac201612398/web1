@@ -119,7 +119,7 @@ def cuadrar_RioDia(request):
     nombre_usuario = request.user.username
     salidas = (
         salidasFruta.objects
-        .filter(fecha=today, correo=nombre_usuario)
+        .filter(fecha="2024-10-08", correo=nombre_usuario)
         .values('variedad')  # Cambia 'variedad' por el nombre del campo correspondiente
         .annotate(total_cajas=Sum('cajas'))  # Sumar las cajas por variedad
     )
