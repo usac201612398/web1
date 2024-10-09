@@ -144,6 +144,9 @@ document.getElementById('consultar').addEventListener('click', function() {
     console.log(opcionSeleccionada1);
     console.log(opcionSeleccionada2);
 
+    const tablasContainer = document.getElementById('container');
+    tablasContainer.innerHTML = ''; // Limpiar el contenedor antes de agregar nuevas tablas
+
     const tbody = document.querySelector('#myTable tbody');
 
     // Limpiar la tabla antes de agregar nuevos datos
@@ -169,12 +172,7 @@ document.getElementById('consultar').addEventListener('click', function() {
             
             tbody.appendChild(fila);
         });
-        data.datos.forEach(item => {
-            const fila = document.createElement('tr');
-            fila.innerHTML = `<td>${item.id}</td><td>${item.fecha}</td><td>${item.finca}</td><td>${item.cajas}</td><td>${item.orden}</td><td>${item.cultivo}</td><td>${item.estructura}</td><td>${item.variedad}</td><td>-</td><td>-</td>`;
-            
-            tbody.appendChild(fila);
-        });
+        alert("Total de cajas: " + data.resumen.total_cajas );
     });
 });
 
