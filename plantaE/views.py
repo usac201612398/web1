@@ -646,7 +646,7 @@ def acumFruta_consulta(request):
     return render(request, 'plantaE/AcumFrutaDia_list.html')
 
 
-def acumFruta_consulta(request):
+def acumFruta_consultaValle(request):
     if request.method == 'POST':
         opcion1 = request.POST.get('opcion1')
         opcion2 = request.POST.get('opcion2')
