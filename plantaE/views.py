@@ -660,12 +660,12 @@ def acumFruta_consultaValle(request):
         df_agrupado = df.groupby(['orden','estructura','variedad'], as_index=False).agg(
             total_cajas=('cajas', 'sum'),
             cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
-            fecha=('id', 'first'),
-            finca =('fecha', 'first'),
+            id=('id', 'first'),
+            fecha =('fecha', 'first'),
             finca =('finca', 'first'),
-            finca =('orden', 'first'),
-            finca =('variedad', 'first'),
-            finca =('estructura', 'first')
+            orden =('orden', 'first'),
+            variedad =('variedad', 'first'),
+            estructura =('estructura', 'first')
         )
 
         registros_finales = df_agrupado.to_dict(orient='records')
