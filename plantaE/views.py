@@ -147,7 +147,8 @@ def cuadrar_RioDia(request):
     )
 
     registros_finales2 = df_agrupado.to_dict(orient='records')
-    return render(request, 'plantaE/salidasFruta_cuadre.html', {'registros': registros_finales}, {'registros2': registros_finales2})
+
+    return render(request, 'plantaE/salidasFruta_cuadre.html', {'registros': registros_finales, 'registros2': registros_finales2})
 
 def guardar_plantillaValle(request):
     data = json.loads(request.body)
