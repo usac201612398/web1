@@ -507,7 +507,7 @@ def acumFruta_consulta(request):
         datos = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2).values('id','fecha','finca','orden','cultivo','variedad','cajas','estructura')  # Ajusta los campos
         
         # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
-        df = pd.DataFrame(list(datos.values()),columns=['fecha','finca''cultivo','cajas'])
+        df = pd.DataFrame(list(datos),columns=['fecha','finca''cultivo','cajas'])
 
         # Agrupar por 'variedad' y sumar las 'cajas'
         df_agrupado = df.groupby('cultivo', as_index=False).agg(
@@ -516,7 +516,6 @@ def acumFruta_consulta(request):
             fecha=('fecha', 'first'),
             finca =('finca', 'first')
         )
-
 
         registros_finales = df_agrupado.to_dict(orient='records')
         return JsonResponse({'datos': list(datos),'opcion1':opcion1,'opcion2':opcion2,'resumen':registros_finales}, safe=False)
