@@ -31,7 +31,6 @@
                 <thead id = "enc1">
                     <tr class="header">
                     <th >Fecha</th>
-                    <th >Llave</th>
                     <th >Finca</th>
                     <th >Cultivo</th>
                     <th >Variedad</th>
@@ -44,12 +43,11 @@
                 <tr> 
                  
                     <td>{{registro.fecha}}</td>
-                    <td>{{registro.llave}}</td>
                     <td>{{registro.finca}}</td>
                     <td>{{registro.cultivo}}</td>
                     <td>{{registro.variedad}}</td>
                     <td>{{registro.total_cajas}}</td>
-                    <td>{{registro.created}}</td>
+                    <td>{{registro.created_at}}</td>
                 </tr> 
                         
                 {% endfor %}
