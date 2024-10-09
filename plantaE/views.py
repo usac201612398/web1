@@ -505,10 +505,12 @@ def acumFruta_consulta(request):
         opcion2 = request.POST.get('opcion2')
         # Filtra tus datos según la opción seleccionada
         datos = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2).values('id','fecha','finca','orden','cultivo','variedad','cajas','estructura')  # Ajusta los campos
-        
-        # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
-        df = pd.DataFrame(list(datos = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2).values()),columns=['fecha','finca''cultivo','cajas'])
+         # Obtener todos los registros para el usuario y la fecha
+        registros = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2)
 
+        # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
+        df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','cajas'])
+       
         # Agrupar por 'variedad' y sumar las 'cajas'
         df_agrupado = df.groupby('cultivo', as_index=False).agg(
             total_cajas=('cajas', 'sum'),
