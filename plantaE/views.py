@@ -121,7 +121,7 @@ def cuadrar_RioDia(request):
     registros = salidasFruta.objects.filter(fecha=today, correo=nombre_usuario)
 
    # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
-    df = pd.DataFrame(list(registros.values()))
+    df = pd.DataFrame(list(registros.values('variedad','fecha','finca','cultivo','created_at','cajas')))
 
     # Agrupar por 'variedad' y sumar las 'cajas'
     df_agrupado = df.groupby('variedad', as_index=False).agg(
