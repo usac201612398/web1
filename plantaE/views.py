@@ -112,6 +112,20 @@ def guardar_plantilla(request):
         
     return JsonResponse({'mensaje':mensaje})
 
+
+
+def cuadrar_RioDia(request):
+    today = timezone.now().date()
+    nombre_usuario = request.user.username
+    salidas = (
+        salidasFruta.objects
+        .filter(fecha=today, correo=nombre_usuario)
+        .values('variedad')  # Cambia 'variedad' por el nombre del campo correspondiente
+        .annotate(total_cajas=Sum('cajas'))  # Sumar las cajas por variedad
+    )
+    
+    return render(request, 'plantaE/salidasFruta_cuadre.html', {'registros': salidas})
+
 def guardar_plantillaValle(request):
     data = json.loads(request.body)
     mensaje = data['array']
