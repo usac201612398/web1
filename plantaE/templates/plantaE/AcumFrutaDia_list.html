@@ -165,7 +165,7 @@ document.getElementById('consultar').addEventListener('click', function() {
         console.log(data)
         data.datos.forEach(item => {
             const fila = document.createElement('tr');
-            fila.innerHTML = `<td>${item.llave}</td><td>${item.fecha}</td><td>${item.finca}</td><td>${item.cajas}</td><td>${item.orden}</td><td>${item.cultivo}</td><td>${item.estructura}</td><td>${item.variedad}</td><td><a href="{% url 'acumFruta_update' registro.pk %}"> <i class="fas fa-edit"></i>Editar</a></td><td><a href="{% url 'acumFruta_delete' registro.pk %}"><i class="fas fa-trash-alt"></i>Eliminar</a></td>`;
+            fila.innerHTML = `<td>${item.llave}</td><td>${item.fecha}</td><td>${item.finca}</td><td>${item.cajas}</td><td>${item.orden}</td><td>${item.cultivo}</td><td>${item.estructura}</td><td>${item.variedad}</td><td>-</td><td>-</td>`;
             
             tbody.appendChild(fila);
         });
