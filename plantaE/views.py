@@ -503,10 +503,11 @@ def acumFruta_consulta(request):
     if request.method == 'POST':
         opcion1 = request.POST.get('opcion1')
         opcion2 = request.POST.get('opcion2')
+        nombre_usuario = request.user.username
         # Filtra tus datos según la opción seleccionada
-        datos = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2).values('id','fecha','finca','orden','cultivo','variedad','cajas','estructura')  # Ajusta los campos
+        datos = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario).values('id','fecha','finca','orden','cultivo','variedad','cajas','estructura')  # Ajusta los campos
          # Obtener todos los registros para el usuario y la fecha
-        registros = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2)
+        registros = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario)
 
         # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
         df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','cajas'])
