@@ -23,7 +23,48 @@
     <h1 class="roboto">Panel</h1>
     <a href="{% url 'salidasFruta_create_plantilla' %}">Agregar plantilla</a>
 
-    
+    <div class = "container">
+        <div class="half">
+
+            <div class="box">
+                <form>
+                    <div><label for="fecha">Fecha:</label></div>
+                    <div>
+                        <input class="input" id="date" type="date" value={{fecha}}>
+                    </div>
+                </form>      
+            </div>
+
+            <div class="box">
+                <div><label for="cultivo">Cultivo:</label></div>
+                <div class="select"> 
+                    <select name="Cultivo" id="Cul">
+                        <option value="">-</option>
+                        <option value="BLOCKY ORGANICO">BLOCKY ORGANICO</option>
+                        <option value="CHERRY">CHERRY</option>
+                        <option value="GRAPE">GRAPE</option>
+                        <option value="MEDLEY">MEDLEY</option>
+                        <option value="GRAPE ORGANICO">GRAPE ORGANICO</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="box">
+                <form>
+                    <div><label for="correo">Usuario:</label></div>
+                    <div>
+                        <input class="input" id="correo" type="text" value={{usuario}} readonly>
+                    </div>
+                </form>      
+            </div>    
+        </div>
+    </div>
+    <br>
+
+    <div class="container">
+        <button id="consultar">Consultar</button>
+    </div>
+
     <div class="container">
         <div class="columns">
             <div class="column is-12">
@@ -67,3 +108,71 @@
         </div>
         <a href="{% url 'salidasFruta_list' %}">Regresar</a>
 </body>
+<script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+
+document.getElementById('consultar').addEventListener('click', function() {
+    const opcionSeleccionada1 = document.getElementById('Cul').value;
+    const opcionSeleccionada2 = document.getElementById('date').value;
+    console.log(opcionSeleccionada1);
+    console.log(opcionSeleccionada2);
+
+    const tbody = document.querySelector('#myTable tbody');
+
+    // Limpiar la tabla antes de agregar nuevos datos
+    tbody.innerHTML = '';
+
+    fetch('{% url "inventarioProd_create" %}', { // Asegúrate de poner la URL correcta
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': getCookie('csrftoken')  // Asegúrate de incluir CSRF token
+        },
+        body: new URLSearchParams({
+            'opcion1': opcionSeleccionada1,
+            'opcion2': opcionSeleccionada2
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data)
+        data.datos.forEach(item => {
+            const fila = document.createElement('tr');
+            fila.innerHTML = `<td>${item.calidad1}</td><td><div contenteditable="true" class="editable-cell"></div></td><td><div contenteditable="true" class="editable-cell"></div></td><td><button class="eliminar"><i class="fas fa-trash-alt"></i></button></td>`;
+            tbody.appendChild(fila);
+        });
+    });
+});
+
+$(document).ready(function() {
+        // Función para cargar productos basados en la categoría seleccionada
+    function authUsuario() {
+        $.ajax({
+            url: '{% url "obtener_nombre_usuario" %}',  // URL para la vista AJAX
+            data: {
+                'category_id': "Consulta"  // Envia el ID de la categoría como parámetro
+            },
+            success: function(data) {
+                // Limpia las opciones actuales del campo 'name'
+                var initialCategoryId =data.username;  // Obtiene el valor inicial del campo 'category'
+                $('#date').val(data.fecha);
+                $('#correo').val(data.username);
+                if (initialCategoryId) {
+                    console.log(initialCategoryId);
+                }
+            
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);  // Maneja errores de la solicitud
+            }
+        });
+    }
+    
+    authUsuario();
+    // Llama a la función de carga de productos al cargar la página
+        
+});
+
+</script>
+</html>
