@@ -117,14 +117,22 @@ def guardar_plantilla(request):
 def cuadrar_RioDia(request):
     today = timezone.now().date()
     nombre_usuario = request.user.username
-    salidas = (
-        salidasFruta.objects
-        .filter(fecha="2024-10-08", correo=nombre_usuario)
-        .values('fecha','finca','cultivo','variedad','created_at')  # Cambia 'variedad' por el nombre del campo correspondiente
-        .annotate(total_cajas=Sum('cajas'))  # Sumar las cajas por variedad
-    )
+     # Obtener todos los registros para el usuario y la fecha
+    registros = salidasFruta.objects.filter(fecha=today, correo=nombre_usuario)
+
+    # Crear un DataFrame a partir de los registros
+    df = pd.DataFrame(list(registros.values()))
+
+    # Agrupar por variedad y sumar las cajas
+    df_agrupado = df.groupby('variedad', as_index=False).agg(total_cajas=('cajas', 'sum'))
+
+    # Merge para incluir otras columnas si es necesario
+    df_final = df_agrupado.merge(df[['variedad', 'finca', 'fecha','cultivo','created_at']], on='variedad', how='left').drop_duplicates()
+
+    # Convertir el DataFrame a una lista de diccionarios para pasarlo a la plantilla
+    registros_finales = df_final.to_dict(orient='records')
     
-    return render(request, 'plantaE/salidasFruta_cuadre.html', {'registros': salidas})
+    return render(request, 'plantaE/salidasFruta_cuadre.html', {'registros': registros_finales})
 
 def guardar_plantillaValle(request):
     data = json.loads(request.body)
