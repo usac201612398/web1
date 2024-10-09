@@ -519,7 +519,7 @@ def acumFruta_consulta(request):
 
 
         registros_finales = df_agrupado.to_dict(orient='records')
-        return JsonResponse({'datos': list(datos),'opcion1':opcion1,'opcion2':opcion2,'resumen':list(registros_finales)}, safe=False)
+        return JsonResponse({'datos': list(datos),'opcion1':opcion1,'opcion2':opcion2,'resumen':registros_finales}, safe=False)
     return render(request, 'plantaE/AcumFrutaDia_list.html')
 
 def inventarioProd_create(request):
