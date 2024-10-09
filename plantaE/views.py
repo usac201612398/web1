@@ -120,18 +120,22 @@ def cuadrar_RioDia(request):
      # Obtener todos los registros para el usuario y la fecha
     registros = salidasFruta.objects.filter(fecha=today, correo=nombre_usuario)
 
-    # Crear un DataFrame a partir de los registros
-    df = pd.DataFrame(list(registros.values('variedad', 'finca', 'fecha','cultivo','created_at')))
+   # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
+    df = pd.DataFrame(list(registros.values()))
 
-    # Agrupar por variedad y sumar las cajas
-    df_agrupado = df.groupby('variedad', as_index=False).agg(total_cajas=('cajas', 'sum'))
-
-    # Merge para incluir otras columnas si es necesario
-    df_final = df_agrupado.merge(df[['variedad', 'finca', 'fecha','cultivo','created_at']], on='variedad', how='left').drop_duplicates()
+    # Agrupar por 'variedad' y sumar las 'cajas'
+    df_agrupado = df.groupby('variedad', as_index=False).agg(
+        total_cajas=('cajas', 'sum'),
+        cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
+        fecha=('fecha', 'first'),
+        variedad=('variedad', 'first'),
+        finca=('finca', 'first'),
+        created_at=('created_at', 'first')    # Conservar la primera fecha asociada
+    )
 
     # Convertir el DataFrame a una lista de diccionarios para pasarlo a la plantilla
-    registros_finales = df_final.to_dict(orient='records')
-    
+    registros_finales = df_agrupado.to_dict(orient='records')
+
     return render(request, 'plantaE/salidasFruta_cuadre.html', {'registros': registros_finales})
 
 def guardar_plantillaValle(request):
