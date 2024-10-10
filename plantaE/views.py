@@ -669,7 +669,7 @@ def acumFruta_consultaValle(request):
     today=timezone.now().date()
     nombre_usuario = request.user.username
     # Filtra tus datos según la opción seleccionada
-    datos = AcumFruta.objects.filter(fecha=today,correo=nombre_usuario) 
+    datos = AcumFruta.objects.filter(fecha='2024-10-10',correo=nombre_usuario) 
     df = pd.DataFrame(list(datos.values()),columns=['id','fecha','finca','orden','cultivo','variedad','cajas','estructura'])
 
     df_agrupado = df.groupby(['orden','estructura','variedad'], as_index=False).agg(
