@@ -623,7 +623,7 @@ def acumFruta_consulta(request):
         variedad =('variedad', 'first'),
         estructura =('estructura', 'first')
     )
-
+    df_agrupado = df_agrupado.sort_values(by='orden')
     salidas = df_agrupado.to_dict(orient='records')
 
     if request.method == 'POST':
@@ -646,7 +646,7 @@ def acumFruta_consulta(request):
             variedad =('variedad', 'first'),
             estructura =('estructura', 'first')
         )
-
+        df_agrupado = df_agrupado.sort_values(by='orden')
         registros_finales = df_agrupado.to_dict(orient='records')
         # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
         df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','cajas'])
@@ -682,7 +682,7 @@ def acumFruta_consultaValle(request):
         variedad =('variedad', 'first'),
         estructura =('estructura', 'first')
     )
-
+    df_agrupado = df_agrupado.sort_values(by='orden')
     salidas = df_agrupado.to_dict(orient='records')
 
     if request.method == 'POST':
@@ -705,7 +705,7 @@ def acumFruta_consultaValle(request):
             variedad =('variedad', 'first'),
             estructura =('estructura', 'first')
         )
-
+        df_agrupado = df_agrupado.sort_values(by='orden')
         registros_finales = df_agrupado.to_dict(orient='records')
         # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
         df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','cajas'])
