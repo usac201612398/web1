@@ -396,7 +396,6 @@ def acumFruta_list(request):
     
     return render(request, 'plantaE/AcumFrutaDia_list.html', {'registros': salidas})
 
-
 def acumFruta_detail(request, pk):
     salidas = get_object_or_404(AcumFruta, pk=pk)
     return render(request, 'plantaE/AcumFrutaDia_detail.html', {'registros': salidas})
@@ -608,6 +607,25 @@ def inventarioProd_detail(request, pk):
     return render(request, 'plantaE/inventarioProd_detail.html', {'registros': salidas})
 
 def acumFruta_consulta(request):
+    today=timezone.now().date()
+    nombre_usuario = request.user.username
+    # Filtra tus datos según la opción seleccionada
+    datos = AcumFruta.objects.filter(fecha=today,correo=nombre_usuario) 
+    df = pd.DataFrame(list(datos.values()),columns=['id','fecha','finca','orden','cultivo','variedad','cajas','estructura'])
+
+    df_agrupado = df.groupby(['orden','estructura','variedad'], as_index=False).agg(
+        total_cajas=('cajas', 'sum'),
+        cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
+        id=('id', 'first'),
+        fecha =('fecha', 'first'),
+        finca =('finca', 'first'),
+        orden =('orden', 'first'),
+        variedad =('variedad', 'first'),
+        estructura =('estructura', 'first')
+    )
+
+    salidas = df_agrupado.to_dict(orient='records')
+
     if request.method == 'POST':
         opcion1 = request.POST.get('opcion1')
         opcion2 = request.POST.get('opcion2')
@@ -643,10 +661,30 @@ def acumFruta_consulta(request):
 
         registros_finales2 = df_agrupado.to_dict(orient='records')
         return JsonResponse({'datos': registros_finales,'opcion1':opcion1,'opcion2':opcion2,'resumen':registros_finales2}, safe=False)
-    return render(request, 'plantaE/AcumFrutaDia_list.html')
+    return render(request, 'plantaE/AcumFrutaDia_list.html', {'registros': salidas})
 
 
 def acumFruta_consultaValle(request):
+    
+    today=timezone.now().date()
+    nombre_usuario = request.user.username
+    # Filtra tus datos según la opción seleccionada
+    datos = AcumFruta.objects.filter(fecha=today,correo=nombre_usuario) 
+    df = pd.DataFrame(list(datos.values()),columns=['id','fecha','finca','orden','cultivo','variedad','cajas','estructura'])
+
+    df_agrupado = df.groupby(['orden','estructura','variedad'], as_index=False).agg(
+        total_cajas=('cajas', 'sum'),
+        cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
+        id=('id', 'first'),
+        fecha =('fecha', 'first'),
+        finca =('finca', 'first'),
+        orden =('orden', 'first'),
+        variedad =('variedad', 'first'),
+        estructura =('estructura', 'first')
+    )
+
+    salidas = df_agrupado.to_dict(orient='records')
+
     if request.method == 'POST':
         opcion1 = request.POST.get('opcion1')
         opcion2 = request.POST.get('opcion2')
@@ -682,7 +720,7 @@ def acumFruta_consultaValle(request):
 
         registros_finales2 = df_agrupado.to_dict(orient='records')
         return JsonResponse({'datos': registros_finales,'opcion1':opcion1,'opcion2':opcion2,'resumen':registros_finales2}, safe=False)
-    return render(request, 'plantaE/AcumFrutaDia_listValle.html')
+    return render(request, 'plantaE/AcumFrutaDia_listValle.html', {'registros': salidas})
 
 def inventarioProd_create(request):
     if request.method == 'POST':
