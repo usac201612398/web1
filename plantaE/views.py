@@ -114,9 +114,9 @@ def guardar_plantillaRio(request):
     data = json.loads(request.body)
     mensaje = data['array']
     #mensaje = request.POST.get('array')
-    #for i in mensaje:
+    for i in mensaje:
         
-    #    salidasFruta.objects.create(fecha=i[8],finca=i[7],cultivo=i[2],variedad=i[4],cajas=i[5],correo=i[9])
+        salidasFruta.objects.create(fecha=i[7],finca=i[5],cultivo=i[1],variedad=i[2],cajas=i[3],correo=i[8])
         
     return JsonResponse({'mensaje':mensaje})
 
