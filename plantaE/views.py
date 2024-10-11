@@ -397,7 +397,7 @@ def article_formPlantilla(request):
         'encargado': list(datos)[0]['encargado']
     }
     
-    return render(request, 'plantaE/salidasFruta_envio.html',context)
+    return render(request, 'plantaE/salidasFruta_formplantilla.html',context)
 
 
 def article_update(request, pk):
