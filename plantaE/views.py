@@ -40,7 +40,6 @@ def obtenerfecha_invFruta(request):
     fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
     return JsonResponse({'fecha':fecha_})
 
-
 def load_dataUsuario(request):
     correo_id = request.GET.get('category_id')
     datos = usuariosAppFruta.objects.filter(correo=correo_id).values('finca', 'encargado')
@@ -82,7 +81,6 @@ def article_list(request):
     
     return render(request, 'plantaE/salidasFruta_list.html', {'registros': salidas})
 
-
 def pesos_delete(request, pk):
     salidas = get_object_or_404(Actpeso, pk=pk)
     if request.method == 'POST':
@@ -112,7 +110,15 @@ def guardar_plantilla(request):
         
     return JsonResponse({'mensaje':mensaje})
 
-
+def guardar_plantillaRio(request):
+    data = json.loads(request.body)
+    mensaje = data['array']
+    #mensaje = request.POST.get('array')
+    #for i in mensaje:
+        
+    #    salidasFruta.objects.create(fecha=i[8],finca=i[7],cultivo=i[2],variedad=i[4],cajas=i[5],correo=i[9])
+        
+    return JsonResponse({'mensaje':mensaje})
 
 def cuadrar_RioDia(request):
     today = timezone.now().date()
@@ -256,7 +262,6 @@ def cuadrar_ValleDia(request):
 
     return render(request, 'plantaE/salidasFruta_cuadreValle.html', {'registros': registros_finales, 'registros2': registros_finales2})
 
-
 def guardar_plantillaValle(request):
     data = json.loads(request.body)
     mensaje = data['array']
@@ -368,6 +373,33 @@ def article_create(request):
         form = salidasFrutaForm()
     return render(request, 'plantaE/salidasFruta_form.html', {'form': form})
 
+def article_formPlantilla(request):
+    now = datetime.datetime.now()
+    fecha = now.date()
+    dia= fecha.day
+    mes= fecha.month
+    año= fecha.year
+    if mes < 10:
+        mes = "0" + str(mes)
+    if dia < 10:
+        dia = "0" + str(dia)
+    fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
+    
+    nombre_usuario = request.user.username
+    datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('finca','encargado')
+    variedad = detallesEstructuras.objects.filter(finca=list(datos)[0]['finca']).values('finca','variedad','cultivo').distinct()
+    estructura = variedad.order_by('variedad')
+    
+    context = {
+        'usuario': nombre_usuario,
+        'registros': list(estructura),
+        'fecha': fecha_,
+        'encargado': list(datos)[0]['encargado']
+    }
+    
+    return render(request, 'plantaE/salidasFruta_envio.html',context)
+
+
 def article_update(request, pk):
     salidas = get_object_or_404(salidasFruta, pk=pk)
     if request.method == 'POST':
@@ -395,30 +427,6 @@ def acumFruta_list(request):
     
     
     return render(request, 'plantaE/AcumFrutaDia_list.html', {'registros': salidas})
-
-
-def acumFruta_listValle(request):
-    today=timezone.now().date()
-    nombre_usuario = request.user.username
-    # Filtra tus datos según la opción seleccionada
-    datos = AcumFruta.objects.filter(fecha=today,correo=nombre_usuario) 
-    df = pd.DataFrame(list(datos.values()),columns=['id','fecha','finca','orden','cultivo','variedad','cajas','estructura'])
-
-    df_agrupado = df.groupby(['orden','estructura','variedad'], as_index=False).agg(
-        total_cajas=('cajas', 'sum'),
-        cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
-        id=('id', 'first'),
-        fecha =('fecha', 'first'),
-        finca =('finca', 'first'),
-        orden =('orden', 'first'),
-        variedad =('variedad', 'first'),
-        estructura =('estructura', 'first')
-    )
-    df_agrupado = df_agrupado.sort_values(by='orden')
-    salidas = df_agrupado.to_dict(orient='records')
-    
-    
-    return render(request, 'plantaE/AcumFrutaDia_listValle.html', {'registros': salidas})
 
 def acumFruta_detail(request, pk):
     salidas = get_object_or_404(AcumFruta, pk=pk)
