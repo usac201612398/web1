@@ -388,7 +388,7 @@ def article_formPlantilla(request):
     nombre_usuario = request.user.username
     datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('finca','encargado')
     variedad = detallesEstructuras.objects.filter(finca=list(datos)[0]['finca']).values('finca','variedad','cultivo').distinct()
-    estructura = variedad.order_by('variedad')
+    estructura = variedad.order_by('cultivo')
     
     context = {
         'usuario': nombre_usuario,
