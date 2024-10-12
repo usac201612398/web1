@@ -1,6 +1,7 @@
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 import logging
+from openpyxl import Workbook
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect
 from .models import Actpeso,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
@@ -10,6 +11,75 @@ from django.utils import timezone
 import datetime
 import json
 import pandas as pd
+import pytz
+
+def exportar_excel(request):
+    if request.method == 'POST':
+        opcion1 = request.POST.get('opcion1')
+        # Crea un libro de Excel y una hoja
+        nombre_usuario = request.user.username
+
+        wb = Workbook()
+        ws = wb.active
+        ws.title = 'Rio'
+
+        # Obtén los datos de tu modelo
+        datos = AcumFruta.objects.filter(fecha=opcion1,finca="RIO")
+
+        # Especifica la zona horaria deseada
+        zona_horaria_deseada = pytz.timezone('America/Guatemala')  # Cambia esto según sea necesario
+
+        # Agrega los encabezados
+        ws.append([field.name for field in AcumFruta._meta.fields])
+        # Agrega los datos  
+        for obj in datos:
+            row = []
+            for field in AcumFruta._meta.fields:
+                value = getattr(obj, field.name)
+                if isinstance(value, datetime.datetime):
+                    # Convertir a la zona horaria deseada
+                    if value.tzinfo is not None:
+                        value = value.astimezone(zona_horaria_deseada)
+                        value = value.replace(tzinfo=None)  # Eliminar la zona horaria para ser compatible con Excel
+                row.append(value)
+            ws.append(row)
+
+        ws_valle = wb.create_sheet(title='Valle')
+        
+        # Filtra tus datos según la opción seleccionada
+        datos = AcumFruta.objects.filter(fecha=opcion1,finca="VALLE") 
+
+        df = pd.DataFrame(list(datos.values()),columns=['id','fecha','finca','orden','cultivo','variedad','cajas','estructura'])
+
+        df_agrupado = df.groupby(['orden','estructura','variedad'], as_index=False).agg(
+            total_cajas=('cajas', 'sum'),
+            cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
+            id=('id', 'first'),
+            fecha =('fecha', 'first'),
+            finca =('finca', 'first'),
+            orden =('orden', 'first'),
+            variedad =('variedad', 'first'),
+            estructura =('estructura', 'first')
+        )
+        df_agrupado = df_agrupado.sort_values(by='orden')
+
+        # Agrega encabezados a la hoja Valle
+        ws_valle.append(df_agrupado.columns.tolist())
+
+        # Agrega los registros agrupados a la hoja Valle
+        for record in df_agrupado.itertuples(index=False):
+            ws_valle.append(record)
+        
+        # Crea una respuesta HTTP que sirva el archivo Excel
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename=envios.xlsx'
+
+        # Guarda el libro de Excel en la respuesta
+        wb.save(response)
+
+        return response
+    return render(request, 'plantaE/consulta_envios.html')
+
 
 def obtener_nombre_usuario(request):
     # Obtén el nombre de usuario del usuario autenticado
