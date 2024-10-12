@@ -24,7 +24,7 @@ def exportar_excel(request):
         ws.title = 'Rio'
 
          # Obtén los datos de tu modelo
-        datos = AcumFruta.objects.filter(fecha=opcion1, finca="RIO").values(["fecha","finca","orden","cultivo","variedad","estructura","cajas"]).order_by("orden")
+        datos = AcumFruta.objects.filter(fecha=opcion1, finca="RIO").values("fecha","finca","orden","cultivo","variedad","estructura","cajas").order_by("orden")
 
         # Agrega los encabezados
         ws.append([field.name for field in AcumFruta._meta.fields])
