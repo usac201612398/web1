@@ -23,24 +23,18 @@ def exportar_excel(request):
         ws = wb.active
         ws.title = 'Rio'
 
-        # Obtén los datos de tu modelo
-        datos = AcumFruta.objects.filter(fecha=opcion1,finca="RIO")
-
-        # Especifica la zona horaria deseada
-        zona_horaria_deseada = pytz.timezone('America/Guatemala')  # Cambia esto según sea necesario
+         # Obtén los datos de tu modelo
+        datos = AcumFruta.objects.filter(fecha=opcion1, finca="RIO").values(["fecha","finca","orden","cultivo","variedad","estructura","cajas"]).order_by("orden")
 
         # Agrega los encabezados
         ws.append([field.name for field in AcumFruta._meta.fields])
+        
         # Agrega los datos  
         for obj in datos:
             row = []
             for field in AcumFruta._meta.fields:
                 value = getattr(obj, field.name)
-                if isinstance(value, datetime.datetime):
-                    # Convertir a la zona horaria deseada
-                    if value.tzinfo is not None:
-                        value = value.astimezone(zona_horaria_deseada)
-                        value = value.replace(tzinfo=None)  # Eliminar la zona horaria para ser compatible con Excel
+                # Ya no se maneja el tipo datetime de manera especial
                 row.append(value)
             ws.append(row)
 
@@ -49,17 +43,16 @@ def exportar_excel(request):
         # Filtra tus datos según la opción seleccionada
         datos = AcumFruta.objects.filter(fecha=opcion1,finca="VALLE") 
 
-        df = pd.DataFrame(list(datos.values()),columns=['id','fecha','finca','orden','cultivo','variedad','cajas','estructura'])
+        df = pd.DataFrame(list(datos.values()),columns=['fecha','finca','orden','cultivo','variedad','estructura','cajas'])
 
         df_agrupado = df.groupby(['orden','estructura','variedad'], as_index=False).agg(
-            total_cajas=('cajas', 'sum'),
-            cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
-            id=('id', 'first'),
             fecha =('fecha', 'first'),
             finca =('finca', 'first'),
             orden =('orden', 'first'),
+            cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
             variedad =('variedad', 'first'),
-            estructura =('estructura', 'first')
+            estructura =('estructura', 'first'),
+            total_cajas=('cajas', 'sum')
         )
         df_agrupado = df_agrupado.sort_values(by='orden')
 
