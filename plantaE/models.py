@@ -209,6 +209,7 @@ class Recepciones(models.Model):
     registro = models.BigAutoField(primary_key=True)
     recepcion = models.BigIntegerField(blank=True, null=True)
     fecha = models.DateField(blank=True, null=True)
+    fechasalidafruta = models.DateField(blank=True, null=True)
     llave = models.CharField(max_length=200, blank=True, null=True)
     finca = models.CharField(max_length=75, blank=True, null=True)
     variedad = models.CharField(max_length=50, blank=True, null=True)
