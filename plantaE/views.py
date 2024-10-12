@@ -61,7 +61,7 @@ def exportar_excel(request):
 
         # Agrega los registros agrupados a la hoja Valle
         for record in df_agrupado.itertuples(index=False):
-            ws_valle.append(record[1:])  # Excluir el índice, si es necesario
+            ws_valle.append(record)  # Excluir el índice, si es necesario
         
         # Crea una respuesta HTTP que sirva el archivo Excel
         response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
