@@ -6,7 +6,7 @@ from openpyxl import Workbook
 from django.shortcuts import get_object_or_404, redirect
 from .models import Actpeso,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
 from .forms import pesosForm,salidasFrutaForm, recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
-from django.db.models import Sum
+from django.db.models import Sum, Q
 from django.utils import timezone
 import datetime
 import json
@@ -558,8 +558,8 @@ def recepciones_list(request):
     salidas = salidas.order_by('recepcion').filter(status=None)
     
     for i in salidas:
-        cajasacum = salidas2.order_by('-created').filter(status="En proceso",recepcion=i.recepcion).aggregate(sumacajas=Sum('cajas'))['sumacajas']
-        librasacum = salidas2.order_by('-created').filter(status="En proceso",recepcion=i.recepcion).aggregate(sumalibras=Sum('libras'))['sumalibras']    
+        cajasacum = salidas2.order_by('-created').filter(Q(status="En proceso") | Q(status="Cerrado"),recepcion=i.recepcion).aggregate(sumacajas=Sum('cajas'))['sumacajas']
+        librasacum = salidas2.order_by('-created').filter(Q(status="En proceso") | Q(status="Cerrado"),recepcion=i.recepcion).aggregate(sumalibras=Sum('libras'))['sumalibras']    
         if librasacum != None and cajasacum != None:
             i.cajas = i.cajas - int(cajasacum)
             i.libras = i.libras - float(librasacum)
