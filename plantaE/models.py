@@ -320,6 +320,7 @@ class detallerec(models.Model):
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     enviofruta = models.BigIntegerField(blank=True, null=True)
     boleta = models.BigIntegerField(blank=True, null = True)
+    fechasalidafruta = models.DateField(blank=True, null=True)
 
 class detallerecaux(models.Model):
     op_status = [('Pendiente','-'),('En proceso','En proceso'),('Cerrado','Cerrado')]
@@ -340,3 +341,4 @@ class detallerecaux(models.Model):
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     enviofruta = models.BigIntegerField(blank=True, null=True)
     boleta = models.BigIntegerField(blank=True, null = True)
+    fechasalidafruta = models.DateField(blank=True, null=True)
