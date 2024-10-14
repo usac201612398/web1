@@ -339,3 +339,4 @@ class detallerecaux(models.Model):
     classorigen = models.CharField(max_length=35, blank= True, null = True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     enviofruta = models.BigIntegerField(blank=True, null=True)
+    boletas = models.BigIntegerField(blank=True, null = True)
