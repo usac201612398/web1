@@ -43,9 +43,9 @@ class detallesProduccion(models.Model):
 class detallesEstructuras(models.Model):
 
     op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
-    op_estructura = [('CM1','CM1'),('CM2','CM2'),('CM3','CM3'),('CM4','CM4'),('CM5','CM5'),('CM6','CM6'),('CM6A','CM6A'),('CM6B','CM6B'),('CM7','CM7'),('INV1','INV1'),('INV2','INV2')]
+    op_estructura = [('CM1','CM1'),('CM2','CM2'),('CM3','CM3'),('CM4','CM4'),('CM5','CM5'),('CM6','CM6'),('CM6A','CM6A'),('CM6B','CM6B'),('CM7','CM7'),('INV1','INV1'),('INV2','INV2'),('CM8','CM8')]
     op_finca =  [('RIO','RIO'),('VALLE','VALLE')]
-    op_variedad = [('HATENO','HATENO'),('HYRULE','HYRULE'),('DORMA','DORMA'),('BAMANO','BAMANO'),('BAMANO TT764','BAMANO TT764'),('CHOCOSTAR','CHOCOSTAR'),('DUNNE','DUNNE'),('IVORINO','IVORINO'),('KM 5512','KM 5512'),('NEBULA','NEBULA'),('ROJO','ROJO'),('AMARILLO','AMARILLO'),('ANARANJADO','ANARANJADO')]
+    op_variedad = [('HATENO','HATENO'),('SWEET MAX','SWEET MAX'),('HYRULE','HYRULE'),('DORMA','DORMA'),('BAMANO','BAMANO'),('BAMANO TT764','BAMANO TT764'),('CHOCOSTAR','CHOCOSTAR'),('DUNNE','DUNNE'),('IVORINO','IVORINO'),('KM 5512','KM 5512'),('NEBULA','NEBULA'),('ROJO','ROJO'),('AMARILLO','AMARILLO'),('ANARANJADO','ANARANJADO')]
     op_encargado = [('Brandon Portillo','Brandon Portillo'),('Carlos Hernández','Carlos Hernández'),('Nolberto Morales','Nolberto Morales'),('Rita Florian','Rita Florian')]
     
     id = models.AutoField(primary_key=True)
@@ -63,12 +63,12 @@ class salidasFruta(models.Model):
     
     op_viajes = [('','-'),('Viaje 1','Viaje 1'),('Viaje 2','Viaje 2'),('Viaje 3', 'Viaje 3'),('Viaje 4','Viaje 4'),('Viaje 5','Viaje 5'),('Viaje 6','Viaje 6'),('Viaje 7','Viaje 7'),('Viaje 8','Viaje 8')]
     op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
-    op_variedad = [('HATENO','HATENO'),('HYRULE','HYRULE'),('DUNNE','DUNNE'),('BAMANO','BAMANO'),('BAMANO TT764','BAMANO TT764'),('DORMA','DORMA'),('CHOCOSTAR','CHOCOSTAR'),('IVORINO','IVORINO'),('KM 5512','KM 5512'),('NEBULA','NEBULA'),('ROJO','ROJO'),('AMARILLO','AMARILLO'),('ANARANJADO','ANARANJADO')]
+    op_variedad = [('HATENO','HATENO'),('SWEET MAX','SWEET MAX'),('HYRULE','HYRULE'),('DUNNE','DUNNE'),('BAMANO','BAMANO'),('BAMANO TT764','BAMANO TT764'),('DORMA','DORMA'),('CHOCOSTAR','CHOCOSTAR'),('IVORINO','IVORINO'),('KM 5512','KM 5512'),('NEBULA','NEBULA'),('ROJO','ROJO'),('AMARILLO','AMARILLO'),('ANARANJADO','ANARANJADO')]
     op_encargado = [('Brandon Portillo','Brandon Portillo'),('Carlos Hernández','Carlos Hernández'),('Noel Bran','Noel Bran'),('Nolberto Morales','Nolberto Morales')]
     op_finca = [('VALLE','VALLE'),('RIO','RIO'),('CIP','CIP'),('FLE','FLE'),('FLA','FLA')]
     op_correo = [('cosecha.rio@popoyan.com.gt','cosecha.rio@popoyan.com.gt'),('cosecha.valle@popoyan.com.gt','cosecha.valle@popoyan.com.gt'),('cosecha.valle2@popoyan.com.gt','cosecha.valle2@popoyan.com.gt')]
     op_orden = [('64202052','64202052'),('64206054','64206054'),('64206055','64206055'),('64206056','64206056'),('64202048','64202048'),('64202049','64202049'),('64202050','64202050'),('64202051','64202051')]
-    op_estructura = [('CM1','CM1'),('CM2','CM2'),('CM3','CM3'),('CM4','CM4'),('CM5','CM5'),('CM6','CM6'),('CM6A','CM6A'),('CM6B','CM6B'),('CM7','CM7'),('INV1','INV1'),('INV2','INV2')]
+    op_estructura = [('CM1','CM1'),('CM2','CM2'),('CM3','CM3'),('CM4','CM4'),('CM5','CM5'),('CM6','CM6'),('CM6A','CM6A'),('CM6B','CM6B'),('CM7','CM7'),('INV1','INV1'),('INV2','INV2'),('CM8','CM8')]
     id = models.AutoField(primary_key=True)
     fecha = models.DateField(blank=True, null=True)
     finca = models.CharField(max_length=25,choices=op_finca,null=True)
@@ -89,11 +89,11 @@ class salidasFruta(models.Model):
 class AcumFruta(models.Model):
     
     op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
-    op_variedad = [('HYRULE','HYRULE'),('HATENO','HATENO'),('DUNNE','DUNNE'),('BAMANO','BAMANO'),('BAMANO TT764','BAMANO TT764'),('DORMA','DORMA'),('CHOCOSTAR','CHOCOSTAR'),('IVORINO','IVORINO'),('KM 5512','KM 5512'),('NEBULA','NEBULA'),('ROJO','ROJO'),('AMARILLO','AMARILLO'),('ANARANJADO','ANARANJADO')]
+    op_variedad = [('HYRULE','HYRULE'),('SWEET MAX','SWEET MAX'),('HATENO','HATENO'),('DUNNE','DUNNE'),('BAMANO','BAMANO'),('BAMANO TT764','BAMANO TT764'),('DORMA','DORMA'),('CHOCOSTAR','CHOCOSTAR'),('IVORINO','IVORINO'),('KM 5512','KM 5512'),('NEBULA','NEBULA'),('ROJO','ROJO'),('AMARILLO','AMARILLO'),('ANARANJADO','ANARANJADO')]
     op_finca = [('VALLE','VALLE'),('RIO','RIO'),('CIP','CIP'),('FLE','FLE'),('FLA','FLA')]
     op_correo = [('cosecha.rio@popoyan.com.gt','cosecha.rio@popoyan.com.gt'),('cosecha.valle@popoyan.com.gt','cosecha.valle@popoyan.com.gt')]
     op_orden = [('64202052','64202052'),('64206054','64206054'),('64206055','64206055'),('64206056','64206056'),('64202048','64202048'),('64202049','64202049'),('64202050','64202050'),('64202051','64202051')]
-    op_estructura = [('CM1','CM1'),('CM2','CM2'),('CM3','CM3'),('CM4','CM4'),('CM5','CM5'),('CM6','CM6'),('CM6A','CM6A'),('CM6B','CM6B'),('CM7','CM7'),('INV1','INV1'),('INV2','INV2')]
+    op_estructura = [('CM1','CM1'),('CM2','CM2'),('CM3','CM3'),('CM4','CM4'),('CM5','CM5'),('CM6','CM6'),('CM6A','CM6A'),('CM6B','CM6B'),('CM7','CM7'),('INV1','INV1'),('INV2','INV2'),('CM8','CM8')]
     
     id = models.AutoField(primary_key=True)
     fecha = models.DateField(blank=True, null=True)
@@ -117,7 +117,7 @@ class enviosFrutaPlantilla(models.Model):
     op_finca = [('VALLE','VALLE'),('RIO','RIO'),('CIP','CIP'),('FLE','FLE'),('FLA','FLA')]
     op_correo = [('cosecha.rio@popoyan.com.gt','cosecha.rio@popoyan.com.gt')]
     op_orden = [('64202052','64202052'),('64206054','64206054'),('64206055','64206055'),('64206056','64206056'),('64202048','64202048'),('64202049','64202049'),('64202050','64202050'),('64202051','64202051')]
-    op_estructura = [('CM1','CM1'),('CM2','CM2'),('CM3','CM3'),('CM4','CM4'),('CM5','CM5'),('CM6','CM6'),('CM6A','CM6A'),('CM6B','CM6B'),('CM7','CM7'),('INV1','INV1'),('INV2','INV2')]
+    op_estructura = [('CM1','CM1'),('CM2','CM2'),('CM3','CM3'),('CM4','CM4'),('CM5','CM5'),('CM6','CM6'),('CM6A','CM6A'),('CM6B','CM6B'),('CM7','CM7'),('INV1','INV1'),('INV2','INV2'),('CM8','CM8')]
     
     id = models.AutoField(primary_key=True)
     fecha = models.DateField(blank=True, null=True)
@@ -139,7 +139,7 @@ class enviosFrutaPlantilla(models.Model):
 class cultivoxFinca(models.Model):
     
     op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
-    op_variedad = [('BAMANO','BAMANO'),('BAMANO TT764','BAMANO TT764'),('DUNNE','DUNNE'),('CHOCOSTAR','CHOCOSTAR'),('BAMANO','BAMANO'),('DORMA','DORMA'),('IVORINO','IVORINO'),('KM 5512','KM 5512'),('NEBULA','NEBULA'),('ROJO','ROJO'),('AMARILLO','AMARILLO'),('ANARANJADO','ANARANJADO'),('HATENO','HATENO'),('HYRULE','HYRULE')]
+    op_variedad = [('BAMANO','BAMANO'),('SWEET MAX','SWEET MAX'),('BAMANO TT764','BAMANO TT764'),('DUNNE','DUNNE'),('CHOCOSTAR','CHOCOSTAR'),('BAMANO','BAMANO'),('DORMA','DORMA'),('IVORINO','IVORINO'),('KM 5512','KM 5512'),('NEBULA','NEBULA'),('ROJO','ROJO'),('AMARILLO','AMARILLO'),('ANARANJADO','ANARANJADO'),('HATENO','HATENO'),('HYRULE','HYRULE')]
     op_finca = [('VALLE','VALLE'),('RIO','RIO'),('CIP','CIP'),('FLE','FLE'),('FLA','FLA')]
 
     id = models.AutoField(primary_key=True)
