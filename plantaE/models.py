@@ -322,7 +322,7 @@ class detallerec(models.Model):
     enviofruta = models.BigIntegerField(blank=True, null=True)
 
 class detallerecaux(models.Model):
-    op_status = [('Pendiente','-'),('En proceso','En proceso')]
+    op_status = [('Pendiente','-'),('En proceso','En proceso'),('Cerrado','Cerrado')]
     registro = models.BigAutoField(primary_key=True)
     recepcion = models.BigIntegerField(blank=True, null = True)
     fecha = models.DateField(blank=True, null=True)
