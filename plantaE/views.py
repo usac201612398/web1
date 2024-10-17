@@ -539,27 +539,32 @@ def procesarrecepcion(request):
     
     for i in mensaje:
         ref=detallerec.objects.get(registro = i[0])
-        # Crea un diccionario con los datos
-        registro = {
-            'recepcion': i[1],
-            'fecha': str(ref.fecha),
-            'finca': i[3],
-            'cultivo': i[4],
-            'cajas': i[5],
-            'libras': i[6],
-            'status': "En proceso",
-            'observaciones': i[8],
-            'llave': str(ref.llave),
-            'criterio': str(ref.criterio),
-            'classorigen': str(ref.classorigen),
-            'fechasalidafruta': str(ref.fechasalidafruta),
-        }
+        if ref.fechasalidafruta == None:
+            ref.fechasalidafruta = ref.fecha
         
-        # Añade el diccionario a la lista de registros
-        registros.append(registro)
-        #detallerecaux.objects.create(recepcion=i[1],fecha=str(ref.fecha),finca=i[3],cultivo=i[4],cajas=i[5],libras=i[6],status="En proceso",observaciones=i[8],llave=str(ref.llave),criterio=str(ref.criterio),classorigen=str(ref.classorigen),fechasalidafruta=str(ref.fechasalidafruta))
+        detallerecaux.objects.create(recepcion=i[1],fecha=str(ref.fecha),finca=i[3],cultivo=i[4],cajas=i[5],libras=i[6],status="En proceso",observaciones=i[8],llave=str(ref.llave),criterio=str(ref.criterio),classorigen=str(ref.classorigen),fechasalidafruta=str(ref.fechasalidafruta))
     
+        # Crea un diccionario con los datos
     '''
+    registro = {
+        'recepcion': i[1],
+        'fecha': str(ref.fecha),
+        'finca': i[3],
+        'cultivo': i[4],
+        'cajas': i[5],
+        'libras': i[6],
+        'status': "En proceso",
+        'observaciones': i[8],
+        'llave': str(ref.llave),
+        'criterio': str(ref.criterio),
+        'classorigen': str(ref.classorigen),
+        'fechasalidafruta': str(ref.fechasalidafruta),
+    }
+    
+    # Añade el diccionario a la lista de registros
+    registros.append(registro)
+    '''
+    
     for i in mensaje:
         salidas = detallerec.objects.get(recepcion=i[1])
         
@@ -568,7 +573,7 @@ def procesarrecepcion(request):
         if str(salidas2) == str(salidas.libras):
             salidas.status = "En proceso"
             salidas.save()
-    '''
+    
     return JsonResponse({'mensaje':mensaje,'registros':registros})   
 
 def recepciones_list(request):
