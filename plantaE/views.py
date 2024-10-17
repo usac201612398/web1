@@ -536,11 +536,30 @@ def procesarrecepcion(request):
     mensaje = data['array']
     #mensaje = request.POST.get('array')
     registros =  []
-    '''
+    
     for i in mensaje:
         ref=detallerec.objects.get(registro = i[0])
-        detallerecaux.objects.create(recepcion=i[1],fecha=str(ref.fecha),finca=i[3],cultivo=i[4],cajas=i[5],libras=i[6],status="En proceso",observaciones=i[8],llave=str(ref.llave),criterio=str(ref.criterio),classorigen=str(ref.classorigen),fechasalidafruta=str(ref.fechasalidafruta))
-    registros = []
+        # Crea un diccionario con los datos
+        registro = {
+            'recepcion': i[1],
+            'fecha': str(ref.fecha),
+            'finca': i[3],
+            'cultivo': i[4],
+            'cajas': i[5],
+            'libras': i[6],
+            'status': "En proceso",
+            'observaciones': i[8],
+            'llave': str(ref.llave),
+            'criterio': str(ref.criterio),
+            'classorigen': str(ref.classorigen),
+            'fechasalidafruta': str(ref.fechasalidafruta),
+        }
+        
+        # Añade el diccionario a la lista de registros
+        registros.append(registro)
+        #detallerecaux.objects.create(recepcion=i[1],fecha=str(ref.fecha),finca=i[3],cultivo=i[4],cajas=i[5],libras=i[6],status="En proceso",observaciones=i[8],llave=str(ref.llave),criterio=str(ref.criterio),classorigen=str(ref.classorigen),fechasalidafruta=str(ref.fechasalidafruta))
+    
+    '''
     for i in mensaje:
         salidas = detallerec.objects.get(recepcion=i[1])
         
