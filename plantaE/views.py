@@ -54,7 +54,7 @@ def exportar_excel(request):
             variedad=('variedad', 'first'),
             estructura=('estructura', 'first'),
             total_cajas=('cajas', 'sum'),
-            correo = ('correo', 'sum'),
+            correo = ('correo', 'first'),
         )
         df_agrupado = df_agrupado.sort_values(by='orden')
 
