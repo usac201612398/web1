@@ -23,22 +23,22 @@ def exportar_excel(request):
 
         # Obtén los datos de tu modelo
         datos_rio = AcumFruta.objects.filter(fecha=opcion1, finca="RIO").values(
-            "fecha", "finca", "orden", "cultivo", "variedad", "estructura", "cajas"
+            "id","fecha", "finca", "orden", "cultivo", "variedad", "estructura", "cajas","correo"
         ).order_by("orden")
 
         # Agrega los encabezados
-        ws.append(["fecha", "finca", "orden", "cultivo", "variedad", "estructura", "cajas"])
+        ws.append(["id","fecha", "finca", "orden", "cultivo", "variedad", "estructura", "cajas","correo"])
         
         # Agrega los datos  
         for obj in datos_rio:
-            row = [obj['fecha'], obj['finca'], obj['orden'], obj['cultivo'], obj['variedad'], obj['estructura'], obj['cajas']]
+            row = [obj['id'],obj['fecha'], obj['finca'], obj['orden'], obj['cultivo'], obj['variedad'], obj['estructura'], obj['cajas'], obj['correo']]
             ws.append(row)
 
         ws_valle = wb.create_sheet(title='Valle')
         
         # Filtra tus datos según la opción seleccionada
         datos_valle = AcumFruta.objects.filter(fecha=opcion1, finca="VALLE").values(
-            "id", "fecha", "finca", "orden", "cultivo", "variedad", "estructura", "cajas"
+            "id", "fecha", "finca", "orden", "cultivo", "variedad", "estructura", "cajas","correo"
         )
 
         # Crea un DataFrame a partir de los datos
@@ -46,13 +46,15 @@ def exportar_excel(request):
 
         # Agrupa los datos
         df_agrupado = df.groupby(['orden', 'estructura', 'variedad'], as_index=False).agg(
+            id=('id', 'first'),
             fecha=('fecha', 'first'),
             finca=('finca', 'first'),
             orden=('orden', 'first'),
             cultivo=('cultivo', 'first'),
             variedad=('variedad', 'first'),
             estructura=('estructura', 'first'),
-            total_cajas=('cajas', 'sum')
+            total_cajas=('cajas', 'sum'),
+            correo = ('correo', 'sum'),
         )
         df_agrupado = df_agrupado.sort_values(by='orden')
 
