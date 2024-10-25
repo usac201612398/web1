@@ -56,6 +56,7 @@ def exportar_excel(request):
             total_cajas=('cajas', 'sum'),
             correo = ('correo', 'first'),
         )
+
         df_agrupado = df_agrupado.sort_values(by='orden')
 
         # Agrega encabezados a la hoja Valle
@@ -600,6 +601,77 @@ def recepciones_list(request):
     #for i in len(salidas):
     #    existenciaCajas 
     return render(request, 'plantaE/recepciones_list.html', {'registros': salidas})
+
+def recepciones_reporteAcum(request):
+    today = timezone.now().date()
+    
+     # Obtener todos los registros para el usuario y la fecha
+    registros = Recepciones.objects.filter(fecha=today)
+
+   # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
+    df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','variedad','cajas','libras'])
+
+    # Agrupar por 'variedad' y sumar las 'cajas'
+    df_agrupado = df.groupby(['variedad','cultivo'], as_index=False).agg(
+        total_cajas=('cajas', 'sum'),
+        cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
+        fecha=('fecha', 'first'),
+        variedad=('variedad', 'first'),
+        finca=('finca', 'first'),
+        created_at=('libras', 'sum')    # Conservar la primera fecha asociada
+    )
+
+    # Convertir el DataFrame a una lista de diccionarios para pasarlo a la plantilla
+    registros_finales = df_agrupado.to_dict(orient='records')
+
+    # Agrupar por 'cultivo' y sumar las 'cajas'
+    df_agrupado = df.groupby('cultivo', as_index=False).agg(
+        total_cajas=('cajas', 'sum'),
+        cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
+        fecha=('fecha', 'first'),
+        variedad=('variedad', 'first'),
+        finca=('finca', 'first'),
+        created_at=('libras', 'sum')    # Conservar la primera fecha asociada
+    )
+
+    registros_finales2 = df_agrupado.to_dict(orient='records')
+
+    if request.method == 'POST':
+        opcion2 = request.POST.get('opcion2')
+         # Obtener todos los registros para el usuario y la fecha
+        registros = Recepciones.objects.filter(fecha=opcion2)
+
+    # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
+        df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','variedad','cajas','libras'])
+
+        # Agrupar por 'variedad' y sumar las 'cajas'
+        df_agrupado = df.groupby('variedad', as_index=False).agg(
+            total_cajas=('cajas', 'sum'),
+            cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
+            fecha=('fecha', 'first'),
+            variedad=('variedad', 'first'),
+            finca=('finca', 'first'),
+            created_at=('libras', 'sum')    # Conservar la primera fecha asociada
+        )
+
+        # Convertir el DataFrame a una lista de diccionarios para pasarlo a la plantilla
+        registros_finales = df_agrupado.to_dict(orient='records')
+
+        # Agrupar por 'cultivo' y sumar las 'cajas'
+        df_agrupado = df.groupby('cultivo', as_index=False).agg(
+            total_cajas=('cajas', 'sum'),
+            cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
+            fecha=('fecha', 'first'),
+            variedad=('variedad', 'first'),
+            finca=('finca', 'first'),
+            created_at=('libras', 'sum')    # Conservar la primera fecha asociada
+        )
+
+        registros_finales2 = df_agrupado.to_dict(orient='records')
+        return JsonResponse({'datos': list(registros_finales),'opcion2':opcion2,'resumen':registros_finales2}, safe=False)
+
+    return render(request, 'plantaE/recepciones_reporteAcum.html', {'registros': registros_finales, 'registros2': registros_finales2})
+
 
 def boletas_list(request):
     #today = timezone.now().date()

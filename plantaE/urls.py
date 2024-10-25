@@ -45,6 +45,7 @@ urlpatterns = [
     path('recepcionesFruta/<int:pk>/edit/', views.recepciones_update, name='recepcionesFruta_update'),
     path("recepcionesFruta/process",views.procesarrecepcion,name='recepcionesFruta_process'),
     path("recepcionesFruta",views.recepciones_list,name='recepcionesFruta_list'),
+    path("recepcionesFruta/reporteAcum",views.recepciones_reporteAcum,name='recepcionesFruta_reporteAcum'),
     path("boletasFruta",views.boletas_list,name='boletasFruta_list'),
     path('recepcionesFruta/<int:pk>/', views.recepciones_detail, name='recepcionesFruta_detail'),
     path("ccalidad",views.ccalidad_list,name='ccalidad_list'),
