@@ -99,8 +99,9 @@
                     <td>{{registro.finca}}</td>
                     <td>{{registro.cultivo}}</td>
                     <td>{{registro.variedad}}</td>
-                    <td>{{registro.total_cajas}}</td>
-                    <td>{{registro.total_libras}}</td>
+                    <td data-value="{{ registro.total_cajas }}">{{ registro.total_cajas }}</td>
+                    <td data-value="{{ registro.total_libras }}">{{ registro.total_libras }}</td>
+                        
                 </tr> 
                         
                 {% endfor %}
@@ -134,8 +135,9 @@
                         <td>{{registro.finca}}</td>
                         <td>{{registro.cultivo}}</td>
                         <td>-</td>
-                        <td>{{registro.total_cajas}}</td>
-                        <td>{{registro.total_libras}}</td>
+                        <td data-value="{{ registro.total_cajas }}">{{ registro.total_cajas }}</td>
+                        <td data-value="{{ registro.total_libras }}">{{ registro.total_libras }}</td>
+                        
                     </tr> 
                             
                     {% endfor %}
@@ -150,6 +152,15 @@
 
 <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    const cells = document.querySelectorAll('td[data-value]');
+    cells.forEach(cell => {
+        const value = parseInt(cell.getAttribute('data-value'), 10);
+        cell.textContent = value.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    });
+</script>
+
 <script>
 
 document.getElementById('consultar').addEventListener('click', function() {
