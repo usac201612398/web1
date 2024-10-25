@@ -14,7 +14,7 @@
             font-family: monospace; /* Usa una fuente monoespaciada para mejor alineación */
         }
     </style>
-    
+
     <style>
         h1 {
             margin: 15px;
@@ -162,13 +162,18 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-    const cells = document.querySelectorAll('td[data-value]');
-    cells.forEach(cell => {
-        const value = parseInt(cell.getAttribute('data-value'), 10);
-        cell.textContent = value.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-    });
-</script>
+    // Formatear los números en ambas tablas
+    const formatCells = (tableId) => {
+        const cells = document.querySelectorAll(`#${tableId} td[data-value]`);
+        cells.forEach(cell => {
+            const value = parseInt(cell.getAttribute('data-value'), 10);
+            cell.textContent = value.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+        });
+    };
 
+    formatCells('myTable');
+    formatCells('myTable2');
+</script>
 <script>
 
 document.getElementById('consultar').addEventListener('click', function() {
