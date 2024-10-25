@@ -604,7 +604,7 @@ def recepciones_list(request):
 
 def recepciones_reporteAcum(request):
     today = timezone.now().date()
-    
+
      # Obtener todos los registros para el usuario y la fecha
     registros = Recepciones.objects.filter(fecha=today)
 
@@ -618,7 +618,7 @@ def recepciones_reporteAcum(request):
         fecha=('fecha', 'first'),
         variedad=('variedad', 'first'),
         finca=('finca', 'first'),
-        created_at=('libras', 'sum')    # Conservar la primera fecha asociada
+        total_libras=('libras', 'sum')    # Conservar la primera fecha asociada
     )
 
     # Convertir el DataFrame a una lista de diccionarios para pasarlo a la plantilla
@@ -631,7 +631,7 @@ def recepciones_reporteAcum(request):
         fecha=('fecha', 'first'),
         variedad=('variedad', 'first'),
         finca=('finca', 'first'),
-        created_at=('libras', 'sum')    # Conservar la primera fecha asociada
+        total_libras=('libras', 'sum')    # Conservar la primera fecha asociada
     )
 
     registros_finales2 = df_agrupado.to_dict(orient='records')
@@ -651,7 +651,7 @@ def recepciones_reporteAcum(request):
             fecha=('fecha', 'first'),
             variedad=('variedad', 'first'),
             finca=('finca', 'first'),
-            created_at=('libras', 'sum')    # Conservar la primera fecha asociada
+            total_libras=('libras', 'sum')    # Conservar la primera fecha asociada
         )
 
         # Convertir el DataFrame a una lista de diccionarios para pasarlo a la plantilla
@@ -664,7 +664,7 @@ def recepciones_reporteAcum(request):
             fecha=('fecha', 'first'),
             variedad=('variedad', 'first'),
             finca=('finca', 'first'),
-            created_at=('libras', 'sum')    # Conservar la primera fecha asociada
+            total_libras=('libras', 'sum')    # Conservar la primera fecha asociada
         )
 
         registros_finales2 = df_agrupado.to_dict(orient='records')
