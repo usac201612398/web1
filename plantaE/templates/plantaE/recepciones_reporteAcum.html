@@ -161,14 +161,14 @@
 <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-
 <script>
     // Función para formatear los números en ambas tablas
     const formatCells = (tableId) => {
         const cells = document.querySelectorAll(`#${tableId} td.number-cell`);
         cells.forEach(cell => {
-            const value = parseInt(cell.getAttribute('data-value'), 10);
+            const value = Number(cell.getAttribute('data-value'));
             if (!isNaN(value)) {
+                // Usa toLocaleString para formatear correctamente
                 cell.textContent = value.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
             }
         });
