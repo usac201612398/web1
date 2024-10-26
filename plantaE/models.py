@@ -78,6 +78,7 @@ class salidasFruta(models.Model):
     cultivo = models.CharField(max_length=45,choices=op_cultivo,null=True)
     variedad = models.CharField(max_length=40,choices=op_variedad,null=True)
     cajas = models.IntegerField(blank=True, null=True)
+    libras = models.FloatField(blank=True, null=True)
     correo = models.CharField(max_length=75, blank=True,choices=op_correo,null=True)
     #estructura=models.CharField(max_length=40,choices=op_estructura,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -106,6 +107,8 @@ class AcumFruta(models.Model):
     estructura=models.CharField(max_length=40,choices=op_estructura,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    libras = models.FloatField(blank=True, null=True)
+    orden = models.CharField(max_length=30,null=True)
 
     def __str__(self):
         return (str(self.finca)+ " | " + str(self.cultivo) + " | " + str(self.variedad)+ " | " + str(self.estructura))
