@@ -107,7 +107,7 @@ class AcumFruta(models.Model):
     estructura=models.CharField(max_length=40,choices=op_estructura,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    #libras = models.FloatField(blank=True, null=True)
+    libras = models.FloatField(blank=True, null=True)
     orden = models.CharField(max_length=30,null=True)
 
     def __str__(self):
