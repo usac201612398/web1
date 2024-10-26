@@ -196,7 +196,7 @@ def cuadrar_RioDia(request):
     df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','variedad','cajas','created_at'])
 
     # Agrupar por 'variedad' y sumar las 'cajas'
-    df_agrupado = df.groupby('variedad', as_index=False).agg(
+    df_agrupado = df.groupby(['variedad','cultivo'], as_index=False).agg(
         total_cajas=('cajas', 'sum'),
         cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
         fecha=('fecha', 'first'),
@@ -230,7 +230,7 @@ def cuadrar_RioDia(request):
         df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','variedad','cajas','created_at'])
 
         # Agrupar por 'variedad' y sumar las 'cajas'
-        df_agrupado = df.groupby('variedad', as_index=False).agg(
+        df_agrupado = df.groupby(['variedad','cultivo'], as_index=False).agg(
             total_cajas=('cajas', 'sum'),
             cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
             fecha=('fecha', 'first'),
@@ -301,7 +301,7 @@ def cuadrar_ValleDia(request):
         df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','variedad','cajas','created_at'])
 
         # Agrupar por 'variedad' y sumar las 'cajas'
-        df_agrupado = df.groupby('variedad', as_index=False).agg(
+        df_agrupado = df.groupby(['variedad','cultivo'], as_index=False).agg(
             total_cajas=('cajas', 'sum'),
             cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
             fecha=('fecha', 'first'),
@@ -645,7 +645,7 @@ def recepciones_reporteAcum(request):
         df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','variedad','cajas','libras'])
 
         # Agrupar por 'variedad' y sumar las 'cajas'
-        df_agrupado = df.groupby('variedad', as_index=False).agg(
+        df_agrupado = df.groupby(['variedad','cultivo'], as_index=False).agg(
             total_cajas=('cajas', 'sum'),
             cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
             fecha=('fecha', 'first'),
