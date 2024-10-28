@@ -212,7 +212,7 @@ def cuadrar_RioDia(request):
         finca=('finca', 'first'),
         created_at=('created_at', 'first')    # Conservar la primera fecha asociada
     )
-
+    df_agrupado['total_libras'] = df_agrupado['total_libras'].round(0)
     # Convertir el DataFrame a una lista de diccionarios para pasarlo a la plantilla
     registros_finales = df_agrupado.to_dict(orient='records')
 
@@ -226,7 +226,7 @@ def cuadrar_RioDia(request):
         finca=('finca', 'first'),
         created_at=('created_at', 'first')    # Conservar la primera fecha asociada
     )
-
+    df_agrupado['total_libras'] = df_agrupado['total_libras'].round(0)
     registros_finales2 = df_agrupado.to_dict(orient='records')
 
     if request.method == 'POST':
@@ -248,7 +248,7 @@ def cuadrar_RioDia(request):
             finca=('finca', 'first'),
             created_at=('created_at', 'first')    # Conservar la primera fecha asociada
         )
-
+        df_agrupado['total_libras'] = df_agrupado['total_libras'].round(0)
         # Convertir el DataFrame a una lista de diccionarios para pasarlo a la plantilla
         registros_finales = df_agrupado.to_dict(orient='records')
 
@@ -262,7 +262,7 @@ def cuadrar_RioDia(request):
             finca=('finca', 'first'),
             created_at=('created_at', 'first')    # Conservar la primera fecha asociada
         )
-
+        df_agrupado['total_libras'] = df_agrupado['total_libras'].round(0)
         registros_finales2 = df_agrupado.to_dict(orient='records')
         return JsonResponse({'datos': list(registros_finales),'opcion1':opcion1,'opcion2':opcion2,'resumen':registros_finales2}, safe=False)
 
@@ -287,7 +287,7 @@ def cuadrar_ValleDia(request):
         finca=('finca', 'first'),
         created_at=('created_at', 'first')    # Conservar la primera fecha asociada
     )
-
+    df_agrupado['total_libras'] = df_agrupado['total_libras'].round(0)
     # Convertir el DataFrame a una lista de diccionarios para pasarlo a la plantilla
     registros_finales = df_agrupado.to_dict(orient='records')
 
@@ -301,7 +301,7 @@ def cuadrar_ValleDia(request):
         finca=('finca', 'first'),
         created_at=('created_at', 'first')    # Conservar la primera fecha asociada
     )
-
+    df_agrupado['total_libras'] = df_agrupado['total_libras'].round(0)
     registros_finales2 = df_agrupado.to_dict(orient='records')
 
     if request.method == 'POST':
@@ -323,7 +323,7 @@ def cuadrar_ValleDia(request):
             finca=('finca', 'first'),
             created_at=('created_at', 'first')    # Conservar la primera fecha asociada
         )
-
+        df_agrupado['total_libras'] = df_agrupado['total_libras'].round(0)
         # Convertir el DataFrame a una lista de diccionarios para pasarlo a la plantilla
         registros_finales = df_agrupado.to_dict(orient='records')
 
@@ -337,7 +337,7 @@ def cuadrar_ValleDia(request):
             finca=('finca', 'first'),
             created_at=('created_at', 'first')    # Conservar la primera fecha asociada
         )
-
+        df_agrupado['total_libras'] = df_agrupado['total_libras'].round(0)
         registros_finales2 = df_agrupado.to_dict(orient='records')
         return JsonResponse({'datos': list(registros_finales),'opcion1':opcion1,'opcion2':opcion2,'resumen':registros_finales2}, safe=False)
 

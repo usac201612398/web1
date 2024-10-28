@@ -118,7 +118,8 @@
                     <td>{{registro.fecha}}</td>
                     <td>{{registro.finca}}</td>
                     <td>{{registro.cajas}}</td>
-                    <td>{{registro.libras}}</td>
+                    
+                    <td class="number-cell" data-value="{{ registro.libras }}">{{ registro.libras }}</td>
                     <td>{{registro.orden}}</td>
                     <td>{{registro.cultivo}}</td>
                     <td>{{registro.estructura}}</td>
@@ -209,5 +210,24 @@ $(document).ready(function() {
         
 });
 
+</script>
+
+<script>
+    // Función para formatear los números en ambas tablas
+    const formatCells = (tableId) => {
+        const cells = document.querySelectorAll(`#${tableId} td.number-cell`);
+        cells.forEach(cell => {
+            const value = Number(cell.getAttribute('data-value'));
+            if (!isNaN(value)) {
+                // Usa toLocaleString para formatear correctamente
+                cell.textContent = value.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+            }
+        });
+    };
+
+    // Llama a la función para ambas tablas
+    document.addEventListener('DOMContentLoaded', () => {
+        formatCells('myTable');
+    });
 </script>
 </html>
