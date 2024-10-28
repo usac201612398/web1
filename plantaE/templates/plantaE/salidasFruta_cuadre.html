@@ -99,6 +99,7 @@
                     <th >Cultivo</th>
                     <th >Variedad</th>
                     <th >Cajas</th>
+                    <th >Libras</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -110,6 +111,7 @@
                     <td>{{registro.cultivo}}</td>
                     <td>{{registro.variedad}}</td>
                     <td>{{registro.total_cajas}}</td>
+                    <td>{{registro.total_libras}}</td>
                 </tr> 
                         
                 {% endfor %}
@@ -132,6 +134,7 @@
                         <th >Cultivo</th>
                         <th >Variedad</th>
                         <th >Cajas</th>
+                        <th >Libras</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -143,6 +146,7 @@
                         <td>{{registro.cultivo}}</td>
                         <td>-</td>
                         <td>{{registro.total_cajas}}</td>
+                        <td>{{registro.total_libras}}</td>
                     </tr> 
                             
                     {% endfor %}
@@ -188,14 +192,14 @@ document.getElementById('consultar').addEventListener('click', function() {
         console.log(data)
         data.datos.forEach(item => {
             const fila = document.createElement('tr');
-            fila.innerHTML = `<td>${item.fecha}</td><td>${item.finca}</td><td>${item.cultivo}</td><td>${item.variedad}</td><td>${item.total_cajas}</td>`;
+            fila.innerHTML = `<td>${item.fecha}</td><td>${item.finca}</td><td>${item.cultivo}</td><td>${item.variedad}</td><td>${item.total_cajas}</td><td>${item.total_libras}</td>`;
             
             tbody.appendChild(fila);
         });
 
         data.resumen.forEach(item => {
             const fila = document.createElement('tr');
-            fila.innerHTML = `<td>${item.fecha}</td><td>${item.finca}</td><td>${item.cultivo}</td><td>-</td><td>${item.total_cajas}</td>`;
+            fila.innerHTML = `<td>${item.fecha}</td><td>${item.finca}</td><td>${item.cultivo}</td><td>-</td><td>${item.total_cajas}</td><td>${item.total_libras}</td>`;
             
             tbody2.appendChild(fila);
         });

@@ -200,11 +200,12 @@ def cuadrar_RioDia(request):
     registros = salidasFruta.objects.filter(fecha=today, correo=nombre_usuario)
 
    # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
-    df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','variedad','cajas','created_at'])
+    df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','variedad','cajas','libras','created_at'])
 
     # Agrupar por 'variedad' y sumar las 'cajas'
     df_agrupado = df.groupby(['variedad','cultivo'], as_index=False).agg(
         total_cajas=('cajas', 'sum'),
+        total_libras=('libras', 'sum'),
         cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
         fecha=('fecha', 'first'),
         variedad=('variedad', 'first'),
@@ -218,6 +219,7 @@ def cuadrar_RioDia(request):
     # Agrupar por 'cultivo' y sumar las 'cajas'
     df_agrupado = df.groupby('cultivo', as_index=False).agg(
         total_cajas=('cajas', 'sum'),
+        total_libras=('libras', 'sum'),
         cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
         fecha=('fecha', 'first'),
         variedad=('variedad', 'first'),
@@ -234,11 +236,12 @@ def cuadrar_RioDia(request):
         registros = salidasFruta.objects.filter(fecha=opcion2,cultivo=opcion1,correo=nombre_usuario)
 
     # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
-        df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','variedad','cajas','created_at'])
+        df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','variedad','cajas','libras','created_at'])
 
         # Agrupar por 'variedad' y sumar las 'cajas'
         df_agrupado = df.groupby(['variedad','cultivo'], as_index=False).agg(
             total_cajas=('cajas', 'sum'),
+            total_libras=('libras', 'sum'),
             cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
             fecha=('fecha', 'first'),
             variedad=('variedad', 'first'),
@@ -252,6 +255,7 @@ def cuadrar_RioDia(request):
         # Agrupar por 'cultivo' y sumar las 'cajas'
         df_agrupado = df.groupby('cultivo', as_index=False).agg(
             total_cajas=('cajas', 'sum'),
+            total_libras=('libras', 'sum'),
             cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
             fecha=('fecha', 'first'),
             variedad=('variedad', 'first'),
@@ -271,11 +275,12 @@ def cuadrar_ValleDia(request):
     registros = salidasFruta.objects.filter(fecha=today, correo=nombre_usuario)
 
    # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
-    df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','variedad','cajas','created_at'])
+    df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','variedad','cajas','libras','created_at'])
 
     # Agrupar por 'variedad' y sumar las 'cajas'
     df_agrupado = df.groupby(['variedad','cultivo'], as_index=False).agg(
         total_cajas=('cajas', 'sum'),
+        total_libras=('libras', 'sum'),
         cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
         fecha=('fecha', 'first'),
         variedad=('variedad', 'first'),
@@ -289,6 +294,7 @@ def cuadrar_ValleDia(request):
     # Agrupar por 'cultivo' y sumar las 'cajas'
     df_agrupado = df.groupby('cultivo', as_index=False).agg(
         total_cajas=('cajas', 'sum'),
+        total_libras=('libras', 'sum'),
         cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
         fecha=('fecha', 'first'),
         variedad=('variedad', 'first'),
@@ -305,11 +311,12 @@ def cuadrar_ValleDia(request):
         registros = salidasFruta.objects.filter(fecha=opcion2,cultivo=opcion1,correo=nombre_usuario)
 
     # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
-        df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','variedad','cajas','created_at'])
+        df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','variedad','cajas','libras','created_at'])
 
         # Agrupar por 'variedad' y sumar las 'cajas'
         df_agrupado = df.groupby(['variedad','cultivo'], as_index=False).agg(
             total_cajas=('cajas', 'sum'),
+            total_libras=('libras', 'sum'),
             cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
             fecha=('fecha', 'first'),
             variedad=('variedad', 'first'),
@@ -323,6 +330,7 @@ def cuadrar_ValleDia(request):
         # Agrupar por 'cultivo' y sumar las 'cajas'
         df_agrupado = df.groupby('cultivo', as_index=False).agg(
             total_cajas=('cajas', 'sum'),
+            total_libras=('libras', 'sum'),
             cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
             fecha=('fecha', 'first'),
             variedad=('variedad', 'first'),
@@ -679,6 +687,54 @@ def recepciones_reporteAcum(request):
 
     return render(request, 'plantaE/recepciones_reporteAcum.html', {'registros': registros_finales, 'registros2': registros_finales2})
 
+def recepciones_reporteAcumSem(request):
+    today = timezone.now().date()
+    current_week = today.isocalendar()[1]  # Obtener el número de semana actual
+    current_year = today.isocalendar()[0]  # Obtener el año actual
+
+    # Obtener todos los registros
+    registros = Recepciones.objects.all()
+
+    # Crear un DataFrame a partir de los registros
+    df = pd.DataFrame(list(registros.values()), columns=['fecha', 'finca', 'cultivo', 'variedad', 'cajas', 'libras'])
+
+    # Agregar columnas para el número de semana y el año
+    df['semana'] = df['fecha'].dt.isocalendar().week
+    df['año'] = df['fecha'].dt.isocalendar().year
+
+    # Filtrar por la semana y el año actuales
+    df_filtrado = df[(df['semana'] == current_week) & (df['año'] == current_year)]
+
+    # Agrupar por 'variedad' y sumar las 'cajas'
+    df_agrupado = df_filtrado.groupby(['variedad', 'cultivo', 'finca'], as_index=False).agg(
+        total_cajas=('cajas', 'sum'),
+        cultivo=('cultivo', 'first'),
+        semana=('semana', 'first'),
+        variedad=('variedad', 'first'),
+        finca=('finca', 'first'),
+        total_libras=('libras', 'sum')
+    )
+
+    # Convertir el DataFrame a una lista de diccionarios para pasarlo a la plantilla
+    registros_finales = df_agrupado.to_dict(orient='records')
+
+    # Agrupar por 'cultivo' y sumar las 'cajas'
+    df_agrupado2 = df_filtrado.groupby(['cultivo', 'finca'], as_index=False).agg(
+        total_cajas=('cajas', 'sum'),
+        cultivo=('cultivo', 'first'),
+        semana=('semana', 'first'),
+        variedad=('variedad', 'first'),
+        finca=('finca', 'first'),
+        total_libras=('libras', 'sum')
+    )
+
+    registros_finales2 = df_agrupado2.to_dict(orient='records')
+
+    return render(request, 'plantaE/recepciones_reporteAcumSem.html', {
+        'registros': registros_finales,
+        'registros2': registros_finales2
+    })
+
 
 def boletas_list(request):
     #today = timezone.now().date()
@@ -818,11 +874,12 @@ def acumFruta_consulta(request):
         datos = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario) 
         # Obtener todos los registros para el usuario y la fecha
         registros = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario)
-        df = pd.DataFrame(list(datos.values()),columns=['id','fecha','finca','orden','cultivo','variedad','cajas','estructura'])
+        df = pd.DataFrame(list(datos.values()),columns=['id','fecha','finca','orden','cultivo','variedad','cajas','libras','estructura'])
 
         df_agrupado = df.groupby(['orden','estructura','variedad'], as_index=False).agg(
             total_cajas=('cajas', 'sum'),
             cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
+            total_libras=('libras', 'sum'),
             id=('id', 'first'),
             fecha =('fecha', 'first'),
             finca =('finca', 'first'),
@@ -838,6 +895,7 @@ def acumFruta_consulta(request):
         # Agrupar por 'variedad' y sumar las 'cajas'
         df_agrupado = df.groupby('cultivo', as_index=False).agg(
             total_cajas=('cajas', 'sum'),
+            total_libras=('libras', 'sum'),
             cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
             fecha=('fecha', 'first'),
             finca =('finca', 'first')
@@ -858,10 +916,11 @@ def acumFruta_consultaValle(request):
         datos = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario) 
         # Obtener todos los registros para el usuario y la fecha
         registros = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario)
-        df = pd.DataFrame(list(datos.values()),columns=['id','fecha','finca','orden','cultivo','variedad','cajas','estructura'])
+        df = pd.DataFrame(list(datos.values()),columns=['id','fecha','finca','orden','cultivo','variedad','cajas','libras','estructura'])
 
         df_agrupado = df.groupby(['orden','estructura','variedad'], as_index=False).agg(
             total_cajas=('cajas', 'sum'),
+            total_libras=('libras', 'sum'),
             cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
             id=('id', 'first'),
             fecha =('fecha', 'first'),
@@ -878,6 +937,7 @@ def acumFruta_consultaValle(request):
         # Agrupar por 'variedad' y sumar las 'cajas'
         df_agrupado = df.groupby('cultivo', as_index=False).agg(
             total_cajas=('cajas', 'sum'),
+            total_libras=('libras', 'sum'),
             cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
             fecha=('fecha', 'first'),
             finca =('finca', 'first')

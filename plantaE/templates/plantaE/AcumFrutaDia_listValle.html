@@ -102,6 +102,7 @@
                     <th >Fecha</th>
                     <th >Finca</th>
                     <th >Cajas</th>
+                    <th >Libras</th>
                     <th >Orden</th>
                     <th >Cultivo</th>
                     <th >Estructura</th>
@@ -117,6 +118,7 @@
                     <td>{{registro.fecha}}</td>
                     <td>{{registro.finca}}</td>
                     <td>{{registro.cajas}}</td>
+                    <td>{{registro.libras}}</td>
                     <td>{{registro.orden}}</td>
                     <td>{{registro.cultivo}}</td>
                     <td>{{registro.estructura}}</td>
@@ -165,7 +167,7 @@ document.getElementById('consultar').addEventListener('click', function() {
         console.log(data)
         data.datos.forEach(item => {
             const fila = document.createElement('tr');
-            fila.innerHTML = `<td>${item.id}</td><td>${item.fecha}</td><td>${item.finca}</td><td>${item.total_cajas}</td><td>${item.orden}</td><td>${item.cultivo}</td><td>${item.estructura}</td><td>${item.variedad}</td><td>-</td><td>-</td>`;
+            fila.innerHTML = `<td>${item.id}</td><td>${item.fecha}</td><td>${item.finca}</td><td>${item.total_cajas}</td><td>${item.total_libras}</td><td>${item.orden}</td><td>${item.cultivo}</td><td>${item.estructura}</td><td>${item.variedad}</td><td>-</td><td>-</td>`;
             
             tbody.appendChild(fila);
         });
