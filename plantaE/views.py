@@ -697,7 +697,7 @@ def recepciones_reporteAcumSem(request):
 
     # Crear un DataFrame a partir de los registros
     df = pd.DataFrame(list(registros.values()), columns=['fecha', 'finca', 'cultivo', 'variedad', 'cajas', 'libras'])
-
+    df['fecha'] = pd.to_datetime(df['fecha'], errors='coerce')
     # Agregar columnas para el número de semana y el año
     df['semana'] = df['fecha'].dt.isocalendar().week
     df['año'] = df['fecha'].dt.isocalendar().year
