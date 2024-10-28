@@ -890,7 +890,7 @@ def acumFruta_consulta(request):
         df_agrupado = df_agrupado.sort_values(by='orden')
         registros_finales = df_agrupado.to_dict(orient='records')
         # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
-        df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','cajas'])
+        df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','cajas','libras'])
 
         # Agrupar por 'variedad' y sumar las 'cajas'
         df_agrupado = df.groupby('cultivo', as_index=False).agg(
@@ -932,7 +932,7 @@ def acumFruta_consultaValle(request):
         df_agrupado = df_agrupado.sort_values(by='orden')
         registros_finales = df_agrupado.to_dict(orient='records')
         # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
-        df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','cajas'])
+        df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','cajas','libras'])
 
         # Agrupar por 'variedad' y sumar las 'cajas'
         df_agrupado = df.groupby('cultivo', as_index=False).agg(
