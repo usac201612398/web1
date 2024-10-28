@@ -23,22 +23,22 @@ def exportar_excel(request):
 
         # Obtén los datos de tu modelo
         datos_rio = AcumFruta.objects.filter(fecha=opcion1, finca="RIO").values(
-            "id","fecha", "finca", "orden", "cultivo", "variedad", "estructura", "cajas","correo"
+            "id","fecha", "finca", "orden", "cultivo", "variedad", "estructura", "cajas","correo","libras"
         ).order_by("orden")
 
         # Agrega los encabezados
-        ws.append(["id","fecha", "finca", "orden", "cultivo", "variedad", "estructura", "cajas","correo"])
+        ws.append(["id","fecha", "finca", "orden", "cultivo", "variedad", "estructura", "cajas","correo","libras"])
         
         # Agrega los datos  
         for obj in datos_rio:
-            row = [obj['id'],obj['fecha'], obj['finca'], obj['orden'], obj['cultivo'], obj['variedad'], obj['estructura'], obj['cajas'], obj['correo']]
+            row = [obj['id'],obj['fecha'], obj['finca'], obj['orden'], obj['cultivo'], obj['variedad'], obj['estructura'], obj['cajas'], obj['correo'], obj['libras']]
             ws.append(row)
 
         ws_valle = wb.create_sheet(title='Valle')
         
         # Filtra tus datos según la opción seleccionada
         datos_valle = AcumFruta.objects.filter(fecha=opcion1, finca="VALLE").values(
-            "id", "fecha", "finca", "orden", "cultivo", "variedad", "estructura", "cajas","correo"
+            "id", "fecha", "finca", "orden", "cultivo", "variedad", "estructura", "cajas","correo","libras"
         )
 
         # Crea un DataFrame a partir de los datos
@@ -54,6 +54,7 @@ def exportar_excel(request):
             variedad=('variedad', 'first'),
             estructura=('estructura', 'first'),
             total_cajas=('cajas', 'sum'),
+            total_libras=('libras', 'sum'),
             correo = ('correo', 'first'),
         )
 
@@ -197,7 +198,7 @@ def cuadrar_RioDia(request):
     today = timezone.now().date()
     nombre_usuario = request.user.username
      # Obtener todos los registros para el usuario y la fecha
-    registros = salidasFruta.objects.filter(fecha=today, correo=nombre_usuario)
+    registros = salidasFruta.objects.filter(fecha=today, correo=nombre_usuario, libras__isnull=False)
 
    # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
     df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','variedad','cajas','libras','created_at'])
@@ -233,7 +234,7 @@ def cuadrar_RioDia(request):
         opcion1 = request.POST.get('opcion1')
         opcion2 = request.POST.get('opcion2')
          # Obtener todos los registros para el usuario y la fecha
-        registros = salidasFruta.objects.filter(fecha=opcion2,cultivo=opcion1,correo=nombre_usuario)
+        registros = salidasFruta.objects.filter(fecha=opcion2,cultivo=opcion1,correo=nombre_usuario,libras__isnull=False)
 
     # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
         df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','variedad','cajas','libras','created_at'])
@@ -272,7 +273,7 @@ def cuadrar_ValleDia(request):
     today = timezone.now().date()
     nombre_usuario = request.user.username
      # Obtener todos los registros para el usuario y la fecha
-    registros = salidasFruta.objects.filter(fecha=today, correo=nombre_usuario)
+    registros = salidasFruta.objects.filter(fecha=today, correo=nombre_usuario,libras__isnull=False)
 
    # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
     df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','variedad','cajas','libras','created_at'])
@@ -308,7 +309,7 @@ def cuadrar_ValleDia(request):
         opcion1 = request.POST.get('opcion1')
         opcion2 = request.POST.get('opcion2')
          # Obtener todos los registros para el usuario y la fecha
-        registros = salidasFruta.objects.filter(fecha=opcion2,cultivo=opcion1,correo=nombre_usuario)
+        registros = salidasFruta.objects.filter(fecha=opcion2,cultivo=opcion1,correo=nombre_usuario,libras__isnull=False)
 
     # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
         df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','variedad','cajas','libras','created_at'])
@@ -871,9 +872,9 @@ def acumFruta_consulta(request):
         opcion2 = request.POST.get('opcion2')
         nombre_usuario = request.user.username
         # Filtra tus datos según la opción seleccionada
-        datos = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario) 
+        datos = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario,libras__isnull=False) 
         # Obtener todos los registros para el usuario y la fecha
-        registros = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario)
+        registros = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario,libras__isnull=False)
         df = pd.DataFrame(list(datos.values()),columns=['id','fecha','finca','orden','cultivo','variedad','cajas','libras','estructura'])
 
         df_agrupado = df.groupby(['orden','estructura','variedad'], as_index=False).agg(
@@ -913,9 +914,9 @@ def acumFruta_consultaValle(request):
         opcion2 = request.POST.get('opcion2')
         nombre_usuario = request.user.username
         # Filtra tus datos según la opción seleccionada
-        datos = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario) 
+        datos = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario,libras__isnull=False) 
         # Obtener todos los registros para el usuario y la fecha
-        registros = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario)
+        registros = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario,libras__isnull=False)
         df = pd.DataFrame(list(datos.values()),columns=['id','fecha','finca','orden','cultivo','variedad','cajas','libras','estructura'])
 
         df_agrupado = df.groupby(['orden','estructura','variedad'], as_index=False).agg(
