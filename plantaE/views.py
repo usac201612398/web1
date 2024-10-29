@@ -786,8 +786,8 @@ def recepciones_reportecurva(request):
         'registros': df_agrupado.to_dict(orient='records'),
         'semana': json.dumps(list(semanas)),
         'kilos_por_area': json.dumps(kilos_por_area),
-        'fincas': fincas,
-        'ordenes': ordenes
+        'fincas': list(fincas),
+        'ordenes': list(ordenes)
     })
 
 
