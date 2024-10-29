@@ -173,7 +173,7 @@ def guardar_plantilla(request):
     #mensaje = request.POST.get('array')
     
     for i in mensaje:
-        datos = salidasFruta.objects.filter(fecha=i[8],finca=i[7],orden=i[1],cultivo=i[2])
+        datos = salidasFruta.objects.filter(fecha=i[8],finca=i[7],cultivo=i[2])
         # Calcular las sumas
         suma_cajas = datos.aggregate(Sum('cajas'))['cajas__sum'] or 0
         suma_libras = datos.aggregate(Sum('libras'))['libras__sum'] or 0
