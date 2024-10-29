@@ -179,7 +179,7 @@ def guardar_plantilla(request):
         suma_libras = datos.aggregate(Sum('libras'))['libras__sum'] or 0
 
         pesoxcaja = suma_libras/suma_cajas
-        librasestructura = float(i[5]*pesoxcaja)
+        librasestructura = i[5]*pesoxcaja
         acumuladolibras = acumuladolibras+librasestructura
         AcumFruta.objects.create(fecha=i[8],finca=i[7],orden=i[1],cultivo=i[2],estructura=i[3],variedad=i[4],cajas=i[5],correo=i[9],libras=librasestructura)
     
