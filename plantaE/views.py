@@ -768,10 +768,11 @@ def recepciones_reportecurva(request):
     )
     # Convertir libras a kilos
     df_agrupado['total_kilos'] = df_agrupado['total_libras'] * 0.453592
-    df_agrupado['kilos_por_area'] = df_agrupado['total_kilos'] / df_agrupado['area'].replace(0, pd.NA)
 
     # Realizar el inner join con el DataFrame de áreas
     df_agrupado = pd.merge(df_agrupado, df_areas, on='orden', how='inner')
+    
+    df_agrupado['kilos_por_area'] = df_agrupado['total_kilos'] / df_agrupado['area'].replace(0, pd.NA)
     # Convertir el DataFrame a una lista de diccionarios para pasarlo a la plantilla
     registros_finales = df_agrupado.to_dict(orient='records')
 
@@ -789,7 +790,7 @@ def recepciones_reportecurva(request):
     # Realizar el inner join con el DataFrame de áreas también aquí si es necesario
     df_agrupado2 = pd.merge(df_agrupado2, df_areas, on='orden', how='inner')
     # Convertir libras a kilos
-    df_agrupado2['total_kilos'] = df_agrupado2['total_libras'] * 0.453592
+    df_agrupado2['total_kilos'] = df_agrupado2['total_libras'] * 0.453592# Calcular kilos por área usando la columna 'area'
     df_agrupado2['kilos_por_area'] = df_agrupado2['total_kilos'] / df_agrupado2['area'].replace(0, pd.NA)
     registros_finales2 = df_agrupado2.to_dict(orient='records')
 
