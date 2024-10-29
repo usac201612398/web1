@@ -797,7 +797,7 @@ def recepciones_reportecurva(request):
     semana = [reg['semana'] for reg in registros_finales2]
     kilos_por_area = [reg['kilos_por_area'] for reg in registros_finales2]
 
-    return render(request, 'plantaE/recepciones_reporteAcumSem.html', {
+    return render(request, 'plantaE/recepciones_reportegrafica.html', {
         'registros': registros_finales,
         'registros2': registros_finales2,
         'semana': json.dumps(semana),  # Convertir a JSON
