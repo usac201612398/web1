@@ -2,75 +2,69 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Curva de kg/m2</title>
+    <title>Gráfica de Kilos por Área</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <h1>Curva de kg/m2 por Finca y Orden</h1>
-
-    <label for="fincaSelect">Selecciona Finca:</label>
-    <select id="fincaSelect">
+    <select id="finca-select">
         {% for finca in fincas %}
             <option value="{{ finca }}">{{ finca }}</option>
         {% endfor %}
     </select>
-
-    <label for="ordenSelect">Selecciona Orden:</label>
-    <select id="ordenSelect">
+    <select id="orden-select">
         {% for orden in ordenes %}
             <option value="{{ orden }}">{{ orden }}</option>
         {% endfor %}
     </select>
-
-    <canvas id="kilosPorAreaChart" width="400" height="200"></canvas>
+    <canvas id="myChart"></canvas>
 
     <script>
-        console.log(registros)
-        const ctx = document.getElementById('kilosPorAreaChart').getContext('2d');
-        let kilosPorAreaChart = new Chart(ctx, {
-            type: 'line', // O 'bar' según lo que prefieras
-            data: {
-                labels: [], // Inicialmente vacío
-                datasets: [{
-                    label: 'Kilos por Área',
-                    data: [], // Inicialmente vacío
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 2,
-                    fill: false, // Para una curva
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
+        const ctx = document.getElementById('myChart').getContext('2d');
+        let myChart;
+
+        const updateChart = (finca, orden) => {
+            fetch(`/obtener_datos_filtrados/?finca=${finca}&orden=${orden}`)
+                .then(response => response.json())
+                .then(data => {
+                    const semanas = data.map(item => item.semana);
+                    const kilos_por_area = data.map(item => item.kilos_por_area);
+
+                    if (myChart) {
+                        myChart.destroy();
                     }
-                }
-            }
+
+                    myChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: semanas,
+                            datasets: [{
+                                label: 'Kilos por Área',
+                                data: kilos_por_area,
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 2,
+                            }]
+                        },
+                    });
+                });
+        };
+
+        document.getElementById('finca-select').addEventListener('change', (event) => {
+            const finca = event.target.value;
+            const orden = document.getElementById('orden-select').value;
+            updateChart(finca, orden);
         });
 
-        // Función para actualizar el gráfico
-        function updateChart() {
-            const finca = document.getElementById('fincaSelect').value;
-            const orden = document.getElementById('ordenSelect').value;
-            
-            // Aquí podrías tener lógica para obtener los datos basados en la finca y orden
-            // Por ejemplo, usando AJAX para obtener los datos del servidor.
+        document.getElementById('orden-select').addEventListener('change', (event) => {
+            const orden = event.target.value;
+            const finca = document.getElementById('finca-select').value;
+            updateChart(finca, orden);
+        });
 
-            // Simulación de datos: 
-            // Debes reemplazar esta parte con la lógica real para obtener los datos filtrados.
-            const etiquetas = ['Semana 1', 'Semana 2', 'Semana 3']; // Ejemplo
-            const kilosPorArea = [10, 20, 30]; // Ejemplo
-
-            kilosPorAreaChart.data.labels = etiquetas;
-            kilosPorAreaChart.data.datasets[0].data = kilosPorArea;
-            kilosPorAreaChart.update();
-        }
-
-        // Escuchar cambios en los selectores
-        document.getElementById('fincaSelect').addEventListener('change', updateChart);
-        document.getElementById('ordenSelect').addEventListener('change', updateChart);
+        document.addEventListener('DOMContentLoaded', () => {
+            const finca = document.getElementById('finca-select').value;
+            const orden = document.getElementById('orden-select').value;
+            updateChart(finca, orden);
+        });
     </script>
 </body>
 </html>
