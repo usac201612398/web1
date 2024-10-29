@@ -757,7 +757,7 @@ def recepciones_reportecurva(request):
     #df_filtrado = df[(df['semana'] == current_week) & (df['año'] == current_year)]
 
     # Agrupar por 'variedad' y sumar las 'cajas'
-    df_agrupado = df.groupby(['variedad', 'orden', 'finca'], as_index=False).agg(
+    df_agrupado = df.groupby(['variedad', 'orden', 'finca','semana'], as_index=False).agg(
         total_cajas=('cajas', 'sum'),
         cultivo=('cultivo', 'first'),
         orden=('orden', 'first'),
@@ -777,7 +777,7 @@ def recepciones_reportecurva(request):
     registros_finales = df_agrupado.to_dict(orient='records')
 
     # Agrupar por 'cultivo' y sumar las 'cajas'
-    df_agrupado2 = df.groupby(['orden', 'finca'], as_index=False).agg(
+    df_agrupado2 = df.groupby(['orden', 'finca', 'semana'], as_index=False).agg(
         total_cajas=('cajas', 'sum'),
         cultivo=('cultivo', 'first'),
         orden=('orden', 'first'),
