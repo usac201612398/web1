@@ -795,8 +795,8 @@ def recepciones_reportecurva(request):
     registros_finales2 = df_agrupado2.to_dict(orient='records')
 
     semana = [reg['semana'] for reg in registros_finales2]
-    fincas = [reg['finca'] for reg in registros_finales2]
-    ordenes = [reg['orden'] for reg in registros_finales2]
+    fincas = df_agrupado2['finca'].unique()  # Obtener las fincas únicas
+    ordenes = df_agrupado2['orden'].unique()  # Obtener los órdenes únicos
     kilos_por_area = [reg['kilos_por_area'] for reg in registros_finales2]
 
     return render(request, 'plantaE/recepciones_reportegrafica.html', {
@@ -804,8 +804,8 @@ def recepciones_reportecurva(request):
         'registros2': registros_finales2,
         'semana': json.dumps(semana),  # Convertir a JSON
         'kilos_por_area': json.dumps(kilos_por_area),  # Convertir a JSON
-        'fincas': json.dumps(fincas),  # Convertir a JSON
-        'ordenes': json.dumps(ordenes)  # Convertir a JSON
+        'fincas': fincas,  # Convertir a JSON
+        'ordenes': ordenes  # Convertir a JSON
     })
 
 def boletas_list(request):
