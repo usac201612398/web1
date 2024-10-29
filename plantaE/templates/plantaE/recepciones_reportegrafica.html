@@ -26,6 +26,7 @@
     <canvas id="kilosPorAreaChart" width="400" height="200"></canvas>
 
     <script>
+        console.log(registros)
         const ctx = document.getElementById('kilosPorAreaChart').getContext('2d');
         let kilosPorAreaChart = new Chart(ctx, {
             type: 'line', // O 'bar' según lo que prefieras
@@ -53,7 +54,7 @@
         function updateChart() {
             const finca = document.getElementById('fincaSelect').value;
             const orden = document.getElementById('ordenSelect').value;
-
+            
             // Aquí podrías tener lógica para obtener los datos basados en la finca y orden
             // Por ejemplo, usando AJAX para obtener los datos del servidor.
 

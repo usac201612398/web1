@@ -736,77 +736,60 @@ def recepciones_reporteAcumSem(request):
         'registros2': registros_finales2
     })
 
+from django.shortcuts import render
+from django.utils import timezone
+import pandas as pd
+import json
+
 def recepciones_reportecurva(request):
     today = timezone.now().date()
-    current_week = today.isocalendar()[1]  # Obtener el número de semana actual
-    current_year = today.isocalendar()[0]  # Obtener el año actual
+    fecha_limite = timezone.datetime(2024, 10, 27)
 
-    # Obtener todos los registros
-    registros = AcumFruta.objects.all()
+    # Filtrar los registros
+    registros_filtrados = AcumFruta.objects.filter(fecha__gt=fecha_limite)
     areas = datosProduccion.objects.all()
-    df_areas = pd.DataFrame(list(areas.values()), columns=['orden', 'area'])  # Ajusta las columnas según sea necesario
+    df_areas = pd.DataFrame(list(areas.values()), columns=['orden', 'area'])
 
     # Crear un DataFrame a partir de los registros
-    df = pd.DataFrame(list(registros.values()), columns=['fecha', 'finca', 'cultivo', 'variedad', 'cajas', 'libras', 'orden'])
+    df = pd.DataFrame(list(registros_filtrados.values()), columns=['fecha', 'finca', 'cultivo', 'variedad', 'cajas', 'libras', 'orden'])
     df['fecha'] = pd.to_datetime(df['fecha'], errors='coerce')
-    # Agregar columnas para el número de semana y el año
     df['semana'] = df['fecha'].dt.isocalendar().week
-    df['año'] = df['fecha'].dt.isocalendar().year
-    # Convertir libras a kilos
-    # Filtrar por la semana y el año actuales
-    #df_filtrado = df[(df['semana'] == current_week) & (df['año'] == current_year)]
 
     # Agrupar por 'variedad' y sumar las 'cajas'
-    df_agrupado = df.groupby(['variedad', 'orden', 'finca','semana'], as_index=False).agg(
+    df_agrupado = df.groupby(['variedad', 'orden', 'finca', 'semana'], as_index=False).agg(
         total_cajas=('cajas', 'sum'),
-        cultivo=('cultivo', 'first'),
-        orden=('orden', 'first'),
-        semana=('semana', 'first'),
-        variedad=('variedad', 'first'),
-        finca=('finca', 'first'),
         total_libras=('libras', 'sum')
     )
-    # Convertir libras a kilos
-    df_agrupado['total_kilos'] = df_agrupado['total_libras'] * 0.453592
-
-    # Realizar el inner join con el DataFrame de áreas
-    df_agrupado = pd.merge(df_agrupado, df_areas, on='orden', how='inner')
     
+    df_agrupado['total_kilos'] = df_agrupado['total_libras'] * 0.453592
+    df_agrupado = pd.merge(df_agrupado, df_areas, on='orden', how='inner')
     df_agrupado['kilos_por_area'] = df_agrupado['total_kilos'] / df_agrupado['area'].replace(0, pd.NA)
-    # Convertir el DataFrame a una lista de diccionarios para pasarlo a la plantilla
-    registros_finales = df_agrupado.to_dict(orient='records')
 
-    # Agrupar por 'cultivo' y sumar las 'cajas'
-    df_agrupado2 = df.groupby(['orden', 'finca', 'semana'], as_index=False).agg(
-        total_cajas=('cajas', 'sum'),
-        cultivo=('cultivo', 'first'),
-        orden=('orden', 'first'),
-        semana=('semana', 'first'),
-        variedad=('variedad', 'first'),
-        finca=('finca', 'first'),
-        total_libras=('libras', 'sum')
-    )
+    # Obtener los filtros de finca y orden del request, si existen
+    finca_seleccionada = request.GET.get('finca')
+    orden_seleccionada = request.GET.get('orden')
 
-    # Realizar el inner join con el DataFrame de áreas también aquí si es necesario
-    df_agrupado2 = pd.merge(df_agrupado2, df_areas, on='orden', how='inner')
-    # Convertir libras a kilos
-    df_agrupado2['total_kilos'] = df_agrupado2['total_libras'] * 0.453592# Calcular kilos por área usando la columna 'area'
-    df_agrupado2['kilos_por_area'] = df_agrupado2['total_kilos'] / df_agrupado2['area'].replace(0, pd.NA)
-    registros_finales2 = df_agrupado2.to_dict(orient='records')
+    # Filtrar según finca y orden seleccionados
+    if finca_seleccionada:
+        df_agrupado = df_agrupado[df_agrupado['finca'] == finca_seleccionada]
+    if orden_seleccionada:
+        df_agrupado = df_agrupado[df_agrupado['orden'] == orden_seleccionada]
 
-    semana = [reg['semana'] for reg in registros_finales2]
-    fincas = df_agrupado2['finca'].unique()  # Obtener las fincas únicas
-    ordenes = df_agrupado2['orden'].unique()  # Obtener los órdenes únicos
-    kilos_por_area = [reg['kilos_por_area'] for reg in registros_finales2]
+    # Obtener los datos para la gráfica
+    semanas = df_agrupado['semana'].unique()
+    kilos_por_area = [df_agrupado[df_agrupado['semana'] == semana]['kilos_por_area'].sum() for semana in semanas]
+
+    fincas = df_agrupado['finca'].unique()  # Obtener las fincas únicas
+    ordenes = df_agrupado['orden'].unique()  # Obtener los órdenes únicos
 
     return render(request, 'plantaE/recepciones_reportegrafica.html', {
-        'registros': registros_finales,
-        'registros2': registros_finales2,
-        'semana': json.dumps(semana),  # Convertir a JSON
-        'kilos_por_area': json.dumps(kilos_por_area),  # Convertir a JSON
-        'fincas': fincas,  # Convertir a JSON
-        'ordenes': ordenes  # Convertir a JSON
+        'registros': df_agrupado.to_dict(orient='records'),
+        'semana': json.dumps(list(semanas)),
+        'kilos_por_area': json.dumps(kilos_por_area),
+        'fincas': fincas,
+        'ordenes': ordenes
     })
+
 
 def boletas_list(request):
     #today = timezone.now().date()
