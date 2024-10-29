@@ -171,7 +171,7 @@ def guardar_plantilla(request):
     data = json.loads(request.body)
     mensaje = data['array']
     #mensaje = request.POST.get('array')
-    
+    acumuladolibras = 0
     for i in mensaje:
         datos = salidasFruta.objects.filter(fecha=i[8],finca=i[7],cultivo=i[2])
         # Calcular las sumas
