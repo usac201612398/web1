@@ -137,12 +137,6 @@ $('.envio3').on('click', function() {
     var fecha = document.getElementById('date').value;
     var correo = document.getElementById('correo').value;
 
-    var viaje = document.getElementById('Via');
-    if (!viaje.value) {
-        alert("Por favor, selecciona un viaje.");
-        return; // Detener la ejecución si está vacío
-    }
-    
     var datos = []
     for (var i = 1, row; row = resume_table.rows[i]; i++) {
       //alert(cell[i].innerText);
