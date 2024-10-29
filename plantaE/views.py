@@ -799,7 +799,7 @@ def recepciones_reportecurva(request):
     return render(request, 'plantaE/recepciones_reporteAcumSem.html', {
         'registros': registros_finales,
         'registros2': registros_finales2,
-        'areas': json.dumps(semana),  # Convertir a JSON
+        'semana': json.dumps(semana),  # Convertir a JSON
         'kilos_por_area': json.dumps(kilos_por_area)  # Convertir a JSON
     })
 
