@@ -803,8 +803,8 @@ def recepciones_reportecurva(request):
         'registros': registros_finales,
         'registros2': registros_finales2,
         'semana': json.dumps(semana),  # Convertir a JSON
-        'kilos_por_area': json.dumps(kilos_por_area)  # Convertir a JSON
-        'fincas': json.dumps(fincas)  # Convertir a JSON
+        'kilos_por_area': json.dumps(kilos_por_area),  # Convertir a JSON
+        'fincas': json.dumps(fincas),  # Convertir a JSON
         'ordenes': json.dumps(ordenes)  # Convertir a JSON
     })
 
