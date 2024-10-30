@@ -108,7 +108,7 @@ class AcumFruta(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     libras = models.FloatField(blank=True, null=True)
-    viaje = models.CharField(max_length=30,null=True)
+    viaje = models.CharField(max_length=30,null=True,blank=True)
 
     def __str__(self):
         return (str(self.finca)+ " | " + str(self.cultivo) + " | " + str(self.variedad)+ " | " + str(self.estructura))
