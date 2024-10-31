@@ -844,9 +844,8 @@ def ccalidad_delete(request, pk):
 def obtener_llave_recepcion(request):
     # Obtén la fecha límite
 
-    
     # Obtén los criterios únicos filtrando por fecha
-    llave_recepcion = detallerec.objects.filter(fecha__lt="2024-10-25").values('criterio').distinct()
+    llave_recepcion = detallerec.objects.filter(recepcion__lt=304).values('criterio').distinct()
     
     #valor = Ccalidad.objects.filter(llave=llave_recepcion).aggregate(suma=Sum('porcentaje'))['suma']
     # Crea un diccionario para almacenar las sumas de porcentaje por llave
