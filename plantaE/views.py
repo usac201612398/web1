@@ -846,7 +846,7 @@ def obtener_llave_recepcion(request):
 
     # Obtén los criterios únicos filtrando por fecha
     llave_recepcion = detallerec.objects.filter(recepcion__lt=304).values('criterio').distinct()
-    
+    llave_recepcion2 = detallerec.objects.filter(recepcion__lt=304).values('recepcion').distinct()
     #valor = Ccalidad.objects.filter(llave=llave_recepcion).aggregate(suma=Sum('porcentaje'))['suma']
     # Crea un diccionario para almacenar las sumas de porcentaje por llave
     suma_por_llave = Ccalidad.objects.values('llave').annotate(suma=Sum('porcentaje'))
@@ -871,7 +871,7 @@ def obtener_llave_recepcion(request):
     if dia < 10:
         dia = "0" + str(dia)
     fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
-    return JsonResponse({'llaves': list(llaves_recepcion_filtradas),'causa':list(causa_rechazo),'fecha':fecha_,'llave':list(llave_recepcion)})
+    return JsonResponse({'llaves': list(llaves_recepcion_filtradas),'causa':list(causa_rechazo),'fecha':fecha_,'llave':list(llave_recepcion2)})
 
 def load_ccalidadparam(request):
     llave_recepcion = request.GET.get('category_id')
