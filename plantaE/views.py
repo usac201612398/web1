@@ -845,8 +845,8 @@ def obtener_llave_recepcion(request):
     # Obtén la fecha límite
 
     # Obtén los criterios únicos filtrando por fecha
-    llave_recepcion = detallerec.objects.filter(recepcion__lt=304).values('criterio').distinct()
-    llave_recepcion2 = detallerec.objects.filter(recepcion__lt=304).values('recepcion').distinct()
+    llave_recepcion = detallerec.objects.filter(recepcion__gte=304).values('criterio').distinct()
+    llave_recepcion2 = detallerec.objects.filter(recepcion__gte=304).values('recepcion').distinct()
     #valor = Ccalidad.objects.filter(llave=llave_recepcion).aggregate(suma=Sum('porcentaje'))['suma']
     # Crea un diccionario para almacenar las sumas de porcentaje por llave
     suma_por_llave = Ccalidad.objects.values('llave').annotate(suma=Sum('porcentaje'))
