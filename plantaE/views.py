@@ -843,7 +843,7 @@ def ccalidad_delete(request, pk):
 
 def obtener_llave_recepcion(request):
     # Obtén el nombre de usuario del usuario autenticado
-    llave_recepcion = detallerec.objects.values('criterio').distinct('criterio')
+    llave_recepcion = detallerec.objects.values('criterio').distinct('criterio').filter(fecha<"2024-10-28")
     #valor = Ccalidad.objects.filter(llave=llave_recepcion).aggregate(suma=Sum('porcentaje'))['suma']
     # Crea un diccionario para almacenar las sumas de porcentaje por llave
     suma_por_llave = Ccalidad.objects.values('llave').annotate(suma=Sum('porcentaje'))
