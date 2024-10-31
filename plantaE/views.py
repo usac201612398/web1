@@ -843,7 +843,7 @@ def ccalidad_delete(request, pk):
 
 def obtener_llave_recepcion(request):
     # Obtén la fecha límite
-    fecha_limite = timezone.datetime(2024, 10, 28)
+    fecha_limite = timezone.datetime(2024, 10, 25)
     
     # Obtén los criterios únicos filtrando por fecha
     llave_recepcion = detallerec.objects.filter(fecha__lt=fecha_limite).values('criterio').distinct()
