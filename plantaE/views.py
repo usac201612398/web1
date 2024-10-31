@@ -196,6 +196,17 @@ def guardar_plantillaRio(request):
         
     return JsonResponse({'mensaje':mensaje})
 
+def inventarioProd_grabarplantilla(request):
+    data = json.loads(request.body)
+    mensaje = data['array']
+    '''
+    #mensaje = request.POST.get('array')
+    for i in mensaje:
+        
+        inventarioProdTerm.objects.create(fecha=i[7],finca=i[5],cultivo=i[1],variedad=i[2],cajas=i[3],correo=i[8],viaje=i[6],encargado=i[0])
+    '''
+    return JsonResponse({'mensaje':mensaje})
+
 def cuadrar_RioDia(request):
     today = timezone.now().date()
     nombre_usuario = request.user.username

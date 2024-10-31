@@ -217,6 +217,30 @@ $('.envio3').on('click', function() {
 
     }
     console.log(datos);
+    $.ajax({
+            
+            url: '{% url "inventarioProd_grabar" %}',  // URL para la vista AJAX
+            type: 'POST',
+            dataType: "json",
+            data:  JSON.stringify({'array':datos}),
+            contentType: 'application/json',
+            headers: {'X-CSRFToken': csrftoken}, 
+            
+            success: function(data) {
+                // Limpia las opciones actuales del campo 'name'
+                alert("Listo")
+                console.log(data)
+                // Recorre los productos recibidos y añade opciones al campo 'name'
+                
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);  // Maneja errores de la solicitud
+            }
+        });
+    
+        window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/inventarioProd')
+
+    
   });
 
 const eliminarBotones = document.querySelectorAll('.eliminar');
