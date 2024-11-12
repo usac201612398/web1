@@ -190,6 +190,7 @@ $('.envio3').on('click', function() {
     var fecha = document.getElementById('date').value;
     var correo = document.getElementById('correo').value;
     var datos = []
+    var elem = 0
     for (var i = 1, row; row = resume_table.rows[i]; i++) {
       //alert(cell[i].innerText);
       filas = []
@@ -197,16 +198,17 @@ $('.envio3').on('click', function() {
         //alert(col[j].innerText);
         if (j === 2 || j ===1) {
             if(col.innerText === ''){
-                col.innerText = null
+                elem = null
             }
             else{
-                col.innerText = parseFloat(col.innerText);    
+                elem = parseFloat(col.innerText);    
             }   
-        } 
-        filas.push(col.innerText);
-        
+            filas.push(elem);
+        }
+        else {
+            filas.push(col.innerText);
+        }
       }
-
         var prov = document.getElementById('Pro'),
             value_prov = prov.value,
             text_prov = prov.options[prov.selectedIndex].innerText;
