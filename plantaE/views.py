@@ -203,7 +203,8 @@ def inventarioProd_grabarplantilla(request):
     #mensaje = request.POST.get('array')
     
     for i in mensaje:
-        
+        if i[2] == '':
+            i[2] == None
         inventarioProdTerm.objects.create(fecha=i[7],proveedor=i[4],cultivo=i[5],calidad1=i[0],cajas=i[1],categoria=i[6],libras=i[2])
     
     return JsonResponse({'mensaje':mensaje})
