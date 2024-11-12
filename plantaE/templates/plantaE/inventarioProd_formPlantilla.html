@@ -197,10 +197,10 @@ $('.envio3').on('click', function() {
         //alert(col[j].innerText);
         if (j === 2 || j ===1) {
             if(col.innerText === ''){
-                col.innerText === null
+                col.innerText = null
             }
             else{
-                col.innerText = parseFloat(libras);    
+                col.innerText = parseFloat(col.innerText);    
             }   
         } 
         filas.push(col.innerText);
