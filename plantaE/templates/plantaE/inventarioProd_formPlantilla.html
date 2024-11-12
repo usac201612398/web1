@@ -195,6 +195,14 @@ $('.envio3').on('click', function() {
       filas = []
       for (var j = 0, col; col = row.cells[j]; j++) {
         //alert(col[j].innerText);
+        if (j === 2 || j ===1) {
+            if(col.innerText === ''){
+                col.innerText === null
+            }
+            else{
+                col.innerText = parseFloat(libras);    
+            }   
+        } 
         filas.push(col.innerText);
         
       }
