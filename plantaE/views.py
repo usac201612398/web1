@@ -758,26 +758,7 @@ def recepciones_reportecurva(request):
     finca_id = request.GET.get('finca')
     orden_id = request.GET.get('orden')
 
-    registros_filtrados = AcumFruta.objects.filter(finca=finca_id, orden=orden_id)
-    df = pd.DataFrame(list(registros_filtrados.values()), columns=['fecha', 'finca', 'cultivo', 'variedad', 'cajas', 'libras', 'orden'])
-    df['fecha'] = pd.to_datetime(df['fecha'], errors='coerce')
-    df['semana'] = df['fecha'].dt.isocalendar().week
-
-    # Agrupamos los datos por semana
-    df_agrupado = df.groupby(['semana'], as_index=False).agg(
-        total_libras=('libras', 'sum')
-    )
-    df_agrupado['total_kilos'] = df_agrupado['total_libras'] * 0.453592
-
-    # Obtener el área para el orden seleccionado
-    area = datosProduccion.objects.filter(orden=orden_id).first()
-    area_valor = area.area if area else 0  # Obtener el área, asegurándonos de que no sea nula
-
-    # Calcular kilos por área
-    df_agrupado['kilos_por_area'] = df_agrupado['total_kilos'] / area_valor if area_valor else 0
-
-    result = df_agrupado[['semana', 'kilos_por_area']].to_dict(orient='records')
-    return JsonResponse(result, safe=False)
+    return render(request, 'plantaE/reportegrafica.html')
 
 def boletas_list(request):
     #today = timezone.now().date()
