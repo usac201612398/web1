@@ -794,222 +794,85 @@ def recepciones_reportecurva(request):
     #mensaje = request.POST.get('array')
     
     return render(request, 'plantaE/recepciones_reportegrafica.html', {'usuario': nombre_usuario})
+def obtener_registros_y_graficar(filtros):
+    registros = AcumFruta.objects.filter(**filtros)
+    df = pd.DataFrame(list(registros.values()), columns=['fecha', 'libras'])
+    df['fecha'] = pd.to_datetime(df['fecha'], errors='coerce')
+
+    # Agregar columnas para el número de semana y el año
+    df['semana'] = df['fecha'].dt.isocalendar().week
+    df['año'] = df['fecha'].dt.isocalendar().year
+    df['kilos'] = df['libras'] * 0.453592
+
+    # Agrupar por semana y año, sumando los kilos
+    df_agrupado = df.groupby(['semana', 'año'], as_index=False).agg(
+        total_kilos=('kilos', 'sum'),
+        cultivo=('semana', 'first'),
+        semana=('año', 'first')
+    )
+
+    # Crear una nueva columna que combine semana y año en un formato "año-semana"
+    df_agrupado['semana_año'] = df_agrupado['año'].astype(str) + '-W' + df_agrupado['semana'].astype(str)
+
+    # Extraer los valores para los ejes
+    x_vals = df_agrupado['semana_año']
+    y_vals = df_agrupado['total_kilos']
+
+    # Crear el gráfico
+    plt.figure(figsize=(10, 6))
+    plt.plot(x_vals, y_vals, marker='o', linestyle='-', color='b')
+
+    # Etiquetas y título
+    plt.xlabel('Semana y Año')
+    plt.ylabel('Kilos')
+    plt.title('Gráfico de Kilos por Semana y Año')
+    plt.xticks(rotation=45)
+
+    # Guardar la figura en un objeto BytesIO para enviarla a la respuesta HTTP
+    buf = BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+
+    # Codificar la imagen en base64
+    imagen_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+
+    return imagen_base64
 
 def graficas(request):
-    
     if request.method == 'POST':
         data = json.loads(request.body)
         mensaje = data['array']
-        if  mensaje[0][3] and mensaje [0][4] and mensaje[0][2] and mensaje[0][1] and mensaje[0][0]:
-            registros=AcumFruta.objects.filter(finca=mensaje[0][0],cultivo=mensaje[0][1],orden=mensaje[0][2],estructura=mensaje[0][3],variedad=mensaje[0][4])
-            df = pd.DataFrame(list(registros.values()), columns=['fecha','libras'])
-            df['fecha'] = pd.to_datetime(df['fecha'], errors='coerce')
-            # Agregar columnas para el número de semana y el año
-            df['semana'] = df['fecha'].dt.isocalendar().week
-            df['año'] = df['fecha'].dt.isocalendar().year
-            df['kilos'] = df['libras']*0.453592
-            # Agrupar por 'variedad' y sumar las 'cajas'
-            df_agrupado = df.groupby(['semana', 'año'], as_index=False).agg(
-                total_kilos=('kilos', 'sum'),
-                cultivo=('semana', 'first'),
-                semana=('año', 'first')
-            )
 
-                        # Crear una nueva columna que combine semana y año en un formato "año-semana"
-            df_agrupado['semana_año'] = df_agrupado['año'].astype(str) + '-W' + df_agrupado['semana'].astype(str)
+        # Construcción de filtros de consulta
+        filtros = {}
+        if mensaje[0][0]:  # finca
+            filtros['finca'] = mensaje[0][0]
+        if mensaje[0][1]:  # cultivo
+            filtros['cultivo'] = mensaje[0][1]
+        if mensaje[0][2]:  # orden
+            filtros['orden'] = mensaje[0][2]
+        if mensaje[0][3]:  # estructura
+            filtros['estructura'] = mensaje[0][3]
+        if mensaje[0][4]:  # variedad
+            filtros['variedad'] = mensaje[0][4]
 
-            # Extraer los valores para los ejes
-            x_vals = df_agrupado['semana_año']  # Eje X será la combinación de semana y año
-            y_vals = df_agrupado['total_kilos']  # Eje Y serán los kilos
+        # Validar que al menos haya un filtro seleccionado
+        if not filtros:
+            return JsonResponse({'mensaje': "Debe seleccionar por lo menos un parámetro para consultar."})
 
-            # Crear el gráfico
-            plt.figure(figsize=(10, 6))  # Tamaño de la figura
-            plt.plot(x_vals, y_vals, marker='o', linestyle='-', color='b')  # Línea con puntos marcados
+        # Llamar a la función para obtener registros y graficar
+        imagen_base64 = obtener_registros_y_graficar(filtros)
 
-            # Etiquetas y título
-            plt.xlabel('Semana y Año')  # Etiqueta del eje X
-            plt.ylabel('Kilos')  # Etiqueta del eje Y
-            plt.title('Gráfico de Kilos por Semana y Año')  # Título del gráfico
-            plt.xticks(rotation=45)  # Rotar las etiquetas del eje X para mejor visualización
+        # Responder con el gráfico generado
+        return render(request, 'plantaE/recepciones_graficalienzo.html', {
+            'imagen_url': imagen_base64,
+            'finca': mensaje[0][0],
+            'cultivo': mensaje[0][1],
+            'orden': mensaje[0][2],
+            'estructura': mensaje[0][3],
+            'variedad': mensaje[0][4]
+        })
 
-            # Guardar la figura en un objeto BytesIO para enviarla a la respuesta HTTP
-            buf = BytesIO()
-            plt.savefig(buf, format='png')
-            buf.seek(0)
-
-            # Codificar la imagen en base64
-            imagen_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
-            return render(request, 'plantaE/recepciones_graficalienzo.html', {'imagen_url': imagen_base64, 'finca':mensaje[0][0], 'cultivo':mensaje[0][1], 'orden':mensaje[0][2], 'estructura':mensaje[0][3], 'variedad':mensaje[0][4]})
-    
-        elif not mensaje[0][4] and mensaje [0][3] and mensaje[0][2] and mensaje[0][1] and mensaje[0][0]: 
-            registros=AcumFruta.objects.filter(finca=mensaje[0][0],cultivo=mensaje[0][1],orden=mensaje[0][2],estructura=mensaje[0][3])
-            df = pd.DataFrame(list(registros.values()), columns=['fecha','libras'])
-            df['fecha'] = pd.to_datetime(df['fecha'], errors='coerce')
-            # Agregar columnas para el número de semana y el año
-            df['semana'] = df['fecha'].dt.isocalendar().week
-            df['año'] = df['fecha'].dt.isocalendar().year
-            df['kilos'] = df['libras']*0.453592
-            # Agrupar por 'variedad' y sumar las 'cajas'
-            df_agrupado = df.groupby(['semana', 'año'], as_index=False).agg(
-                total_kilos=('kilos', 'sum'),
-                cultivo=('semana', 'first'),
-                semana=('año', 'first')
-            )
-
-                        # Crear una nueva columna que combine semana y año en un formato "año-semana"
-            df_agrupado['semana_año'] = df_agrupado['año'].astype(str) + '-W' + df_agrupado['semana'].astype(str)
-
-            # Extraer los valores para los ejes
-            x_vals = df_agrupado['semana_año']  # Eje X será la combinación de semana y año
-            y_vals = df_agrupado['total_kilos']  # Eje Y serán los kilos
-
-            # Crear el gráfico
-            plt.figure(figsize=(10, 6))  # Tamaño de la figura
-            plt.plot(x_vals, y_vals, marker='o', linestyle='-', color='b')  # Línea con puntos marcados
-
-            # Etiquetas y título
-            plt.xlabel('Semana y Año')  # Etiqueta del eje X
-            plt.ylabel('Kilos')  # Etiqueta del eje Y
-            plt.title('Gráfico de Kilos por Semana y Año')  # Título del gráfico
-            plt.xticks(rotation=45)  # Rotar las etiquetas del eje X para mejor visualización
-
-            # Guardar la figura en un objeto BytesIO para enviarla a la respuesta HTTP
-            buf = BytesIO()
-            plt.savefig(buf, format='png')
-            buf.seek(0)
-
-            # Codificar la imagen en base64
-            imagen_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
-            return render(request, 'plantaE/recepciones_graficalienzo.html', {'imagen_url': imagen_base64, 'finca':mensaje[0][0], 'cultivo':mensaje[0][1], 'orden':mensaje[0][2], 'estructura':mensaje[0][3], 'variedad':mensaje[0][4]})
-    
-        elif not mensaje[0][3] and mensaje [0][4] and mensaje[0][2] and mensaje[0][1] and mensaje[0][0]:
-            registros=AcumFruta.objects.filter(finca=mensaje[0][0],cultivo=mensaje[0][1],orden=mensaje[0][2],variedad=mensaje[0][4])
-            df = pd.DataFrame(list(registros.values()), columns=['fecha','libras'])
-            df['fecha'] = pd.to_datetime(df['fecha'], errors='coerce')
-            # Agregar columnas para el número de semana y el año
-            df['semana'] = df['fecha'].dt.isocalendar().week
-            df['año'] = df['fecha'].dt.isocalendar().year
-            df['kilos'] = df['libras']*0.453592
-            # Agrupar por 'variedad' y sumar las 'cajas'
-            df_agrupado = df.groupby(['semana', 'año'], as_index=False).agg(
-                total_kilos=('kilos', 'sum'),
-                cultivo=('semana', 'first'),
-                semana=('año', 'first')
-            )
-
-                        # Crear una nueva columna que combine semana y año en un formato "año-semana"
-            df_agrupado['semana_año'] = df_agrupado['año'].astype(str) + '-W' + df_agrupado['semana'].astype(str)
-
-            # Extraer los valores para los ejes
-            x_vals = df_agrupado['semana_año']  # Eje X será la combinación de semana y año
-            y_vals = df_agrupado['total_kilos']  # Eje Y serán los kilos
-
-            # Crear el gráfico
-            plt.figure(figsize=(10, 6))  # Tamaño de la figura
-            plt.plot(x_vals, y_vals, marker='o', linestyle='-', color='b')  # Línea con puntos marcados
-
-            # Etiquetas y título
-            plt.xlabel('Semana y Año')  # Etiqueta del eje X
-            plt.ylabel('Kilos')  # Etiqueta del eje Y
-            plt.title('Gráfico de Kilos por Semana y Año')  # Título del gráfico
-            plt.xticks(rotation=45)  # Rotar las etiquetas del eje X para mejor visualización
-
-            # Guardar la figura en un objeto BytesIO para enviarla a la respuesta HTTP
-            buf = BytesIO()
-            plt.savefig(buf, format='png')
-            buf.seek(0)
-
-            # Codificar la imagen en base64
-            imagen_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
-            return render(request, 'plantaE/recepciones_graficalienzo.html', {'imagen_url': imagen_base64, 'finca':mensaje[0][0], 'cultivo':mensaje[0][1], 'orden':mensaje[0][2], 'estructura':mensaje[0][3], 'variedad':mensaje[0][4]})
-
-        elif not (mensaje[0][3] and mensaje[0][4]) and mensaje[0][2] and mensaje[0][1] and mensaje[0][0]:
-            registros=AcumFruta.objects.filter(finca=mensaje[0][0],cultivo=mensaje[0][1],orden=mensaje[0][2])
-            df = pd.DataFrame(list(registros.values()), columns=['fecha','libras'])
-            df['fecha'] = pd.to_datetime(df['fecha'], errors='coerce')
-            # Agregar columnas para el número de semana y el año
-            df['semana'] = df['fecha'].dt.isocalendar().week
-            df['año'] = df['fecha'].dt.isocalendar().year
-            df['kilos'] = df['libras']*0.453592
-            # Agrupar por 'variedad' y sumar las 'cajas'
-            df_agrupado = df.groupby(['semana', 'año'], as_index=False).agg(
-                total_kilos=('kilos', 'sum'),
-                cultivo=('semana', 'first'),
-                semana=('año', 'first')
-            )
-
-                        # Crear una nueva columna que combine semana y año en un formato "año-semana"
-            df_agrupado['semana_año'] = df_agrupado['año'].astype(str) + '-W' + df_agrupado['semana'].astype(str)
-
-            # Extraer los valores para los ejes
-            x_vals = df_agrupado['semana_año']  # Eje X será la combinación de semana y año
-            y_vals = df_agrupado['total_kilos']  # Eje Y serán los kilos
-
-            # Crear el gráfico
-            plt.figure(figsize=(10, 6))  # Tamaño de la figura
-            plt.plot(x_vals, y_vals, marker='o', linestyle='-', color='b')  # Línea con puntos marcados
-
-            # Etiquetas y título
-            plt.xlabel('Semana y Año')  # Etiqueta del eje X
-            plt.ylabel('Kilos')  # Etiqueta del eje Y
-            plt.title('Gráfico de Kilos por Semana y Año')  # Título del gráfico
-            plt.xticks(rotation=45)  # Rotar las etiquetas del eje X para mejor visualización
-
-            # Guardar la figura en un objeto BytesIO para enviarla a la respuesta HTTP
-            buf = BytesIO()
-            plt.savefig(buf, format='png')
-            buf.seek(0)
-
-            # Codificar la imagen en base64
-            imagen_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
-            return render(request, 'plantaE/recepciones_graficalienzo.html', {'imagen_url': imagen_base64, 'finca':mensaje[0][0], 'cultivo':mensaje[0][1], 'orden':mensaje[0][2], 'estructura':mensaje[0][3], 'variedad':mensaje[0][4]})
-
-        elif not (mensaje[0][3] and mensaje[0][4] and mensaje[0][2]) and  mensaje[0][1] and mensaje[0][0]:
-            registros=AcumFruta.objects.filter(finca=mensaje[0][0],cultivo=mensaje[0][1])
-            df = pd.DataFrame(list(registros.values()), columns=['fecha','libras'])
-            df['fecha'] = pd.to_datetime(df['fecha'], errors='coerce')
-            # Agregar columnas para el número de semana y el año
-            df['semana'] = df['fecha'].dt.isocalendar().week
-            df['año'] = df['fecha'].dt.isocalendar().year
-            df['kilos'] = df['libras']*0.453592
-            # Agrupar por 'variedad' y sumar las 'cajas'
-            df_agrupado = df.groupby(['semana', 'año'], as_index=False).agg(
-                total_kilos=('kilos', 'sum'),
-                cultivo=('semana', 'first'),
-                semana=('año', 'first')
-            )
-
-                        # Crear una nueva columna que combine semana y año en un formato "año-semana"
-            df_agrupado['semana_año'] = df_agrupado['año'].astype(str) + '-W' + df_agrupado['semana'].astype(str)
-
-            # Extraer los valores para los ejes
-            x_vals = df_agrupado['semana_año']  # Eje X será la combinación de semana y año
-            y_vals = df_agrupado['total_kilos']  # Eje Y serán los kilos
-
-            # Crear el gráfico
-            plt.figure(figsize=(10, 6))  # Tamaño de la figura
-            plt.plot(x_vals, y_vals, marker='o', linestyle='-', color='b')  # Línea con puntos marcados
-
-            # Etiquetas y título
-            plt.xlabel('Semana y Año')  # Etiqueta del eje X
-            plt.ylabel('Kilos')  # Etiqueta del eje Y
-            plt.title('Gráfico de Kilos por Semana y Año')  # Título del gráfico
-            plt.xticks(rotation=45)  # Rotar las etiquetas del eje X para mejor visualización
-
-            # Guardar la figura en un objeto BytesIO para enviarla a la respuesta HTTP
-            buf = BytesIO()
-            plt.savefig(buf, format='png')
-            buf.seek(0)
-
-            # Codificar la imagen en base64
-            imagen_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
-            
-            return render(request, 'plantaE/recepciones_graficalienzo.html', {'imagen_url': imagen_base64, 'finca':mensaje[0][0], 'cultivo':mensaje[0][1], 'orden':mensaje[0][2], 'estructura':mensaje[0][3], 'variedad':mensaje[0][4]})
-
-        else: 
-            return JsonResponse({'mensaje': "Debe seleccionar por lo menos orden a consultar."})
-        
-   
 
 def boletas_list(request):
     #today = timezone.now().date()
