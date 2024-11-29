@@ -793,7 +793,7 @@ def recepciones_reportecurva(request):
     finca_id = request.GET.get('finca')
     orden_id = request.GET.get('orden')
 
-    return render(request, 'plantaE/recepciones_reportegrafica.html', {'registros': nombre_usuario})
+    return render(request, 'plantaE/recepciones_reportegrafica.html', {'usuario': nombre_usuario})
 
 def boletas_list(request):
     #today = timezone.now().date()
