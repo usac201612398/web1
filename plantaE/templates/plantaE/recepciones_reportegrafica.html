@@ -170,23 +170,24 @@ document.getElementById('consultar').addEventListener('click', function() {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': getCookie('csrftoken'),  // Agregar el token CSRF
+            'X-CSRFToken': getCookie('csrftoken'),
         },
-        body: JSON.stringify({ 'array': datos }), // Enviar los datos como JSON
+        body: JSON.stringify({ 'array': datos }),
     })
-    .then(response => response.json())  // Convertir la respuesta a JSON
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('La respuesta del servidor no fue exitosa');
+        }
+        return response.json();
+    })
     .then(data => {
-        // Aquí asumimos que la respuesta tiene la propiedad `image` con la imagen en base64
         var imageBase64 = data.imagen;
-
-        // Mostrar la imagen en un <img> tag en el HTML
-        var imgElement = document.getElementById('graficoImagen');  // Asegúrate de tener un <img id="graficoImagen">
-        imgElement.src = imageBase64;  // Asigna el base64 a la propiedad src
-
+        var imgElement = document.getElementById('graficoImagen');
+        imgElement.src = imageBase64;
     })
     .catch(error => {
-        console.error('Error:', error);  // Manejar errores
-        alert("Hubo un error al procesar la solicitud.");
+        console.error('Error al obtener el gráfico:', error);
+        alert('Hubo un error al procesar la solicitud');
     });
 
   });
