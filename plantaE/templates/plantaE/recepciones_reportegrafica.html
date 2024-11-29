@@ -244,9 +244,9 @@ $(document).ready(function() {
                     $('<option>').text('').attr('value','')
                 );
                 // Recorre los productos recibidos y añade opciones al campo 'name'
-                $.each(data.datos, function(index, product) {
+                $.each(data.ordenes, function(index, product) {
                     $('#Orden').append(
-                        $('<option>').text(product.ordenes.toString()).attr('value', product.ordenes.toString())
+                        $('<option>').text(product.orden.toString()).attr('value', product.orden.toString())
                         
                     );
                 });
