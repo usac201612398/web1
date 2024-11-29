@@ -816,7 +816,7 @@ def obtener_registros_y_graficar(filtros):
 
     # Crear una nueva columna que combine semana y año en un formato "año-semana"
     df_agrupado['semana_año'] = df_agrupado['año'].astype(str) + '-W' + df_agrupado['semana'].astype(str)
-
+    registros_finales = df_agrupado.to_dict(orient='records')
     # Extraer los valores para los ejes
     x_vals = df_agrupado['semana_año']
     y_vals = df_agrupado['total_kilos']
@@ -839,7 +839,7 @@ def obtener_registros_y_graficar(filtros):
     # Codificar la imagen en base64
     imagen_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
 
-    return imagen_base64, df_agrupado
+    return imagen_base64, registros_finales
 
 
 def graficas(request):
