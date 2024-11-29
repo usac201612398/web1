@@ -766,7 +766,7 @@ def boletas_list(request):
     salidas= Boletas.objects.all()
     salidas = salidas.order_by('boleta')
      
-    return render(request, 'plantaE/boletas_list.html', {'registros': salidas})
+    return render(request, 'plantaE/recepciones_boletas_list.html', {'registros': salidas})
 
 def recepciones_detail(request, pk):
     salidas = get_object_or_404(detallerec, pk=pk)
