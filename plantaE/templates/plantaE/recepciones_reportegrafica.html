@@ -164,7 +164,7 @@ document.getElementById('consultar').addEventListener('click', function() {
 
     $.ajax({
             
-            url: '{% url "load-grafico" %}',  // URL para la vista AJAX
+            url: '{% url "load_grafico" %}',  // URL para la vista AJAX
             type: 'POST',
             dataType: "json",
             data:  JSON.stringify({'array':datos}),
