@@ -839,9 +839,8 @@ def obtener_registros_y_graficar(filtros):
     return imagen_base64
 
 def graficas(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        mensaje = data['array']
+    data = json.loads(request.body)
+    mensaje = data['array']
 
     '''
         # Construcción de filtros de consulta
