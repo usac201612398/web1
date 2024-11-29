@@ -872,6 +872,7 @@ def graficas(request):
             'estructura': mensaje[0][3],
             'variedad': mensaje[0][4]
         })
+    return JsonResponse({'mensaje': "Método no permitido."}, status=405)
 
 
 def boletas_list(request):
