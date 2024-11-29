@@ -162,7 +162,7 @@ document.getElementById('consultar').addEventListener('click', function() {
     
     console.log(datos); // Verifica que los datos se están enviando correctamente
 
-    fetch('{% url "recepcionesFruta_reportecurva" %}', { // Asegúrate de poner la URL correcta
+    fetch('{% url "load-grafico" %}', { // Asegúrate de poner la URL correcta
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',

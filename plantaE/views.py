@@ -790,6 +790,12 @@ def recepciones_reporteAcumSem(request):
 
 def recepciones_reportecurva(request):
     nombre_usuario = request.user.username
+    #mensaje = request.POST.get('array')
+    
+    return render(request, 'plantaE/recepciones_reportegrafica.html', {'usuario': nombre_usuario})
+
+def graficas(request):
+    
     if request.method == 'POST':
         data = json.loads(request.body)
         mensaje = data['array']
@@ -811,9 +817,6 @@ def recepciones_reportecurva(request):
         except json.JSONDecodeError:
             # Si hay un error al decodificar el JSON, devolver un error
             return JsonResponse({'error': 'Formato JSON inválido'}, status=400)
-    #mensaje = request.POST.get('array')
-    
-    return render(request, 'plantaE/recepciones_reportegrafica.html', {'usuario': nombre_usuario})
 
 def boletas_list(request):
     #today = timezone.now().date()
