@@ -120,8 +120,8 @@
     <div class="container">
         <button id="consultar">Consultar</button>
     </div>
-    
-
+<br>
+    <img id="graficoImagen" src="" alt="Gráfico generado" />
 </body>
 <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -162,26 +162,33 @@ document.getElementById('consultar').addEventListener('click', function() {
     
     console.log(datos); // Verifica que los datos se están enviando correctamente
 
-    $.ajax({
-            
-            url: '{% url "load_grafico" %}',  // URL para la vista AJAX
-            type: 'POST',
-            dataType: "json",
-            data:  JSON.stringify({'array':datos}),
-            contentType: 'application/json',
-            headers: {'X-CSRFToken': csrftoken}, 
-            
-            success: function(data) {
-                // Limpia las opciones actuales del campo 'name'
-                alert("Listo")
-                console.log(data)
-                // Recorre los productos recibidos y añade opciones al campo 'name'
-                
-            },
-            error: function(xhr, status, error) {
-                console.error('Error:', error);  // Maneja errores de la solicitud
-            }
-        });
+
+    // Realizar la solicitud con fetch
+    fetch('{% url "load_grafico" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),  // Agregar el token CSRF
+        },
+        body: JSON.stringify({ 'array': datos }), // Enviar los datos como JSON
+    })
+    .then(response => response.json())  // Convertir la respuesta a JSON
+    .then(data => {
+        // Aquí asumimos que la respuesta tiene la propiedad `image` con la imagen en base64
+        var imageBase64 = data.imagen;
+
+        // Mostrar la imagen en un <img> tag en el HTML
+        var imgElement = document.getElementById('graficoImagen');  // Asegúrate de tener un <img id="graficoImagen">
+        imgElement.src = imageBase64;  // Asigna el base64 a la propiedad src
+
+        alert("Imagen cargada correctamente.");
+        console.log(data);  // Loguear la respuesta del servidor
+    })
+    .catch(error => {
+        console.error('Error:', error);  // Manejar errores
+        alert("Hubo un error al procesar la solicitud.");
+    });
+
   });
 $(document).ready(function() {
         // Función para cargar productos basados en la categoría seleccionada
