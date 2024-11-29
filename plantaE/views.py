@@ -790,10 +790,27 @@ def recepciones_reporteAcumSem(request):
 
 def recepciones_reportecurva(request):
     nombre_usuario = request.user.username
-    data = json.loads(request.body)
-    mensaje = data['array']
-    if mensaje:
-        return JsonResponse({'mensaje':mensaje})
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        mensaje = data['array']
+        
+        try:
+            # Intentar decodificar el JSON recibido en el cuerpo de la solicitud
+            data = json.loads(request.body)
+            
+            # Obtener el contenido del array desde los datos JSON
+            mensaje = data.get('array', [])  # Esto obtiene la lista asociada con la clave 'array'
+
+            if mensaje:
+                # Si el array no está vacío, devolverlo como respuesta JSON
+                return JsonResponse({'mensaje': mensaje})
+            else:
+                # Si no hay datos en el array, devolver un mensaje adecuado
+                return JsonResponse({'error': 'No hay datos en el array'}, status=400)
+        
+        except json.JSONDecodeError:
+            # Si hay un error al decodificar el JSON, devolver un error
+            return JsonResponse({'error': 'Formato JSON inválido'}, status=400)
     #mensaje = request.POST.get('array')
     
     return render(request, 'plantaE/recepciones_reportegrafica.html', {'usuario': nombre_usuario})

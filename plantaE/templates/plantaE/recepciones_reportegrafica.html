@@ -122,59 +122,60 @@
 <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-
+    
 $('.envio3').on('click', function() {
-    
-    
     var datos = []
     var filas = []
+    
     var origen = document.getElementById('Lug'),
         value_or = origen.value,
         text_or = origen.options[origen.selectedIndex].innerText;
-        filas.push(text_or);
+    filas.push(text_or);
+
     var cultivo = document.getElementById('Cul'),
         value_cul = cultivo.value,
         text_cul = cultivo.options[cultivo.selectedIndex].innerText;
-        filas.push(text_cul);
+    filas.push(text_cul);
+
     var orden = document.getElementById('Orden'),
         value_orden = orden.value,
         text_orden = orden.options[orden.selectedIndex].innerText;
-        filas.push(text_orden);
+    filas.push(text_orden);
+
     var estructura = document.getElementById('Estructura'),
         value_est = estructura.value,
         text_est = estructura.options[estructura.selectedIndex].innerText;
-        filas.push(text_est);
-    var variedad = document.getElementById('Variedad'),
-        value_var = variedad.variedad,
-        text_var = variedad.options[variedad.selectedIndex].innerText;
-        filas.push(text_var);
-    datos.push(filas);
+    filas.push(text_est);
 
+    var variedad = document.getElementById('Variedad'),
+        value_var = variedad.value,  // Asegúrate de usar .value aquí
+        text_var = variedad.options[variedad.selectedIndex].innerText;
+    filas.push(text_var);
     
-    console.log(datos);
+    datos.push(filas);
+    
+    console.log(datos); // Verifica que los datos se están enviando correctamente
+    
     $.ajax({
-            
-            url: '{% url "recepcionesFruta_reportecurva" %}',  // URL para la vista AJAX
-            type: 'POST',
-            dataType: "json",
-            data:  JSON.stringify({'array':datos}),
-            contentType: 'application/json',
-            headers: {'X-CSRFToken': csrftoken}, 
-            
-            success: function(data) {
-                // Limpia las opciones actuales del campo 'name'
-                alert("Listo")
-                console.log(data)
-                // Recorre los productos recibidos y añade opciones al campo 'name'
-                
-            },
-            error: function(xhr, status, error) {
-                console.error('Error:', error);  // Maneja errores de la solicitud
-            }
-        });
-    
-        window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/salidasFrutaValle')
-  });
+        url: '{% url "recepcionesFruta_reportecurva" %}',  // URL para la vista AJAX
+        type: 'POST',
+        dataType: "json",
+        data: JSON.stringify({'array': datos}),  // Envío de los datos en formato JSON
+        contentType: 'application/json',
+        headers: {'X-CSRFToken': csrftoken},  // Asegúrate de que csrftoken esté definido correctamente
+
+        success: function(data) {
+            alert("Listo");
+            console.log(data);  // Verifica la respuesta del servidor
+            window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/salidasFrutaValle');  // Redirección después de la respuesta exitosa
+        },
+
+        error: function(xhr, status, error) {
+            console.error('Error:', error);  // Manejo de errores de la solicitud
+        }
+    });
+});
+
 
 
 
