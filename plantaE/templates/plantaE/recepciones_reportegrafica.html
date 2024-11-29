@@ -214,7 +214,7 @@ $(document).ready(function() {
                     $('<option>').text('').attr('value','')
                 );
                 // Recorre los productos recibidos y añade opciones al campo 'name'
-                $.each(data.datos, function(index, product) {
+                $.each(data.cultivo, function(index, product) {
                     $('#Cul').append(
                         $('<option>').text(product.cultivo.toString()).attr('value', product.cultivo.toString())
                         
