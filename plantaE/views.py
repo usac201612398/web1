@@ -793,7 +793,7 @@ def recepciones_reportecurva(request):
     data = json.loads(request.body)
     mensaje = data['array']
     if mensaje:
-        JsonResponse({'mensaje':mensaje})
+        return JsonResponse({'mensaje':mensaje})
     #mensaje = request.POST.get('array')
     
     return render(request, 'plantaE/recepciones_reportegrafica.html', {'usuario': nombre_usuario})
