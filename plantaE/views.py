@@ -839,7 +839,7 @@ def obtener_registros_y_graficar(filtros):
     # Codificar la imagen en base64
     imagen_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
 
-    return imagen_base64
+    return imagen_base64, df_agrupado
 
 
 def graficas(request):
@@ -865,7 +865,7 @@ def graficas(request):
         return JsonResponse({'mensaje': "Debe seleccionar por lo menos un parámetro para consultar."})
 
     # Llamar a la función para obtener registros y graficar
-    imagen_base64 = obtener_registros_y_graficar(filtros)
+    imagen_base64, dataframe = obtener_registros_y_graficar(filtros)
 
         # Responder con el gráfico generado
         
@@ -876,7 +876,8 @@ def graficas(request):
             'cultivo': mensaje[0][1],
             'orden': mensaje[0][2],
             'estructura': mensaje[0][3],
-            'variedad': mensaje[0][4]
+            'variedad': mensaje[0][4],
+            'dataframe': dataframe
         })
 
 
