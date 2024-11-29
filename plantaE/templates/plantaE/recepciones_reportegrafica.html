@@ -144,8 +144,10 @@ $('.envio3').on('click', function() {
         value_est = estructura.value,
         text_est = estructura.options[estructura.selectedIndex].innerText;
         filas.push(text_est);
-    var correo = document.getElementById('correo').value;
-    filas.push(correo);
+    var variedad = document.getElementById('Variedad'),
+        value_var = variedad.variedad,
+        text_var = variedad.options[variedad.selectedIndex].innerText;
+        filas.push(text_var);
     datos.push(filas);
 
     

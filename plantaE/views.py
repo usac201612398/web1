@@ -790,9 +790,12 @@ def recepciones_reporteAcumSem(request):
 
 def recepciones_reportecurva(request):
     nombre_usuario = request.user.username
-    finca_id = request.GET.get('finca')
-    orden_id = request.GET.get('orden')
-
+    data = json.loads(request.body)
+    mensaje = data['array']
+    if mensaje:
+        JsonResponse({'mensaje':mensaje})
+    #mensaje = request.POST.get('array')
+    
     return render(request, 'plantaE/recepciones_reportegrafica.html', {'usuario': nombre_usuario})
 
 def boletas_list(request):
