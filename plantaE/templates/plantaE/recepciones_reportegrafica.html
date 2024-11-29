@@ -185,8 +185,7 @@ document.getElementById('consultar').addEventListener('click', function() {
         var imgElement = document.getElementById('graficoImagen');
         imgElement.src = imageBase64;
         
-        console.log(imageBase64);
-        console.log(imgElement.src);
+        console.log(data);
     })
     .catch(error => {
         console.error('Error al obtener el gráfico:', error);
