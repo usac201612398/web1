@@ -121,7 +121,7 @@ def load_dataUsuario4(request):
     cultivo_ = request.GET.get('cultivo')
     finca_ = request.GET.get('finca')
     
-    variedad = detallesProduccion.objects.filter(cultivo=cultivo_,orden=ordenSelect).values('variedad').distinct('variedad')
+    variedad = detallesEstructuras.objects.filter(cultivo=cultivo_,orden=ordenSelect,finca=finca_).values('variedad').distinct('variedad')
     # Filtra las estructuras basadas en la orden seleccionada
     estructura = detallesEstructuras.objects.filter(cultivo=cultivo_,orden=ordenSelect,finca=finca_).values('estructura').distinct('estructura')
     return JsonResponse({'estructura': list(estructura),'variedad': list(variedad)})
