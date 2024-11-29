@@ -8,7 +8,9 @@ from .models import Actpeso,Boletas, detallerecaux,detallerec,salidasFruta, usua
 from .forms import pesosForm,salidasFrutaForm, recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
 from django.db.models import Sum, Q
 from django.utils import timezone
+import matplotlib.pyplot as plt
 import datetime
+from io import BytesIO
 import json
 import pandas as pd
 import pytz
