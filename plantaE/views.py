@@ -842,7 +842,7 @@ def graficas(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         mensaje = data['array']
-        
+
     '''
         # Construcción de filtros de consulta
         filtros = {}
