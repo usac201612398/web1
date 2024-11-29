@@ -117,7 +117,7 @@ def load_dataUsuario(request):
     return JsonResponse({'datos': list(datos),'correo':correo_id,'adicionales':list(adicionales),'ordenes':list(adicionales_)})
 
 def load_dataUsuario4(request):
-    ordenSelect = request.GET.get('category_id')
+    ordenSelect = request.GET.get('orden')
     cultivo_ = request.GET.get('cultivo')
     finca_ = request.GET.get('finca')
     
