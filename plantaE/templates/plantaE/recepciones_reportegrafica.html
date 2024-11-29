@@ -127,7 +127,9 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 
-$('.consultar').on('click', function() {
+
+document.getElementById('consultar').addEventListener('click', function() {
+    
     var datos = []
     var filas = []
     
@@ -159,29 +161,23 @@ $('.consultar').on('click', function() {
     datos.push(filas);
     
     console.log(datos); // Verifica que los datos se están enviando correctamente
-    
-    $.ajax({
-        url: '{% url "recepcionesFruta_reportecurva" %}',  // URL para la vista AJAX
-        type: 'POST',
-        dataType: "json",
-        data: JSON.stringify({'array': datos}),  // Envío de los datos en formato JSON
-        contentType: 'application/json',
-        headers: {'X-CSRFToken': csrftoken},  // Asegúrate de que csrftoken esté definido correctamente
 
-        success: function(data) {
-            alert("Listo");
-            console.log(data);  // Verifica la respuesta del servidor
-            window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/salidasFrutaValle');  // Redirección después de la respuesta exitosa
+    fetch('{% url "recepcionesFruta_reportecurva" %}', { // Asegúrate de poner la URL correcta
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': getCookie('csrftoken')  // Asegúrate de incluir CSRF token
         },
-
-        error: function(xhr, status, error) {
-            console.error('Error:', error);  // Manejo de errores de la solicitud
-        }
+        body: new URLSearchParams({
+            'opcion2': opcionSeleccionada2
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data)
+        
     });
 });
-
-
-
 
 $(document).ready(function() {
         // Función para cargar productos basados en la categoría seleccionada
