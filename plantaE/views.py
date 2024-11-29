@@ -842,7 +842,8 @@ def graficas(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         mensaje = data['array']
-
+        
+    '''
         # Construcción de filtros de consulta
         filtros = {}
         if mensaje[0][0]:  # finca
@@ -872,7 +873,14 @@ def graficas(request):
             'estructura': mensaje[0][3],
             'variedad': mensaje[0][4]
         })
-    return JsonResponse({'mensaje': "Método no permitido."}, status=405)
+    '''
+    return render(request, 'plantaE/recepciones_graficalienzo.html', {
+            'finca': mensaje[0][0],
+            'cultivo': mensaje[0][1],
+            'orden': mensaje[0][2],
+            'estructura': mensaje[0][3],
+            'variedad': mensaje[0][4]
+        })
 
 
 def boletas_list(request):
