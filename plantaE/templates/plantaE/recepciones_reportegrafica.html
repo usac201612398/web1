@@ -169,7 +169,7 @@ document.getElementById('consultar').addEventListener('click', function() {
             'X-CSRFToken': getCookie('csrftoken')  // Asegúrate de incluir CSRF token
         },
         body: new URLSearchParams({
-            'opcion2': opcionSeleccionada2
+            'array': datos
         })
     })
     .then(response => response.json())
