@@ -122,7 +122,7 @@ def load_dataUsuario2(request):
     finca_ = request.GET.get('finca')
 
     # Filtra las órdenes de detallesEstructuras por finca y cultivo
-    orden = detallesEstructuras.objects.filter(finca=finca_, cultivo=cultivo_).values('orden')
+    orden = detallesEstructuras.objects.filter(finca=finca_, cultivo=cultivo_).values('orden').distinct('orden')
 
     # Filtra los cultivos basados en la orden seleccionada y estado "Abierta"
     cultivo = datosProduccion.objects.filter(orden=ordenSelect, status="Abierta").values('cultivo')
