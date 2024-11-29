@@ -259,7 +259,7 @@ $(document).ready(function() {
     }
     function loadProducts3(categoryId) {
         $.ajax({
-            url: '{% url "load_dataUsuario2" %}',  // URL para la vista AJAX
+            url: '{% url "load_dataUsuario4" %}',  // URL para la vista AJAX
             data: {
                 'orden':categoryId,
                 'cultivo':$('#Cul').val(),
@@ -274,7 +274,7 @@ $(document).ready(function() {
                     $('<option>').text('').attr('value','')
                 );
                 // Recorre los productos recibidos y añade opciones al campo 'name'
-                $.each(data.datos, function(index, product) {
+                $.each(data.variedad, function(index, product) {
                     $('#Variedad').append(
                         $('<option>').text(product.variedad.toString()).attr('value', product.variedad.toString())
                         
@@ -286,7 +286,7 @@ $(document).ready(function() {
                     $('<option>').text('').attr('value','')
                 );
                 // Recorre los productos recibidos y añade opciones al campo 'name'
-                $.each(data.datos, function(index, product) {
+                $.each(data.estructura, function(index, product) {
                     $('#Estructura').append(
                         $('<option>').text(product.estructura.toString()).attr('value', product.estructura.toString())
                         

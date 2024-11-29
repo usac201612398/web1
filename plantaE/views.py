@@ -116,6 +116,16 @@ def load_dataUsuario(request):
     adicionales_ = datosProduccion.objects.filter(finca=list(datos)[0]['finca']).values('orden').distinct('orden')
     return JsonResponse({'datos': list(datos),'correo':correo_id,'adicionales':list(adicionales),'ordenes':list(adicionales_)})
 
+def load_dataUsuario4(request):
+    ordenSelect = request.GET.get('category_id')
+    cultivo_ = request.GET.get('cultivo')
+    finca_ = request.GET.get('finca')
+    
+    variedad = detallesProduccion.objects.filter(cultivo=cultivo_,orden=ordenSelect,finca=finca_).values('variedad').distinct('variedad')
+    # Filtra las estructuras basadas en la orden seleccionada
+    estructura = detallesEstructuras.objects.filter(cultivo=cultivo_,orden=ordenSelect,finca=finca_).values('estructura').distinct('estructura')
+    return JsonResponse({'estructura': list(estructura),'variedad': list(variedad)})
+
 def load_dataUsuario2(request):
     ordenSelect = request.GET.get('category_id')
     cultivo_ = request.GET.get('cultivo')
