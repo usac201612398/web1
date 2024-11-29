@@ -182,8 +182,11 @@ document.getElementById('consultar').addEventListener('click', function() {
     })
     .then(data => {
         var imageBase64 = data.imagen;
+        // Prefijo correcto para base64 PNG
+        var imgSrc = "data:image/png;base64," + imageBase64;
         var imgElement = document.getElementById('graficoImagen');
-        imgElement.src = imageBase64;
+        
+        imgElement.src = imgSrc; 
         
         console.log(data);
     })
