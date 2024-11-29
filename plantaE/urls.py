@@ -14,7 +14,6 @@ urlpatterns = [
     path('ajax/load-dataUsuario3/', views.load_dataUsuario3, name='load_dataUsuario3'),
     
     path('ajax/load-dataUsuario4/', views.load_dataUsuario4, name='load_dataUsuario4'),
-    path('ajax/load-grafico/', views.graficas, name='load_grafico'),
     path('ajax/obtener-nombre-usuario/', views.obtener_nombre_usuario, name='obtener_nombre_usuario'),
     path('ajax/obtener-fecha-invFruta/', views.obtenerfecha_invFruta, name='obtenerfecha_invFruta'),
     path('ajax/obtener-llave-recepcion/', views.obtener_llave_recepcion, name='obtener_llave_recepcion'),
@@ -51,6 +50,7 @@ urlpatterns = [
     path("recepcionesFruta/reporteAcum",views.recepciones_reporteAcum,name='recepcionesFruta_reporteAcum'),
     path("recepcionesFruta/reporteAcum/semanal",views.recepciones_reporteAcumSem,name='recepcionesFruta_reporteAcumSem'),
     path("recepcionesFruta/reporteAcum/grafico",views.recepciones_reportecurva,name='recepcionesFruta_reportecurva'),
+    path("recepcionesFruta/reporteAcum/loadgrafico",views.graficas,name='load_grafico'),
     path("boletasFruta",views.boletas_list,name='boletasFruta_list'),
     path('recepcionesFruta/<int:pk>/', views.recepciones_detail, name='recepcionesFruta_detail'),
     path("ccalidad",views.ccalidad_list,name='ccalidad_list'),
