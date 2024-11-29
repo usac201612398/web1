@@ -11,6 +11,7 @@ from django.utils import timezone
 import matplotlib.pyplot as plt
 import datetime
 from io import BytesIO
+import base64
 import json
 import pandas as pd
 import pytz
@@ -836,9 +837,9 @@ def graficas(request):
             plt.savefig(buf, format='png')
             buf.seek(0)
 
-            # Preparar la imagen para mostrarla en la página
-            imagen_url = buf.getvalue()
-            return render(request, 'plantaE/recepciones_graficalienzo.html', {'imagen_url': imagen_url, 'finca':mensaje[0][0], 'cultivo':mensaje[0][1], 'orden':mensaje[0][2], 'estructura':mensaje[0][3], 'variedad':mensaje[0][4]})
+            # Codificar la imagen en base64
+            imagen_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+            return render(request, 'plantaE/recepciones_graficalienzo.html', {'imagen_url': imagen_base64, 'finca':mensaje[0][0], 'cultivo':mensaje[0][1], 'orden':mensaje[0][2], 'estructura':mensaje[0][3], 'variedad':mensaje[0][4]})
     
         elif not mensaje[0][4] and mensaje [0][3] and mensaje[0][2] and mensaje[0][1] and mensaje[0][0]: 
             registros=AcumFruta.objects.filter(finca=mensaje[0][0],cultivo=mensaje[0][1],orden=mensaje[0][2],estructura=mensaje[0][3])
@@ -877,9 +878,9 @@ def graficas(request):
             plt.savefig(buf, format='png')
             buf.seek(0)
 
-            # Preparar la imagen para mostrarla en la página
-            imagen_url = buf.getvalue()
-            return render(request, 'plantaE/recepciones_graficalienzo.html', {'imagen_url': imagen_url, 'finca':mensaje[0][0], 'cultivo':mensaje[0][1], 'orden':mensaje[0][2], 'estructura':mensaje[0][3], 'variedad':mensaje[0][4]})
+            # Codificar la imagen en base64
+            imagen_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+            return render(request, 'plantaE/recepciones_graficalienzo.html', {'imagen_url': imagen_base64, 'finca':mensaje[0][0], 'cultivo':mensaje[0][1], 'orden':mensaje[0][2], 'estructura':mensaje[0][3], 'variedad':mensaje[0][4]})
     
         elif not mensaje[0][3] and mensaje [0][4] and mensaje[0][2] and mensaje[0][1] and mensaje[0][0]:
             registros=AcumFruta.objects.filter(finca=mensaje[0][0],cultivo=mensaje[0][1],orden=mensaje[0][2],variedad=mensaje[0][4])
@@ -918,9 +919,9 @@ def graficas(request):
             plt.savefig(buf, format='png')
             buf.seek(0)
 
-            # Preparar la imagen para mostrarla en la página
-            imagen_url = buf.getvalue()
-            return render(request, 'plantaE/recepciones_graficalienzo.html', {'imagen_url': imagen_url, 'finca':mensaje[0][0], 'cultivo':mensaje[0][1], 'orden':mensaje[0][2], 'estructura':mensaje[0][3], 'variedad':mensaje[0][4]})
+            # Codificar la imagen en base64
+            imagen_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+            return render(request, 'plantaE/recepciones_graficalienzo.html', {'imagen_url': imagen_base64, 'finca':mensaje[0][0], 'cultivo':mensaje[0][1], 'orden':mensaje[0][2], 'estructura':mensaje[0][3], 'variedad':mensaje[0][4]})
 
         elif not (mensaje[0][3] and mensaje[0][4]) and mensaje[0][2] and mensaje[0][1] and mensaje[0][0]:
             registros=AcumFruta.objects.filter(finca=mensaje[0][0],cultivo=mensaje[0][1],orden=mensaje[0][2])
@@ -959,8 +960,8 @@ def graficas(request):
             plt.savefig(buf, format='png')
             buf.seek(0)
 
-            # Preparar la imagen para mostrarla en la página
-            imagen_url = buf.getvalue()
+            # Codificar la imagen en base64
+            imagen_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
             return render(request, 'plantaE/recepciones_graficalienzo.html', {'imagen_url': imagen_url, 'finca':mensaje[0][0], 'cultivo':mensaje[0][1], 'orden':mensaje[0][2], 'estructura':mensaje[0][3], 'variedad':mensaje[0][4]})
 
         elif not (mensaje[0][3] and mensaje[0][4] and mensaje[0][2]) and  mensaje[0][1] and mensaje[0][0]:
