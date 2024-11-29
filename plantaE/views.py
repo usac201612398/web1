@@ -810,8 +810,8 @@ def obtener_registros_y_graficar(filtros):
     # Agrupar por semana y año, sumando los kilos
     df_agrupado = df.groupby(['semana', 'año'], as_index=False).agg(
         total_kilos=('kilos', 'sum'),
-        cultivo=('semana', 'first'),
-        semana=('año', 'first')
+        semana=('semana', 'first'),
+        año=('año', 'first')
     )
 
     # Crear una nueva columna que combine semana y año en un formato "año-semana"
