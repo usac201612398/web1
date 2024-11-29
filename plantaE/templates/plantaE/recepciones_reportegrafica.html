@@ -123,8 +123,10 @@
 <br>
     <img id="graficoImagen" src="" alt="Gráfico generado" />
 </body>
+
 <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
 
 
@@ -182,7 +184,6 @@ document.getElementById('consultar').addEventListener('click', function() {
         imgElement.src = imageBase64;  // Asigna el base64 a la propiedad src
 
         alert("Imagen cargada correctamente.");
-        console.log(data);  // Loguear la respuesta del servidor
     })
     .catch(error => {
         console.error('Error:', error);  // Manejar errores
