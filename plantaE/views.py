@@ -846,38 +846,32 @@ def graficas(request):
     data = json.loads(request.body)
     mensaje = data['array']
 
-    '''
-        # Construcción de filtros de consulta
-        filtros = {}
-        if mensaje[0][0]:  # finca
-            filtros['finca'] = mensaje[0][0]
-        if mensaje[0][1]:  # cultivo
-            filtros['cultivo'] = mensaje[0][1]
-        if mensaje[0][2]:  # orden
-            filtros['orden'] = mensaje[0][2]
-        if mensaje[0][3]:  # estructura
-            filtros['estructura'] = mensaje[0][3]
-        if mensaje[0][4]:  # variedad
-            filtros['variedad'] = mensaje[0][4]
+    
+    # Construcción de filtros de consulta
+    filtros = {}
+    if mensaje[0][0]:  # finca
+        filtros['finca'] = mensaje[0][0]
+    if mensaje[0][1]:  # cultivo
+        filtros['cultivo'] = mensaje[0][1]
+    if mensaje[0][2]:  # orden
+        filtros['orden'] = mensaje[0][2]
+    if mensaje[0][3]:  # estructura
+        filtros['estructura'] = mensaje[0][3]
+    if mensaje[0][4]:  # variedad
+        filtros['variedad'] = mensaje[0][4]
 
-        # Validar que al menos haya un filtro seleccionado
-        if not filtros:
-            return JsonResponse({'mensaje': "Debe seleccionar por lo menos un parámetro para consultar."})
+    # Validar que al menos haya un filtro seleccionado
+    if not filtros:
+        return JsonResponse({'mensaje': "Debe seleccionar por lo menos un parámetro para consultar."})
 
-        # Llamar a la función para obtener registros y graficar
-        imagen_base64 = obtener_registros_y_graficar(filtros)
+    # Llamar a la función para obtener registros y graficar
+    imagen_base64 = obtener_registros_y_graficar(filtros)
 
         # Responder con el gráfico generado
-        return render(request, 'plantaE/recepciones_graficalienzo.html', {
-            'imagen_url': imagen_base64,
-            'finca': mensaje[0][0],
-            'cultivo': mensaje[0][1],
-            'orden': mensaje[0][2],
-            'estructura': mensaje[0][3],
-            'variedad': mensaje[0][4]
-        })
-    '''
+        
+    
     return JsonResponse( {
+            'imagen': imagen_base64,
             'finca': mensaje[0][0],
             'cultivo': mensaje[0][1],
             'orden': mensaje[0][2],
