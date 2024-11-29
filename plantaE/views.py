@@ -795,10 +795,7 @@ def recepciones_reportecurva(request):
     
     return render(request, 'plantaE/recepciones_reportegrafica.html', {'usuario': nombre_usuario})
 
-def recepciones_reportecurva2(request):
-    #mensaje = request.POST.get('array')
-    
-    return render(request, 'plantaE/recepciones_graficalienzo.html', {'mensaje': "hola"})
+
 
 def obtener_registros_y_graficar(filtros):
     registros = AcumFruta.objects.filter(**filtros)
@@ -880,7 +877,7 @@ def graficas(request):
             'variedad': mensaje[0][4]
         })
     '''
-    return render(request, 'plantaE/recepciones_graficalienzo.html', {
+    return JsonResponse( {
             'finca': mensaje[0][0],
             'cultivo': mensaje[0][1],
             'orden': mensaje[0][2],
