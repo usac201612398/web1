@@ -794,6 +794,12 @@ def recepciones_reportecurva(request):
     #mensaje = request.POST.get('array')
     
     return render(request, 'plantaE/recepciones_reportegrafica.html', {'usuario': nombre_usuario})
+
+def recepciones_reportecurva2(request):
+    #mensaje = request.POST.get('array')
+    
+    return render(request, 'plantaE/recepciones_graficalienzo.html', {'mensaje': "hola"})
+
 def obtener_registros_y_graficar(filtros):
     registros = AcumFruta.objects.filter(**filtros)
     df = pd.DataFrame(list(registros.values()), columns=['fecha', 'libras'])
@@ -837,6 +843,7 @@ def obtener_registros_y_graficar(filtros):
     imagen_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
 
     return imagen_base64
+
 
 def graficas(request):
     data = json.loads(request.body)
