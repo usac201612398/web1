@@ -121,7 +121,7 @@
         <button id="consultar">Consultar</button>
     </div>
 <br>
-    <img id="graficoImagen" src="" alt="Gráfico generado" />
+    <img id="graficoImagen" src="" width="300" height="200" alt="Gráfico generado" />
 </body>
 
 <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
@@ -183,7 +183,6 @@ document.getElementById('consultar').addEventListener('click', function() {
         var imgElement = document.getElementById('graficoImagen');  // Asegúrate de tener un <img id="graficoImagen">
         imgElement.src = imageBase64;  // Asigna el base64 a la propiedad src
 
-        alert("Imagen cargada correctamente.");
     })
     .catch(error => {
         console.error('Error:', error);  // Manejar errores
