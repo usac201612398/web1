@@ -789,11 +789,11 @@ def recepciones_reporteAcumSem(request):
     })
 
 def recepciones_reportecurva(request):
-
+    nombre_usuario = request.user.username
     finca_id = request.GET.get('finca')
     orden_id = request.GET.get('orden')
 
-    return render(request, 'plantaE/recepciones_reportegrafica.html')
+    return render(request, 'plantaE/recepciones_reportegrafica.html', {'registros': nombre_usuario})
 
 def boletas_list(request):
     #today = timezone.now().date()
