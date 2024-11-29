@@ -162,23 +162,27 @@ document.getElementById('consultar').addEventListener('click', function() {
     
     console.log(datos); // Verifica que los datos se están enviando correctamente
 
-    fetch('{% url "load_grafico" %}', { // Asegúrate de poner la URL correcta
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-CSRFToken': getCookie('csrftoken')  // Asegúrate de incluir CSRF token
-        },
-        body: new URLSearchParams({
-            'array': datos
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data)
-        
-    });
-});
-
+    $.ajax({
+            
+            url: '{% url "load-grafico" %}',  // URL para la vista AJAX
+            type: 'POST',
+            dataType: "json",
+            data:  JSON.stringify({'array':datos}),
+            contentType: 'application/json',
+            headers: {'X-CSRFToken': csrftoken}, 
+            
+            success: function(data) {
+                // Limpia las opciones actuales del campo 'name'
+                alert("Listo")
+                console.log(data)
+                // Recorre los productos recibidos y añade opciones al campo 'name'
+                
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);  // Maneja errores de la solicitud
+            }
+        });
+  });
 $(document).ready(function() {
         // Función para cargar productos basados en la categoría seleccionada
     function authUsuario() {
