@@ -118,13 +118,34 @@ def load_dataUsuario(request):
 
 def load_dataUsuario2(request):
     ordenSelect = request.GET.get('category_id')
-    cultivo_= request.GET.get('cultivo')
-    finca_= request.GET.get('finca')
-    orden = detallesEstructuras.objects.filter(finca=finca_,cultivo=cultivo_).values('orden')
-    cultivo= datosProduccion.objects.filter(orden=ordenSelect,status="Abierta").values('cultivo')
-    variedad = detallesProduccion.objects.filter(cultivo=list(cultivo)[0]['cultivo']).values('variedad')
+    cultivo_ = request.GET.get('cultivo')
+    finca_ = request.GET.get('finca')
+
+    # Filtra las órdenes de detallesEstructuras por finca y cultivo
+    orden = detallesEstructuras.objects.filter(finca=finca_, cultivo=cultivo_).values('orden')
+
+    # Filtra los cultivos basados en la orden seleccionada y estado "Abierta"
+    cultivo = datosProduccion.objects.filter(orden=ordenSelect, status="Abierta").values('cultivo')
+
+    # Verifica si hay al menos un cultivo en los resultados
+    if cultivo:
+        # Si hay un cultivo, toma el primero y filtra las variedades asociadas
+        variedad = detallesProduccion.objects.filter(cultivo=list(cultivo)[0]['cultivo']).values('variedad')
+    else:
+        # Si no hay cultivos, asigna una lista vacía a variedad
+        variedad = []
+
+    # Filtra las estructuras basadas en la orden seleccionada
     estructura = detallesEstructuras.objects.filter(orden=ordenSelect).values('estructura')
-    return JsonResponse({'datos': list(cultivo),'variedad':list(variedad),'estructura':list(estructura),'orden':ordenSelect,'ordenes':list(orden)})
+
+    # Devuelve los resultados como JSON
+    return JsonResponse({
+        'datos': list(cultivo),
+        'variedad': list(variedad),
+        'estructura': list(estructura),
+        'orden': ordenSelect,
+        'ordenes': list(orden)
+    })
 
 def load_dataUsuario3(request):
     cultivo_ = request.GET.get('category_id')
