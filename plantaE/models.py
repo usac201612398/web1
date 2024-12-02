@@ -187,6 +187,7 @@ class Boletas(models.Model):
     librasxcaja = models.FloatField(blank=True, null=True)
     libras = models.FloatField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True,blank=True, null=True)
+    idpedido = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
