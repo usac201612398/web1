@@ -224,7 +224,7 @@ $(document).ready(function() {
                     $('<option>').text('').attr('value','')
                 );
 
-                $.each(data.cultivo, function(index, product) {
+                $.each(data.adicionales, function(index, product) {
                     $('#Cul').append(
                         $('<option>').text(product.cultivo.toString()).attr('value', product.cultivo.toString())
                     );
