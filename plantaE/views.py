@@ -161,7 +161,7 @@ def load_dataUsuario2(request):
 def load_dataUsuario3(request):
     cultivo_ = request.GET.get('category_id')
     finca_ = request.GET.get('finca')
-    cultivo = cultivoxFinca.objects.filter(finca=finca_).values('cultivo').distinct('cultivo')
+    cultivo = detallesEstructuras.objects.filter(finca=finca_).values('cultivo').distinct('cultivo')
     variedad= cultivoxFinca.objects.filter(finca=finca_,cultivo=cultivo_).values('variedad').distinct('variedad')
     #variedad = cultivoxFinca.objects.filter(cultivo=list(cultivo)[0]['cultivo']).values('variedad')
     return JsonResponse({'datos': list(variedad),'cultivo': list(cultivo)})
