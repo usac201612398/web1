@@ -557,6 +557,13 @@ def article_delete(request, pk):
         return redirect('salidasFruta_list')
     return render(request, 'plantaE/salidasFruta_confirm_delete.html', {'registros': salidas})
 
+def article_deleteValle(request, pk):
+    salidas = get_object_or_404(salidasFruta, pk=pk)
+    if request.method == 'POST':
+        salidas.delete()
+        return redirect('salidasFruta_listValle')
+    return render(request, 'plantaE/salidasFruta_confirm_deleteValle.html', {'registros': salidas})
+
 def acumFruta_list(request):
     today = timezone.now().date()
     nombre_usuario = request.user.username

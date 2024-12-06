@@ -96,7 +96,7 @@ class salidasFruta(models.Model):
     op_orden = [('PT20242025','PP20242025'),('64202052','64202052'),('64206054','64206054'),('64206055','64206055'),('64206056','64206056'),('64202048','64202048'),('64202049','64202049'),('64202050','64202050'),('64202051','64202051')]
     op_estructura = [('CM1','CM1'),('CM2','CM2'),('CM3','CM3'),('CM4','CM4'),('CM5','CM5'),('CM6','CM6'),('CM6A','CM6A'),('CM6B','CM6B'),('CM7','CM7'),('INV1','INV1'),('INV2','INV2'),('CM8','CM8')]
     id = models.AutoField(primary_key=True)
-    acumFruta = models.ForeignKey(AcumFruta, null=True, blank=True,on_delete=models.CASCADE)
+    acumFruta = models.ForeignKey(AcumFruta, null=True, blank=True, on_delete=models.CASCADE)
     fecha = models.DateField(blank=True, null=True)
     finca = models.CharField(max_length=25,choices=op_finca,null=True)
     viaje = models.CharField(max_length=20, choices=op_viajes,null=True)
