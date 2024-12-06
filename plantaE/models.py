@@ -59,34 +59,6 @@ class detallesEstructuras(models.Model):
     def __str__(self):
         return (str(self.finca) + " | " + str(self.orden) + " | " + str(self.estructura) + " | " + str(self.variedad)  )
 
-class salidasFruta(models.Model):
-    
-    op_viajes = [('','-'),('Viaje 1','Viaje 1'),('Viaje 2','Viaje 2'),('Viaje 3', 'Viaje 3'),('Viaje 4','Viaje 4'),('Viaje 5','Viaje 5'),('Viaje 6','Viaje 6'),('Viaje 7','Viaje 7'),('Viaje 8','Viaje 8'),('Viaje 9','Viaje 9'),('Viaje 10','Viaje 10')]
-    op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
-    op_variedad = [('HATENO','HATENO'),('SWEET MAX','SWEET MAX'),('HYRULE','HYRULE'),('DUNNE','DUNNE'),('BAMANO','BAMANO'),('TT 764','TT 764'),('TT 864','TT 864'),('DORMA','DORMA'),('CHOCOSTAR','CHOCOSTAR'),('IVORINO','IVORINO'),('KM 5512','KM 5512'),('NEBULA','NEBULA'),('ROJO','ROJO'),('AMARILLO','AMARILLO'),('ANARANJADO','ANARANJADO')]
-    op_encargado = [('Brandon Portillo','Brandon Portillo'),('Ariel Parada','Ariel Parada'),('Carlos Hernández','Carlos Hernández'),('Rita Florian','Rita Florian'),('Nolberto Morales','Nolberto Morales')]
-    op_finca = [('VALLE','VALLE'),('RIO','RIO'),('CIP','CIP'),('FLE','FLE'),('FLA','FLA'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.')]
-    op_correo = [('cosecha.rio@popoyan.com.gt','cosecha.rio@popoyan.com.gt'),('provalle@popoyan.com.gt','provalle@popoyan.com.gt'),('cosecha.valle@popoyan.com.gt','cosecha.valle@popoyan.com.gt'),('cosecha.valle2@popoyan.com.gt','cosecha.valle2@popoyan.com.gt')]
-    op_orden = [('PT20242025','PP20242025'),('64202052','64202052'),('64206054','64206054'),('64206055','64206055'),('64206056','64206056'),('64202048','64202048'),('64202049','64202049'),('64202050','64202050'),('64202051','64202051')]
-    op_estructura = [('CM1','CM1'),('CM2','CM2'),('CM3','CM3'),('CM4','CM4'),('CM5','CM5'),('CM6','CM6'),('CM6A','CM6A'),('CM6B','CM6B'),('CM7','CM7'),('INV1','INV1'),('INV2','INV2'),('CM8','CM8')]
-    id = models.AutoField(primary_key=True)
-    fecha = models.DateField(blank=True, null=True)
-    finca = models.CharField(max_length=25,choices=op_finca,null=True)
-    viaje = models.CharField(max_length=20, choices=op_viajes,null=True)
-    encargado = models.CharField(max_length=30,choices=op_encargado,null=True)
-    #orden = models.CharField(max_length=20,choices=op_orden,null=True)
-    cultivo = models.CharField(max_length=45,choices=op_cultivo,null=True)
-    variedad = models.CharField(max_length=40,choices=op_variedad,null=True)
-    cajas = models.IntegerField(blank=True, null=True)
-    libras = models.FloatField(blank=True, null=True)
-    correo = models.CharField(max_length=75, blank=True,choices=op_correo,null=True)
-    #estructura=models.CharField(max_length=40,choices=op_estructura,null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return (str(self.finca)+ " | " + str(self.encargado) + " | " + str(self.viaje)+ " | " + str(self.cultivo))
-
 class AcumFruta(models.Model):
     
     op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
@@ -112,6 +84,35 @@ class AcumFruta(models.Model):
 
     def __str__(self):
         return (str(self.id) + " | " + str(self.fecha) + " | " + str(self.finca)+ " | " + str(self.cultivo) + " | " + str(self.variedad)+ " | " + str(self.estructura)+ " | " + str(self.viaje))
+
+class salidasFruta(models.Model):
+    
+    op_viajes = [('','-'),('Viaje 1','Viaje 1'),('Viaje 2','Viaje 2'),('Viaje 3', 'Viaje 3'),('Viaje 4','Viaje 4'),('Viaje 5','Viaje 5'),('Viaje 6','Viaje 6'),('Viaje 7','Viaje 7'),('Viaje 8','Viaje 8'),('Viaje 9','Viaje 9'),('Viaje 10','Viaje 10')]
+    op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
+    op_variedad = [('HATENO','HATENO'),('SWEET MAX','SWEET MAX'),('HYRULE','HYRULE'),('DUNNE','DUNNE'),('BAMANO','BAMANO'),('TT 764','TT 764'),('TT 864','TT 864'),('DORMA','DORMA'),('CHOCOSTAR','CHOCOSTAR'),('IVORINO','IVORINO'),('KM 5512','KM 5512'),('NEBULA','NEBULA'),('ROJO','ROJO'),('AMARILLO','AMARILLO'),('ANARANJADO','ANARANJADO')]
+    op_encargado = [('Brandon Portillo','Brandon Portillo'),('Ariel Parada','Ariel Parada'),('Carlos Hernández','Carlos Hernández'),('Rita Florian','Rita Florian'),('Nolberto Morales','Nolberto Morales')]
+    op_finca = [('VALLE','VALLE'),('RIO','RIO'),('CIP','CIP'),('FLE','FLE'),('FLA','FLA'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.')]
+    op_correo = [('cosecha.rio@popoyan.com.gt','cosecha.rio@popoyan.com.gt'),('provalle@popoyan.com.gt','provalle@popoyan.com.gt'),('cosecha.valle@popoyan.com.gt','cosecha.valle@popoyan.com.gt'),('cosecha.valle2@popoyan.com.gt','cosecha.valle2@popoyan.com.gt')]
+    op_orden = [('PT20242025','PP20242025'),('64202052','64202052'),('64206054','64206054'),('64206055','64206055'),('64206056','64206056'),('64202048','64202048'),('64202049','64202049'),('64202050','64202050'),('64202051','64202051')]
+    op_estructura = [('CM1','CM1'),('CM2','CM2'),('CM3','CM3'),('CM4','CM4'),('CM5','CM5'),('CM6','CM6'),('CM6A','CM6A'),('CM6B','CM6B'),('CM7','CM7'),('INV1','INV1'),('INV2','INV2'),('CM8','CM8')]
+    id = models.AutoField(primary_key=True)
+    acumFruta = models.ForeignKey(AcumFruta, on_delete=models.CASCADE)
+    fecha = models.DateField(blank=True, null=True)
+    finca = models.CharField(max_length=25,choices=op_finca,null=True)
+    viaje = models.CharField(max_length=20, choices=op_viajes,null=True)
+    encargado = models.CharField(max_length=30,choices=op_encargado,null=True)
+    #orden = models.CharField(max_length=20,choices=op_orden,null=True)
+    cultivo = models.CharField(max_length=45,choices=op_cultivo,null=True)
+    variedad = models.CharField(max_length=40,choices=op_variedad,null=True)
+    cajas = models.IntegerField(blank=True, null=True)
+    libras = models.FloatField(blank=True, null=True)
+    correo = models.CharField(max_length=75, blank=True,choices=op_correo,null=True)
+    #estructura=models.CharField(max_length=40,choices=op_estructura,null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return (str(self.finca)+ " | " + str(self.encargado) + " | " + str(self.viaje)+ " | " + str(self.cultivo))
 
 class enviosFrutaPlantilla(models.Model):
     op_viajes = [('','-'),('Viaje 1','Viaje 1'),('Viaje 2','Viaje 2'),('Viaje 3', 'Viaje 3'),('Viaje 4','Viaje 4'),('Viaje 5','Viaje 5'),('Viaje 6','Viaje 6'),('Viaje 7','Viaje 7'),('Viaje 8','Viaje 8')]
