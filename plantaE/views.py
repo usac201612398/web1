@@ -799,6 +799,8 @@ def recepciones_reportecurva(request):
 
 def obtener_registros_y_graficar(filtros):
     registros = AcumFruta.objects.filter(**filtros)
+    areas = datosProduccion.objects.all()
+
     df = pd.DataFrame(list(registros.values()), columns=['fecha', 'libras'])
     df['fecha'] = pd.to_datetime(df['fecha'], errors='coerce')
 
@@ -816,10 +818,16 @@ def obtener_registros_y_graficar(filtros):
 
     # Crear una nueva columna que combine semana y año en un formato "año-semana"
     df_agrupado['semana_año'] = df_agrupado['año'].astype(str) + '-W' + df_agrupado['semana'].astype(str)
-    registros_finales = df_agrupado.to_dict(orient='records')
+
+    df_areas = pd.DataFrame(list(areas.values()), columns=['orden', 'area'])  # 'orden' y 'area'
+
+    # Realizamos un merge para agregar las áreas correspondientes a cada 'orden'
+    df_final = df_agrupado.merge(df_areas, on='orden', how='inner')
+    df['kxm2'] = df['kilos'] /df['area']
+    registros_finales = df_final.to_dict(orient='records')
     # Extraer los valores para los ejes
     x_vals = df_agrupado['semana_año']
-    y_vals = df_agrupado['total_kilos']
+    y_vals = df_agrupado['kxm2']
 
     # Crear el gráfico
     plt.figure(figsize=(10, 6))
