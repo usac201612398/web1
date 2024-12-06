@@ -801,7 +801,7 @@ def obtener_registros_y_graficar(filtros):
     registros = AcumFruta.objects.filter(**filtros)
     
 
-    df = pd.DataFrame(list(registros.values()), columns=['fecha', 'libras'])
+    df = pd.DataFrame(list(registros.values()), columns=['fecha', 'orden', 'libras'])
     df['fecha'] = pd.to_datetime(df['fecha'], errors='coerce')
 
     # Agregar columnas para el número de semana y el año
