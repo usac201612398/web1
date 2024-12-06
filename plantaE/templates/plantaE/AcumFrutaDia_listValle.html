@@ -169,7 +169,7 @@ document.getElementById('consultar').addEventListener('click', function() {
 
         // Verificar si resumen no está vacío
         if (data.resumen && Array.isArray(data.resumen) && data.resumen.length > 0) {
-            alert("Total de cajas: " + data.resumen[0].total_cajas + " del día: " + data.resumen[0].fecha);
+            alert("Total de cajas: " + data.resumen[0].total_cajas + " y total de libras: " + data.resumen[0].total_libras + " del día: " + data.resumen[0].fecha);
         }
     });
 });
