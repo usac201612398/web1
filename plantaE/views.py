@@ -829,8 +829,8 @@ def obtener_registros_y_graficar(filtros):
     df_final['kxm2'] = df_final['total_kilos'] /df_final['area']
     registros_finales = df_final.to_dict(orient='records')
     # Extraer los valores para los ejes
-    x_vals = df_agrupado['semana_año']
-    y_vals = df_agrupado['kxm2']
+    x_vals = df_final['semana_año']
+    y_vals = df_final['kxm2']
 
     # Crear el gráfico
     plt.figure(figsize=(10, 6))
