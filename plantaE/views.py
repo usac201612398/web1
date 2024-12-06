@@ -826,7 +826,7 @@ def obtener_registros_y_graficar(filtros):
 
     # Realizamos un merge para agregar las áreas correspondientes a cada 'orden'
     df_final = df_agrupado.merge(df_areas, on='orden', how='inner')
-    df['kxm2'] = df['kilos'] /df['area']
+    df_final['kxm2'] = df_final['kilos'] /df_final['area']
     registros_finales = df_final.to_dict(orient='records')
     # Extraer los valores para los ejes
     x_vals = df_agrupado['semana_año']
