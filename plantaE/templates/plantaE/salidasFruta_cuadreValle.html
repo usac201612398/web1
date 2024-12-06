@@ -64,11 +64,6 @@
                 <div><label for="cultivo">Cultivo:</label></div>
                 <div class="select"> 
                     <select name="Cultivo" id="Cul">
-                        <option value="">-</option>
-                        <option value="CHERRY">CHERRY</option>
-                        <option value="GRAPE">GRAPE</option>
-                        <option value="MEDLEY">MEDLEY</option>
-                        <option value="GRAPE ORGANICO">GRAPE ORGANICO</option>
                     </select>
                 </div>
             </div>
@@ -221,9 +216,21 @@ $(document).ready(function() {
                 var initialCategoryId =data.username;  // Obtiene el valor inicial del campo 'category'
                 $('#date').val(data.fecha);
                 $('#correo').val(data.username);
+
                 if (initialCategoryId) {
                     console.log(initialCategoryId);
                 }
+
+                $('#Cul').html('');
+                $('#Cul').append(
+                    $('<option>').text('').attr('value','')
+                );
+                
+                $.each(data.cultivo, function(index, product) {
+                    $('#Cul').append(
+                        $('<option>').text(product.cultivo.toString()).attr('value', product.cultivo.toString())
+                    );
+                });
             
             },
             error: function(xhr, status, error) {

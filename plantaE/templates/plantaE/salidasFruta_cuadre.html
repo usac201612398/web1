@@ -64,9 +64,6 @@
                 <div><label for="cultivo">Cultivo:</label></div>
                 <div class="select"> 
                     <select name="Cultivo" id="Cul">
-                        <option value="">-</option>
-                        <option value="BLOCKY ORGANICO">BLOCKY ORGANICO</option>
-                        <option value="MEDLEY">MEDLEY</option>
                     </select>
                 </div>
             </div>
@@ -222,6 +219,16 @@ $(document).ready(function() {
                 if (initialCategoryId) {
                     console.log(initialCategoryId);
                 }
+                $('#Cul').html('');
+                $('#Cul').append(
+                    $('<option>').text('').attr('value','')
+                );
+                $.each(data.cultivo, function(index, product) {
+                    $('#Cul').append(
+                        $('<option>').text(product.cultivo.toString()).attr('value', product.cultivo.toString())
+                        
+                    );
+                });
             
             },
             error: function(xhr, status, error) {

@@ -94,7 +94,10 @@ def obtener_nombre_usuario(request):
         dia = "0" + str(dia)
     fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
     nombre_usuario = request.user.username
-    return JsonResponse({'username': nombre_usuario,'fecha':fecha_})
+    
+    datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('finca', 'encargado')
+    adicionales = cultivoxFinca.objects.filter(finca=list(datos)[0]['finca']).values('cultivo').distinct('cultivo')
+    return JsonResponse({'username': nombre_usuario,'fecha':fecha_,'adicionales':adicionales})
 
 def obtenerfecha_invFruta(request):
     # Obtén el nombre de usuario del usuario autenticado
@@ -107,6 +110,7 @@ def obtenerfecha_invFruta(request):
         mes = "0" + str(mes)
     if dia < 10:
         dia = "0" + str(dia)
+
     fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
     return JsonResponse({'fecha':fecha_})
 
