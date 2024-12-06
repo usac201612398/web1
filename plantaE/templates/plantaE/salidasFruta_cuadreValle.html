@@ -217,15 +217,13 @@ $(document).ready(function() {
                 $('#date').val(data.fecha);
                 $('#correo').val(data.username);
 
-                if (initialCategoryId) {
-                    console.log(initialCategoryId);
-                }
+                console.log(data)
 
                 $('#Cul').html('');
                 $('#Cul').append(
                     $('<option>').text('').attr('value','')
                 );
-                
+
                 $.each(data.cultivo, function(index, product) {
                     $('#Cul').append(
                         $('<option>').text(product.cultivo.toString()).attr('value', product.cultivo.toString())
