@@ -206,7 +206,10 @@ $(document).ready(function() {
                 // Limpia las opciones actuales del campo 'name'
                 console.log(data)
                 var initialCategoryId =data.username;  // Obtiene el valor inicial del campo 'category'
-                $('#Lug').val(data.finca);
+                
+                $('#Lug').append(
+                    $('<option>').text(data.finca).attr('value',data.finca)
+                );
                 if (initialCategoryId) {
                     console.log(initialCategoryId);
                     loadProducts(initialCategoryId);
