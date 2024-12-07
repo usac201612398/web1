@@ -97,7 +97,7 @@ def obtener_nombre_usuario(request):
     
     datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('finca', 'encargado')
     adicionales = detallesEstructuras.objects.filter(finca=list(datos)[0]['finca']).values('cultivo').distinct('cultivo')
-    return JsonResponse({'username': nombre_usuario,'fecha':fecha_,'adicionales':list(adicionales)})
+    return JsonResponse({'username': nombre_usuario,'fecha':fecha_,'adicionales':list(adicionales),'finca':list(datos)[0]['finca'] })
 
 def obtenerfecha_invFruta(request):
     # Obtén el nombre de usuario del usuario autenticado
@@ -806,7 +806,11 @@ def recepciones_reportecurva(request):
     
     return render(request, 'plantaE/recepciones_reportegrafica.html', {'usuario': nombre_usuario})
 
-
+def recepciones_reportecurva2(request):
+    nombre_usuario = request.user.username
+    #mensaje = request.POST.get('array')
+    
+    return render(request, 'plantaE/recepciones_reportegraficaPublic.html', {'usuario': nombre_usuario})
 
 def obtener_registros_y_graficar(filtros):
     registros = AcumFruta.objects.filter(**filtros)
