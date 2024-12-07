@@ -205,7 +205,7 @@ $(document).ready(function() {
             success: function(data) {
                 // Limpia las opciones actuales del campo 'name'
                 console.log(data)
-                var initialCategoryId =data.username;  // Obtiene el valor inicial del campo 'category'
+                var initialCategoryId =data.finca;  // Obtiene el valor inicial del campo 'category'
                 
                 $('#Lug').append(
                     $('<option>').text(data.finca).attr('value',data.finca)
