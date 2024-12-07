@@ -121,7 +121,11 @@
     <img id="graficoImagen" src="" alt="Gráfico generado" />
 </div>
 </body>
-
+{% if user.username == 'cosecha.rio@popoyan.com.gt' %}
+    <a href="{% url 'salidasFruta_list' %}">Regresar a panel</a>
+{% else %}
+    <a href="{% url 'salidasFruta_listValle' %}">Regresar a panel</a>
+{% endif %}
 <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
