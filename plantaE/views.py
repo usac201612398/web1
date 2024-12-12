@@ -95,7 +95,7 @@ def exportar_excel(request):
             correo = ('correo', 'first'),
         )
 
-        df_agrupado = df_agrupado.sort_values(by='cultivo')
+        df_agrupado = df_agrupado.sort_values(by='orden')
 
         # Agrega encabezados a la hoja Valle
         ws_provalle.append(df_agrupado.columns.tolist())
