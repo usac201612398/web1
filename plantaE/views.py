@@ -71,6 +71,38 @@ def exportar_excel(request):
             ws_valle.append(record)  # Excluir el índice, si es necesario
 
         
+        ws_provalle = wb.create_sheet(title='Provalle')
+        
+        # Filtra tus datos según la opción seleccionada
+        datos_provalle = AcumFruta.objects.filter(fecha=opcion1, finca="PRODUCTOS DEL VALLE, S.A.").values(
+            "id", "fecha", "finca", "orden", "cultivo", "variedad", "estructura", "cajas","correo","libras"
+        )
+
+        # Crea un DataFrame a partir de los datos
+        df = pd.DataFrame(list(datos_provalle))
+
+        # Agrupa los datos
+        df_agrupado = df.groupby(['orden', 'estructura', 'variedad'], as_index=False).agg(
+            id=('id', 'first'),
+            fecha=('fecha', 'first'),
+            finca=('finca', 'first'),
+            orden=('orden', 'first'),
+            cultivo=('cultivo', 'first'),
+            variedad=('variedad', 'first'),
+            estructura=('estructura', 'first'),
+            total_cajas=('cajas', 'sum'),
+            total_libras=('libras', 'sum'),
+            correo = ('correo', 'first'),
+        )
+
+        df_agrupado = df_agrupado.sort_values(by='cultivo')
+
+        # Agrega encabezados a la hoja Valle
+        ws_provalle.append(df_agrupado.columns.tolist())
+
+        # Agrega los registros agrupados a la hoja Valle
+        for record in df_agrupado.itertuples(index=False):
+            ws_provalle.append(record)  # Excluir el índice, si es necesario
         
         # Crea una respuesta HTTP que sirva el archivo Excel
         response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
