@@ -77,9 +77,9 @@ def exportar_excel(request):
         datos_provalle = AcumFruta.objects.filter(fecha=opcion1, finca="PRODUCTOS DEL VALLE, S.A.").values(
             "id", "fecha", "finca", "orden", "cultivo", "variedad", "estructura", "cajas","correo","libras"
         )
+        df = pd.DataFrame(list(datos_provalle))
         if not df.empty:
             # Crea un DataFrame a partir de los datos
-            df = pd.DataFrame(list(datos_provalle))
 
             # Agrupa los datos
             df_agrupado = df.groupby(['orden', 'estructura', 'variedad'], as_index=False).agg(
