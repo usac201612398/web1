@@ -81,6 +81,25 @@ def exportar_excel(request):
         # Crea un DataFrame a partir de los datos
         df = pd.DataFrame(list(datos_provalle))
 
+        # Agrupa los datos
+        df_agrupado = df.groupby(['cultivo', 'estructura', 'variedad'], as_index=False).agg(
+            id=('id', 'first'),
+            fecha=('fecha', 'first'),
+            finca=('finca', 'first'),
+            orden=('orden', 'first'),
+            cultivo=('cultivo', 'first'),
+            variedad=('variedad', 'first'),
+            estructura=('estructura', 'first'),
+            total_cajas=('cajas', 'sum'),
+            total_libras=('libras', 'sum'),
+            correo = ('correo', 'first'),
+        )
+
+        df_agrupado = df_agrupado.sort_values(by='cultivo')
+
+        # Agrega encabezados a la hoja Valle
+        ws_provalle.append(df_agrupado.columns.tolist())
+
         # Agrega los registros agrupados a la hoja Valle
         for record in df_agrupado.itertuples(index=False):
             ws_provalle.append(record)  # Excluir el índice, si es necesario
