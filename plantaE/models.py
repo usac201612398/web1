@@ -251,6 +251,7 @@ class inventarioProdTerm(models.Model):
     op_cultivo =   [('','-'),('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
     op_categoria = [('','-'),('Mastronardi','Mastronardi'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolucion','Devolucion')]
     op_empaque =   [('Cajas','Cajas'),('Libras','Libras')]
+    op_status = [('Pendiente','-'),('Cerrado','Cerrado')]
 
     registro = models.BigAutoField(primary_key=True)
     fecha = models.DateField(blank=True, null=True)
@@ -261,6 +262,7 @@ class inventarioProdTerm(models.Model):
     calidad1 = models.CharField(max_length=200, blank=True, null=True)
     cajas = models.BigIntegerField(blank=True, null=True)
     libras =  models.FloatField(blank=True, null=True)
+    status = models.CharField(max_length=25, choices=op_status,blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
 
