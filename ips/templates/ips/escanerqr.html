@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-    {% load static %}   
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -47,14 +46,20 @@
                 document.getElementById('confirmar-cantidad').addEventListener('click', function() {
                     const cantidad = document.getElementById('cantidad').value;
                     if (cantidad && cantidad > 0) {
+                        // Crea el objeto JSON con los datos
+                        const data = {
+                            qr_data: decodedText,
+                            cantidad: cantidad
+                        };
+
                         // Enviar los datos al backend de Django (AJAX)
                         fetch("{% url 'save_qr' %}", {
                             method: "POST",
                             headers: {
-                                "Content-Type": "application/x-www-form-urlencoded",
-                                'X-CSRFToken': getCookie('csrftoken')
+                                "Content-Type": "application/json", // Especificamos que estamos enviando JSON
+                                'X-CSRFToken': getCookie('csrftoken') // Token CSRF para Django
                             },
-                            body: `qr_data=${decodedText}&cantidad=${cantidad}`
+                            body: JSON.stringify(data) // Convertimos el objeto a una cadena JSON
                         })
                         .then(response => response.json())
                         .then(data => {
