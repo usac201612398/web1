@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Confirm Delete</title>
+    <style>
+        h1 {
+            margin: 15px;
+            font-family: Arial, sans-serif;
+        }
+
+        a {
+            margin: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="container">
+    <h1>¿Está seguro de eliminar "{{ registros.registro }}"?</h1>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Confirmar</button>
+    </form>
+    <a href="{% url 'index' %}">Cancelar</a>
+    </div>
+</body>
+</html>
