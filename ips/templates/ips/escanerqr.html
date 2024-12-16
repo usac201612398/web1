@@ -28,16 +28,19 @@
             font-family: Arial, sans-serif;
         }
 
-        .qr-reader{
-            margin: 20px;
+        .qr-reader {
+            margin: 20px auto; /* Margen automático a los lados y 20px arriba y abajo */
+            display: block;
+            width: 500px;
+            height: 500px;
         }  
 
         .half {
-        display: flex;
-        height: 100%;
-        grid-template-columns:  repeat(auto-fit, minmax(min-content, max-content)); /* Divide cada mitad en dos columnas iguales */
-        gap: 5px; /* Espacio entre columnas */
-        text-align: center;
+            display: flex;
+            height: 100%;
+            grid-template-columns:  repeat(auto-fit, minmax(min-content, max-content)); /* Divide cada mitad en dos columnas iguales */
+            gap: 5px; /* Espacio entre columnas */
+            text-align: center;
         }
 
         .box {
@@ -47,6 +50,7 @@
             flex: auto; 
             height: 100%;    
         }
+
         td {
             padding: 0;
         }
@@ -57,6 +61,11 @@
             background: transparent;
         }
 
+        /* Margen adicional para el contenedor del campo de cantidad */
+        #cantidad-container {
+            margin-top: 20px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
