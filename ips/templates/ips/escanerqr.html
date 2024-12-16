@@ -52,7 +52,7 @@
                             qr_data: decodedText,
                             cantidad: cantidad
                         };
-
+                        console.log(data)
                         // Enviar los datos al backend de Django (AJAX)
                         fetch("{% url 'save_qr' %}", {
                             method: "POST",
