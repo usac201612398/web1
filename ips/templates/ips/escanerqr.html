@@ -13,6 +13,60 @@
     <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/html5-qrcode/minified/html5-qrcode.min.js"></script>
     <style>
+        
+        .input-container {
+        /* Ancho del contenedor del input */
+        overflow: hidden; /* Asegura que el contenedor no muestre el desbordamiento */
+        }
+
+        input {
+        width: 100%; /* Ancho del campo de entrada */
+        white-space: nowrap; /* Evita que el texto se ajuste a una nueva línea */
+        overflow: hidden; /* Oculta el texto que se desborda */
+        text-overflow: ellipsis; /* Muestra puntos suspensivos si el texto es demasiado largo */
+        box-sizing: border-box; /* Incluye el padding y el borde en el ancho del input */
+        padding: 8px; /* Padding interno del input */
+        }
+
+        .centered-input {
+            text-align: center;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+        }
+        
+        .container {
+            display: grid;
+            height: 100%;
+            overflow: auto;
+        }
+
+        .half {
+            display: flex;
+            height: 100%;
+            grid-template-columns:  repeat(auto-fit, minmax(min-content, max-content)); /* Divide cada mitad en dos columnas iguales */
+            gap: 5px; /* Espacio entre columnas */
+            text-align: center;
+        }
+
+        .box {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 10px;
+            flex: auto; 
+            height: 100%;    
+        }
+
+        .texto-con-margen {
+            margin: 20px; /* Aplica un margen de 20px alrededor del párrafo */
+        }
+
+        .text-left {
+            text-align: left;
+        }
+
         h1 {
             margin: 15px;
             font-family: Arial, sans-serif;
@@ -33,7 +87,7 @@
             height: 100%;
             overflow: auto;
         }
-        
+
         .qr-reader {
             margin: 20px auto;  /* Margen superior e inferior de 20px y centrado horizontal */
             display: block;      /* Asegura que el contenedor esté en bloque */
