@@ -12,22 +12,25 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
     <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/html5-qrcode/minified/html5-qrcode.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
     <style>
         
         .input-container {
-        /* Ancho del contenedor del input */
-        overflow: hidden; /* Asegura que el contenedor no muestre el desbordamiento */
+          /* Ancho del contenedor del input */
+          overflow: hidden; /* Asegura que el contenedor no muestre el desbordamiento */
         }
-
+    
         input {
-        width: 100%; /* Ancho del campo de entrada */
-        white-space: nowrap; /* Evita que el texto se ajuste a una nueva línea */
-        overflow: hidden; /* Oculta el texto que se desborda */
-        text-overflow: ellipsis; /* Muestra puntos suspensivos si el texto es demasiado largo */
-        box-sizing: border-box; /* Incluye el padding y el borde en el ancho del input */
-        padding: 8px; /* Padding interno del input */
+          width: 100%; /* Ancho del campo de entrada */
+          white-space: nowrap; /* Evita que el texto se ajuste a una nueva línea */
+          overflow: hidden; /* Oculta el texto que se desborda */
+          text-overflow: ellipsis; /* Muestra puntos suspensivos si el texto es demasiado largo */
+          box-sizing: border-box; /* Incluye el padding y el borde en el ancho del input */
+          padding: 8px; /* Padding interno del input */
         }
-
+    
         .centered-input {
             text-align: center;
             padding: 0.5rem;
@@ -42,7 +45,7 @@
             height: 100%;
             overflow: auto;
         }
-
+    
         .half {
             display: flex;
             height: 100%;
@@ -50,7 +53,7 @@
             gap: 5px; /* Espacio entre columnas */
             text-align: center;
         }
-
+    
         .box {
             background-color: #f0f0f0;
             border: 1px solid #ddd;
@@ -58,76 +61,72 @@
             flex: auto; 
             height: 100%;    
         }
-
+    
         .texto-con-margen {
             margin: 20px; /* Aplica un margen de 20px alrededor del párrafo */
         }
-
+    
         .text-left {
             text-align: left;
         }
-
-        h1 {
-            margin: 15px;
-            font-family: Arial, sans-serif;
+    
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
         }
-
-        p {
-            margin: 15px;
-            font-family: Arial, sans-serif;
-        }
-
-        a {
-            margin: 20px;
-            font-family: Arial, sans-serif;
-        }
-
-        .container {
-            display: grid;
-            height: 100%;
-            overflow: auto;
-        }
-
-        .qr-reader {
-            margin: 20px auto;  /* Margen superior e inferior de 20px y centrado horizontal */
-            display: block;      /* Asegura que el contenedor esté en bloque */
-            width: 100%;         /* Toma el 100% del contenedor padre */
-            max-width: 500px;    /* Limita el tamaño máximo del contenedor */
-            height: 500px;       /* Fija una altura de 500px */
-        }  
-
-        .half {
-            display: flex;
-            height: 100%;
-            grid-template-columns:  repeat(auto-fit, minmax(min-content, max-content)); /* Divide cada mitad en dos columnas iguales */
-            gap: 5px; /* Espacio entre columnas */
-            text-align: center;
-        }
-
-        .box {
-            background-color: #f0f0f0;
-            border: 1px solid #ddd;
-            padding: 10px;
-            flex: auto; 
-            height: 100%;    
-        }
-
-        td {
-            padding: 0;
-        }
-
-        td input {
+    
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            border: none;
-            background: transparent;
+            height: 100%;
         }
-
-        /* Margen adicional para el contenedor del campo de cantidad */
-        #cantidad-container {
-            margin-top: 20px;
-            text-align: center;
+    
+        .photo {
+            border: 5px solid #FF5733; /* Cambia el color y el grosor del borde según lo necesites */
         }
-    </style>    
+    
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            height: 50vh; /* O cualquier altura que desees */
+        }
+    
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    
+        hr {
+          border: 0; /* Elimina el borde predeterminado */
+          height: 1px; /* Altura de la línea */
+          margin: 20px 0; /* Espacio arriba y abajo de la línea */
+        }
+    
+        .start-btn {
+          display: inline-flex;
+          align-items: center;
+          padding: 10px 20px;
+          border: none;
+          background-color: #4CAF50;
+          color: white;
+          font-size: 16px;
+          cursor: pointer;
+        }
+    
+        .start-btn i {
+          margin-right: 8px; /* Espacio entre el icono y el texto */
+        }
+    
+    </style>  
 
 </head>
 <body>
@@ -145,16 +144,18 @@
     </div>
     <h1 class="roboto">Escanear | Código QR</h1>
     
-    <div id="container">  
+    <div id="container"> 
+        <div class="video-container">
         <!-- Contenedor donde se muestra la cámara -->
-        <div id="qr-reader" style="width: 500px; height: 500px;"></div>
+            <div id="qr-reader" style="width: 500px; height: 500px;"></div>
+        </div> 
     </div>  
     
     <!-- Mostrar el resultado del escaneo -->
-    <p>QR Escaneado: <span id="qr-result"></span></p>
+   
     <div id="container">
         
-        
+        <p>QR Escaneado: <span id="qr-result"></span></p>
         <!-- Input para ingresar la cantidad -->
         <div id="cantidad-container" style="display:none;">
             <label for="cantidad">Cantidad a agregar:</label>
