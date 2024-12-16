@@ -27,13 +27,14 @@
 
     <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
     <script>
-        // Esperar que la librería esté completamente cargada antes de usarla
         document.addEventListener('DOMContentLoaded', function () {
             // Comprobamos si Html5Qrcode está disponible
             if (typeof Html5Qrcode === 'undefined') {
                 console.error('Html5Qrcode no está definido.');
                 return;
             }
+
+            let confirmButtonClicked = false; // Variable para asegurarse de que solo se registre el evento de clic una vez
 
             // Función de inicio del escáner
             function onScanSuccess(decodedText, decodedResult) {
@@ -42,36 +43,41 @@
 
                 // Muestra el campo para ingresar la cantidad
                 document.getElementById('cantidad-container').style.display = "block";
-                
-                // Al hacer clic en "Confirmar", enviamos la información
-                document.getElementById('confirmar-cantidad').addEventListener('click', function() {
-                    const cantidad = document.getElementById('cantidad').value;
-                    if (cantidad && cantidad > 0) {
-                        // Crea el objeto JSON con los datos
-                        const data = {
-                            qr_data: decodedText,
-                            cantidad: cantidad
-                        };
-                        console.log(data)
-                        // Enviar los datos al backend de Django (AJAX)
-                        fetch("{% url 'save_qr' %}", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json", // Especificamos que estamos enviando JSON
-                                'X-CSRFToken': getCookie('csrftoken') // Token CSRF para Django
-                            },
-                            body: JSON.stringify(data) // Convertimos el objeto a una cadena JSON
-                        })
-                        .then(response => response.json())
-                        .then(data => {
+
+                // Evitar que el evento de clic se registre más de una vez
+                if (!confirmButtonClicked) {
+                    document.getElementById('confirmar-cantidad').addEventListener('click', function() {
+                        const cantidad = document.getElementById('cantidad').value;
+                        if (cantidad && cantidad > 0) {
+                            // Crea el objeto JSON con los datos
+                            const data = {
+                                qr_data: decodedText,
+                                cantidad: cantidad
+                            };
                             console.log(data);
-                            alert(data.message || 'Error al guardar el QR');
-                        })
-                        .catch(error => console.error('Error:', error));
-                    } else {
-                        alert("Por favor ingrese una cantidad válida.");
-                    }
-                });
+
+                            // Enviar los datos al backend de Django (AJAX)
+                            fetch("{% url 'save_qr' %}", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json", // Especificamos que estamos enviando JSON
+                                    'X-CSRFToken': getCookie('csrftoken') // Token CSRF para Django
+                                },
+                                body: JSON.stringify(data) // Convertimos el objeto a una cadena JSON
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log(data);
+                                alert(data.message || 'Error al guardar el QR');
+                            })
+                            .catch(error => console.error('Error:', error));
+
+                            confirmButtonClicked = true; // Marcar que el botón fue presionado
+                        } else {
+                            alert("Por favor ingrese una cantidad válida.");
+                        }
+                    });
+                }
             }
 
             // Configura el escáner QR
@@ -89,3 +95,4 @@
     </script>
 </body>
 </html>
+
