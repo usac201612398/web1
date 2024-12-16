@@ -28,6 +28,12 @@
             font-family: Arial, sans-serif;
         }
 
+        .container {
+            display: grid;
+            height: 100%;
+            overflow: auto;
+        }
+        
         .qr-reader {
             margin: 20px auto;  /* Margen superior e inferior de 20px y centrado horizontal */
             display: block;      /* Asegura que el contenedor esté en bloque */
@@ -85,10 +91,10 @@
     </div>
     <h1 class="roboto">Escanear | Código QR</h1>
     
-        
+    <div id="container">  
         <!-- Contenedor donde se muestra la cámara -->
-    <div id="qr-reader" style="width: 500px; height: 500px;"></div>
-        
+        <div id="qr-reader" style="width: 500px; height: 500px;"></div>
+    </div>  
     
     <!-- Mostrar el resultado del escaneo -->
     <p>QR Escaneado: <span id="qr-result"></span></p>
