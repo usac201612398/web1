@@ -23,6 +23,7 @@ urlpatterns = [
     path('app1/',include('app1.urls')),
     path('ejemplo/',include('ejemplo.urls')),
     path('plantaE/',include('plantaE.urls')),
+    path('ips/',include('ips.urls')),
     path('admin/', admin.site.urls),
     path('oauth2/', include('django_auth_adfs.urls')),    
 #    path('microsoft_authentication/', include('microsoft_authentication.urls')),

@@ -1,0 +1,51 @@
+<script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escanear QR con Django</title>
+</head>
+<body>
+    <h1>Escanear Código QR</h1>
+
+    <!-- Contenedor donde se muestra la cámara -->
+    <div id="qr-reader" style="width: 500px; height: 500px;"></div>
+
+    <!-- Mostrar el resultado del escaneo -->
+    <p>QR Escaneado: <span id="qr-result"></span></p>
+
+    <script>
+        // Función de inicio del escáner
+        function onScanSuccess(decodedText, decodedResult) {
+            // Muestra el resultado del escaneo
+            document.getElementById('qr-result').innerText = decodedText;
+
+            // Enviar los datos al backend de Django (AJAX)
+            fetch("{% url 'save_qr' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: `qr_data=${decodedText}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                alert(data.message || 'Error al guardar el QR');
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Configura el escáner QR
+        const html5QrCode = new Html5Qrcode("qr-reader");
+        html5QrCode.start(
+            { facingMode: "environment" }, // Usar la cámara trasera
+            { fps: 10, qrbox: 250 }, // Configuración de FPS y tamaño del cuadro de escaneo
+            onScanSuccess
+        ).catch(err => {
+            console.error("Error al iniciar el escáner:", err);
+        });
+    </script>
+</body>
+</html>

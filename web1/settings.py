@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'app1',
     'ejemplo',
     'plantaE',
+    'ips',
     'django_auth_adfs',
 ]
 
