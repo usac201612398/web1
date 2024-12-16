@@ -5,205 +5,94 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Escanear Código QR</title>
-    <!-- Incluir la librería html5-qrcode -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous">   
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
     <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/html5-qrcode/minified/html5-qrcode.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
     <style>
-        
-        .input-container {
-          /* Ancho del contenedor del input */
-          overflow: hidden; /* Asegura que el contenedor no muestre el desbordamiento */
-        }
-    
-        input {
-          width: 100%; /* Ancho del campo de entrada */
-          white-space: nowrap; /* Evita que el texto se ajuste a una nueva línea */
-          overflow: hidden; /* Oculta el texto que se desborda */
-          text-overflow: ellipsis; /* Muestra puntos suspensivos si el texto es demasiado largo */
-          box-sizing: border-box; /* Incluye el padding y el borde en el ancho del input */
-          padding: 8px; /* Padding interno del input */
-        }
-    
-        .centered-input {
-            text-align: center;
-            padding: 0.5rem;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            width: 100%;
-            box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
-        }
-        
-        .container {
-            display: grid;
-            height: 100%;
-            overflow: auto;
-        }
-    
-        .half {
-            display: flex;
-            height: 100%;
-            grid-template-columns:  repeat(auto-fit, minmax(min-content, max-content)); /* Divide cada mitad en dos columnas iguales */
-            gap: 5px; /* Espacio entre columnas */
-            text-align: center;
-        }
-    
-        .box {
-            background-color: #f0f0f0;
-            border: 1px solid #ddd;
-            padding: 10px;
-            flex: auto; 
-            height: 100%;    
-        }
-    
-        .texto-con-margen {
-            margin: 20px; /* Aplica un margen de 20px alrededor del párrafo */
-        }
-    
-        .text-left {
-            text-align: left;
-        }
-    
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-            height: 0;
-            overflow: hidden;
-            max-width: 100%;
-            background: #000;
-        }
-    
-        .video-container video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-    
-        .photo {
-            border: 5px solid #FF5733; /* Cambia el color y el grosor del borde según lo necesites */
-        }
-    
-        .canvas-container {
-            position: relative;
-            width: 100%;
-            height: 50vh; /* O cualquier altura que desees */
-        }
-    
-        canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-    
-        hr {
-          border: 0; /* Elimina el borde predeterminado */
-          height: 1px; /* Altura de la línea */
-          margin: 20px 0; /* Espacio arriba y abajo de la línea */
-        }
-    
-        .start-btn {
-          display: inline-flex;
-          align-items: center;
-          padding: 10px 20px;
-          border: none;
-          background-color: #4CAF50;
-          color: white;
-          font-size: 16px;
-          cursor: pointer;
-        }
-    
-        .start-btn i {
-          margin-right: 8px; /* Espacio entre el icono y el texto */
-        }
-    
-    </style>  
-
+        /* Agrega tus estilos personalizados aquí */
+        .input-container { overflow: hidden; }
+        input { width: 100%; }
+        .centered-input { text-align: center; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; width: 100%; box-sizing: border-box; }
+        .container { display: grid; height: 100%; overflow: auto; }
+        .half { display: flex; gap: 5px; text-align: center; }
+        .box { background-color: #f0f0f0; padding: 10px; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; max-width: 100%; background: #000; }
+        .video-container video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+    </style>
 </head>
 <body>
-    <div class = "container"> 
+    <div class="container">
         <div class="half">
             <div class="box">
                 <a href="{% url 'ips_visualizar' %}">Visualizar</a> 
             </div>
-
             <div class="box">
                 <a href="{% url 'ips_exportar' %}"> Exportar </a>
             </div>
-
         </div>
     </div>
 
+    <h1>Escanear Código QR</h1>
     
-    <h1 class="roboto">Escanear | Código QR</h1>
-    
-    <div id="container"> 
+    <div id="container">
         <div class="video-container">
-        <!-- Contenedor donde se muestra la cámara -->
             <div id="qr-reader" style="width: 500px; height: 500px;"></div>
         </div> 
-    </div>  
-    
-    <!-- Mostrar el resultado del escaneo -->
-   
+    </div>
+
     <div id="container">
-        
         <p>QR Escaneado: <span id="qr-result"></span></p>
-        <!-- Input para ingresar la cantidad -->
         <div id="cantidad-container" style="display:none;">
             <label for="cantidad">Cantidad a agregar:</label>
             <input type="number" id="cantidad" name="cantidad" min="1">
             <button id="confirmar-cantidad">Confirmar</button>
         </div>
     </div>
-    <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
+
+    <script src="{% static '/lib/cockies.js' %}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Comprobamos si Html5Qrcode está disponible
             if (typeof Html5Qrcode === 'undefined') {
                 console.error('Html5Qrcode no está definido.');
                 return;
             }
 
-            let confirmButtonClicked = false; // Variable para asegurarse de que solo se registre el evento de clic una vez
+            let confirmButtonClicked = false; // Variable de control para evitar múltiples clics
+            let qrScanned = false; // Variable para evitar escanear múltiples QR
 
-            // Función de inicio del escáner
+            // Función de éxito al escanear QR
             function onScanSuccess(decodedText, decodedResult) {
-                // Muestra el resultado del escaneo
-                document.getElementById('qr-result').innerText = decodedText;
+                if (!qrScanned) {  // Si no se ha escaneado previamente
+                    document.getElementById('qr-result').innerText = decodedText;
+                    document.getElementById('cantidad-container').style.display = "block";  // Mostrar el campo para la cantidad
 
-                // Muestra el campo para ingresar la cantidad
-                document.getElementById('cantidad-container').style.display = "block";
+                    // Desactivar el escáner temporalmente hasta que se confirme la cantidad
+                    qrScanned = true;
 
-                // Evitar que el evento de clic se registre más de una vez
-                if (!confirmButtonClicked) {
+                    // Al hacer clic en el botón "Confirmar"
                     document.getElementById('confirmar-cantidad').addEventListener('click', function() {
                         const cantidad = document.getElementById('cantidad').value;
                         if (cantidad && cantidad > 0) {
-                            // Crea el objeto JSON con los datos
+                            // Crear el objeto JSON con los datos
                             const data = {
                                 qr_data: decodedText,
                                 cantidad: cantidad
                             };
+
                             console.log(data);
 
                             // Enviar los datos al backend de Django (AJAX)
                             fetch("{% url 'save_qr' %}", {
                                 method: "POST",
                                 headers: {
-                                    "Content-Type": "application/json", // Especificamos que estamos enviando JSON
-                                    'X-CSRFToken': getCookie('csrftoken') // Token CSRF para Django
+                                    "Content-Type": "application/json",
+                                    'X-CSRFToken': getCookie('csrftoken')  // Token CSRF para Django
                                 },
-                                body: JSON.stringify(data) // Convertimos el objeto a una cadena JSON
+                                body: JSON.stringify(data)
                             })
                             .then(response => response.json())
                             .then(data => {
@@ -212,7 +101,9 @@
                             })
                             .catch(error => console.error('Error:', error));
 
-                            confirmButtonClicked = true; // Marcar que el botón fue presionado
+                            // Restablecer la variable para permitir un nuevo escaneo
+                            qrScanned = false;
+                            document.getElementById('cantidad-container').style.display = "none"; // Ocultar el campo para la cantidad
                         } else {
                             alert("Por favor ingrese una cantidad válida.");
                         }
@@ -223,10 +114,10 @@
             // Configura el escáner QR
             const html5QrCode = new Html5Qrcode("qr-reader");
 
-            // Iniciar el escáner QR con la cámara trasera
+            // Iniciar el escáner QR
             html5QrCode.start(
-                { facingMode: "environment" }, // Usar la cámara trasera
-                { fps: 10, qrbox: 250 }, // Configuración de FPS y tamaño del cuadro de escaneo
+                { facingMode: "environment" },
+                { fps: 10, qrbox: 250 },
                 onScanSuccess
             ).catch(err => {
                 console.error("Error al iniciar el escáner:", err);
