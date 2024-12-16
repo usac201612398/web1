@@ -14,5 +14,6 @@ def save_qr(request):
             return JsonResponse({'message': 'QR guardado correctamente'})
         else:
             return JsonResponse({'error': 'No se recibió ningún dato QR'}, status=400)
+        
     return JsonResponse({'error': 'Método no permitido'}, status=405)
 
