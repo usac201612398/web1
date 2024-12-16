@@ -15,13 +15,21 @@
     <style>
         /* Agrega tus estilos personalizados aquí */
         .input-container { overflow: hidden; }
-        input { width: 100%; }
+        input { width: 100%; padding: 10px; }
         .centered-input { text-align: center; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; width: 100%; box-sizing: border-box; }
         .container { display: grid; height: 100%; overflow: auto; }
         .half { display: flex; gap: 5px; text-align: center; }
         .box { background-color: #f0f0f0; padding: 10px; }
         .video-container { position: relative; padding-bottom: 56.25%; height: 0; max-width: 100%; background: #000; }
+        #qr-reader {
+            width: 100%;
+            height: 100%;
+        }
         .video-container video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        button {
+            padding: 10px;
+            width: 90%;
+        }
     </style>
 </head>
 <body>
