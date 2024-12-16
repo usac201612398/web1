@@ -29,10 +29,11 @@
         }
 
         .qr-reader {
-            margin: 20px auto; /* Margen automático a los lados y 20px arriba y abajo */
-            display: block;
-            width: 500px;
-            height: 500px;
+            margin: 20px auto;  /* Margen superior e inferior de 20px y centrado horizontal */
+            display: block;      /* Asegura que el contenedor esté en bloque */
+            width: 100%;         /* Toma el 100% del contenedor padre */
+            max-width: 500px;    /* Limita el tamaño máximo del contenedor */
+            height: 500px;       /* Fija una altura de 500px */
         }  
 
         .half {
@@ -66,7 +67,8 @@
             margin-top: 20px;
             text-align: center;
         }
-    </style>
+    </style>    
+
 </head>
 <body>
     <div class = "container"> 
