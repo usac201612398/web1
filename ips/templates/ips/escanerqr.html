@@ -142,6 +142,8 @@
 
         </div>
     </div>
+
+    
     <h1 class="roboto">Escanear | Código QR</h1>
     
     <div id="container"> 
@@ -154,14 +156,23 @@
     <!-- Mostrar el resultado del escaneo -->
    
     <div id="container">
-        
-        <p>QR Escaneado: <span id="qr-result"></span></p>
-        <!-- Input para ingresar la cantidad -->
-        <div id="cantidad-container" style="display:none;">
-            <label for="cantidad">Cantidad a agregar:</label>
-            <input type="number" id="cantidad" name="cantidad" min="1">
-            <button id="confirmar-cantidad">Confirmar</button>
+        <div class="half">
+            <div class="box"> 
+                <p>QR Escaneado: <span id="qr-result"></span></p>
+            </div>
+    
+            <div class="box">
+                <div id="cantidad-container" style="display:none;">
+                    <label for="cantidad">Cantidad a agregar:</label>
+                    <input type="number" id="cantidad" name="cantidad" min="1">
+                    <button id="confirmar-cantidad">Confirmar</button>
+                </div>
+            </div>
+    
         </div>
+        
+        <!-- Input para ingresar la cantidad -->
+        
     </div>
     <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
     <script>
