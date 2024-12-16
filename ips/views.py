@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from .models import QRCodeData
 
+def index(request):
+    return render(request, 'escanerqr.html')
 
 def save_qr(request):
     if request.method == 'POST':

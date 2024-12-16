@@ -6,5 +6,7 @@ from ips import views
 app_main ="ips"
 
 urlpatterns = [
+
+    path('', views.index, name='index'),  # Página principal
     path('save_qr/', views.save_qr, name='save_qr'),  # Ruta para guardar el QR
 ]
