@@ -21,13 +21,15 @@
 </head>
 <body>
     <div id="container">
-    <h1 class="reboto">¿Está seguro de eliminar "{{ registros.registro }}"?</h1>
+        <h1 class="reboto">¿Está seguro de eliminar "{{ registros.id_escarner }}"?</h1>
     </div>
     <div id="container">
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit">Confirmar</button>
-    </form>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit">Confirmar</button>
+        </form>
+    </div>
+    <div id="container">
     <a href="{% url 'index' %}"><h1 class="reboto">Cancelar</h1></a>
     </div>
 </body>
