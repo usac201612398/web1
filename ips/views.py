@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from .models import QRCodeData
 
 def index(request):
-    return render(request, 'escanerqr.html')
+    return render(request, 'ips/escanerqr.html')
 
 def save_qr(request):
     if request.method == 'POST':
