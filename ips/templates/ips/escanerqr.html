@@ -83,6 +83,18 @@
             object-fit: cover;
         }
 
+        .scan-area {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 80%;
+            border: 3px dashed rgba(0, 123, 255, 0.7);
+            pointer-events: none;
+            box-sizing: border-box;
+        }
+
         .result-container {
             text-align: center;
             margin-top: 20px;
@@ -132,7 +144,7 @@
             }
 
             .video-container {
-                height: 300px; /* Ajuste la altura para pantallas más pequeñas */
+                height: 300px;
             }
         }
     </style>
@@ -153,6 +165,7 @@
         <div class="video-container">
             <video id="video" autoplay></video>
             <canvas id="qr-canvas"></canvas>
+            <div class="scan-area"></div>
         </div>
 
         <div class="result-container">
@@ -169,7 +182,6 @@
     <script src="{% static 'lib/cockies.js' %}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Obtiene la cámara
             const video = document.getElementById("video");
             const canvas = document.getElementById("qr-canvas");
             const context = canvas.getContext("2d");
@@ -177,35 +189,42 @@
             const cantidadContainer = document.getElementById("cantidad-container");
             let qrScanned = false;
 
-            // Accede a la cámara
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-                .then(function(stream) {
-                    video.srcObject = stream;
+            // Configuración de la cámara
+            navigator.mediaDevices.getUserMedia({
+                video: { 
+                    facingMode: "environment", 
+                    width: { ideal: 1280 }, // Resolución más alta posible
+                    height: { ideal: 720 }
+                }
+            })
+            .then(function(stream) {
+                video.srcObject = stream;
 
-                    // Llamado a la función de escaneo cada vez que se actualiza el frame
-                    video.addEventListener('play', function () {
-                        // Ajustar el tamaño del canvas para que coincida con el tamaño del video
-                        canvas.width = video.videoWidth;
-                        canvas.height = video.videoHeight;
+                // Llamado a la función de escaneo cada vez que se actualiza el frame
+                video.addEventListener('play', function () {
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
 
-                        setInterval(function() {
-                            if (video.paused || video.ended) return;
-                            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-                            const code = jsQR(imageData.data, canvas.width, canvas.height);
+                    setInterval(function() {
+                        if (video.paused || video.ended) return;
+                        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                        const code = jsQR(imageData.data, canvas.width, canvas.height);
 
-                            if (code && !qrScanned) {
-                                qrResult.innerText = code.data;
-                                cantidadContainer.style.display = "block";
-                                qrScanned = true;
-                            }
-                        }, 100);
-                    });
-                })
-                .catch(function(error) {
-                    console.error("Error al acceder a la cámara: ", error);
-                    alert("No se pudo acceder a la cámara. Por favor, verifique los permisos.");
+                        if (code && !qrScanned) {
+                            qrResult.innerText = code.data;
+                            cantidadContainer.style.display = "block";
+                            qrScanned = true;
+                            // Detener el escaneo después de detectar el QR
+                            video.srcObject.getTracks().forEach(track => track.stop());
+                        }
+                    }, 100);
                 });
+            })
+            .catch(function(error) {
+                console.error("Error al acceder a la cámara: ", error);
+                alert("No se pudo acceder a la cámara. Por favor, verifique los permisos.");
+            });
 
             // Lógica para manejar la confirmación de la cantidad
             document.getElementById('confirmar-cantidad').addEventListener('click', function() {
@@ -232,16 +251,36 @@
                     })
                     .catch(error => console.error('Error:', error));
 
-                    qrScanned = false; // Permitir un nuevo escaneo
-                    cantidadContainer.style.display = "none"; // Ocultar cantidad
+                    // Reiniciar el escaneo después de enviar los datos
+                    qrScanned = false; 
+                    cantidadContainer.style.display = "none"; 
+                    startScanning(); // Volver a empezar el escaneo
                 } else {
                     alert("Por favor ingrese una cantidad válida.");
                 }
             });
+
+            // Función para reiniciar el escaneo
+            function startScanning() {
+                navigator.mediaDevices.getUserMedia({
+                    video: { 
+                        facingMode: "environment", 
+                        width: { ideal: 1280 }, 
+                        height: { ideal: 720 }
+                    }
+                })
+                .then(function(stream) {
+                    video.srcObject = stream;
+                })
+                .catch(function(error) {
+                    console.error("Error al acceder a la cámara:", error);
+                });
+            }
         });
     </script>
 </body>
 </html>
+
 
 
 
