@@ -183,8 +183,15 @@
 
             // Configuración de escaneo
             const config = {
-                fps: 10, // frames per second
-                qrbox: { width: 250, height: 250 } // Tamaño del área de escaneo
+                fps: 10, // Velocidad de escaneo
+                qrbox: { width: 250, height: 250 }, // Tamaño del área de escaneo
+                disableFlip: false, // Configura si deseas invertir la cámara (útil en dispositivos móviles)
+                videoConstraints: {
+                    facingMode: "environment", // Usar la cámara trasera del móvil
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 },
+                    frameRate: { ideal: 30 }
+                }
             };
 
             // Iniciar escaneo de QR
