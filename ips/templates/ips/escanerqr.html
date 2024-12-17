@@ -186,7 +186,7 @@
                 qrbox: { width: 85, height: 85 }, // Tamaño del área de escaneo
                 disableFlip: false, // Configura si deseas invertir la cámara (útil en dispositivos móviles)
                 videoConstraints: {
-                    facingMode: "user", // Usar la cámara trasera del móvil
+                    facingMode: "environment", // Usar la cámara trasera del móvil
                     width: { ideal: 1280 },
                     height: { ideal: 720 },
                     frameRate: { ideal: 30 },
@@ -202,7 +202,7 @@
 
             // Iniciar escaneo de QR
             html5QrCode.start(
-                { facingMode: "user" }, // Usar la cámara trasera
+                { facingMode: "environment" }, // Usar la cámara trasera
                 config,
                 (decodedText, decodedResult) => {
                     console.log("QR detectado:", decodedText);
@@ -245,7 +245,7 @@
                     // Reiniciar el escaneo después de enviar los datos
                     cantidadContainer.style.display = "none";
                     html5QrCode.start(
-                        { facingMode: "user" }, // Reiniciar escaneo
+                        { facingMode: "environment" }, // Reiniciar escaneo
                         config,
                         (decodedText, decodedResult) => {
                             console.log("QR detectado:", decodedText);
