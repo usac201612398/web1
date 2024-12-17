@@ -53,7 +53,7 @@
 
         .qr-frame {
             position: absolute;
-            border: 4px solid rgba(0, 255, 0, 0.7); /* Marco más grueso y de color verde */
+            border: 3px solid rgba(0, 255, 0, 0.7); /* Marco verde */
             border-radius: 8px;
             pointer-events: none;
             z-index: 2;
@@ -62,7 +62,7 @@
             transform: translate(-50%, -50%);
             width: 250px;
             height: 250px;
-            display: none;
+            display: none; /* Inicialmente oculto, se muestra solo cuando se detecta un QR */
         }
 
         .btn-confirm {
@@ -90,7 +90,7 @@
     <div id="container">
         <div class="video-container">
             <div id="qr-reader" style="width: 100%; height: 100%;"></div>
-            <div id="qr-frame" class="qr-frame"></div>
+            <div id="qr-frame" class="qr-frame"></div> <!-- Marco que indica el área de escaneo -->
         </div>
     </div>
 
@@ -106,18 +106,22 @@
             const qrFrame = document.getElementById("qr-frame");
             let qrScanner;
 
+            // Inicializamos el escáner cuando el usuario hace clic en "Iniciar Escaneo"
             function startScan() {
                 if (qrScanner) {
-                    qrScanner.stop();
+                    qrScanner.stop();  // Detenemos cualquier escaneo anterior
                 }
 
+                // Creamos el escáner
                 qrScanner = new Html5Qrcode("qr-reader");
 
                 qrScanner.start(
                     { facingMode: "environment" },
                     {
-                        fps: 10, 
-                        qrbox: 250,
+                        fps: 10,  // Fotogramas por segundo
+                        qrbox: 250,  // Tamaño del área de escaneo (ajustable)
+                        // Aquí puedes agregar el siguiente parámetro para mostrar la caja de escaneo
+                        aspectRatio: 1.0, // Ajusta el aspecto de la zona de escaneo si lo deseas
                     },
                     onScanSuccess,
                     onScanError
@@ -127,23 +131,52 @@
                 });
             }
 
+            // Función cuando se escanea un QR
             function onScanSuccess(decodedText, decodedResult) {
                 console.log("QR Detectado: ", decodedText);
-                qrFrame.style.display = "none"; // Ocultamos el marco cuando escaneamos un QR
 
-                // Realiza alguna acción con el resultado
-                alert(`QR Detectado: ${decodedText}`);
-                qrScanner.stop();
+                // Verifica si hay coordenadas del QR detectado
+                const location = decodedResult.result.points;
+                if (location && location.length === 4) {
+                    // Calcula las coordenadas del rectángulo
+                    const x1 = location[0].x;
+                    const y1 = location[0].y;
+                    const x2 = location[1].x;
+                    const y2 = location[1].y;
+                    const x3 = location[2].x;
+                    const y3 = location[2].y;
+                    const x4 = location[3].x;
+                    const y4 = location[3].y;
+
+                    // Dibuja el marco sobre el QR detectado
+                    drawQrFrame(x1, y1, x2, y2, x3, y3, x4, y4);
+                }
             }
 
+            // Función de error si no se puede leer el QR
             function onScanError(errorMessage) {
                 console.warn("Error al escanear QR: ", errorMessage);
+            }
+
+            // Dibuja el rectángulo del QR en el video
+            function drawQrFrame(x1, y1, x2, y2, x3, y3, x4, y4) {
+                // Calcular la posición y tamaño del rectángulo
+                const width = Math.abs(x1 - x3);
+                const height = Math.abs(y1 - y3);
+
+                // Actualizar la posición y tamaño del marco
+                qrFrame.style.left = `${x1}px`;
+                qrFrame.style.top = `${y1}px`;
+                qrFrame.style.width = `${width}px`;
+                qrFrame.style.height = `${height}px`;
+                qrFrame.style.display = "block";  // Mostrar el marco
             }
         });
     </script>
 
 </body>
 </html>
+
 
 
 
