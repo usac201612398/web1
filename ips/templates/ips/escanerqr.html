@@ -181,7 +181,6 @@
             // Iniciar escaneo con html5-qrcode
             const html5QrCode = new Html5Qrcode("reader");
 
-            // Configuración de escaneo
             const config = {
                 fps: 10, // Velocidad de escaneo
                 qrbox: { width: 250, height: 250 }, // Tamaño del área de escaneo
@@ -190,9 +189,16 @@
                     facingMode: "environment", // Usar la cámara trasera del móvil
                     width: { ideal: 1280 },
                     height: { ideal: 720 },
-                    frameRate: { ideal: 30 }
+                    frameRate: { ideal: 30 },
+                    advanced: [
+                        {
+                            focusMode: 'manual', // Intentamos deshabilitar el enfoque automático
+                            focusDistance: 0.5 // Puedes ajustar esto según sea necesario (valor entre 0 y 1)
+                        }
+                    ]
                 }
             };
+
 
             // Iniciar escaneo de QR
             html5QrCode.start(
