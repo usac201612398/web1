@@ -53,6 +53,18 @@
             object-fit: cover;
         }
 
+        /* Marco de escaneo */
+        .scan-frame {
+            position: absolute;
+            top: 20%;
+            left: 20%;
+            width: 60%;
+            height: 60%;
+            border: 5px solid rgba(0, 255, 0, 0.7);
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
+        }
+
         /* Botón de confirmación */
         .btn-confirm {
             background-color: #dc3545;
@@ -96,6 +108,8 @@
             <video id="video" autoplay></video>
             <!-- Canvas para dibujar el recuadro cuando se detecta el QR -->
             <canvas id="qr-canvas"></canvas>
+            <!-- Marco de escaneo donde el QR debe estar centrado -->
+            <div class="scan-frame"></div>
         </div>
     </div>
 
@@ -111,6 +125,7 @@
             const canvas = document.getElementById("qr-canvas");
             const context = canvas.getContext("2d");
             const btnScan = document.querySelector('button');
+            const scanFrame = document.querySelector('.scan-frame');
             
             let scanning = false;
 
@@ -135,17 +150,40 @@
                             const code = jsQR(imageData.data, canvas.width, canvas.height);
 
                             if (code) {
-                                // Si se detecta el QR, dibujar un recuadro verde
-                                context.beginPath();
-                                context.rect(code.location.topLeftCorner.x, code.location.topLeftCorner.y,
-                                    code.location.bottomRightCorner.x - code.location.topLeftCorner.x,
-                                    code.location.bottomRightCorner.y - code.location.topLeftCorner.y);
-                                context.lineWidth = 5;
-                                context.strokeStyle = "green";
-                                context.stroke();
+                                // Verifica si el QR está dentro del marco de escaneo
+                                const qrTopLeft = code.location.topLeftCorner;
+                                const qrBottomRight = code.location.bottomRightCorner;
 
-                                // Mostrar el resultado
-                                console.log("QR Detectado: ", code.data);
+                                const frameRect = scanFrame.getBoundingClientRect();
+                                const qrRect = {
+                                    x: qrTopLeft.x,
+                                    y: qrTopLeft.y,
+                                    width: qrBottomRight.x - qrTopLeft.x,
+                                    height: qrBottomRight.y - qrTopLeft.y
+                                };
+
+                                // Verifica si el QR está dentro del marco
+                                if (
+                                    qrRect.x >= frameRect.left &&
+                                    qrRect.y >= frameRect.top &&
+                                    qrRect.x + qrRect.width <= frameRect.left + frameRect.width &&
+                                    qrRect.y + qrRect.height <= frameRect.top + frameRect.height
+                                ) {
+                                    // Si está dentro, dibujar el recuadro verde
+                                    context.beginPath();
+                                    context.rect(qrTopLeft.x, qrTopLeft.y,
+                                        qrBottomRight.x - qrTopLeft.x,
+                                        qrBottomRight.y - qrTopLeft.y);
+                                    context.lineWidth = 5;
+                                    context.strokeStyle = "green";
+                                    context.stroke();
+
+                                    // Mostrar el resultado
+                                    console.log("QR Detectado dentro del marco: ", code.data);
+                                } else {
+                                    // Si no está dentro, podemos limpiar el canvas o mostrar otro tipo de señal
+                                    context.clearRect(0, 0, canvas.width, canvas.height);
+                                }
                             }
 
                             // Llamar a scan() cada 100ms
@@ -169,4 +207,5 @@
 
 </body>
 </html>
+
 
