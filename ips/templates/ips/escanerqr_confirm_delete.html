@@ -6,7 +6,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Escanear Código QR</title>
 
-    <!-- Fuentes y estilos -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
@@ -33,12 +32,11 @@
             color: #333;
         }
 
-        /* Contenedor para el video y el canvas */
         .video-container {
             position: relative;
             max-width: 100%;
             width: 100%;
-            height: 400px;
+            height: 500px;
             background-color: #000;
             border-radius: 8px;
             margin-top: 30px;
@@ -53,19 +51,17 @@
             object-fit: cover;
         }
 
-        /* Marco de escaneo */
         .scan-frame {
             position: absolute;
-            top: 20%;
-            left: 20%;
-            width: 60%;
-            height: 60%;
+            top: 15%;
+            left: 15%;
+            width: 70%;
+            height: 70%;
             border: 5px solid rgba(0, 255, 0, 0.7);
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
         }
 
-        /* Botón de confirmación */
         .btn-confirm {
             background-color: #dc3545;
             color: white;
@@ -80,7 +76,6 @@
             background-color: #c82333;
         }
 
-        /* Botón de cancelación */
         .btn-cancel {
             background-color: #6c757d;
             color: white;
@@ -104,11 +99,8 @@
 
     <div id="container">
         <div class="video-container">
-            <!-- Video para mostrar el escaneo -->
             <video id="video" autoplay></video>
-            <!-- Canvas para dibujar el recuadro cuando se detecta el QR -->
             <canvas id="qr-canvas"></canvas>
-            <!-- Marco de escaneo donde el QR debe estar centrado -->
             <div class="scan-frame"></div>
         </div>
     </div>
@@ -130,7 +122,7 @@
             let scanning = false;
 
             // Accede a la cámara
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment", width: 1280, height: 720 } })
                 .then(function(stream) {
                     video.srcObject = stream;
                     video.play();
@@ -178,10 +170,8 @@
                                     context.strokeStyle = "green";
                                     context.stroke();
 
-                                    // Mostrar el resultado
                                     console.log("QR Detectado dentro del marco: ", code.data);
                                 } else {
-                                    // Si no está dentro, podemos limpiar el canvas o mostrar otro tipo de señal
                                     context.clearRect(0, 0, canvas.width, canvas.height);
                                 }
                             }
@@ -207,6 +197,7 @@
 
 </body>
 </html>
+
 
 
 
