@@ -68,16 +68,16 @@
             max-width: 100%;
             height: 400px;
             margin: 20px auto;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
             background-color: #000;
             border-radius: 8px;
             overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
+        /* Aseguramos que tanto el video como el canvas cubran el contenedor */
         video, #qr-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -132,7 +132,7 @@
             }
 
             .video-container {
-                height: 300px;
+                height: 300px; /* Ajuste la altura para pantallas más pequeñas */
             }
         }
     </style>
@@ -151,7 +151,7 @@
         <h1>Escanear Código QR</h1>
 
         <div class="video-container">
-            <video id="video" width="100%" height="100%" autoplay></video>
+            <video id="video" autoplay></video>
             <canvas id="qr-canvas"></canvas>
         </div>
 
@@ -184,6 +184,7 @@
 
                     // Llamado a la función de escaneo cada vez que se actualiza el frame
                     video.addEventListener('play', function () {
+                        // Ajustar el tamaño del canvas para que coincida con el tamaño del video
                         canvas.width = video.videoWidth;
                         canvas.height = video.videoHeight;
 
@@ -203,13 +204,7 @@
                 })
                 .catch(function(error) {
                     console.error("Error al acceder a la cámara: ", error);
-                    if (error.name === "NotAllowedError") {
-                        alert("No has concedido permisos para usar la cámara.");
-                    } else if (error.name === "NotFoundError") {
-                        alert("No se pudo encontrar la cámara.");
-                    } else {
-                        alert("Error desconocido al acceder a la cámara.");
-                    }
+                    alert("No se pudo acceder a la cámara. Por favor, verifique los permisos.");
                 });
 
             // Lógica para manejar la confirmación de la cantidad
@@ -247,5 +242,6 @@
     </script>
 </body>
 </html>
+
 
 
