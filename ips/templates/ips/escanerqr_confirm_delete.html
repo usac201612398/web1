@@ -53,10 +53,15 @@
 
         .qr-frame {
             position: absolute;
-            border: 3px solid rgba(0, 255, 0, 0.7);
-            border-radius: 5px;
+            border: 3px dashed rgba(0, 255, 0, 0.7); /* Cuadro verde con borde punteado */
+            border-radius: 8px;
             pointer-events: none;
             z-index: 2;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%); /* Centrado automático */
+            width: 250px;
+            height: 250px;
         }
 
         .btn-confirm {
@@ -67,6 +72,7 @@
             font-size: 1.1rem;
             border-radius: 5px;
             transition: background-color 0.3s ease;
+            margin-top: 30px;
         }
 
         .btn-confirm:hover {
@@ -84,7 +90,7 @@
         <div class="video-container">
             <!-- Video Container -->
             <div id="qr-reader" style="width: 100%; height: 100%;"></div>
-            <!-- Frame for QR Detection -->
+            <!-- Marco para la Detección del QR -->
             <div id="qr-frame" class="qr-frame"></div>
         </div>
     </div>
@@ -114,7 +120,7 @@
                     { facingMode: "environment" },
                     {
                         fps: 10, // Fotogramas por segundo
-                        qrbox: 250, // Tamaño del área de escaneo
+                        qrbox: 250, // Tamaño del área de escaneo, ajustable
                     },
                     onScanSuccess,
                     onScanError
@@ -169,6 +175,7 @@
 
 </body>
 </html>
+
 
 
 
