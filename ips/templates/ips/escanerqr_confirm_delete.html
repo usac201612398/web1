@@ -53,15 +53,16 @@
 
         .qr-frame {
             position: absolute;
-            border: 3px dashed rgba(0, 255, 0, 0.7); /* Cuadro verde con borde punteado */
+            border: 4px solid rgba(0, 255, 0, 0.7); /* Marco más grueso y de color verde */
             border-radius: 8px;
             pointer-events: none;
             z-index: 2;
             left: 50%;
             top: 50%;
-            transform: translate(-50%, -50%); /* Centrado automático */
+            transform: translate(-50%, -50%);
             width: 250px;
             height: 250px;
+            display: none;
         }
 
         .btn-confirm {
@@ -88,9 +89,7 @@
 
     <div id="container">
         <div class="video-container">
-            <!-- Video Container -->
             <div id="qr-reader" style="width: 100%; height: 100%;"></div>
-            <!-- Marco para la Detección del QR -->
             <div id="qr-frame" class="qr-frame"></div>
         </div>
     </div>
@@ -107,20 +106,18 @@
             const qrFrame = document.getElementById("qr-frame");
             let qrScanner;
 
-            // Inicializamos el escáner cuando el usuario hace clic en "Iniciar Escaneo"
             function startScan() {
                 if (qrScanner) {
-                    qrScanner.stop();  // Detenemos cualquier escaneo anterior
+                    qrScanner.stop();
                 }
 
-                // Creamos el escáner
                 qrScanner = new Html5Qrcode("qr-reader");
 
                 qrScanner.start(
                     { facingMode: "environment" },
                     {
-                        fps: 10, // Fotogramas por segundo
-                        qrbox: 250, // Tamaño del área de escaneo, ajustable
+                        fps: 10, 
+                        qrbox: 250,
                     },
                     onScanSuccess,
                     onScanError
@@ -130,51 +127,24 @@
                 });
             }
 
-            // Función cuando se escanea un QR
             function onScanSuccess(decodedText, decodedResult) {
                 console.log("QR Detectado: ", decodedText);
+                qrFrame.style.display = "none"; // Ocultamos el marco cuando escaneamos un QR
 
-                // Verifica si hay coordenadas del QR detectado
-                const location = decodedResult.result.points;
-                if (location && location.length === 4) {
-                    // Calcula las coordenadas del rectángulo
-                    const x1 = location[0].x;
-                    const y1 = location[0].y;
-                    const x2 = location[1].x;
-                    const y2 = location[1].y;
-                    const x3 = location[2].x;
-                    const y3 = location[2].y;
-                    const x4 = location[3].x;
-                    const y4 = location[3].y;
-
-                    // Dibuja el marco sobre el QR detectado
-                    drawQrFrame(x1, y1, x2, y2, x3, y3, x4, y4);
-                }
+                // Realiza alguna acción con el resultado
+                alert(`QR Detectado: ${decodedText}`);
+                qrScanner.stop();
             }
 
-            // Función de error si no se puede leer el QR
             function onScanError(errorMessage) {
                 console.warn("Error al escanear QR: ", errorMessage);
-            }
-
-            // Dibuja el rectángulo del QR en el video
-            function drawQrFrame(x1, y1, x2, y2, x3, y3, x4, y4) {
-                // Calcular la posición y tamaño del rectángulo
-                const width = Math.abs(x1 - x3);
-                const height = Math.abs(y1 - y3);
-
-                // Actualizar la posición y tamaño del marco
-                qrFrame.style.left = `${x1}px`;
-                qrFrame.style.top = `${y1}px`;
-                qrFrame.style.width = `${width}px`;
-                qrFrame.style.height = `${height}px`;
-                qrFrame.style.display = "block";
             }
         });
     </script>
 
 </body>
 </html>
+
 
 
 
