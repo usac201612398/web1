@@ -7,15 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Escanear Código QR</title>
 
-    <!-- Iconos y fuentes -->
+    <!-- Estilos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
 
-    <!-- QR Code Reader -->
-    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+    <!-- QR Code Reader (jsQR) -->
+    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.min.js"></script>
 
     <style>
-        /* General styling */
         body, html {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -75,9 +74,10 @@
             overflow: hidden;
         }
 
-        #qr-reader {
+        #qr-canvas {
             width: 100%;
             height: 100%;
+            display: none;
         }
 
         .result-container {
@@ -148,7 +148,8 @@
         <h1>Escanear Código QR</h1>
 
         <div class="video-container">
-            <div id="qr-reader"></div>
+            <video id="video" width="100%" height="100%" autoplay></video>
+            <canvas id="qr-canvas"></canvas>
         </div>
 
         <div class="result-container">
@@ -165,63 +166,71 @@
     <script src="{% static 'lib/cockies.js' %}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            if (typeof Html5Qrcode === 'undefined') {
-                console.error('Html5Qrcode no está definido.');
-                return;
-            }
+            // Obtiene la cámara
+            const video = document.getElementById("video");
+            const canvas = document.getElementById("qr-canvas");
+            const context = canvas.getContext("2d");
+            const qrResult = document.getElementById("qr-result");
+            const cantidadContainer = document.getElementById("cantidad-container");
+            let qrScanned = false;
 
-            let confirmButtonClicked = false; // Control para evitar múltiples clics
-            let qrScanned = false; // Evita escanear múltiples QR
+            // Accede a la cámara
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+                .then(function(stream) {
+                    video.srcObject = stream;
 
-            // Función de éxito al escanear QR
-            function onScanSuccess(decodedText, decodedResult) {
-                if (!qrScanned) {
-                    document.getElementById('qr-result').innerText = decodedText;
-                    document.getElementById('cantidad-container').style.display = "block";  // Mostrar cantidad
+                    // Llamado a la función de escaneo cada vez que se actualiza el frame
+                    video.addEventListener('play', function () {
+                        setInterval(function() {
+                            if (video.paused || video.ended) return;
+                            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                            const code = jsQR(imageData.data, canvas.width, canvas.height);
 
-                    qrScanned = true; // Evita más escaneos hasta confirmar cantidad
-
-                    // Confirmar cantidad
-                    document.getElementById('confirmar-cantidad').addEventListener('click', function() {
-                        const cantidad = document.getElementById('cantidad').value;
-                        if (cantidad && cantidad > 0) {
-                            const data = {
-                                qr_data: decodedText,
-                                cantidad: cantidad
-                            };
-
-                            // Enviar datos al backend Django (AJAX)
-                            fetch("{% url 'save_qr' %}", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                    'X-CSRFToken': getCookie('csrftoken')
-                                },
-                                body: JSON.stringify(data)
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                alert(data.message || 'QR guardado correctamente.');
-                            })
-                            .catch(error => console.error('Error:', error));
-
-                            qrScanned = false; // Permitir nuevo escaneo
-                            document.getElementById('cantidad-container').style.display = "none"; // Ocultar cantidad
-                        } else {
-                            alert("Por favor ingrese una cantidad válida.");
-                        }
+                            if (code && !qrScanned) {
+                                qrResult.innerText = code.data;
+                                cantidadContainer.style.display = "block";
+                                qrScanned = true;
+                            }
+                        }, 100);
                     });
-                }
-            }
-
-            // Configurar QR Scanner
-            const html5QrCode = new Html5Qrcode("qr-reader");
-
-            // Iniciar el escáner QR
-            html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, onScanSuccess)
-                .catch(err => {
-                    console.error("Error al iniciar el escáner:", err);
+                })
+                .catch(function(error) {
+                    console.error("Error al acceder a la cámara: ", error);
+                    alert("No se pudo acceder a la cámara. Por favor, verifique los permisos.");
                 });
+
+            // Lógica para manejar la confirmación de la cantidad
+            document.getElementById('confirmar-cantidad').addEventListener('click', function() {
+                const cantidad = document.getElementById('cantidad').value;
+                const qrData = qrResult.innerText;
+
+                if (cantidad && cantidad > 0) {
+                    const data = {
+                        qr_data: qrData,
+                        cantidad: cantidad
+                    };
+
+                    fetch("{% url 'save_qr' %}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            'X-CSRFToken': getCookie('csrftoken')
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message || 'QR guardado correctamente.');
+                    })
+                    .catch(error => console.error('Error:', error));
+
+                    qrScanned = false; // Permitir un nuevo escaneo
+                    cantidadContainer.style.display = "none"; // Ocultar cantidad
+                } else {
+                    alert("Por favor ingrese una cantidad válida.");
+                }
+            });
         });
     </script>
 </body>
