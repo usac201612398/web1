@@ -72,12 +72,16 @@
             background-color: #000;
             border-radius: 8px;
             overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        #qr-canvas {
+        /* Aseguramos que el video y canvas tengan el mismo tamaño */
+        video, #qr-canvas {
             width: 100%;
             height: 100%;
-            display: none;
+            object-fit: cover;
         }
 
         .result-container {
@@ -153,86 +157,4 @@
         </div>
 
         <div class="result-container">
-            <p>QR Escaneado: <span id="qr-result"></span></p>
-
-            <div id="cantidad-container">
-                <label for="cantidad">Cantidad a agregar:</label>
-                <input type="number" id="cantidad" name="cantidad" min="1" required>
-                <button id="confirmar-cantidad">Confirmar</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="{% static 'lib/cockies.js' %}"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Obtiene la cámara
-            const video = document.getElementById("video");
-            const canvas = document.getElementById("qr-canvas");
-            const context = canvas.getContext("2d");
-            const qrResult = document.getElementById("qr-result");
-            const cantidadContainer = document.getElementById("cantidad-container");
-            let qrScanned = false;
-
-            // Accede a la cámara
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-                .then(function(stream) {
-                    video.srcObject = stream;
-
-                    // Llamado a la función de escaneo cada vez que se actualiza el frame
-                    video.addEventListener('play', function () {
-                        setInterval(function() {
-                            if (video.paused || video.ended) return;
-                            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-                            const code = jsQR(imageData.data, canvas.width, canvas.height);
-
-                            if (code && !qrScanned) {
-                                qrResult.innerText = code.data;
-                                cantidadContainer.style.display = "block";
-                                qrScanned = true;
-                            }
-                        }, 100);
-                    });
-                })
-                .catch(function(error) {
-                    console.error("Error al acceder a la cámara: ", error);
-                    alert("No se pudo acceder a la cámara. Por favor, verifique los permisos.");
-                });
-
-            // Lógica para manejar la confirmación de la cantidad
-            document.getElementById('confirmar-cantidad').addEventListener('click', function() {
-                const cantidad = document.getElementById('cantidad').value;
-                const qrData = qrResult.innerText;
-
-                if (cantidad && cantidad > 0) {
-                    const data = {
-                        qr_data: qrData,
-                        cantidad: cantidad
-                    };
-
-                    fetch("{% url 'save_qr' %}", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            'X-CSRFToken': getCookie('csrftoken')
-                        },
-                        body: JSON.stringify(data)
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        alert(data.message || 'QR guardado correctamente.');
-                    })
-                    .catch(error => console.error('Error:', error));
-
-                    qrScanned = false; // Permitir un nuevo escaneo
-                    cantidadContainer.style.display = "none"; // Ocultar cantidad
-                } else {
-                    alert("Por favor ingrese una cantidad válida.");
-                }
-            });
-        });
-    </script>
-</body>
-</html>
 
