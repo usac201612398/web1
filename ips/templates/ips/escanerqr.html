@@ -141,8 +141,8 @@
             }
         }
     </style>
-    <!-- Importar ZXing-js -->
-    <script src="https://unpkg.com/@zxing/library@0.18.6"></script>
+    <!-- Importar html5-qrcode -->
+    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -180,7 +180,7 @@
             const cantidadContainer = document.getElementById("cantidad-container");
 
             let qrScanned = false;
-            const codeReader = new ZXing.BrowserQRCodeReader(); // Instanciamos el lector de códigos QR
+            const html5QrCode = new Html5Qrcode("video");
 
             // Configuración de la cámara
             navigator.mediaDevices.getUserMedia({
@@ -228,10 +228,11 @@
                     const processedCanvas = processImage(frame); // Procesamos la imagen
                     const imageData = processedCanvas.getContext('2d').getImageData(0, 0, processedCanvas.width, processedCanvas.height);
 
-                    codeReader.decodeFromImageData(imageData)
+                    // Usamos html5-qrcode para detectar QR
+                    html5QrCode.scanFile(imageData)
                         .then(result => {
-                            console.log('QR detectado:', result.text);
-                            qrResult.innerText = result.text; // Mostrar el resultado del QR
+                            console.log('QR detectado:', result);
+                            qrResult.innerText = result; // Mostrar el resultado del QR
                             cantidadContainer.style.display = "block"; // Mostrar campo de cantidad
                             qrScanned = true;
 
