@@ -66,7 +66,8 @@
         .video-container {
             position: relative;
             width: 100%;
-            max-width: 500px;
+            max-width: 100%;
+            height: 400px; /* Altura fija para asegurar que el video se vea bien */
             margin: 20px auto;
             padding-bottom: 56.25%; /* 16:9 aspect ratio */
             background-color: #000;
@@ -125,6 +126,10 @@
             .box {
                 width: 100%;
                 max-width: 300px;
+            }
+
+            .video-container {
+                height: 300px; /* Ajuste la altura para pantallas más pequeñas */
             }
         }
     </style>
@@ -212,6 +217,7 @@
             // Configurar QR Scanner
             const html5QrCode = new Html5Qrcode("qr-reader");
 
+            // Iniciar el escáner QR
             html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, onScanSuccess)
                 .catch(err => {
                     console.error("Error al iniciar el escáner:", err);
@@ -220,3 +226,4 @@
     </script>
 </body>
 </html>
+
