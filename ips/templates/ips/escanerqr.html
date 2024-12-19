@@ -248,11 +248,14 @@
                 (decodedText, decodedResult) => {
                     console.log("QR detectado:", decodedText);
                     qrResult.innerText = decodedText; // Mostrar el resultado del QR
+                    // Mostrar los campos después de escanear
                     cantidadContainer.style.display = "block"; // Mostrar campo de cantidad
                     colorField.style.display = "block"; // Mostrar el campo color
                     cosechadorField.style.display = "block"; // Mostrar el campo cosechador
-                    colorLabel.classList.remove("is-hidden"); // Mostrar la etiqueta de color
-                    cosechadorLabel.classList.remove("is-hidden"); // Mostrar la etiqueta de cosechador
+
+                    // Eliminar la clase is-hidden para mostrar las etiquetas de los campos
+                    colorLabel.classList.remove("is-hidden");
+                    cosechadorLabel.classList.remove("is-hidden");
             
                     html5QrCode.stop(); // Detener el escaneo después de detectar el QR
                 },
@@ -298,6 +301,7 @@
                     cosechadorField.style.display = "none";
                     colorLabel.classList.add("is-hidden"); // Ocultar la etiqueta de color
                     cosechadorLabel.classList.add("is-hidden"); // Ocultar la etiqueta de cosechador
+            
                     
                     html5QrCode.start(
                         { facingMode: "environment" }, // Reiniciar escaneo
