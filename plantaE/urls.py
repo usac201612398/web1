@@ -48,6 +48,7 @@ urlpatterns = [
     path("recepcionesFruta/process",views.procesarrecepcion,name='recepcionesFruta_process'),
     path("recepcionesFruta",views.recepciones_list,name='recepcionesFruta_list'),
     path("recepcionesFruta/reporteAcum",views.recepciones_reporteAcum,name='recepcionesFruta_reporteAcum'),
+    path("salidasFrutaPublic/reporteAcum/semanal",views.recepciones_reporteAcumSem,name='salidasFrutaPublic_reporteAcumSem'),
     path("recepcionesFruta/reporteAcum/semanal",views.recepciones_reporteAcumSem,name='recepcionesFruta_reporteAcumSem'),
     path("recepcionesFruta/reporteAcum/grafico",views.recepciones_reportecurva,name='recepcionesFruta_reportecurva'),
     path("salidasFrutaPublic/graficoPublic",views.recepciones_reportecurva2,name='recepcionesFruta_reportecurva2'),

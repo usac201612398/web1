@@ -834,6 +834,55 @@ def recepciones_reporteAcumSem(request):
         'registros2': registros_finales2
     })
 
+def recepciones_reporteAcumSemPublic(request):
+    today = timezone.now().date()
+    current_week = today.isocalendar()[1]  # Obtener el número de semana actual
+    current_year = today.isocalendar()[0]  # Obtener el año actual
+    nombre_usuario = request.user.username
+    # Obtener todos los registros
+    finca = usuariosAppFruta.objects.filter(correo=nombre_usuario)
+    registros = Recepciones.objects.filter(finca = finca.finca)
+
+    # Crear un DataFrame a partir de los registros
+    df = pd.DataFrame(list(registros.values()), columns=['fecha', 'finca', 'cultivo', 'variedad', 'cajas', 'libras'])
+    df['fecha'] = pd.to_datetime(df['fecha'], errors='coerce')
+    # Agregar columnas para el número de semana y el año
+    df['semana'] = df['fecha'].dt.isocalendar().week
+    df['año'] = df['fecha'].dt.isocalendar().year
+
+    # Filtrar por la semana y el año actuales
+    df_filtrado = df[(df['semana'] == current_week) & (df['año'] == current_year)]
+
+    # Agrupar por 'variedad' y sumar las 'cajas'
+    df_agrupado = df_filtrado.groupby(['variedad', 'cultivo', 'finca'], as_index=False).agg(
+        total_cajas=('cajas', 'sum'),
+        cultivo=('cultivo', 'first'),
+        semana=('semana', 'first'),
+        variedad=('variedad', 'first'),
+        finca=('finca', 'first'),
+        total_libras=('libras', 'sum')
+    )
+
+    # Convertir el DataFrame a una lista de diccionarios para pasarlo a la plantilla
+    registros_finales = df_agrupado.to_dict(orient='records')
+
+    # Agrupar por 'cultivo' y sumar las 'cajas'
+    df_agrupado2 = df_filtrado.groupby(['cultivo', 'finca'], as_index=False).agg(
+        total_cajas=('cajas', 'sum'),
+        cultivo=('cultivo', 'first'),
+        semana=('semana', 'first'),
+        variedad=('variedad', 'first'),
+        finca=('finca', 'first'),
+        total_libras=('libras', 'sum')
+    )
+
+    registros_finales2 = df_agrupado2.to_dict(orient='records')
+
+    return render(request, 'plantaE/recepciones_reporteAcumSemPublic.html', {
+        'registros': registros_finales,
+        'registros2': registros_finales2
+    })
+
 def recepciones_reportecurva(request):
     nombre_usuario = request.user.username
     #mensaje = request.POST.get('array')
