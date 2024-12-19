@@ -839,9 +839,20 @@ def recepciones_reporteAcumSemPublic(request):
     current_week = today.isocalendar()[1]  # Obtener el número de semana actual
     current_year = today.isocalendar()[0]  # Obtener el año actual
     nombre_usuario = request.user.username
-    # Obtener todos los registros
-    finca = usuariosAppFruta.objects.filter(correo=nombre_usuario)
-    registros = Recepciones.objects.filter(finca = finca.finca)
+    # Obtener el objeto de usuario basado en el correo. Usamos .get() si esperamos un solo resultado
+
+    try:
+        finca_usuario = usuariosAppFruta.objects.get(correo=nombre_usuario)
+        
+    except usuariosAppFruta.DoesNotExist:
+        # En caso de que no exista el usuario con ese correo, maneja el error apropiadamente.
+        # Puedes lanzar una excepción o retornar un mensaje de error.
+        finca_usuario = None
+
+    # Verifica si se encontró el usuario
+    if finca_usuario:
+        # Obtener los registros de 'Recepciones' para la finca asociada al usuario
+        registros = Recepciones.objects.filter(finca=finca_usuario.finca)
 
     # Crear un DataFrame a partir de los registros
     df = pd.DataFrame(list(registros.values()), columns=['fecha', 'finca', 'cultivo', 'variedad', 'cajas', 'libras'])
