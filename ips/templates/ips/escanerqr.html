@@ -219,7 +219,7 @@
     const cosechadorField = document.getElementById("cosechador-container");
     const colorLabel = document.getElementById("color-label");
     const cosechadorLabel = document.getElementById("cosechador-label");
-
+    
     // Iniciar escaneo con html5-qrcode
     const html5QrCode = new Html5Qrcode("reader");
 
@@ -241,52 +241,52 @@
         }
     };
 
-    // Función para capturar imagen del video y procesarla
-    function captureImage(videoElement) {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = videoElement.videoWidth;
-        canvas.height = videoElement.videoHeight;
-        ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-
-        return ctx.getImageData(0, 0, canvas.width, canvas.height);
-    }
-
-    // Función para procesar la imagen (escalado, brillo y binarización)
+    // Función de preprocesamiento de la imagen
     function processImage(imageData) {
-        imageData = scaleImage(imageData); // Escalado
-        imageData = adjustContrast(imageData); // Ajuste de brillo/contraste
-        imageData = binarizeImage(imageData); // Binarización
+        // 1. Escalar la imagen
+        imageData = scaleImage(imageData);
+        // 2. Ajustar el brillo y contraste
+        imageData = adjustContrast(imageData);
+        // 3. Convertir a blanco y negro (binarización)
+        imageData = binarizeImage(imageData);
         return imageData;
     }
 
-    // Función para pasar la imagen procesada a html5QrCode
-    function processAndDecode(imageData) {
-        // Procesa la imagen antes de pasarla al escáner
-        const processedImage = processImage(imageData);
+    // Función para escalar la imagen
+    function scaleImage(imageData) {
+        const scale = 2;  // Escalar por un factor de 2
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = imageData.width * scale;
+        canvas.height = imageData.height * scale;
+        ctx.drawImage(imageData, 0, 0, canvas.width, canvas.height);
+        return canvas;
+    }
 
-        // Decodificar el código QR desde la imagen procesada
-        html5QrCode.decodeFromImageData(processedImage)
-            .then((decodedText) => {
-                console.log("QR detectado:", decodedText);
-                qrResult.innerText = decodedText; // Mostrar el resultado del QR
+    // Función para ajustar el brillo y el contraste
+    function adjustContrast(imageData) {
+        const imageDataCopy = new ImageData(new Uint8ClampedArray(imageData.data), imageData.width, imageData.height);
+        const data = imageDataCopy.data;
+        for (let i = 0; i < data.length; i += 4) {
+            data[i] = Math.min(255, data[i] * 1.2);     // Rojo
+            data[i + 1] = Math.min(255, data[i + 1] * 1.2); // Verde
+            data[i + 2] = Math.min(255, data[i + 2] * 1.2); // Azul
+        }
+        return imageDataCopy;
+    }
 
-                // Mostrar los campos después de escanear
-                cantidadContainer.style.display = "block"; // Mostrar campo de cantidad
-                colorField.style.display = "block"; // Mostrar el campo color
-                cosechadorField.style.display = "block"; // Mostrar el campo cosechador
-
-                // Eliminar la clase 'is-hidden' para los campos y etiquetas
-                colorField.classList.remove("is-hidden");
-                cosechadorField.classList.remove("is-hidden");
-                colorLabel.classList.remove("is-hidden");
-                cosechadorLabel.classList.remove("is-hidden");
-
-                html5QrCode.stop(); // Detener el escaneo después de detectar el QR
-            })
-            .catch((errorMessage) => {
-                console.log("Error al detectar QR:", errorMessage);
-            });
+    // Función para binarizar la imagen
+    function binarizeImage(imageData) {
+        const data = imageData.data;
+        for (let i = 0; i < data.length; i += 4) {
+            const brightness = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+            const threshold = 128; // Umbral para convertir a blanco y negro
+            const color = brightness > threshold ? 255 : 0;
+            data[i] = color; // Rojo
+            data[i + 1] = color; // Verde
+            data[i + 2] = color; // Azul
+        }
+        return imageData;
     }
 
     // Iniciar escaneo de QR
@@ -294,10 +294,28 @@
         { facingMode: "environment" }, // Usar la cámara trasera
         config,
         (decodedText, decodedResult) => {
-            // Si detectamos el QR, no se usa este callback, ya que estamos usando `decodeFromImageData`.
+            console.log("QR detectado:", decodedText);
+            qrResult.innerText = decodedText; // Mostrar el resultado del QR
+            // Mostrar los campos después de escanear
+            cantidadContainer.style.display = "block"; // Mostrar campo de cantidad
+            colorField.style.display = "block"; // Mostrar el campo color
+            cosechadorField.style.display = "block"; // Mostrar el campo cosechador
+
+            // Eliminar la clase 'is-hidden' para los campos y etiquetas
+            colorField.classList.remove("is-hidden");
+            cosechadorField.classList.remove("is-hidden");
+            colorLabel.classList.remove("is-hidden");
+            cosechadorLabel.classList.remove("is-hidden");
+
+            html5QrCode.stop(); // Detener el escaneo después de detectar el QR
         },
         (errorMessage) => {
             console.log("Error al detectar QR:", errorMessage);
+        },
+        (videoFrame) => {
+            // Aquí se procesa la imagen capturada antes de la decodificación
+            let processedImage = processImage(videoFrame); // Aplicar preprocesamiento
+            return processedImage;  // Pasar la imagen preprocesada
         }
     ).catch((err) => {
         console.error("Error al iniciar el escaneo:", err);
@@ -339,12 +357,14 @@
             colorLabel.classList.add("is-hidden"); // Ocultar la etiqueta de color
             cosechadorLabel.classList.add("is-hidden"); // Ocultar la etiqueta de cosechador
 
-            // Reiniciar escaneo
             html5QrCode.start(
                 { facingMode: "environment" }, // Reiniciar escaneo
                 config,
                 (decodedText, decodedResult) => {
-                    // Si detectamos el QR, no se usa este callback, ya que estamos usando `decodeFromImageData`.
+                    console.log("QR detectado:", decodedText);
+                    qrResult.innerText = decodedText; // Mostrar el resultado del QR
+                    cantidadContainer.style.display = "block"; // Mostrar campo de cantidad
+                    html5QrCode.stop(); // Detener el escaneo después de detectar el QR
                 },
                 (errorMessage) => {
                     console.log("Error al detectar QR:", errorMessage);
@@ -354,40 +374,6 @@
             alert("Por favor ingrese una cantidad válida.");
         }
     });
-
-    // Funciones de preprocesamiento (Escalado, ajuste de brillo/contraste y binarización)
-    function scaleImage(imageData) {
-        const scale = 2;  // Escalar por un factor de 2
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = imageData.width * scale;
-        canvas.height = imageData.height * scale;
-        ctx.putImageData(imageData, 0, 0);
-        return ctx.getImageData(0, 0, canvas.width, canvas.height);
-    }
-
-    function adjustContrast(imageData) {
-        const data = imageData.data;
-        for (let i = 0; i < data.length; i += 4) {
-            data[i] = Math.min(255, data[i] * 1.2);     // Red
-            data[i + 1] = Math.min(255, data[i + 1] * 1.2); // Green
-            data[i + 2] = Math.min(255, data[i + 2] * 1.2); // Blue
-        }
-        return imageData;
-    }
-
-    function binarizeImage(imageData) {
-        const data = imageData.data;
-        for (let i = 0; i < data.length; i += 4) {
-            const brightness = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
-            const threshold = 128; // Umbral para convertir a blanco y negro
-            const color = brightness > threshold ? 255 : 0;
-            data[i] = color; // Red
-            data[i + 1] = color; // Green
-            data[i + 2] = color; // Blue
-        }
-        return imageData;
-    }
 });
 
     </script>
