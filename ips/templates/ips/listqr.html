@@ -72,6 +72,8 @@
                     <th >id</th>
                     <th >Codigo</th>
                     <th >Cantidad</th>
+                    <th >Color</th>
+                    <th >Cosechador</th>
                     <th >Fecha</th>
                     <th >Eliminar</th>
                     </tr>
@@ -82,6 +84,8 @@
                     <td>{{ registro.id_escaner }}</a></td>
                     <td>{{registro.data}}</td>
                     <td>{{registro.cantidad}}</td>
+                    <td>{{registro.color}}</td>
+                    <td>{{registro.cosechador}}</td>
                     <td>{{registro.created_at}}</td>
                     <th ><a href="{% url 'ips_delete' registro.pk %}"><i class="fas fa-trash-alt"></i>Eliminar</a></th>
                 </tr> 
