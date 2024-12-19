@@ -169,6 +169,27 @@
                 <input type="number" id="cantidad" name="cantidad" min="1" required>
                 <button id="confirmar-cantidad">Confirmar</button>
             </div>
+            <br><br>
+
+            <!-- Campo para seleccionar color -->
+            <label for="color">Color:</label>
+            <select id="color" name="color" required>
+                <option value="">Seleccione un color:</option>
+                <option value="Rojo">Rojo</option>
+                <option value="Amarillo">Amarillo</option>
+                <option value="Anaranjado">Anaranjado</option>
+                <!-- Agrega más opciones según sea necesario -->
+            </select>
+            <br><br>
+
+            <!-- Campo para seleccionar cosechador -->
+            <label for="cosechador">Cosechador:</label>
+            <select id="cosechador" name="cosechador" required>
+                <option value="">Seleccione un cosechador:</option>
+                <option value="VM">VM</option>
+                <!-- Agrega más opciones según sea necesario -->
+            </select>
+            <br><br>
         </div>
     </div>
     
@@ -182,7 +203,7 @@
             const html5QrCode = new Html5Qrcode("reader");
 
             const config = {
-                fps: 10, // Velocidad de escaneo
+                fps: 20, // Velocidad de escaneo
                 qrbox: { width: 85, height: 85 }, // Tamaño del área de escaneo
                 disableFlip: false, // Configura si deseas invertir la cámara (útil en dispositivos móviles)
                 videoConstraints: {
@@ -220,12 +241,16 @@
             // Lógica para manejar la confirmación de la cantidad
             document.getElementById('confirmar-cantidad').addEventListener('click', function() {
                 const cantidad = document.getElementById('cantidad').value;
+                const color = document.getElementById('color').value;
+                const cosechador = document.getElementById('cosechador').value;
                 const qrData = qrResult.innerText;
 
                 if (cantidad && cantidad > 0) {
                     const data = {
                         qr_data: qrData,
-                        cantidad: cantidad
+                        cantidad: cantidad,
+                        color: color,
+                        cosechador: cosechador
                     };
 
                     fetch("{% url 'save_qr' %}", {
