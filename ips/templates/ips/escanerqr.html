@@ -213,116 +213,183 @@
     <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const qrResult = document.getElementById("qr-result");
-            const cantidadContainer = document.getElementById("cantidad-container");
-            const colorField = document.getElementById("color-container");
-            const cosechadorField = document.getElementById("cosechador-container");
-            const colorLabel = document.getElementById("color-label");
-            const cosechadorLabel = document.getElementById("cosechador-label");
-            // Iniciar escaneo con html5-qrcode
-            const html5QrCode = new Html5Qrcode("reader");
+    const qrResult = document.getElementById("qr-result");
+    const cantidadContainer = document.getElementById("cantidad-container");
+    const colorField = document.getElementById("color-container");
+    const cosechadorField = document.getElementById("cosechador-container");
+    const colorLabel = document.getElementById("color-label");
+    const cosechadorLabel = document.getElementById("cosechador-label");
 
-            const config = {
-                fps: 15, // Velocidad de escaneo
-                qrbox: { width: 90, height: 90 }, // Tamaño del área de escaneo
-                disableFlip: false, // Configura si deseas invertir la cámara (útil en dispositivos móviles)
-                videoConstraints: {
-                    facingMode: "environment", // Usar la cámara trasera del móvil
-                    width: { ideal: 1280 },
-                    height: { ideal: 720 },
-                    frameRate: { ideal: 30 },
-                    advanced: [
-                        {
-                            focusMode: 'manual', // Intentamos deshabilitar el enfoque automático
-                            focusDistance: 0.5 // Puedes ajustar esto según sea necesario (valor entre 0 y 1)
-                        }
-                    ]
+    // Iniciar escaneo con html5-qrcode
+    const html5QrCode = new Html5Qrcode("reader");
+
+    const config = {
+        fps: 15, // Velocidad de escaneo
+        qrbox: { width: 90, height: 90 }, // Tamaño del área de escaneo
+        disableFlip: false, // Configura si deseas invertir la cámara (útil en dispositivos móviles)
+        videoConstraints: {
+            facingMode: "environment", // Usar la cámara trasera del móvil
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+            frameRate: { ideal: 30 },
+            advanced: [
+                {
+                    focusMode: 'manual', // Intentamos deshabilitar el enfoque automático
+                    focusDistance: 0.5 // Puedes ajustar esto según sea necesario (valor entre 0 y 1)
                 }
+            ]
+        }
+    };
+
+    // Función para capturar imagen del video y procesarla
+    function captureImage(videoElement) {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = videoElement.videoWidth;
+        canvas.height = videoElement.videoHeight;
+        ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+
+        return ctx.getImageData(0, 0, canvas.width, canvas.height);
+    }
+
+    // Función para procesar la imagen (escalado, brillo y binarización)
+    function processImage(imageData) {
+        imageData = scaleImage(imageData); // Escalado
+        imageData = adjustContrast(imageData); // Ajuste de brillo/contraste
+        imageData = binarizeImage(imageData); // Binarización
+        return imageData;
+    }
+
+    // Función para pasar la imagen procesada a html5QrCode
+    function processAndDecode(imageData) {
+        // Procesa la imagen antes de pasarla al escáner
+        const processedImage = processImage(imageData);
+
+        // Decodificar el código QR desde la imagen procesada
+        html5QrCode.decodeFromImageData(processedImage)
+            .then((decodedText) => {
+                console.log("QR detectado:", decodedText);
+                qrResult.innerText = decodedText; // Mostrar el resultado del QR
+
+                // Mostrar los campos después de escanear
+                cantidadContainer.style.display = "block"; // Mostrar campo de cantidad
+                colorField.style.display = "block"; // Mostrar el campo color
+                cosechadorField.style.display = "block"; // Mostrar el campo cosechador
+
+                // Eliminar la clase 'is-hidden' para los campos y etiquetas
+                colorField.classList.remove("is-hidden");
+                cosechadorField.classList.remove("is-hidden");
+                colorLabel.classList.remove("is-hidden");
+                cosechadorLabel.classList.remove("is-hidden");
+
+                html5QrCode.stop(); // Detener el escaneo después de detectar el QR
+            })
+            .catch((errorMessage) => {
+                console.log("Error al detectar QR:", errorMessage);
+            });
+    }
+
+    // Iniciar escaneo de QR
+    html5QrCode.start(
+        { facingMode: "environment" }, // Usar la cámara trasera
+        config,
+        (decodedText, decodedResult) => {
+            // Si detectamos el QR, no se usa este callback, ya que estamos usando `decodeFromImageData`.
+        },
+        (errorMessage) => {
+            console.log("Error al detectar QR:", errorMessage);
+        }
+    ).catch((err) => {
+        console.error("Error al iniciar el escaneo:", err);
+    });
+
+    // Lógica para manejar la confirmación de la cantidad
+    document.getElementById('confirmar-cantidad').addEventListener('click', function() {
+        const cantidad = document.getElementById('cantidad').value;
+        const color = document.getElementById('color').value;
+        const cosechador = document.getElementById('cosechador').value;
+        const qrData = qrResult.innerText;
+
+        if (cantidad && cantidad > 0) {
+            const data = {
+                qr_data: qrData,
+                cantidad: cantidad,
+                color: color,
+                cosechador: cosechador
             };
 
+            fetch("{% url 'save_qr' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message || 'QR guardado correctamente.');
+            })
+            .catch(error => console.error('Error:', error));
 
-            // Iniciar escaneo de QR
+            // Reiniciar el escaneo después de enviar los datos
+            cantidadContainer.style.display = "none";
+            colorField.style.display = "none";
+            cosechadorField.style.display = "none";
+            colorLabel.classList.add("is-hidden"); // Ocultar la etiqueta de color
+            cosechadorLabel.classList.add("is-hidden"); // Ocultar la etiqueta de cosechador
+
+            // Reiniciar escaneo
             html5QrCode.start(
-                { facingMode: "environment" }, // Usar la cámara trasera
+                { facingMode: "environment" }, // Reiniciar escaneo
                 config,
                 (decodedText, decodedResult) => {
-                    console.log("QR detectado:", decodedText);
-                    qrResult.innerText = decodedText; // Mostrar el resultado del QR
-                    // Mostrar los campos después de escanear
-                    cantidadContainer.style.display = "block"; // Mostrar campo de cantidad
-                    colorField.style.display = "block"; // Mostrar el campo color
-                    cosechadorField.style.display = "block"; // Mostrar el campo cosechador
-
-                    // Eliminar la clase 'is-hidden' para los campos y etiquetas
-                    colorField.classList.remove("is-hidden");
-                    cosechadorField.classList.remove("is-hidden");
-                    colorLabel.classList.remove("is-hidden");
-                    cosechadorLabel.classList.remove("is-hidden");
-            
-                    html5QrCode.stop(); // Detener el escaneo después de detectar el QR
+                    // Si detectamos el QR, no se usa este callback, ya que estamos usando `decodeFromImageData`.
                 },
                 (errorMessage) => {
                     console.log("Error al detectar QR:", errorMessage);
                 }
-            ).catch((err) => {
-                console.error("Error al iniciar el escaneo:", err);
-            });
+            );
+        } else {
+            alert("Por favor ingrese una cantidad válida.");
+        }
+    });
 
-            // Lógica para manejar la confirmación de la cantidad
-            document.getElementById('confirmar-cantidad').addEventListener('click', function() {
-                const cantidad = document.getElementById('cantidad').value;
-                const color = document.getElementById('color').value;
-                const cosechador = document.getElementById('cosechador').value;
-                const qrData = qrResult.innerText;
+    // Funciones de preprocesamiento (Escalado, ajuste de brillo/contraste y binarización)
+    function scaleImage(imageData) {
+        const scale = 2;  // Escalar por un factor de 2
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = imageData.width * scale;
+        canvas.height = imageData.height * scale;
+        ctx.putImageData(imageData, 0, 0);
+        return ctx.getImageData(0, 0, canvas.width, canvas.height);
+    }
 
-                if (cantidad && cantidad > 0) {
-                    const data = {
-                        qr_data: qrData,
-                        cantidad: cantidad,
-                        color: color,
-                        cosechador: cosechador
-                    };
+    function adjustContrast(imageData) {
+        const data = imageData.data;
+        for (let i = 0; i < data.length; i += 4) {
+            data[i] = Math.min(255, data[i] * 1.2);     // Red
+            data[i + 1] = Math.min(255, data[i + 1] * 1.2); // Green
+            data[i + 2] = Math.min(255, data[i + 2] * 1.2); // Blue
+        }
+        return imageData;
+    }
 
-                    fetch("{% url 'save_qr' %}", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            'X-CSRFToken': getCookie('csrftoken')
-                        },
-                        body: JSON.stringify(data)
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        alert(data.message || 'QR guardado correctamente.');
-                    })
-                    .catch(error => console.error('Error:', error));
+    function binarizeImage(imageData) {
+        const data = imageData.data;
+        for (let i = 0; i < data.length; i += 4) {
+            const brightness = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+            const threshold = 128; // Umbral para convertir a blanco y negro
+            const color = brightness > threshold ? 255 : 0;
+            data[i] = color; // Red
+            data[i + 1] = color; // Green
+            data[i + 2] = color; // Blue
+        }
+        return imageData;
+    }
+});
 
-                    // Reiniciar el escaneo después de enviar los datos
-                    cantidadContainer.style.display = "none";
-                    colorField.style.display = "none";
-                    cosechadorField.style.display = "none";
-                    colorLabel.classList.add("is-hidden"); // Ocultar la etiqueta de color
-                    cosechadorLabel.classList.add("is-hidden"); // Ocultar la etiqueta de cosechador
-            
-                    
-                    html5QrCode.start(
-                        { facingMode: "environment" }, // Reiniciar escaneo
-                        config,
-                        (decodedText, decodedResult) => {
-                            console.log("QR detectado:", decodedText);
-                            qrResult.innerText = decodedText; // Mostrar el resultado del QR
-                            cantidadContainer.style.display = "block"; // Mostrar campo de cantidad
-                            html5QrCode.stop(); // Detener el escaneo después de detectar el QR
-                        },
-                        (errorMessage) => {
-                            console.log("Error al detectar QR:", errorMessage);
-                        }
-                    );
-                } else {
-                    alert("Por favor ingrese una cantidad válida.");
-                }
-            });
-        });
     </script>
 </body>
 </html>
