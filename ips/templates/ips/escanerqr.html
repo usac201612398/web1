@@ -215,8 +215,8 @@
         document.addEventListener('DOMContentLoaded', function () {
             const qrResult = document.getElementById("qr-result");
             const cantidadContainer = document.getElementById("cantidad-container");
-            const colorField = document.getElementById("color");
-            const cosechadorField = document.getElementById("cosechador");
+            const colorField = document.getElementById("color-container");
+            const cosechadorField = document.getElementById("cosechador-container");
             const colorLabel = document.getElementById("color-label");
             const cosechadorLabel = document.getElementById("cosechador-label");
             // Iniciar escaneo con html5-qrcode
@@ -249,8 +249,8 @@
                     console.log("QR detectado:", decodedText);
                     qrResult.innerText = decodedText; // Mostrar el resultado del QR
                     cantidadContainer.style.display = "block"; // Mostrar campo de cantidad
-                    colorField.style.display = "block"; // Mostrar campo color
-                    cosechadorField.style.display = "block"; // Mostrar campo cosechador
+                    colorField.style.display = "block"; // Mostrar el campo color
+                    cosechadorField.style.display = "block"; // Mostrar el campo cosechador
                     colorLabel.classList.remove("is-hidden"); // Mostrar la etiqueta de color
                     cosechadorLabel.classList.remove("is-hidden"); // Mostrar la etiqueta de cosechador
             
