@@ -170,17 +170,17 @@
                 <input type="number" id="cantidad" name="cantidad" min="1" required>
                 <button id="confirmar-cantidad">Confirmar</button>
             </div>
-
+                
             <br><br>
 
             <!-- Campo para seleccionar color -->
-            <label for="color" class="label">Color:</label>
+            <label for="color" class="label is-hidden" id="color-label">Color:</label>
             <div class="control">
-                <div class="select" style="display:none;">
+                <div class="select is-hidden" id="color-container">
                     <select id="color" name="color" required>
                         <option value="">Seleccione un color</option>
                         <option value="Rojo">Rojo</option>
-                        <option value="Verde">Verde</option>
+                        <option value="Anaranjado">Anaranjado</option>
                         <option value="Amarillo">Amarillo</option>
                         <!-- Agrega más opciones según sea necesario -->
                     </select>
@@ -188,10 +188,10 @@
             </div>
             <br><br>
 
-            <!-- Campo para seleccionar cosechador -->
-            <label for="cosechador" class="label">Cosechador:</label>
+                <!-- Campo para seleccionar cosechador -->
+            <label for="cosechador" class="label is-hidden" id="cosechador-label">Cosechador:</label>
             <div class="control">
-                <div class="select" style="display:none;">
+                <div class="select is-hidden" id="cosechador-container">
                     <select id="cosechador" name="cosechador" required>
                         <option value="">Seleccione un cosechador</option>
                         <option value="VM">VM</option>
@@ -200,7 +200,6 @@
                 </div>
             </div>
             <br><br>
-
         </div>
     </div>
     
@@ -211,6 +210,8 @@
             const cantidadContainer = document.getElementById("cantidad-container");
             const colorField = document.getElementById("color");
             const cosechadorField = document.getElementById("cosechador");
+            const colorLabel = document.getElementById("color-label");
+            const cosechadorLabel = document.getElementById("cosechador-label");
             // Iniciar escaneo con html5-qrcode
             const html5QrCode = new Html5Qrcode("reader");
 
@@ -241,8 +242,11 @@
                     console.log("QR detectado:", decodedText);
                     qrResult.innerText = decodedText; // Mostrar el resultado del QR
                     cantidadContainer.style.display = "block"; // Mostrar campo de cantidad
-                    colorField.style.display = "inline-block"; // Mostrar campo color
-                    cosechadorField.style.display = "inline-block"; // Mostrar campo cosechador
+                    colorField.style.display = "block"; // Mostrar campo color
+                    cosechadorField.style.display = "block"; // Mostrar campo cosechador
+                    colorLabel.classList.remove("is-hidden"); // Mostrar la etiqueta de color
+                    cosechadorLabel.classList.remove("is-hidden"); // Mostrar la etiqueta de cosechador
+            
                     html5QrCode.stop(); // Detener el escaneo después de detectar el QR
                 },
                 (errorMessage) => {
@@ -283,6 +287,11 @@
 
                     // Reiniciar el escaneo después de enviar los datos
                     cantidadContainer.style.display = "none";
+                    colorField.style.display = "none";
+                    cosechadorField.style.display = "none";
+                    colorLabel.classList.add("is-hidden"); // Ocultar la etiqueta de color
+                    cosechadorLabel.classList.add("is-hidden"); // Ocultar la etiqueta de cosechador
+                    
                     html5QrCode.start(
                         { facingMode: "environment" }, // Reiniciar escaneo
                         config,
