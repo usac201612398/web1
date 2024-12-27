@@ -445,7 +445,7 @@ def guardar_plantillaValle(request):
 
     df = pd.DataFrame(mensaje,columns=['Encargado','Orden','Cultivo','Estructura','Variedad','Cajas','Blank','Finca','Viaje','Fecha','Correo'])
     
-    resultado = df.groupby(['Variedad','Orden'] ).agg({
+    resultado = df.groupby(['Variedad','Orden','Cultivo'] ).agg({
         'Encargado': 'first',  # O 'last', 'min', 'max', etc.
         'Cultivo': 'first',
         'Finca': 'first',
@@ -787,6 +787,7 @@ def recepciones_reporteAcum(request):
     return render(request, 'plantaE/recepciones_reporteAcum.html', {'registros': registros_finales, 'registros2': registros_finales2})
 
 def recepciones_reporteAcumSem(request):
+
     today = timezone.now().date()
     current_week = today.isocalendar()[1]  # Obtener el número de semana actual
     current_year = today.isocalendar()[0]  # Obtener el año actual
