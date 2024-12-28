@@ -845,7 +845,7 @@ def recepciones_reporteAcumKgm2Orden(request):
 
     if request.method == 'POST':
         opcion2 = request.POST.get('opcion2')  # Esto es algo como "Semana 51 del 2024"
-
+        opcion2 = opcion2.strip()  # Eliminar espacios adicionales o caracteres extraños
         # Obtener todos los registros para el usuario y la fecha
         registros = AcumFruta.objects.all()
 
