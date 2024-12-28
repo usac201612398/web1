@@ -208,6 +208,7 @@ def load_dataUsuario3(request):
 
     # Convierte la columna 'fecha' a tipo datetime
     df['fecha'] = pd.to_datetime(df['fecha'])
+    df = df.sort_values(by='fecha', ascending=False)
     # Extrae el número de semana y el año
     df['semana'] = df['fecha'].dt.isocalendar().week
     df['año'] = df['fecha'].dt.isocalendar().year
