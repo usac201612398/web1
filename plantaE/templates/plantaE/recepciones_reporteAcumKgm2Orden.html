@@ -137,7 +137,7 @@
             const value = Number(cell.getAttribute('data-value'));
             if (!isNaN(value)) {
                 // Usa toLocaleString para formatear correctamente
-                cell.textContent = value.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                cell.textContent = value.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits:2 });
             }
         });
     };
