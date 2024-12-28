@@ -847,11 +847,49 @@ def recepciones_reporteAcumKgm2Orden(request):
         opcion2 = request.POST.get('opcion2')  # Esto es algo como "Semana 51 del 2024"
         opcion2 = opcion2.strip()  # Eliminar espacios adicionales o caracteres extraños
         # Obtener todos los registros para el usuario y la fecha
+        registros = AcumFruta.objects.all()
+
+        # Crear un DataFrame a partir de los registros
+        df = pd.DataFrame(list(registros.values()), columns=['fecha', 'finca', 'orden', 'cultivo', 'libras'])
+        df['fecha'] = pd.to_datetime(df['fecha'], errors='coerce')  # Convierte la fecha a datetime
         
+        # Agregar columnas para el número de semana y el año
+        df['semana'] = df['fecha'].dt.isocalendar().week  # Semana ISO
+        df['año'] = df['fecha'].dt.isocalendar().year  # Año ISO
+        df['semana-año'] = 'Semana ' + df['semana'].astype(str) + ' del ' + df['año'].astype(str)  # Texto para visualizar
+        
+        
+        # Filtramos por las columnas 'semana-año'
+        df_filtrado = df[df['semana-año'] == str(opcion2)]
+
+        # Agrupar por 'orden', 'cultivo' y 'finca', sumando las libras
+        df_agrupado = df_filtrado.groupby(['orden', 'cultivo', 'finca'], as_index=False).agg(
+            cultivo=('cultivo', 'first'),
+            semana=('semana', 'first'),
+            finca=('finca', 'first'),
+            orden=('orden', 'first'),
+            total_libras=('libras', 'sum')
+        )
+        
+        # Convertir las libras a kilogramos
+        df_agrupado['Kg'] = df_agrupado['total_libras'] * 0.453592
+
+        # Obtener las áreas
+        areas = datosProduccion.objects.all()
+        df_areas = pd.DataFrame(list(areas.values()), columns=['orden', 'area'])
+
+        # Realizar un merge para agregar las áreas correspondientes a cada 'orden'
+        df_final = df_agrupado.merge(df_areas, on='orden', how='inner')
+
+        # Calcular kxm2 (kg por metro cuadrado)
+        df_final['kxm2'] = df_final['Kg'] / df_final['area']
+
+        # Convertir el DataFrame a una lista de diccionarios para pasarlo a la plantilla
+        registros_finales = df_final.to_dict(orient='records')
 
         # Devolver los datos en formato JSON
-        #return JsonResponse({'datos': list(registros_finales), 'opcion2': opcion2}, safe=False)
-        return JsonResponse({'opcion2': opcion2}, safe=False)
+        return JsonResponse({'datos': list(registros_finales), 'opcion2': opcion2}, safe=False)
+
     return render(request, 'plantaE/recepciones_reporteAcumKgm2Orden.html', {'registros': registros_finales})
 
 def recepciones_reporteAcumSem(request):
