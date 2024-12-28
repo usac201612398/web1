@@ -839,7 +839,7 @@ def recepciones_reporteAcumKgm2Orden(request):
 
     # Realizamos un merge para agregar las áreas correspondientes a cada 'orden'
     df_final = df_agrupado.merge(df_areas, on='orden', how='inner')
-    df_final['kxm2'] = df_final['Kg'] /df_final['area']
+    df_final['kxm2'] = df_agrupado['Kg'] /df_final['area']
     # Convertir el DataFrame a una lista de diccionarios para pasarlo a la plantilla
     registros_finales = df_agrupado.to_dict(orient='records')
 
@@ -875,7 +875,7 @@ def recepciones_reporteAcumKgm2Orden(request):
 
         # Realizamos un merge para agregar las áreas correspondientes a cada 'orden'
         df_final = df_agrupado.merge(df_areas, on='orden', how='inner')
-        df_final['kxm2'] = df_final['Kg'] /df_final['area']
+        df_final['kxm2'] = df_agrupado['Kg'] /df_final['area']
         # Convertir el DataFrame a una lista de diccionarios para pasarlo a la plantilla
         registros_finales = df_agrupado.to_dict(orient='records')
 

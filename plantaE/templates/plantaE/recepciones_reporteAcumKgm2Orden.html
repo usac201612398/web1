@@ -183,6 +183,7 @@ document.getElementById('consultar').addEventListener('click', function() {
 
 $(document).ready(function() {
         // Función para cargar productos basados en la categoría seleccionada
+    
     function authUsuario() {
         $.ajax({
             url: '{% url "obtener_nombre_usuario" %}',  // URL para la vista AJAX
