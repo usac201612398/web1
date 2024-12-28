@@ -828,7 +828,7 @@ def recepciones_reporteAcumKgm2Orden(request):
         cultivo=('cultivo', 'first'),
         semana=('semana', 'first'),
         finca=('finca', 'first'),
-        finca=('finca', 'first'),
+        orden=('orden', 'first'),
         total_libras=('libras', 'sum')
     )
     df_agrupado['Kg'] = df_agrupado['total_libras']*0.453592
@@ -864,7 +864,7 @@ def recepciones_reporteAcumKgm2Orden(request):
             cultivo=('cultivo', 'first'),
             semana=('semana', 'first'),
             finca=('finca', 'first'),
-            finca=('finca', 'first'),
+            orden=('orden', 'first'),
             total_libras=('libras', 'sum')
         )
         df_agrupado['Kg'] = df_agrupado['total_libras']*0.453592

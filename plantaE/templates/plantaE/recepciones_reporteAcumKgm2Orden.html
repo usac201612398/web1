@@ -98,6 +98,7 @@
                     <tr class="header">
                         <th >Semana </th>
                         <th >Finca  </th>
+                        <th >Orden</th>
                         <th >Cultivo</th>
                         <th >Kg     </th>
                         <th >Kg/m2  </th>
@@ -109,6 +110,7 @@
                  
                     <td>{{registro.semana}}</td>
                     <td>{{registro.finca}}</td>
+                    <td>{{registro.orden}}</td>
                     <td>{{registro.cultivo}}</td>
                     <td class="number-cell" data-value="{{ registro.Kg }}">{{ registro.Kg }}</td>
                     <td class="number-cell" data-value="{{ registro.kxm2 }}">{{ registro.kxm2 }}</td>
@@ -170,7 +172,7 @@ document.getElementById('consultar').addEventListener('click', function() {
         console.log(data)
         data.datos.forEach(item => {
             const fila = document.createElement('tr');
-            fila.innerHTML = `<td>${item.semana}</td><td>${item.finca}</td><td>${item.cultivo}</td><td>${item.Kg}</td><td>${item.total_kxm2}</td>`;
+            fila.innerHTML = `<td>${item.semana}</td><td>${item.finca}</td><td>${item.orden}</td><td>${item.cultivo}</td><td>${item.Kg}</td><td>${item.total_kxm2}</td>`;
             
             tbody.appendChild(fila);
 
