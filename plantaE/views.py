@@ -201,7 +201,7 @@ def load_dataUsuario3(request):
     finca_ = request.GET.get('finca')
     cultivo = detallesEstructuras.objects.filter(finca=finca_).values('cultivo').distinct('cultivo')
     variedad= cultivoxFinca.objects.filter(finca=finca_,cultivo=cultivo_).values('variedad').distinct('variedad')
-    semana = AcumFruta.objects.values('fecha').distinct().order_by('fecha')
+    semana = AcumFruta.objects.values('fecha').distinct().order_by('-fecha')
 
     # Convierte el queryset a una lista de diccionarios
     df = pd.DataFrame(list(semana))
