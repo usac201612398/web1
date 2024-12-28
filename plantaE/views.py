@@ -201,14 +201,13 @@ def load_dataUsuario3(request):
     finca_ = request.GET.get('finca')
     cultivo = detallesEstructuras.objects.filter(finca=finca_).values('cultivo').distinct('cultivo')
     variedad= cultivoxFinca.objects.filter(finca=finca_,cultivo=cultivo_).values('variedad').distinct('variedad')
-    semana = AcumFruta.objects.values('fecha').distinct()
+    semana = AcumFruta.objects.values('fecha').distinct().order_by('fecha')
 
     # Convierte el queryset a una lista de diccionarios
     df = pd.DataFrame(list(semana))
 
     # Convierte la columna 'fecha' a tipo datetime
     df['fecha'] = pd.to_datetime(df['fecha'])
-    df = df.sort_values(by='fecha', ascending=False)
     # Extrae el número de semana y el año
     df['semana'] = df['fecha'].dt.isocalendar().week
     df['año'] = df['fecha'].dt.isocalendar().year
