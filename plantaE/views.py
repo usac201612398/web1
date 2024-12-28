@@ -201,8 +201,24 @@ def load_dataUsuario3(request):
     finca_ = request.GET.get('finca')
     cultivo = detallesEstructuras.objects.filter(finca=finca_).values('cultivo').distinct('cultivo')
     variedad= cultivoxFinca.objects.filter(finca=finca_,cultivo=cultivo_).values('variedad').distinct('variedad')
+    semana = AcumFruta.objects.values('fecha').distinct()
+
+    # Convierte el queryset a una lista de diccionarios
+    df = pd.DataFrame(list(semana))
+
+    # Convierte la columna 'fecha' a tipo datetime
+    df['fecha'] = pd.to_datetime(df['fecha'])
+    # Extrae el número de semana y el año
+    df['semana'] = df['fecha'].dt.isocalendar().week
+    df['año'] = df['fecha'].dt.isocalendar().year
+
+    # Crea una nueva columna con la combinación "Semana-Año"
+    df['semana-año'] = 'Semana ' + df['semana'].astype(str) + ' del ' + df['año'].astype(str)
+    # Conviértelo de nuevo a una lista de diccionarios
+    semana_año_list = df[['fecha', 'semana-año']].to_dict(orient='records')
+
     #variedad = cultivoxFinca.objects.filter(cultivo=list(cultivo)[0]['cultivo']).values('variedad')
-    return JsonResponse({'datos': list(variedad),'cultivo': list(cultivo)})
+    return JsonResponse({'datos': list(variedad),'cultivo': list(cultivo),'semana':semana_año_list})
 
 
 def pesos_list(request):
@@ -785,6 +801,86 @@ def recepciones_reporteAcum(request):
         return JsonResponse({'datos': list(registros_finales),'opcion2':opcion2,'resumen':registros_finales2}, safe=False)
 
     return render(request, 'plantaE/recepciones_reporteAcum.html', {'registros': registros_finales, 'registros2': registros_finales2})
+
+
+def recepciones_reporteAcumKgm2Orden(request):
+
+    today = timezone.now().date()
+    current_week = today.isocalendar()[1]  # Obtener el número de semana actual
+    current_year = today.isocalendar()[0]  # Obtener el año actual
+
+    # Obtener todos los registros
+    registros = AcumFruta.objects.all()
+
+    # Crear un DataFrame a partir de los registros
+    df = pd.DataFrame(list(registros.values()), columns=['fecha', 'finca', 'orden','cultivo', 'libras'])
+    df['fecha'] = pd.to_datetime(df['fecha'], errors='coerce')
+    # Agregar columnas para el número de semana y el año
+    df['semana'] = df['fecha'].dt.isocalendar().week
+    df['año'] = df['fecha'].dt.isocalendar().year
+
+    # Filtrar por la semana y el año actuales
+    df_filtrado = df[(df['semana'] == current_week) & (df['año'] == current_year)]
+    
+    # Agrupar por 'variedad' y sumar las 'cajas'
+
+    df_agrupado = df_filtrado.groupby(['orden', 'cultivo', 'finca'], as_index=False).agg(
+        cultivo=('cultivo', 'first'),
+        semana=('semana', 'first'),
+        finca=('finca', 'first'),
+        finca=('finca', 'first'),
+        total_libras=('libras', 'sum')
+    )
+    df_agrupado['Kg'] = df_agrupado['total_libras']*0.453592
+    areas = datosProduccion.objects.all()
+
+    df_areas = pd.DataFrame(list(areas.values()), columns=['orden', 'area'])  # 'orden' y 'area'
+
+    # Realizamos un merge para agregar las áreas correspondientes a cada 'orden'
+    df_final = df_agrupado.merge(df_areas, on='orden', how='inner')
+    df_final['kxm2'] = df_final['Kg'] /df_final['area']
+    # Convertir el DataFrame a una lista de diccionarios para pasarlo a la plantilla
+    registros_finales = df_agrupado.to_dict(orient='records')
+
+    if request.method == 'POST':
+        opcion2 = request.POST.get('opcion2')
+         # Obtener todos los registros para el usuario y la fecha
+            
+        registros = AcumFruta.objects.all()
+
+        # Crear un DataFrame a partir de los registros
+        df = pd.DataFrame(list(registros.values()), columns=['fecha', 'finca', 'orden','cultivo', 'libras'])
+        df['fecha'] = pd.to_datetime(df['fecha'], errors='coerce')
+        # Agregar columnas para el número de semana y el año
+        df['semana'] = df['fecha'].dt.isocalendar().week
+        df['año'] = df['fecha'].dt.isocalendar().year
+        df['semana-año'] = 'Semana ' + df['semana'].astype(str) + ' del ' + df['año'].astype(str)
+        # Filtrar por la semana y el año actuales
+        df_filtrado = df[(df['semana-año'] == opcion2)]
+        
+        # Agrupar por 'variedad' y sumar las 'cajas'
+
+        df_agrupado = df_filtrado.groupby(['orden', 'cultivo', 'finca'], as_index=False).agg(
+            cultivo=('cultivo', 'first'),
+            semana=('semana', 'first'),
+            finca=('finca', 'first'),
+            finca=('finca', 'first'),
+            total_libras=('libras', 'sum')
+        )
+        df_agrupado['Kg'] = df_agrupado['total_libras']*0.453592
+        areas = datosProduccion.objects.all()
+
+        df_areas = pd.DataFrame(list(areas.values()), columns=['orden', 'area'])  # 'orden' y 'area'
+
+        # Realizamos un merge para agregar las áreas correspondientes a cada 'orden'
+        df_final = df_agrupado.merge(df_areas, on='orden', how='inner')
+        df_final['kxm2'] = df_final['Kg'] /df_final['area']
+        # Convertir el DataFrame a una lista de diccionarios para pasarlo a la plantilla
+        registros_finales = df_agrupado.to_dict(orient='records')
+
+        return JsonResponse({'datos': list(registros_finales),'opcion2':opcion2}, safe=False)
+
+    return render(request, 'plantaE/recepciones_reporteAcumKgm2Orden.html', {'registros': registros_finales})
 
 def recepciones_reporteAcumSem(request):
 
