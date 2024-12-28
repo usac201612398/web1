@@ -844,23 +844,28 @@ def recepciones_reporteAcumKgm2Orden(request):
     registros_finales = df_final.to_dict(orient='records')
 
     if request.method == 'POST':
-        opcion2 = request.POST.get('opcion2')
-         # Obtener todos los registros para el usuario y la fecha
-            
+        opcion2 = request.POST.get('opcion2')  # Esto es algo como "Semana 51 del 2024"
+
+        # Obtener todos los registros para el usuario y la fecha
         registros = AcumFruta.objects.all()
 
         # Crear un DataFrame a partir de los registros
-        df = pd.DataFrame(list(registros.values()), columns=['fecha', 'finca', 'orden','cultivo', 'libras'])
-        df['fecha'] = pd.to_datetime(df['fecha'], errors='coerce')
-        # Agregar columnas para el número de semana y el año
-        df['semana'] = df['fecha'].dt.isocalendar().week
-        df['año'] = df['fecha'].dt.isocalendar().year
-        df['semana-año'] = 'Semana ' + df['semana'].astype(str) + ' del ' + df['año'].astype(str)
-        # Filtrar por la semana y el año actuales
-        df_filtrado = df[(df['semana-año'] == opcion2)]
+        df = pd.DataFrame(list(registros.values()), columns=['fecha', 'finca', 'orden', 'cultivo', 'libras'])
+        df['fecha'] = pd.to_datetime(df['fecha'], errors='coerce')  # Convierte la fecha a datetime
         
-        # Agrupar por 'variedad' y sumar las 'cajas'
-
+        # Agregar columnas para el número de semana y el año
+        df['semana'] = df['fecha'].dt.isocalendar().week  # Semana ISO
+        df['año'] = df['fecha'].dt.isocalendar().year  # Año ISO
+        df['semana-año'] = 'Semana ' + df['semana'].astype(str) + ' del ' + df['año'].astype(str)  # Texto para visualizar
+        
+        # Filtrar por la semana y el año actuales
+        # Extraemos la semana y el año de 'opcion2' (por ejemplo, "Semana 51 del 2024")
+        opcion2_semana, opcion2_año = map(int, opcion2.split(' ')[1::2])  # Extrae la semana y el año de opcion2
+        
+        # Filtramos por las columnas 'semana' y 'año'
+        df_filtrado = df[(df['semana'] == opcion2_semana) & (df['año'] == opcion2_año)]
+        
+        # Agrupar por 'orden', 'cultivo' y 'finca', sumando las libras
         df_agrupado = df_filtrado.groupby(['orden', 'cultivo', 'finca'], as_index=False).agg(
             cultivo=('cultivo', 'first'),
             semana=('semana', 'first'),
@@ -868,18 +873,25 @@ def recepciones_reporteAcumKgm2Orden(request):
             orden=('orden', 'first'),
             total_libras=('libras', 'sum')
         )
-        df_agrupado['Kg'] = df_agrupado['total_libras']*0.453592
+        
+        # Convertir las libras a kilogramos
+        df_agrupado['Kg'] = df_agrupado['total_libras'] * 0.453592
+
+        # Obtener las áreas
         areas = datosProduccion.objects.all()
+        df_areas = pd.DataFrame(list(areas.values()), columns=['orden', 'area'])
 
-        df_areas = pd.DataFrame(list(areas.values()), columns=['orden', 'area'])  # 'orden' y 'area'
-
-        # Realizamos un merge para agregar las áreas correspondientes a cada 'orden'
+        # Realizar un merge para agregar las áreas correspondientes a cada 'orden'
         df_final = df_agrupado.merge(df_areas, on='orden', how='inner')
-        df_final['kxm2'] = df_final['Kg'] /df_final['area']
+
+        # Calcular kxm2 (kg por metro cuadrado)
+        df_final['kxm2'] = df_final['Kg'] / df_final['area']
+
         # Convertir el DataFrame a una lista de diccionarios para pasarlo a la plantilla
         registros_finales = df_final.to_dict(orient='records')
 
-        return JsonResponse({'datos': list(registros_finales),'opcion2':opcion2}, safe=False)
+        # Devolver los datos en formato JSON
+        return JsonResponse({'datos': list(registros_finales), 'opcion2': opcion2}, safe=False)
 
     return render(request, 'plantaE/recepciones_reporteAcumKgm2Orden.html', {'registros': registros_finales})
 
