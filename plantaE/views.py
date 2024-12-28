@@ -213,9 +213,9 @@ def load_dataUsuario3(request):
     df['año'] = df['fecha'].dt.isocalendar().year
 
     # Crea una nueva columna con la combinación "Semana-Año"
-    df['semana-año'] = 'Semana ' + df['semana'].astype(str) + ' del ' + df['año'].astype(str)
+    df['periodo'] = 'Semana ' + df['semana'].astype(str) + ' del ' + df['año'].astype(str)
     # Conviértelo de nuevo a una lista de diccionarios
-    semana_año_list = df[['fecha', 'semana-año']].to_dict(orient='records')
+    semana_año_list = df[['fecha', 'periodo']].to_dict(orient='records')
 
     #variedad = cultivoxFinca.objects.filter(cultivo=list(cultivo)[0]['cultivo']).values('variedad')
     return JsonResponse({'datos': list(variedad),'cultivo': list(cultivo),'semana':semana_año_list})

@@ -221,7 +221,7 @@ $(document).ready(function() {
                 // Recorre los productos recibidos y añade opciones al campo 'name'
                 $.each(data.semana, function(index, product) {
                     $('#Semana').append(
-                        $('<option>').text(product.semana-año.toString()).attr('value', product.semana-año.toString())
+                        $('<option>').text(product.periodo.toString()).attr('value', product.periodo.toString())
                         
                     );
                 });
