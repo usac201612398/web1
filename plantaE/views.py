@@ -860,7 +860,7 @@ def recepciones_reporteAcumKgm2Orden(request):
         
         
         # Filtramos por las columnas 'semana-año'
-        df_filtrado = df[df['semana-año'] == str(opcion2)]
+        #df_filtrado = df[df['semana-año'] == str(opcion2)]
 
         # Agrupar por 'orden', 'cultivo' y 'finca', sumando las libras
         df_agrupado = df_filtrado.groupby(['orden', 'cultivo', 'finca'], as_index=False).agg(
