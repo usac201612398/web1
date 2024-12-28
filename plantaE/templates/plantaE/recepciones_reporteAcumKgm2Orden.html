@@ -171,10 +171,22 @@ document.getElementById('consultar').addEventListener('click', function() {
     .then(data => {
         console.log(data)
         data.datos.forEach(item => {
-            const fila = document.createElement('tr');
-            fila.innerHTML = `<td>${item.semana}</td><td>${item.finca}</td><td>${item.orden}</td><td>${item.cultivo}</td><td>${item.Kg}</td><td>${item.kxm2}</td>`;
-            
-            tbody.appendChild(fila);
+        const fila = document.createElement('tr');
+        
+        // Formatear los valores de Kg y kxm2 a 2 decimales
+        const KgFormatted = item.Kg.toFixed(2);
+        const kxm2Formatted = item.kxm2.toFixed(2);
+        
+        fila.innerHTML = `
+            <td>${item.semana}</td>
+            <td>${item.finca}</td>
+            <td>${item.orden}</td>
+            <td>${item.cultivo}</td>
+            <td>${KgFormatted}</td>
+            <td>${kxm2Formatted}</td>
+        `;
+        
+        tbody.appendChild(fila);
 
         });
 
