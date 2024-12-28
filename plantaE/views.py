@@ -858,13 +858,10 @@ def recepciones_reporteAcumKgm2Orden(request):
         df['año'] = df['fecha'].dt.isocalendar().year  # Año ISO
         df['semana-año'] = 'Semana ' + df['semana'].astype(str) + ' del ' + df['año'].astype(str)  # Texto para visualizar
         
-        # Filtrar por la semana y el año actuales
-        # Extraemos la semana y el año de 'opcion2' (por ejemplo, "Semana 51 del 2024")
-        opcion2_semana, opcion2_año = map(int, opcion2.split(' ')[1::2])  # Extrae la semana y el año de opcion2
         
-        # Filtramos por las columnas 'semana' y 'año'
-        df_filtrado = df[(df['semana'] == opcion2_semana) & (df['año'] == opcion2_año)]
-        
+        # Filtramos por las columnas 'semana-año'
+        df_filtrado = df[df['semana-año'] == str(opcion2)]
+
         # Agrupar por 'orden', 'cultivo' y 'finca', sumando las libras
         df_agrupado = df_filtrado.groupby(['orden', 'cultivo', 'finca'], as_index=False).agg(
             cultivo=('cultivo', 'first'),
