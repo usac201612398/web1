@@ -172,7 +172,7 @@ document.getElementById('consultar').addEventListener('click', function() {
         console.log(data)
         data.datos.forEach(item => {
             const fila = document.createElement('tr');
-            fila.innerHTML = `<td>${item.semana}</td><td>${item.finca}</td><td>${item.orden}</td><td>${item.cultivo}</td><td>${item.Kg}</td><td>${item.total_kxm2}</td>`;
+            fila.innerHTML = `<td>${item.semana}</td><td>${item.finca}</td><td>${item.orden}</td><td>${item.cultivo}</td><td>${item.Kg}</td><td>${item.kxm2}</td>`;
             
             tbody.appendChild(fila);
 
