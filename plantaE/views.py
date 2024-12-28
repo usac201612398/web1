@@ -214,6 +214,7 @@ def load_dataUsuario3(request):
 
     # Crea una nueva columna con la combinación "Semana-Año"
     df['periodo'] = 'Semana ' + df['semana'].astype(str) + ' del ' + df['año'].astype(str)
+    df = df.drop_duplicates(subset=['periodo'])
     # Conviértelo de nuevo a una lista de diccionarios
     semana_año_list = df[['fecha', 'periodo']].to_dict(orient='records')
 
