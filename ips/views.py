@@ -89,7 +89,7 @@ def save_qr(request):
 
 def actualizar_registro(request, pk):
     # Obtener el registro a partir del qr_data
-    registro = get_object_or_404(QRCodeData, qr_data=pk)
+    registro = get_object_or_404(QRCodeData, pk=pk)
     
     if request.method == "POST":
         form = RegistroQRForm(request.POST, instance=registro)
