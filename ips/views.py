@@ -3,7 +3,7 @@ from .models import QRCodeData
 import json
 from django.http import JsonResponse, HttpResponse
 from openpyxl import Workbook
-from forms import RegistroQRForm
+from .forms import RegistroQRForm
 from django.shortcuts import get_object_or_404, redirect
 # Create your views here.
 import json
