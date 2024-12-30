@@ -224,14 +224,14 @@
     const html5QrCode = new Html5Qrcode("reader");
 
     const config = {
-        fps: 15, // Velocidad de escaneo
-        qrbox: { width: 90, height: 90 }, // Tamaño del área de escaneo
+        fps: 10, // Velocidad de escaneo
+        qrbox: { width: 150, height: 150 }, // Tamaño del área de escaneo
         disableFlip: false, // Configura si deseas invertir la cámara (útil en dispositivos móviles)
         videoConstraints: {
             facingMode: "environment", // Usar la cámara trasera del móvil
-            width: { ideal: 1280 },
-            height: { ideal: 720 },
-            frameRate: { ideal: 30 },
+            width: { ideal: 640 },
+            height: { ideal: 480 },
+            frameRate: { ideal: 15 },
             advanced: [
                 {
                     focusMode: 'manual', // Intentamos deshabilitar el enfoque automático
@@ -314,7 +314,8 @@
         },
         (videoFrame) => {
             // Aquí se procesa la imagen capturada antes de la decodificación
-            let processedImage = processImage(videoFrame); // Aplicar preprocesamiento
+            //let processedImage = processImage(videoFrame); // Aplicar preprocesamiento
+            let processedImage = videoFrame;
             return processedImage;  // Pasar la imagen preprocesada
         }
     ).catch((err) => {
