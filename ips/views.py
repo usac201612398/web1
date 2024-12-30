@@ -73,10 +73,11 @@ def save_qr(request):
             cantidad_=data.get('cantidad')
             color_ = data.get('color')
             cosechador_ = data.get('cosechador')
+            blossom_ = data.get('blossom')
 
             if qr_data:
                 # Guardar el QR en la base de datos
-                QRCodeData.objects.create(data=qr_data,cantidad=cantidad_,color=color_,cosechador=cosechador_),
+                QRCodeData.objects.create(data=qr_data,cantidad=cantidad_,color=color_,cosechador=cosechador_,blossom=blossom_),
                 return JsonResponse({'message': 'QR guardado correctamente'})
             else:
                 return JsonResponse({'error': 'No se recibió ningún dato QR'}, status=400)

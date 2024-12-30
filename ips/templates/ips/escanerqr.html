@@ -207,6 +207,20 @@
                 </div>
             </div>
             <br><br>
+
+                <!-- Campo para seleccionar cosechador -->
+            <label for="blossom" class="label is-hidden" id="blossom-label">Presencia de Blossom:</label>
+            <div class="control">
+                <div class="select is-hidden" id="blossom-container">
+                    <select id="blossom" name="blossom" required>
+                        <option value="">Seleccione opción</option>
+                        <option value="Si">Si</option>
+                        <option value="No">No</option>
+                        <!-- Agrega más opciones según sea necesario -->
+                    </select>
+                </div>
+            </div>
+            <br><br>
         </div>
     </div>
     
@@ -217,8 +231,10 @@
     const cantidadContainer = document.getElementById("cantidad-container");
     const colorField = document.getElementById("color-container");
     const cosechadorField = document.getElementById("cosechador-container");
+    const blossomField = document.getElementById("blossom-container");
     const colorLabel = document.getElementById("color-label");
     const cosechadorLabel = document.getElementById("cosechador-label");
+    const blossomLabel = document.getElementById("blossom-label");
     
     // Iniciar escaneo con html5-qrcode
     const html5QrCode = new Html5Qrcode("reader");
@@ -300,12 +316,15 @@
             cantidadContainer.style.display = "block"; // Mostrar campo de cantidad
             colorField.style.display = "block"; // Mostrar el campo color
             cosechadorField.style.display = "block"; // Mostrar el campo cosechador
+            blossomField.style.display = "block"; // Mostrar el campo cosechador
 
             // Eliminar la clase 'is-hidden' para los campos y etiquetas
             colorField.classList.remove("is-hidden");
             cosechadorField.classList.remove("is-hidden");
+            blossomField.classList.remove("is-hidden");
             colorLabel.classList.remove("is-hidden");
             cosechadorLabel.classList.remove("is-hidden");
+            blossomLabel.classList.remove("is-hidden");
 
             html5QrCode.stop(); // Detener el escaneo después de detectar el QR
         },
@@ -327,6 +346,7 @@
         const cantidad = document.getElementById('cantidad').value;
         const color = document.getElementById('color').value;
         const cosechador = document.getElementById('cosechador').value;
+        const blossom = document.getElementById('blossom').value;
         const qrData = qrResult.innerText;
 
         if (cantidad && cantidad > 0) {
@@ -334,7 +354,8 @@
                 qr_data: qrData,
                 cantidad: cantidad,
                 color: color,
-                cosechador: cosechador
+                cosechador: cosechador,
+                blossom: blossom
             };
 
             fetch("{% url 'save_qr' %}", {
@@ -355,8 +376,10 @@
             cantidadContainer.style.display = "none";
             colorField.style.display = "none";
             cosechadorField.style.display = "none";
+            blossomField.style.display = "none";
             colorLabel.classList.add("is-hidden"); // Ocultar la etiqueta de color
             cosechadorLabel.classList.add("is-hidden"); // Ocultar la etiqueta de cosechador
+            blossomLabel.classList.add("is-hidden"); // Ocultar la etiqueta de cosechador
 
             html5QrCode.start(
                 { facingMode: "environment" }, // Reiniciar escaneo
