@@ -87,9 +87,9 @@ def save_qr(request):
 
     return JsonResponse({'error': 'Método no permitido'}, status=405)
 
-def actualizar_registro(request, id_escaner):
+def actualizar_registro(request, pk):
     # Obtener el registro a partir del qr_data
-    registro = get_object_or_404(QRCodeData, qr_data=id_escaner)
+    registro = get_object_or_404(QRCodeData, qr_data=pk)
     
     if request.method == "POST":
         form = RegistroQRForm(request.POST, instance=registro)
