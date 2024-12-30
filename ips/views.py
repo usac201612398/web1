@@ -3,7 +3,7 @@ from .models import QRCodeData
 import json
 from django.http import JsonResponse, HttpResponse
 from openpyxl import Workbook
-
+from forms import RegistroQRForm
 from django.shortcuts import get_object_or_404, redirect
 # Create your views here.
 import json
@@ -87,3 +87,17 @@ def save_qr(request):
 
     return JsonResponse({'error': 'Método no permitido'}, status=405)
 
+def actualizar_registro(request, qr_data):
+    # Obtener el registro a partir del qr_data
+    registro = get_object_or_404(QRCodeData, qr_data=qr_data)
+    
+    if request.method == "POST":
+        form = RegistroQRForm(request.POST, instance=registro)
+        
+        if form.is_valid():
+            form.save()  # Guardar los cambios en la base de datos
+            return redirect('ips_visualizar')  # Redirigir a una página de éxito o el detalle del registro actualizado
+    else:
+        form = RegistroQRForm(instance=registro)  # Mostrar el formulario con los datos actuales
+
+    return render(request, 'editqrlist.html', {'form': form})

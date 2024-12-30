@@ -1,0 +1,15 @@
+<!-- actualizar_registro.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Actualizar Registro QR</h1>
+  
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Actualizar</button>
+  </form>
+  
+  <br>
+  <a href="{% url 'detalle_registro' qr_data=registro.qr_data %}">Ver detalles del registro</a>
+{% endblock %}
