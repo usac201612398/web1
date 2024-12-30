@@ -100,4 +100,4 @@ def actualizar_registro(request, pk):
     else:
         form = RegistroQRForm(instance=registro)  # Mostrar el formulario con los datos actuales
 
-    return render(request, 'editqrlist.html', {'form': form})
+    return render(request, 'ips/editqrlist.html', {'form': form})
