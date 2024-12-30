@@ -75,7 +75,11 @@
                     <th >Color</th>
                     <th >Cosechador</th>
                     <th >Blossom</th>
+                    <th >N_semillas</th>
+                    <th >Peso</th>
+                    <th >Status</th>
                     <th >Fecha</th>
+                    <th >Editar</th>
                     <th >Eliminar</th>
                     </tr>
                 </thead>
@@ -88,6 +92,9 @@
                     <td>{{registro.color}}</td>
                     <td>{{registro.cosechador}}</td>
                     <td>{{registro.blossom}}</td>
+                    <td>{{registro.n_semillas}}</td>
+                    <td>{{registro.peso}}</td>
+                    <td>{{registro.status}}</td>
                     <td>{{registro.created_at}}</td>
                     <th ><a href="{% url 'ips_actualizar' registro.pk %}"><i class="fas fa-edit"></i>Editar</a></th>
                     <th ><a href="{% url 'ips_delete' registro.pk %}"><i class="fas fa-trash-alt"></i>Eliminar</a></th>

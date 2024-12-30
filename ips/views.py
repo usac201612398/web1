@@ -51,7 +51,7 @@ def exportar_excel(request):
     return response
 
 def ips_visualizar(request):
-    salidas = QRCodeData.objects.all()
+    salidas = QRCodeData.objects.exclude(status='Cerrado')  # Excluye los que tienen status 'Cerrado'
     salidas = salidas.order_by('-created_at')
     
     return render(request, 'ips/listqr.html', {'registros': salidas})
