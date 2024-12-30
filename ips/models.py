@@ -8,12 +8,12 @@ class QRCodeData(models.Model):
 
     id_escaner = models.BigAutoField(primary_key=True)
     data = models.TextField()  # Campo para almacenar los datos del QR
-    cantidad = models.FloatField()
+    cantidad = models.FloatField(blank=True, null=True)
     color = models.CharField(max_length=25, choices=op_color,blank=True, null=True)
     cosechador = models.CharField(max_length=25, choices=op_color,blank=True, null=True)
     blossom = models.CharField(max_length=10, choices=op_blossom,blank=True, null=True)
-    n_semillas = models.FloatField()
-    peso = models.FloatField()
+    n_semillas = models.FloatField(blank=True, null=True)
+    peso = models.FloatField(blank=True, null=True)
     status = models.CharField(max_length=10, choices=op_status,blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
