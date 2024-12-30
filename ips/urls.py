@@ -12,6 +12,6 @@ urlpatterns = [
     path('qr/visualizar/', views.ips_visualizar, name='ips_visualizar'),  # Ruta para guardar el QR
     path('qr/<int:pk>/delete/', views.ips_borrar, name='ips_delete'),  # Ruta para guardar el QR
     path('qr/exportar_excel/', views.exportar_excel, name='ips_exportar'),  # Ruta para guardar el QR
-    path('qr/editar_qrdata/<int:id>/', views.actualizar_registro, name='ips_actualizar'),  # Ruta para guardar el QR
+    path('qr/editar_qrdata/<int:pk>/', views.actualizar_registro, name='ips_actualizar'),  # Ruta para guardar el QR
 
 ]
