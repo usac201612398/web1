@@ -174,7 +174,7 @@ document.getElementById('consultar').addEventListener('click', function() {
     // Limpiar la tabla antes de agregar nuevos datos
     tbody.innerHTML = '';
 
-    fetch('{% url "recepcionesFruta_reporteAcumKgm2Orden" %}', { // Asegúrate de poner la URL correcta
+    fetch('{% url "recepcionesFruta_reporteAcumKgm2Estruc" %}', { // Asegúrate de poner la URL correcta
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
