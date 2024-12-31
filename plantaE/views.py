@@ -1030,7 +1030,7 @@ def recepciones_reporteAcumKgm2Variedad(request):
         registros = AcumFruta.objects.all()
 
         # Crear un DataFrame a partir de los registros
-        df = pd.DataFrame(list(registros.values()), columns=['fecha', 'finca', 'orden', 'cultivo','estructura', 'libras'])
+        df = pd.DataFrame(list(registros.values()), columns=['fecha', 'finca', 'orden', 'cultivo','estructura','variedad', 'libras'])
         df['fecha'] = pd.to_datetime(df['fecha'], errors='coerce')  # Convierte la fecha a datetime
         
         # Agregar columnas para el número de semana y el año
