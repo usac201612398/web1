@@ -1008,7 +1008,6 @@ def recepciones_reporteAcumKgm2Variedad(request):
         semana=('semana', 'first'),
         finca=('finca', 'first'),
         orden=('orden', 'first'),
-        estructura=('estructura', 'first'),
         variedad=('variedad', 'first'),
         total_libras=('libras', 'sum')
     )
@@ -1048,7 +1047,6 @@ def recepciones_reporteAcumKgm2Variedad(request):
             semana=('semana', 'first'),
             finca=('finca', 'first'),
             orden=('orden', 'first'),
-            estructura=('estructura', 'first'),
             variedad=('variedad', 'first'),
             total_libras=('libras', 'sum')
         )
