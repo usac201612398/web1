@@ -1003,7 +1003,7 @@ def recepciones_reporteAcumKgm2Variedad(request):
     
     # Agrupar por 'variedad' y sumar las 'cajas'
 
-    df_agrupado = df_filtrado.groupby(['orden', 'cultivo', 'finca','estructura','variedad'], as_index=False).agg(
+    df_agrupado = df_filtrado.groupby(['orden', 'cultivo', 'finca','variedad'], as_index=False).agg(
         cultivo=('cultivo', 'first'),
         semana=('semana', 'first'),
         finca=('finca', 'first'),
@@ -1042,7 +1042,7 @@ def recepciones_reporteAcumKgm2Variedad(request):
         df_filtrado = df[df['semana-año'] == str(opcion2)]
 
         # Agrupar por 'orden', 'cultivo' y 'finca', sumando las libras
-        df_agrupado = df_filtrado.groupby(['orden', 'cultivo', 'finca','estructura'], as_index=False).agg(
+        df_agrupado = df_filtrado.groupby(['orden', 'cultivo', 'finca','variedad'], as_index=False).agg(
             cultivo=('cultivo', 'first'),
             semana=('semana', 'first'),
             finca=('finca', 'first'),
