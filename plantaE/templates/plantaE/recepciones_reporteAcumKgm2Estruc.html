@@ -6,7 +6,7 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
-    <title>Kg/m2 por Orden</title>
+    <title>Kg/m2 por Estructura</title>
 
     <style>
         .number-cell {
@@ -57,27 +57,7 @@
 <body>
 
     <h1 class="roboto">Panel</h1>
-    <br>
-    <div class = "container"> 
-        <div class="half">
-            <div class="box">
-                <a href="{% url 'recepcionesFruta_reporteAcumKgm2Estruc' %}">kxm2 - Estructura</a> 
-            </div>
 
-            <div class="box">
-                <a href="{% url 'recepcionesFruta_reporteAcumKgm2Variedad' %}">kxm2 - Variedad</a> 
-            </div>
-
-            <div class="box">
-                <a href="{% url 'recepcionesFruta_reportecurva' %}">Curva Kgxm2</a> 
-            </div>
-            
-        </div>
-            
-
-           
-
-    </div>
     <br>
 
     <div class = "container">
@@ -120,6 +100,7 @@
                         <th >Finca  </th>
                         <th >Orden</th>
                         <th >Cultivo</th>
+                        <th >Estructura</th>
                         <th >Kg     </th>
                         <th >Kg/m2  </th>
                     </tr>
@@ -132,6 +113,7 @@
                     <td>{{registro.finca}}</td>
                     <td>{{registro.orden}}</td>
                     <td>{{registro.cultivo}}</td>
+                    <td>{{registro.estructura}}</td>
                     <td class="number-cell" data-value="{{ registro.Kg }}">{{ registro.Kg }}</td>
                     <td class="number-cell" data-value="{{ registro.kxm2 }}">{{ registro.kxm2 }}</td>
                         
@@ -202,6 +184,7 @@ document.getElementById('consultar').addEventListener('click', function() {
             <td>${item.finca}</td>
             <td>${item.orden}</td>
             <td>${item.cultivo}</td>
+            <td>${item.estructura}</td>
             <td>${KgFormatted}</td>
             <td>${kxm2Formatted}</td>
         `;

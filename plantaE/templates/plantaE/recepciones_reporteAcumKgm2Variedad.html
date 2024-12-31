@@ -61,11 +61,11 @@
     <div class = "container"> 
         <div class="half">
             <div class="box">
-                <a href="{% url 'recepcionesFruta_reporteAcumKgm2Estruc' %}">kxm2 - Estructura</a> 
+                <a href="{% url 'recepcionesFruta_reporteAcumKgm2Orden' %}">kxm2 - Orden</a> 
             </div>
 
             <div class="box">
-                <a href="{% url 'recepcionesFruta_reporteAcumKgm2Variedad' %}">kxm2 - Variedad</a> 
+                <a href="{% url 'recepcionesFruta_reporteAcumKgm2Estruc' %}">kxm2 - Estructura</a> 
             </div>
 
             <div class="box">
@@ -73,11 +73,6 @@
             </div>
             
         </div>
-            
-
-           
-
-    </div>
     <br>
 
     <div class = "container">
@@ -120,6 +115,8 @@
                         <th >Finca  </th>
                         <th >Orden</th>
                         <th >Cultivo</th>
+                        <th >Estructura</th>
+                        <th >Variedad</th>
                         <th >Kg     </th>
                         <th >Kg/m2  </th>
                     </tr>
@@ -132,6 +129,8 @@
                     <td>{{registro.finca}}</td>
                     <td>{{registro.orden}}</td>
                     <td>{{registro.cultivo}}</td>
+                    <td>{{registro.estructura}}</td>
+                    <td>{{registro.variedad}}</td>
                     <td class="number-cell" data-value="{{ registro.Kg }}">{{ registro.Kg }}</td>
                     <td class="number-cell" data-value="{{ registro.kxm2 }}">{{ registro.kxm2 }}</td>
                         
@@ -202,6 +201,8 @@ document.getElementById('consultar').addEventListener('click', function() {
             <td>${item.finca}</td>
             <td>${item.orden}</td>
             <td>${item.cultivo}</td>
+            <td>${item.estructura}</td>
+            <td>${item.variedad}</td>
             <td>${KgFormatted}</td>
             <td>${kxm2Formatted}</td>
         `;
