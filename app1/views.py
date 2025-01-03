@@ -442,6 +442,19 @@ def registroPhoto(request):
 ##         response = {'mensaje':new_mensaje}
     return render(request,'app1/reconocimientof.html',response)
 
+def clean_base64_string(image_base64):
+    # Eliminar el prefijo "data:image/png;base64," si está presente
+    if image_base64.startswith('data:image/png;base64,'):
+        image_base64 = image_base64.split(',')[1]
+    
+    # Eliminar comillas alrededor de la cadena, si las hay
+    image_base64 = image_base64.strip().replace('"', '')
+    
+    # Asegurarse de que la longitud sea múltiplo de 4
+    image_base64 = image_base64 + '=' * (4 - len(image_base64) % 4)
+    
+    return image_base64
+
 def registroPhotoMejorado(request):
     now = datetime.datetime.now()
     fecha = now.date()
@@ -493,6 +506,7 @@ def registroPhotoMejorado(request):
         # Obtener las imágenes en base64 desde el JSON recibido
         data = json.loads(request.body)
         images_base64 = data.get('fotos', [])
+        cleaned_images_base64 = [clean_base64_string(image) for image in images_base64]
         fechar_=data.get('fecha')
         región_=data.get('región')
         evento_=data.get('evento')
