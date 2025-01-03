@@ -552,25 +552,12 @@ def registroPhotoMejorado(request):
         if most_common_code != "DESCONOCIDO":
             # Aquí puedes registrar la entrada en la base de datos
             
-            coincidencia = Ingresop.objects.filter(codigop=str(most_common_code))
+            coincidencia = Ingresop.objects.filter(codigop = int(most_common_code),fecha = str(fechar_), origen= str(región_), evento= str(evento_))
 
             if coincidencia.exists():
-
-                if str(fechar_) == str(coincidencia.fecha) and str(región_)== coincidencia.origen and str(evento_) == coincidencia.evento:
-                    nombreT = Listapersonal.objects.get(codigop=str(most_common_code))
-                    nombre = nombreT.nombrep
-                    saludo = "El usuario " + nombreT.nombrep + " ya registró hoy su " + coincidencia.evento + " en " + coincidencia.origen
-                else:
-                    nombreT = Listapersonal.objects.get(codigop=str(most_common_code))
-                    nombre = nombreT.nombrep
-
-                    if evento_ == "Entrada":
-                        saludo = "Bienvenido " + nombre
-                    elif evento_ =="Salida":
-                        saludo = "Excelente día " + nombre
-                    marcaT = datetime.datetime.now()
-                    
-                    Ingresop.objects.create(codigop=most_common_code,nombrep=nombre,marcat=marcaT,fecha=fechar_,origen=región_,evento=evento_)   
+                nombreT = Listapersonal.objects.get(codigop=str(most_common_code))
+                nombre = nombreT.nombrep
+                saludo = "El usuario " + nombreT.nombrep + " ya registró hoy su " + coincidencia.evento + " en " + coincidencia.origen
             else:
                 nombreT = Listapersonal.objects.get(codigop=str(most_common_code))
                 nombre = nombreT.nombrep
@@ -582,7 +569,6 @@ def registroPhotoMejorado(request):
                 marcaT = datetime.datetime.now()
                 
                 Ingresop.objects.create(codigop=most_common_code,nombrep=nombre,marcat=marcaT,fecha=fechar_,origen=región_,evento=evento_)   
-            
 
         else:
             nombre = "DESCONOCIDO"
