@@ -552,7 +552,7 @@ def registroPhotoMejorado(request):
         if most_common_code != "DESCONOCIDO":
             # Aquí puedes registrar la entrada en la base de datos
             
-            coincidencia = Ingresop.objects.filter(codigop = int(most_common_code),fecha = str(fechar_), origen= str(región_), evento= str(evento_))
+            coincidencia = Ingresop.objects.filter(codigop = int(most_common_code),fecha = str(fechar_), origen= str(región_), evento= str(evento_)).last()
 
             if coincidencia.exists():
                 nombreT = Listapersonal.objects.get(codigop=str(most_common_code))
