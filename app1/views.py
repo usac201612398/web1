@@ -463,7 +463,7 @@ def registroPhotoMejorado(request):
 
     total = entradas - salidas
 
-    response = {'fecha' : fecha_, 'saludo':saludo,'total':total}
+    response = {'fecha' : fecha_,'total':total}
 ##        
     if request.method == "POST":
 
