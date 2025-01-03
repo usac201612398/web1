@@ -7,14 +7,19 @@ from app1.models import *
 import cv2
 import os
 import numpy as np
+import json
+from PIL import Image
+import io
 import base64
 import datetime
+from itertools import chain
 #from django.views.decorators.csrf import csrf_exempt
 #from django.contrib.auth.decorators import login_required
 #from django.template import RequestContext
 from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login, logout
 from app1.forms import LoginForm
+import faiss
 from rest_framework import serializers
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -148,7 +153,6 @@ def consultaRegistros(request):
 
 #@csrf_exempt
 #@login_required
-
 def registroPhoto(request):
     global cola
     global bandera
@@ -437,6 +441,121 @@ def registroPhoto(request):
          response = {'codigoP':0,'marcaT':0,'photo':0,'mensaje':'None', 'fecha' : fecha_, 'saludo':saludo,'total':total,'p':porcentaje}
 ##         response = {'mensaje':new_mensaje}
     return render(request,'app1/reconocimientof.html',response)
+
+def registroPhotoMejorado(request):
+
+    now = datetime.datetime.now()
+    fecha = now.date()
+    dia = fecha.day
+    mes = fecha.month
+    año = fecha.year
+    if mes < 10:
+        mes = "0" + str(mes)
+    if dia < 10:
+        dia = "0" + str(dia)
+    fecha_ = "{}-{}-{}".format(str(año), str(mes), str(dia))
+
+     # Obtener las entradas y salidas del día
+    total_ent = Ingresop.objects.filter(fecha=fechar_, evento="Entrada")
+    entradas = total_ent.count()
+    total_sal = Ingresop.objects.filter(fecha=fechar_, evento="Salida")
+    salidas = total_sal.count()
+
+    total = entradas - salidas
+
+    response = {'fecha' : fecha_, 'saludo':saludo,'total':total}
+##        
+    if request.method == "POST":
+
+        # Obtener la fecha desde el cuerpo de la solicitud o usar la fecha actual
+        data = json.loads(request.body)
+        fechar_ = data.get('fecha')
+        región_ = data.get('región')
+        evento_ = data.get('evento')
+
+
+        # Cargar imágenes y clases
+        path = 'home/bportillo/Proyecto1/web1/app1/static/app1'
+        images = []
+        clases = []
+        lista = os.listdir(path)
+        for i in lista:
+            imgdb = cv2.imread(f'{path}/{i}')
+            images.append(imgdb)
+            clases.append(os.path.splitext(i)[0])
+
+        # Codificación de rostros
+        listaCod = []
+        for img in images:
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            cod = fr.face_encodings(img)[0]
+            listaCod.append(cod)
+
+        # Procesar las imágenes recibidas
+        processed_data = []
+        for image_base64 in data.get('fotos', []):
+            nparr = np.frombuffer(base64.b64decode(image_base64), np.uint8)
+            img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            
+            faces = fr.face_locations(rgb)
+            facesCod = fr.face_encodings(rgb, faces)
+            resultado = []
+            for facecod, faceloc in zip(facesCod, faces):
+                comparacion = fr.compare_faces(listaCod, facecod)
+                simi = fr.face_distance(listaCod, facecod)
+                min = np.argmin(simi)
+
+                if comparacion[min]:
+                    resultado.append(clases[min])
+                else:
+                    resultado.append("DESCONOCIDO")
+            processed_data.append(resultado)
+
+        # Aplanar la lista y contar los resultados
+        from itertools import chain
+        all_results = list(chain.from_iterable(processed_data))
+        result_count = Counter(all_results)
+        most_common_result = result_count.most_common(1)[0]
+        most_common_code = most_common_result[0]
+
+        # Registro en la base de datos
+        if most_common_code != "DESCONOCIDO":
+            coincidencia = Ingresop.objects.filter(codigop=str(most_common_code)).last()
+
+            if coincidencia:
+                if str(fechar_) == str(coincidencia.fecha) and str(región_) == coincidencia.origen and str(evento_) == coincidencia.evento:
+                    nombreT = Listapersonal.objects.get(codigop=str(most_common_code))
+                    nombre = nombreT.nombrep
+                    saludo = f"El usuario {nombreT.nombrep} ya registró hoy su {coincidencia.evento} en {coincidencia.origen}"
+                else:
+                    nombreT = Listapersonal.objects.get(codigop=str(most_common_code))
+                    nombre = nombreT.nombrep
+                    saludo = f"Bienvenido {nombre}" if evento_ == "Entrada" else f"Excelente día {nombre}"
+                    marcaT = datetime.datetime.now()
+                    Ingresop.objects.create(codigop=most_common_code, nombrep=nombre, marcat=marcaT, fecha=fechar_, origen=región_, evento=evento_)
+            else:
+                nombreT = Listapersonal.objects.get(codigop=str(most_common_code))
+                nombre = nombreT.nombrep
+                saludo = f"Bienvenido {nombre}" if evento_ == "Entrada" else f"Excelente día {nombre}"
+                marcaT = datetime.datetime.now()
+                Ingresop.objects.create(codigop=most_common_code, nombrep=nombre, marcat=marcaT, fecha=fechar_, origen=región_, evento=evento_)
+
+        else:
+            nombre = "DESCONOCIDO"
+            saludo = "USUARIO NO REGISTRADO"
+
+        # Respuesta final al frontend
+        return JsonResponse({
+            'status': 'success',
+            'message': 'Reconocimiento realizado',
+            'result': processed_data,
+            'most_common': most_common_code,
+            'saludo': saludo,
+            'total': total
+        })
+    
+    return render(request, 'app1/reconocimientof.html',response)
 
 '''
 def vector_prueba(request):
