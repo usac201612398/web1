@@ -498,6 +498,7 @@ def registroPhotoMejorado(request):
         evento_=data.get('evento')
         # Procesar cada imagen
         processed_data = []
+        '''
         for image_base64 in images_base64:
             # Decodificar la imagen base64
             nparr = np.frombuffer(base64.b64decode(image_base64), np.uint8)
@@ -574,6 +575,7 @@ def registroPhotoMejorado(request):
             saludo = "USUARIO NO REGISTRADO"
         
         # Respuesta final al frontend
+        
         return JsonResponse({
             'status': 'success',
             'message': 'Reconocimiento realizado',
@@ -582,7 +584,15 @@ def registroPhotoMejorado(request):
             'saludo': saludo,
             'total': total
         })
-    
+        '''
+        return JsonResponse({
+            'status': 'success',
+            'message': 'Reconocimiento realizado',
+            'result': processed_data,
+            'most_common': most_common_code,
+            'saludo': data,
+            'total': total
+        })
     
 ##       
     return render(request,'app1/reconocimientof.html',response)
