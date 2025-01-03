@@ -512,8 +512,8 @@ def registroPhotoMejorado(request):
         evento_=data.get('evento')
         # Procesar cada imagen
         processed_data = []
-        '''
-        for image_base64 in images_base64:
+        
+        for image_base64 in cleaned_images_base64:
             # Decodificar la imagen base64
             nparr = np.frombuffer(base64.b64decode(image_base64), np.uint8)
             img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
@@ -596,14 +596,6 @@ def registroPhotoMejorado(request):
             'result': processed_data,
             'most_common': most_common_code,
             'saludo': saludo,
-            'total': total
-        })
-        '''
-        return JsonResponse({
-            'status': 'success',
-            'message': 'Reconocimiento realizado',
-            'result': processed_data,
-            'saludo': list(cleaned_images_base64),
             'total': total
         })
     
