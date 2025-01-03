@@ -556,7 +556,7 @@ def registroPhotoMejorado(request):
 
             if coincidencia.exists():
 
-                if coincidencia.codigop == int(most_common_code) and str(fechar_) == str(coincidencia.fecha) and str(región_)== coincidencia.origen and str(evento_) == coincidencia.evento:
+                if str(fechar_) == str(coincidencia.fecha) and str(región_)== coincidencia.origen and str(evento_) == coincidencia.evento:
                     nombreT = Listapersonal.objects.get(codigop=str(most_common_code))
                     nombre = nombreT.nombrep
                     saludo = "El usuario " + nombreT.nombrep + " ya registró hoy su " + coincidencia.evento + " en " + coincidencia.origen
