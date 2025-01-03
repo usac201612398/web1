@@ -589,7 +589,6 @@ def registroPhotoMejorado(request):
             'status': 'success',
             'message': 'Reconocimiento realizado',
             'result': processed_data,
-            'most_common': most_common_code,
             'saludo': data,
             'total': total
         })
