@@ -603,7 +603,7 @@ def registroPhotoMejorado(request):
             'status': 'success',
             'message': 'Reconocimiento realizado',
             'result': processed_data,
-            'saludo': list(clean_base64_string),
+            'saludo': list(cleaned_images_base64),
             'total': total
         })
     
