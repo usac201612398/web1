@@ -456,9 +456,9 @@ def registroPhotoMejorado(request):
     fecha_ = "{}-{}-{}".format(str(año), str(mes), str(dia))
 
      # Obtener las entradas y salidas del día
-    total_ent = Ingresop.objects.filter(fecha=fechar_, evento="Entrada")
+    total_ent = Ingresop.objects.filter(fecha=fecha_, evento="Entrada")
     entradas = total_ent.count()
-    total_sal = Ingresop.objects.filter(fecha=fechar_, evento="Salida")
+    total_sal = Ingresop.objects.filter(fecha=fecha_, evento="Salida")
     salidas = total_sal.count()
 
     total = entradas - salidas
@@ -512,8 +512,6 @@ def registroPhotoMejorado(request):
                     resultado.append("DESCONOCIDO")
             processed_data.append(resultado)
 
-        # Aplanar la lista y contar los resultados
-        from itertools import chain
         all_results = list(chain.from_iterable(processed_data))
         result_count = Counter(all_results)
         most_common_result = result_count.most_common(1)[0]
