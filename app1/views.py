@@ -545,8 +545,8 @@ def registroPhotoMejorado(request):
         # Por ejemplo, puedes usar un contador para verificar la mayoría de los aciertos
         all_results = list(chain.from_iterable(processed_data))
         result_count = Counter(all_results)
-        most_common_result = result_count.most_common(1)[0]
-        most_common_code = most_common_result[0]
+#        most_common_result = result_count.most_common(1)[0]
+#        most_common_code = most_common_result[0]
         '''
         # Asumiendo que tienes la lógica de creación de entradas en la base de datos
         if most_common_code != "DESCONOCIDO":
@@ -575,16 +575,23 @@ def registroPhotoMejorado(request):
             saludo = "USUARIO NO REGISTRADO"
         
         # Respuesta final al frontend
-        '''
+        
+       
         return JsonResponse({
             'status': 'success',
             'message': 'Reconocimiento realizado',
             'result': processed_data,
             'most_common': most_common_code,
-            'saludo': most_common_result,
+            'saludo': saludo,
             'total': total
         })
-    
+    '''
+        return JsonResponse({
+            'status': 'success',
+            'result_count': result_count,
+            'result': processed_data,
+            'total': total
+        })
 ##       
     return render(request,'app1/reconocimientof.html',response)
 '''
