@@ -255,56 +255,59 @@
         });
     };
 
-    // Función para enviar todas las fotos al servidor en un solo paquete
     const sendPhotosToServer = async (photos) => {
-        const data = {
-            'fecha': document.getElementById('date').value,
-            'región': document.getElementById('Lug').value,
-            'evento': document.getElementById('ev').value,
-            'usuario': document.getElementById('id').value,
-            'fotos': photos  // Enviar el array completo de fotos
-        };
-        console.log(data);
-        try {
-            const response = await fetch('https://sdc-iot.popoyan.com.gt/app1/registro', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrftoken
-                },
-                body: JSON.stringify(data)
-            });
-
-            const result = await response.json();
-            console.log("Photos uploaded:", result);
-            if (result.success) {
-                alert(result.saludo);
-            } else {
-                throw new Error(result.error);
-            }
-        } catch (error) {
-            console.error('Error sending photos:', error);
-        }
+    const data = {
+        'fecha': document.getElementById('date').value,
+        'región': document.getElementById('Lug').value,
+        'evento': document.getElementById('ev').value,
+        'usuario': document.getElementById('id').value,
+        'fotos': photos  // Enviar el array completo de fotos
     };
 
-    // Función para capturar y enviar fotos
-    button.addEventListener("click", async () => {
-        try {
-            let photos = [];
-            // Capturar 3 fotos (puedes cambiar el número)
-            for (let i = 0; i < 5; i++) {
-                let photoData = await capturePhoto();
-                photos.push(photoData);
-            }
+    try {
+        const response = await fetch('https://sdc-iot.popoyan.com.gt/app1/registro', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify(data)
+        });
 
-            // Enviar todas las fotos juntas en una sola solicitud
-            await sendPhotosToServer(photos);
-
-            console.log("Image capture and sending completed.");
-        } catch (error) {
-            console.error("Error during image capture or sending:", error);
+        // Verificar si la respuesta del servidor es exitosa
+        const result = await response.json();
+        if (result.success) {
+            // Mostrar mensaje de éxito
+            alert("¡Registro exitoso! " + result.message);
+        } else {
+            throw new Error(result.error || "Error desconocido en el servidor.");
         }
-    });
+    } catch (error) {
+        // Mostrar mensaje de error si algo falla
+        console.error('Error sending photos:', error);
+        alert("Error al enviar las fotos: " + error.message);
+    }
+};
+
+button.addEventListener("click", async () => {
+    try {
+        let photos = [];
+        // Capturar 3 fotos (puedes cambiar el número)
+        for (let i = 0; i < 5; i++) {
+            let photoData = await capturePhoto();
+            photos.push(photoData);
+        }
+
+        // Enviar todas las fotos juntas en una sola solicitud
+        await sendPhotosToServer(photos);
+        console.log("Image capture and sending completed.");
+    } catch (error) {
+        console.error("Error during image capture or sending:", error);
+        alert("Error al capturar o enviar las fotos: " + error.message);
+    }
+});
+
+    
 </script>
 <script>
     $(document).ready(function() {
