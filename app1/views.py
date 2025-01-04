@@ -555,6 +555,7 @@ def registroPhotoMejorado(request):
         result_count = Counter(all_results)
         most_common_result = result_count.most_common(1)[0]
         most_common_code = most_common_result[0]
+        most_common_count = most_common_result[1]
         
         # Asumiendo que tienes la lógica de creación de entradas en la base de datos
         if most_common_code != "DESCONOCIDO":
@@ -592,7 +593,7 @@ def registroPhotoMejorado(request):
             'most_common': most_common_code,
             'saludo': saludo,
             'total': total,
-            'probabilidad':len(most_common_result)/5
+            'probabilidad':most_common_count/len(all_results)
         })
 ##       
     return render(request,'app1/reconocimientof.html',response)

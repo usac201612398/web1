@@ -68,7 +68,6 @@ def save_qr(request):
         try:
             # Obtener los datos del cuerpo de la solicitud (en formato JSON)
             data = json.loads(request.body)  # Cargar el JSON en un diccionario
-
             qr_data = data.get('qr_data')  # Obtener el valor del QR desde el JSON
             cantidad_=data.get('cantidad')
             color_ = data.get('color')
