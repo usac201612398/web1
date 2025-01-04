@@ -264,7 +264,7 @@
             'usuario': document.getElementById('id').value,
             'fotos': photos  // Enviar el array completo de fotos
         };
-
+        console.log(data);
         try {
             const response = await fetch('https://sdc-iot.popoyan.com.gt/app1/registro', {
                 method: 'POST',
@@ -278,7 +278,7 @@
             const result = await response.json();
             console.log("Photos uploaded:", result);
             if (result.success) {
-                alert(result.message);
+                alert(result.saludo);
             } else {
                 throw new Error(result.error);
             }
