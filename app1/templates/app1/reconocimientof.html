@@ -277,7 +277,7 @@
         // Verificar si la respuesta del servidor es exitosa
         const result = await response.json();
         console.log(result)
-        if (result.success) {
+        if (result.status) {
             // Mostrar mensaje de éxito
             alert("¡Registro exitoso! " + result.message);
         } else {
