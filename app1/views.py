@@ -547,7 +547,7 @@ def registroPhotoMejorado(request):
         result_count = Counter(all_results)
         most_common_result = result_count.most_common(1)[0]
         most_common_code = most_common_result[0]
-        
+        '''
         # Asumiendo que tienes la lógica de creación de entradas en la base de datos
         if most_common_code != "DESCONOCIDO":
             # Aquí puedes registrar la entrada en la base de datos
@@ -575,13 +575,13 @@ def registroPhotoMejorado(request):
             saludo = "USUARIO NO REGISTRADO"
         
         # Respuesta final al frontend
-        
+        '''
         return JsonResponse({
             'status': 'success',
             'message': 'Reconocimiento realizado',
             'result': processed_data,
             'most_common': most_common_code,
-            'saludo': saludo,
+            'saludo': most_common_result,
             'total': total
         })
     
