@@ -558,7 +558,7 @@ def registroPhotoMejorado(request):
         most_common_count = most_common_result[1]
         
         # Asumiendo que tienes la lógica de creación de entradas en la base de datos
-        if most_common_code != "DESCONOCIDO":
+        if most_common_code != "DESCONOCIDO" and most_common_count/len(all_results)>=0.8:
             # Aquí puedes registrar la entrada en la base de datos
             
             coincidencia = Ingresop.objects.filter(codigop = int(most_common_code),fecha = str(fechar_), origen= str(región_), evento= str(evento_))
