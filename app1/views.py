@@ -512,34 +512,39 @@ def registroPhotoMejorado(request):
         evento_=data.get('evento')
         # Procesar cada imagen
         processed_data = []
-        
+
+        # Umbral para considerar que una cara coincide
+        umbral_similaridad = 0.6  # Ajusta según tus necesidades (generalmente, valores menores indican mayor similitud)
+
         for image_base64 in cleaned_images_base64:
             # Decodificar la imagen base64
             nparr = np.frombuffer(base64.b64decode(image_base64), np.uint8)
             img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
             rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-            
-            # Aquí puedes poner tu código de reconocimiento facial
+
             faces = fr.face_locations(rgb)
             facesCod = fr.face_encodings(rgb, faces)
-            resultado = []
-            for facecod, faceloc in zip(facesCod,faces):
-            
-                comparacion = fr.compare_faces(listaCod,facecod)
-                simi = fr.face_distance(listaCod,facecod)
-                min = np.argmin(simi)
 
-                if comparacion[min]:
-                    codigoE = clases[min].upper()
+            resultado = []
+            for facecod, faceloc in zip(facesCod, faces):
+                comparacion = fr.compare_faces(listaCod, facecod)
+                simi = fr.face_distance(listaCod, facecod)
+
+                # Encontrar el índice de la menor distancia
+                min_distancia = np.argmin(simi)
+                
+                # Si la distancia mínima es menor que el umbral, se considera que la cara coincide
+                if simi[min_distancia] <= umbral_similaridad and comparacion[min_distancia]:
+                    codigoE = clases[min_distancia].upper()
                     yi, xf, yf, xi = faceloc
                     yi, xf, yf, xi = yi*4, xf*4, yf*4, xi*4
-                    resultado.append(clases[min])
-                
+                    resultado.append(clases[min_distancia])
                 else:
+                    # Si no hay coincidencia suficiente, se marca como "DESCONOCIDO"
                     resultado.append("DESCONOCIDO")
-                #coincidencia = Ingresop.objects.filter(codigop=str(codigoE))
+
             processed_data.append(resultado)
-        
+
         # Aquí procesas los resultados obtenidos
         # Lógica para el registro en la base de datos
         # Por ejemplo, puedes usar un contador para verificar la mayoría de los aciertos
