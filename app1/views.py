@@ -523,13 +523,12 @@ def registroPhotoMejorado(request):
             rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
             faces = fr.face_locations(rgb)
-            resultado = []
             if not faces:  # Si no se detectaron caras
-                resultado.append("DESCONOCIDO")  # Agregar "DESCONOCIDO" si no hay caras
+                processed_data.append(["DESCONOCIDO"])  # Agregar "DESCONOCIDO" si no hay caras
                 continue  # Pasar a la siguiente imagen
             facesCod = fr.face_encodings(rgb, faces)
 
-            
+            resultado = []
             for facecod, faceloc in zip(facesCod, faces):
                 comparacion = fr.compare_faces(listaCod, facecod)
                 simi = fr.face_distance(listaCod, facecod)
