@@ -589,6 +589,7 @@ def registroPhotoMejorado(request):
         return JsonResponse({
             'status': 'success',
             'result_count': result_count,
+            'all_results':all_results,
             'result': processed_data,
             'total': total
         })
