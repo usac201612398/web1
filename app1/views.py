@@ -13,6 +13,7 @@ import io
 import base64
 import datetime
 from itertools import chain
+from django.core.mail import send_mail
 #from django.views.decorators.csrf import csrf_exempt
 #from django.contrib.auth.decorators import login_required
 #from django.template import RequestContext
@@ -577,8 +578,21 @@ def registroPhotoMejorado(request):
                     saludo = "Excelente día " + nombre
                 marcaT = datetime.datetime.now()
                 
-                Ingresop.objects.create(codigop=most_common_code,nombrep=nombre,marcat=marcaT,fecha=fechar_,origen=región_,evento=evento_)   
-
+                alerta=Ingresop.objects.create(codigop=most_common_code,nombrep=nombre,marcat=marcaT,fecha=fechar_,origen=región_,evento=evento_)   
+                # Aquí creas tu objeto Registro (según sea necesario)
+               
+                
+                # Verificas la hora de creación
+                hora_creacion = alerta.marcat.hour
+                
+                if hora_creacion > 7:
+                    send_mail(
+                        'Notificación de Registro',
+                        f'El colabodador {alerta.nombrep}  a las {alerta.marcat} .',
+                        'brandrenz99@gmail.com.gt',  # Remitente
+                        ['brandon.portillo@popoyan.com.gt'],  # Destinatario
+                        fail_silently=False,
+                    )
         else:
             nombre = "DESCONOCIDO"
             saludo = "USUARIO NO REGISTRADO"
