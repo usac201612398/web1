@@ -229,14 +229,17 @@
 
     getVideo();
 
-    // Función para capturar una foto
+    // Función para capturar la imagen del video
     const capturePhoto = () => {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 console.log("Capturing image...");
-                const context = canvas.getContext("2d");
+
+                // Capturar la imagen directamente desde el video
+                const context = document.createElement("canvas").getContext("2d");
                 context.drawImage(video, 0, 0, 420, 340);
-                const imageData = canvas.toDataURL("image/png");
+                const imageData = context.canvas.toDataURL("image/png");
+
                 resolve(imageData);
             }, 400); // Captura cada 0.4 segundos
         });
