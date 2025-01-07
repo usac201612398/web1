@@ -302,6 +302,8 @@ button.addEventListener("click", async () => {
         // Enviar todas las fotos juntas en una sola solicitud
         await sendPhotosToServer(photos);
         console.log("Image capture and sending completed.");
+        // Ocultar el canvas después de enviar las fotos al servidor
+        document.querySelector(".canvas-container").style.display = "none";
     } catch (error) {
         console.error("Error during image capture or sending:", error);
         alert("Error al capturar o enviar las fotos: " + error.message);
