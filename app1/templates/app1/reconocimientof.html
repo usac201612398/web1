@@ -197,18 +197,6 @@
     </div>
 </div>
 
-<div class="container">
-    <div class="canvas-container">  
-        <canvas class="canvas" width="420" height="340"></canvas>     
-    </div> 
-</div>
-
-<!-- Muestra la foto capturada en una sección separada -->
-<div class="container" id="captured-photo-container" style="display: none;">
-    <h3>Foto Capturada</h3>
-    <img id="captured-photo" class="photo" alt="Foto Capturada" />
-</div>
-
 <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
 <script language="JavaScript" type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
@@ -303,7 +291,6 @@ button.addEventListener("click", async () => {
         await sendPhotosToServer(photos);
         console.log("Image capture and sending completed.");
         // Ocultar el canvas después de enviar las fotos al servidor
-        document.querySelector(".canvas-container").style.display = "none";
     } catch (error) {
         console.error("Error during image capture or sending:", error);
         alert("Error al capturar o enviar las fotos: " + error.message);
