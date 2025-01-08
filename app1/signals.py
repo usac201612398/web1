@@ -8,13 +8,18 @@ from .models import Ingresop
 @receiver(post_save, sender=Ingresop)
 def verificar_entrada_tras_salida(sender, instance, created, **kwargs):
     if instance.evento == 'Salida':
-        ahora = timezone.now()
-        # Verificar si han pasado más de 30 minutos desde la salida
+        ahora = timezone.now()  # Esto es un datetime consciente
+
+        # Asegúrate de que 'instance.marcat' sea consciente (si es ingenuo)
+        if instance.marcat.tzinfo is None:  # Si es ingenuo (sin zona horaria)
+            instance.marcat = timezone.make_aware(instance.marcat, timezone.get_current_timezone())
+
+        # Ahora puedes hacer la resta sin problemas
         if ahora - instance.marcat > timezone.timedelta(minutes=30):
             # Verificar si es antes de las 5 PM
             if ahora.hour < 17:
                 # Verificar si no se ha registrado una entrada después de la salida
-                if not Ingresop.objects.filter(codigop=instance.codigop, evento='entrada', marcat__gt=instance.marcat).exists():
+                if not Ingresop.objects.filter(codigop=instance.codigop, evento='Entrada', marcat__gt=instance.marcat).exists():
                     # Enviar correo electrónico
                     send_mail(
                         'Alerta: Entrada no registrada',
