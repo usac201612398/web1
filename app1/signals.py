@@ -1,6 +1,7 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
+from datetime import time 
 from django.core.mail import send_mail
 from .models import Ingresop
 
@@ -33,11 +34,11 @@ def verificar_primera_entrada(sender, instance, created, **kwargs):
 
         if primera_entrada:
             # Verificar si la hora de la entrada es posterior a las 7:15 AM
-            if instance.marcat.time() > timezone.time(7, 15):
+            if instance.marcat.time() > time(7, 15):  # Usamos time() de datetime
                 # Enviar correo si se cumple la condición
                 send_mail(
                     'Alerta: Entrada tarde',
-                    f'La persona {instance.nombrep} ha registrado su entrada después de las 7:15 AM. A la hora {instance.marcat.time()}' ,
+                    f'La persona {instance.nombrep} ha registrado su entrada después de las 7:15 AM. A la hora {instance.marcat.time()}',
                     'brandrenz99@gmail.com',  # Tu dirección de correo
                     ['brandon.portillo@popoyan.com.gt'],  # Correo del usuario
                 )
