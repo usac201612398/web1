@@ -29,7 +29,7 @@ def verificar_primera_entrada(sender, instance, created, **kwargs):
         fecha_entrada = instance.marcat.date()
 
         # Verificar si es la primera entrada del día para ese usuario
-        primera_entrada = not Ingresop.objects.filter(nombrep=instance.nombrep, tipo='Entrada', marcat__date=fecha_entrada).exclude(id=instance.id).exists()
+        primera_entrada = not Ingresop.objects.filter(nombrep=instance.nombrep, evento='Entrada', marcat__date=fecha_entrada).exclude(id=instance.id).exists()
 
         if primera_entrada:
             # Verificar si la hora de la entrada es posterior a las 7:15 AM
