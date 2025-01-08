@@ -558,29 +558,45 @@ def registroPhotoMejorado(request):
         most_common_code = most_common_result[0]
         most_common_count = most_common_result[1]
         
-        # Asumiendo que tienes la lógica de creación de entradas en la base de datos
-        if most_common_code != "DESCONOCIDO" and most_common_count/len(all_results)>=0.8:
-            # Aquí puedes registrar la entrada en la base de datos
-            
-            coincidencia = Ingresop.objects.filter(codigop = int(most_common_code),fecha = str(fechar_), origen= str(región_), evento= str(evento_))
+        if most_common_code != "DESCONOCIDO" and most_common_count / len(all_results) >= 0.8:
+            # Verificar si ya existe una entrada registrada
+            coincidencia = Ingresop.objects.filter(codigop=int(most_common_code), fecha=str(fechar_), evento="Entrada")
 
             if coincidencia.exists():
-                nombreT = Listapersonal.objects.get(codigop=str(most_common_code))
-                nombre = nombreT.nombrep
-                saludo = "El usuario " + nombreT.nombrep + " ya registró hoy su " + evento_ + " en " + región_
+                # Si ya hay una entrada registrada, obtenemos la última entrada para ese código
+                ultima_entrada = coincidencia.latest('marcat')
+
+                # Verificar si la última entrada ha sido seguida por una salida
+                salida_post_entrada = Ingresop.objects.filter(codigop=int(most_common_code), fecha=str(fechar_), evento="Salida", marcat__gt=ultima_entrada.marcat)
+
+                if salida_post_entrada.exists():
+                    # Si hay una salida posterior a la última entrada, podemos registrar una nueva entrada
+                    nombreT = Listapersonal.objects.get(codigop=str(most_common_code))
+                    nombre = nombreT.nombrep
+
+                    if evento_ == "Entrada":
+                        saludo = f"Bienvenido {nombre}"
+                    elif evento_ == "Salida":
+                        saludo = f"Excelente día {nombre}"
+
+                    # Registrar la nueva entrada
+                    marcaT = datetime.datetime.now()
+                    Ingresop.objects.create(codigop=most_common_code, nombrep=nombre, marcat=marcaT, fecha=fechar_, origen=región_, evento=evento_)
+                else:
+                    # Si no hay salida posterior, no permitimos registrar una nueva entrada
+                    saludo = f"La persona {most_common_code} ya ha registrado una entrada y no ha salido aún."
             else:
+                # Si no hay ninguna entrada registrada previamente, crear una nueva entrada
                 nombreT = Listapersonal.objects.get(codigop=str(most_common_code))
                 nombre = nombreT.nombrep
 
                 if evento_ == "Entrada":
-                    saludo = "Bienvenido " + nombre
-                elif evento_ =="Salida":
-                    saludo = "Excelente día " + nombre
+                    saludo = f"Bienvenido {nombre}"
+                elif evento_ == "Salida":
+                    saludo = f"Excelente día {nombre}"
+
                 marcaT = datetime.datetime.now()
-                
-                Ingresop.objects.create(codigop=most_common_code,nombrep=nombre,marcat=marcaT,fecha=fechar_,origen=región_,evento=evento_)   
-                # Aquí creas tu objeto Registro (según sea necesario)
-               
+                Ingresop.objects.create(codigop=most_common_code, nombrep=nombre, marcat=marcaT, fecha=fechar_, origen=región_, evento=evento_)   
         else:
             nombre = "DESCONOCIDO"
             saludo = "USUARIO NO REGISTRADO"
