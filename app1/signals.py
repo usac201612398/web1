@@ -10,6 +10,10 @@ import logging
 def verificar_entrada_tras_salida(sender, instance, created, **kwargs):
     if instance.evento == 'Salida':
         ahora = timezone.now()  # Esto es un datetime consciente
+        # Obtén la fecha y hora actual (en UTC)
+
+        # Convierte a la zona horaria local
+        ahora = timezone.localtime(ahora)
 
         # Asegúrate de que 'instance.marcat' sea consciente (si es ingenuo)
         if instance.marcat.tzinfo is None:  # Si es ingenuo (sin zona horaria)

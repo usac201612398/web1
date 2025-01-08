@@ -576,6 +576,7 @@ def registroPhotoMejorado(request):
 
                 # Registrar la nueva entrada o salida
                 marcaT = timezone.localtime(timezone.now())
+                
                 Ingresop.objects.create(codigop=most_common_code, nombrep=nombre, marcat=marcaT, fecha=fechar_, origen=región_, evento=evento_)
             
                 
