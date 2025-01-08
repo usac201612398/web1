@@ -583,8 +583,10 @@ def registroPhotoMejorado(request):
                     marcaT = datetime.datetime.now()
                     Ingresop.objects.create(codigop=most_common_code, nombrep=nombre, marcat=marcaT, fecha=fechar_, origen=región_, evento=evento_)
                 else:
+                    nombreT = Listapersonal.objects.get(codigop=str(most_common_code))
+                    nombre = nombreT.nombrep
                     # Si no hay salida posterior, no permitimos registrar una nueva entrada
-                    saludo = f"La persona {most_common_code} ya ha registrado una entrada y no ha salido aún."
+                    saludo = f"La persona {nombre} ya ha registrado una entrada y no ha salido aún."
             else:
                 # Si no hay ninguna entrada registrada previamente, crear una nueva entrada
                 nombreT = Listapersonal.objects.get(codigop=str(most_common_code))
