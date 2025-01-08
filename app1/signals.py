@@ -17,18 +17,18 @@ def verificar_entrada_tras_salida(sender, instance, created, **kwargs):
 
         # Asegúrate de que 'instance.marcat' sea consciente (si es ingenuo)
         if instance.marcat.tzinfo is None:  # Si es ingenuo (sin zona horaria)
-            logging.debug("Marcat es ingenuo, convirtiendo a consciente")
+            print.debug("Marcat es ingenuo, convirtiendo a consciente")
             instance.marcat = timezone.make_aware(instance.marcat, timezone.get_current_timezone())
 
         # Verificar si han pasado más de 30 minutos
         if ahora - instance.marcat > timezone.timedelta(minutes=30):
-            logging.debug(f"Han pasado más de 30 minutos desde la salida de {instance.nombrep}")
+            print(f"Han pasado más de 30 minutos desde la salida de {instance.nombrep}")
             # Verificar si es antes de las 5 PM
             if ahora.hour < 17:
-                logging.debug("Es antes de las 5 PM")
+                print("Es antes de las 5 PM")
                 # Verificar si no se ha registrado una entrada después de la salida
                 if not Ingresop.objects.filter(codigop=instance.codigop, evento='Entrada', marcat__gt=instance.marcat).exists():
-                    logging.debug(f"No se ha registrado una entrada después de la salida de {instance.nombrep}")
+                    print(f"No se ha registrado una entrada después de la salida de {instance.nombrep}")
                     # Enviar correo electrónico
                     send_mail(
                         'Alerta: Entrada no registrada',
@@ -37,7 +37,7 @@ def verificar_entrada_tras_salida(sender, instance, created, **kwargs):
                         ['brandon.portillo@popoyan.com.gt'],  # Correo del usuario
                     )
                 else:
-                    logging.debug(f"Ya se ha registrado una entrada después de la salida de {instance.nombrep}")
+                    print(f"Ya se ha registrado una entrada después de la salida de {instance.nombrep}")
 
 @receiver(post_save, sender=Ingresop)
 def verificar_primera_entrada(sender, instance, created, **kwargs):
