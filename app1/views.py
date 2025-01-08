@@ -564,33 +564,22 @@ def registroPhotoMejorado(request):
 
             if coincidencia.exists():
                 # Si ya hay una entrada registrada, obtenemos la última entrada para ese código
-                ultima_entrada = coincidencia.latest('marcat')
+                #ultima_entrada = coincidencia.latest('marcat')
+                # Si hay una salida posterior a la última entrada, podemos registrar una nueva entrada
+                nombreT = Listapersonal.objects.get(codigop=str(most_common_code))
+                nombre = nombreT.nombrep
 
-                # Verificar si la última entrada ha sido seguida por una salida
-                salida_post_entrada = Ingresop.objects.filter(codigop=int(most_common_code), fecha=str(fechar_), evento="Salida", marcat__gt=ultima_entrada.marcat)
+                if evento_ == "Entrada":
+                    saludo = f"Bienvenido {nombre}"
+                elif evento_ == "Salida":
+                    saludo = f"Excelente día {nombre}"
 
-                if salida_post_entrada.exists():
-                    # Si hay una salida posterior a la última entrada, podemos registrar una nueva entrada
-                    nombreT = Listapersonal.objects.get(codigop=str(most_common_code))
-                    nombre = nombreT.nombrep
-
-                    if evento_ == "Entrada":
-                        saludo = f"Bienvenido {nombre}"
-                    elif evento_ == "Salida":
-                        saludo = f"Excelente día {nombre}"
-
-                    # Registrar la nueva entrada o salida
-                    marcaT = datetime.datetime.now()
-                    Ingresop.objects.create(codigop=most_common_code, nombrep=nombre, marcat=marcaT, fecha=fechar_, origen=región_, evento=evento_)
-                else:
-                    # Si no hay salida posterior, no permitimos registrar una nueva entrada o salida
-                    nombreT = Listapersonal.objects.get(codigop=str(most_common_code))
-                    nombre = nombreT.nombrep
-                    # Si no ha salido, no permitimos una salida
-                    if evento_ == "Salida":
-                        saludo = f"La persona {nombre} no ha registrado una salida después de la última entrada."
-                    else:
-                        saludo = f"La persona {nombre} ya ha registrado una entrada y no ha salido aún."
+                # Registrar la nueva entrada o salida
+                marcaT = datetime.datetime.now()
+                Ingresop.objects.create(codigop=most_common_code, nombrep=nombre, marcat=marcaT, fecha=fechar_, origen=región_, evento=evento_)
+            
+                
+                
             else:
                 # Si no hay ninguna entrada registrada previamente, no permitimos salida
                 if evento_ == "Salida":
