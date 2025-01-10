@@ -553,43 +553,22 @@ def registroPhotoMejorado(request):
         # Lógica para el registro en la base de datos
         # Por ejemplo, puedes usar un contador para verificar la mayoría de los aciertos
         all_results = list(chain.from_iterable(processed_data))
-        result_count = Counter(all_results)
-        most_common_result = result_count.most_common(1)[0]
-        most_common_code = most_common_result[0]
-        most_common_count = most_common_result[1]
-        
-        if (most_common_code != "DESCONOCIDO" or most_common_code != "NO SE DETECTO ROSTRO") and most_common_count / len(all_results) >= 0.8:
-            # Verificar si ya existe una entrada registrada
-            coincidencia = Ingresop.objects.filter(codigop=most_common_code, fecha=str(fechar_), evento="Entrada")
+        filtered_results = [result for result in all_results if result not in ["DESCONOCIDO", "NO SE DETECTO ROSTRO"]]
 
-            if coincidencia.exists():
-                # Si ya hay una entrada registrada, obtenemos la última entrada para ese código
-                #ultima_entrada = coincidencia.latest('marcat')
-                # Si hay una salida posterior a la última entrada, podemos registrar una nueva entrada
-                nombreT = Listapersonal.objects.get(codigop=str(most_common_code))
-                nombre = nombreT.nombrep
-
-                if evento_ == "Entrada":
-                    saludo = f"Bienvenido {nombre}"
-                elif evento_ == "Salida":
-                    saludo = f"Excelente día {nombre}"
-
-                # Registrar la nueva entrada o salida
-                marcaT = timezone.localtime(timezone.now())
-                
-                Ingresop.objects.create(codigop=most_common_code, nombrep=nombre, marcat=marcaT, fecha=fechar_, origen=región_, evento=evento_)
+        if filtered_results:
+            result_count = Counter(filtered_results)
+            most_common_result = result_count.most_common(1)[0]
+            most_common_code = most_common_result[0]
+            most_common_count = most_common_result[1]
             
-                
-                
-            else:
-                # Si no hay ninguna entrada registrada previamente, no permitimos salida
-                if evento_ == "Salida":
-                    nombreT = Listapersonal.objects.get(codigop=str(most_common_code))
-                    nombre = nombreT.nombrep
-                    saludo = f"No se puede registrar la salida de {nombre} sin una entrada previa."
+            if most_common_code and most_common_count / len(filtered_results) >= 0.8:
+                # Verificar si ya existe una entrada registrada
+                coincidencia = Ingresop.objects.filter(codigop=most_common_code, fecha=str(fechar_), evento="Entrada")
 
-                else:
-                    # Si no existe una entrada, se puede registrar la nueva entrada
+                if coincidencia.exists():
+                    # Si ya hay una entrada registrada, obtenemos la última entrada para ese código
+                    #ultima_entrada = coincidencia.latest('marcat')
+                    # Si hay una salida posterior a la última entrada, podemos registrar una nueva entrada
                     nombreT = Listapersonal.objects.get(codigop=str(most_common_code))
                     nombre = nombreT.nombrep
 
@@ -598,8 +577,35 @@ def registroPhotoMejorado(request):
                     elif evento_ == "Salida":
                         saludo = f"Excelente día {nombre}"
 
-                    marcaT = datetime.datetime.now()
+                    # Registrar la nueva entrada o salida
+                    marcaT = timezone.localtime(timezone.now())
+                    
                     Ingresop.objects.create(codigop=most_common_code, nombrep=nombre, marcat=marcaT, fecha=fechar_, origen=región_, evento=evento_)
+                
+                    
+                    
+                else:
+                    # Si no hay ninguna entrada registrada previamente, no permitimos salida
+                    if evento_ == "Salida":
+                        nombreT = Listapersonal.objects.get(codigop=str(most_common_code))
+                        nombre = nombreT.nombrep
+                        saludo = f"No se puede registrar la salida de {nombre} sin una entrada previa."
+
+                    else:
+                        # Si no existe una entrada, se puede registrar la nueva entrada
+                        nombreT = Listapersonal.objects.get(codigop=str(most_common_code))
+                        nombre = nombreT.nombrep
+
+                        if evento_ == "Entrada":
+                            saludo = f"Bienvenido {nombre}"
+                        elif evento_ == "Salida":
+                            saludo = f"Excelente día {nombre}"
+
+                        marcaT = datetime.datetime.now()
+                        Ingresop.objects.create(codigop=most_common_code, nombrep=nombre, marcat=marcaT, fecha=fechar_, origen=región_, evento=evento_)
+            else:
+                nombre = "CONFUSO"
+                saludo = "INTENTE DE NUEVO, NO SE CONFIRMO IDENTIDAD"
         else:
             nombre = "DESCONOCIDO"
             saludo = "USUARIO NO REGISTRADO"
