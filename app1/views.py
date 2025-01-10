@@ -500,10 +500,8 @@ def registroPhotoMejorado(request):
         porcentaje = int(len(clases))
         listaCod = []
         for img in images:
-            img = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-            gray_e = cv2.equalizeHist(img)
-            rgb = cv2.cvtColor(gray_e, cv2.COLOR_GRAY2RGB)
-            cod = fr.face_encodings(rgb)[0]
+            img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+            cod = fr.face_encodings(img)[0]
             listaCod.append(cod)
         
         # Obtener las imágenes en base64 desde el JSON recibido
@@ -526,7 +524,7 @@ def registroPhotoMejorado(request):
             # Convertir la imagen a escala de grises
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             gray_e = cv2.equalizeHist(gray)
-            rgb = cv2.cvtColor(gray_e, cv2.COLOR_GRAY2RGB)
+            rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
             faces = fr.face_locations(gray_e, model="cnn")
             if not faces:  # Si no se detectaron caras
