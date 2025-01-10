@@ -241,7 +241,7 @@
                 const imageData = context.canvas.toDataURL("image/png");
 
                 resolve(imageData);
-            }, 400); // Captura cada 0.4 segundos
+            }, 200); // Captura cada 0.4 segundos
         });
     };
 
@@ -284,7 +284,7 @@ button.addEventListener("click", async () => {
     try {
         let photos = [];
         // Capturar 3 fotos (puedes cambiar el número)
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 10; i++) {
             let photoData = await capturePhoto();
             photos.push(photoData);
         }

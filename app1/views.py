@@ -525,7 +525,7 @@ def registroPhotoMejorado(request):
 
             faces = fr.face_locations(rgb)
             if not faces:  # Si no se detectaron caras
-                processed_data.append(["DESCONOCIDO"])  # Agregar "DESCONOCIDO" si no hay caras
+                processed_data.append(["NO SE DETECTO ROSTRO"])  # Agregar "DESCONOCIDO" si no hay caras
                 continue  # Pasar a la siguiente imagen
             facesCod = fr.face_encodings(rgb, faces)
 
