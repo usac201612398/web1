@@ -606,22 +606,34 @@ def registroPhotoMejorado(request):
             else:
                 nombre = "CONFUSO"
                 saludo = "INTENTE DE NUEVO, NO SE CONFIRMO IDENTIDAD"
+            
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Reconocimiento realizado',
+                'result': processed_data,
+                'most_common': most_common_code,
+                'saludo': saludo,
+                'total': total,
+                'probabilidad':most_common_count/len(all_results)
+            })
+        
         else:
             nombre = "DESCONOCIDO"
             saludo = "USUARIO NO REGISTRADO"
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Reconocimiento realizado',
+                'result': processed_data,
+                'most_common': "",
+                'saludo': saludo,
+                'total': total,
+                'probabilidad':0
+            })
         
         # Respuesta final al frontend
         
        
-        return JsonResponse({
-            'status': 'success',
-            'message': 'Reconocimiento realizado',
-            'result': processed_data,
-            'most_common': most_common_code,
-            'saludo': saludo,
-            'total': total,
-            'probabilidad':most_common_count/len(all_results)
-        })
+       
 ##       
     return render(request,'app1/reconocimientof.html',response)
 '''
