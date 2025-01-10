@@ -502,7 +502,7 @@ def registroPhotoMejorado(request):
         for img in images:
             
             img = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-            gray_e = cv2.equalizeHist(gray)
+            gray_e = cv2.equalizeHist(img)
             cod = fr.face_encodings(gray_e)[0]
             listaCod.append(cod)
         
