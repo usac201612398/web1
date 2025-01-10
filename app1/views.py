@@ -558,7 +558,7 @@ def registroPhotoMejorado(request):
         most_common_code = most_common_result[0]
         most_common_count = most_common_result[1]
         
-        if most_common_code != "DESCONOCIDO" or most_common_code != "NO SE DETECTO ROSTRO" and most_common_count / len(all_results) >= 0.8:
+        if (most_common_code != "DESCONOCIDO" or most_common_code != "NO SE DETECTO ROSTRO") and most_common_count / len(all_results) >= 0.8:
             # Verificar si ya existe una entrada registrada
             coincidencia = Ingresop.objects.filter(codigop=most_common_code, fecha=str(fechar_), evento="Entrada")
 
