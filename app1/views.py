@@ -526,7 +526,7 @@ def registroPhotoMejorado(request):
             gray_e = cv2.equalizeHist(gray)
             rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-            faces = fr.face_locations(gray_e, model="cnn")
+            faces = fr.face_locations(gray_e)
             if not faces:  # Si no se detectaron caras
                 processed_data.append(["NO SE DETECTO ROSTRO"])  # Agregar "DESCONOCIDO" si no hay caras
                 continue  # Pasar a la siguiente imagen
