@@ -501,8 +501,10 @@ def registroPhotoMejorado(request):
         listaCod = []
         for img in images:
             img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
-            cod = fr.face_encodings(img)[0]
-            listaCod.append(cod)
+            cods = fr.face_encodings(img)
+            if cods:
+                cod = fr.face_encodings(img)[0]
+                listaCod.append(cod)
         
         # Obtener las imágenes en base64 desde el JSON recibido
         data = json.loads(request.body)
@@ -529,6 +531,7 @@ def registroPhotoMejorado(request):
                 processed_data.append(["NO SE DETECTO ROSTRO"])  # Agregar "DESCONOCIDO" si no hay caras
                 continue  # Pasar a la siguiente imagen
             facesCod = fr.face_encodings(rgb, faces)
+
             resultado = []
             for facecod, faceloc in zip(facesCod, faces):
                 comparacion = fr.compare_faces(listaCod, facecod)
