@@ -522,8 +522,9 @@ def registroPhotoMejorado(request):
             nparr = np.frombuffer(base64.b64decode(image_base64), np.uint8)
             img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
             rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            rgb = cv2.equalizeHist(rgb)
 
-            faces = fr.face_locations(rgb)
+            faces = fr.face_locations(rgb, model="cnn")
             if not faces:  # Si no se detectaron caras
                 processed_data.append(["NO SE DETECTO ROSTRO"])  # Agregar "DESCONOCIDO" si no hay caras
                 continue  # Pasar a la siguiente imagen
