@@ -207,7 +207,7 @@
     const button = document.querySelector(".start-btn");
 
     const constraints = {
-        video: { width: 420, height: 340 },
+        video: { width: 640, height: 480 },
         audio: false,
     };
 
@@ -237,7 +237,7 @@
 
                 // Capturar la imagen directamente desde el video
                 const context = document.createElement("canvas").getContext("2d");
-                context.drawImage(video, 0, 0, 420, 340);
+                context.drawImage(video, 0, 0, 640, 480);
                 const imageData = context.canvas.toDataURL("image/png");
 
                 resolve(imageData);
