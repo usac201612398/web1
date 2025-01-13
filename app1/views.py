@@ -7,7 +7,6 @@ from app1.models import *
 import cv2
 import os
 import numpy as np
-import uuid
 import json
 from PIL import Image
 import io
@@ -457,11 +456,6 @@ def clean_base64_string(image_base64):
     
     return image_base64
 
-def clean_base64_string(image_base64):
-    # Limpiar el string base64 (remover prefijos 'data:image/jpeg;base64,' y demás)
-    if image_base64.startswith('data:image'):
-        return image_base64.split(',')[1]
-    return image_base64
 
 def registroPhotoMejorado(request):
     now = datetime.datetime.now()
@@ -491,8 +485,8 @@ def registroPhotoMejorado(request):
             salidas = total_sal.count() 
     total = int(entradas)-int(salidas)
     response = {'fecha':fecha_,'total':total}
+
     if request.method == "POST":
-        
         path = 'home/bportillo/Proyecto1/web1/app1/static/app1'
         images = []
         clases = []
@@ -520,29 +514,6 @@ def registroPhotoMejorado(request):
         fechar_=data.get('fecha')
         región_=data.get('región')
         evento_=data.get('evento')
-
-        save_folder = os.path.join(settings.BASE_DIR, 'fotos_guardadas')
-        # Asegurarse de que la carpeta existe
-        if not os.path.exists(save_folder):
-            os.makedirs(save_folder)
-
-       
-        images_base64 = data.get('fotos', [])
-        cleaned_images_base64 = [clean_base64_string(image) for image in images_base64]
-
-        # Procesar cada imagen base64
-        for idx, image_base64 in enumerate(cleaned_images_base64):
-            # Decodificar la imagen base64
-            nparr = np.frombuffer(base64.b64decode(image_base64), np.uint8)
-            img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-
-            # Generar un nombre único para la imagen
-            unique_name = str(uuid.uuid4()) + '.jpg'
-            image_path = os.path.join(save_folder, unique_name)
-
-            # Guardar la imagen como .jpg
-            cv2.imwrite(image_path, img)
-            print(f"Imagen guardada en: {image_path}")  # Esto se puede quitar una vez verificado
 
         # Procesar cada imagen
         processed_data = []
