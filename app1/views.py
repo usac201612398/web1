@@ -7,6 +7,8 @@ from app1.models import *
 import cv2
 import os
 import numpy as np
+
+import uuid  # Añadir esta línea para importar el módulo uuid
 import json
 from PIL import Image
 import io
