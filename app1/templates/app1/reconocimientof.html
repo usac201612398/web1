@@ -196,7 +196,10 @@
         <video class="video" autoplay></video>
     </div>
 </div>
-
+<div class="container">
+    <h3>Foto capturada:</h3>
+    <img id="captured-photo" src="" alt="Foto capturada" style="width: 100%; max-width: 640px; height: auto;">
+</div>
 <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
 <script language="JavaScript" type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
@@ -240,6 +243,9 @@
                 context.drawImage(video, 0, 0, 640, 480);
                 const imageData = context.canvas.toDataURL("image/jpeg");
 
+                // Mostrar la imagen capturada en el navegador
+                const capturedImageElement = document.getElementById("captured-photo");
+                capturedImageElement.src = imageData;
                 resolve(imageData);
             }, 100); // Captura cada 0.4 segundos
         });
