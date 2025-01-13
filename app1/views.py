@@ -457,39 +457,32 @@ def clean_base64_string(image_base64):
     image_base64 = image_base64 + '=' * (4 - len(image_base64) % 4)
     
     return image_base64
-
-import os
-import base64
-import cv2
-import numpy as np
-from django.conf import settings
-
 def registroPhotoMejorado(request):
     now = datetime.datetime.now()
     fecha = now.date()
-    dia= fecha.day
-    mes= fecha.month
-    año= fecha.year
+    dia = fecha.day
+    mes = fecha.month
+    año = fecha.year
     if mes < 10:
         mes = "0" + str(mes)
     if dia < 10:
         dia = "0" + str(dia)
-    fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
+    fecha_ = "{}-{}-{}".format(str(año), str(mes), str(dia))
 
     lista = ['1']
     for i in lista:
-        total_ent= Ingresop.objects.filter(fecha = fecha_).filter(evento="Entrada")
+        total_ent = Ingresop.objects.filter(fecha=fecha_).filter(evento="Entrada")
         entradas = total_ent.count() if total_ent else 0
-        total_sal= Ingresop.objects.filter(fecha = fecha_).filter(evento="Salida")
-        salidas = total_sal.count() if total_sal else 0 
-    total = int(entradas)-int(salidas)
-    response = {'fecha':fecha_,'total':total}
-    
+        total_sal = Ingresop.objects.filter(fecha=fecha_).filter(evento="Salida")
+        salidas = total_sal.count() if total_sal else 0
+    total = int(entradas) - int(salidas)
+    response = {'fecha': fecha_, 'total': total}
+
     if request.method == "POST":
         path = settings.BASE_DIR  # Ruta donde se encuentra 'models.py' (root de tu proyecto)
         images = []
         clases = []
-        
+
         # Asegúrate de que la carpeta de destino exista
         images_folder = os.path.join(path, 'app1/static/app1')
         if not os.path.exists(images_folder):
@@ -499,22 +492,33 @@ def registroPhotoMejorado(request):
         data = json.loads(request.body)
         images_base64 = data.get('fotos', [])
         cleaned_images_base64 = [clean_base64_string(image) for image in images_base64]
-        fechar_=data.get('fecha')
-        región_=data.get('región')
-        evento_=data.get('evento')
+        fechar_ = data.get('fecha')
+        región_ = data.get('región')
+        evento_ = data.get('evento')
 
         processed_data = []
         umbral_similaridad = 0.6
 
         for image_base64 in cleaned_images_base64:
             # Decodificar la imagen base64
-            nparr = np.frombuffer(base64.b64decode(image_base64), np.uint8)
-            img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-            
+            try:
+                nparr = np.frombuffer(base64.b64decode(image_base64), np.uint8)
+                img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+                
+                if img is None:
+                    raise ValueError("La imagen no se pudo decodificar correctamente.")
+            except Exception as e:
+                print(f"Error al procesar la imagen base64: {e}")
+                continue
+
             # Generar un nombre único para la imagen y guardarla
             image_name = f"{str(uuid.uuid4())}.jpg"  # Usa uuid para evitar colisiones
             image_path = os.path.join(images_folder, image_name)
-            cv2.imwrite(image_path, img)  # Guarda la imagen en el directorio
+
+            # Verificar que la imagen se haya guardado correctamente
+            if not cv2.imwrite(image_path, img):  # Guarda la imagen en el directorio
+                print(f"Error al guardar la imagen en: {image_path}")
+                continue
 
             # Añadir la imagen y la clase a las listas
             images.append(img)
@@ -536,7 +540,7 @@ def registroPhotoMejorado(request):
                 if simi[min_distancia] <= umbral_similaridad and comparacion[min_distancia]:
                     codigoE = clases[min_distancia].upper()
                     yi, xf, yf, xi = faceloc
-                    yi, xf, yf, xi = yi*4, xf*4, yf*4, xi*4
+                    yi, xf, yf, xi = yi * 4, xf * 4, yf * 4, xi * 4
                     resultado.append(clases[min_distancia])
                 else:
                     resultado.append("DESCONOCIDO")
@@ -552,7 +556,7 @@ def registroPhotoMejorado(request):
             most_common_result = result_count.most_common(1)[0]
             most_common_code = most_common_result[0]
             most_common_count = most_common_result[1]
-            
+
             if most_common_code and most_common_count / len(filtered_results) >= 0.8:
                 coincidencia = Ingresop.objects.filter(codigop=most_common_code, fecha=str(fechar_), evento="Entrada")
 
@@ -567,7 +571,7 @@ def registroPhotoMejorado(request):
 
                     marcaT = timezone.localtime(timezone.now())
                     Ingresop.objects.create(codigop=most_common_code, nombrep=nombre, marcat=marcaT, fecha=fechar_, origen=región_, evento=evento_)
-                    
+
                 else:
                     if evento_ == "Salida":
                         nombreT = Listapersonal.objects.get(codigop=str(most_common_code))
@@ -586,7 +590,7 @@ def registroPhotoMejorado(request):
             else:
                 nombre = "CONFUSO"
                 saludo = "INTENTE DE NUEVO, NO SE CONFIRMO IDENTIDAD"
-            
+
             return JsonResponse({
                 'status': 'success',
                 'message': 'Reconocimiento realizado',
@@ -596,7 +600,7 @@ def registroPhotoMejorado(request):
                 'total': total,
                 'probabilidad': most_common_count / len(all_results)
             })
-        
+
         else:
             nombre = "DESCONOCIDO"
             saludo = "USUARIO NO REGISTRADO"
@@ -611,7 +615,6 @@ def registroPhotoMejorado(request):
             })
 
     return render(request, 'app1/reconocimientof.html', response)
-
 
 '''
 def vector_prueba(request):
