@@ -19,6 +19,12 @@
       overflow: hidden; /* Asegura que el contenedor no muestre el desbordamiento */
     }
 
+    #captured-photo {
+        width: 100%; /* Asegura que la imagen ocupe todo el ancho disponible */
+        height: auto; /* Mantiene la relación de aspecto de la imagen */
+        object-fit: contain; /* Ajusta la imagen dentro del contenedor sin recortarla */
+    }
+
     input {
       width: 100%; /* Ancho del campo de entrada */
       white-space: nowrap; /* Evita que el texto se ajuste a una nueva línea */
@@ -240,7 +246,11 @@
 
                 // Capturar la imagen directamente desde el video
                 const context = document.createElement("canvas").getContext("2d");
-                context.drawImage(video, 0, 0, 640, 480);
+                // Ajustar el tamaño del canvas al tamaño del video
+                canvas.width = video.videoWidth;  // 640px
+                canvas.height = video.videoHeight;  // 480px
+                // Dibujar la imagen del video en el canvas
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
                 const imageData = context.canvas.toDataURL("image/jpeg");
 
                 // Mostrar la imagen capturada en el navegador
