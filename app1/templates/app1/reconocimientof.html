@@ -238,7 +238,7 @@
                 // Capturar la imagen directamente desde el video
                 const context = document.createElement("canvas").getContext("2d");
                 context.drawImage(video, 0, 0, 640, 480);
-                const imageData = context.canvas.toDataURL("image/png");
+                const imageData = context.canvas.toDataURL("image/jpeg");
 
                 resolve(imageData);
             }, 100); // Captura cada 0.4 segundos
