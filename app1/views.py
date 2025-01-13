@@ -456,6 +456,12 @@ def clean_base64_string(image_base64):
     
     return image_base64
 
+import os
+import base64
+import cv2
+import numpy as np
+from django.conf import settings
+
 def registroPhotoMejorado(request):
     now = datetime.datetime.now()
     fecha = now.date()
@@ -469,43 +475,24 @@ def registroPhotoMejorado(request):
     fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
 
     lista = ['1']
-
     for i in lista:
-
         total_ent= Ingresop.objects.filter(fecha = fecha_).filter(evento="Entrada")
-        if total_ent == None:
-            entradas = 0
-        else:
-            entradas = total_ent.count()
+        entradas = total_ent.count() if total_ent else 0
         total_sal= Ingresop.objects.filter(fecha = fecha_).filter(evento="Salida")
-        if total_sal == None:
-            salidas = 0
-        else:
-            salidas = total_sal.count() 
+        salidas = total_sal.count() if total_sal else 0 
     total = int(entradas)-int(salidas)
     response = {'fecha':fecha_,'total':total}
+    
     if request.method == "POST":
-        
-        path = 'home/bportillo/Proyecto1/web1/app1/static/app1'
+        path = settings.BASE_DIR  # Ruta donde se encuentra 'models.py' (root de tu proyecto)
         images = []
         clases = []
-        lista = os.listdir(path)
-    #    registro = []
-        comp1 = 100
-        for i in lista:
-            imgdb = cv2.imread(f'{path}/{i}')
-            images.append(imgdb)
-            clases.append(os.path.splitext(i)[0])
-    #         rostrosCod = codRostros(images)
-        porcentaje = int(len(clases))
-        listaCod = []
-        for img in images:
-            img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
-            cods = fr.face_encodings(img)
-            if cods:
-                cod = fr.face_encodings(img)[0]
-                listaCod.append(cod)
         
+        # Asegúrate de que la carpeta de destino exista
+        images_folder = os.path.join(path, 'app1/static/app1')
+        if not os.path.exists(images_folder):
+            os.makedirs(images_folder)
+
         # Obtener las imágenes en base64 desde el JSON recibido
         data = json.loads(request.body)
         images_base64 = data.get('fotos', [])
@@ -513,48 +500,48 @@ def registroPhotoMejorado(request):
         fechar_=data.get('fecha')
         región_=data.get('región')
         evento_=data.get('evento')
-        # Procesar cada imagen
-        processed_data = []
 
-        # Umbral para considerar que una cara coincide
-        umbral_similaridad = 0.6  # Ajusta según tus necesidades (generalmente, valores menores indican mayor similitud)
+        processed_data = []
+        umbral_similaridad = 0.6
 
         for image_base64 in cleaned_images_base64:
             # Decodificar la imagen base64
             nparr = np.frombuffer(base64.b64decode(image_base64), np.uint8)
             img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-            # Convertir la imagen a escala de grises
-            rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            
+            # Generar un nombre único para la imagen y guardarla
+            image_name = f"{str(uuid.uuid4())}.jpg"  # Usa uuid para evitar colisiones
+            image_path = os.path.join(images_folder, image_name)
+            cv2.imwrite(image_path, img)  # Guarda la imagen en el directorio
 
+            # Añadir la imagen y la clase a las listas
+            images.append(img)
+            clases.append(image_name)
+
+            rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
             faces = fr.face_locations(rgb)
-            if not faces:  # Si no se detectaron caras
-                processed_data.append(["NO SE DETECTO ROSTRO"])  # Agregar "DESCONOCIDO" si no hay caras
-                continue  # Pasar a la siguiente imagen
+            if not faces:
+                processed_data.append(["NO SE DETECTO ROSTRO"])
+                continue
             facesCod = fr.face_encodings(rgb, faces)
 
             resultado = []
             for facecod, faceloc in zip(facesCod, faces):
                 comparacion = fr.compare_faces(listaCod, facecod)
                 simi = fr.face_distance(listaCod, facecod)
-
-                # Encontrar el índice de la menor distancia
                 min_distancia = np.argmin(simi)
-                
-                # Si la distancia mínima es menor que el umbral, se considera que la cara coincide
+
                 if simi[min_distancia] <= umbral_similaridad and comparacion[min_distancia]:
                     codigoE = clases[min_distancia].upper()
                     yi, xf, yf, xi = faceloc
                     yi, xf, yf, xi = yi*4, xf*4, yf*4, xi*4
                     resultado.append(clases[min_distancia])
                 else:
-                    # Si no hay coincidencia suficiente, se marca como "DESCONOCIDO"
                     resultado.append("DESCONOCIDO")
 
             processed_data.append(resultado)
 
-        # Aquí procesas los resultados obtenidos
-        # Lógica para el registro en la base de datos
-        # Por ejemplo, puedes usar un contador para verificar la mayoría de los aciertos
+        # Procesar los resultados y realizar el registro en la base de datos
         all_results = list(chain.from_iterable(processed_data))
         filtered_results = [result for result in all_results if result not in ["DESCONOCIDO", "NO SE DETECTO ROSTRO"]]
 
@@ -565,13 +552,9 @@ def registroPhotoMejorado(request):
             most_common_count = most_common_result[1]
             
             if most_common_code and most_common_count / len(filtered_results) >= 0.8:
-                # Verificar si ya existe una entrada registrada
                 coincidencia = Ingresop.objects.filter(codigop=most_common_code, fecha=str(fechar_), evento="Entrada")
 
                 if coincidencia.exists():
-                    # Si ya hay una entrada registrada, obtenemos la última entrada para ese código
-                    #ultima_entrada = coincidencia.latest('marcat')
-                    # Si hay una salida posterior a la última entrada, podemos registrar una nueva entrada
                     nombreT = Listapersonal.objects.get(codigop=str(most_common_code))
                     nombre = nombreT.nombrep
 
@@ -580,25 +563,17 @@ def registroPhotoMejorado(request):
                     elif evento_ == "Salida":
                         saludo = f"Excelente día {nombre}"
 
-                    # Registrar la nueva entrada o salida
                     marcaT = timezone.localtime(timezone.now())
-                    
                     Ingresop.objects.create(codigop=most_common_code, nombrep=nombre, marcat=marcaT, fecha=fechar_, origen=región_, evento=evento_)
-                
-                    
                     
                 else:
-                    # Si no hay ninguna entrada registrada previamente, no permitimos salida
                     if evento_ == "Salida":
                         nombreT = Listapersonal.objects.get(codigop=str(most_common_code))
                         nombre = nombreT.nombrep
                         saludo = f"No se puede registrar la salida de {nombre} sin una entrada previa."
-
                     else:
-                        # Si no existe una entrada, se puede registrar la nueva entrada
                         nombreT = Listapersonal.objects.get(codigop=str(most_common_code))
                         nombre = nombreT.nombrep
-
                         if evento_ == "Entrada":
                             saludo = f"Bienvenido {nombre}"
                         elif evento_ == "Salida":
@@ -617,7 +592,7 @@ def registroPhotoMejorado(request):
                 'most_common': most_common_code,
                 'saludo': saludo,
                 'total': total,
-                'probabilidad':most_common_count/len(all_results)
+                'probabilidad': most_common_count / len(all_results)
             })
         
         else:
@@ -630,15 +605,12 @@ def registroPhotoMejorado(request):
                 'most_common': "",
                 'saludo': saludo,
                 'total': total,
-                'probabilidad':0
+                'probabilidad': 0
             })
-        
-        # Respuesta final al frontend
-        
-       
-       
-##       
-    return render(request,'app1/reconocimientof.html',response)
+
+    return render(request, 'app1/reconocimientof.html', response)
+
+
 '''
 def vector_prueba(request):
 #    Sensor.objects.create(name='Presion Res1:' , tipo='Presion')
