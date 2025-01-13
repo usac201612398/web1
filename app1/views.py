@@ -7,6 +7,7 @@ from app1.models import *
 import cv2
 import os
 import numpy as np
+import uuid
 import json
 from PIL import Image
 import io
@@ -445,7 +446,7 @@ def registroPhoto(request):
 
 def clean_base64_string(image_base64):
     # Eliminar el prefijo "data:image/png;base64," si está presente
-    if image_base64.startswith('data:image/png;base64,'):
+    if image_base64.startswith('data:image/jpeg;base64,'):
         image_base64 = image_base64.split(',')[1]
     
     # Eliminar comillas alrededor de la cadena, si las hay
@@ -456,13 +457,14 @@ def clean_base64_string(image_base64):
     
     return image_base64
 
-
 def registroPhotoMejorado(request):
+
     now = datetime.datetime.now()
     fecha = now.date()
     dia= fecha.day
     mes= fecha.month
     año= fecha.year
+
     if mes < 10:
         mes = "0" + str(mes)
     if dia < 10:
@@ -483,10 +485,11 @@ def registroPhotoMejorado(request):
             salidas = 0
         else:
             salidas = total_sal.count() 
+            
     total = int(entradas)-int(salidas)
     response = {'fecha':fecha_,'total':total}
-
     if request.method == "POST":
+        
         path = 'home/bportillo/Proyecto1/web1/app1/static/app1'
         images = []
         clases = []
@@ -514,7 +517,6 @@ def registroPhotoMejorado(request):
         fechar_=data.get('fecha')
         región_=data.get('región')
         evento_=data.get('evento')
-
         # Procesar cada imagen
         processed_data = []
 
