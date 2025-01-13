@@ -14,7 +14,7 @@ class usuariosAppFruta(models.Model):
 class datosProduccion(models.Model):
 
     op_finca = [('VALLE','VALLE'),('RIO','RIO'),('CIP', 'CIP'),('FLE','FLE'),('PASTORIA','PASTORIA'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.')]
-    op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
+    op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('BEEF','BEEF'),('SALADETTE','SALADETTE'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
     op_status = [('Abierta','Abierta'),('Cerrada','Cerrada')]
     op_temporada = [('Temp 2023-2024','Temp 2023-2024'),('Temp 2024-2025','Temp 2024-2025')]
     id = models.AutoField(primary_key=True)
@@ -30,7 +30,7 @@ class datosProduccion(models.Model):
     
 class detallesProduccion(models.Model):
 
-    op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
+    op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('BEEF','BEEF'),('SALADETTE','SALADETTE'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
     
     id = models.AutoField(primary_key=True)
     cultivo = models.CharField(max_length=35, choices=op_cultivo,blank=True)
@@ -42,10 +42,10 @@ class detallesProduccion(models.Model):
 
 class detallesEstructuras(models.Model):
 
-    op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
+    op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('BEEF','BEEF'),('SALADETTE','SALADETTE'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
     op_estructura = [('CM1','CM1'),('CM2','CM2'),('CM3','CM3'),('CM4','CM4'),('CM5','CM5'),('CM6','CM6'),('CM6A','CM6A'),('CM6B','CM6B'),('CM7','CM7'),('INV1','INV1'),('INV2','INV2'),('CM8','CM8')]
     op_finca =  [('RIO','RIO'),('VALLE','VALLE'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.')]
-    op_variedad = [('HATENO','HATENO'),('SWEET MAX','SWEET MAX'),('PICOLO','PICOLO'),('HYRULE','HYRULE'),('DORMA','DORMA'),('BAMANO','BAMANO'),('TT 764','TT 764'),('TT 864','TT 864'),('CHOCOSTAR','CHOCOSTAR'),('DUNNE','DUNNE'),('IVORINO','IVORINO'),('KM 5512','KM 5512'),('NEBULA','NEBULA'),('ROJO','ROJO'),('AMARILLO','AMARILLO'),('ANARANJADO','ANARANJADO')]
+    op_variedad = [('HATENO','HATENO'),('SICYBELLE','SICYBELLE'),('EMYELLE','EMYELLE'),('ADORELLE','ADORELLE'),('CRYSTELLE','CRYSTELLE'),('LEE PETIT','LEE PETIT'),('LUAN','LUAN'),('FLAVUS','FLAVUS'),('LUMMEN','LUMMEN'),('ALANI','ALANI'),('ALANI','ALANI'),('T311457R','T311457R'),('319384','319384'),('CASCADE','CASCADE'),('EXTRADENA','EXTRADENA'),('TL152633','TL152633'),('TL162715','TL152715'),('TL162715','TL152715'),('8B19B091','8B19B091'),('DIONISIO','DIONISIO'),('TORERO','TORERO'),('VINCITORI','VINCITORI'),('MONTELIMAR','MONTELIMAR'),('SWEET MAX','SWEET MAX'),('PICOLO','PICOLO'),('HYRULE','HYRULE'),('DORMA','DORMA'),('BAMANO','BAMANO'),('TT 764','TT 764'),('TT 864','TT 864'),('CHOCOSTAR','CHOCOSTAR'),('DUNNE','DUNNE'),('IVORINO','IVORINO'),('KM 5512','KM 5512'),('NEBULA','NEBULA'),('ROJO','ROJO'),('AMARILLO','AMARILLO'),('ANARANJADO','ANARANJADO')]
     op_encargado = [('Brandon Portillo','Brandon Portillo'),('Carlos Hernández','Carlos Hernández'),('Nolberto Morales','Nolberto Morales'),('Rita Florian','Rita Florian'),('Ariel Parada','Ariel Parada')]
     
     id = models.AutoField(primary_key=True)
@@ -61,8 +61,8 @@ class detallesEstructuras(models.Model):
 
 class AcumFruta(models.Model):
     
-    op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
-    op_variedad = [('HYRULE','HYRULE'),('SWEET MAX','SWEET MAX'),('PICOLO','PICOLO'),('HATENO','HATENO'),('DUNNE','DUNNE'),('BAMANO','BAMANO'),('TT 764','TT 764'),('TT 864','TT 864'),('DORMA','DORMA'),('CHOCOSTAR','CHOCOSTAR'),('IVORINO','IVORINO'),('KM 5512','KM 5512'),('NEBULA','NEBULA'),('ROJO','ROJO'),('AMARILLO','AMARILLO'),('ANARANJADO','ANARANJADO')]
+    op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('BEEF','BEEF'),('SALADETTE','SALADETTE'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
+    op_variedad = [('HYRULE','HYRULE'),('SWEET MAX','SWEET MAX'),('SICYBELLE','SICYBELLE'),('EMYELLE','EMYELLE'),('ADORELLE','ADORELLE'),('CRYSTELLE','CRYSTELLE'),('LEE PETIT','LEE PETIT'),('LUAN','LUAN'),('FLAVUS','FLAVUS'),('LUMMEN','LUMMEN'),('ALANI','ALANI'),('ALANI','ALANI'),('T311457R','T311457R'),('319384','319384'),('CASCADE','CASCADE'),('EXTRADENA','EXTRADENA'),('TL152633','TL152633'),('TL162715','TL152715'),('TL162715','TL152715'),('8B19B091','8B19B091'),('DIONISIO','DIONISIO'),('TORERO','TORERO'),('VINCITORI','VINCITORI'),('MONTELIMAR','MONTELIMAR'),('PICOLO','PICOLO'),('HATENO','HATENO'),('DUNNE','DUNNE'),('BAMANO','BAMANO'),('TT 764','TT 764'),('TT 864','TT 864'),('DORMA','DORMA'),('CHOCOSTAR','CHOCOSTAR'),('IVORINO','IVORINO'),('KM 5512','KM 5512'),('NEBULA','NEBULA'),('ROJO','ROJO'),('AMARILLO','AMARILLO'),('ANARANJADO','ANARANJADO')]
     op_finca = [('VALLE','VALLE'),('RIO','RIO'),('CIP','CIP'),('FLE','FLE'),('FLA','FLA'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.'),]
     op_correo = [('cosecha.rio@popoyan.com.gt','cosecha.rio@popoyan.com.gt'),('provalle@popoyan.com.gt','provalle@popoyan.com.gt'),('cosecha.valle@popoyan.com.gt','cosecha.valle@popoyan.com.gt'),('cosecha.valle2@popoyan.com.gt','cosecha.valle2@popoyan.com.gt')]
     op_orden = [('PT20242025','PT20242025'),('PP20242025','PP20242025'),('64202052','64202052'),('64202052','64202052'),('64206054','64206054'),('64206055','64206055'),('64206056','64206056'),('64202048','64202048'),('64202049','64202049'),('64202050','64202050'),('64202051','64202051')]
@@ -88,8 +88,8 @@ class AcumFruta(models.Model):
 class salidasFruta(models.Model):
     
     op_viajes = [('','-'),('Viaje 1','Viaje 1'),('Viaje 2','Viaje 2'),('Viaje 3', 'Viaje 3'),('Viaje 4','Viaje 4'),('Viaje 5','Viaje 5'),('Viaje 6','Viaje 6'),('Viaje 7','Viaje 7'),('Viaje 8','Viaje 8'),('Viaje 9','Viaje 9'),('Viaje 10','Viaje 10')]
-    op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
-    op_variedad = [('HATENO','HATENO'),('SWEET MAX','SWEET MAX'),('PICOLO','PICOLO'),('HYRULE','HYRULE'),('DUNNE','DUNNE'),('BAMANO','BAMANO'),('TT 764','TT 764'),('TT 864','TT 864'),('DORMA','DORMA'),('CHOCOSTAR','CHOCOSTAR'),('IVORINO','IVORINO'),('KM 5512','KM 5512'),('NEBULA','NEBULA'),('ROJO','ROJO'),('AMARILLO','AMARILLO'),('ANARANJADO','ANARANJADO')]
+    op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('BEEF','BEEF'),('SALADETTE','SALADETTE'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
+    op_variedad = [('HATENO','HATENO'),('SWEET MAX','SWEET MAX'),('SICYBELLE','SICYBELLE'),('EMYELLE','EMYELLE'),('ADORELLE','ADORELLE'),('CRYSTELLE','CRYSTELLE'),('LEE PETIT','LEE PETIT'),('LUAN','LUAN'),('FLAVUS','FLAVUS'),('LUMMEN','LUMMEN'),('ALANI','ALANI'),('ALANI','ALANI'),('T311457R','T311457R'),('319384','319384'),('CASCADE','CASCADE'),('EXTRADENA','EXTRADENA'),('TL152633','TL152633'),('TL162715','TL152715'),('TL162715','TL152715'),('8B19B091','8B19B091'),('DIONISIO','DIONISIO'),('TORERO','TORERO'),('VINCITORI','VINCITORI'),('MONTELIMAR','MONTELIMAR'),('PICOLO','PICOLO'),('HYRULE','HYRULE'),('DUNNE','DUNNE'),('BAMANO','BAMANO'),('TT 764','TT 764'),('TT 864','TT 864'),('DORMA','DORMA'),('CHOCOSTAR','CHOCOSTAR'),('IVORINO','IVORINO'),('KM 5512','KM 5512'),('NEBULA','NEBULA'),('ROJO','ROJO'),('AMARILLO','AMARILLO'),('ANARANJADO','ANARANJADO')]
     op_encargado = [('Brandon Portillo','Brandon Portillo'),('Ariel Parada','Ariel Parada'),('Carlos Hernández','Carlos Hernández'),('Rita Florian','Rita Florian'),('Nolberto Morales','Nolberto Morales')]
     op_finca = [('VALLE','VALLE'),('RIO','RIO'),('CIP','CIP'),('FLE','FLE'),('FLA','FLA'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.')]
     op_correo = [('cosecha.rio@popoyan.com.gt','cosecha.rio@popoyan.com.gt'),('provalle@popoyan.com.gt','provalle@popoyan.com.gt'),('cosecha.valle@popoyan.com.gt','cosecha.valle@popoyan.com.gt'),('cosecha.valle2@popoyan.com.gt','cosecha.valle2@popoyan.com.gt')]
@@ -117,7 +117,7 @@ class salidasFruta(models.Model):
 class enviosFrutaPlantilla(models.Model):
     op_viajes = [('','-'),('Viaje 1','Viaje 1'),('Viaje 2','Viaje 2'),('Viaje 3', 'Viaje 3'),('Viaje 4','Viaje 4'),('Viaje 5','Viaje 5'),('Viaje 6','Viaje 6'),('Viaje 7','Viaje 7'),('Viaje 8','Viaje 8')]
     op_encargado = [('Brandon Portillo','Brandon Portillo'),('Ariel Parada','Ariel Parada'),('Carlos Hernández','Carlos Hernández'),('Nolberto Morales','Nolberto Morales'),('Rita Florian','Rita Florian')]
-    op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
+    op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('SICYBELLE','SICYBELLE'),('EMYELLE','EMYELLE'),('ADORELLE','ADORELLE'),('CRYSTELLE','CRYSTELLE'),('LEE PETIT','LEE PETIT'),('LUAN','LUAN'),('FLAVUS','FLAVUS'),('LUMMEN','LUMMEN'),('ALANI','ALANI'),('ALANI','ALANI'),('T311457R','T311457R'),('319384','319384'),('CASCADE','CASCADE'),('EXTRADENA','EXTRADENA'),('TL152633','TL152633'),('TL162715','TL152715'),('TL162715','TL152715'),('8B19B091','8B19B091'),('DIONISIO','DIONISIO'),('TORERO','TORERO'),('VINCITORI','VINCITORI'),('MONTELIMAR','MONTELIMAR'),('BEEF','BEEF'),('SALADETTE','SALADETTE'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
     op_finca = [('VALLE','VALLE'),('RIO','RIO'),('CIP','CIP'),('FLE','FLE'),('FLA','FLA'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.')]
     op_correo = [('cosecha.rio@popoyan.com.gt','cosecha.rio@popoyan.com.gt'),('provalle@popoyan.com.gt','provalle@popoyan.com.gt'),('cosecha.valle@popoyan.com.gt','cosecha.valle@popoyan.com.gt'),('cosecha.valle2@popoyan.com.gt','cosecha.valle2@popoyan.com.gt')]
     op_orden = [('64202052','64202052'),('PT20242025','PT20242025'),('PP20242025','PP20242025'),('64206054','64206054'),('64206055','64206055'),('64206056','64206056'),('64202048','64202048'),('64202049','64202049'),('64202050','64202050'),('64202051','64202051')]
@@ -142,8 +142,8 @@ class enviosFrutaPlantilla(models.Model):
 
 class cultivoxFinca(models.Model):
     
-    op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
-    op_variedad = [('BAMANO','BAMANO'),('SWEET MAX','SWEET MAX'),('PICOLO','PICOLO'),('TT 764','TT 764'),('TT 864','TT 864'),('DUNNE','DUNNE'),('CHOCOSTAR','CHOCOSTAR'),('BAMANO','BAMANO'),('DORMA','DORMA'),('IVORINO','IVORINO'),('KM 5512','KM 5512'),('NEBULA','NEBULA'),('ROJO','ROJO'),('AMARILLO','AMARILLO'),('ANARANJADO','ANARANJADO'),('HATENO','HATENO'),('HYRULE','HYRULE')]
+    op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('BEEF','BEEF'),('SALADETTE','SALADETTE'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
+    op_variedad = [('BAMANO','BAMANO'),('SWEET MAX','SWEET MAX'),('SICYBELLE','SICYBELLE'),('EMYELLE','EMYELLE'),('ADORELLE','ADORELLE'),('CRYSTELLE','CRYSTELLE'),('LEE PETIT','LEE PETIT'),('LUAN','LUAN'),('FLAVUS','FLAVUS'),('LUMMEN','LUMMEN'),('ALANI','ALANI'),('ALANI','ALANI'),('T311457R','T311457R'),('319384','319384'),('CASCADE','CASCADE'),('EXTRADENA','EXTRADENA'),('TL152633','TL152633'),('TL162715','TL152715'),('TL162715','TL152715'),('8B19B091','8B19B091'),('DIONISIO','DIONISIO'),('TORERO','TORERO'),('VINCITORI','VINCITORI'),('MONTELIMAR','MONTELIMAR'),('PICOLO','PICOLO'),('TT 764','TT 764'),('TT 864','TT 864'),('DUNNE','DUNNE'),('CHOCOSTAR','CHOCOSTAR'),('BAMANO','BAMANO'),('DORMA','DORMA'),('IVORINO','IVORINO'),('KM 5512','KM 5512'),('NEBULA','NEBULA'),('ROJO','ROJO'),('AMARILLO','AMARILLO'),('ANARANJADO','ANARANJADO'),('HATENO','HATENO'),('HYRULE','HYRULE')]
     op_finca = [('VALLE','VALLE'),('RIO','RIO'),('CIP','CIP'),('FLE','FLE'),('FLA','FLA'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.')]
 
     id = models.AutoField(primary_key=True)
@@ -248,7 +248,7 @@ class causasRechazo(models.Model):
 class inventarioProdTerm(models.Model):
     
     op_proveedor = [('','-'),('SDC','SDC'),('AGROINDUSTRIAS SAN RAFAEL, S.A.','AGROINDUSTRIAS SAN RAFAEL, S.A.'),('INVERNADEROS TECNOLOGICOS S.A','INVERNADEROS TECNOLOGICOS S.A'),('HORTEX, S.A.','HORTEX, S.A.'),('DANIEL ESTUARDO GALICIA CARRERA','DANIEL ESTUARDO GALICIA CARRERA'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.')]
-    op_cultivo =   [('','-'),('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
+    op_cultivo =   [('','-'),('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('BEEF','BEEF'),('SALADETTE','SALADETTE'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
     op_categoria = [('','-'),('Mastronardi','Mastronardi'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolucion','Devolucion')]
     op_empaque =   [('Cajas','Cajas'),('Libras','Libras')]
     op_status = [('Pendiente','-'),('Cerrado','Cerrado')]
@@ -271,7 +271,7 @@ class inventarioProdTerm(models.Model):
 
 class productoTerm(models.Model):
     
-    op_cultivo =   [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
+    op_cultivo =   [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('BEEF','BEEF'),('SALADETTE','SALADETTE'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
     op_categoria = [('Mastronardi','Mastronardi'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolucion','Devolucion')]
     op_tipo =      [('Tomate','Tomate'),('Chile','Chile')]
     
