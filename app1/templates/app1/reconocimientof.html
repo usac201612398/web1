@@ -244,8 +244,10 @@
             setTimeout(() => {
                 console.log("Capturing image...");
 
-                // Capturar la imagen directamente desde el video
-                const context = document.createElement("canvas").getContext("2d");
+                // Crear el canvas con las dimensiones del video
+                const canvas = document.createElement("canvas");
+                const context = canvas.getContext("2d");
+
                 // Ajustar el tamaño del canvas al tamaño del video
                 canvas.width = video.videoWidth;  // 640px
                 canvas.height = video.videoHeight;  // 480px
