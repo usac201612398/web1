@@ -53,7 +53,9 @@ class detallesEstructuras(models.Model):
     orden = models.CharField(max_length=30,blank=True)
     cultivo = models.CharField(max_length=35, choices=op_cultivo,blank=True)
     estructura = models.CharField(max_length=35, choices=op_estructura,blank=True)
+    area =  models.FloatField(blank=True, null=True)
     variedad = models.CharField(max_length=40, choices=op_variedad,blank=True)
+    
     encargado = models.CharField(max_length=40, choices=op_encargado,blank=True)
 
     def __str__(self):
@@ -80,6 +82,7 @@ class AcumFruta(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     libras = models.FloatField(blank=True, null=True)
+    
     viaje = models.CharField(max_length=30,null=True,blank=True)
 
     def __str__(self):
@@ -352,3 +355,29 @@ class detallerecaux(models.Model):
     enviofruta = models.BigIntegerField(blank=True, null=True)
     boleta = models.BigIntegerField(blank=True, null = True)
     fechasalidafruta = models.DateField(blank=True, null=True)
+
+class enviosrec(models.Model):
+    #op_status = [('Pendiente','-'),('En proceso','En proceso'),('Cerrado','Cerrado')]
+    registro = models.BigAutoField(primary_key=True)
+    envio = models.BigIntegerField(blank=True, null = True)
+    cantidad = models.BigIntegerField(blank = True, null = True)
+    u_m = models.CharField(max_length= 25, blank = True, null =  True)
+    itemSAP_name = models.CharField(max_length= 200, blank = True, null =  True)
+    itemSAP_code = models.CharField(max_length= 15, blank = True, null =  True)
+    fecha = models.DateField(blank=True, null=True)
+    destino = models.CharField(max_length= 150, blank = True, null =  True)
+    recibe = models.CharField(max_length= 75, blank = True, null =  True)
+    observaciones = models.CharField(max_length=125,blank=True, null = True)
+    empaque_cnt = models.BigIntegerField(blank = True, null = True)
+    empaque_tipo = models.CharField(max_length= 25, blank = True, null =  True)
+    lugar = models.CharField(max_length= 25, blank = True, null =  True)
+    clasificacion = models.CharField(max_length= 25, blank = True, null =  True)
+    rubro = models.CharField(max_length= 25, blank = True, null =  True)
+    grupoArticulos = models.CharField(max_length= 25, blank = True, null =  True)
+    Rubro = models.CharField(max_length= 25, blank = True, null =  True)
+    almacen = models.CharField(max_length= 25, blank = True, null =  True)
+    firma = models.CharField(max_length= 75, blank = True, null =  True)
+    status = models.CharField(max_length=25,blank=True,null = True)
+    created = models.DateTimeField(auto_now=True, blank=True,null = True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
+    

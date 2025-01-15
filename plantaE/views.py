@@ -378,12 +378,14 @@ def cuadrar_RioDia(request):
     return render(request, 'plantaE/salidasFruta_cuadre.html', {'registros': registros_finales, 'registros2': registros_finales2})
 
 def cuadrar_ValleDia(request):
+
     today = timezone.now().date()
     nombre_usuario = request.user.username
-     # Obtener todos los registros para el usuario y la fecha
+    
+    # Obtener todos los registros para el usuario y la fecha
     registros = salidasFruta.objects.filter(fecha=today, correo=nombre_usuario,libras__isnull=False)
 
-   # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
+    # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
     df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','variedad','cajas','libras','created_at'])
 
     # Agrupar por 'variedad' y sumar las 'cajas'
@@ -414,6 +416,7 @@ def cuadrar_ValleDia(request):
     registros_finales2 = df_agrupado.to_dict(orient='records')
 
     if request.method == 'POST':
+
         opcion1 = request.POST.get('opcion1')
         opcion2 = request.POST.get('opcion2')
          # Obtener todos los registros para el usuario y la fecha
