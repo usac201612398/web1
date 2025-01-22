@@ -563,7 +563,7 @@ def article_create_plantillaValle(request):
         'ordenes': list(ordenes_abiertas)
     }
     
-    return render(request, 'plantaE/salidasFruta_envioValle.html',context)
+    return  JsonResponse({'ordenes':list(ordenes_abiertas)})
 
 def article_create(request):
     if request.method == 'POST':
