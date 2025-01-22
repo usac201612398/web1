@@ -537,21 +537,19 @@ def article_create_plantillaValle(request):
     
     nombre_usuario = request.user.username
     datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('finca','encargado')
-    estructura = detallesEstructuras.objects.filter(finca=list(datos)[0]['finca'],encargado=list(datos)[0]['encargado']).values('finca','orden','estructura','variedad','cultivo').distinct()
+
+    # Realizamos el INNER JOIN entre detallesEstructuras y datosProduccion a través del campo 'orden' 
+    estructura = detallesEstructuras.objects.filter(
+        finca=list(datos)[0]['finca'],
+        encargado=list(datos)[0]['encargado']
+    ).filter(
+        datosproduccion__status='Abierta'  # Aquí indicamos que queremos que solo se incluyan las órdenes 'Abiertas'
+    ).values(
+        'finca', 'orden', 'estructura', 'variedad', 'cultivo'
+    ).distinct()
+
+    # Ordenamos por el número de orden
     estructura = estructura.order_by('orden')
-    
-    # Ahora filtramos por el estado 'abierto' desde la tabla datosproduccion
-# Hacemos una segunda consulta para obtener los status de las órdenes y filtramos las abiertas
-    ordenes_abiertas = datosProduccion.objects.filter(  # Filtramos las ordenes que están en la lista de ordenes de estructura
-    status='Abierta'  # Filtramos solo las órdenes abiertas
-    ).values('orden')
-    # Extraemos los números de orden de las órdenes abiertas
-    ordenes_abiertas = [item['orden'] for item in ordenes_abiertas]
-
-    # Filtramos la estructura para que solo contenga las órdenes abiertas
-    estructura_abierta = estructura.filter(orden__in=ordenes_abiertas)
-
-    estructura_abierta = estructura_abierta.order_by('orden')
 
     context = {
 
