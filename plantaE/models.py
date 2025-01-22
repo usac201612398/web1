@@ -39,7 +39,6 @@ class detallesProduccion(models.Model):
     def __str__(self):
         return (str(self.cultivo) + " | " + str(self.variedad) )
     
-
 class detallesEstructuras(models.Model):
 
     op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('BEEF','BEEF'),('SALADETTE','SALADETTE'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
