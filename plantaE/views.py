@@ -559,7 +559,8 @@ def article_create_plantillaValle(request):
         'usuario': nombre_usuario,
         'registros': list(estructura),
         'fecha': fecha_,
-        'encargado': list(datos)[0]['encargado']
+        'encargado': list(datos)[0]['encargado'],
+        'ordenes': list(ordenes_abiertas)
     }
     
     return render(request, 'plantaE/salidasFruta_envioValle.html',context)
