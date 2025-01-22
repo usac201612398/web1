@@ -545,9 +545,10 @@ def article_create_plantillaValle(request):
     ordenes_abiertas = datosProduccion.objects.filter(  # Filtramos las ordenes que están en la lista de ordenes de estructura
     status='Abierta'  # Filtramos solo las órdenes abiertas
     ).values('orden')
+    
     # Extraemos los números de orden de las órdenes abiertas
     ordenes_abiertas = [item['orden'] for item in ordenes_abiertas]
-
+    JsonResponse({'ordenes':list(ordenes_abiertas)})
     # Filtramos la estructura para que solo contenga las órdenes abiertas
     estructura_abierta = estructura.filter(orden__in=ordenes_abiertas)
 
