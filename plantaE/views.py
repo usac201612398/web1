@@ -548,7 +548,7 @@ def article_create_plantillaValle(request):
     
     # Extraemos los números de orden de las órdenes abiertas
     ordenes_abiertas = [item['orden'] for item in ordenes_abiertas]
-    JsonResponse({'ordenes':list(ordenes_abiertas)})
+    #JsonResponse({'ordenes':list(ordenes_abiertas)})
     # Filtramos la estructura para que solo contenga las órdenes abiertas
     estructura_abierta = estructura.filter(orden__in=ordenes_abiertas)
 
@@ -563,7 +563,7 @@ def article_create_plantillaValle(request):
         'ordenes': list(ordenes_abiertas)
     }
     
-    return  JsonResponse({'ordenes':list(ordenes_abiertas)})
+    return render(request, 'plantaE/salidasFruta_envioValle.html',context)
 
 def article_create(request):
     if request.method == 'POST':
