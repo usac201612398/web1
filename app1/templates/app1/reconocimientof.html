@@ -334,13 +334,15 @@ function confirmRecognition() {
     const codigo = document.getElementById("codreconocido").innerText;
     const evento = document.getElementById("ev").value; // "Entrada" o "Salida"
     const fecha = document.getElementById("date").value;
+    const lugar = document.getElementById("Lug").value;
 
     // Preparamos los datos para la solicitud POST
     const data = {
         'nombre': nombre,
         'evento': evento,
         'codigo': codigo,
-        'fecha': fecha
+        'fecha': fecha,
+        'lugar':lugar
     };
 
     // Realizamos la solicitud al servidor

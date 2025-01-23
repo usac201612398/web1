@@ -610,7 +610,7 @@ def almacenarIdentidadConfirmada(request):
     if request.method == "POST":
         data = json.loads(request.body)
         fechar_ = data.get('fecha')
-        región_ = data.get('región')
+        región_ = data.get('lugar')
         evento_ = data.get('evento')
         most_common_code = data.get('codigo')
 
