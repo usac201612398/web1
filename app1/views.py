@@ -606,12 +606,6 @@ def registroPhotoMejorado(request):
 ##       
     return render(request,'app1/reconocimientof.html',response)
 
-from django.http import JsonResponse
-from django.utils import timezone
-from django.db import transaction
-import datetime
-import json
-
 def almacenarIdentidadConfirmada(request):
     if request.method == "POST":
         data = json.loads(request.body)
