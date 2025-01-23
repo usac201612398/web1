@@ -571,7 +571,7 @@ def registroPhotoMejorado(request):
             if most_common_code and most_common_count / len(filtered_results) >= 0.8:
                 nombreT = Listapersonal.objects.get(codigop=str(most_common_code))
                 nombre = nombreT.nombrep
-                saludo = "SE DETECTO COINCIDENCIA, CONFIRME SI ES " + nombre
+                saludo = "SE DETECTO COINCIDENCIA, CONFIRME SI ES "
             else:
                 nombre = "CONFUSO"
                 saludo = "INTENTE DE NUEVO, NO SE CONFIRMO IDENTIDAD"
