@@ -199,6 +199,7 @@
 <!-- Modal de confirmación -->
 <div id="confirmation-modal" style="display:none;">
     <p id="confirmation-message">¿Es esta la persona reconocida?</p>
+    <p id="codreconocido"></p>
     <p id="reconocido"></p>
     <button id="confirmar-btn">Sí</button>
     <button id="cancelar-btn">No</button>
@@ -315,9 +316,10 @@ button.addEventListener("click", async () => {
     }
 });
 
-function showConfirmation(nombre, saludo) {
+function showConfirmation(nombre, saludo,codigo) {
     // Mostrar modal con el saludo
     document.getElementById("confirmation-message").innerText = saludo;
+    document.getElementById("codreconocido").innerText = nombre;
     document.getElementById("reconocido").innerText = nombre;
     document.getElementById("confirmation-modal").style.display = 'block';
 
@@ -327,10 +329,47 @@ function showConfirmation(nombre, saludo) {
 }
 
 function confirmRecognition() {
-    // Aquí puedes hacer lo que sea necesario para confirmar el evento en el backend
-    alert("Evento confirmado.");
+    // Aquí obtenemos los datos necesarios para hacer el registro
+    const nombre = document.getElementById("reconocido").innerText;
+    const codigo = document.getElementById("codreconocido").innerText;
+    const evento = document.getElementById("ev").value; // "Entrada" o "Salida"
+    const fecha = document.getElementById("date").value;
+
+    // Preparamos los datos para la solicitud POST
+    const data = {
+        'nombre': nombre,
+        'evento': evento,
+        'codigo': codigo,
+        'fecha': fecha
+    };
+
+    // Realizamos la solicitud al servidor
+    fetch('https://sdc-iot.popoyan.com.gt/app1/registro/confirmacion', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken  // Asegúrate de enviar el token CSRF
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        // Maneja la respuesta del servidor
+        if (result.status === 'success') {
+            alert(result.saludo);
+        } else {
+            alert("Error al registrar el evento.");
+        }
+    })
+    .catch(error => {
+        console.error('Error al hacer la solicitud:', error);
+        alert("Ocurrió un error al intentar registrar el evento.");
+    });
+
+    // Ocultar el modal después de la confirmación
     document.getElementById("confirmation-modal").style.display = 'none';
 }
+
 
 function cancelRecognition() {
     // Si el usuario no está de acuerdo con el reconocimiento
@@ -345,7 +384,7 @@ function handleRecognitionResponse(data) {
         alert(data.saludo);
     } else {
         // Si el nombre es "DESCONOCIDO" o "CONFUSO", mostramos el modal de confirmación
-        showConfirmation(data.nombre, data.saludo);
+        showConfirmation(data.nombre, data.saludo, data.most_common);
     }
 }
     

@@ -24,6 +24,7 @@ urlpatterns = [
 #    path("iniciar/pedido/convencional/carrito",views.vector_prueba3,name='iniciar_pedido_conv_carrito'),
 #    path("iniciar/pedido/convencional",views.vector_prueba4,name='iniciar_pedido_conv_panel'),
     path("registro",views.registroPhotoMejorado,name='reconocimientof'),
+    path("registro/confirmacion",views.almacenarIdentidadConfirmada,name='confirmacionrecfacial'),
     path("registro/consulta",views.consultaRegistros,name='registroConsulta'),
 #    path("registro/consultaR",views.consultarR.as_view(), name = 'registroConsulta'),
     path('exportar_excel/', views.exportar_excel, name='exportar_excel'),

@@ -605,52 +605,68 @@ def registroPhotoMejorado(request):
                
 ##       
     return render(request,'app1/reconocimientof.html',response)
-'''
-def almacenarIdentidadConfirmada(request):
-    # Verificar si ya existe una entrada registrada
-    coincidencia = Ingresop.objects.filter(codigop=most_common_code, fecha=str(fechar_), evento="Entrada")
 
-    if coincidencia.exists():
-        # Si ya hay una entrada registrada, obtenemos la última entrada para ese código
-        #ultima_entrada = coincidencia.latest('marcat')
-        # Si hay una salida posterior a la última entrada, podemos registrar una nueva entrada
-        nombreT = Listapersonal.objects.get(codigop=str(most_common_code))
+from django.http import JsonResponse
+from django.utils import timezone
+from django.db import transaction
+import datetime
+import json
+
+def almacenarIdentidadConfirmada(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        fechar_ = data.get('fecha')
+        región_ = data.get('región')
+        evento_ = data.get('evento')
+        most_common_code = data.get('codigo')
+
+        # Obtener el nombre del usuario de forma más segura
+        nombreT = Listapersonal.objects.filter(codigop=str(most_common_code)).first()
+        if not nombreT:
+            return JsonResponse({"error": "Usuario no encontrado"}, status=404)
+        
         nombre = nombreT.nombrep
 
-        if evento_ == "Entrada":
-            saludo = f"Bienvenido {nombre}"
-        elif evento_ == "Salida":
-            saludo = f"Excelente día {nombre}"
+        # Verificar si ya existe un registro de entrada para el usuario en ese día
+        registros = Ingresop.objects.filter(codigop=most_common_code, fecha=str(fechar_))
 
-        # Registrar la nueva entrada o salida
-        marcaT = timezone.localtime(timezone.now())
-        
-        #Ingresop.objects.create(codigop=most_common_code, nombrep=nombre, marcat=marcaT, fecha=fechar_, origen=región_, evento=evento_)
-
-        
-        
-    else:
-        # Si no hay ninguna entrada registrada previamente, no permitimos salida
-        if evento_ == "Salida":
-            nombreT = Listapersonal.objects.get(codigop=str(most_common_code))
-            nombre = nombreT.nombrep
-            saludo = f"No se puede registrar la salida de {nombre} sin una entrada previa."
-
-        else:
-            # Si no existe una entrada, se puede registrar la nueva entrada
-            nombreT = Listapersonal.objects.get(codigop=str(most_common_code))
-            nombre = nombreT.nombrep
-
+        if not registros.exists():
+            # Si no hay registros, se puede crear una nueva entrada si es "Entrada"
             if evento_ == "Entrada":
+                marcaT = timezone.localtime(timezone.now())
+                Ingresop.objects.create(codigop=most_common_code, nombrep=nombre, marcat=marcaT, fecha=fechar_, origen=región_, evento=evento_)
                 saludo = f"Bienvenido {nombre}"
-            elif evento_ == "Salida":
-                saludo = f"Excelente día {nombre}"
+            else:
+                # Si no hay registros, no se puede registrar una salida
+                saludo = f"No se puede registrar la salida de {nombre} sin una entrada previa."
+        else:
+            # Si hay registros, debemos verificar el último evento registrado
+            ultimo_registro = registros.latest('marcat')  # Obtenemos el último registro de la fecha
+            if ultimo_registro.evento == "Entrada":
+                if evento_ == "Entrada":
+                    # Si el último registro es una entrada, no permitir otra entrada
+                    saludo = f"Ya has registrado una entrada, primero debes salir."
+                elif evento_ == "Salida":
+                    # Si el último registro es una entrada, permitir la salida
+                    marcaT = timezone.localtime(timezone.now())
+                    Ingresop.objects.create(codigop=most_common_code, nombrep=nombre, marcat=marcaT, fecha=fechar_, origen=región_, evento=evento_)
+                    saludo = f"Excelente día {nombre}"
+            elif ultimo_registro.evento == "Salida":
+                if evento_ == "Entrada":
+                    # Si el último registro fue una salida, permitir una nueva entrada
+                    marcaT = timezone.localtime(timezone.now())
+                    Ingresop.objects.create(codigop=most_common_code, nombrep=nombre, marcat=marcaT, fecha=fechar_, origen=región_, evento=evento_)
+                    saludo = f"Bienvenido {nombre}"
+                elif evento_ == "Salida":
+                    # Si el último registro fue una salida, no permitir otra salida
+                    saludo = f"Ya has registrado una salida, primero debes entrar."
+        
+        return JsonResponse({"nombre": nombre, "saludo": saludo})
 
-            marcaT = datetime.datetime.now()
-            #Ingresop.objects.create(codigop=most_common_code, nombrep=nombre, marcat=marcaT, fecha=fechar_, origen=región_, evento=evento_)
+    return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)
 
-    return JsonResponse({"nombre": nombre,"saludo":saludo})
 
+'''
 def vector_prueba(request):
 #    Sensor.objects.create(name='Presion Res1:' , tipo='Presion')
     items = TItem.objects.all()
