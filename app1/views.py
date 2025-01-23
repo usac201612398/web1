@@ -622,7 +622,7 @@ def almacenarIdentidadConfirmada(request):
         nombre = nombreT.nombrep
 
         # Verificar si ya existe un registro de entrada para el usuario en ese día
-        registros = Ingresop.objects.filter(codigop=most_common_code, fecha=str(fechar_))
+        registros = Ingresop.objects.filter(codigop=most_common_code, fecha=str(fechar_),origen=región_)
 
         if not registros.exists():
             # Si no hay registros, se puede crear una nueva entrada si es "Entrada"
@@ -655,7 +655,7 @@ def almacenarIdentidadConfirmada(request):
                     # Si el último registro fue una salida, no permitir otra salida
                     saludo = f"Ya has registrado una salida, primero debes entrar."
         
-        return JsonResponse({"nombre": nombre, "saludo": saludo})
+        return JsonResponse({"status":"success","nombre": nombre, "saludo": saludo})
 
     return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)
 

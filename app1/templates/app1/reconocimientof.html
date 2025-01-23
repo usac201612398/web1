@@ -357,7 +357,7 @@ function confirmRecognition() {
     .then(response => response.json())
     .then(result => {
         // Maneja la respuesta del servidor
-        if (result.status === 'success') {
+        if (result.status == 'success') {
             alert(result.saludo);
         } else {
             alert("Error al registrar el evento.");
