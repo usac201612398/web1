@@ -196,6 +196,14 @@
         <video class="video" autoplay></video>
     </div>
 </div>
+<!-- Modal de confirmación -->
+<div id="confirmation-modal" style="display:none;">
+    <p id="confirmation-message">¿Es esta la persona reconocida?</p>
+    <p id="reconocido"></p>
+    <button id="confirmar-btn">Sí</button>
+    <button id="cancelar-btn">No</button>
+</div>
+
 
 <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
 <script language="JavaScript" type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -272,6 +280,8 @@
 
         // Verificar si la respuesta del servidor es exitosa
         const result = await response.json();
+
+        handleRecognitionResponse(result);
         console.log(result);
         if (result.status) {
             // Mostrar mensaje de éxito
@@ -305,6 +315,39 @@ button.addEventListener("click", async () => {
     }
 });
 
+function showConfirmation(nombre, saludo) {
+    // Mostrar modal con el saludo
+    document.getElementById("confirmation-message").innerText = saludo;
+    document.getElementById("reconocido").innerText = nombre;
+    document.getElementById("confirmation-modal").style.display = 'block';
+
+    // Agregar los eventos a los botones
+    document.getElementById("confirmar-btn").addEventListener("click", confirmRecognition);
+    document.getElementById("cancelar-btn").addEventListener("click", cancelRecognition);
+}
+
+function confirmRecognition() {
+    // Aquí puedes hacer lo que sea necesario para confirmar el evento en el backend
+    alert("Evento confirmado.");
+    document.getElementById("confirmation-modal").style.display = 'none';
+}
+
+function cancelRecognition() {
+    // Si el usuario no está de acuerdo con el reconocimiento
+    alert("Evento cancelado.");
+    document.getElementById("confirmation-modal").style.display = 'none';
+}
+
+function handleRecognitionResponse(data) {
+    // Comprobamos si el nombre es "DESCONOCIDO" o "CONFUSO"
+    if (data.nombre == "DESCONOCIDO" && data.nombre == "CONFUSO") {
+        // Si el nombre es válido, mostramos un alert con el saludo
+        alert(data.saludo);
+    } else {
+        // Si el nombre es "DESCONOCIDO" o "CONFUSO", mostramos el modal de confirmación
+        showConfirmation(data.nombre, data.saludo);
+    }
+}
     
 </script>
 <script>
