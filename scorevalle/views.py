@@ -7,7 +7,7 @@ import json
 
 def index(request):
 
-    salidas = scorepersonal.objects.filter(area="Cosecha")
+    salidas = scorepersonal.objects.filter(area="Cosecha ")
     
     return render(request, 'scorevalle/menu.html', {'registros': salidas})
 
