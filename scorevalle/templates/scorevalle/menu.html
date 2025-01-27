@@ -78,16 +78,14 @@
                 <table class="table is-striped is-hoverable is is-fullwidth" id="myTable">
                 <thead id = "enc1">
                     <tr class="header">
+                        
+                    <th >Finca</th>
                     <th >Encargado</th>
                     <th >Cuadrilla</th>
                     <th >Codigo</th>
                     <th >Nombre</th>
                     <th >Estructura</th>
-                    <th >Finca</th>
-                    <th >GradoMad</th>
-                    <th >Deshoje</th>
-                    <th >Descoronado</th>
-                    <th >OrdenyLimp</th>
+                    <th >Area</th>
                     <th >Eliminar</th>
                     </tr>
                 </thead>
@@ -95,17 +93,17 @@
                 {%for registro in registros %}
 
                     <tr> 
+                        
+                        <td>{{registro.finca}}</td>
                         <td>{{registro.encargado}}</td>
                         <td>{{registro.cuadrilla}}</td>
                         <td>{{registro.codigop}}</td>
                         <td>{{registro.nombrep}}</td>
-                        <td>{{registro.finca}}</td>
                         <td>{{registro.estructura}}</td>
-                        <td><div contenteditable="true" class="editable-cell"></div></td>
-                        <td><div contenteditable="true" class="editable-cell"></div></td>
-                        <td><div contenteditable="true" class="editable-cell"></div></td>
-                        <td><div contenteditable="true" class="editable-cell"></div></td>
+                        <td>{{registro.area}}</td>
+
                         <td><button class="eliminar"><i class="fas fa-trash-alt"></i></button></td>
+
                     </tr> 
                         
                 {% endfor %}
