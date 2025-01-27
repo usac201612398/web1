@@ -9,7 +9,7 @@ urlpatterns = [
 
     path('', views.index, name='index'),  # Página principal
     
-    path('ajax/obtener-nombre-usuario/scoresdc', views.obtener_nombre_usuario_scoresdc, name='obtener_nombre_usuario_scoresdc'),
+    path('ajax/obtener-nombre-usuario-scoresdc/', views.obtener_nombre_usuario_scoresdc, name='obtener_nombre_usuario_scoresdc'),
     
     path('ajax/guardar-scorecosecha/', views.guardar_scorecosecha, name='guardar_scorecosecha'),
     

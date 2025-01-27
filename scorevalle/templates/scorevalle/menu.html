@@ -199,8 +199,8 @@ $(document).ready(function() {
             },
             success: function(data) {
                 // Limpia las opciones actuales del campo 'name'
-                $('#date').val(data.fecha_);
-                $('#correo').val(data.nombre_usuario);
+                $('#date').val(data.fecha);
+                $('#correo').val(data.username);
             
             },
             error: function(xhr, status, error) {
