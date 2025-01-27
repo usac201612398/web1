@@ -52,7 +52,7 @@ def guardar_scorecosecha(request):
     return JsonResponse({'mensaje':list(mensaje)})                  
 
 
-def obtener_nombre_usuario(request):
+def obtener_nombre_usuario_scoresdc(request):
     # Obtén el nombre de usuario del usuario autenticado
     now = datetime.datetime.now()
     fecha = now.date()
