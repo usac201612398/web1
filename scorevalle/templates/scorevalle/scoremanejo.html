@@ -16,7 +16,7 @@
     /*  background-image: url('/css/searchicon.png'); /* Add a search icon to input */
         background-position: 10px 12px; /* Position the search icon */
         background-repeat: no-repeat; /* Do not repeat the icon image */
-        width: 20%; /* Full-width */
+        width: 25%; /* Full-width */
         font-size: 16px; /* Increase font-size */
         padding: 12px 20px 12px 40px; /* Add some padding */
         border: 1px solid #ddd; /* Add a grey border */
@@ -27,7 +27,7 @@
     /*  background-image: url('/css/searchicon.png'); /* Add a search icon to input */
         background-position: 10px 12px; /* Position the search icon */
         background-repeat: no-repeat; /* Do not repeat the icon image */
-        width: 20%; /* Full-width */
+        width: 25%; /* Full-width */
         font-size: 16px; /* Increase font-size */
         padding: 12px 20px 12px 40px; /* Add some padding */
         border: 1px solid #ddd; /* Add a grey border */
@@ -38,7 +38,7 @@
     /*  background-image: url('/css/searchicon.png'); /* Add a search icon to input */
         background-position: 10px 12px; /* Position the search icon */
         background-repeat: no-repeat; /* Do not repeat the icon image */
-        width: 20%; /* Full-width */
+        width: 25%; /* Full-width */
         font-size: 16px; /* Increase font-size */
         padding: 12px 20px 12px 40px; /* Add some padding */
         border: 1px solid #ddd; /* Add a grey border */
@@ -49,18 +49,7 @@
     /*  background-image: url('/css/searchicon.png'); /* Add a search icon to input */
         background-position: 10px 12px; /* Position the search icon */
         background-repeat: no-repeat; /* Do not repeat the icon image */
-        width: 20%; /* Full-width */
-        font-size: 16px; /* Increase font-size */
-        padding: 12px 20px 12px 40px; /* Add some padding */
-        border: 1px solid #ddd; /* Add a grey border */
-        box-sizing: border-box;
-    }
-
-    #myInput5 {
-    /*  background-image: url('/css/searchicon.png'); /* Add a search icon to input */
-        background-position: 10px 12px; /* Position the search icon */
-        background-repeat: no-repeat; /* Do not repeat the icon image */
-        width: 20%; /* Full-width */
+        width: 25%; /* Full-width */
         font-size: 16px; /* Increase font-size */
         padding: 12px 20px 12px 40px; /* Add some padding */
         border: 1px solid #ddd; /* Add a grey border */
@@ -110,21 +99,6 @@
     <br>
     <div class = "container"> 
         <div class="half">
-            <div class="box">
-                <a href="{% url 'scorevalle_cosecha' %}">Cosecha</a> 
-            </div>
-
-            <div class="box">
-                <a href="{% url 'scorevalle_manejo' %}"> Manejo</a>
-            </div>
-
-        </div>
-    </div>
-    <br>
-
-    
-    <div class = "container"> 
-        <div class="half">
 
             <div class="box">
                 <form>
@@ -154,7 +128,6 @@
               <input class="input" type="text" id="myInput2" onkeyup="myFunction2()" placeholder="Buscar por nombre...">
               <input class="input" type="text" id="myInput3" onkeyup="myFunction3()" placeholder="Buscar estructura...">
               <input class="input" type="text" id="myInput4" onkeyup="myFunction4()" placeholder="Buscar por encargado...">
-              <input class="input" type="text" id="myInput5" onkeyup="myFunction5()" placeholder="Buscar por actividad...">
       
         </div>
     </div>
@@ -215,6 +188,7 @@
         </div>
         
 </body>
+<a href="{% url 'index' %}">Regresar a panel</a>
 <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -246,7 +220,7 @@ $('.envio3').on('click', function() {
     console.log(datos);
     $.ajax({
             
-            url: '{% url "guardar_score" %}',  // URL para la vista AJAX
+            url: '{% url "guardar_scorecosecha" %}',  // URL para la vista AJAX
             type: 'POST',
             dataType: "json",
             data:  JSON.stringify({'array':datos}),
@@ -390,27 +364,5 @@ function myFunction4() {
   }
 }
 
-
-function myFunction4() {
-  // Declare variables
-  var input, filter, table, tr, td, i, txtValue;
-  input = document.getElementById("myInput4");
-  filter = input.value.toUpperCase();
-  table = document.getElementById("myTable");
-  tr = table.getElementsByTagName("tr");
-
-  // Loop through all table rows, and hide those who don't match the search query
-  for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[6];
-    if (td) {
-      txtValue = td.textContent || td.innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        tr[i].style.display = "";
-      } else {
-        tr[i].style.display = "none";
-      }
-    }
-  }
-}
 
 </script>

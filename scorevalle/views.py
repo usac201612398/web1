@@ -1,17 +1,28 @@
 from django.shortcuts import render
 import datetime
 from django.http import JsonResponse
-from .models import scorepersonal
+from .models import scorepersonal, scorecosecha, scoremanejo
 import json
-# Create your views here.
+
 
 def index(request):
 
-    salidas = scorepersonal.objects.filter(area="Cosecha")
+    salidas = scorepersonal.objects.all()
     
     return render(request, 'scorevalle/menu.html', {'registros': salidas})
 
-def guardar_scorecosecha(request):
+def scoremanejo(request):
+
+    salidas = scoremanejo.objects.all()
+    
+    return render(request, 'scorevalle/scoremanejo.html', {'registros': salidas})
+def scorecosecha(request):
+
+    salidas = scorecosecha.objects.all()
+    
+    return render(request, 'scorevalle/scorecosecha.html', {'registros': salidas})
+
+def guardar_score(request):
     data = json.loads(request.body)
     mensaje = data['array']
     #mensaje = request.POST.get('array')
