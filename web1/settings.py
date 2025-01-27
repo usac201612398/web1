@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'ejemplo',
     'plantaE',
     'ips',
+    'scorevalle',
     'django_auth_adfs',
 ]
 
