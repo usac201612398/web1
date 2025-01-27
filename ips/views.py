@@ -10,6 +10,7 @@ import json
 import pandas as pd
 import pytz
 import datetime
+
 def index(request):
     return render(request, 'ips/escanerqr.html')
 
