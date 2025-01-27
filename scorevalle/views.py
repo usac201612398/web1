@@ -1,7 +1,7 @@
 from django.shortcuts import render
 import datetime
 from django.http import JsonResponse
-from models import scorepersonal
+from .models import scorepersonal
 # Create your views here.
 
 def index(request):
