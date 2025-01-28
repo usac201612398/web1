@@ -99,12 +99,13 @@ def scoremanejo_(request):
    # Obtener la fecha actual
     fecha_actual = datetime.datetime.now()
 
-    # Obtener el número de semana y el año actuales
-    numero_semana_actual = fecha_actual.isocalendar()[1]
-    año_actual = fecha_actual.year
+        # Definir el inicio y el fin de la semana actual
+    inicio_semana = fecha_actual - datetime.timedelta(days=fecha_actual.weekday())  # Lunes de la semana actual
+    fin_semana = inicio_semana + datetime.timedelta(days=6)  # Domingo de la semana actual
 
     # Filtrar los registros de scoremanejo donde el número de semana y el año sean los actuales
-    salidas = scoremanejo.objects.filter(semana=numero_semana_actual, año=año_actual)
+     # Filtrar los registros entre el inicio y el fin de la semana actual
+    salidas = scoremanejo.objects.filter(fecha__range=[inicio_semana, fin_semana])
     
     
     return render(request, 'scorevalle/scoremanejo.html', {'registros': salidas})
@@ -113,11 +114,13 @@ def scorecosecha_(request):
     # Obtener la fecha actual
     fecha_actual = datetime.datetime.now()
 
-    # Obtener el número de semana y el año actuales
-    numero_semana_actual = fecha_actual.isocalendar()[1]
-    año_actual = fecha_actual.year
-    salidas = scorecosecha.objects.filter(semana=numero_semana_actual, año=año_actual)
-    
+    # Definir el inicio y el fin de la semana actual
+    inicio_semana = fecha_actual - datetime.timedelta(days=fecha_actual.weekday())  # Lunes de la semana actual
+    fin_semana = inicio_semana + datetime.timedelta(days=6)  # Domingo de la semana actual
+
+    # Filtrar los registros entre el inicio y el fin de la semana actual
+    salidas = scorecosecha.objects.filter(fecha__range=[inicio_semana, fin_semana])
+
     return render(request, 'scorevalle/scorecosecha.html', {'registros': salidas})
 
 def guardar_score(request):
