@@ -7,12 +7,38 @@ from .forms import scorepersonalForm, scorecosechaForm,scoremanejoForm
 from django.shortcuts import get_object_or_404, redirect
 import json
 
-
 def index(request):
-
+    # Obtener todos los registros de scorepersonal
     salidas = scorepersonal.objects.all()
-    
-    return render(request, 'scorevalle/menu.html', {'registros': salidas})
+
+    # Obtener la fecha actual
+    fecha_actual = datetime.datetime.now()
+
+    # Obtener el número de semana y el año actuales
+    numero_semana_actual = fecha_actual.isocalendar()[1]
+    año_actual = fecha_actual.year
+
+    # Obtener registros de scoremanejo y scorecosecha de la semana y año actuales
+    manejo_sem = scoremanejo.objects.filter(semana=numero_semana_actual, año=año_actual)
+    cosecha_sem = scorecosecha.objects.filter(semana=numero_semana_actual, año=año_actual)
+
+    # Filtrar los registros que no están en scoremanejo ni scorecosecha según el área
+    registros_filtrados = []
+
+    for i in salidas:
+        # Si el área es "Manejo", solo comprobar en scoremanejo
+        if i.area == "Manejo":
+            if not manejo_sem.filter(cuadrilla=i.cuadrilla, codigop=i.codigop).exists():
+                registros_filtrados.append(i)
+        # Si el área es "Cosecha", solo comprobar en scorecosecha
+        elif i.area == "Cosecha":
+            if not cosecha_sem.filter(cuadrilla=i.cuadrilla, codigop=i.codigop).exists():
+                registros_filtrados.append(i)
+
+    # Renderizar la plantilla con los registros filtrados (sin los eliminados)
+    return render(request, 'scorevalle/menu.html', {'registros': registros_filtrados})
+
+
 
 def scoremanejo_(request):
 
