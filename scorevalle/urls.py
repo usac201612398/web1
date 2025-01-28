@@ -12,6 +12,7 @@ urlpatterns = [
     path('ajax/obtener-nombre-usuario-scoresdc/', views.obtener_nombre_usuario_scoresdc, name='obtener_nombre_usuario_scoresdc'),
     
     path('ajax/guardar-scorecosecha/', views.guardar_score, name='guardar_score'),
+    
     path('scoremanejo', views.scorecosecha_, name='scorevalle_cosecha'),
     path('scorecosecha', views.scoremanejo_, name='scorevalle_manejo'),
 

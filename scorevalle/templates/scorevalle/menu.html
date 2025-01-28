@@ -174,7 +174,8 @@
                     <th >Nombre</th>
                     <th >Estructura</th>
                     <th >Area</th>
-                    <th >Eliminar</th>
+                    <th ><i class="fas fa-edit"></i></th>
+                    <th ><i class="fas fa-trash-alt"></i></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -189,7 +190,7 @@
                         <td>{{registro.nombrep}}</td>
                         <td>{{registro.estructura}}</td>
                         <td>{{registro.area}}</td>
-
+                        <th ><a href="{% url 'scorepersonal_update' registro.pk %}"><i class="fas fa-edit"></i></a></th>
                         <td><button class="eliminar"><i class="fas fa-trash-alt"></i></button></td>
 
                     </tr> 
