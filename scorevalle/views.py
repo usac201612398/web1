@@ -2,6 +2,9 @@ from django.shortcuts import render
 import datetime
 from django.http import JsonResponse
 from .models import scorepersonal, scorecosecha, scoremanejo
+from .forms import scorepersonalForm, scorecosechaForm,scoremanejoForm
+
+from django.shortcuts import get_object_or_404, redirect
 import json
 
 
@@ -11,14 +14,29 @@ def index(request):
     
     return render(request, 'scorevalle/menu.html', {'registros': salidas})
 
-def scoremanejo(request):
+def scoremanejo_(request):
 
-    salidas = scoremanejo.objects.all()
+   # Obtener la fecha actual
+    fecha_actual = datetime.datetime.now()
+
+    # Obtener el número de semana y el año actuales
+    numero_semana_actual = fecha_actual.isocalendar()[1]
+    año_actual = fecha_actual.year
+
+    # Filtrar los registros de scoremanejo donde el número de semana y el año sean los actuales
+    salidas = scoremanejo.objects.filter(numero_semana=numero_semana_actual, año=año_actual)
+    
     
     return render(request, 'scorevalle/scoremanejo.html', {'registros': salidas})
-def scorecosecha(request):
 
-    salidas = scorecosecha.objects.all()
+def scorecosecha_(request):
+    # Obtener la fecha actual
+    fecha_actual = datetime.datetime.now()
+
+    # Obtener el número de semana y el año actuales
+    numero_semana_actual = fecha_actual.isocalendar()[1]
+    año_actual = fecha_actual.year
+    salidas = scorecosecha.objects.filter(numero_semana=numero_semana_actual, año=año_actual)
     
     return render(request, 'scorevalle/scorecosecha.html', {'registros': salidas})
 
@@ -26,40 +44,26 @@ def guardar_score(request):
     data = json.loads(request.body)
     mensaje = data['array']
     #mensaje = request.POST.get('array')
-    '''
-    for elemento in mensaje:
-        elemento[5] = int(elemento[5])
-
-    df = pd.DataFrame(mensaje,columns=['Encargado','Orden','Cultivo','Estructura','Variedad','Cajas','Blank','Finca','Viaje','Fecha','Correo'])
     
-    resultado = df.groupby(['Variedad','Orden'] ).agg({
-        'Encargado': 'first',  # O 'last', 'min', 'max', etc.
-        'Cultivo': 'first',
-        'Finca': 'first',
-        'Viaje': 'first',
-        'Fecha': 'first',
-        'Correo': 'first',
-        'Cajas': 'sum'
-    }).reset_index()
-    resultado_lista = resultado.to_dict(orient='records')
-     # Creación de registros en la base de datos
-    for i in resultado_lista:
-        salidasFruta.objects.create(
-            fecha=i['Fecha'],       # Ajusta el nombre según tu modelo
-            finca=i['Finca'],
-            encargado=i['Encargado'],
-            cultivo=i['Cultivo'],
-            variedad=i['Variedad'],
-            cajas=i['Cajas'],
-            viaje=i['Viaje'],
-            correo=i['Correo']
-        )
+    
     
     for i in mensaje:
+
+        fecha = datetime.datetime.strptime(i[7], "%Y-%m-%d")  # Ajusta el formato si es necesario
+
+        # Obtener el número de la semana
+        numero_semana = fecha.isocalendar()[1]
+        año_ = fecha.year  # Obtener el año de la fecha
+
+        if i[6] == "Cosecha":
+
+            scorecosecha.objects.create(finca=i[0],encargado=i[1],cuadrilla=i[2],codigop=i[3],nombrep=i[4],estructura=i[5],area=i[6],fecha=i[7],semana=numero_semana,año=año_)
+        else:
+
+            scoremanejo.objects.create(finca=i[0],encargado=i[1],cuadrilla=i[2],codigop=i[3],nombrep=i[4],estructura=i[5],area=i[6],fecha=i[7],semana=numero_semana,año=año_)
         
-        AcumFruta.objects.create(fecha=i[9],finca=i[7],orden=i[1],cultivo=i[2],estructura=i[3],variedad=i[4],cajas=i[5],correo=i[10],viaje=i[8])
+
     
-    '''
     return JsonResponse({'mensaje':list(mensaje)})                  
 
 
@@ -78,3 +82,48 @@ def obtener_nombre_usuario_scoresdc(request):
     nombre_usuario = request.user.username
     
     return JsonResponse({'username': nombre_usuario,'fecha':fecha_})
+
+def actualizar_scorepersonal(request, pk):
+    # Obtener el registro a partir del qr_data
+    registro = get_object_or_404(scorepersonal, pk=pk)
+    
+    if request.method == "POST":
+        form = scorepersonalForm(request.POST, instance=registro)
+        
+        if form.is_valid():
+            form.save()  # Guardar los cambios en la base de datos
+            return redirect('index')  # Redirigir a una página de éxito o el detalle del registro actualizado
+    else:
+        form = scorepersonalForm(instance=registro)  # Mostrar el formulario con los datos actuales
+
+    return render(request, 'scorevalle/edit_menu.html', {'form': form})
+
+def actualizar_scoremanejo(request, pk):
+    # Obtener el registro a partir del qr_data
+    registro = get_object_or_404(scoremanejo, pk=pk)
+    
+    if request.method == "POST":
+        form = scoremanejoForm(request.POST, instance=registro)
+        
+        if form.is_valid():
+            form.save()  # Guardar los cambios en la base de datos
+            return redirect('scorevalle_manejo')  # Redirigir a una página de éxito o el detalle del registro actualizado
+    else:
+        form = scoremanejoForm(instance=registro)  # Mostrar el formulario con los datos actuales
+
+    return render(request, 'scoremanejo/edit_manejo.html', {'form': form})
+
+def actualizar_scorecosecha(request, pk):
+    # Obtener el registro a partir del qr_data
+    registro = get_object_or_404(scorecosecha, pk=pk)
+    
+    if request.method == "POST":
+        form = scorecosechaForm(request.POST, instance=registro)
+        
+        if form.is_valid():
+            form.save()  # Guardar los cambios en la base de datos
+            return redirect('scorevalle_cosecha')  # Redirigir a una página de éxito o el detalle del registro actualizado
+    else:
+        form = scorecosechaForm(instance=registro)  # Mostrar el formulario con los datos actuales
+
+    return render(request, 'scorevalle/edit_cosecha.html', {'form': form})
