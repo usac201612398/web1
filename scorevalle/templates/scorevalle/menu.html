@@ -118,6 +118,10 @@
                 <a href="{% url 'scorevalle_manejo' %}"> Manejo</a>
             </div>
 
+            <div class="box">
+              <a href="{% url 'score_exportar' %}">Exportar</a>
+            </div>
+
         </div>
     </div>
     <br>
@@ -239,7 +243,7 @@ $('.envio3').on('click', function() {
             datos.push(filas);
         }
     }
-    
+
     console.log(datos);
     $.ajax({
             

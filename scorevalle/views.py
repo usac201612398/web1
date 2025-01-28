@@ -1,11 +1,64 @@
 from django.shortcuts import render
 import datetime
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from .models import scorepersonal, scorecosecha, scoremanejo
 from .forms import scorepersonalForm, scorecosechaForm,scoremanejoForm
-
+from openpyxl import Workbook
 from django.shortcuts import get_object_or_404, redirect
 import json
+import pandas as pd
+import pytz
+
+def exportar_excel(request):
+    
+    # Crea un libro de Excel y una hoja
+    wb = Workbook()
+    ws = wb.active
+    ws.title = 'Manejo'
+
+    # Obtén los datos de tu modelo
+    datos = scorecosecha.objects.all()
+
+    # Especifica la zona horaria deseada
+    zona_horaria_deseada = pytz.timezone('America/Guatemala')  # Cambia esto según sea necesario
+
+    # Agrega los encabezados
+    ws.append([field.name for field in scoremanejo._meta.fields])
+    # Agrega los datos  
+    for obj in datos:
+        row = []
+        for field in scoremanejo._meta.fields:
+            value = getattr(obj, field.name)
+            if isinstance(value, datetime.datetime):
+                # Convertir a la zona horaria deseada
+                if value.tzinfo is not None:
+                    value = value.astimezone(zona_horaria_deseada)
+                    value = value.replace(tzinfo=None)  # Eliminar la zona horaria para ser compatible con Excel
+            row.append(value)
+        ws.append(row)
+    ws_cosecha = wb.create_sheet(title='Cosecha')
+    # Agrega los encabezados
+    ws_cosecha.append([field.name for field in scorecosecha._meta.fields])
+    # Agrega los datos  
+    for obj in datos:
+        row = []
+        for field in scorecosecha._meta.fields:
+            value = getattr(obj, field.name)
+            if isinstance(value, datetime.datetime):
+                # Convertir a la zona horaria deseada
+                if value.tzinfo is not None:
+                    value = value.astimezone(zona_horaria_deseada)
+                    value = value.replace(tzinfo=None)  # Eliminar la zona horaria para ser compatible con Excel
+            row.append(value)
+        ws.append(row)
+    # Crea una respuesta HTTP que sirva el archivo Excel
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=datos.xlsx'
+
+    # Guarda el libro de Excel en la respuesta
+    wb.save(response)
+
+    return response
 
 def index(request):
     # Obtener todos los registros de scorepersonal
