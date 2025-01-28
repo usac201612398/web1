@@ -147,6 +147,10 @@
                     <th >Nombre</th>
                     <th >Estructura</th>
                     <th >Area</th>
+                    <th >Grado_Mad</th>
+                    <th >Deshoje</th>
+                    <th >Descoronado</th>
+                    <th >Ord_Limp</th>
                     <th ><i class="fas fa-edit"></i></th>
                     <th ><i class="fas fa-trash-alt"></i></th>
                     </tr>
@@ -163,7 +167,10 @@
                         <td>{{registro.nombrep}}</td>
                         <td>{{registro.estructura}}</td>
                         <td>{{registro.area}}</td>
-
+                        <td>{{registro.grado_mad}}</td>
+                        <td>{{registro.deshoje}}</td>
+                        <td>{{registro.descoronado}}</td>
+                        <td>{{registro.orden_limpieza}}</td>
                         <th ><a href="{% url 'scorecosecha_update' registro.pk %}"><i class="fas fa-edit"></i></a></th>
                         <td><button class="eliminar"><i class="fas fa-trash-alt"></i></button></td>
 

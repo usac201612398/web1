@@ -111,7 +111,7 @@ def actualizar_scoremanejo(request, pk):
     else:
         form = scoremanejoForm(instance=registro)  # Mostrar el formulario con los datos actuales
 
-    return render(request, 'scoremanejo/edit_manejo.html', {'form': form})
+    return render(request, 'scorevalle/edit_manejo.html', {'form': form})
 
 def actualizar_scorecosecha(request, pk):
     # Obtener el registro a partir del qr_data

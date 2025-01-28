@@ -147,7 +147,14 @@
                     <th >Nombre</th>
                     <th >Estructura</th>
                     <th >Area</th>
-                    <th >Eliminar</th>
+                    <th >Bajado</th>
+                    <th >Distri_ejes</th>
+                    <th >Deshije</th>
+                    <th >Guiado</th>
+                    <th >Hil_ban_rec_ejes</th>
+                    <th >Ord_Limp</th>
+                    <th ><i class="fas fa-edit"></i></th>
+                    <th ><i class="fas fa-trash-alt"></i></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -162,6 +169,13 @@
                         <td>{{registro.nombrep}}</td>
                         <td>{{registro.estructura}}</td>
                         <td>{{registro.area}}</td>
+                        <td>{{registro.bajado}}</td>
+                        <td>{{registro.distri_ejes}}</td>
+                        <td>{{registro.deshije}}</td>
+                        <td>{{registro.guiado}}</td>
+                        <td>{{registro.hil_ban_rec_ejes}}</td>
+                        <td>{{registro.orden_limpieza}}</td>
+                        
                         <th ><a href="{% url 'scoremanejo_update' registro.pk %}"><i class="fas fa-edit"></i></a></th>
                         <td><button class="eliminar"><i class="fas fa-trash-alt"></i></button></td>
 
