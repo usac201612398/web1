@@ -49,7 +49,7 @@ def guardar_score(request):
     
     for i in mensaje:
 
-        fecha = datetime.datetime.strptime(i[7], "%Y-%m-%d")  # Ajusta el formato si es necesario
+        fecha = datetime.datetime.strptime(i[9], "%Y-%m-%d")  # Ajusta el formato si es necesario
 
         # Obtener el número de la semana
         numero_semana = fecha.isocalendar()[1]
@@ -57,10 +57,10 @@ def guardar_score(request):
 
         if i[6] == "Cosecha":
 
-            scorecosecha.objects.create(finca=i[0],encargado=i[1],cuadrilla=i[2],codigop=i[3],nombrep=i[4],estructura=i[5],area=i[6],fecha=i[7],semana=numero_semana,año=año_)
+            scorecosecha.objects.create(finca=i[0],encargado=i[1],cuadrilla=i[2],codigop=i[3],nombrep=i[4],estructura=i[5],area=i[6],fecha=i[9],semana=numero_semana,año=año_)
         else:
 
-            scoremanejo.objects.create(finca=i[0],encargado=i[1],cuadrilla=i[2],codigop=i[3],nombrep=i[4],estructura=i[5],area=i[6],fecha=i[7],semana=numero_semana,año=año_)
+            scoremanejo.objects.create(finca=i[0],encargado=i[1],cuadrilla=i[2],codigop=i[3],nombrep=i[4],estructura=i[5],area=i[6],fecha=i[9],semana=numero_semana,año=año_)
         
 
     
