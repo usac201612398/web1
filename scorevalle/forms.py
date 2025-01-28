@@ -46,4 +46,4 @@ class scorepersonalForm(forms.ModelForm):
     class Meta:
     
         model = scorepersonal
-        fields = ['fecha','encargado','cuadrilla','codigop','nombrep','estructura','area']
+        fields = ['finca','encargado','cuadrilla','codigop','nombrep','estructura','area']
