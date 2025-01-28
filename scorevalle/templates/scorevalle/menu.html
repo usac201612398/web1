@@ -229,21 +229,17 @@ $('.envio3').on('click', function() {
     
     var datos = []
     for (var i = 1, row; row = resume_table.rows[i]; i++) {
-      //alert(cell[i].innerText);
-      filas = []
-      for (var j = 0, col; col = row.cells[j]; j++) {
-        //alert(col[j].innerText);
-        
-
-        filas.push(col.innerText);
-        
-      }
-
-        
-        filas.push(fecha);
-      datos.push(filas);
-
+        // Solo procesar filas visibles
+        if (row.style.display !== "none") {
+            filas = []
+            for (var j = 0, col; col = row.cells[j]; j++) {
+                filas.push(col.innerText);
+            }
+            filas.push(fecha);
+            datos.push(filas);
+        }
     }
+    
     console.log(datos);
     $.ajax({
             
