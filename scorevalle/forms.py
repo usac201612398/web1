@@ -6,12 +6,12 @@ class scoremanejoForm(forms.ModelForm):
     fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'my-input'}))
     nombrep = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de correo electrónico
     estructura = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
-    bajado = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
-    distri_ejes = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
-    deshije = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
-    guiado = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
-    hil_ban_rec_ejes = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
-    orden_limpieza = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
+    bajado = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}), required=False)  # Campo numérico
+    distri_ejes = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}), required=False)  # Campo numérico
+    deshije = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}), required=False)  # Campo numérico
+    guiado = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}), required=False)  # Campo numérico
+    hil_ban_rec_ejes = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}), required=False)  # Campo numérico
+    orden_limpieza = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}), required=False)  # Campo numérico
 
     class Meta:
     
@@ -23,10 +23,10 @@ class scorecosechaForm(forms.ModelForm):
     fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'my-input'}))
     nombrep = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de nombre
     estructura = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
-    grado_mad = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
-    deshoje= forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
-    descoronado = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
-    orden_limpieza = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
+    grado_mad = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}), required=False)  # Campo numérico
+    deshoje= forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}), required=False)  # Campo numérico
+    descoronado = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}), required=False)  # Campo numérico
+    orden_limpieza = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}), required=False)  # Campo numérico
 
     class Meta:
     
@@ -41,7 +41,7 @@ class scorepersonalForm(forms.ModelForm):
     codigop =  forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico   
     nombrep = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de nombre
     estructura = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
-    area = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
+    area = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}), required=False)  # Campo de texto
 
     class Meta:
     
