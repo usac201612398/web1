@@ -24,7 +24,7 @@ def scoremanejo_(request):
     año_actual = fecha_actual.year
 
     # Filtrar los registros de scoremanejo donde el número de semana y el año sean los actuales
-    salidas = scoremanejo.objects.filter(numero_semana=numero_semana_actual, año=año_actual)
+    salidas = scoremanejo.objects.filter(semana=numero_semana_actual, año=año_actual)
     
     
     return render(request, 'scorevalle/scoremanejo.html', {'registros': salidas})
@@ -36,7 +36,7 @@ def scorecosecha_(request):
     # Obtener el número de semana y el año actuales
     numero_semana_actual = fecha_actual.isocalendar()[1]
     año_actual = fecha_actual.year
-    salidas = scorecosecha.objects.filter(numero_semana=numero_semana_actual, año=año_actual)
+    salidas = scorecosecha.objects.filter(semana=numero_semana_actual, año=año_actual)
     
     return render(request, 'scorevalle/scorecosecha.html', {'registros': salidas})
 
