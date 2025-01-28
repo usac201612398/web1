@@ -16,7 +16,7 @@ class scoremanejoForm(forms.ModelForm):
     class Meta:
     
         model = scoremanejo
-        fields = ['fecha','nombrep','estructura','bajado',  'distri_ejes', 'deshije', 'gruiado','hil_ban_rec_ejes','orden_limpieza']
+        fields = ['fecha','nombrep','estructura','bajado',  'distri_ejes', 'deshije', 'guiado','hil_ban_rec_ejes','orden_limpieza']
 
 class scorecosechaForm(forms.ModelForm):
 
