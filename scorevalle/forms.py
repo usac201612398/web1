@@ -4,8 +4,8 @@ from .models import scoremanejo, scorecosecha, scorepersonal
 class scoremanejoForm(forms.ModelForm):
 
     fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'my-input'}))
-    nombre = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de correo electrónico
-    estructura = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    nombre = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de correo electrónico
+    estructura = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
     bajado = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
     distri_ejes = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
     deshije = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
@@ -21,8 +21,8 @@ class scoremanejoForm(forms.ModelForm):
 class scorecosechaForm(forms.ModelForm):
 
     fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'my-input'}))
-    nombre = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de nombre
-    estructura = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    nombre = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de nombre
+    estructura = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
     grado_mad = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
     deshoje= forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
     descoronado = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
@@ -35,13 +35,13 @@ class scorecosechaForm(forms.ModelForm):
 
 class scorepersonalForm(forms.ModelForm):
 
-    finca = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
-    encargado = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
-    cuadrilla = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    finca = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
+    encargado = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
+    cuadrilla = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
     codigo =  forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico   
-    nombre = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de nombre
-    estructura = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
-    area = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    nombre = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de nombre
+    estructura = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
+    area = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
 
     class Meta:
     
