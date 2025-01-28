@@ -17,7 +17,7 @@ def exportar_excel(request):
     ws.title = 'Manejo'
 
     # Obtén los datos de tu modelo
-    datos = scorecosecha.objects.all()
+    datos = scoremanejo.objects.all()
 
     # Especifica la zona horaria deseada
     zona_horaria_deseada = pytz.timezone('America/Guatemala')  # Cambia esto según sea necesario
@@ -36,6 +36,7 @@ def exportar_excel(request):
                     value = value.replace(tzinfo=None)  # Eliminar la zona horaria para ser compatible con Excel
             row.append(value)
         ws.append(row)
+    datos = scorecosecha.objects.all()
     ws_cosecha = wb.create_sheet(title='Cosecha')
     # Agrega los encabezados
     ws_cosecha.append([field.name for field in scorecosecha._meta.fields])
