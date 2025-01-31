@@ -48,8 +48,19 @@ INSTALLED_APPS = [
     'ips',
     'scorevalle',
     'django_auth_adfs',
+    'channels', 
 ]
+ASGI_APPLICATION = "plantaE.asgi.application"
 
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],  # Dirección del servidor Redis
+        },
+    },
+}
 #SITE_ID = 1
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

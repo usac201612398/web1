@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoreo de Sensor en Tiempo Real</title>
+</head>
+<body>
+    <h1>Valor del Sensor en Tiempo Real</h1>
+    <div id="sensorValue">Esperando datos...</div>
+
+    <script>
+        const socket = new WebSocket('ws://' + window.location.host + '/ws/sensor_data/');
+
+        // Recibir los datos del sensor en tiempo real
+        socket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            document.getElementById('sensorValue').innerText = "Valor del sensor: " + data.value;
+        };
+
+        // Manejar errores
+        socket.onerror = function(e) {
+            console.error('Error de WebSocket:', e);
+        };
+    </script>
+</body>
+</html>

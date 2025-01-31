@@ -8,6 +8,8 @@ urlpatterns = [
 #    path("homepage/", views.homepage, name="homepage"),
 #    path('logout/', views.logout_view, name='logout'),
     path("",views.plantaEhomepage,name='plantaE_home'),
+    
+    path('mostrarvascula/', views.vascula_monitor, name='sensor_monitor'),
     path('exportar_excel/', views.exportar_excel, name='exportar_excel'),
     path('ajax/load-dataUsuario/', views.load_dataUsuario, name='load_dataUsuario'),
     path('ajax/load-dataUsuario2/', views.load_dataUsuario2, name='load_dataUsuario2'),

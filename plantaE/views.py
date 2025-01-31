@@ -16,6 +16,9 @@ import json
 import pandas as pd
 import pytz
 
+def vascula_monitor(request):
+    return render(request, 'vascula.html')
+
 def exportar_excel(request):
     if request.method == 'POST':
         opcion1 = request.POST.get('opcion1')
