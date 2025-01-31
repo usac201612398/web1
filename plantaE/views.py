@@ -17,7 +17,7 @@ import pandas as pd
 import pytz
 
 def vascula_monitor(request):
-    return render(request, 'vascula.html')
+    return render(request, 'plantaE/vascula.html')
 
 def exportar_excel(request):
     if request.method == 'POST':
