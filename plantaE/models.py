@@ -267,6 +267,7 @@ class inventarioProdTerm(models.Model):
     libras =  models.FloatField(blank=True, null=True)
     pesostdxcaja =  models.FloatField(blank=True, null=True)
     lbsintara =  models.FloatField(blank=True, null=True)
+    pesostd = models.FloatField(blank=True, null=True)
     merma =  models.FloatField(blank=True, null=True)
     pesorxcaja =  models.FloatField(blank=True, null=True)
     pesostdxcaja = models.FloatField(blank=True, null=True)
