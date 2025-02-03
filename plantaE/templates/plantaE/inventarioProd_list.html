@@ -6,6 +6,42 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
     <title>Inventario Producto Terminado</title>
     <style>
+        .inputs-row {
+        display: flex;
+        flex-wrap: nwrap; /* Para que se acomoden bien en pantallas más pequeñas */
+    }
+    #myInput {
+    /*  background-image: url('/css/searchicon.png'); /* Add a search icon to input */
+        background-position: 10px 12px; /* Position the search icon */
+        background-repeat: no-repeat; /* Do not repeat the icon image */
+        width: 25%; /* Full-width */
+        font-size: 16px; /* Increase font-size */
+        padding: 12px 20px 12px 40px; /* Add some padding */
+        border: 1px solid #ddd; /* Add a grey border */
+        box-sizing: border-box;
+    }
+    
+    #myInput2 {
+    /*  background-image: url('/css/searchicon.png'); /* Add a search icon to input */
+        background-position: 10px 12px; /* Position the search icon */
+        background-repeat: no-repeat; /* Do not repeat the icon image */
+        width: 25%; /* Full-width */
+        font-size: 16px; /* Increase font-size */
+        padding: 12px 20px 12px 40px; /* Add some padding */
+        border: 1px solid #ddd; /* Add a grey border */
+        box-sizing: border-box;
+    }
+    
+    #myInput3 {
+    /*  background-image: url('/css/searchicon.png'); /* Add a search icon to input */
+        background-position: 10px 12px; /* Position the search icon */
+        background-repeat: no-repeat; /* Do not repeat the icon image */
+        width: 25%; /* Full-width */
+        font-size: 16px; /* Increase font-size */
+        padding: 12px 20px 12px 40px; /* Add some padding */
+        border: 1px solid #ddd; /* Add a grey border */
+        box-sizing: border-box;
+    }
         h1 {
             margin: 15px;
             font-family: Arial, sans-serif;
@@ -15,11 +51,44 @@
             margin: 20px;
             font-family: Arial, sans-serif;
         }
+        .half {
+        display: flex;
+        height: 100%;
+        grid-template-columns:  repeat(auto-fit, minmax(min-content, max-content)); /* Divide cada mitad en dos columnas iguales */
+        gap: 5px; /* Espacio entre columnas */
+        text-align: center;
+        }
+
+        .box {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 10px;
+            flex: auto; 
+            height: 100%;    
+        }
+        td {
+            padding: 0;
+        }
+        td input {
+            width: 100%;
+            border: none;
+            background: transparent;
+        }
 
     </style>
 </head>
 <body>
     <h1 class="roboto">Panel</h1>
+    <div class="container">
+        <div class="inputs-row">
+      
+              <input class="input" type="text" id="myInput" onkeyup="myFunction()" placeholder="Buscar productor...">
+              <input class="input" type="text" id="myInput2" onkeyup="myFunction2()" placeholder="Buscar item nombre...">
+              <input class="input" type="text" id="myInput3" onkeyup="myFunction3()" placeholder="Buscar categoria...">
+              
+        </div>
+    </div>
+
     <a href="{% url 'inventarioProd_create' %}">Agregar registro</a>
     <div class="container">
         <div class="columns">
@@ -64,3 +133,73 @@
         </div>
 </body>
 </html>
+
+<script>  
+function myFunction() {
+    // Declare variables
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("myTable");
+    tr = table.getElementsByTagName("tr");
+  
+    // Loop through all table rows, and hide those who don't match the search query
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[3];
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  }
+  
+  
+  function myFunction2() {
+    // Declare variables
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("myInput2");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("myTable");
+    tr = table.getElementsByTagName("tr");
+  
+    // Loop through all table rows, and hide those who don't match the search query
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[4];
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  }
+  
+  
+  function myFunction3() {
+    // Declare variables
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("myInput3");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("myTable");
+    tr = table.getElementsByTagName("tr");
+  
+    // Loop through all table rows, and hide those who don't match the search query
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[5];
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  }
+</script>  
