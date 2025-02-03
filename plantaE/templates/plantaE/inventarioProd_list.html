@@ -32,13 +32,12 @@
                     <th >Fecha</th>
                     <th >Productor</th>
                     <th >Cultivo</th>
-                    <th >Calidad 1</th>
+                    <th >ItemCode</th> 
+                    <th >ItemName</th>
                     <th >Categoria</th>
-                    <th >Empaque</th>
                     <th >Cajas</th>
                     <th >Libras</th>
                     <th >Created</th>
-                    <th >Eliminar</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -48,13 +47,12 @@
                     <td>{{registro.fecha}}</td>
                     <td>{{registro.proveedor}}</td>
                     <td>{{registro.cultivo}}</td>
-                    <td>{{registro.calidad1}}</td>
+                    <td>{{registro.itemsapcode}}</td>
+                    <td>{{registro.itemsapname}}</td>
                     <td>{{registro.categoria}}</td>
-                    <td>{{registro.empaque}}</td>
                     <td>{{registro.cajas}}</td>
-                    <td>{{registro.libras}}</td>
+                    <td>{{registro.lbsintara}}</td>
                     <td>{{registro.created_at}}</td>
-                    <th ><a href="{% url 'inventarioProd_delete' registro.pk %}"><i class="fas fa-trash-alt"></i></a></th>
                     </tr> 
                         
                 {% endfor %}
