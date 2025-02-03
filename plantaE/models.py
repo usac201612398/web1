@@ -274,14 +274,16 @@ class inventarioProdTerm(models.Model):
 class productoTerm(models.Model):
     
     op_cultivo =   [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('BEEF','BEEF'),('SALADETTE','SALADETTE'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
-    op_categoria = [('Mastronardi','Mastronardi'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolucion','Devolucion')]
+    op_categoria = [('Exportación','Exportación'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolución','Devolución')]
     op_tipo =      [('Tomate','Tomate'),('Chile','Chile')]
     
     registro = models.BigAutoField(primary_key=True)
     cultivo = models.CharField(max_length=50, choices=op_cultivo, blank=True, null=True)
-    calidad1 = models.CharField(max_length=200, blank=True, null=True)
+    itemSAP_Code  = models.CharField(max_length=50, blank=True, null=True)
+    itemSAP_Name = models.CharField(max_length=200, blank=True, null=True)
     categoria = models.CharField(max_length=50, choices=op_categoria, blank=True, null=True)
-    librasxcaja = models.FloatField(blank=True, null=True)
+    taraxCaja = models.FloatField(blank=True, null=True)
+    pesoSTDxCaja = models.FloatField(blank=True, null=True)
     tipo = models.CharField(max_length=50, choices=op_tipo, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
