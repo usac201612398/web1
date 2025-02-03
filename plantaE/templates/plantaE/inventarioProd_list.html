@@ -112,7 +112,7 @@
                 <tbody>
                 {%for registro in registros %} 
                 <tr> 
-                    <td> <a href="{% url 'ccalidad_detail' registro.pk %}">{{ registro.registro }}</a></td>
+                    <td> {{ registro.registro }}</td>
                     <td>{{registro.fecha}}</td>
                     <td>{{registro.proveedor}}</td>
                     <td>{{registro.cultivo}}</td>
@@ -145,7 +145,7 @@ function myFunction() {
   
     // Loop through all table rows, and hide those who don't match the search query
     for (i = 0; i < tr.length; i++) {
-      td = tr[i].getElementsByTagName("td")[3];
+      td = tr[i].getElementsByTagName("td")[2];
       if (td) {
         txtValue = td.textContent || td.innerText;
         if (txtValue.toUpperCase().indexOf(filter) > -1) {
@@ -168,7 +168,7 @@ function myFunction() {
   
     // Loop through all table rows, and hide those who don't match the search query
     for (i = 0; i < tr.length; i++) {
-      td = tr[i].getElementsByTagName("td")[4];
+      td = tr[i].getElementsByTagName("td")[5];
       if (td) {
         txtValue = td.textContent || td.innerText;
         if (txtValue.toUpperCase().indexOf(filter) > -1) {
@@ -191,7 +191,7 @@ function myFunction() {
   
     // Loop through all table rows, and hide those who don't match the search query
     for (i = 0; i < tr.length; i++) {
-      td = tr[i].getElementsByTagName("td")[5];
+      td = tr[i].getElementsByTagName("td")[6];
       if (td) {
         txtValue = td.textContent || td.innerText;
         if (txtValue.toUpperCase().indexOf(filter) > -1) {
