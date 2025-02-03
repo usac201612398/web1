@@ -8,6 +8,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
     <title>inventarioFruta</title>
     <style>
+        .inputs-row {
+        display: flex;
+        flex-wrap: nwrap; /* Para que se acomoden bien en pantallas más pequeñas */
+    }
+    #myInput {
+    /*  background-image: url('/css/searchicon.png'); /* Add a search icon to input */
+        background-position: 10px 12px; /* Position the search icon */
+        background-repeat: no-repeat; /* Do not repeat the icon image */
+        width: 25%; /* Full-width */
+        font-size: 16px; /* Increase font-size */
+        padding: 12px 20px 12px 40px; /* Add some padding */
+        border: 1px solid #ddd; /* Add a grey border */
+        box-sizing: border-box;
+    }
+    
         h1 {
             margin: 15px;
             font-family: Arial, sans-serif;
@@ -102,6 +117,7 @@
                     </select>
                 </div>
             </div>
+            
 
             <div class="box">
                 <form>
@@ -118,6 +134,15 @@
         <button id="consultar">Consultar</button>
     </div>
     
+
+    <div class="container">
+        <div class="inputs-row">
+      
+              <input class="input" type="text" id="myInput" onkeyup="myFunction()" placeholder="Buscar por nombre de item...">
+           
+        </div>
+    </div>
+
     <div class="container">
         <div class="columns">
             <div class="column is-12">
@@ -196,39 +221,40 @@ $('.envio3').on('click', function() {
     var datos = []
     var elem = 0
     for (var i = 1, row; row = resume_table.rows[i]; i++) {
-      //alert(cell[i].innerText);
-      filas = []
-      for (var j = 0, col; col = row.cells[j]; j++) {
-        //alert(col[j].innerText);
-        if (j === 3 || j ===2) {
-            if(col.innerText === ''){
-                elem = null
+        if (row.style.display !== "none") {
+            //alert(cell[i].innerText);
+            filas = []
+            for (var j = 0, col; col = row.cells[j]; j++) {
+                //alert(col[j].innerText);
+                if (j === 3 || j ===2) {
+                    if(col.innerText === ''){
+                        elem = null
+                    }
+                    else{
+                        elem = parseFloat(col.innerText);    
+                    }   
+                    filas.push(elem);
+                }
+                else {
+                    filas.push(col.innerText);
+                }
             }
-            else{
-                elem = parseFloat(col.innerText);    
-            }   
-            filas.push(elem);
+                var prov = document.getElementById('Pro'),
+                    value_prov = prov.value,
+                    text_prov = prov.options[prov.selectedIndex].innerText;
+                    filas.push(text_prov);
+                var cult = document.getElementById('Cul'),
+                    value_cult = cult.value,
+                    text_cult = cult.options[cult.selectedIndex].innerText;
+                    filas.push(text_cult);
+                var cat = document.getElementById('Cat'),
+                    value_cat = cat.value,
+                    text_cat = cat.options[cat.selectedIndex].innerText;
+                    filas.push(text_cat);
+                filas.push(fecha);
+                filas.push(correo);
+            datos.push(filas);
         }
-        else {
-            filas.push(col.innerText);
-        }
-      }
-        var prov = document.getElementById('Pro'),
-            value_prov = prov.value,
-            text_prov = prov.options[prov.selectedIndex].innerText;
-            filas.push(text_prov);
-        var cult = document.getElementById('Cul'),
-            value_cult = cult.value,
-            text_cult = cult.options[cult.selectedIndex].innerText;
-            filas.push(text_cult);
-        var cat = document.getElementById('Cat'),
-            value_cat = cat.value,
-            text_cat = cat.options[cat.selectedIndex].innerText;
-            filas.push(text_cat);
-        filas.push(fecha);
-        filas.push(correo);
-      datos.push(filas);
-
     }
     console.log(datos);
     $.ajax({
@@ -258,6 +284,27 @@ $('.envio3').on('click', function() {
   });
 
 const eliminarBotones = document.querySelectorAll('.eliminar');
+function myFunction() {
+  // Declare variables
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[1];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
 
 
 
