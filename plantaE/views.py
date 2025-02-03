@@ -299,7 +299,7 @@ def inventarioProd_grabarplantilla(request):
     #mensaje = request.POST.get('array')
     
     for i in mensaje:
-        pesostd = productoTerm.objects.filter(codigo=i[0]).first()
+        pesostd = productoTerm.objects.filter(itemsapcode=i[0]).first()
         pesotarima = 54
         pesosintara = int(i[3]) - float(pesostd.taraxcaja)*int(i[2]) -pesotarima
         pesoestandar = float(pesostd.pesostdxcaja)*int(i[2])
