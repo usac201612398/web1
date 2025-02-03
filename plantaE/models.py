@@ -277,7 +277,7 @@ class inventarioProdTerm(models.Model):
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
     
     def __str__(self):
-        return str(self.proveedor) + " | " + str(self.calidad1)
+        return str(self.proveedor) + " | " + str(self.itemsapname)+ " | " + str(self.cultivo)
 
 class productoTerm(models.Model):
     
