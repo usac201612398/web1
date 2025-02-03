@@ -301,7 +301,7 @@ def inventarioProd_grabarplantilla(request):
     for i in mensaje:
         if i[2] == '':
             i[2] == None
-        inventarioProdTerm.objects.create(fecha=i[7],proveedor=i[4],cultivo=i[5],calidad1=i[0],cajas=i[1],categoria=i[6],libras=i[2])
+        inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[4],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=i[2],categoria=i[7],libras=i[3])
     
     return JsonResponse({'mensaje':mensaje})
 

@@ -95,10 +95,10 @@
                 <div class="select"> 
                     <select name="Categoria" id="Cat">
                         <option value="">-</option>
-                        <option value="Mastronardi">Mastronardi</option>
+                        <option value="Exportación">Exportación</option>
                         <option value="Carreta">Carreta</option>
                         <option value="Cenma">Cenma</option>
-                        <option value="Devolucion">Devolucion</option>
+                        <option value="Devolución">Devolución</option>
                     </select>
                 </div>
             </div>
@@ -125,7 +125,8 @@
                 <table class="table is-striped is-hoverable is is-fullwidth" id="myTable">
                 <thead id = "enc1">
                     <tr class="header">
-                    <th >Calidad 1</th>
+                    <th >ItemCode</th>
+                    <th >ItemName</th>
                     <th >Cajas</th>
                     <th >Libras</th>
                     <th >Eliminar</th>
@@ -182,7 +183,7 @@ document.getElementById('consultar').addEventListener('click', function() {
         console.log(data)
         data.datos.forEach(item => {
             const fila = document.createElement('tr');
-            fila.innerHTML = `<td>${item.calidad1}</td><td><div contenteditable="true" class="editable-cell"></div></td><td><div contenteditable="true" class="editable-cell"></div></td><td><button class="eliminar"><i class="fas fa-trash-alt"></i></button></td>`;
+            fila.innerHTML = `<td>${item.itemsapcode}</td><td>${item.itemsapname}</td><td><div contenteditable="true" class="editable-cell"></div></td><td><div contenteditable="true" class="editable-cell"></div></td><td><button class="eliminar"><i class="fas fa-trash-alt"></i></button></td>`;
             tbody.appendChild(fila);
         });
     });
