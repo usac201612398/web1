@@ -290,7 +290,7 @@ class productoTerm(models.Model):
     orden= models.CharField(max_length=30, blank=True, null=True)
 
     def __str__(self):
-        return str(str(self.cultivo)+ " | " + str(self.calidad1))
+        return str(str(self.cultivo)+ " | " + str(self.itemSAP_Code)+ " | " + str(self.itemSAP_Name))
 
 class tipoCajas(models.Model):
     registro = models.BigAutoField(primary_key=True)
