@@ -305,12 +305,15 @@ def inventarioProd_grabarplantilla(request):
         pesoestandar = float(pesostd.pesostdxcaja)*int(i[2])
         pesostdxcaja = pesostd.pesostdxcaja
         merma = pesosintara-pesoestandar
+        
         pesoporcaja = pesosintara/int(i[2])
         ordenemp=pesostd.orden
         if i[2] == '':
             i[2] == None
         inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[5],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=i[2],categoria=i[7],libras=i[3],lbsintara=pesosintara,pesostd=pesoestandar,merma=merma,pesorxcaja=pesoporcaja,orden=ordenemp,pesostdxcaja=pesostdxcaja)
-    
+        if merma > 0:
+            inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[5],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=0,categoria="Merma",libras=0,lbsintara=merma,pesostd=0,merma=merma,pesorxcaja=0,orden="SM",pesostdxcaja=0)
+            
     return JsonResponse({'mensaje':mensaje})
 
 def cuadrar_RioDia(request):
