@@ -279,8 +279,8 @@ class productoTerm(models.Model):
     
     registro = models.BigAutoField(primary_key=True)
     cultivo = models.CharField(max_length=50, choices=op_cultivo, blank=True, null=True)
-    itemSAP_Code  = models.CharField(max_length=50, blank=True, null=True)
-    itemSAP_Name = models.CharField(max_length=200, blank=True, null=True)
+    itemSAPCode  = models.CharField(max_length=50, blank=True, null=True)
+    itemSAPName = models.CharField(max_length=200, blank=True, null=True)
     categoria = models.CharField(max_length=50, choices=op_categoria, blank=True, null=True)
     taraxCaja = models.FloatField(blank=True, null=True)
     pesoSTDxCaja = models.FloatField(blank=True, null=True)
@@ -290,7 +290,7 @@ class productoTerm(models.Model):
     orden= models.CharField(max_length=30, blank=True, null=True)
 
     def __str__(self):
-        return str(str(self.cultivo)+ " | " + str(self.itemSAP_Code)+ " | " + str(self.itemSAP_Name))
+        return str(str(self.cultivo)+ " | " + str(self.itemSAPCode)+ " | " + str(self.itemSAPName))
 
 class tipoCajas(models.Model):
     registro = models.BigAutoField(primary_key=True)
