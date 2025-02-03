@@ -1562,7 +1562,7 @@ def load_inventarioProdparam(request):
     categoria_ = request.GET.get('campo2')
 
     if cultivo_ != None and categoria_ != None:
-        datos = productoTerm.objects.filter(cultivo=cultivo_,categoria=categoria_).values('calidad1')
+        datos = productoTerm.objects.filter(cultivo=cultivo_,categoria=categoria_).values('itemsapcode','itemsapname')
     
     return JsonResponse({'datos': list(datos),'cultivo':cultivo_,'categoria':categoria_})
 
