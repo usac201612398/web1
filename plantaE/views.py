@@ -1529,7 +1529,7 @@ def inventarioProd_create(request):
         opcion1 = request.POST.get('opcion1')
         opcion2 = request.POST.get('opcion2')
         # Filtra tus datos según la opción seleccionada
-        datos = productoTerm.objects.filter(cultivo=opcion1,categoria=opcion2).values('calidad1')  # Ajusta los campos
+        datos = productoTerm.objects.filter(cultivo=opcion1,categoria=opcion2).values('itemsapcode','itemsapname')  # Ajusta los campos
         return JsonResponse({'datos': list(datos),'opcion1':opcion1,'opcion2':opcion2}, safe=False)
     return render(request, 'plantaE/inventarioProd_formPlantilla.html')
 '''
