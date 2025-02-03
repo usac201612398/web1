@@ -309,7 +309,7 @@ def inventarioProd_grabarplantilla(request):
         ordenemp=pesostd.orden
         if i[2] == '':
             i[2] == None
-        inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[4],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=i[2],categoria=i[7],libras=i[3],lbsintara=pesosintara,pesostd=pesoestandar,merma=merma,pesorxcaja=pesoporcaja,orden=ordenemp,pesostdxcaja=pesostdxcaja)
+        inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[5],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=i[2],categoria=i[7],libras=i[3],lbsintara=pesosintara,pesostd=pesoestandar,merma=merma,pesorxcaja=pesoporcaja,orden=ordenemp,pesostdxcaja=pesostdxcaja)
     
     return JsonResponse({'mensaje':mensaje})
 
