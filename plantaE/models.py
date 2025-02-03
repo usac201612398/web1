@@ -251,8 +251,8 @@ class inventarioProdTerm(models.Model):
     
     op_proveedor = [('','-'),('SDC','SDC'),('AGROINDUSTRIAS SAN RAFAEL, S.A.','AGROINDUSTRIAS SAN RAFAEL, S.A.'),('INVERNADEROS TECNOLOGICOS S.A','INVERNADEROS TECNOLOGICOS S.A'),('HORTEX, S.A.','HORTEX, S.A.'),('DANIEL ESTUARDO GALICIA CARRERA','DANIEL ESTUARDO GALICIA CARRERA'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.')]
     op_cultivo =   [('','-'),('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('BEEF','BEEF'),('SALADETTE','SALADETTE'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
-    op_categoria = [('','-'),('Mastronardi','Mastronardi'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolucion','Devolucion')]
-    op_empaque =   [('Cajas','Cajas'),('Libras','Libras')]
+    op_categoria = [('','-'),('Exportación','Exportación'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolución','Devolución')]
+    #op_empaque =   [('Cajas','Cajas'),('Libras','Libras')]
     op_status = [('Pendiente','-'),('Cerrado','Cerrado')]
 
     registro = models.BigAutoField(primary_key=True)
@@ -260,14 +260,21 @@ class inventarioProdTerm(models.Model):
     categoria = models.CharField(max_length=50, choices=op_categoria, blank=True, null=True)
     cultivo = models.CharField(max_length=50, choices=op_cultivo, blank=True, null=True)
     proveedor = models.CharField(max_length=75, choices=op_proveedor,blank=True, null=True)
-    empaque = models.CharField(max_length=75, choices=op_empaque,blank=True, null=True)
-    calidad1 = models.CharField(max_length=200, blank=True, null=True)
+    #empaque = models.CharField(max_length=75, choices=op_empaque,blank=True, null=True)
+    itemsapcode = models.CharField(max_length=20, blank=True, null=True)
+    itemsapname = models.CharField(max_length=200, blank=True, null=True)
     cajas = models.BigIntegerField(blank=True, null=True)
     libras =  models.FloatField(blank=True, null=True)
+    pesostdxcaja =  models.FloatField(blank=True, null=True)
+    lbsintara =  models.FloatField(blank=True, null=True)
+    merma =  models.FloatField(blank=True, null=True)
+    pesorxcaja =  models.FloatField(blank=True, null=True)
+    pesostdxcaja = models.FloatField(blank=True, null=True)
+    orden =  models.FloatField(blank=True, null=True)
     status = models.CharField(max_length=25, choices=op_status,blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
-
+    
     def __str__(self):
         return str(self.proveedor) + " | " + str(self.calidad1)
 

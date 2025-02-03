@@ -299,9 +299,17 @@ def inventarioProd_grabarplantilla(request):
     #mensaje = request.POST.get('array')
     
     for i in mensaje:
+        pesostd = productoTerm.objects.filter(codigo=i[0]).first()
+        pesotarima = 54
+        pesosintara = int(i[3]) - float(pesostd.taraxcaja)*int(i[2]) -pesotarima
+        pesoestandar = float(pesostd.pesostdxcaja)*int(i[2])
+        pesostdxcaja = pesostd.pesostdxcaja
+        merma = pesosintara-pesoestandar
+        pesoporcaja = pesosintara/int(i[2])
+        ordenemp=pesostd.orden
         if i[2] == '':
             i[2] == None
-        inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[4],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=i[2],categoria=i[7],libras=i[3])
+        inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[4],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=i[2],categoria=i[7],libras=i[3],lbsintara=pesosintara,pesostd=pesoestandar,merma=merma,pesorxcaja=pesoporcaja,orden=ordenemp,pesostdxcaja=pesostdxcaja)
     
     return JsonResponse({'mensaje':mensaje})
 
