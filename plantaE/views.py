@@ -1579,14 +1579,12 @@ def load_inventarioProdparam(request):
 
 def plantaEhomepage(request):
     return render(request,'plantaE/plantaE_home.html')
-
 def reporteInventario(request):
-
     opcion1 = timezone.now().date()
 
     # Filtra tus datos según la opción seleccionada
     datos_empaque = inventarioProdTerm.objects.filter(fecha=opcion1).values(
-        "fecha", "proveedor", "cultivo", "itemsapcode", "itemsapname","categoria","cajas","lbsintara","merma"
+        "fecha", "proveedor", "cultivo", "itemsapcode", "itemsapname", "categoria", "cajas", "lbsintara", "merma"
     )
 
     # Crea un DataFrame a partir de los datos
@@ -1602,26 +1600,25 @@ def reporteInventario(request):
             categoria=('categoria', 'first'),
             total_cajas=('cajas', 'sum'),
             total_libras=('lbsintara', 'sum'),
-            total_merma = ('merma', 'sum'),
+            total_merma=('merma', 'sum'),
         )
 
         registros_finales = df_agrupado.to_dict(orient='records')
-        context = {'datos': registros_finales,'opcion1':opcion1}
-    context = {'opcion1':opcion1}
+        context = {'datos': registros_finales, 'opcion1': opcion1}
+    else:
+        context = {'opcion1': opcion1}
+
     if request.method == 'POST':
         opcion1 = request.POST.get('opcion2')
     
-        # Filtra tus datos según la opción seleccionada
+        # Filtra los datos nuevamente
         datos_empaque = inventarioProdTerm.objects.filter(fecha=opcion1).values(
-
-            "fecha", "proveedor", "cultivo", "itemsapcode", "itemsapname","categoria","cajas","lbsintara","merma"
-
+            "fecha", "proveedor", "cultivo", "itemsapcode", "itemsapname", "categoria", "cajas", "lbsintara", "merma"
         )
 
-        # Crea un DataFrame a partir de los datos
+        # Crea el DataFrame y agrupa
         df = pd.DataFrame(list(datos_empaque))
         if not df.empty:
-            # Agrupa los datos
             df_agrupado = df.groupby(['proveedor', 'itemsapcode'], as_index=False).agg(
                 fecha=('fecha', 'first'),
                 proveedor=('proveedor', 'first'),
@@ -1631,11 +1628,10 @@ def reporteInventario(request):
                 categoria=('categoria', 'first'),
                 total_cajas=('cajas', 'sum'),
                 total_libras=('lbsintara', 'sum'),
-                total_merma = ('merma', 'sum'),
+                total_merma=('merma', 'sum'),
             )
-
-        registros_finales = df_agrupado.to_dict(orient='records')
-        return JsonResponse({'datos': registros_finales,'opcion1':opcion1}, safe=False)
+            registros_finales = df_agrupado.to_dict(orient='records')
+            return JsonResponse({'datos': registros_finales, 'opcion1': opcion1}, safe=False)
     
+    return render(request, 'plantaE/inventarioProd_reporteinv.html', context)
 
-    return render(request, 'plantaE/inventarioProd_reporteinv.html',context)
