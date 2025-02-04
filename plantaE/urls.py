@@ -11,6 +11,8 @@ urlpatterns = [
     
     path('mostrarvascula/', views.vascula_monitor, name='sensor_monitor'),
     path('exportar_excel/', views.exportar_excel, name='exportar_excel'),
+    
+    path('exportar_excel/', views.reporteInventario, name='reporte_inventario'),
     path('ajax/load-dataUsuario/', views.load_dataUsuario, name='load_dataUsuario'),
     path('ajax/load-dataUsuario2/', views.load_dataUsuario2, name='load_dataUsuario2'),
     path('ajax/load-dataUsuario3/', views.load_dataUsuario3, name='load_dataUsuario3'),

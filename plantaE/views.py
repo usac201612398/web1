@@ -1579,3 +1579,62 @@ def load_inventarioProdparam(request):
 
 def plantaEhomepage(request):
     return render(request,'plantaE/plantaE_home.html')
+
+def reporteInventario(request):
+
+    opcion1 = timezone.now().date()
+
+    # Filtra tus datos según la opción seleccionada
+    datos_empaque = AcumFruta.objects.filter(fecha=opcion1, finca="VALLE").values(
+        "fecha", "proveedor", "cultivo", "itemsapcode", "itemsapname","categoria","lbsintara","merma"
+    )
+
+    # Crea un DataFrame a partir de los datos
+    df = pd.DataFrame(list(datos_empaque))
+    if not df.empty:
+        # Agrupa los datos
+        df_agrupado = df.groupby(['proveedor', 'itemsapcode'], as_index=False).agg(
+            fecha=('fecha', 'first'),
+            proveedor=('proveedor', 'first'),
+            cultivo=('cultivo', 'first'),
+            itemsapcode=('itemsapcode', 'first'),
+            itemsapname=('itemsapname', 'first'),
+            categoria=('categoria', 'first'),
+            total_cajas=('cajas', 'sum'),
+            total_libras=('lbsintara', 'sum'),
+            total_merma = ('merma', 'sum'),
+        )
+
+    registros_finales = df_agrupado.to_dict(orient='records')
+
+    if request.method == 'POST':
+        opcion1 = request.POST.get('opcion2')
+    
+        # Filtra tus datos según la opción seleccionada
+        datos_empaque = AcumFruta.objects.filter(fecha=opcion1, finca="VALLE").values(
+
+            "fecha", "proveedor", "cultivo", "itemsapcode", "itemsapname","categoria","cajas","lbsintara","merma"
+
+        )
+
+        # Crea un DataFrame a partir de los datos
+        df = pd.DataFrame(list(datos_empaque))
+        if not df.empty:
+            # Agrupa los datos
+            df_agrupado = df.groupby(['proveedor', 'itemsapcode'], as_index=False).agg(
+                fecha=('fecha', 'first'),
+                proveedor=('proveedor', 'first'),
+                cultivo=('cultivo', 'first'),
+                itemsapcode=('itemsapcode', 'first'),
+                itemsapname=('itemsapname', 'first'),
+                categoria=('categoria', 'first'),
+                total_cajas=('cajas', 'sum'),
+                total_libras=('lbsintara', 'sum'),
+                total_merma = ('merma', 'sum'),
+            )
+
+        registros_finales = df_agrupado.to_dict(orient='records')
+        return JsonResponse({'datos': registros_finales,'opcion1':opcion1}, safe=False)
+    
+
+    return render(request, 'plantaE/inventarioProd_reporteinv.html',context={'datos': registros_finales,'opcion1':opcion1})
