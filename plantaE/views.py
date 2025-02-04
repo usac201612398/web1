@@ -1586,7 +1586,7 @@ def reporteInventario(request):
 
     # Filtra tus datos según la opción seleccionada
     datos_empaque = inventarioProdTerm.objects.filter(fecha=opcion1).values(
-        "fecha", "proveedor", "cultivo", "itemsapcode", "itemsapname","categoria","lbsintara","merma"
+        "fecha", "proveedor", "cultivo", "itemsapcode", "itemsapname","categoria","cajas","lbsintara","merma"
     )
 
     # Crea un DataFrame a partir de los datos
@@ -1606,7 +1606,8 @@ def reporteInventario(request):
         )
 
         registros_finales = df_agrupado.to_dict(orient='records')
-
+        context = {'datos': registros_finales,'opcion1':opcion1}
+    context = {'opcion1':opcion1}
     if request.method == 'POST':
         opcion1 = request.POST.get('opcion2')
     
@@ -1637,4 +1638,4 @@ def reporteInventario(request):
         return JsonResponse({'datos': registros_finales,'opcion1':opcion1}, safe=False)
     
 
-    return render(request, 'plantaE/inventarioProd_reporteinv.html',context={'datos': registros_finales,'opcion1':opcion1})
+    return render(request, 'plantaE/inventarioProd_reporteinv.html',context)
