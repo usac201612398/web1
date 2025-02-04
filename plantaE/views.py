@@ -1605,7 +1605,7 @@ def reporteInventario(request):
             total_merma = ('merma', 'sum'),
         )
 
-    registros_finales = df_agrupado.to_dict(orient='records')
+        registros_finales = df_agrupado.to_dict(orient='records')
 
     if request.method == 'POST':
         opcion1 = request.POST.get('opcion2')
