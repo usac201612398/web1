@@ -80,7 +80,7 @@
             <div class="columns">
                 <div class="column is-12">
                 <div class="table-container">
-                    <table class="table is-striped is-hoverable is is-fullwidth" id="myTable2">
+                    <table class="table is-striped is-hoverable is is-fullwidth" id="myTable">
                     <thead id = "enc1">
                         <tr class="header">
                             <th >Fecha</th>
@@ -145,7 +145,6 @@
 
 document.getElementById('consultar').addEventListener('click', function() {
     const opcionSeleccionada2 = document.getElementById('date').value;
-    console.log(opcionSeleccionada2);
 
     const tbody = document.querySelector('#myTable tbody');
     // Limpiar la tabla antes de agregar nuevos datos
@@ -174,7 +173,6 @@ document.getElementById('consultar').addEventListener('click', function() {
 
     });
 });
-
 
 $(document).ready(function() {
         // Función para cargar productos basados en la categoría seleccionada
