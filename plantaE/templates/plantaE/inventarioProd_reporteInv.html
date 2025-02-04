@@ -89,6 +89,7 @@
                             <th >ItemSAPCode</th>
                             <th >ItemSAPName</th>
                             <th >Categoria</th>
+                            <th >Tarimas</th>
                             <th >Cajas</th>
                             <th >Libras</th>
                             <th >Merma</th>
@@ -104,10 +105,11 @@
                         <td>{{registro.fecha}}</td>
                         <td>{{registro.proveedor}}</td>
                         <td>{{registro.cultivo}}</td>
-                        <td>{{registro.ItemSAPCode}}</td>
-                        <td>{{registro.ItemSAPName}}</td>
-                        <td>{{registro.Categoria}}</td>
-
+                        <td>{{registro.itemsapcode}}</td>
+                        <td>{{registro.itemsapname}}</td>
+                        <td>{{registro.categoria}}</td>
+                        <td class="number-cell" data-value="{{ registro.total_tarimas }}">{{ registro.total_tarimas }}</td>
+                        
                         <td class="number-cell" data-value="{{ registro.total_cajas }}">{{ registro.total_cajas }}</td>
                         <td class="number-cell" data-value="{{ registro.total_libras }}">{{ registro.total_libras }}</td>
                         <td class="number-cell" data-value="{{ registro.total_merma }}">{{ registro.total_merma }}</td>
@@ -170,7 +172,7 @@ document.getElementById('consultar').addEventListener('click', function() {
         console.log(data)
         data.datos.forEach(item => {
             const fila = document.createElement('tr');
-            fila.innerHTML = `<td>${item.fecha}</td><td>${item.proveedor}</td><td>${item.cultivo}</td><td>${item.itemsapcode}</td><td>${item.itemsapname}</td><td>${item.categoria}</td><td>${item.total_cajas}</td><td>${item.total_libras}</td><td>${item.total_merma}</td><td>${item.porcen_merma}</td><td>${item.pesoxcajaprom}</td>`;
+            fila.innerHTML = `<td>${item.fecha}</td><td>${item.proveedor}</td><td>${item.cultivo}</td><td>${item.itemsapcode}</td><td>${item.itemsapname}</td><td>${item.categoria}</td><td>${item.total_tarimas}</td><td>${item.total_cajas}</td><td>${item.total_libras}</td><td>${item.total_merma}</td><td>${item.porcen_merma}</td><td>${item.pesoxcajaprom}</td>`;
             
             tbody.appendChild(fila);
 
