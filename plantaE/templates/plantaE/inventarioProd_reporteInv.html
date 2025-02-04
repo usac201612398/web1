@@ -71,48 +71,6 @@
         </div>
     </div>
     <br>
-
-    <div class="container">
-        <button id="consultar">Descargar</button>
-    </div>
-
-    
-    <div class="container">
-        <div class="columns">
-            <div class="column is-12">
-            <div class="table-container">
-                <table class="table is-striped is-hoverable is is-fullwidth" id="myTable">
-                <thead id = "enc1">
-                    <tr class="header">
-                    <th >Fecha</th>
-                    <th >Finca</th>
-                    <th >Cultivo</th>
-                    <th >Variedad</th>
-                    <th >Cajas</th>
-                    <th >Libras</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {%for registro in registros %} 
-                <tr> 
-                 
-                    <td>{{registro.fecha}}</td>
-                    <td>{{registro.finca}}</td>
-                    <td>{{registro.cultivo}}</td>
-                    <td>{{registro.variedad}}</td>
-                    <td class="number-cell" data-value="{{ registro.total_cajas }}">{{ registro.total_cajas }}</td>
-                    <td class="number-cell" data-value="{{ registro.total_libras }}">{{ registro.total_libras }}</td>
-                        
-                </tr> 
-                        
-                {% endfor %}
-                </tbody>
-                </table>
-            </div>
-            </div>
-        </div>
-        </div>
-    <br>
         <div class="container">
             <div class="columns">
                 <div class="column is-12">
