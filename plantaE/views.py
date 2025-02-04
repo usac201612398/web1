@@ -1604,9 +1604,11 @@ def reporteInventario(request):
         )
         
         df_agrupado["porcen_merma"] = df_agrupado["total_merma"]*100/df_agrupado["total_libras"]
+        df_agrupado["pesoxcajaprom"] = df_agrupado["total_libras"]/df_agrupado["total_cajas"]
+        
         registros_finales = df_agrupado.to_dict(orient='records')
         context = {'datos': registros_finales, 'opcion1': opcion1}
-        
+
     else:
         context = {'opcion1': opcion1}
 
@@ -1633,6 +1635,8 @@ def reporteInventario(request):
                 total_merma=('merma', 'sum'),
             )
             df_agrupado["porcen_merma"] = df_agrupado["total_merma"]*100/df_agrupado["total_libras"]
+            
+            df_agrupado["pesoxcajaprom"] = df_agrupado["total_libras"]/df_agrupado["total_cajas"]
             registros_finales = df_agrupado.to_dict(orient='records')
             return JsonResponse({'datos': registros_finales, 'opcion1': opcion1}, safe=False)
     

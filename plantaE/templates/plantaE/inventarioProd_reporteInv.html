@@ -93,6 +93,7 @@
                             <th >Libras</th>
                             <th >Merma</th>
                             <th >%Merma</th>
+                            <th >pesoxcajaprom</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -111,6 +112,7 @@
                         <td class="number-cell" data-value="{{ registro.total_libras }}">{{ registro.total_libras }}</td>
                         <td class="number-cell" data-value="{{ registro.total_merma }}">{{ registro.total_merma }}</td>
                         <td class="number-cell" data-value="{{ registro.porcen_merma }}">{{ registro.porcen_merma }}</td>
+                        <td class="number-cell" data-value="{{ registro.pesoxcajaprom }}">{{ registro.pesoxcajaprom }}</td>
                     </tr> 
                             
                     {% endfor %}
@@ -168,7 +170,7 @@ document.getElementById('consultar').addEventListener('click', function() {
         console.log(data)
         data.datos.forEach(item => {
             const fila = document.createElement('tr');
-            fila.innerHTML = `<td>${item.fecha}</td><td>${item.proveedor}</td><td>${item.cultivo}</td><td>${item.itemsapcode}</td><td>${item.itemsapname}</td><td>${item.categoria}</td><td>${item.total_cajas}</td><td>${item.total_libras}</td><td>${item.total_merma}</td><td>${item.porcen_merma}</td>`;
+            fila.innerHTML = `<td>${item.fecha}</td><td>${item.proveedor}</td><td>${item.cultivo}</td><td>${item.itemsapcode}</td><td>${item.itemsapname}</td><td>${item.categoria}</td><td>${item.total_cajas}</td><td>${item.total_libras}</td><td>${item.total_merma}</td><td>${item.porcen_merma}</td><td>${item.pesoxcajaprom}</td>`;
             
             tbody.appendChild(fila);
 
