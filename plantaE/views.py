@@ -1633,5 +1633,5 @@ def reporteInventario(request):
             registros_finales = df_agrupado.to_dict(orient='records')
             return JsonResponse({'datos': registros_finales, 'opcion1': opcion1}, safe=False)
     
-    return render(request, 'plantaE/inventarioProd_reporteinv.html', context)
+    return render(request, 'plantaE/inventarioProd_reporteInv.html', context)
 
