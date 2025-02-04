@@ -1585,7 +1585,7 @@ def reporteInventario(request):
     opcion1 = timezone.now().date()
 
     # Filtra tus datos según la opción seleccionada
-    datos_empaque = AcumFruta.objects.filter(fecha=opcion1, finca="VALLE").values(
+    datos_empaque = inventarioProdTerm.objects.filter(fecha=opcion1).values(
         "fecha", "proveedor", "cultivo", "itemsapcode", "itemsapname","categoria","lbsintara","merma"
     )
 
@@ -1611,7 +1611,7 @@ def reporteInventario(request):
         opcion1 = request.POST.get('opcion2')
     
         # Filtra tus datos según la opción seleccionada
-        datos_empaque = AcumFruta.objects.filter(fecha=opcion1, finca="VALLE").values(
+        datos_empaque = inventarioProdTerm.objects.filter(fecha=opcion1).values(
 
             "fecha", "proveedor", "cultivo", "itemsapcode", "itemsapname","categoria","cajas","lbsintara","merma"
 
