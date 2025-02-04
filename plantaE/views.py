@@ -1593,7 +1593,7 @@ def reporteInventario(request):
 
     if not df.empty:
         # Agrupa los datos
-        df_agrupado = df.groupby(['proveedor', 'itemsapcode'], as_index=False).agg(
+        df_agrupado = df.groupby(['proveedor', 'itemsapcode','categoria'], as_index=False).agg(
             fecha=('fecha', 'first'),
             proveedor=('proveedor', 'first'),
             cultivo=('cultivo', 'first'),
@@ -1624,7 +1624,7 @@ def reporteInventario(request):
         # Crea el DataFrame y agrupa
         df = pd.DataFrame(list(datos_empaque))
         if not df.empty:
-            df_agrupado = df.groupby(['proveedor', 'itemsapcode'], as_index=False).agg(
+            df_agrupado = df.groupby(['proveedor', 'itemsapcode','categoria'], as_index=False).agg(
                 fecha=('fecha', 'first'),
                 proveedor=('proveedor', 'first'),
                 cultivo=('cultivo', 'first'),
