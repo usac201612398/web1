@@ -1589,6 +1589,8 @@ def reporteInventario(request):
 
     # Crea un DataFrame a partir de los datos
     df = pd.DataFrame(list(datos_empaque))
+    registros_finales = []
+
     if not df.empty:
         # Agrupa los datos
         df_agrupado = df.groupby(['proveedor', 'itemsapcode'], as_index=False).agg(
@@ -1607,14 +1609,13 @@ def reporteInventario(request):
         df_agrupado["pesoxcajaprom"] = df_agrupado["total_libras"]/df_agrupado["total_cajas"]
         
         registros_finales = df_agrupado.to_dict(orient='records')
-        context = {'datos': registros_finales, 'opcion1': opcion1}
 
-    else:
-        context = {'opcion1': opcion1}
+    # Al hacer la solicitud GET (cuando se carga la página inicialmente), se envían datos para el día actual
+    context = {'datos': registros_finales, 'opcion1': opcion1}
 
     if request.method == 'POST':
         opcion1 = request.POST.get('opcion2')
-    
+
         # Filtra los datos nuevamente
         datos_empaque = inventarioProdTerm.objects.filter(fecha=opcion1).values(
             "fecha", "proveedor", "cultivo", "itemsapcode", "itemsapname", "categoria", "cajas", "lbsintara", "merma"
@@ -1635,10 +1636,8 @@ def reporteInventario(request):
                 total_merma=('merma', 'sum'),
             )
             df_agrupado["porcen_merma"] = df_agrupado["total_merma"]*100/df_agrupado["total_libras"]
-            
             df_agrupado["pesoxcajaprom"] = df_agrupado["total_libras"]/df_agrupado["total_cajas"]
             registros_finales = df_agrupado.to_dict(orient='records')
             return JsonResponse({'datos': registros_finales, 'opcion1': opcion1}, safe=False)
-    
-    return render(request, 'plantaE/inventarioProd_reporteInv.html', context)
 
+    return render(request, 'plantaE/inventarioProd_reporteInv.html', context)
