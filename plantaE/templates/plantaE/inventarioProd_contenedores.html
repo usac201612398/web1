@@ -118,7 +118,12 @@ $('.envio3').on('click', function() {
             } else {
                 filas.push(col.innerText);
             }
+
         }
+        var conten = document.getElementById('Conten'),
+            value_conten = conten.value,
+            text_conten = conten.options[conten.selectedIndex].innerText;
+            filas.push(text_conten);
         datos.push(filas);
     }
     
@@ -128,7 +133,7 @@ $('.envio3').on('click', function() {
         url: '{% url "inventarioProd_contprocess" %}',  // URL para la vista AJAX
         type: 'POST',
         dataType: "json",
-        data: JSON.stringify({'array': datos}),
+        data: JSON.stringify({'array': datos, 'contenedor':text_conten}),
         contentType: 'application/json',
         headers: {'X-CSRFToken': csrftoken}, 
         

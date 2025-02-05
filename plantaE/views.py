@@ -1652,7 +1652,10 @@ def procesarinvprodconten(request):
 
     data = json.loads(request.body)
     mensaje = data['array']
+    contenedor_=data['contenedor']
+    today = timezone.now().date()
     #mensaje = request.POST.get('array')
+    
     registros =  []
     
     for i in mensaje:
@@ -1662,6 +1665,7 @@ def procesarinvprodconten(request):
         # Crea un diccionario con los datos
     
     for i in mensaje:
+
         salidas = inventarioProdTerm.objects.get(registro=i[0])
         
         salidas2= salidacontenedores.objects.all().filter(key=i[0]).aggregate(sumacajas=Sum('cajas'))['sumacajas']
@@ -1669,12 +1673,15 @@ def procesarinvprodconten(request):
         if str(salidas2) == str(salidas.cajas):
             salidas.status = "En proceso"
             salidas.save()
+    salidas3=contenedores.objects.filter(contenedor=contenedor_,fecha=today)
+    # Si hay más de un contenedor que coincide con el filtro, puedes hacer un update masivo
+    salidas3.update(status="Cerrado")
     
     return JsonResponse({'mensaje':mensaje,'registros':registros})   
 
 def cargacontenedores_list(request):
 
-    #today = timezone.now().date()
+    today = timezone.now().date()
     #salidas = Recepciones.objects.filter(fecha=today)
     salidas= inventarioProdTerm.objects.all()
     salidas2= salidacontenedores.objects.all()

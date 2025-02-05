@@ -301,6 +301,10 @@ class contenedores(models.Model):
     placacamion = models.CharField(max_length=50, blank=True, null=True)
     horasalida = models.TimeField(blank=True, null=True)
     status = models.CharField(max_length=25, choices=op_status,blank=True, null=True)
+    etd = models.DateField(blank=True, null=True)
+    eta = models.DateField(blank=True, null=True)
+    bl = models.CharField(max_length=50, blank=True, null=True)
+    booking = models.CharField(max_length=50, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
     
