@@ -1678,10 +1678,10 @@ def cargacontenedores_list(request):
     #salidas = Recepciones.objects.filter(fecha=today)
     salidas= inventarioProdTerm.objects.all()
     salidas2= salidacontenedores.objects.all()
-    salidas = salidas.order_by('registro').filter(status=None)
+    salidas = salidas.order_by('registro').filter(status=None,categoria="Exportación")
     
     for i in salidas:
-        cajasacum = salidas2.order_by('-created_at').filter(key=i.registro,categoria="Exportación").aggregate(sumacajas=Sum('cajas'))['sumacajas']
+        cajasacum = salidas2.order_by('-created_at').filter(key=i.registro).aggregate(sumacajas=Sum('cajas'))['sumacajas']
         if  cajasacum != None:
             i.cajas = i.cajas - int(cajasacum)
         
