@@ -91,6 +91,10 @@
                     <th >PlacaCamion</th>
                     <th >HoraSalida</th>
                     <th >Status</th>
+                    <th >ETA</th>
+                    <th >ETD</th>
+                    <th >Bl</th>
+                    <th >Booking</th>
                     <th >Editar</th>
                     <th >Eliminar</th>
                     </tr>
@@ -111,6 +115,10 @@
                     <td>{{registro.placacamion}}</td>
                     <td>{{registro.horasalida}}</td>
                     <td>{{registro.status}}</td>
+                    <td>{{registro.eta}}</td>
+                    <td>{{registro.etd}}</td>
+                    <td>{{registro.bl}}</td>
+                    <td>{{registro.booking}}</td>
                     <th ><a href="{% url 'contenedores_update' registro.pk %}"> <i class="fas fa-edit"></i>Editar</a></th>
                     <th ><a href="{% url 'contenedores_delete' registro.pk %}"><i class="fas fa-trash-alt"></i>Eliminar</a></th>
                     </tr> 
