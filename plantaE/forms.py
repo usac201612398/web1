@@ -1,5 +1,5 @@
 from django import forms
-from .models import Actpeso,salidasFruta, Recepciones, Ccalidad, inventarioProdTerm,AcumFruta, enviosFrutaPlantilla
+from .models import Actpeso,salidasFruta, contenedores, Recepciones, Ccalidad, inventarioProdTerm,AcumFruta, enviosFrutaPlantilla
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Fieldset, Div
 
@@ -115,3 +115,29 @@ class inventarioFrutaForm(forms.ModelForm):
         
         model = inventarioProdTerm
         fields = ['fecha','proveedor', 'cultivo', 'categoria', 'calidad1','empaque','cajas','libras']
+
+class contenedoresForm(forms.ModelForm):
+
+    op_status = [('Pendiente','-'),('Cerrado','Cerrado')]
+    op_destino = [('Jonestown','Jonestown'),('Lakeland','Lakeland'),('Laredo, Texas','Laredo, Texas'),('Miami','Miami')]
+    op_naviera = [('SEABOARD','SEABOARD'),('CROWLEY','CROWLEY')]
+
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'my-input'}))
+    destino = forms.ChoiceField(choices=op_destino, widget=forms.Select(attrs={'class': 'my-input'}))
+    contenedor = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
+    transportista = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
+    viaje = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
+    piloto = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
+    temperatura = forms.DecimalField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
+    ventilacion = forms.DecimalField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
+    marchamo = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
+    placacamion = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
+    horasalida = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'my-input'}))  # Campo numérico
+    
+    class Meta:
+        
+        model = contenedores
+        fields = ['fecha','destino','contenedor','transportista','viaje','piloto','temperatura', 'ventilacion', 'marchamo', 'placacamion','horasalida']
+
+
+

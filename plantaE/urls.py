@@ -49,6 +49,7 @@ urlpatterns = [
     path('acumFruta/consultaValle/', views.acumFruta_consultaValle, name='acumFruta_consultaValle'),
     path('recepcionesFruta/<int:pk>/edit/', views.recepciones_update, name='recepcionesFruta_update'),
     path("recepcionesFruta/process",views.procesarrecepcion,name='recepcionesFruta_process'),
+    path("recepcionesFruta/process",views.procesarinvprodconten,name='inventarioProd_contprocess'),
     path("recepcionesFruta",views.recepciones_list,name='recepcionesFruta_list'),
     path("recepcionesFruta/reporteAcum",views.recepciones_reporteAcum,name='recepcionesFruta_reporteAcum'),
     path("recepcionesFruta/reporteAcumKgm2Orden",views.recepciones_reporteAcumKgm2Orden,name='recepcionesFruta_reporteAcumKgm2Orden'),
@@ -71,7 +72,13 @@ urlpatterns = [
     path('inventarioProd/<int:pk>/', views.inventarioProd_detail, name='inventarioProd_detail'),
     path('inventarioProd/new/', views.inventarioProd_create, name='inventarioProd_create'),
     path('inventarioProd/<int:pk>/delete/', views.inventarioProd_delete, name='inventarioProd_delete'),
-    
+    path("inventarioProd/cargacontenedor",views.cargacontenedores_list,name='inventarioProd_contenlist'),
     path('inventarioProd/reporteInv', views.reporteInventario, name='reporte_inventario'),
+    path('ajax/load-contenedores/', views.load_contenedores, name='load_contenedores'),
+    path("contenedores",views.contenedores_list,name='contenedores_list'),
+    path('contenedores/new/', views.contenedores_create, name='contenedores_create'),
+    path('contenedores/<int:pk>/edit/', views.contenedores_update, name='contenedores_update'),
+    path('contenedores/<int:pk>/delete/', views.contenedores_delete, name='contenedores_delete'),
+    
     
 ]

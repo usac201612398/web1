@@ -4,8 +4,8 @@ import logging
 from openpyxl import Workbook
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect
-from .models import Actpeso,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
-from .forms import pesosForm,salidasFrutaForm, recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
+from .models import Actpeso,salidacontenedores, contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
+from .forms import pesosForm,salidasFrutaForm, contenedoresForm,recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
 from django.db.models import Sum, Q
 from django.utils import timezone
 import matplotlib.pyplot as plt
@@ -300,20 +300,22 @@ def inventarioProd_grabarplantilla(request):
     
     for i in mensaje:
         pesostd = productoTerm.objects.filter(itemsapcode=i[0]).first()
-        pesotarima = 54
-        pesosintara = int(i[3]) - float(pesostd.taraxcaja)*int(i[2]) -pesotarima
+        pesotarima = 54    
+        tara  = float(pesostd.taraxcaja)*int(i[2]) + pesotarima
+        pesosintara = int(i[3]) - tara 
         pesoestandar = float(pesostd.pesostdxcaja)*int(i[2])
         pesostdxcaja = pesostd.pesostdxcaja
         merma = pesosintara-pesoestandar
-        
+        pesosinmerma = pesosintara-merma
         pesoporcaja = pesosintara/int(i[2])
         ordenemp=pesostd.orden
         if i[2] == '':
             i[2] == None
-        inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[5],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=i[2],categoria=i[7],libras=i[3],lbsintara=pesosintara,pesostd=pesoestandar,merma=merma,pesorxcaja=pesoporcaja,orden=ordenemp,pesostdxcaja=pesostdxcaja)
+
+        inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[5],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=i[2],categoria=i[7],libras=i[3],lbsintara=pesosintara,pesostd=pesoestandar,merma=merma,pesorxcaja=pesoporcaja,orden=ordenemp,pesostdxcaja=pesostdxcaja,tara=tara,pesosinmerma=pesosinmerma)
         if merma > 0:
-            inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[5],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=0,categoria="Merma",libras=0,lbsintara=merma,pesostd=0,merma=merma,pesorxcaja=0,orden="SM",pesostdxcaja=0)
-            
+            inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[5],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=0,categoria="Merma",libras=0,lbsintara=merma,pesostd=0,merma=merma,pesorxcaja=0,orden="SM",pesostdxcaja=0,tara=tara,pesosinmerma=pesosinmerma)
+        
     return JsonResponse({'mensaje':mensaje})
 
 def cuadrar_RioDia(request):
@@ -329,7 +331,7 @@ def cuadrar_RioDia(request):
     df_agrupado = df.groupby(['variedad','cultivo'], as_index=False).agg(
         total_cajas=('cajas', 'sum'),
         total_libras=('libras', 'sum'),
-        cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
+            cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
         fecha=('fecha', 'first'),
         variedad=('variedad', 'first'),
         finca=('finca', 'first'),
@@ -1579,6 +1581,7 @@ def load_inventarioProdparam(request):
 
 def plantaEhomepage(request):
     return render(request,'plantaE/plantaE_home.html')
+
 def reporteInventario(request):
     opcion1 = timezone.now().date()
 
@@ -1643,3 +1646,89 @@ def reporteInventario(request):
             return JsonResponse({'datos': registros_finales, 'opcion1': opcion1}, safe=False)
 
     return render(request, 'plantaE/inventarioProd_reporteInv.html', context)
+
+
+def procesarinvprodconten(request):
+
+    data = json.loads(request.body)
+    mensaje = data['array']
+    #mensaje = request.POST.get('array')
+    registros =  []
+    
+    for i in mensaje:
+        ref=inventarioProdTerm.objects.get(registro = i[0])
+        salidacontenedores.objects.create(fecha=str(ref.fecha),contenedor=i[10],categoria=str(ref.categoria),cultivo=ref.cultivo,proveedor=ref.proveedor,itemsapcode = ref.itemsapcode,itemsapname = ref.itemsapname,orden=ref.orden,cajas=i[6],lbsintara=(i[6]*ref.lbsintara/ref.cajas),pesostdxcaja=ref.pesostdxcaja,pesostd=(i[6]*ref.pesostd/ref.cajas),merma=(i[6]*ref.merma/ref.cajas),pesorxcaja=ref.pesorxcaja,pesosinmerma=ref.pesosinmerma)
+    
+        # Crea un diccionario con los datos
+    
+    for i in mensaje:
+        salidas = inventarioProdTerm.objects.get(registro=i[0])
+        
+        salidas2= salidacontenedores.objects.all().filter(key=i[0]).aggregate(sumacajas=Sum('cajas'))['sumacajas']
+        
+        if str(salidas2) == str(salidas.cajas):
+            salidas.status = "En proceso"
+            salidas.save()
+    
+    return JsonResponse({'mensaje':mensaje,'registros':registros})   
+
+def cargacontenedores_list(request):
+
+    #today = timezone.now().date()
+    #salidas = Recepciones.objects.filter(fecha=today)
+    salidas= inventarioProdTerm.objects.all()
+    salidas2= salidacontenedores.objects.all()
+    salidas = salidas.order_by('registro').filter(status=None)
+    
+    for i in salidas:
+        cajasacum = salidas2.order_by('-created').filter(key=i.registro).aggregate(sumacajas=Sum('cajas'))['sumacajas']
+        if  cajasacum != None:
+            i.cajas = i.cajas - int(cajasacum)
+        
+    return render(request, 'plantaE/inventarioProd_contenedores.html', {'registros': salidas})
+
+def load_contenedores(request):
+    
+    adicionales = contenedores.objects.filter(status='Cerrado').values('contenedor')
+    return JsonResponse({'adicionales':list(adicionales)})
+
+def contenedores_list(request):
+    salidas = contenedores.objects.exclude(status='Cerrado')  # Excluye los que tienen status 'Cerrado'
+    salidas = salidas.order_by('-created_at')
+    
+    return render(request, 'plantaE/contenedores_list.html', {'registros': salidas})
+
+def contenedores_delete(request, pk):
+    salidas = get_object_or_404(contenedores, pk=pk)
+    if request.method == 'POST':
+        salidas.delete()
+        return redirect('contenedores_list')
+    return render(request, 'plantaE/contenedores_confirm_delete.html', {'registros': salidas})
+
+def contenedores_create(request):
+    if request.method == 'POST':
+        form = contenedoresForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+            except Exception as e:
+                # Manejar excepciones específicas (por ejemplo, UniqueConstraintError)
+                return JsonResponse({'error': str(e)}, status=400)
+            return redirect('contenedores_list')
+        else:
+             # Imprimir errores para depuración
+            return JsonResponse({'errores': form.errors}, status=400)
+    else:
+        form = contenedoresForm()
+    return render(request, 'plantaE/contenedores_form.html', {'form': form})
+
+def contenedores_update(request, pk):
+    salidas = get_object_or_404(contenedores, pk=pk)
+    if request.method == 'POST':
+        form = contenedoresForm(request.POST, instance=salidas)
+        if form.is_valid():
+            form.save()
+            return redirect('contenedores_list')
+    else:
+        form = contenedoresForm(instance=salidas)
+    return render(request, 'plantaE/contenedores_form.html', {'form': form})
