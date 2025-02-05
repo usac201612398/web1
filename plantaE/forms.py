@@ -125,7 +125,7 @@ class contenedoresForm(forms.ModelForm):
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'my-input'}))
     destino = forms.ChoiceField(choices=op_destino, widget=forms.Select(attrs={'class': 'my-input'}))
     contenedor = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    transportista = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
+    transportista = forms.ChoiceField(choices=op_naviera, widget=forms.Select(attrs={'class': 'my-input'}))
     viaje = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
     piloto = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
     temperatura = forms.DecimalField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
