@@ -169,7 +169,7 @@ $(document).ready(function() {
                 // Recorre los productos recibidos y añade opciones al campo 'name'
                 $.each(data.adicionales, function(index, product) {
                     $('#id_Conten').append(
-                        $('<option>').text(product.cultivo.toString()).attr('value', product.contenedores.toString())
+                        $('<option>').text(product.contenedor.toString()).attr('value', product.contenedor.toString())
                             
                     );
                 });

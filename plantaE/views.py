@@ -1696,7 +1696,7 @@ def cargacontenedores_list(request):
 
 def load_contenedores(request):
     
-    adicionales = contenedores.objects.filter(status='Cerrado').values('contenedor')
+    adicionales = contenedores.objects.exclude(status='Cerrado').values('contenedor')
     return JsonResponse({'adicionales':list(adicionales)})
 
 def contenedores_list(request):
