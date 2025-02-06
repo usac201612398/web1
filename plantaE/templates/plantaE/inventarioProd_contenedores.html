@@ -1,186 +1,40 @@
-<!DOCTYPE html>
-<html>
-{% load static %} 
-<head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous">   
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
-    <title>Carga Contenedores</title>
-    <style>
-        h1 {
-            margin: 15px;
-            font-family: Arial, sans-serif;
-        }
-
-        a {
-            margin: 20px;
-            font-family: Arial, sans-serif;
-        }
-
-    </style>
-</head>
-<body>
-    <h1 class="roboto">Panel</h1>
-    <div class = "container"> 
-        <div class="half">
-            <div class="box">
-                <form>
-                    <div><label for="contenedor">Contenedor:</label></div>
-                    <div class="select"> 
-                        <select name="contenedor" id="Conten">
-                        </select>
-                    </div>
-                </form>      
-            </div>
-        </div>
-    </div>
-
-    <div class="container">
-        <div class="columns">
-            <div class="column is-12">
-            <div class="table-container">
-                <table class="table is-striped is-hoverable is is-fullwidth" id="myTable">
-                <thead id = "enc1">
-                    <tr class="header">
-                    <th >Key</th>
-                    <th >Fecha</th>
-                    <th >Proveedor</th>
-                    <th >Cultivo</th>
-                    <th >itemSAPCode</th>
-                    <th >itemSAPName</th>
-                    <th >Cajas</th>
-                    <th >Orden</th>
-                    <th >Status</th>
-                    <th >Eliminar</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {%for registro in registros %} 
-                <tr> 
-                    <td>{{ registro.registro }}</td>
-                    <td>{{registro.fecha}}</td>
-                    <td>{{registro.proveedor}}</td>
-                    <td>{{registro.cultivo}}</td>
-                    <td>{{registro.itemsapcode}}</td>
-                    <td>{{registro.itemsapname}}</td>
-                    <td><div contenteditable="true" class="editable-cell">{{registro.cajas}}</div></td>
-                    <td>{{registro.orden}}</td>
-                    <td>{{registro.status}}</td>
-                   <td><button class="eliminar"><i class="fas fa-trash-alt"></i></button></td>
-                    </tr> 
-                        
-                {% endfor %}
-                </tbody>
-                </table>
-            </div>
-            </div>
-        </div>
-        </div>
-        <br>
-        <div class = "container"> 
-            <div class="half">
-                <div class="box">
-                    <form>
-                        <div>
-                            <input type="button" value="Enviar" class="envio3">
-                        </div>
-                    </form>      
-                </div>
-            </div>
-        </div>
-</body>
-<script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-
-
-const eliminarBotones = document.querySelectorAll('.eliminar');
-
-$(document).on('click', '.eliminar', function() {
-    $(this).closest('tr').remove();
-});
-
-$('.envio3').on('click', function() {
-    var resume_table = document.getElementById("myTable");
-    var datos = [];
+    $(document).ready(function() {
+        console.log("Página cargada");
     
-    for (var i = 1, row; row = resume_table.rows[i]; i++) {
-        var filas = [];
-        
-        for (var j = 0, col; col = row.cells[j]; j++) {
-            // Si la columna contiene una fecha, formateala
-            if (col.innerText.match(/^[A-Za-z]{3}\.\s\d{1,2},\s\d{4}$/)) { // Coincide con el formato "Oct. 10, 2024"
-                // Convertir la fecha
-                var fechaOriginal = col.innerText;
-                var fechaConvertida = new Date(fechaOriginal).toISOString().split('T')[0];
-                filas.push(fechaConvertida);
-            } else {
-                filas.push(col.innerText);
-            }
-
-        }
-        var conten = document.getElementById('Conten'),
-            value_conten = conten.value,
-            text_conten = conten.options[conten.selectedIndex].innerText;
-            filas.push(text_conten);
-        datos.push(filas);
-    }
+        // Función para cargar contenedores
+        function loadProducts() {
+            console.log("Cargando contenedores...");
+            $.ajax({
+                url: '{% url "load_contenedores" %}',  // URL para la vista AJAX
+                data: {
+                    'category_id': 'Consulta' // Envia el ID de la categoría como parámetro
+                },
+                success: function(data) {
+                    console.log("Datos recibidos:", data);
     
-    console.log(datos);
-
-    $.ajax({
-        url: '{% url "inventarioProd_contprocess" %}',  // URL para la vista AJAX
-        type: 'POST',
-        dataType: "json",
-        data: JSON.stringify({'array': datos, 'contenedor':text_conten}),
-        contentType: 'application/json',
-        headers: {'X-CSRFToken': csrftoken}, 
-        
-        success: function(data) {
-            alert("Listo");
-            console.log(data);
-        },
-        error: function(xhr, status, error) {
-            console.error('Error:', error);
-        }
-    });
-});
-
-
-$(document).ready(function() {
-    // Función para cargar productos basados en la categoría seleccionada
-    
-    function loadProducts() {
-        console.log("Hola");
-        $.ajax({
-            url: '{% url "load_contenedores" %}',  // URL para la vista AJAX
-            data: {
-                'category_id': 'Consulta' // Envia el ID de la categoría como parámetro
-            },
-            
-            success: function(data) {
-                // Limpia las opciones actuales del campo 'name'
-                console.log(data);
-
-                $('#id_Conten').html('');
-                $('#id_Conten').append(
-                    $('<option>').text('').attr('value','')
-                );
-                // Recorre los productos recibidos y añade opciones al campo 'name'
-                $.each(data.adicionales, function(index, product) {
-                    $('#id_Conten').append(
-                        $('<option>').text(product.contenedor.toString()).attr('value', product.contenedor.toString())
-                            
+                    // Limpia las opciones actuales del campo 'select'
+                    $('#Conten').html('');
+                    $('#Conten').append(
+                        $('<option>').text('Seleccione un contenedor').attr('value', '')
                     );
-                });
-
-            },
-            error: function(xhr, status, error) {
-                console.error('Error:', error);  // Maneja errores de la solicitud
-            }
+    
+                    // Recorre los productos recibidos y añade opciones al campo 'select'
+                    $.each(data.adicionales, function(index, product) {
+                        $('#Conten').append(
+                            $('<option>').text(product.contenedor.toString()).attr('value', product.contenedor.toString())
+                        );
+                    });
+    
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);  // Maneja errores de la solicitud
+                }
+            });
+        }
+    
+        // Llamar a la función de carga de contenedores
+        loadProducts();
     });
-    loadProducts();
-}});
-</script>
-</html>
+    </script>
+    
