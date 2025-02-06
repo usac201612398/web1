@@ -152,6 +152,7 @@ $(document).ready(function() {
     // Función para cargar productos basados en la categoría seleccionada
     
     function loadProducts() {
+        console.log("Hola");
         $.ajax({
             url: '{% url "load_contenedores" %}',  // URL para la vista AJAX
             data: {
