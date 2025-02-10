@@ -312,9 +312,9 @@ def inventarioProd_grabarplantilla(request):
         if i[2] == '':
             i[2] == None
 
-        inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[5],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=i[2],categoria=i[7],libras=i[3],lbsintara=pesosintara,pesostd=pesoestandar,merma=merma,pesorxcaja=pesoporcaja,orden=ordenemp,pesostdxcaja=pesostdxcaja,tara=tara,pesosinmerma=pesosinmerma)
+        inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[5],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=i[2],categoria=i[7],libras=i[3],lbsintara=pesosintara,pesostd=pesoestandar,merma=merma,pesorxcaja=pesoporcaja,orden=ordenemp,pesostdxcaja=pesostdxcaja,tara=tara,pesosinmerma=pesosinmerma,calidad1=pesostd.calidad1)
         if merma > 0:
-            inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[5],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=0,categoria="Merma",libras=0,lbsintara=merma,pesostd=0,merma=merma,pesorxcaja=0,orden="SM",pesostdxcaja=0,tara=tara,pesosinmerma=pesosinmerma)
+            inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[5],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=0,categoria="Merma",libras=0,lbsintara=merma,pesostd=0,merma=merma,pesorxcaja=0,orden="SM",pesostdxcaja=0,tara=tara,pesosinmerma=pesosinmerma,calidad1=pesostd.calidad1)
         
     return JsonResponse({'mensaje':mensaje})
 
@@ -1660,7 +1660,7 @@ def procesarinvprodconten(request):
     
     for i in mensaje:
         ref=inventarioProdTerm.objects.get(registro = i[0])
-        salidacontenedores.objects.create(fecha=str(ref.fecha),contenedor=i[10],categoria=str(ref.categoria),cultivo=ref.cultivo,proveedor=ref.proveedor,itemsapcode = ref.itemsapcode,itemsapname = ref.itemsapname,orden=ref.orden,cajas=i[6],lbsintara=(i[6]*ref.lbsintara/ref.cajas),pesostdxcaja=ref.pesostdxcaja,pesostd=(i[6]*ref.pesostd/ref.cajas),merma=(i[6]*ref.merma/ref.cajas),pesorxcaja=ref.pesorxcaja,pesosinmerma=ref.pesosinmerma)
+        salidacontenedores.objects.create(fecha=str(ref.fecha),contenedor=i[10],categoria=str(ref.categoria),cultivo=ref.cultivo,proveedor=ref.proveedor,itemsapcode = ref.itemsapcode,itemsapname = ref.itemsapname,orden=ref.orden,cajas=i[6],lbsintara=(i[6]*ref.lbsintara/ref.cajas),pesostdxcaja=ref.pesostdxcaja,pesostd=(i[6]*ref.pesostd/ref.cajas),merma=(i[6]*ref.merma/ref.cajas),pesorxcaja=ref.pesorxcaja,pesosinmerma=ref.pesosinmerma,calidad1=ref.calidad1)
     
         # Crea un diccionario con los datos
     
