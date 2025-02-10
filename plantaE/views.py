@@ -4,7 +4,7 @@ import logging
 from openpyxl import Workbook
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect
-from .models import Actpeso,salidacontenedores, contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
+from .models import Actpeso,salidacontenedores, productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
 from .forms import pesosForm,salidasFrutaForm, contenedoresForm,recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
 from django.db.models import Sum, Q
 from django.utils import timezone
@@ -300,6 +300,7 @@ def inventarioProd_grabarplantilla(request):
     
     for i in mensaje:
         pesostd = productoTerm.objects.filter(itemsapcode=i[0]).first()
+        productor_ = productores.objects.filter(productor=i[5]).first()
         pesotarima = 54    
         tara  = float(pesostd.taraxcaja)*int(i[2]) + pesotarima
         pesosintara = int(i[3]) - tara 
@@ -311,11 +312,15 @@ def inventarioProd_grabarplantilla(request):
         ordenemp=pesostd.orden
         if i[2] == '':
             i[2] == None
-
-        inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[5],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=i[2],categoria=i[7],libras=i[3],lbsintara=pesosintara,pesostd=pesoestandar,merma=merma,pesorxcaja=pesoporcaja,orden=ordenemp,pesostdxcaja=pesostdxcaja,tara=tara,pesosinmerma=pesosinmerma,calidad1=pesostd.calidad1)
-        if merma > 0:
-            inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[5],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=0,categoria="Merma",libras=0,lbsintara=merma,pesostd=0,merma=merma,pesorxcaja=0,orden="SM",pesostdxcaja=0,tara=tara,pesosinmerma=pesosinmerma,calidad1=pesostd.calidad1)
-        
+        if productor_.tipo=="EM":
+            inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[5],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=i[2],categoria=i[7],libras=i[3],lbsintara=pesosintara,pesostd=pesoestandar,merma=merma,pesorxcaja=pesoporcaja,orden="EM",pesostdxcaja=pesostdxcaja,tara=tara,pesosinmerma=pesosinmerma,calidad1=pesostd.calidad1)
+            if merma > 0:
+                inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[5],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=0,categoria="Merma",libras=0,lbsintara=merma,pesostd=0,merma=merma,pesorxcaja=0,orden="SM",pesostdxcaja=0,tara=tara,pesosinmerma=pesosinmerma,calidad1=pesostd.calidad1)       
+        else:
+            inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[5],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=i[2],categoria=i[7],libras=i[3],lbsintara=pesosintara,pesostd=pesoestandar,merma=merma,pesorxcaja=pesoporcaja,orden=ordenemp,pesostdxcaja=pesostdxcaja,tara=tara,pesosinmerma=pesosinmerma,calidad1=pesostd.calidad1)
+            if merma > 0:
+                inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[5],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=0,categoria="Merma",libras=0,lbsintara=merma,pesostd=0,merma=merma,pesorxcaja=0,orden="SM",pesostdxcaja=0,tara=tara,pesosinmerma=pesosinmerma,calidad1=pesostd.calidad1)
+            
     return JsonResponse({'mensaje':mensaje})
 
 def cuadrar_RioDia(request):
