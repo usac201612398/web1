@@ -444,7 +444,7 @@ class enviosrec(models.Model):
     destino = models.CharField(max_length= 150, blank = True, null =  True)
     recibe = models.CharField(max_length= 75, blank = True, null =  True)
     observaciones = models.CharField(max_length=125,blank=True, null = True)
-    empaque_cnt = models.BigIntegerField(blank = True, null = True)
+    empaque_cnt = models.FloatField(blank = True, null = True)
     empaque_tipo = models.CharField(max_length= 25, blank = True, null =  True)
     lugar = models.CharField(max_length= 25, blank = True, null =  True)
     clasificacion = models.CharField(max_length= 25, blank = True, null =  True)
