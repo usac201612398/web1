@@ -459,3 +459,14 @@ class enviosrec(models.Model):
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     libras = models.BigIntegerField(blank = True, null = True)
     
+
+class paramenvlocales(models.Model):
+    #op_status = [('Pendiente','-'),('En proceso','En proceso'),('Cerrado','Cerrado')]
+    registro = models.BigAutoField(primary_key=True)
+    descripcion = models.CharField(max_length= 200, blank = True, null =  True)
+    u_m = models.CharField(max_length= 25, blank = True, null =  True)
+    item = models.CharField(max_length= 30, blank = True, null =  True)
+    clasificacion = models.CharField(max_length= 45, blank = True, null =  True)
+    almacen = models.CharField(max_length= 25, blank = True, null =  True)
+    grupo = models.CharField(max_length= 50, blank = True, null =  True)
+    rubro = models.CharField(max_length= 50, blank = True, null =  True)
