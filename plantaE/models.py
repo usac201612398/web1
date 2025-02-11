@@ -457,7 +457,7 @@ class enviosrec(models.Model):
     productor = models.CharField(max_length= 75, blank = True, null =  True)
     created = models.DateTimeField(auto_now=True, blank=True,null = True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
-    libras = models.BigIntegerField(blank = True, null = True)
+    libras = models.FloatField(blank = True, null = True)
     
 
 class paramenvlocales(models.Model):
