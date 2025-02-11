@@ -435,7 +435,7 @@ class enviosrec(models.Model):
     #op_status = [('Pendiente','-'),('En proceso','En proceso'),('Cerrado','Cerrado')]
     registro = models.BigAutoField(primary_key=True)
     envio = models.BigIntegerField(blank=True, null = True)
-    cantidad = models.BigIntegerField(blank = True, null = True)
+    cantidad = models.FloatField(blank = True, null = True)
     u_m = models.CharField(max_length= 25, blank = True, null =  True)
     itemsap_name = models.CharField(max_length= 200, blank = True, null =  True)
     itemsap_code = models.CharField(max_length= 15, blank = True, null =  True)
@@ -444,7 +444,7 @@ class enviosrec(models.Model):
     destino = models.CharField(max_length= 150, blank = True, null =  True)
     recibe = models.CharField(max_length= 75, blank = True, null =  True)
     observaciones = models.CharField(max_length=125,blank=True, null = True)
-    empaque_cnt = models.FloatField(blank = True, null = True)
+    empaque_cnt = models.BigIntegerField(blank = True, null = True)
     empaque_tipo = models.CharField(max_length= 25, blank = True, null =  True)
     lugar = models.CharField(max_length= 25, blank = True, null =  True)
     clasificacion = models.CharField(max_length= 25, blank = True, null =  True)
