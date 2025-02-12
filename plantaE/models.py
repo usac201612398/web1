@@ -470,3 +470,14 @@ class paramenvlocales(models.Model):
     almacen = models.CharField(max_length= 25, blank = True, null =  True)
     grupo = models.CharField(max_length= 50, blank = True, null =  True)
     rubro = models.CharField(max_length= 50, blank = True, null =  True)
+
+class destinoslocales(models.Model):
+    #op_status = [('Pendiente','-'),('En proceso','En proceso'),('Cerrado','Cerrado')]
+    registro = models.BigAutoField(primary_key=True)
+    cod_destino = models.CharField(max_length= 20, blank = True, null =  True)
+    destino = models.CharField(max_length= 200, blank = True, null =  True)
+
+class und_emplocales(models.Model):
+    #op_status = [('Pendiente','-'),('En proceso','En proceso'),('Cerrado','Cerrado')]
+    registro = models.BigAutoField(primary_key=True)
+    cod_empaque = models.CharField(max_length= 20, blank = True, null =  True)
