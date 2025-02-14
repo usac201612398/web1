@@ -1658,6 +1658,7 @@ def procesarinvprodconten(request):
     mensaje = data['array']
     contenedor_=data['contenedor']
     today = timezone.now().date()
+    semana_actual = today.isocalendar()[1]  # semana actual
     #mensaje = request.POST.get('array')
     
     registros =  []
@@ -1678,8 +1679,14 @@ def procesarinvprodconten(request):
             salidas.status = "En proceso"
             salidas.save()
     salidas3=contenedores.objects.filter(contenedor=contenedor_,fecha=today)
-    # Si hay más de un contenedor que coincide con el filtro, puedes hacer un update masivo
-    salidas3.update(status="Cerrado")
+    # Iterar sobre los contenedores y comparar la semana
+    for i in salidas3:
+        semana_contenedor =i.fecha.isocalendar()[1]  # semana del contenedor
+
+        # Si la semana del contenedor es la misma que la semana actual
+        if semana_contenedor == semana_actual:
+            i.status = "Cerrado"
+            i.save()
     
     return JsonResponse({'mensaje':mensaje,'registros':registros})   
 
