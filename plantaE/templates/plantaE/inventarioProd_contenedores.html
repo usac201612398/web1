@@ -37,6 +37,14 @@
     </div>
 
     <div class="container">
+        <div class="inputs-row">
+      
+              <input class="input" type="text" id="myInput" onkeyup="myFunction()" placeholder="Buscar por nombre de item...">
+           
+        </div>
+    </div>
+
+    <div class="container">
         <div class="columns">
             <div class="column is-12">
             <div class="table-container">
@@ -100,6 +108,28 @@ const eliminarBotones = document.querySelectorAll('.eliminar');
 $(document).on('click', '.eliminar', function() {
     $(this).closest('tr').remove();
 });
+
+function myFunction() {
+  // Declare variables
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[5];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
 
 $('.envio3').on('click', function() {
     var resume_table = document.getElementById("myTable");
