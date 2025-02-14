@@ -1652,7 +1652,6 @@ def reporteInventario(request):
 
     return render(request, 'plantaE/inventarioProd_reporteInv.html', context)
 
-
 def procesarinvprodconten(request):
 
     data = json.loads(request.body)
