@@ -1678,7 +1678,7 @@ def procesarinvprodconten(request):
         if str(salidas2) == str(salidas.cajas):
             salidas.status = "En proceso"
             salidas.save()
-    salidas3=contenedores.objects.filter(contenedor=contenedor_,fecha=today)
+    salidas3=contenedores.objects.filter(contenedor=contenedor_)
     # Iterar sobre los contenedores y comparar la semana
     for i in salidas3:
         semana_contenedor =i.fecha.isocalendar()[1]  # semana del contenedor
