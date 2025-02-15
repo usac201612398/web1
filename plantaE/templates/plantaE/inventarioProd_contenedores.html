@@ -237,28 +237,29 @@ $('.envio3').on('click', function() {
         // Llamar a la función de carga de contenedores
         loadProducts();
 
-        // Función que actualiza el total de cajas
-    function updateTotal() {
-        var totalCajas = 0;
-        
-        // Recorre todas las filas que están seleccionadas (marcadas con checkbox)
-        $('input[type="checkbox"]:checked').each(function() {
-            var row = $(this).closest('tr');  // Encuentra la fila correspondiente
-            var cajas = parseFloat(row.find('td').eq(7).text()) || 0;  // Obtiene el valor de la columna "Cajas" (índice 7)
-            totalCajas += cajas;  // Acumula el total de cajas
+            // Función que actualiza el total de cajas
+        function updateTotal() {
+            var totalCajas = 0;
+            
+            // Recorre todas las filas que están seleccionadas (marcadas con checkbox)
+            $('input[type="checkbox"]:checked').each(function() {
+                var row = $(this).closest('tr');  // Encuentra la fila correspondiente
+                var cajas = parseFloat(row.find('td').eq(6).find('.editable-cell').text()) || 0;  // Obtenemos el valor de la columna "Cajas" (índice 6) desde .editable-cell
+                totalCajas += cajas;  // Acumula el total de cajas
+            });
+
+            // Actualiza el total en la fila correspondiente
+            $('#totalCajas').text(totalCajas);  // Muestra el total en la fila de suma
+        }
+
+        // Cuando se marque o desmarque un checkbox
+        $(document).on('change', 'input[type="checkbox"]', function() {
+            updateTotal();  // Llama a la función para actualizar el total
         });
 
-        // Actualiza el total en la fila correspondiente
-        $('#totalCajas').text(totalCajas);  // Muestra el total en la fila de suma
-    }
+        // Inicializa el total al cargar la página
+        updateTotal();
 
-    // Cuando se marque o desmarque un checkbox
-    $(document).on('change', 'input[type="checkbox"]', function() {
-        updateTotal();  // Llama a la función para actualizar el total
-    });
-
-    // Inicializa el total al cargar la página
-    updateTotal();
     });
     </script>
     
