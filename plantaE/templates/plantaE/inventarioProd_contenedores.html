@@ -60,6 +60,7 @@
                     <th >Cajas</th>
                     <th >Orden</th>
                     <th >Status</th>
+                    <th >Seleccionar</th>
                     <th >Eliminar</th>
                     </tr>
                 </thead>
@@ -75,6 +76,7 @@
                     <td><div contenteditable="true" class="editable-cell">{{registro.cajas}}</div></td>
                     <td>{{registro.orden}}</td>
                     <td>{{registro.status}}</td>
+                    <td><input type="checkbox" class="seleccionar"></td>
                    <td><button class="eliminar"><i class="fas fa-trash-alt"></i></button></td>
                     </tr> 
                         
@@ -134,38 +136,49 @@ function myFunction() {
 $('.envio3').on('click', function() {
     var resume_table = document.getElementById("myTable");
     var datos = [];
-    
+
+    // Iterar sobre las filas de la tabla
     for (var i = 1, row; row = resume_table.rows[i]; i++) {
-        var filas = [];
-        
-        for (var j = 0, col; col = row.cells[j]; j++) {
-            // Si la columna contiene una fecha, formateala
-            if (col.innerText.match(/^[A-Za-z]{3}\.\s\d{1,2},\s\d{4}$/)) { // Coincide con el formato "Oct. 10, 2024"
-                // Convertir la fecha
-                var fechaOriginal = col.innerText;
-                var fechaConvertida = new Date(fechaOriginal).toISOString().split('T')[0];
-                filas.push(fechaConvertida);
-            } else {
-                filas.push(col.innerText);
+        var checkbox = row.querySelector('input[type="checkbox"]');  // Obtener el checkbox en esta fila
+
+        // Si el checkbox está marcado, recolectamos los datos de la fila
+        if (checkbox.checked) {
+            var filas = [];
+
+            // Recorremos las celdas de la fila
+            for (var j = 0, col; col = row.cells[j]; j++) {
+                // Si la columna contiene una fecha, formatearla
+                if (col.innerText.match(/^[A-Za-z]{3}\.\s\d{1,2},\s\d{4}$/)) { // Coincide con el formato "Oct. 10, 2024"
+                    // Convertir la fecha
+                    var fechaOriginal = col.innerText;
+                    var fechaConvertida = new Date(fechaOriginal).toISOString().split('T')[0];
+                    filas.push(fechaConvertida);
+                } else {
+                    filas.push(col.innerText);
+                }
             }
 
-        }
-        var conten = document.getElementById('Conten'),
-            value_conten = conten.value,
-            text_conten = conten.options[conten.selectedIndex].innerText;
+            // Añadir la información del contenedor seleccionado
+            var conten = document.getElementById('Conten'),
+                value_conten = conten.value,
+                text_conten = conten.options[conten.selectedIndex].innerText;
             filas.push(text_conten);
-        datos.push(filas);
+
+            // Guardamos la fila seleccionada
+            datos.push(filas);
+        }
     }
-    
+
+    // Enviar los datos seleccionados a través de AJAX
     console.log(datos);
 
     $.ajax({
         url: '{% url "inventarioProd_contprocess" %}',  // URL para la vista AJAX
         type: 'POST',
         dataType: "json",
-        data: JSON.stringify({'array': datos, 'contenedor':text_conten}),
+        data: JSON.stringify({'array': datos, 'contenedor': text_conten}),
         contentType: 'application/json',
-        headers: {'X-CSRFToken': csrftoken}, 
+        headers: {'X-CSRFToken': csrftoken},
         
         success: function(data) {
             alert("Listo");
@@ -176,6 +189,7 @@ $('.envio3').on('click', function() {
         }
     });
 });
+
 
 
 </script>
