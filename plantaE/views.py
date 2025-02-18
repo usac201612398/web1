@@ -306,7 +306,10 @@ def inventarioProd_grabarplantilla(request):
         pesosintara = int(i[3]) - tara 
         pesoestandar = float(pesostd.pesostdxcaja)*int(i[2])
         pesostdxcaja = pesostd.pesostdxcaja
-        merma = pesosintara-pesoestandar
+        if pesosintara < pesoestandar:
+            merma = 0
+        else:
+            merma = pesosintara-pesoestandar
         pesosinmerma = pesosintara-merma
         pesoporcaja = pesosintara/int(i[2])
         ordenemp=pesostd.orden
