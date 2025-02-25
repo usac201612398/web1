@@ -174,8 +174,8 @@ document.getElementById('consultar').addEventListener('click', function() {
         if (Array.isArray(data.datos) && data.datos.length > 0) {
             data.datos.forEach(item => {
                 const fila = document.createElement('tr');
-                const editUrl = urls.updateUrl.replace('0', item.pk);  // Reemplaza el 0 por el valor correcto
-                const deleteUrl = urls.deleteUrl.replace('0', item.pk);  // Lo mismo para eliminar
+                const editUrl = urls.updateUrl.replace('0', item.id);  // Reemplaza el 0 por el valor correcto
+                const deleteUrl = urls.deleteUrl.replace('0', item.id);  // Lo mismo para eliminar
 
                 fila.innerHTML = `
                     <td>${item.id}</td>
