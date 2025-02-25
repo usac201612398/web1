@@ -1473,7 +1473,7 @@ def acumFruta_consulta(request):
         datos = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario,libras__isnull=False) 
         # Obtener todos los registros para el usuario y la fecha
         registros = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario,libras__isnull=False)
-        df = pd.DataFrame(list(datos.values()),columns=['id','fecha','finca','orden','cultivo','variedad','cajas','libras','estructura'])
+        df = pd.DataFrame(list(datos.values()),columns=['id','fecha','finca','viaje','orden','cultivo','variedad','cajas','libras','estructura'])
 
         df_agrupado = df.groupby(['orden','estructura','variedad'], as_index=False).agg(
             total_cajas=('cajas', 'sum'),
@@ -1482,6 +1482,7 @@ def acumFruta_consulta(request):
             id=('id', 'first'),
             fecha =('fecha', 'first'),
             finca =('finca', 'first'),
+            viaje =('viaje', 'first'),
             orden =('orden', 'first'),
             variedad =('variedad', 'first'),
             estructura =('estructura', 'first')
@@ -1489,12 +1490,13 @@ def acumFruta_consulta(request):
         df_agrupado = df_agrupado.sort_values(by='orden')
         registros_finales = df_agrupado.to_dict(orient='records')
         # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
-        df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','cajas','libras'])
+        df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','viaje','cultivo','cajas','libras'])
 
         # Agrupar por 'variedad' y sumar las 'cajas'
         df_agrupado = df.groupby('cultivo', as_index=False).agg(
             total_cajas=('cajas', 'sum'),
             total_libras=('libras', 'sum'),
+            viaje=('viaje', 'first'),
             cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
             fecha=('fecha', 'first'),
             finca =('finca', 'first')
