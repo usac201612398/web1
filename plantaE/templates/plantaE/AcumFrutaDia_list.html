@@ -47,7 +47,6 @@
 </head>
 <body>
     <h1 class="roboto">Panel</h1>
-    <a href="{% url 'salidasFruta_create_plantilla' %}">Agregar plantilla</a>
 
     <div class = "container">
         <div class="half">
@@ -94,6 +93,7 @@
                     <tr class="header">
                     <th >Llave</th>
                     <th >Fecha</th>
+                    <th >Viaje</th>
                     <th >Finca</th>
                     <th >Cajas</th>
                     <th >Libras</th>
@@ -111,6 +111,7 @@
                     <td> <a href="{% url 'acumFruta_detail' registro.pk %}">{{ registro.id }}</a></td>
                     <td>{{registro.fecha}}</td>
                     <td>{{registro.finca}}</td>
+                    <td>{{registro.viaje}}</td>
                     <td>{{registro.cajas}}</td>
                     
                     <td class="number-cell" data-value="{{ registro.libras }}">{{ registro.libras }}</td>
