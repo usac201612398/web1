@@ -167,7 +167,8 @@ document.getElementById('consultar').addEventListener('click', function() {
 
         const urls = {
             updateUrl: "{% url 'acumFruta_update' 0 %}",
-            deleteUrl: "{% url 'acumFruta_delete' 0 %}"
+            deleteUrl: "{% url 'acumFruta_delete' 0 %}",
+            detailUrl: "{% url 'acumFruta_detail' 0 %}"
         };
 
         // Verificar si hay datos en data.datos
@@ -176,9 +177,10 @@ document.getElementById('consultar').addEventListener('click', function() {
                 const fila = document.createElement('tr');
                 const editUrl = urls.updateUrl.replace('0', item.id);  // Reemplaza el 0 por el valor correcto
                 const deleteUrl = urls.deleteUrl.replace('0', item.id);  // Lo mismo para eliminar
+                const detailUrl = urls.detailUrl.replace('0', item.id);  // Lo mismo para detalles
 
                 fila.innerHTML = `
-                    <td>${item.id}</td>
+                    <td><a href="${detailUrl}">${item.id}</a></td>
                     <td>${item.fecha}</td>
                     <td>${item.finca}</td>
                     <td>${item.viaje}</td>

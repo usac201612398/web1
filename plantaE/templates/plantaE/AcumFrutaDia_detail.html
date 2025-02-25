@@ -44,7 +44,14 @@
         </div>
     </div>
 
-    <a href="{% url 'acumFruta_list' %}">Regresar a panel</a>
+
+    {% if user.email == 'cosecha.rio@popoyan.com.gt' %}
+    
+        <a href="{% url 'acumFruta_list' %}">Regresar a panel</a>
+    {% else %}
+        <a href="{% url 'acumFruta_listValle' %}">Regresar a panel</a>
+        
+    {% endif %}
 
     
     
