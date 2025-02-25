@@ -163,7 +163,7 @@ document.getElementById('consultar').addEventListener('click', function() {
         console.log(data)
         data.datos.forEach(item => {
             const fila = document.createElement('tr');
-            fila.innerHTML = `<td>${item.id}</td><td>${item.fecha}</td><td>${item.finca}</td><td>${item.total_cajas}</td><td>${Math.round(item.total_libras)}</td><td>${item.orden}</td><td>${item.cultivo}</td><td>${item.estructura}</td><td>${item.variedad}</td><td>-</td><td>-</td>`;
+            fila.innerHTML = `<td>${item.id}</td><td>${item.fecha}</td><td>${item.finca}</td><td>${item.viaje}</td><td>${item.total_cajas}</td><td>${Math.round(item.total_libras)}</td><td>${item.orden}</td><td>${item.cultivo}</td><td>${item.estructura}</td><td>${item.variedad}</td><td><a href="{% url 'acumFruta_update' registro.pk %}"> <i class="fas fa-edit"></i>Editar</a></td><td><a href="{% url 'acumFruta_delete' registro.pk %}"><i class="fas fa-trash-alt"></i>Eliminar</a></td>`;
             
             tbody.appendChild(fila);
         });
