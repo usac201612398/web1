@@ -161,9 +161,17 @@ document.getElementById('consultar').addEventListener('click', function() {
     .then(response => response.json())
     .then(data => {
         console.log(data)
+        const urls = {
+            updateUrl: "{% url 'acumFruta_update' 0 %}",
+            deleteUrl: "{% url 'acumFruta_delete' 0 %}"
+        };
         data.datos.forEach(item => {
             const fila = document.createElement('tr');
-            fila.innerHTML = `<td>${item.id}</td><td>${item.fecha}</td><td>${item.finca}</td><td>${item.viaje}</td><td>${item.total_cajas}</td><td>${Math.round(item.total_libras)}</td><td>${item.orden}</td><td>${item.cultivo}</td><td>${item.estructura}</td><td>${item.variedad}</td><td><a href="{% url 'acumFruta_update' registro.pk %}"> <i class="fas fa-edit"></i>Editar</a></td><td><a href="{% url 'acumFruta_delete' registro.pk %}"><i class="fas fa-trash-alt"></i>Eliminar</a></td>`;
+            const editUrl = urls.updateUrl.replace('0', item.pk);  // Reemplaza el 0 por el valor correcto
+            const deleteUrl = urls.deleteUrl.replace('0', item.pk);  // Lo mismo para eliminar
+
+            fila.innerHTML = `<td>${item.id}</td><td>${item.fecha}</td><td>${item.finca}</td><td>${item.viaje}</td><td>${item.total_cajas}</td><td>${Math.round(item.total_libras)}</td><td>${item.orden}</td><td>${item.cultivo}</td><td>${item.estructura}</td><td>${item.variedad}</td><td><a href="${editUrl}"><i class="fas fa-edit"></i>Editar</a></td>
+            <td><a href="${deleteUrl}"><i class="fas fa-trash-alt"></i>Eliminar</a></td>`;
             
             tbody.appendChild(fila);
         });
