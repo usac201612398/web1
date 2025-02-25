@@ -83,7 +83,7 @@ class AcumFruta(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     libras = models.FloatField(blank=True, null=True)
     status = models.CharField(max_length=25, choices=op_status,blank=True, null=True)
-    op_sap = models.CharField(max_length=20,choices=op_orden,null=True)
+    op_sap = models.CharField(max_length=20,blank=True, null=True)
     
     viaje = models.CharField(max_length=30,null=True,blank=True)
 
