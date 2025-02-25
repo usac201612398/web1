@@ -492,7 +492,6 @@ def guardar_plantillaValle(request):
     
     resultado = df.groupby(['Variedad','Cultivo'] ).agg({
         'Encargado': 'first',  # O 'last', 'min', 'max', etc.
-        'Cultivo': 'first',
         'Finca': 'first',
         'Viaje': 'first',
         'Fecha': 'first',
