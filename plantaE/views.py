@@ -1487,7 +1487,8 @@ def acumFruta_consulta(request):
             variedad =('variedad', 'first'),
             estructura =('estructura', 'first')
         )
-        df_agrupado = df_agrupado.sort_values(by='orden')
+        df_agrupado = df_agrupado.sort_values(by=['viaje', 'orden'])
+
         registros_finales = df_agrupado.to_dict(orient='records')
         # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
         df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','viaje','cultivo','cajas','libras'])
