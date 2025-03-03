@@ -281,6 +281,7 @@ class inventarioProdTerm(models.Model):
     status2 = models.CharField(max_length=25, choices=op_status,blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
+    op_sap = models.CharField(max_length=20,blank=True, null=True)
     
     def __str__(self):
         return str(self.registro) + " | " + str(self.proveedor) + " | " + str(self.itemsapname)+ " | " + str(self.cultivo)
