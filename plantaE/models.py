@@ -278,6 +278,7 @@ class inventarioProdTerm(models.Model):
     tara = models.FloatField(blank=True, null=True)
     orden=models.CharField(max_length=20,null=True)
     status = models.CharField(max_length=25, choices=op_status,blank=True, null=True)
+    status2 = models.CharField(max_length=25, choices=op_status,blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
     
