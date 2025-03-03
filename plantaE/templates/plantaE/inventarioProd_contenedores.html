@@ -147,7 +147,7 @@ $('.envio3').on('click', function() {
         var checkbox = row.querySelector('input[type="checkbox"]');  // Obtener el checkbox en esta fila
 
         // Si el checkbox está marcado, recolectamos los datos de la fila
-        if (checkbox.checked) {
+        if (checkbox && checkbox.checked) {
             var filas = [];
 
             // Recorremos las celdas de la fila
