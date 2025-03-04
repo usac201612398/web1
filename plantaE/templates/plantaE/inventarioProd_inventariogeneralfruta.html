@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+{% load static %} 
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous">   
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <title>Inventario</title>
+    <style>
+        .inputs-row {
+        display: flex;
+        flex-wrap: nwrap; /* Para que se acomoden bien en pantallas más pequeñas */
+    }
+    #myInput, #myInput2, #myInput3 {
+    flex: 1; /* Cada input ocupa el mismo espacio */
+    font-size: 16px;
+    padding: 12px 20px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    min-width: 0; /* Asegura que no haya un ancho mínimo inesperado */
+    }
+        h1 {
+            margin: 15px;
+            font-family: Arial, sans-serif;
+        }
+
+        a {
+            margin: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+    </style>
+</head>
+<body>
+    <h1 class="roboto">Panel</h1>
+
+    <div class="container">
+        <div class="inputs-row">
+      
+              <input class="input" type="text" id="myInput" onkeyup="myFunction()" placeholder="Buscar por nombre de item...">
+              <input class="input" type="text" id="myInput2" onkeyup="myFunction2()" placeholder="Buscar por cultivo...">
+              <input class="input" type="text" id="myInput3" onkeyup="myFunction3()" placeholder="Buscar por proveedor...">
+         
+        </div>
+
+    </div>
+
+    <div class="container">
+        <div class="columns">
+            <div class="column is-12">
+            <div class="table-container">
+                <table class="table is-striped is-hoverable is is-fullwidth" id="myTable">
+                <thead id = "enc1">
+                    <tr class="header">
+                    <th >Proveedor</th>
+                    <th >Cultivo</th>
+                    <th >Libras</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {%for registro in registros %} 
+                <tr> 
+                    <td>{{registro.proveedor}}</td>
+                    <td>{{registro.cultivo}}</td>
+                    <td><div contenteditable="true" class="editable-cell">{{registro.libras_restantes}}</div></td>
+                </tr> 
+                        
+                {% endfor %}
+                </tbody>
+                </table>
+            </div>
+            </div>
+        </div>
+        </div>
+        <br>
+
+</body>
+<script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+
+
+function myFunction() {
+  // Declare variables
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[3];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+
+function myFunction2() {
+  // Declare variables
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput2");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[1];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+function myFunction3() {
+  // Declare variables
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput3");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+</script>
+
+<script>
+    // Django convierte el contexto de 'registros' a un JSON en el frontend
+    
+
+    $(document).ready(function() {
+        console.log("Página cargada");
+       
+        // Inicializa el total al cargar la página
+
+    });
+    </script>
+    
+</html>

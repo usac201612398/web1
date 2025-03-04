@@ -1774,6 +1774,76 @@ def inventariogeneral_list(request):
     # Pasar los registros agrupados al renderizado de la plantilla
     return render(request, 'plantaE/inventarioProd_inventariogeneral.html', {'registros': registros_agrupados})
 
+def inventariogeneralfruta_list(request):
+    today = timezone.now().date()
+
+    # Obtener todas las salidas de inventario y salidas de contenedores
+    salidas = detallerec.objects.all()
+    salidas2 = inventarioProdTerm.objects.all()
+    
+    # Filtrar las salidas de inventario para las que tienen categoría 'Exportación' y sin 'status'
+    salidas = salidas.order_by('registro').exclude(status='Cerrado')
+    
+    # Excluir los registros de salidas2 donde el contenedor esté vacío
+    salidas2 = salidas2.exclude(status='Cerrado',categoria='Merma')
+
+    # Crear un diccionario para almacenar los resultados agrupados por 'itemsapcode' y 'proveedor'
+    agrupaciones = {}
+
+    # Agrupar las salidas de inventario (salidas) por 'itemsapcode' y 'proveedor'
+    for salida in salidas:
+        # Crear la clave de agrupación concatenando 'itemsapcode' y 'proveedor'
+        if salida.finca == "Productor":
+            clave_agrupacion = (salida.llave, salida.cultivo)
+            if clave_agrupacion not in agrupaciones:
+                agrupaciones[clave_agrupacion] = {
+                    'proveedor': salida.llave,
+                    'cultivo': salida.cultivo,
+                    'total_libras_salidas': 0,  # Cajas de salidas
+                    'total_libras_salidas2': 0,  # Cajas de salidas2
+                    'salidas': []
+                }
+
+        else:
+            clave_agrupacion = (salida.finca, salida.cultivo)
+            
+            if clave_agrupacion not in agrupaciones:
+                agrupaciones[clave_agrupacion] = {
+                    'proveedor': salida.finca,
+                    'cultivo': salida.cultivo,
+                    'total_libras_salidas': 0,  # Cajas de salidas
+                    'total_libras_salidas2': 0,  # Cajas de salidas2
+                    'salidas': []
+                }
+
+        # Acumular las cajas de las salidas
+        agrupaciones[clave_agrupacion]['total_libras_salidas'] += salida.libras
+        agrupaciones[clave_agrupacion]['salidas'].append(salida)
+    
+    # Agrupar las salidas de contenedores (salidas2) por 'itemsapcode' y 'proveedor'
+    for salida2 in salidas2:
+        # Verificar si el contenedor no está vacío antes de acumular las cajas
+        if salida2.status is not 'Cerrado':
+            # Crear la clave de agrupación concatenando 'itemsapcode' y 'proveedor'
+            clave_agrupacion = (salida2.proveedor, salida2.cultivo)
+            
+            if clave_agrupacion in agrupaciones:
+                # Acumular las cajas de las salidas2
+                agrupaciones[clave_agrupacion]['total_libras_salidas2'] += salida2.lbsintara
+    
+    # Ahora, restamos las cajas de 'salidas2' de las de 'salidas' para cada agrupación
+    for agrupacion in agrupaciones.values():
+        # Restar las cajas de las salidas2 de las de las salidas
+        agrupacion['libras_restantes'] = agrupacion['total_libras_salidas'] - agrupacion['total_libras_salidas2']
+    
+    # Convertir el diccionario en una lista para pasarlo al contexto de la plantilla
+    registros_agrupados = list(agrupaciones.values())
+    
+    # Ordenar la lista de registros por el campo 'proveedor'
+    registros_agrupados = sorted(registros_agrupados, key=lambda x: x['proveedor'])
+    
+    # Pasar los registros agrupados al renderizado de la plantilla
+    return render(request, 'plantaE/inventarioProd_inventariogeneralfruta.html', {'registros': registros_agrupados})
 
 def load_contenedores(request):
     
