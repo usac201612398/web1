@@ -1724,7 +1724,7 @@ def inventariogeneral_list(request):
     salidas = salidas.filter(status=None, categoria="Exportación").order_by('registro')
     
     # Excluir los registros de salidas2 donde el contenedor esté vacío
-    salidas2 = salidas2.exclude(contenedor=None)
+    salidas2 = salidas2.exclude(contenedor='0')
 
     # Crear un diccionario para almacenar los resultados agrupados por 'itemsapcode' y 'proveedor'
     agrupaciones = {}
