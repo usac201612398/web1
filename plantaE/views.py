@@ -1762,11 +1762,10 @@ def inventariogeneral_list(request):
     
     # Convertir el diccionario en una lista para pasarlo al contexto de la plantilla
     registros_agrupados = list(agrupaciones.values())
-    
+    # Ordenar la lista de registros por el campo 'proveedor'
+    registros_agrupados = sorted(registros_agrupados, key=lambda x: x['proveedor'])
     # Pasar los registros agrupados al renderizado de la plantilla
     return render(request, 'plantaE/inventarioProd_inventariogeneral.html', {'registros': registros_agrupados})
-
-
 
 def load_contenedores(request):
     
