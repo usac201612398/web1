@@ -1723,6 +1723,7 @@ def inventariogeneral_list(request):
     
     # Filtrar las salidas de inventario para las que tienen categoría 'Exportación' y sin 'status'
     salidas = salidas.filter(status=None, categoria="Exportación").order_by('registro')
+    salidas2 = salidas2.exclude(contenedor=None)
 
     # Crear un diccionario para almacenar los resultados agrupados por 'itemsapcode' y 'proveedor'
     agrupaciones = {}
