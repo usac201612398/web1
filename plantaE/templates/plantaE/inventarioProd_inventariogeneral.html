@@ -12,37 +12,13 @@
         display: flex;
         flex-wrap: nwrap; /* Para que se acomoden bien en pantallas más pequeñas */
     }
-    #myInput {
-    /*  background-image: url('/css/searchicon.png'); /* Add a search icon to input */
-        background-position: 10px 12px; /* Position the search icon */
-        background-repeat: no-repeat; /* Do not repeat the icon image */
-        width: 25%; /* Full-width */
-        font-size: 16px; /* Increase font-size */
-        padding: 12px 20px 12px 40px; /* Add some padding */
-        border: 1px solid #ddd; /* Add a grey border */
-        box-sizing: border-box;
-    }
-    
-    #myInput2 {
-    /*  background-image: url('/css/searchicon.png'); /* Add a search icon to input */
-        background-position: 10px 12px; /* Position the search icon */
-        background-repeat: no-repeat; /* Do not repeat the icon image */
-        width: 25%; /* Full-width */
-        font-size: 16px; /* Increase font-size */
-        padding: 12px 20px 12px 40px; /* Add some padding */
-        border: 1px solid #ddd; /* Add a grey border */
-        box-sizing: border-box;
-    }
-    
-    #myInput3 {
-    /*  background-image: url('/css/searchicon.png'); /* Add a search icon to input */
-        background-position: 10px 12px; /* Position the search icon */
-        background-repeat: no-repeat; /* Do not repeat the icon image */
-        width: 25%; /* Full-width */
-        font-size: 16px; /* Increase font-size */
-        padding: 12px 20px 12px 40px; /* Add some padding */
-        border: 1px solid #ddd; /* Add a grey border */
-        box-sizing: border-box;
+    #myInput, #myInput2, #myInput3 {
+    flex: 1; /* Cada input ocupa el mismo espacio */
+    font-size: 16px;
+    padding: 12px 20px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    min-width: 0; /* Asegura que no haya un ancho mínimo inesperado */
     }
         h1 {
             margin: 15px;
