@@ -353,7 +353,7 @@ class productoTerm(models.Model):
     
     op_cultivo =   [('ROMA','ROMA'),('ARANDANO','ARANDANO'),('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('BEEF','BEEF'),('SALADETTE','SALADETTE'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
     op_categoria = [('Exportación','Exportación'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolución','Devolución')]
-    op_tipo =      [('Tomate','Tomate'),('Chile','Chile')]
+    op_tipo =      [('Tomate','Tomate'),('Chile','Chile'),('Arandano','Arandano')]
     
     registro = models.BigAutoField(primary_key=True)
     cultivo = models.CharField(max_length=50, choices=op_cultivo, blank=True, null=True)
