@@ -1773,7 +1773,6 @@ def inventariogeneral_list(request):
     
     # Pasar los registros agrupados al renderizado de la plantilla
     return render(request, 'plantaE/inventarioProd_inventariogeneral.html', {'registros': registros_agrupados})
-
 def inventariogeneralfruta_list(request):
     today = timezone.now().date()
 
@@ -1792,8 +1791,13 @@ def inventariogeneralfruta_list(request):
 
     # Agrupar las salidas de inventario (salidas) por 'itemsapcode' y 'proveedor'
     for salida in salidas:
-        # Crear la clave de agrupación concatenando 'itemsapcode' y 'proveedor'
-        if salida.finca == "Productor":
+        # Revisar si la finca es 'RIO', 'VALLE', o 'CIP' y asignar 'SDC' si es cierto
+        finca = salida.finca
+        if finca in ['RIO', 'VALLE', 'CIP']:
+            finca = 'SDC'  # Asignar 'SDC' si la finca es uno de los valores específicos
+        
+        # Crear la clave de agrupación
+        if finca == "Productor":
             clave_agrupacion = (salida.llave, salida.cultivo)
             if clave_agrupacion not in agrupaciones:
                 agrupaciones[clave_agrupacion] = {
@@ -1803,13 +1807,11 @@ def inventariogeneralfruta_list(request):
                     'total_libras_salidas2': 0,  # Cajas de salidas2
                     'salidas': []
                 }
-
         else:
-            clave_agrupacion = (salida.finca, salida.cultivo)
-            
+            clave_agrupacion = (finca, salida.cultivo)  # Usar 'SDC' o el valor de finca
             if clave_agrupacion not in agrupaciones:
                 agrupaciones[clave_agrupacion] = {
-                    'proveedor': salida.finca,
+                    'proveedor': finca,  # Usar 'SDC' o el valor de finca
                     'cultivo': salida.cultivo,
                     'total_libras_salidas': 0,  # Cajas de salidas
                     'total_libras_salidas2': 0,  # Cajas de salidas2
