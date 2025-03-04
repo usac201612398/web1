@@ -29,6 +29,16 @@
               <input class="input" type="text" id="myInput" onkeyup="myFunction()" placeholder="Buscar por nombre de item...">
            
         </div>
+        <div class="inputs-row">
+      
+            <input class="input" type="text" id="myInput2" onkeyup="myFunction2()" placeholder="Buscar por cultivo...">
+         
+        </div>
+        <div class="inputs-row">
+      
+            <input class="input" type="text" id="myInput3" onkeyup="myFunction3()" placeholder="Buscar por proveedor...">
+         
+        </div>
     </div>
 
     <div class="container">
@@ -39,6 +49,7 @@
                 <thead id = "enc1">
                     <tr class="header">
                     <th >Proveedor</th>
+                    <th >Cultivo</th>
                     <th >itemSAPCode</th>
                     <th >itemSAPName</th>
                     <th >Cajas</th>
@@ -48,6 +59,7 @@
                 {%for registro in registros %} 
                 <tr> 
                     <td>{{registro.proveedor}}</td>
+                    <td>{{registro.cultivo}}</td>
                     <td>{{registro.itemsapcode}}</td>
                     <td>{{registro.itemsapname}}</td>
                     <td><div contenteditable="true" class="editable-cell">{{registro.cajas_restantes}}</div></td>
@@ -78,7 +90,7 @@ function myFunction() {
 
   // Loop through all table rows, and hide those who don't match the search query
   for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[5];
+    td = tr[i].getElementsByTagName("td")[3];
     if (td) {
       txtValue = td.textContent || td.innerText;
       if (txtValue.toUpperCase().indexOf(filter) > -1) {
@@ -90,6 +102,48 @@ function myFunction() {
   }
 }
 
+function myFunction2() {
+  // Declare variables
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput2");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[1];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+function myFunction3() {
+  // Declare variables
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput3");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
 </script>
 
 <script>

@@ -1737,6 +1737,7 @@ def inventariogeneral_list(request):
                 'itemsapcode': salida.itemsapcode,
                 'itemsapname': salida.itemsapname,
                 'proveedor': salida.proveedor,
+                'cultivo': salida.cultivo,
                 'total_cajas_salidas': 0,  # Cajas de salidas
                 'total_cajas_salidas2': 0,  # Cajas de salidas2
                 'salidas': []
