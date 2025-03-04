@@ -1704,7 +1704,7 @@ def cargacontenedores_list(request):
     #salidas = Recepciones.objects.filter(fecha=today)
     salidas= inventarioProdTerm.objects.all()
     salidas2= salidacontenedores.objects.all()
-    salidas = salidas.order_by('registro').filter(categoria="Exportación").exclude(status='Cerrado')
+    salidas = salidas.order_by('registro').filter(status=None,categoria="Exportación")
     
     for i in salidas:
         cajasacum = salidas2.order_by('-created_at').filter(key=i.registro).aggregate(sumacajas=Sum('cajas'))['sumacajas']
@@ -1721,7 +1721,7 @@ def inventariogeneral_list(request):
     salidas2 = salidacontenedores.objects.all()
     
     # Filtrar las salidas de inventario para las que tienen categoría 'Exportación' y sin 'status'
-    salidas = salidas.filter(status=None, categoria="Exportación").order_by('registro')
+    salidas = salidas.filter(categoria="Exportación").order_by('registro').exclude(status='Cerrado')
     
     # Excluir los registros de salidas2 donde el contenedor esté vacío
     salidas2 = salidas2.exclude(contenedor='0')
