@@ -1763,9 +1763,9 @@ def inventariogeneral_list(request):
     
     # Convertir el diccionario en una lista para pasarlo al contexto de la plantilla
     registros_agrupados = list(agrupaciones.values())
-    
+    registros_agrupados_json = json.dumps(registros_agrupados)
     # Pasar los registros agrupados al renderizado de la plantilla
-    return render(request, 'plantaE/inventarioProd_inventariogeneral.html', {'registros': registros_agrupados})
+    return render(request, 'plantaE/inventarioProd_inventariogeneral.html', {'registros': registros_agrupados_json})
 
 
 def load_contenedores(request):
