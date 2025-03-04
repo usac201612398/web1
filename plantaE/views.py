@@ -1784,7 +1784,8 @@ def inventariogeneralfruta_list(request):
     salidas = salidas.order_by('registro').exclude(status='Cerrado')
     
     # Excluir los registros de salidas2 donde el contenedor esté vacío
-    salidas2 = salidas2.exclude(status='Cerrado',categoria='Merma')
+    salidas2 = salidas2.exclude(status='Cerrado').exclude(categoria='Merma')
+
 
     # Crear un diccionario para almacenar los resultados agrupados por 'itemsapcode' y 'proveedor'
     agrupaciones = {}
@@ -1825,13 +1826,13 @@ def inventariogeneralfruta_list(request):
     # Agrupar las salidas de contenedores (salidas2) por 'itemsapcode' y 'proveedor'
     for salida2 in salidas2:
         # Verificar si el contenedor no está vacío antes de acumular las cajas
-        if salida2.status is not 'Cerrado':
-            # Crear la clave de agrupación concatenando 'itemsapcode' y 'proveedor'
-            clave_agrupacion = (salida2.proveedor, salida2.cultivo)
-            
-            if clave_agrupacion in agrupaciones:
-                # Acumular las cajas de las salidas2
-                agrupaciones[clave_agrupacion]['total_libras_salidas2'] += salida2.lbsintara
+        
+        # Crear la clave de agrupación concatenando 'itemsapcode' y 'proveedor'
+        clave_agrupacion = (salida2.proveedor, salida2.cultivo)
+        
+        if clave_agrupacion in agrupaciones:
+            # Acumular las cajas de las salidas2
+            agrupaciones[clave_agrupacion]['total_libras_salidas2'] += salida2.lbsintara
     
     # Ahora, restamos las cajas de 'salidas2' de las de 'salidas' para cada agrupación
     for agrupacion in agrupaciones.values():
