@@ -1714,23 +1714,29 @@ def cargacontenedores_list(request):
     return render(request, 'plantaE/inventarioProd_contenedores.html', {'registros': salidas})
 
 
-
 def inventariogeneral_list(request):
-
     today = timezone.now().date()
-
-    # Obtener todas las salidas de inventario y salidas de contenedores
+    
+    # Obtener salidas e inicializar agrupaciones (como en el código anterior)
     salidas = inventarioProdTerm.objects.all()
     salidas2 = salidacontenedores.objects.all()
     
     # Filtrar las salidas de inventario para las que tienen categoría 'Exportación' y sin 'status'
     salidas = salidas.filter(status=None, categoria="Exportación").order_by('registro')
 
-    # Crear un diccionario para almacenar los resultados agrupados por 'itemsapcode' y 'proveedor'
     agrupaciones = {}
 
     # Agrupar las salidas de inventario (salidas) por 'itemsapcode' y 'proveedor'
     for salida in salidas:
+        # Convertir la instancia de 'salida' a un diccionario con solo los valores
+        salida_dict = {
+            'registro': salida.registro,
+            'itemsapcode': salida.itemsapcode,
+            'proveedor': salida.proveedor,
+            'cajas': salida.cajas,
+            # Agrega más campos según sea necesario
+        }
+
         # Crear la clave de agrupación concatenando 'itemsapcode' y 'proveedor'
         clave_agrupacion = (salida.itemsapcode, salida.proveedor)
         
@@ -1745,10 +1751,19 @@ def inventariogeneral_list(request):
 
         # Acumular las cajas de las salidas
         agrupaciones[clave_agrupacion]['total_cajas_salidas'] += salida.cajas
-        agrupaciones[clave_agrupacion]['salidas'].append(salida)
-    
+        agrupaciones[clave_agrupacion]['salidas'].append(salida_dict)  # Añadir el diccionario
+
     # Agrupar las salidas de contenedores (salidas2) por 'itemsapcode' y 'proveedor'
     for salida2 in salidas2:
+        # Convertir la instancia de 'salida2' a un diccionario con solo los valores
+        salida2_dict = {
+            'registro': salida2.registro,
+            'itemsapcode': salida2.itemsapcode,
+            'proveedor': salida2.proveedor,
+            'cajas': salida2.cajas,
+            # Agrega más campos según sea necesario
+        }
+        
         # Crear la clave de agrupación concatenando 'itemsapcode' y 'proveedor'
         clave_agrupacion = (salida2.itemsapcode, salida2.proveedor)
         
@@ -1758,14 +1773,14 @@ def inventariogeneral_list(request):
     
     # Ahora, restamos las cajas de 'salidas2' de las de 'salidas' para cada agrupación
     for agrupacion in agrupaciones.values():
-        # Restar las cajas de las salidas2 de las de las salidas
         agrupacion['cajas_restantes'] = agrupacion['total_cajas_salidas'] - agrupacion['total_cajas_salidas2']
-    
-    # Convertir el diccionario en una lista para pasarlo al contexto de la plantilla
-    registros_agrupados = list(agrupaciones.values())
-    registros_agrupados_json = json.dumps(registros_agrupados)
-    # Pasar los registros agrupados al renderizado de la plantilla
+
+    # Convertir a JSON
+    registros_agrupados_json = json.dumps(agrupaciones)
+
+    # Pasar el JSON al frontend
     return render(request, 'plantaE/inventarioProd_inventariogeneral.html', {'registros': registros_agrupados_json})
+
 
 
 def load_contenedores(request):
