@@ -1713,7 +1713,6 @@ def cargacontenedores_list(request):
         
     return render(request, 'plantaE/inventarioProd_contenedores.html', {'registros': salidas})
 
-
 def inventariogeneral_list(request):
     today = timezone.now().date()
 
@@ -1723,6 +1722,8 @@ def inventariogeneral_list(request):
     
     # Filtrar las salidas de inventario para las que tienen categoría 'Exportación' y sin 'status'
     salidas = salidas.filter(status=None, categoria="Exportación").order_by('registro')
+    
+    # Excluir los registros de salidas2 donde el contenedor esté vacío
     salidas2 = salidas2.exclude(contenedor=None)
 
     # Crear un diccionario para almacenar los resultados agrupados por 'itemsapcode' y 'proveedor'
@@ -1750,12 +1751,14 @@ def inventariogeneral_list(request):
     
     # Agrupar las salidas de contenedores (salidas2) por 'itemsapcode' y 'proveedor'
     for salida2 in salidas2:
-        # Crear la clave de agrupación concatenando 'itemsapcode' y 'proveedor'
-        clave_agrupacion = (salida2.itemsapcode, salida2.proveedor)
-        
-        if clave_agrupacion in agrupaciones:
-            # Acumular las cajas de las salidas2
-            agrupaciones[clave_agrupacion]['total_cajas_salidas2'] += salida2.cajas
+        # Verificar si el contenedor no está vacío antes de acumular las cajas
+        if salida2.contenedor is not None:
+            # Crear la clave de agrupación concatenando 'itemsapcode' y 'proveedor'
+            clave_agrupacion = (salida2.itemsapcode, salida2.proveedor)
+            
+            if clave_agrupacion in agrupaciones:
+                # Acumular las cajas de las salidas2
+                agrupaciones[clave_agrupacion]['total_cajas_salidas2'] += salida2.cajas
     
     # Ahora, restamos las cajas de 'salidas2' de las de 'salidas' para cada agrupación
     for agrupacion in agrupaciones.values():
@@ -1764,10 +1767,13 @@ def inventariogeneral_list(request):
     
     # Convertir el diccionario en una lista para pasarlo al contexto de la plantilla
     registros_agrupados = list(agrupaciones.values())
+    
     # Ordenar la lista de registros por el campo 'proveedor'
     registros_agrupados = sorted(registros_agrupados, key=lambda x: x['proveedor'])
+    
     # Pasar los registros agrupados al renderizado de la plantilla
     return render(request, 'plantaE/inventarioProd_inventariogeneral.html', {'registros': registros_agrupados})
+
 
 def load_contenedores(request):
     
