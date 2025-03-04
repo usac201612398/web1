@@ -105,8 +105,10 @@ function myFunction() {
 <script>
     // Django convierte el contexto de 'registros' a un JSON en el frontend
     
-    
-    // Mostrar el contenido de 'registros' en la consola
+    // Cargar el JSON con 'escapejs' para evitar errores de sintaxis
+    var registros = JSON.parse('{{ registros|escapejs }}');
+
+    // Loguear el objeto 'registros' en la consola
     console.log("Diccionario de registros:", registros);
     $(document).ready(function() {
         console.log("Página cargada");
