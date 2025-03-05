@@ -8,6 +8,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
     <title>Carga Contenedores</title>
     <style>
+          .inputs-row {
+        display: flex;
+        flex-wrap: nwrap; /* Para que se acomoden bien en pantallas más pequeñas */
+    }
+    #myInput, #myInput2 {
+    flex: 1; /* Cada input ocupa el mismo espacio */
+    font-size: 16px;
+    padding: 12px 20px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    min-width: 0; /* Asegura que no haya un ancho mínimo inesperado */
+    }
         h1 {
             margin: 15px;
             font-family: Arial, sans-serif;
@@ -39,6 +51,7 @@
     <div class="container">
         <div class="inputs-row">
       
+              <input class="input" type="text" id="myInput2" onkeyup="myFunction2()" placeholder="Buscar código...">
               <input class="input" type="text" id="myInput" onkeyup="myFunction()" placeholder="Buscar por nombre de item...">
            
         </div>
@@ -127,6 +140,28 @@ function myFunction() {
   // Loop through all table rows, and hide those who don't match the search query
   for (i = 0; i < tr.length; i++) {
     td = tr[i].getElementsByTagName("td")[5];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+
+function myFunction2() {
+  // Declare variables
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput2");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
     if (td) {
       txtValue = td.textContent || td.innerText;
       if (txtValue.toUpperCase().indexOf(filter) > -1) {
