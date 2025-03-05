@@ -179,7 +179,7 @@ class Actpeso(models.Model):
         db_table = 'actpeso'
 
 class Boletas(models.Model):
-
+    op_status = [('Pendiente','-'),('Cerrado','Cerrado')]
     registro = models.BigAutoField(primary_key=True)
     boleta = models.BigIntegerField(blank=True, null=True)
     fecha = models.DateField(blank=True, null=True)
@@ -192,6 +192,7 @@ class Boletas(models.Model):
     cajas = models.BigIntegerField(blank=True, null=True)
     librasxcaja = models.FloatField(blank=True, null=True)
     libras = models.FloatField(blank=True, null=True)
+    status = models.CharField(max_length=25, choices=op_status,blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     idpedido = models.BigIntegerField(blank=True, null=True)
 
