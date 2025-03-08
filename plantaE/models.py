@@ -188,6 +188,8 @@ class Boletas(models.Model):
     proveedor = models.CharField(max_length=150, blank=True, null=True)
     cultivo = models.CharField(max_length=50, blank=True, null=True)
     calidad1 = models.CharField(max_length=200, blank=True, null=True)
+    itemsapcode = models.CharField(max_length=30, blank=True, null=True)
+    itemsapname= models.CharField(max_length=125, blank=True, null=True)
     calidad = models.CharField(max_length=50, blank=True, null=True)
     cajas = models.BigIntegerField(blank=True, null=True)
     librasxcaja = models.FloatField(blank=True, null=True)
@@ -284,6 +286,8 @@ class inventarioProdTerm(models.Model):
     created_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
     op_sap = models.CharField(max_length=20,blank=True, null=True)
+    boleta=models.BigIntegerField(blank=True, null=True)
+    reasignacion=models.CharField(max_length=75,null=True)
     
     def __str__(self):
         return str(self.registro) + " | " + str(self.proveedor) + " | " + str(self.itemsapname)+ " | " + str(self.cultivo)
@@ -345,6 +349,8 @@ class salidacontenedores(models.Model):
     pesorxcaja =  models.FloatField(blank=True, null=True)
     pesosinmerma = models.FloatField(blank=True, null=True)
     orden=models.CharField(max_length=20,null=True)
+    boleta=models.BigIntegerField(blank=True, null=True)
+    reasignacion=models.CharField(max_length=75,null=True)
     created_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
     
