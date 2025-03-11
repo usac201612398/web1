@@ -138,73 +138,6 @@
 </body>
 </html>
 
-<script>  
-function myFunction() {
-    // Declare variables
-    var input, filter, table, tr, td, i, txtValue;
-    input = document.getElementById("myInput");
-    filter = input.value.toUpperCase();
-    table = document.getElementById("myTable");
-    tr = table.getElementsByTagName("tr");
-  
-    // Loop through all table rows, and hide those who don't match the search query
-    for (i = 0; i < tr.length; i++) {
-      td = tr[i].getElementsByTagName("td")[2];
-      if (td) {
-        txtValue = td.textContent || td.innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-          tr[i].style.display = "";
-        } else {
-          tr[i].style.display = "none";
-        }
-      }
-    }
-  }
-  
-  function myFunction2() {
-    // Declare variables
-    var input, filter, table, tr, td, i, txtValue;
-    input = document.getElementById("myInput2");
-    filter = input.value.toUpperCase();
-    table = document.getElementById("myTable");
-    tr = table.getElementsByTagName("tr");
-  
-    // Loop through all table rows, and hide those who don't match the search query
-    for (i = 0; i < tr.length; i++) {
-      td = tr[i].getElementsByTagName("td")[5];
-      if (td) {
-        txtValue = td.textContent || td.innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-          tr[i].style.display = "";
-        } else {
-          tr[i].style.display = "none";
-        }
-      }
-    }
-  }
-  
-  function myFunction3() {
-    // Declare variables
-    var input, filter, table, tr, td, i, txtValue;
-    input = document.getElementById("myInput3");
-    filter = input.value.toUpperCase();
-    table = document.getElementById("myTable");
-    tr = table.getElementsByTagName("tr");
-  
-    // Loop through all table rows, and hide those who don't match the search query
-    for (i = 0; i < tr.length; i++) {
-      td = tr[i].getElementsByTagName("td")[3];
-      if (td) {
-        txtValue = td.textContent || td.innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-          tr[i].style.display = "";
-        } else {
-          tr[i].style.display = "none";
-        }
-      }
-    }
-  }
-</script>  
 <script>
   $(document).ready(function() {
       console.log("Página cargada");
@@ -246,7 +179,7 @@ function myFunction() {
   });
 
 document.getElementById('consultar').addEventListener('click', function() {
-    const opcionSeleccionada1 = document.getElementById('Conten').value;
+    const opcionSeleccionada1 = document.getElementById('#Conten').value;
     console.log(opcionSeleccionada1);
     const tbody = document.querySelector('#myTable tbody');
 
@@ -268,7 +201,7 @@ document.getElementById('consultar').addEventListener('click', function() {
         console.log(data)
         data.datos.forEach(item => {
             const fila = document.createElement('tr');
-            fila.innerHTML = `<td>${item.contenedor}</td><td>${item.proveedor}</td><td>${item.cultivo}</td><td>${item.itemsapname}</td><td>${item.sumacajas}</td><td>${item.sumaimporte}</td>`;
+            fila.innerHTML = `<td>${item.contenedor}</td><td>${item.proveedor}</td><td>${item.cultivo}</td><td>${item.itemsapname}</td><td>${item.suma_cajas}</td><td>${item.suma_importe}</td>`;
             tbody.appendChild(fila);
         });
     });
