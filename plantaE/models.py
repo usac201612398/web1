@@ -326,7 +326,7 @@ class contenedores(models.Model):
         return str(self.registro) + " | " + str(self.fecha)+ " | " + str(self.contenedor)
 
 class salidacontenedores(models.Model):
-    
+
     op_status = [('Pendiente','-'),('Cerrado','Cerrado')]
     op_proveedor = [('','-'),('SDC','SDC'),('AGROINDUSTRIAS SAN RAFAEL, S.A.','AGROINDUSTRIAS SAN RAFAEL, S.A.'),('INVERNADEROS TECNOLOGICOS S.A','INVERNADEROS TECNOLOGICOS S.A'),('HORTEX, S.A.','HORTEX, S.A.'),('DANIEL ESTUARDO GALICIA CARRERA','DANIEL ESTUARDO GALICIA CARRERA'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.')]
     op_cultivo =   [('','-'),('ROMA','ROMA'),('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('BEEF','BEEF'),('SALADETTE','SALADETTE'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
@@ -359,7 +359,7 @@ class salidacontenedores(models.Model):
     created_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
     status=models.CharField(max_length=25,null=True)
-    
+    palet = models.IntegerField(blank=True, null=True)
     def __str__(self):
         return str(self.contenedor) + " | " + str(self.proveedor) + " | " + str(self.itemsapname)+ " | " + str(self.cultivo)
     
