@@ -99,7 +99,31 @@
                     <td><div contenteditable="true" class="editable-cell">{{registro.cajas}}</div></td>
                     <td>{{registro.orden}}</td>
                     <td>{{registro.status}}</td>
-                    <td><div contenteditable="true" class="editable-cell"></div></td>
+                    <td>
+                        <input list="paletList" class="editable-cell">
+                        <datalist id="paletList">
+                            <option value="1">
+                            <option value="2">
+                            <option value="3">
+                            <option value="4">
+                            <option value="5">
+                            <option value="6">
+                            <option value="7">
+                            <option value="8">
+                            <option value="9">
+                            <option value="10">
+                            <option value="11">
+                            <option value="12">
+                            <option value="13">
+                            <option value="14">
+                            <option value="15">
+                            <option value="16">
+                            <option value="17">
+                            <option value="18">
+                            <option value="19">
+                            <option value="20">
+                        </datalist>
+                    </td>
                     <td><input type="checkbox" class="seleccionar"></td>
                    <td><button class="eliminar"><i class="fas fa-trash-alt"></i></button></td>
                     </tr> 
@@ -183,12 +207,11 @@ function myFunction2() {
     }
   }
 }
-
 $('.envio3').on('click', function() {
     var resume_table = document.getElementById("myTable");
     var datos = [];
 
-    // Iterar sobre las filas de la tabla
+    // Iterar sobre las filas de la tabla (empezando desde la fila 1 para saltar el encabezado)
     for (var i = 1, row; row = resume_table.rows[i]; i++) {
         var checkbox = row.querySelector('input[type="checkbox"]');  // Obtener el checkbox en esta fila
 
@@ -209,12 +232,17 @@ $('.envio3').on('click', function() {
                 }
             }
 
+            // Obtener el valor del input list en la columna "Palet" (columna 10)
+            var paletInput = row.querySelector('td:nth-child(10) input');  // Buscar el input en la columna 10 (Palet)
+            var paletValue = paletInput ? paletInput.value : '';  // Obtener el valor seleccionado, si existe
+            filas.push(paletValue);  // Añadir el valor de "Palet" a la fila de datos
+
             // Añadir la información del contenedor seleccionado
             var conten = document.getElementById('Conten'),
                 value_conten = conten.value,
                 text_conten = conten.options[conten.selectedIndex].innerText;
             filas.push(text_conten);
-            console.log(text_conten);
+
             // Guardamos la fila seleccionada
             datos.push(filas);
         }
@@ -241,6 +269,7 @@ $('.envio3').on('click', function() {
     });
     window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/inventarioProd/packinglist');
 });
+
 
     
    
