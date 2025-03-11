@@ -1750,12 +1750,12 @@ def procesarinvprodconten(request):
     
     for i in mensaje:
         ref=inventarioProdTerm.objects.get(registro = i[0])
-        ref2=productoTerm.objects.get(registro = i[0])
+        ref2=productoTerm.objects.get(itesapcode = i[4])
         precio = float(ref2.precio) if ref2.precio is not None else 0.0
         lbsintara = float(ref.lbsintara) if ref.lbsintara is not None else 0.0
 
         importe=float(precio)*float(i[6])
-        salidacontenedores.objects.create(fecha=str(ref.fecha),palet=i[7],importe=importe,fechasalcontenedor=today,key=ref.registro,contenedor=contenedor_,categoria=str(ref.categoria),cultivo=ref.cultivo,proveedor=ref.proveedor,itemsapcode = ref.itemsapcode,itemsapname = ref.itemsapname,orden=ref.orden,cajas=float(i[6]),lbsintara=(float(i[6])*lbsintara/ref.cajas),pesostdxcaja=ref.pesostdxcaja,pesostd=(float(i[6])*ref.pesostd/ref.cajas),merma=(float(i[6])*ref.merma/ref.cajas),pesorxcaja=ref.pesorxcaja,pesosinmerma=ref.pesosinmerma,calidad1=ref.calidad1)
+        salidacontenedores.objects.create(fecha=str(ref.fecha),palet=i[9],importe=importe,fechasalcontenedor=today,key=ref.registro,contenedor=contenedor_,categoria=str(ref.categoria),cultivo=ref.cultivo,proveedor=ref.proveedor,itemsapcode = ref.itemsapcode,itemsapname = ref.itemsapname,orden=ref.orden,cajas=float(i[6]),lbsintara=(float(i[6])*lbsintara/ref.cajas),pesostdxcaja=ref.pesostdxcaja,pesostd=(float(i[6])*ref.pesostd/ref.cajas),merma=(float(i[6])*ref.merma/ref.cajas),pesorxcaja=ref.pesorxcaja,pesosinmerma=ref.pesosinmerma,calidad1=ref.calidad1)
         # Crea un diccionario con los datos
     
     for i in mensaje:
