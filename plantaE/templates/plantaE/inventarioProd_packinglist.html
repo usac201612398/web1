@@ -137,6 +137,7 @@
         </div>
 </body>
 </html>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha384-oP6kM1sHzGkR+GsPq3zQdpGRtWpyTS1sm1H2heKlHceL2zZiXc5BMOyPyFSc6ksC" crossorigin="anonymous"></script>
 
 <script>
   $(document).ready(function() {
@@ -179,7 +180,7 @@
   });
 
 document.getElementById('consultar').addEventListener('click', function() {
-    const opcionSeleccionada1 = document.getElementById('#Conten').value;
+    const opcionSeleccionada1 = document.getElementById('Conten').value;
     console.log(opcionSeleccionada1);
     const tbody = document.querySelector('#myTable tbody');
 
