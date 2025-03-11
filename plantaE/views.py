@@ -1550,6 +1550,27 @@ def acumFruta_consultaValle(request):
         return JsonResponse({'datos': registros_finales,'opcion1':opcion1,'opcion2':opcion2,'resumen':registros_finales2}, safe=False)
     return render(request, 'plantaE/AcumFrutaDia_listValle.html')
 
+def validaroventa(request):
+    # Recibe los datos desde el body de la solicitud
+    data = json.loads(request.body)
+    contenedores_array = data.get('array')  # Contenedores recibidos en el array
+
+    # Filtra los contenedores que no tienen el status "Cerrado" y que están en el array de contenedores
+    contenedores_a_cerrar = salidacontenedores.objects.filter(
+        contenedor=contenedores_array,  # Filtra por contenedor en el array
+        status__ne='Cerrado'  # Filtra contenedores cuyo status no sea "Cerrado"
+    )
+
+    # Si existen contenedores que coinciden
+    if contenedores_a_cerrar.exists():
+        # Actualiza el status a "Cerrado" para los contenedores encontrados
+        contenedores_a_cerrar.update(status='Cerrado')
+        return JsonResponse({'msm': "Listo, se cerro el contenedor"}, safe=False)
+    
+    # Si no se encontraron contenedores
+    return JsonResponse({'msm': "No se encontraron contenedores para cerrar"}, safe=False)
+
+    
 def inventarioProd_create(request):
     if request.method == 'POST':
         opcion1 = request.POST.get('opcion1')
