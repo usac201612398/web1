@@ -99,7 +99,7 @@
                 <button id="consultar">Consultar</button>
               </div>
               <div>
-                <input type="button" value="Enviar" class="envio3">
+                <input type="button" value="Validar" class="envio3">
               </div>
               
             </form>  
@@ -190,8 +190,8 @@
 document.getElementById('consultar').addEventListener('click', function() {
     const opcionSeleccionada1 = document.getElementById('Conten').value;
     console.log(opcionSeleccionada1);
-    if (contenedor.value === "") {
-        alert("Seleccione el contenedor");
+    if (contenedor.value === "Seleccione un contenedor") {
+        alert("Seleccione un contenedor");
     } else {
       const tbody = document.querySelector('#myTable tbody');
 
