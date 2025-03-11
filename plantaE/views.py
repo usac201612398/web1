@@ -1750,7 +1750,8 @@ def procesarinvprodconten(request):
     
     for i in mensaje:
         ref=inventarioProdTerm.objects.get(registro = i[0])
-        precio = float(ref.precio) if ref.precio is not None else 0.0
+        ref2=productoTerm.objects.get(registro = i[0])
+        precio = float(ref2.precio) if ref2.precio is not None else 0.0
         lbsintara = float(ref.lbsintara) if ref.lbsintara is not None else 0.0
 
         importe=float(precio)*float(i[6])
