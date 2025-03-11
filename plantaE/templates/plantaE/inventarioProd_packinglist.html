@@ -223,8 +223,8 @@ $('.envio3').on('click', function() {
     var contenedor = document.getElementById("Conten");
     
     // Verifica si el contenedor tiene un valor vacío
-    if (contenedor.value === "") {
-        alert("Seleccione el contenedor");
+    if (contenedor.value === "Seleccione un contenedor") {
+        alert("Seleccione un contenedor");
     } else {
         $.ajax({
             url: '{% url "inventarioProd_validaroventa" %}',  // URL para la vista AJAX
