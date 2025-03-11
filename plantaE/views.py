@@ -1674,7 +1674,7 @@ def contenedorpacking_list(request):
 
     if not df.empty:
         # Agrupa los datos
-        df_agrupado = df.groupby(['proveedor', 'itemsapcode','contenedor','fechasalcontenedor'], as_index=False).agg(
+        df_agrupado = df.groupby(['itemsapcode','contenedor','fechasalcontenedor'], as_index=False).agg(
             fecha=('fechasalcontenedor', 'first'),
             cultivo=('cultivo', 'first'),
             contenedor=('contenedor', 'first'),
@@ -1700,7 +1700,7 @@ def contenedorpacking_list(request):
         # Crea el DataFrame y agrupa
         df = pd.DataFrame(list(contenedor))
         if not df.empty:
-            df_agrupado = df.groupby(['proveedor', 'itemsapcode','fechasalcontenedor','contenedor'], as_index=False).agg(
+            df_agrupado = df.groupby([ 'itemsapcode','fechasalcontenedor','contenedor'], as_index=False).agg(
                 fecha=('fechasalcontenedor', 'first'),
                 cultivo=('cultivo', 'first'),
                 itemsapcode=('itemsapcode', 'first'),
