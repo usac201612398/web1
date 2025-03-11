@@ -84,7 +84,7 @@ class AcumFruta(models.Model):
     libras = models.FloatField(blank=True, null=True)
     status = models.CharField(max_length=25, choices=op_status,blank=True, null=True)
     op_sap = models.CharField(max_length=20,blank=True, null=True)
-    
+    recepcion = models.BigIntegerField(blank=True, null=True)
     viaje = models.CharField(max_length=30,null=True,blank=True)
 
     def __str__(self):
@@ -111,6 +111,7 @@ class salidasFruta(models.Model):
     variedad = models.CharField(max_length=40,choices=op_variedad,null=True)
     cajas = models.IntegerField(blank=True, null=True)
     libras = models.FloatField(blank=True, null=True)
+    recepcion = models.BigIntegerField(blank=True, null=True)
     correo = models.CharField(max_length=75, blank=True,choices=op_correo,null=True)
     #estructura=models.CharField(max_length=40,choices=op_estructura,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -299,6 +300,7 @@ class contenedores(models.Model):
     op_status = [('Pendiente','-'),('Cerrado','Cerrado')]
     op_destino = [('Jonestown','Jonestown'),('Lakeland','Lakeland'),('Laredo, Texas','Laredo, Texas'),('Miami','Miami')]
     op_naviera = [('SEABOARD','SEABOARD'),('CROWLEY','CROWLEY')]
+    
 
     registro = models.BigAutoField(primary_key=True)
     fecha = models.DateField(blank=True, null=True)
@@ -325,6 +327,7 @@ class contenedores(models.Model):
 
 class salidacontenedores(models.Model):
     
+    op_status = [('Pendiente','-'),('Cerrado','Cerrado')]
     op_proveedor = [('','-'),('SDC','SDC'),('AGROINDUSTRIAS SAN RAFAEL, S.A.','AGROINDUSTRIAS SAN RAFAEL, S.A.'),('INVERNADEROS TECNOLOGICOS S.A','INVERNADEROS TECNOLOGICOS S.A'),('HORTEX, S.A.','HORTEX, S.A.'),('DANIEL ESTUARDO GALICIA CARRERA','DANIEL ESTUARDO GALICIA CARRERA'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.')]
     op_cultivo =   [('','-'),('ROMA','ROMA'),('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('BEEF','BEEF'),('SALADETTE','SALADETTE'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
     op_categoria = [('','-'),('Exportación','Exportación'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolución','Devolución')]
@@ -355,6 +358,7 @@ class salidacontenedores(models.Model):
     importe =models.FloatField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
+    status=models.CharField(max_length=25,null=True)
     
     def __str__(self):
         return str(self.contenedor) + " | " + str(self.proveedor) + " | " + str(self.itemsapname)+ " | " + str(self.cultivo)

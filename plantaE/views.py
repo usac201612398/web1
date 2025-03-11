@@ -1660,6 +1660,60 @@ def reporteInventario(request):
 
     return render(request, 'plantaE/inventarioProd_reporteInv.html', context)
 
+
+
+def contenedorpacking_list(request):
+    opcion1 = timezone.now().date()
+
+    # Filtra tus datos según la opción seleccionada
+    contenedores = salidacontenedores.objects.all().exclude(status="Cerrado").order_by("registro")
+
+    # Crea un DataFrame a partir de los datos
+    df = pd.DataFrame(list(contenedores))
+    registros_finales = []
+
+    if not df.empty:
+        # Agrupa los datos
+        df_agrupado = df.groupby(['proveedor', 'itemsapcode','contenedor','fechasalcontenedor'], as_index=False).agg(
+            fecha=('fechasalcontenedor', 'first'),
+            proveedor=('proveedor', 'first'),
+            cultivo=('cultivo', 'first'),
+            contenedor=('cultivo', 'first'),
+            itemsapcode=('itemsapcode', 'first'),
+            itemsapname=('itemsapname', 'first'),
+            total_cajas=('cajas', 'sum'),
+            total_importe=('importe', 'sum')
+        )
+        
+        
+        registros_finales = df_agrupado.to_dict(orient='records')
+
+    # Al hacer la solicitud GET (cuando se carga la página inicialmente), se envían datos para el día actual
+    context = {'datos': registros_finales, 'opcion1': opcion1}
+
+    if request.method == 'POST':
+        opcion1 = request.POST.get('opcion1')
+
+        # Filtra los datos nuevamente
+        contenedor = salidacontenedores.objects.filter(contenedor=opcion1).exclude(categoria='Merma')
+
+        # Crea el DataFrame y agrupa
+        df = pd.DataFrame(list(contenedor))
+        if not df.empty:
+            df_agrupado = df.groupby(['proveedor', 'itemsapcode','fechasalcontenedor','contenedor'], as_index=False).agg(
+                fecha=('fechasalcontenedor', 'first'),
+                proveedor=('proveedor', 'first'),
+                cultivo=('cultivo', 'first'),
+                itemsapcode=('itemsapcode', 'first'),
+                itemsapname=('itemsapname', 'first'),
+                total_cajas=('cajas', 'sum'),
+                total_importe=('importe', 'sum')
+            )
+            registros_finales = df_agrupado.to_dict(orient='records')
+            return JsonResponse({'datos': registros_finales, 'opcion1': opcion1}, safe=False)
+
+    return render(request, 'plantaE/inventarioProd_packinglist.html', context)
+
 def procesarinvprodconten(request):
 
     data = json.loads(request.body)
@@ -1668,13 +1722,13 @@ def procesarinvprodconten(request):
     today = timezone.now().date()
     semana_actual = today.isocalendar()[1]  # semana actual
     #mensaje = request.POST.get('array')
-    
+        
     registros =  []
     
     for i in mensaje:
         ref=inventarioProdTerm.objects.get(registro = i[0])
-        salidacontenedores.objects.create(fecha=str(ref.fecha),key=ref.registro,contenedor=contenedor_,categoria=str(ref.categoria),cultivo=ref.cultivo,proveedor=ref.proveedor,itemsapcode = ref.itemsapcode,itemsapname = ref.itemsapname,orden=ref.orden,cajas=float(i[6]),lbsintara=(float(i[6])*ref.lbsintara/ref.cajas),pesostdxcaja=ref.pesostdxcaja,pesostd=(float(i[6])*ref.pesostd/ref.cajas),merma=(float(i[6])*ref.merma/ref.cajas),pesorxcaja=ref.pesorxcaja,pesosinmerma=ref.pesosinmerma,calidad1=ref.calidad1)
-    
+        importe=ref.precio*float(i[6])
+        salidacontenedores.objects.create(fecha=str(ref.fecha),calidad1=ref.calidad1,importe=importe,fechasalcontenedor=today,key=ref.registro,contenedor=contenedor_,categoria=str(ref.categoria),cultivo=ref.cultivo,proveedor=ref.proveedor,itemsapcode = ref.itemsapcode,itemsapname = ref.itemsapname,orden=ref.orden,cajas=float(i[6]),lbsintara=(float(i[6])*ref.lbsintara/ref.cajas),pesostdxcaja=ref.pesostdxcaja,pesostd=(float(i[6])*ref.pesostd/ref.cajas),merma=(float(i[6])*ref.merma/ref.cajas),pesorxcaja=ref.pesorxcaja,pesosinmerma=ref.pesosinmerma,calidad1=ref.calidad1)
         # Crea un diccionario con los datos
     
     for i in mensaje:
