@@ -189,7 +189,7 @@
 document.getElementById('consultar').addEventListener('click', function() {
     const opcionSeleccionada1 = document.getElementById('Conten').value;
     console.log(opcionSeleccionada1);
-    if (opcionSeleccionada1 === "Seleccione un contenedor") {
+    if (opcionSeleccionada1 === "") {
         alert("Seleccione un contenedor");
     } else {
       const tbody = document.querySelector('#myTable tbody');
@@ -223,7 +223,7 @@ $('.envio3').on('click', function() {
     var contenedor = document.getElementById("Conten");
     
     // Verifica si el contenedor tiene un valor vacío
-    if (contenedor.value === "Seleccione un contenedor") {
+    if (contenedor.value === "") {
         alert("Seleccione un contenedor");
     } else {
         $.ajax({
