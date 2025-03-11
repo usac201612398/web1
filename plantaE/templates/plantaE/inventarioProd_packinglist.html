@@ -94,15 +94,14 @@
               </form>      
           </div>
           <div class="box">
-            <form>
               <div>
                 <button id="consultar">Consultar</button>
               </div>
+
               <div>
                 <input type="button" value="Validar" class="envio3">
               </div>
-              
-            </form>  
+                
           </div>
       </div>
 
@@ -188,7 +187,7 @@
   });
 
 document.getElementById('consultar').addEventListener('click', function() {
-    const opcionSeleccionada1 = document.getElementById('Conten').value;
+    const opcionSeleccionada1 = document.getElementById('#Conten').value;
     console.log(opcionSeleccionada1);
     if (contenedor.value === "Seleccione un contenedor") {
         alert("Seleccione un contenedor");
