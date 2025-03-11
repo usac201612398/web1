@@ -1677,7 +1677,7 @@ def contenedorpacking_list(request):
         df_agrupado = df.groupby(['proveedor', 'itemsapcode','contenedor','fechasalcontenedor'], as_index=False).agg(
             fecha=('fechasalcontenedor', 'first'),
             cultivo=('cultivo', 'first'),
-            contenedor=('cultivo', 'first'),
+            contenedor=('contenedor', 'first'),
             itemsapcode=('itemsapcode', 'first'),
             itemsapname=('itemsapname', 'first'),
             total_cajas=('cajas', 'sum'),
