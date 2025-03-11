@@ -93,19 +93,14 @@
                   </div>
               </form>      
           </div>
-          <div class="box">
-              <div>
-                <button id="consultar">Consultar</button>
-              </div>
-
-              <div>
-                <input type="button" value="Validar" class="envio3">
-              </div>
-                
-          </div>
+          
       </div>
 
     </div>
+    <div>
+      <button id="consultar">Consultar</button>
+    </div>
+    
     <div class="container">
 
     <div class="container">
@@ -141,6 +136,9 @@
             </div>
             </div>
         </div>
+        </div>
+        <div>
+          <input type="button" value="Validar" class="envio3">
         </div>
 </body>
 </html>
@@ -209,8 +207,10 @@ document.getElementById('consultar').addEventListener('click', function() {
       })
       .then(response => response.json())
       .then(data => {
-          alert(data.mensaje);
+          
           if (data.mensaje){
+            alert(data.mensaje);
+            window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/inventarioProd/cargacontenedor');
           }
           else{
             data.datos.forEach(item => {
@@ -242,6 +242,7 @@ $('.envio3').on('click', function() {
                 // Mostrar mensaje de éxito
                 alert(data.msm);
                 console.log(data);
+                window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/inventarioProd/cargacontenedor');
             },
             error: function(xhr, status, error) {
                 console.error('Error:', error);  // Maneja errores de la solicitud
