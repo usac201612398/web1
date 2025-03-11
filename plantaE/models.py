@@ -287,7 +287,7 @@ class inventarioProdTerm(models.Model):
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
     op_sap = models.CharField(max_length=20,blank=True, null=True)
     boleta=models.BigIntegerField(blank=True, null=True)
-    reasignacion=models.CharField(max_length=75,null=True)
+    reasignacion=models.CharField(max_length=75,null=True,blank=True,)
     
     def __str__(self):
         return str(self.registro) + " | " + str(self.proveedor) + " | " + str(self.itemsapname)+ " | " + str(self.cultivo)
@@ -333,6 +333,7 @@ class salidacontenedores(models.Model):
     registro = models.BigAutoField(primary_key=True)
     key = models.BigIntegerField(blank=True, null=True)
     fecha = models.DateField(blank=True, null=True)
+    fechasalcontenedor =models.DateField(blank=True, null=True)
     contenedor = models.CharField(max_length=50, blank=True, null=True)
     categoria = models.CharField(max_length=50, choices=op_categoria, blank=True, null=True)
     cultivo = models.CharField(max_length=50, choices=op_cultivo, blank=True, null=True)
@@ -351,6 +352,7 @@ class salidacontenedores(models.Model):
     orden=models.CharField(max_length=20,null=True)
     boleta=models.BigIntegerField(blank=True, null=True)
     reasignacion=models.CharField(max_length=75,null=True)
+    importe =models.FloatField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
     
@@ -368,6 +370,7 @@ class productoTerm(models.Model):
     itemsapcode  = models.CharField(max_length=50, blank=True, null=True)
     itemsapname = models.CharField(max_length=200, blank=True, null=True)
     calidad1 = models.CharField(max_length=200, blank=True, null=True)
+    precio = models.FloatField(blank=True, null=True)
     categoria = models.CharField(max_length=50, choices=op_categoria, blank=True, null=True)
     taraxcaja = models.FloatField(blank=True, null=True)
     pesostdxcaja = models.FloatField(blank=True, null=True)
