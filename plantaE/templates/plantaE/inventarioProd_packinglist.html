@@ -210,11 +210,16 @@ document.getElementById('consultar').addEventListener('click', function() {
       .then(response => response.json())
       .then(data => {
           alert(data.mensaje);
-          data.datos.forEach(item => {
+          if (data.mensaje){
+          }
+          else{
+            data.datos.forEach(item => {
               const fila = document.createElement('tr');
               fila.innerHTML = `<td>${item.contenedor}</td><<td>${item.cultivo}</td><td>${item.itemsapname}</td><td>${item.total_cajas}</td><td>${item.total_importe}</td>`;
               tbody.appendChild(fila);
           });
+          }
+          
       });
     }
 });

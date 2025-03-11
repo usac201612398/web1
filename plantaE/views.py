@@ -1733,7 +1733,7 @@ def contenedorpacking_list(request):
             return JsonResponse({'datos': registros_finales, 'opcion1': opcion1}, safe=False)
         else:
         # Si el DataFrame está vacío después de agrupar, retorna un mensaje indicando que no hay datos
-            return JsonResponse({'mensaje': 'No se encontraron datos para el contenedor seleccionado'}, status=404)
+            return JsonResponse({'mensaje': 'No se encontraron datos para el contenedor seleccionado'})
 
     return render(request, 'plantaE/inventarioProd_packinglist.html', context)
 
