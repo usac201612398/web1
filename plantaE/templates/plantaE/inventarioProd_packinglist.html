@@ -186,46 +186,61 @@
       loadProducts();
 
   });
-
-document.getElementById('consultar').addEventListener('click', function() {
+  document.getElementById('consultar').addEventListener('click', function() {
     const opcionSeleccionada1 = document.getElementById('Conten').value;
     console.log(opcionSeleccionada1);
     if (opcionSeleccionada1 === "") {
         alert("Seleccione un contenedor");
     } else {
-      const tbody = document.querySelector('#myTable tbody');
+        const tbody = document.querySelector('#myTable tbody');
 
-      // Limpiar la tabla antes de agregar nuevos datos
-      tbody.innerHTML = '';
+        // Limpiar la tabla antes de agregar nuevos datos
+        tbody.innerHTML = '';
 
-      fetch('{% url "inventarioProd_packinglist" %}', { // Asegúrate de poner la URL correcta
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              'X-CSRFToken': getCookie('csrftoken')  // Asegúrate de incluir CSRF token
-          },
-          body: new URLSearchParams({
-              'opcion1': opcionSeleccionada1
-          })
-      })
-      .then(response => response.json())
-      .then(data => {
-          
-          if (data.mensaje){
-            alert(data.mensaje);
-            window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/inventarioProd/cargacontenedor');
-          }
-          else{
-            data.datos.forEach(item => {
-              const fila = document.createElement('tr');
-              fila.innerHTML = `<td>${item.contenedor}</td><<td>${item.cultivo}</td><td>${item.itemsapname}</td><td>${item.total_cajas}</td><td>${item.total_importe}</td>`;
-              tbody.appendChild(fila);
-          });
-          }
-          
-      });
+        fetch('{% url "inventarioProd_packinglist" %}', { // Asegúrate de poner la URL correcta
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': getCookie('csrftoken')  // Asegúrate de incluir CSRF token
+            },
+            body: new URLSearchParams({
+                'opcion1': opcionSeleccionada1
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.mensaje) {
+                alert(data.mensaje);
+                window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/inventarioProd/cargacontenedor');
+            } else {
+                let totalCajas = 0;
+                let totalImporte = 0;
+
+                // Recorrer los datos y agregar las filas de la tabla
+                data.datos.forEach(item => {
+                    const fila = document.createElement('tr');
+                    fila.innerHTML = `<td>${item.contenedor}</td><td>${item.cultivo}</td><td>${item.itemsapname}</td><td>${item.total_cajas}</td><td>${item.total_importe}</td>`;
+                    tbody.appendChild(fila);
+
+                    // Sumar los valores de cajas e importe para los totales
+                    totalCajas += parseFloat(item.total_cajas);
+                    totalImporte += parseFloat(item.total_importe);
+                });
+
+                // Crear la fila de totales y añadirla al final de la tabla
+                const filaTotales = document.createElement('tr');
+                filaTotales.innerHTML = `
+                    <td colspan="3"><strong>Total</strong></td>
+                    <td><strong>${totalCajas}</strong></td>
+                    <td><strong>${totalImporte}</strong></td>
+                `;
+                tbody.appendChild(filaTotales);
+            }
+        });
     }
 });
+
+
 
 $('.envio3').on('click', function() {
     var contenedor = document.getElementById("Conten");
