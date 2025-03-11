@@ -1557,9 +1557,8 @@ def validaroventa(request):
 
     # Filtra los contenedores que no tienen el status "Cerrado" y que están en el array de contenedores
     contenedores_a_cerrar = salidacontenedores.objects.filter(
-        contenedor=contenedores_array,  # Filtra por contenedor en el array
-        status__ne='Cerrado'  # Filtra contenedores cuyo status no sea "Cerrado"
-    )
+        contenedor=contenedores_array
+    ).exclude(status='Cerrado')
 
     # Si existen contenedores que coinciden
     if contenedores_a_cerrar.exists():
@@ -1712,7 +1711,7 @@ def contenedorpacking_list(request):
     context = {'datos': registros_finales, 'opcion1': opcion1}
 
     if request.method == 'POST':
-        
+
         opcion1 = request.POST.get('opcion1')
 
         # Filtra los datos nuevamente
