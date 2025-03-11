@@ -190,60 +190,63 @@
 document.getElementById('consultar').addEventListener('click', function() {
     const opcionSeleccionada1 = document.getElementById('Conten').value;
     console.log(opcionSeleccionada1);
-    const tbody = document.querySelector('#myTable tbody');
+    if (contenedor.value === "") {
+        alert("Seleccione el contenedor");
+    } else {
+      const tbody = document.querySelector('#myTable tbody');
 
-    // Limpiar la tabla antes de agregar nuevos datos
-    tbody.innerHTML = '';
+      // Limpiar la tabla antes de agregar nuevos datos
+      tbody.innerHTML = '';
 
-    fetch('{% url "inventarioProd_packinglist" %}', { // Asegúrate de poner la URL correcta
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-CSRFToken': getCookie('csrftoken')  // Asegúrate de incluir CSRF token
-        },
-        body: new URLSearchParams({
-            'opcion1': opcionSeleccionada1
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data)
-        data.datos.forEach(item => {
-            const fila = document.createElement('tr');
-            fila.innerHTML = `<td>${item.contenedor}</td><<td>${item.cultivo}</td><td>${item.itemsapname}</td><td>${item.total_cajas}</td><td>${item.total_importe}</td>`;
-            tbody.appendChild(fila);
-        });
-    });
+      fetch('{% url "inventarioProd_packinglist" %}', { // Asegúrate de poner la URL correcta
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'X-CSRFToken': getCookie('csrftoken')  // Asegúrate de incluir CSRF token
+          },
+          body: new URLSearchParams({
+              'opcion1': opcionSeleccionada1
+          })
+      })
+      .then(response => response.json())
+      .then(data => {
+          console.log(data)
+          data.datos.forEach(item => {
+              const fila = document.createElement('tr');
+              fila.innerHTML = `<td>${item.contenedor}</td><<td>${item.cultivo}</td><td>${item.itemsapname}</td><td>${item.total_cajas}</td><td>${item.total_importe}</td>`;
+              tbody.appendChild(fila);
+          });
+      });
+    }
 });
-
-
 $('.envio3').on('click', function() {
     var contenedor = document.getElementById("Conten");
     
-    $.ajax({
-            
+    // Verifica si el contenedor tiene un valor vacío
+    if (contenedor.value === "") {
+        alert("Seleccione el contenedor");
+    } else {
+        $.ajax({
             url: '{% url "inventarioProd_validaroventa" %}',  // URL para la vista AJAX
             type: 'POST',
             dataType: "json",
-            data:  JSON.stringify({'array':contenedor}),
+            data: JSON.stringify({'array': contenedor.value}),  // Enviar solo el valor del contenedor
             contentType: 'application/json',
             headers: {'X-CSRFToken': csrftoken}, 
-            
             success: function(data) {
-                // Limpia las opciones actuales del campo 'name'
-                alert(data.msm)
-                console.log(data)
-                // Recorre los productos recibidos y añade opciones al campo 'name'
-                
+                // Mostrar mensaje de éxito
+                alert(data.msm);
+                console.log(data);
             },
             error: function(xhr, status, error) {
                 console.error('Error:', error);  // Maneja errores de la solicitud
             }
         });
-    
-        //window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/inventarioProd')
 
-    
-  });
+        // Redirigir a otra página después de la validación
+        window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/inventarioProd/cargacontenedor');
+    }
+});
+
 
 </script>

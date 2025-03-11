@@ -1712,6 +1712,7 @@ def contenedorpacking_list(request):
     context = {'datos': registros_finales, 'opcion1': opcion1}
 
     if request.method == 'POST':
+        
         opcion1 = request.POST.get('opcion1')
 
         # Filtra los datos nuevamente
