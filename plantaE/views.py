@@ -1625,7 +1625,7 @@ def generate_packing_list_pdf(request):
         }
         
         # Renderiza la plantilla HTML con los datos
-        html_content = render_to_string('packinglist_template.html', context)
+        html_content = render_to_string('plantaE/packinglist_template.html', context)
 
         # Convierte el HTML a PDF usando pdfkit
         pdf = pdfkit.from_string(html_content, False)
