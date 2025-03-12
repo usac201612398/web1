@@ -1645,8 +1645,9 @@ def generate_packing_list_pdf(request):
         return response
 
     else:
+        registros_finales = df.to_dict(orient='records')
         # Si el DataFrame está vacío después de agrupar, retorna un mensaje indicando que no hay datos
-        return JsonResponse({'msm': 'No se encontraron datos para el contenedor seleccionado...'})
+        return JsonResponse({'msm': registros_finales})
 
 
 def inventarioProd_create(request):
