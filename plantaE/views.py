@@ -1636,7 +1636,7 @@ def generate_packing_list_pdf(request):
             'page-size': 'A4',           # Tamaño de la página A4
             'no-outline': None,          # Elimina los bordes
             'disable-smart-shrinking': '',  # Evita el ajuste automático
-            'zoom': '0.75',              # Reducir el contenido, puedes ajustar este valor (0.75, 0.8, 0.9)
+            'zoom': '0.65',              # Reducir el contenido, puedes ajustar este valor (0.75, 0.8, 0.9)
             'print-media-type': '',      # Ajusta para que se vea bien al imprimir
             'disable-smart-shrinking': '', # Desactiva el ajuste inteligente
             'page-width': '210mm',        # Ajuste de la página (en mm), puedes probar con diferentes valores
