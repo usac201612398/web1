@@ -1590,7 +1590,8 @@ def generate_packing_list_pdf(request):
 
     # Convierte el QuerySet a un DataFrame de pandas
     df = pd.DataFrame(list(contenedores_a_imprimir))
-
+    # Asegúrate de convertir 'fechasalcontenedor' a datetime
+    df['fechasalcontenedor'] = pd.to_datetime(df['fechasalcontenedor'], errors='coerce')
     # Obtén la semana del contenedor
     df['semana_contenedor'] = df['fechasalcontenedor'].dt.isocalendar().week
 
