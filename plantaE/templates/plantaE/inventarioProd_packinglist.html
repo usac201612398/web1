@@ -275,11 +275,12 @@ $('.envio3').on('click', function() {
 
 $('.envio4').on('click', function() {
     var contenedor = document.getElementById("Conten");
-    
+    console.log(contenedor.value);
     // Verifica si el contenedor tiene un valor vacío
     if (contenedor.value === "") {
         alert("Seleccione un contenedor");
     } else {
+
         $.ajax({
             url: '{% url "generate_packing_list_pdf" %}',  // URL para la vista AJAX
             type: 'POST',
