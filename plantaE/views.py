@@ -1641,7 +1641,7 @@ def generate_packing_list_pdf(request):
 
     else:
     # Si el DataFrame está vacío después de agrupar, retorna un mensaje indicando que no hay datos
-        return JsonResponse({'mensaje': 'No se encontraron datos para el contenedor seleccionado'})
+        return JsonResponse({'msm': 'No se encontraron datos para el contenedor seleccionado'})
     
 
 def inventarioProd_create(request):
