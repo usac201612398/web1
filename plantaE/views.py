@@ -1573,28 +1573,29 @@ def validaroventa(request):
     # Si no se encontraron contenedores
         return JsonResponse({'msm': "No se encontraron contenedores para cerrar"}, safe=False)
 
-
-
 def generate_packing_list_pdf(request):
-    # Recibe los datos desde el body de la solicitud
-    data = json.loads(request.body)
+    # Obtén el parámetro 'contenedor' de la URL (GET)
+    contenedor = request.GET.get('contenedor')
+    if not contenedor:
+        return JsonResponse({'error': 'Contenedor no especificado'}, status=400)
+    
     hoy = timezone.now().date()
     semana_actual = hoy.isocalendar()[1]  # Semana actual
-    contenedores_array = data.get('array')  # Contenedores recibidos en el array
 
     # Obtiene el primer contenedor que coincida con los datos
-    infoconten = contenedores.objects.exclude(status="Cerrado").filter(contenedor=contenedores_array).first()
+    infoconten = contenedores.objects.exclude(status="Cerrado").filter(contenedor=contenedor).first()
+    if not infoconten:
+        return JsonResponse({'error': 'Contenedor no encontrado'}, status=404)
 
     # Filtra los contenedores que no tienen el status "Cerrado" y que están en el array de contenedores
-    contenedores_a_imprimir = salidacontenedores.objects.filter(contenedor=contenedores_array).order_by("registro").values('proveedor','itemsapcode','itemsapname','contenedor','fechasalcontenedor','cajas','importe','cultivo','palet')
+    contenedores_a_imprimir = salidacontenedores.objects.filter(contenedor=contenedor).order_by("registro").values('proveedor','itemsapcode','itemsapname','contenedor','fechasalcontenedor','cajas','importe','cultivo','palet')
 
     # Convierte el QuerySet a un DataFrame de pandas
     df = pd.DataFrame(list(contenedores_a_imprimir))
-    # Asegúrate de convertir 'fechasalcontenedor' a datetime
     df['fechasalcontenedor'] = pd.to_datetime(df['fechasalcontenedor'], errors='coerce')
-    # Obtén la semana del contenedor
     df['semana_contenedor'] = df['fechasalcontenedor'].dt.isocalendar().week
     df['semana_actual'] = semana_actual
+
     # Filtra el DataFrame para que solo contenga los registros de la semana actual
     df_filtrado = df[df['semana_contenedor'] == semana_actual]
 
@@ -1624,50 +1625,22 @@ def generate_packing_list_pdf(request):
             'hora': infoconten.horasalida,
             'piloto': infoconten.piloto,
             'transportista': infoconten.transportista,
-            'datos': df_agrupado.to_dict(orient='records')  # Convierte el DataFrame a un diccionario
+            'datos': df_agrupado.to_dict(orient='records')
         }
-        '''
-        # Renderiza la plantilla HTML con los datos
-        html_content = render_to_string('plantaE/packinglist_template.html', context)
-        # Define las opciones para el PDF
-
-        options = {
-            'orientation': 'Landscape',  # Modo horizontal
-            'page-size': 'A4',           # Tamaño de la página A4
-            'no-outline': None,          # Elimina los bordes
-            'disable-smart-shrinking': '',  # Evita el ajuste automático
-            'zoom': '0.65',              # Reducir el contenido, puedes ajustar este valor (0.75, 0.8, 0.9)
-            'print-media-type': '',      # Ajusta para que se vea bien al imprimir
-            'disable-smart-shrinking': '', # Desactiva el ajuste inteligente
-            'page-width': '210mm',        # Ajuste de la página (en mm), puedes probar con diferentes valores
-            'page-height': '297mm',       # Ajuste de la página (en mm), puedes probar con diferentes valores
-            'no-images': '',             # Evita la carga de imágenes grandes si no las necesitas
-            'lowquality': '',            # Mejora la calidad, si es necesario
-        }
-
-        # Genera el PDF a partir del contenido HTML
-        pdf = pdfkit.from_string(html_content, False, options=options)
-
-
-        # Retorna el PDF como respuesta en Django
-        response = HttpResponse(pdf, content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="Packing_List.pdf"'
-        '''
-        # Iterar sobre los contenedores y comparar la semana
-        
-        semana_contenedor = infoconten.fecha.isocalendar()[1]  # Semana del contenedor
-
-        # Si la semana del contenedor es la misma que la semana actual
+        semana_contenedor = infoconten.fecha.isocalendar()[1]
+         # Si la semana del contenedor es la misma que la semana actual
         if semana_contenedor == semana_actual:
             infoconten.status = "Cerrado"
             infoconten.save()
-        
-        return render(request, 'plantaE/packinglist_template.html',context)
+        # Renderiza la plantilla HTML con los datos
+        return render(request, 'plantaE/packinglist_template.html', context)
 
     else:
-        registros_finales = df_filtrado.to_dict(orient='records')
-        # Si el DataFrame está vacío después de agrupar, retorna un mensaje indicando que no hay datos
-        return JsonResponse({'msm': registros_finales})
+        # Si no hay datos, devuelve una respuesta vacía o de error
+        return JsonResponse({'error': 'No hay datos disponibles para esta semana'}, status=400)
+
+       
+
 
 
 def inventarioProd_create(request):
