@@ -1623,6 +1623,7 @@ def generate_packing_list_pdf(request):
             'ventilacion': infoconten.ventilacion,
             'hora': infoconten.horasalida,
             'piloto': infoconten.piloto,
+            'transportista': infoconten.transportista,
             'datos': df_agrupado.to_dict(orient='records')  # Convierte el DataFrame a un diccionario
         }
         
@@ -1630,17 +1631,18 @@ def generate_packing_list_pdf(request):
         html_content = render_to_string('plantaE/packinglist_template.html', context)
         # Define las opciones para el PDF
 
-        # Define las opciones para el PDF
         options = {
             'orientation': 'Landscape',  # Modo horizontal
-            'page-size': 'A4',           # Tamaño de la página A4 (puedes probar con otras como 'Letter' o un tamaño personalizado)
-            'no-outline': None,          # Opcional: elimina los bordes
-            'margin-top': '10mm',        # Márgenes superiores
-            'margin-bottom': '10mm',     # Márgenes inferiores
-            'margin-left': '10mm',       # Márgenes izquierdo
-            'margin-right': '10mm',      # Márgenes derecho
-            'disable-smart-shrinking': '',  # Desactiva el ajuste automático de contenido
-            'zoom': '0.8',               # Escala el contenido (ajusta el valor de zoom si es necesario)
+            'page-size': 'A4',           # Tamaño de la página A4
+            'no-outline': None,          # Elimina los bordes
+            'disable-smart-shrinking': '',  # Evita el ajuste automático
+            'zoom': '0.75',              # Reducir el contenido, puedes ajustar este valor (0.75, 0.8, 0.9)
+            'print-media-type': '',      # Ajusta para que se vea bien al imprimir
+            'disable-smart-shrinking': '', # Desactiva el ajuste inteligente
+            'page-width': '210mm',        # Ajuste de la página (en mm), puedes probar con diferentes valores
+            'page-height': '297mm',       # Ajuste de la página (en mm), puedes probar con diferentes valores
+            'no-images': '',             # Evita la carga de imágenes grandes si no las necesitas
+            'lowquality': '',            # Mejora la calidad, si es necesario
         }
 
         # Genera el PDF a partir del contenido HTML
