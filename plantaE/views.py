@@ -1617,6 +1617,16 @@ def generate_packing_list_pdf(request):
     # Retorna el PDF como respuesta en Django
     response = HttpResponse(pdf, content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="Packing_List.pdf"'
+    
+    semana_actual = hoy.isocalendar()[1]  # semana actual
+    # Iterar sobre los contenedores y comparar la semana
+    for i in infoconten:
+        semana_contenedor =i.fecha.isocalendar()[1]  # semana del contenedor
+
+        # Si la semana del contenedor es la misma que la semana actual
+        if semana_contenedor == semana_actual:
+            i.status = "Cerrado"
+            i.save()
     return response
 
 def inventarioProd_create(request):
@@ -1816,15 +1826,6 @@ def procesarinvprodconten(request):
         if str(salidas2) == str(salidas.cajas):
             salidas.status = "En proceso"
             salidas.save()
-    salidas3=contenedores.objects.filter(contenedor=contenedor_)
-    # Iterar sobre los contenedores y comparar la semana
-    for i in salidas3:
-        semana_contenedor =i.fecha.isocalendar()[1]  # semana del contenedor
-
-        # Si la semana del contenedor es la misma que la semana actual
-        if semana_contenedor == semana_actual:
-            i.status = "Cerrado"
-            i.save()
     
     return JsonResponse({'mensaje':mensaje,'registros':registros})   
 
