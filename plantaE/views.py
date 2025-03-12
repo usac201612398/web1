@@ -1572,7 +1572,8 @@ def validaroventa(request):
     else:
     # Si no se encontraron contenedores
         return JsonResponse({'msm': "No se encontraron contenedores para cerrar"}, safe=False)
-    
+
+
 
 def generate_packing_list_pdf(request):
     # Recibe los datos desde el body de la solicitud
@@ -1582,17 +1583,24 @@ def generate_packing_list_pdf(request):
 
     # Filtra los contenedores que no tienen el status "Cerrado" y que están en el array de contenedores
     contenedores_a_imprimir = salidacontenedores.objects.filter(
-        contenedor=contenedores_array,fechasalcontenedor =hoy
-    ).values('proveedor','itemsapcode','itemsapname','contenedor','fechasalcontenedor','cajas','importe','cultivo')
-    
-    df_agrupado = contenedores_a_imprimir.groupby(['itemsapcode','palet','proveedor'], as_index=False).agg(
-            fecha=('fechasalcontenedor', 'first'),
-            itemsapname=('itemsapname', 'first'),
-            proveedor=('proveedor', 'first'),
-            total_cajas=('cajas', 'sum')
-        )
-    infoconten = contenedores.objects.filter(contenedor=contenedores_array,fecha=hoy)
+        contenedor__in=contenedores_array, fechasalcontenedor=hoy
+    ).values('proveedor', 'itemsapcode', 'itemsapname', 'contenedor', 'fechasalcontenedor', 'cajas', 'importe', 'cultivo', 'palet')
 
+    # Convierte el QuerySet a un DataFrame de pandas
+    df = pd.DataFrame(list(contenedores_a_imprimir))
+
+    # Agrupar por 'itemsapcode', 'palet', 'proveedor' y calcular la suma de las cajas
+    df_agrupado = df.groupby(['itemsapcode', 'palet', 'proveedor'], as_index=False).agg(
+        fecha=('fechasalcontenedor', 'first'),
+        itemsapname=('itemsapname', 'first'),
+        proveedor=('proveedor', 'first'),
+        total_cajas=('cajas', 'sum')
+    )
+
+    # Obtener la información del contenedor
+    infoconten = contenedores.objects.filter(contenedor__in=contenedores_array, fecha=hoy).first()
+
+    # Prepara el contexto para la plantilla
     context = {
         'planta': 'SDC',
         'destino': infoconten.destino,
@@ -1605,13 +1613,13 @@ def generate_packing_list_pdf(request):
         'ventilacion': infoconten.ventilacion,
         'hora': infoconten.horasalida,
         'piloto': infoconten.piloto,
-        'datos': df_agrupado
+        'datos': df_agrupado.to_dict(orient='records')  # Convierte el DataFrame a un diccionario
     }
     
     # Renderiza la plantilla HTML con los datos
     html_content = render_to_string('packing_list_template.html', context)
 
-    # Convierte el HTML a PDF
+    # Convierte el HTML a PDF usando pdfkit
     pdf = pdfkit.from_string(html_content, False)
 
     # Retorna el PDF como respuesta en Django
@@ -1621,13 +1629,15 @@ def generate_packing_list_pdf(request):
     semana_actual = hoy.isocalendar()[1]  # semana actual
     # Iterar sobre los contenedores y comparar la semana
     for i in infoconten:
-        semana_contenedor =i.fecha.isocalendar()[1]  # semana del contenedor
+        semana_contenedor = i.fecha.isocalendar()[1]  # semana del contenedor
 
         # Si la semana del contenedor es la misma que la semana actual
         if semana_contenedor == semana_actual:
             i.status = "Cerrado"
             i.save()
+    
     return response
+
 
 def inventarioProd_create(request):
     if request.method == 'POST':
