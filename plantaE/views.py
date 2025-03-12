@@ -1588,9 +1588,7 @@ def generate_packing_list_pdf(request):
     infoconten = contenedores.objects.exclude(status="Cerrado").filter(contenedor=contenedores_array).first()
 
     # Filtra los contenedores que no tienen el status "Cerrado" y que están en el array de contenedores
-    contenedores_a_imprimir = salidacontenedores.objects.filter(
-        contenedor=contenedores_array
-    ).values('proveedor', 'itemsapcode', 'itemsapname', 'contenedor', 'fechasalcontenedor', 'cajas', 'importe', 'cultivo', 'palet')
+    contenedores_a_imprimir = salidacontenedores.objects.all().values('proveedor', 'itemsapcode', 'itemsapname', 'contenedor', 'fechasalcontenedor', 'cajas', 'importe', 'cultivo', 'palet')
 
     # Verifica que los datos tengan el campo 'fechasalcontenedor'
     if not contenedores_a_imprimir:
