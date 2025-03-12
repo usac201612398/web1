@@ -1575,24 +1575,47 @@ def validaroventa(request):
 
 
 
+
+
 def generate_packing_list_pdf(request):
     # Recibe los datos desde el body de la solicitud
-    
     data = json.loads(request.body)
     hoy = timezone.now().date()
-    semana_actual = hoy.isocalendar()[1]  # semana actual
+    semana_actual = hoy.isocalendar()[1]  # Semana actual
     contenedores_array = data.get('array')  # Contenedores recibidos en el array
+
+    # Obtiene el primer contenedor que coincida con los datos
     infoconten = contenedores.objects.exclude(status="Cerrado").filter(contenedor__in=contenedores_array).first()
+
     # Filtra los contenedores que no tienen el status "Cerrado" y que están en el array de contenedores
     contenedores_a_imprimir = salidacontenedores.objects.filter(
         contenedor__in=contenedores_array
     ).values('proveedor', 'itemsapcode', 'itemsapname', 'contenedor', 'fechasalcontenedor', 'cajas', 'importe', 'cultivo', 'palet')
 
+    # Verifica que los datos tengan el campo 'fechasalcontenedor'
+    if not contenedores_a_imprimir:
+        return JsonResponse({'msm': 'No se encontraron datos para los contenedores seleccionados'})
+
     # Convierte el QuerySet a un DataFrame de pandas
     df = pd.DataFrame(list(contenedores_a_imprimir))
-    df['fecha'] = pd.to_datetime(df['fechasalcontenedor'])  # Asegúrate de que 'fechasalcontenedor' es una fecha
-    df['semana_contenedor'] = df['fecha'].dt.isocalendar().week  # Obtén la semana del contenedor
+
+    # Verifica que la columna 'fechasalcontenedor' exista y tenga datos
+    if 'fechasalcontenedor' not in df.columns:
+        return JsonResponse({'msm': 'El campo fechasalcontenedor no está presente en los datos'})
+
+    # Asegúrate de que 'fechasalcontenedor' es una columna de fecha
+    df['fecha'] = pd.to_datetime(df['fechasalcontenedor'], errors='coerce')  # 'coerce' convierte errores a NaT
+
+    # Verifica si hubo errores en la conversión
+    if df['fecha'].isna().any():
+        return JsonResponse({'msm': 'Algunos registros tienen fechas inválidas'})
+
+    # Obtén la semana del contenedor
+    df['semana_contenedor'] = df['fecha'].dt.isocalendar().week
+
+    # Filtra el DataFrame para que solo contenga los registros de la semana actual
     df_filtrado = df[df['semana_contenedor'] == semana_actual]
+
     if not df_filtrado.empty:
         # Agrupar por 'itemsapcode', 'palet', 'proveedor' y calcular la suma de las cajas
         df_agrupado = df_filtrado.groupby(['itemsapcode', 'palet', 'proveedor'], as_index=False).agg(
@@ -1601,9 +1624,6 @@ def generate_packing_list_pdf(request):
             proveedor=('proveedor', 'first'),
             total_cajas=('cajas', 'sum')
         )
-
-        # Obtener la información del contenedor
-        
 
         # Prepara el contexto para la plantilla
         context = {
@@ -1631,10 +1651,9 @@ def generate_packing_list_pdf(request):
         response = HttpResponse(pdf, content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="Packing_List.pdf"'
         
-       
         # Iterar sobre los contenedores y comparar la semana
         for i in infoconten:
-            semana_contenedor = i.fecha.isocalendar()[1]  # semana del contenedor
+            semana_contenedor = i.fecha.isocalendar()[1]  # Semana del contenedor
 
             # Si la semana del contenedor es la misma que la semana actual
             if semana_contenedor == semana_actual:
@@ -1644,9 +1663,9 @@ def generate_packing_list_pdf(request):
         return response
 
     else:
-    # Si el DataFrame está vacío después de agrupar, retorna un mensaje indicando que no hay datos
+        # Si el DataFrame está vacío después de agrupar, retorna un mensaje indicando que no hay datos
         return JsonResponse({'msm': 'No se encontraron datos para el contenedor seleccionado'})
-    
+
 
 def inventarioProd_create(request):
     if request.method == 'POST':
