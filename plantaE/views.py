@@ -1635,13 +1635,13 @@ def generate_packing_list_pdf(request):
         response['Content-Disposition'] = 'attachment; filename="Packing_List.pdf"'
         
         # Iterar sobre los contenedores y comparar la semana
-        for i in infoconten:
-            semana_contenedor = i.fecha.isocalendar()[1]  # Semana del contenedor
+        
+        semana_contenedor = infoconten.fecha.isocalendar()[1]  # Semana del contenedor
 
-            # Si la semana del contenedor es la misma que la semana actual
-            if semana_contenedor == semana_actual:
-                i.status = "Cerrado"
-                i.save()
+        # Si la semana del contenedor es la misma que la semana actual
+        if semana_contenedor == semana_actual:
+            infoconten.status = "Cerrado"
+            infoconten.save()
         
         return response
 
