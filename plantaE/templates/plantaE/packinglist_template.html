@@ -27,8 +27,9 @@
         }
         .header {
             text-align: center;
-            font-size: 20px;
+            font-size: 12px;
             font-weight: bold;
+            line-height: 1.4; 
         }
 
         @media print {
@@ -98,8 +99,13 @@
             </tbody>
         </table>
     </div>
-
-    <button onclick="window.print()">Imprimir</button> <!-- Botón para activar la impresión -->
+    <div class="container"> 
+        <button onclick="window.print()" class="print-button">
+            <i class="fas fa-print"></i> <!-- Ícono de la impresora -->
+            <span class="sr-only">Imprimir</span> <!-- Texto alternativo para accesibilidad -->
+        </button>
+    </div>
+    
 </body>
 </html>
 
