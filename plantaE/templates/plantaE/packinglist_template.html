@@ -15,6 +15,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            table-layout: auto; /* Permite que las columnas se ajusten automáticamente */
         }
         table th, table td {
             padding: 8px;
@@ -26,6 +27,33 @@
             font-size: 20px;
             font-weight: bold;
         }
+
+        @media print {
+            body {
+                width: 100%;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+            }
+            table {
+                width: 100%;
+                table-layout: fixed; /* Hace que las celdas de la tabla se ajusten para no desbordar */
+            }
+            .container {
+                width: 100%;
+                max-width: 100%; /* Para asegurarse de que la tabla no se salga del borde */
+                overflow: hidden;
+            }
+            /* Reducir el tamaño del contenido para ajustarse al ancho de la página */
+            @page {
+                size: A4 landscape;
+                margin: 0;
+            }
+            .container {
+                transform: scale(0.8); /* Ajusta la escala del contenido */
+                transform-origin: top left; /* Fija el origen de la transformación */
+            }
+        }
     </style>
 </head>
 <body>
@@ -34,8 +62,8 @@
             <p>Packing List</p>
             <p>Planta: {{ planta }} | Fecha: {{ fecha}}</p>
             <p>Destino: {{ destino }} | #Viaje: {{ viaje }} | Temperatura: {{ temperatura }}</p>
-            <p>Contenedor: {{ contenedor }} | Piloto: {{ piloto }} | Firma Piloto:            </p>
-            <p>Transportista: {{ transportista }} | Marchamo: {{ marchamo }} | Placa Camion:  {{ placacamion }} | Hora Salida:  {{ hora }}  </p>
+            <p>Contenedor: {{ contenedor }} | Piloto: {{ piloto }} | Firma Piloto: </p>
+            <p>Transportista: {{ transportista }} | Marchamo: {{ marchamo }} | Placa Camion: {{ placacamion }} | Hora Salida: {{ hora }} </p>
         </div>
 
         <table>
