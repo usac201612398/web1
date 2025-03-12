@@ -1630,6 +1630,7 @@ def generate_packing_list_pdf(request):
         html_content = render_to_string('plantaE/packinglist_template.html', context)
         # Define las opciones para el PDF
 
+        # Define las opciones para el PDF
         options = {
             'orientation': 'Landscape',  # Modo horizontal
             'page-size': 'A4',           # Tamaño de la página A4 (puedes probar con otras como 'Letter' o un tamaño personalizado)
@@ -1639,7 +1640,7 @@ def generate_packing_list_pdf(request):
             'margin-left': '10mm',       # Márgenes izquierdo
             'margin-right': '10mm',      # Márgenes derecho
             'disable-smart-shrinking': '',  # Desactiva el ajuste automático de contenido
-            'zoom': '1.0',               # Escala el contenido (ajusta el valor si es necesario)
+            'zoom': '0.8',               # Escala el contenido (ajusta el valor de zoom si es necesario)
         }
 
         # Genera el PDF a partir del contenido HTML
