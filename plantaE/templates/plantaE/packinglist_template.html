@@ -15,12 +15,13 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            table-layout: auto; /* Permite que las columnas se ajusten automáticamente */
+            table-layout: auto; /* Ajuste automático del ancho de columnas */
         }
         table th, table td {
             padding: 8px;
             border: 1px solid #ddd;
             text-align: left;
+            word-wrap: break-word; /* Asegura que el texto largo se ajuste */
         }
         .header {
             text-align: center;
@@ -37,21 +38,22 @@
             }
             table {
                 width: 100%;
-                table-layout: fixed; /* Hace que las celdas de la tabla se ajusten para no desbordar */
+                table-layout: auto; /* Asegura que las columnas se ajusten correctamente */
             }
             .container {
                 width: 100%;
-                max-width: 100%; /* Para asegurarse de que la tabla no se salga del borde */
+                max-width: 100%;
                 overflow: hidden;
             }
-            /* Reducir el tamaño del contenido para ajustarse al ancho de la página */
+            /* Configuración para impresión horizontal */
             @page {
-                size: A4 landscape;
+                size: A4 landscape; /* Configura el tamaño de la página en horizontal */
                 margin: 0;
             }
+            /* Reducción de la escala para ajustarse al ancho de la página */
             .container {
-                transform: scale(0.8); /* Ajusta la escala del contenido */
-                transform-origin: top left; /* Fija el origen de la transformación */
+                transform: scale(0.75); /* Ajusta la escala para que quepa todo el contenido */
+                transform-origin: top left; /* Fija el origen de la escala */
             }
         }
     </style>
@@ -89,5 +91,8 @@
             </tbody>
         </table>
     </div>
+
+    <button onclick="window.print()">Imprimir</button> <!-- Botón para activar la impresión -->
 </body>
 </html>
+

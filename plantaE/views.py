@@ -1626,7 +1626,7 @@ def generate_packing_list_pdf(request):
             'transportista': infoconten.transportista,
             'datos': df_agrupado.to_dict(orient='records')  # Convierte el DataFrame a un diccionario
         }
-        
+        '''
         # Renderiza la plantilla HTML con los datos
         html_content = render_to_string('plantaE/packinglist_template.html', context)
         # Define las opciones para el PDF
@@ -1652,7 +1652,7 @@ def generate_packing_list_pdf(request):
         # Retorna el PDF como respuesta en Django
         response = HttpResponse(pdf, content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="Packing_List.pdf"'
-        
+        '''
         # Iterar sobre los contenedores y comparar la semana
         
         semana_contenedor = infoconten.fecha.isocalendar()[1]  # Semana del contenedor
@@ -1662,7 +1662,7 @@ def generate_packing_list_pdf(request):
             infoconten.status = "Cerrado"
             infoconten.save()
         
-        return response
+        return render(request, 'plantaE/packinglist_template.html',context)
 
     else:
         registros_finales = df_filtrado.to_dict(orient='records')
