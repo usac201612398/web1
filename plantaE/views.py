@@ -1703,7 +1703,7 @@ def reporteInventario(request):
         opcion1 = request.POST.get('opcion2')
 
         # Filtra los datos nuevamente
-        datos_empaque = inventarioProdTerm.objects.filter(fecha=opcion1).exclude(categoria='Merma').values(
+        datos_empaque = inventarioProdTerm.objects.filter(fecha=opcion1,categoria="Exportación").values(
             "fecha", "proveedor", "cultivo", "itemsapcode", "itemsapname", "categoria", "cajas", "lbsintara", "merma"
         )
 
