@@ -1596,12 +1596,13 @@ def generate_packing_list_pdf(request):
     df['semana_contenedor'] = df['fechasalcontenedor'].dt.isocalendar().week
     df['semana_actual'] = semana_actual
     # Filtra el DataFrame para que solo contenga los registros de la semana actual
-    df_filtrado = df[df['semana_contenedor'] == semana_actual-1]
+    df_filtrado = df[df['semana_contenedor'] == semana_actual]
 
     if not df_filtrado.empty:
         # Agrupar por 'itemsapcode', 'palet', 'proveedor' y calcular la suma de las cajas
         df_agrupado = df_filtrado.groupby(['itemsapcode', 'palet', 'proveedor'], as_index=False).agg(
             fecha=('fechasalcontenedor', 'first'),
+            palet=('palet', 'first'),
             itemsapname=('itemsapname', 'first'),
             proveedor=('proveedor', 'first'),
             total_cajas=('cajas', 'sum')
