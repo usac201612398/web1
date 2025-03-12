@@ -1607,6 +1607,8 @@ def generate_packing_list_pdf(request):
             proveedor=('proveedor', 'first'),
             total_cajas=('cajas', 'sum')
         )
+        # Ordena el DataFrame por la columna 'palet'
+        df_agrupado = df_agrupado.sort_values(by='palet')
 
         # Prepara el contexto para la plantilla
         context = {
@@ -1626,9 +1628,16 @@ def generate_packing_list_pdf(request):
         
         # Renderiza la plantilla HTML con los datos
         html_content = render_to_string('plantaE/packinglist_template.html', context)
+        # Define las opciones para el PDF
+        options = {
+            'orientation': 'Landscape',  # Modo horizontal
+            'page-size': 'A4',           # Tamaño de la página A4 (puedes ajustarlo si es necesario)
+            'no-outline': None,          # Opcional: elimina los bordes
+        }
 
-        # Convierte el HTML a PDF usando pdfkit
-        pdf = pdfkit.from_string(html_content, False)
+        # Genera el PDF a partir del contenido HTML
+        pdf = pdfkit.from_string(html_content, False, options=options)
+
 
         # Retorna el PDF como respuesta en Django
         response = HttpResponse(pdf, content_type='application/pdf')
