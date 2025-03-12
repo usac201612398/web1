@@ -1590,7 +1590,7 @@ def generate_packing_list_pdf(request):
     df = pd.DataFrame(list(contenedores_a_imprimir))
 
     # Agrupar por 'itemsapcode', 'palet', 'proveedor' y calcular la suma de las cajas
-    df_agrupado = df.groupby(['itemsapcode', 'palet', 'proveedor'], as_index=False).agg(
+    df_agrupado = df.groupby(['itemsapname', 'palet', 'proveedor'], as_index=False).agg(
         fecha=('fechasalcontenedor', 'first'),
         itemsapname=('itemsapname', 'first'),
         proveedor=('proveedor', 'first'),
