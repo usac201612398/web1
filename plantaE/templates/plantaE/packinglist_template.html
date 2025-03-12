@@ -3,44 +3,34 @@
 
     
     <style>
-        /* Estilos generales */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
         }
-    
         .container {
             width: 100%;
             margin: 20px;
             padding: 20px;
             border: 1px solid #ddd;
         }
-    
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: auto; /* Ajuste automático del ancho de columnas */
+        }
+        table th, table td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: left;
+            word-wrap: break-word; /* Asegura que el texto largo se ajuste */
+        }
         .header {
             text-align: center;
             font-size: 20px;
             font-weight: bold;
         }
-    
-        /* Estilo para el botón de impresión */
-        .print-button {
-            text-align: center;
-            margin-bottom: 20px;
-            /* Puedes cambiar el estilo según lo que necesites */
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-        }
-    
-        .print-button:hover {
-            background-color: #45a049;
-        }
-    
-        /* Estilos específicos para la impresión */
+
         @media print {
             body {
                 width: 100%;
@@ -48,49 +38,23 @@
                 padding: 0;
                 overflow: hidden;
             }
-    
-            /* Ocultar el botón de impresión y otros elementos no deseados al imprimir */
-            .print-button {
-                display: none;  /* El botón no se imprimirá */
+            table {
+                width: 100%;
+                table-layout: auto; /* Asegura que las columnas se ajusten correctamente */
             }
-    
-            /* Asegurar que el contenedor no se salga de los márgenes */
             .container {
                 width: 100%;
                 max-width: 100%;
+                overflow: hidden;
             }
-    
-            /* Asegurarse que la tabla ocupe toda la página */
-            table {
-                width: 100%;
-                table-layout: fixed;
-                border-collapse: collapse;
-            }
-    
-            table th, table td {
-                padding: 8px;
-                border: 1px solid #ddd;
-                text-align: left;
-            }
-    
-            /* Ajuste del texto al imprimir */
-            .header {
-                font-size: 18px;  /* Ajustar el tamaño del encabezado */
-            }
-    
-            /* Eliminar márgenes y espacios en blanco en la impresión */
-            .header, .container, table {
-                margin: 0;
-                padding: 0;
-            }
-    
-            /* Evitar que elementos fuera de la página se impriman */
-            .footer, .menu, .advertisement {
+                        /* Ocultar el botón de impresión */
+                        .print-button {
                 display: none;
             }
+    
+
         }
     </style>
-    
 </head>
 <body>
     <div class="container">
