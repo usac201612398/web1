@@ -1588,7 +1588,10 @@ def generate_packing_list_pdf(request):
     infoconten = contenedores.objects.exclude(status="Cerrado").filter(contenedor=contenedores_array).first()
 
     # Filtra los contenedores que no tienen el status "Cerrado" y que están en el array de contenedores
-    contenedores_a_imprimir = salidacontenedores.objects.all()
+    contenedores_a_imprimir = salidacontenedores.objects.filter(
+        contenedor=contenedores_array
+    ).values('proveedor', 'itemsapcode', 'itemsapname', 'contenedor', 'fechasalcontenedor', 'cajas', 'importe', 'cultivo', 'palet')
+
     # Verifica que los datos tengan el campo 'fechasalcontenedor'
     if not contenedores_a_imprimir:
         return JsonResponse({'msm': 'No se encontraron datos para los contenedores seleccionados'})
@@ -1604,6 +1607,7 @@ def generate_packing_list_pdf(request):
     df['fecha'] = pd.to_datetime(df['fechasalcontenedor'], errors='coerce')  # 'coerce' convierte errores a NaT
 
     # Verifica si hubo errores en la conversión
+
 
     # Obtén la semana del contenedor
     df['semana_contenedor'] = df['fecha'].dt.isocalendar().week
