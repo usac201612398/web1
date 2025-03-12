@@ -1592,7 +1592,7 @@ def generate_packing_list_pdf(request):
 
     # Verifica que los datos tengan el campo 'fechasalcontenedor'
     if not contenedores_a_imprimir:
-        return JsonResponse({'msm': 'No se encontraron datos para los contenedores seleccionados'})
+        return JsonResponse({'msm': 'No se encontraron datos para los contenedores seleccionados' + contenedores_array})
 
     # Convierte el QuerySet a un DataFrame de pandas
     df = pd.DataFrame(list(contenedores_a_imprimir))
