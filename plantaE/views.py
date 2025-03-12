@@ -1645,7 +1645,7 @@ def generate_packing_list_pdf(request):
         return response
 
     else:
-        registros_finales = df_filtrado.to_dict(orient='records')
+        registros_finales = df.to_dict(orient='records')
         # Si el DataFrame está vacío después de agrupar, retorna un mensaje indicando que no hay datos
         return JsonResponse({'msm': registros_finales})
 
