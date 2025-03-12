@@ -1629,10 +1629,17 @@ def generate_packing_list_pdf(request):
         # Renderiza la plantilla HTML con los datos
         html_content = render_to_string('plantaE/packinglist_template.html', context)
         # Define las opciones para el PDF
+
         options = {
             'orientation': 'Landscape',  # Modo horizontal
-            'page-size': 'A4',           # Tamaño de la página A4 (puedes ajustarlo si es necesario)
+            'page-size': 'A4',           # Tamaño de la página A4 (puedes probar con otras como 'Letter' o un tamaño personalizado)
             'no-outline': None,          # Opcional: elimina los bordes
+            'margin-top': '10mm',        # Márgenes superiores
+            'margin-bottom': '10mm',     # Márgenes inferiores
+            'margin-left': '10mm',       # Márgenes izquierdo
+            'margin-right': '10mm',      # Márgenes derecho
+            'disable-smart-shrinking': '',  # Desactiva el ajuste automático de contenido
+            'zoom': '1.0',               # Escala el contenido (ajusta el valor si es necesario)
         }
 
         # Genera el PDF a partir del contenido HTML
