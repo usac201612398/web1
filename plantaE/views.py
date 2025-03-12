@@ -1586,7 +1586,7 @@ def generate_packing_list_pdf(request):
     infoconten = contenedores.objects.exclude(status="Cerrado").filter(contenedor=contenedores_array).first()
 
     # Filtra los contenedores que no tienen el status "Cerrado" y que están en el array de contenedores
-    contenedores_a_imprimir = salidacontenedores.objects.filter(contenedor=contenedores_array).order_by("registro").values('proveedor','itemsapcode','itemsapname','contenedor','fechasalcontenedor','cajas','importe','cultivo')
+    contenedores_a_imprimir = salidacontenedores.objects.filter(contenedor=contenedores_array).order_by("registro").values('proveedor','itemsapcode','itemsapname','contenedor','fechasalcontenedor','cajas','importe','cultivo','palet')
 
     # Convierte el QuerySet a un DataFrame de pandas
     df = pd.DataFrame(list(contenedores_a_imprimir))
