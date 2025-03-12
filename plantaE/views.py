@@ -1594,7 +1594,7 @@ def generate_packing_list_pdf(request):
     df['fechasalcontenedor'] = pd.to_datetime(df['fechasalcontenedor'], errors='coerce')
     # Obtén la semana del contenedor
     df['semana_contenedor'] = df['fechasalcontenedor'].dt.isocalendar().week
-
+    df['semana_actual'] = semana_actual
     # Filtra el DataFrame para que solo contenga los registros de la semana actual
     df_filtrado = df[df['semana_contenedor'] == semana_actual]
 
