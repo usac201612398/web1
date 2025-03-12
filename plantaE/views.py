@@ -1580,18 +1580,22 @@ def generate_packing_list_pdf(request):
     
     data = json.loads(request.body)
     hoy = timezone.now().date()
+    semana_actual = hoy.isocalendar()[1]  # semana actual
     contenedores_array = data.get('array')  # Contenedores recibidos en el array
-
+    infoconten = contenedores.objects.exclude(status="Cerrado").filter(contenedor__in=contenedores_array).first()
     # Filtra los contenedores que no tienen el status "Cerrado" y que están en el array de contenedores
     contenedores_a_imprimir = salidacontenedores.objects.filter(
-        contenedor__in=contenedores_array, fechasalcontenedor=hoy
+        contenedor__in=contenedores_array
     ).values('proveedor', 'itemsapcode', 'itemsapname', 'contenedor', 'fechasalcontenedor', 'cajas', 'importe', 'cultivo', 'palet')
 
     # Convierte el QuerySet a un DataFrame de pandas
     df = pd.DataFrame(list(contenedores_a_imprimir))
-    if not df.empty:
+    df['fecha'] = pd.to_datetime(df['fechasalcontenedor'])  # Asegúrate de que 'fechasalcontenedor' es una fecha
+    df['semana_contenedor'] = df['fecha'].dt.isocalendar().week  # Obtén la semana del contenedor
+    df_filtrado = df[df['semana_contenedor'] == semana_actual]
+    if not df_filtrado.empty:
         # Agrupar por 'itemsapcode', 'palet', 'proveedor' y calcular la suma de las cajas
-        df_agrupado = df.groupby(['itemsapcode', 'palet', 'proveedor'], as_index=False).agg(
+        df_agrupado = df_filtrado.groupby(['itemsapcode', 'palet', 'proveedor'], as_index=False).agg(
             fecha=('fechasalcontenedor', 'first'),
             itemsapname=('itemsapname', 'first'),
             proveedor=('proveedor', 'first'),
@@ -1599,7 +1603,7 @@ def generate_packing_list_pdf(request):
         )
 
         # Obtener la información del contenedor
-        infoconten = contenedores.objects.filter(contenedor__in=contenedores_array, fecha=hoy).first()
+        
 
         # Prepara el contexto para la plantilla
         context = {
@@ -1627,7 +1631,7 @@ def generate_packing_list_pdf(request):
         response = HttpResponse(pdf, content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="Packing_List.pdf"'
         
-        semana_actual = hoy.isocalendar()[1]  # semana actual
+       
         # Iterar sobre los contenedores y comparar la semana
         for i in infoconten:
             semana_contenedor = i.fecha.isocalendar()[1]  # semana del contenedor
