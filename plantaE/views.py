@@ -1575,8 +1575,6 @@ def validaroventa(request):
 
 
 
-
-
 def generate_packing_list_pdf(request):
     # Recibe los datos desde el body de la solicitud
     data = json.loads(request.body)
@@ -1590,25 +1588,11 @@ def generate_packing_list_pdf(request):
     # Filtra los contenedores que no tienen el status "Cerrado" y que están en el array de contenedores
     contenedores_a_imprimir = salidacontenedores.objects.filter(contenedor=contenedores_array).order_by("registro").values('proveedor','itemsapcode','itemsapname','contenedor','fechasalcontenedor','cajas','importe','cultivo')
 
-    # Verifica que los datos tengan el campo 'fechasalcontenedor'
-    if not contenedores_a_imprimir:
-        return JsonResponse({'msm': contenedores_array})
-
     # Convierte el QuerySet a un DataFrame de pandas
     df = pd.DataFrame(list(contenedores_a_imprimir))
 
-    # Verifica que la columna 'fechasalcontenedor' exista y tenga datos
-    if 'fechasalcontenedor' not in df.columns:
-        return JsonResponse({'msm': 'El campo fechasalcontenedor no está presente en los datos'})
-
-    # Asegúrate de que 'fechasalcontenedor' es una columna de fecha
-    df['fecha'] = pd.to_datetime(df['fechasalcontenedor'], errors='coerce')  # 'coerce' convierte errores a NaT
-
-    # Verifica si hubo errores en la conversión
-
-
     # Obtén la semana del contenedor
-    df['semana_contenedor'] = df['fecha'].dt.isocalendar().week
+    df['semana_contenedor'] = df['fechasalcontenedor'].dt.isocalendar().week
 
     # Filtra el DataFrame para que solo contenga los registros de la semana actual
     df_filtrado = df[df['semana_contenedor'] == semana_actual]
@@ -1661,7 +1645,7 @@ def generate_packing_list_pdf(request):
 
     else:
         # Si el DataFrame está vacío después de agrupar, retorna un mensaje indicando que no hay datos
-        return JsonResponse({'msm': 'No se encontraron datos para el contenedor seleccionado'})
+        return JsonResponse({'msm': 'No se encontraron datos para el contenedor seleccionado...'})
 
 
 def inventarioProd_create(request):
