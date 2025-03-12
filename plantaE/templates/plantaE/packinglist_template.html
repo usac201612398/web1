@@ -52,7 +52,15 @@
                 display: none;
             }
     
-
+                        /* Configuración para impresión horizontal */
+                        @page {
+                size: A4 landscape; /* Configura el tamaño de la página en horizontal */
+                margin: 0;
+            }
+            /* Reducción de la escala para ajustarse al ancho de la página */
+            .container {
+                transform-origin: top left; /* Fija el origen de la escala */
+            }
         }
     </style>
 </head>
