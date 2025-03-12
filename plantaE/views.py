@@ -1607,8 +1607,6 @@ def generate_packing_list_pdf(request):
     df['fecha'] = pd.to_datetime(df['fechasalcontenedor'], errors='coerce')  # 'coerce' convierte errores a NaT
 
     # Verifica si hubo errores en la conversión
-    if df['fecha'].isna().any():
-        return JsonResponse({'msm': 'Algunos registros tienen fechas inválidas'})
 
     # Obtén la semana del contenedor
     df['semana_contenedor'] = df['fecha'].dt.isocalendar().week
