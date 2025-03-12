@@ -83,6 +83,7 @@ urlpatterns = [
     path('contenedores/new/', views.contenedores_create, name='contenedores_create'),
     path('contenedores/<int:pk>/edit/', views.contenedores_update, name='contenedores_update'),
     path('contenedores/<int:pk>/delete/', views.contenedores_delete, name='contenedores_delete'),
+    path('generate_packing_list_pdf/', views.generate_packing_list_pdf, name='generate_packing_list_pdf'),
     
     
 ]

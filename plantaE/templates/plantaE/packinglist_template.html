@@ -1,0 +1,65 @@
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table th, table td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        .header {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <p>Packing List</p>
+            <p>Planta: {{ planta }} | Fecha: {{ fecha }}</p>
+            <p>Destino: {{ destino }} | #Viaje: {{ viaje }} | Temperatura: {{ temperatura }}</p>
+            <p>Contenedor: {{ contenedor }} | Piloto: {{ viaje }} | Firma Piloto:            </p>
+            <p>Transportista: {{ trasportista }} | Marchamo: {{ marchamo }} | Placa Camion:  {{ placacamion }} | Hora Salida:  {{ horasalida }}  </p>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Palet</th>
+                    <th>Proveedor</th>
+                    <th>Item</th>
+                    <th>Fecha</th>
+                    <th>Cajas</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in datos %}
+                <tr>
+                    <td>{{ item.palet }}</td>
+                    <td>{{ item.proveedor }}</td>
+                    <td>{{ item.itemsapname }}</td>
+                    <td>{{ item.fechasalcontenedor }}</td>
+                    <td>{{ item.cajas }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

@@ -105,6 +105,7 @@
       <div>
         <button id="consultar">Consultar</button>
         <input type="button" value="Validar" class="envio3">
+        <input type="button" value="Imprimir" class="envio4">
       </div>
 
       <br>
@@ -260,7 +261,7 @@ $('.envio3').on('click', function() {
                 // Mostrar mensaje de éxito
                 alert(data.msm);
                 console.log(data);
-                window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/inventarioProd/cargacontenedor');
+                //window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/inventarioProd/cargacontenedor');
             },
             error: function(xhr, status, error) {
                 console.error('Error:', error);  // Maneja errores de la solicitud
@@ -272,5 +273,34 @@ $('.envio3').on('click', function() {
     }
 });
 
+$('.envio4').on('click', function() {
+    var contenedor = document.getElementById("Conten");
+    
+    // Verifica si el contenedor tiene un valor vacío
+    if (contenedor.value === "") {
+        alert("Seleccione un contenedor");
+    } else {
+        $.ajax({
+            url: '{% url "generate_packing_list_pdf" %}',  // URL para la vista AJAX
+            type: 'POST',
+            dataType: "json",
+            data: JSON.stringify({'array': contenedor.value}),  // Enviar solo el valor del contenedor
+            contentType: 'application/json',
+            headers: {'X-CSRFToken': csrftoken}, 
+            success: function(data) {
+                // Mostrar mensaje de éxito
+                alert(data.msm);
+                console.log(data);
+                //window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/inventarioProd/cargacontenedor');
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);  // Maneja errores de la solicitud
+            }
+        });
+
+        // Redirigir a otra página después de la validación
+        //window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/inventarioProd/cargacontenedor');
+    }
+});
 
 </script>

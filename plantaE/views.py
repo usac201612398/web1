@@ -15,6 +15,9 @@ import base64
 import json
 import pandas as pd
 import pytz
+from openpyxl.utils.dataframe import dataframe_to_rows
+import pdfkit
+from django.template.loader import render_to_string
 
 def vascula_monitor(request):
     return render(request, 'plantaE/vascula.html')
@@ -1550,6 +1553,8 @@ def acumFruta_consultaValle(request):
         return JsonResponse({'datos': registros_finales,'opcion1':opcion1,'opcion2':opcion2,'resumen':registros_finales2}, safe=False)
     return render(request, 'plantaE/AcumFrutaDia_listValle.html')
 
+
+
 def validaroventa(request):
     # Recibe los datos desde el body de la solicitud
     data = json.loads(request.body)
@@ -1560,16 +1565,60 @@ def validaroventa(request):
         contenedor=contenedores_array
     ).exclude(status='Cerrado')
 
-    # Si existen contenedores que coinciden
     if contenedores_a_cerrar.exists():
         # Actualiza el status a "Cerrado" para los contenedores encontrados
         contenedores_a_cerrar.update(status='Cerrado')
         return JsonResponse({'msm': "Listo, se cerro el contenedor"}, safe=False)
-    
+    else:
     # Si no se encontraron contenedores
-    return JsonResponse({'msm': "No se encontraron contenedores para cerrar"}, safe=False)
-
+        return JsonResponse({'msm': "No se encontraron contenedores para cerrar"}, safe=False)
     
+
+def generate_packing_list_pdf(request):
+    # Recibe los datos desde el body de la solicitud
+    data = json.loads(request.body)
+    hoy = timezone.now().date()
+    contenedores_array = data.get('array')  # Contenedores recibidos en el array
+
+    # Filtra los contenedores que no tienen el status "Cerrado" y que están en el array de contenedores
+    contenedores_a_imprimir = salidacontenedores.objects.filter(
+        contenedor=contenedores_array,fechasalcontenedor =hoy
+    ).values('proveedor','itemsapcode','itemsapname','contenedor','fechasalcontenedor','cajas','importe','cultivo')
+    
+    df_agrupado = contenedores_a_imprimir.groupby(['itemsapcode','palet','proveedor'], as_index=False).agg(
+            fecha=('fechasalcontenedor', 'first'),
+            itemsapname=('itemsapname', 'first'),
+            proveedor=('proveedor', 'first'),
+            total_cajas=('cajas', 'sum')
+        )
+    infoconten = contenedores.objects.filter(contenedor=contenedores_array,fecha=hoy)
+
+    context = {
+        'planta': 'SDC',
+        'destino': infoconten.destino,
+        'contenedor': infoconten.contenedor,
+        'fecha': infoconten.fecha,
+        'viaje': infoconten.viaje,
+        'marchamo': infoconten.marchamo,
+        'placacamion': infoconten.placacamion,
+        'temperatura': infoconten.temperatura,
+        'ventilacion': infoconten.ventilacion,
+        'hora': infoconten.horasalida,
+        'piloto': infoconten.piloto,
+        'datos': df_agrupado
+    }
+    
+    # Renderiza la plantilla HTML con los datos
+    html_content = render_to_string('packing_list_template.html', context)
+
+    # Convierte el HTML a PDF
+    pdf = pdfkit.from_string(html_content, False)
+
+    # Retorna el PDF como respuesta en Django
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="Packing_List.pdf"'
+    return response
+
 def inventarioProd_create(request):
     if request.method == 'POST':
         opcion1 = request.POST.get('opcion1')
@@ -1619,7 +1668,7 @@ def reporteInventario(request):
     opcion1 = timezone.now().date()
 
     # Filtra tus datos según la opción seleccionada
-    datos_empaque = inventarioProdTerm.objects.filter(fecha=opcion1).exclude(categoria='Merma').values(
+    datos_empaque = inventarioProdTerm.objects.filter(fecha=opcion1,categoria="Exportación").values(
         "fecha", "proveedor", "cultivo", "itemsapcode", "itemsapname", "categoria", "cajas", "lbsintara", "merma"
     )
 
