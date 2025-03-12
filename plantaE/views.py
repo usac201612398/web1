@@ -1577,6 +1577,7 @@ def validaroventa(request):
 
 def generate_packing_list_pdf(request):
     # Recibe los datos desde el body de la solicitud
+    
     data = json.loads(request.body)
     hoy = timezone.now().date()
     contenedores_array = data.get('array')  # Contenedores recibidos en el array
@@ -1588,56 +1589,60 @@ def generate_packing_list_pdf(request):
 
     # Convierte el QuerySet a un DataFrame de pandas
     df = pd.DataFrame(list(contenedores_a_imprimir))
+    if not df.empty:
+        # Agrupar por 'itemsapcode', 'palet', 'proveedor' y calcular la suma de las cajas
+        df_agrupado = df.groupby(['itemsapcode', 'palet', 'proveedor'], as_index=False).agg(
+            fecha=('fechasalcontenedor', 'first'),
+            itemsapname=('itemsapname', 'first'),
+            proveedor=('proveedor', 'first'),
+            total_cajas=('cajas', 'sum')
+        )
 
-    # Agrupar por 'itemsapcode', 'palet', 'proveedor' y calcular la suma de las cajas
-    df_agrupado = df.groupby(['itemsapname', 'palet', 'proveedor'], as_index=False).agg(
-        fecha=('fechasalcontenedor', 'first'),
-        itemsapname=('itemsapname', 'first'),
-        proveedor=('proveedor', 'first'),
-        total_cajas=('cajas', 'sum')
-    )
+        # Obtener la información del contenedor
+        infoconten = contenedores.objects.filter(contenedor__in=contenedores_array, fecha=hoy).first()
 
-    # Obtener la información del contenedor
-    infoconten = contenedores.objects.filter(contenedor__in=contenedores_array, fecha=hoy).first()
+        # Prepara el contexto para la plantilla
+        context = {
+            'planta': 'SDC',
+            'destino': infoconten.destino,
+            'contenedor': infoconten.contenedor,
+            'fecha': infoconten.fecha,
+            'viaje': infoconten.viaje,
+            'marchamo': infoconten.marchamo,
+            'placacamion': infoconten.placacamion,
+            'temperatura': infoconten.temperatura,
+            'ventilacion': infoconten.ventilacion,
+            'hora': infoconten.horasalida,
+            'piloto': infoconten.piloto,
+            'datos': df_agrupado.to_dict(orient='records')  # Convierte el DataFrame a un diccionario
+        }
+        
+        # Renderiza la plantilla HTML con los datos
+        html_content = render_to_string('packing_list_template.html', context)
 
-    # Prepara el contexto para la plantilla
-    context = {
-        'planta': 'SDC',
-        'destino': infoconten.destino,
-        'contenedor': infoconten.contenedor,
-        'fecha': infoconten.fecha,
-        'viaje': infoconten.viaje,
-        'marchamo': infoconten.marchamo,
-        'placacamion': infoconten.placacamion,
-        'temperatura': infoconten.temperatura,
-        'ventilacion': infoconten.ventilacion,
-        'hora': infoconten.horasalida,
-        'piloto': infoconten.piloto,
-        'datos': df_agrupado.to_dict(orient='records')  # Convierte el DataFrame a un diccionario
-    }
+        # Convierte el HTML a PDF usando pdfkit
+        pdf = pdfkit.from_string(html_content, False)
+
+        # Retorna el PDF como respuesta en Django
+        response = HttpResponse(pdf, content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="Packing_List.pdf"'
+        
+        semana_actual = hoy.isocalendar()[1]  # semana actual
+        # Iterar sobre los contenedores y comparar la semana
+        for i in infoconten:
+            semana_contenedor = i.fecha.isocalendar()[1]  # semana del contenedor
+
+            # Si la semana del contenedor es la misma que la semana actual
+            if semana_contenedor == semana_actual:
+                i.status = "Cerrado"
+                i.save()
+        
+        return response
+
+    else:
+    # Si el DataFrame está vacío después de agrupar, retorna un mensaje indicando que no hay datos
+        return JsonResponse({'mensaje': 'No se encontraron datos para el contenedor seleccionado'})
     
-    # Renderiza la plantilla HTML con los datos
-    html_content = render_to_string('packing_list_template.html', context)
-
-    # Convierte el HTML a PDF usando pdfkit
-    pdf = pdfkit.from_string(html_content, False)
-
-    # Retorna el PDF como respuesta en Django
-    response = HttpResponse(pdf, content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="Packing_List.pdf"'
-    
-    semana_actual = hoy.isocalendar()[1]  # semana actual
-    # Iterar sobre los contenedores y comparar la semana
-    for i in infoconten:
-        semana_contenedor = i.fecha.isocalendar()[1]  # semana del contenedor
-
-        # Si la semana del contenedor es la misma que la semana actual
-        if semana_contenedor == semana_actual:
-            i.status = "Cerrado"
-            i.save()
-    
-    return response
-
 
 def inventarioProd_create(request):
     if request.method == 'POST':
