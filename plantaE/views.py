@@ -1932,9 +1932,10 @@ def inventariogeneral_list(request):
 
     # Ordenar la lista de registros por el campo 'proveedor'
     registros_agrupados = sorted(registros_agrupados, key=lambda x: x['proveedor'])
+    registros_json = json.dumps(registros_agrupados, default=str)  # Usar default=str para evitar errores con objetos no serializables
 
     # Pasar los registros agrupados al renderizado de la plantilla
-    return render(request, 'plantaE/inventarioProd_inventariogeneral.html', {'registros': registros_agrupados})
+    return render(request, 'plantaE/inventarioProd_inventariogeneral.html', {'registros': registros_agrupados,'registros_json':registros_json})
 
 def inventariogeneralfruta_list(request):
     today = timezone.now().date()

@@ -157,10 +157,16 @@ function myFunction3() {
 
     $(document).ready(function() {
         console.log("Página cargada");
-       
+        var registros = JSON.parse('{{ registros_json|escapejs }}');
+      
+      // Ver en la consola del navegador
+        console.log(registros);
         // Inicializa el total al cargar la página
 
     });
     </script>
     
+
+
 </html>
+
