@@ -8,7 +8,8 @@
         /* Estilo para el video */
         #videoElement {
             width: 100%;
-            height: 400px;
+            max-width: 100%; /* Asegura que el video no se desborde */
+            height: auto;    /* Mantiene la relación de aspecto del video */
             border: 1px solid black;
             background-color: black;
         }
@@ -16,19 +17,30 @@
         /* Estilo para el marco de escaneo */
         #scanFrame {
             position: absolute;
-            top: 50px; /* Ajusta para poner el marco en la parte superior */
-            left: 100px; /* Ajusta para centrar o mover el marco */
-            width: 800px; /* Ancho del marco */
-            height: 200px; /* Altura del marco */
-            border: 3px solid red; /* Color y grosor del borde */
+            top: 20px;  /* Ajusta para poner el marco cerca de la parte superior */
+            left: 10%;  /* Ajusta para centrar el marco */
+            width: 80%; /* Ajuste proporcional al tamaño del video */
+            height: 200px; /* Altura del marco de escaneo */
+            border: 3px solid red; /* Color del borde */
             box-sizing: border-box;
             pointer-events: none; /* Asegura que el marco no interfiera con los clics */
+            z-index: 10;  /* Asegura que el marco esté sobre el video */
         }
 
-        /* Estilo para asegurar que el marco esté sobre el video */
+        /* Estilo para el contenedor del video */
         .videoContainer {
             position: relative;
-            display: inline-block;
+            width: 100%;
+            max-width: 100%; /* No permitirá que se desborde */
+            height: auto; /* Ajusta la altura del contenedor al contenido */
+            margin: 0 auto; /* Centra el contenedor en la pantalla */
+            background-color: #f1f1f1; /* Color de fondo en caso de que el video no se cargue */
+        }
+
+        /* Estilo de texto debajo del video */
+        #result {
+            font-size: 18px;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -114,6 +126,7 @@
     </script>
 </body>
 </html>
+
 
 
 
