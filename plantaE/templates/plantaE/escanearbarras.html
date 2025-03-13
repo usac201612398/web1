@@ -23,23 +23,41 @@
     <script src="https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.js"></script>
 
     <script>
-        // Iniciar la cámara y escanear códigos de barras
-        function iniciarCamara() {
+        // Función para obtener acceso a la cámara
+        function obtenerCamaras() {
+            // Obtener el dispositivo de la cámara
+            navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: "environment" // Preferir la cámara trasera (en dispositivos móviles)
+                }
+            })
+            .then(function(stream) {
+                // Si se obtiene el stream de la cámara, lo asignamos al elemento video
+                document.getElementById('videoElement').srcObject = stream;
+
+                // Llamamos a Quagga para iniciar el escaneo
+                iniciarEscaneo();
+            })
+            .catch(function(err) {
+                console.error("Error al acceder a la cámara: ", err);
+                alert('No se pudo acceder a la cámara. Asegúrate de otorgar los permisos necesarios.');
+            });
+        }
+
+        // Iniciar el escaneo de código de barras con QuaggaJS
+        function iniciarEscaneo() {
             const videoElement = document.getElementById('videoElement');
             const resultElement = document.getElementById('result');
 
-            // Configuración de QuaggaJS
+            // Inicializar Quagga con configuración adecuada
             Quagga.init({
                 inputStream: {
                     name: "Live",
                     type: "LiveStream",
-                    target: videoElement, // asignar el video element para mostrar la cámara
-                    constraints: {
-                        facingMode: "environment" // cámara trasera en dispositivos móviles
-                    }
+                    target: videoElement, // Asignamos el video elemento para mostrar el stream
                 },
                 decoder: {
-                    readers: ["code_128_reader", "ean_reader", "ean_8_reader", "upc_reader"] // lectores de diferentes códigos de barras
+                    readers: ["code_128_reader", "ean_reader", "ean_8_reader", "upc_reader"] // Definir los tipos de códigos de barras que leeremos
                 }
             }, function(err) {
                 if (err) {
@@ -47,23 +65,25 @@
                     alert('Error al iniciar el escáner: ' + err);
                     return;
                 }
-                console.log("Escáner iniciado");
-                Quagga.start(); // Comienza a escanear
 
-                // Detectar el código escaneado
+                console.log("Escáner iniciado");
+                Quagga.start(); // Iniciar escaneo
+
+                // Detectar el código de barras y mostrar el resultado
                 Quagga.onDetected(function(data) {
-                    console.log(data);
+                    console.log("Código escaneado:", data);
                     resultElement.textContent = `Código escaneado: ${data.codeResult.code}`;
                 });
             });
         }
 
         window.onload = function() {
-            iniciarCamara();
+            obtenerCamaras(); // Llamamos la función para obtener la cámara y comenzar el escaneo
         };
     </script>
 </body>
 </html>
+
 
 
 
