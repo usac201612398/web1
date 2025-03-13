@@ -79,6 +79,9 @@
             });
         }
 
+        // Variable para saber si ya se ha escaneado un código
+        let escaneado = false;
+
         // Iniciar el escaneo de código de barras con QuaggaJS
         function iniciarEscaneo() {
             const videoElement = document.getElementById('videoElement');
@@ -97,7 +100,7 @@
                     width: 800,  // Ancho del área (ajústalo según el tamaño del video)
                     height: 200, // Altura del área (ajústalo para cubrir la parte superior)
                     x: 100,      // Posición X de la zona (ajusta para centrarla en la parte superior)
-                    y: 50,       // Posición Y de la zona (ajústalo para cubrir la parte superior)
+                    y: 100,       // Posición Y de la zona (ajústalo para cubrir la parte superior)
                 },
                 decoder: {
                     readers: ["code_128_reader", "ean_reader", "ean_8_reader", "upc_reader"] // Definir los tipos de códigos de barras que leeremos
@@ -114,8 +117,16 @@
 
                 // Detectar el código de barras y mostrar el resultado
                 Quagga.onDetected(function(data) {
-                    console.log("Código escaneado:", data);
-                    resultElement.textContent = `Código escaneado: ${data.codeResult.code}`;
+                    if (!escaneado) {
+                        console.log("Código escaneado:", data);
+                        resultElement.textContent = `Código escaneado: ${data.codeResult.code}`;
+                        escaneado = true; // Marcar como escaneado
+
+                        // Detener el escaneo después de detectar un código
+                        setTimeout(function() {
+                            escaneado = false; // Permitir el siguiente escaneo después de un tiempo
+                        }, 3000); // Revisa el código cada 3 segundos
+                    }
                 });
             });
         }
