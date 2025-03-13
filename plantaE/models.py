@@ -260,7 +260,7 @@ class inventarioProdTerm(models.Model):
     op_cultivo =   [('','-'),('ROMA','ROMA'),('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('BEEF','BEEF'),('SALADETTE','SALADETTE'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
     op_categoria = [('','-'),('Exportación','Exportación'),('Merma','Merma'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolución','Devolución')]
     #op_empaque =   [('Cajas','Cajas'),('Libras','Libras')]
-    op_status = [('Pendiente','-'),('Cerrado','Cerrado')]
+    op_status = [('Pendiente','-'),('Cerrado','Cerrado'),('En proceso','En proceso')]
 
     registro = models.BigAutoField(primary_key=True)
     fecha = models.DateField(blank=True, null=True)
