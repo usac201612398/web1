@@ -1843,23 +1843,37 @@ def procesarinvprodconten(request):
     
     return JsonResponse({'mensaje':mensaje,'registros':registros})   
 
-def cargacontenedores_list(request):
+from django.db.models import Sum
+from django.utils import timezone
 
+def cargacontenedores_list(request):
     today = timezone.now().date()
-    #salidas = Recepciones.objects.filter(fecha=today)
-    salidas= inventarioProdTerm.objects.all()
-    salidas2= salidacontenedores.objects.all()
-    salidas = salidas.order_by('registro').filter(status=None,categoria="Exportación")
+    
+    # Obtener todos los registros de inventario y salidas
+    salidas = inventarioProdTerm.objects.all()
+    salidas2 = salidacontenedores.objects.all()
+    
+    # Filtrar salidas de exportación y con status=None
+    salidas = salidas.order_by('registro').filter(status=None, categoria="Exportación")
     
     for i in salidas:
+        # Obtener la cantidad total de cajas asociadas a la salida
         cajasacum = salidas2.order_by('-created_at').filter(key=i.registro).aggregate(sumacajas=Sum('cajas'))['sumacajas']
-        if  cajasacum != None:
+        
+        # Si hay cajas acumuladas, restarlas de las cajas de inventario
+        if cajasacum is not None:
             i.cajas = i.cajas - int(cajasacum)
+            
+            # Cambiar el status si las cajas quedan en 0
             if i.cajas == 0:
                 i.status = 'En proceso'
     
-    salidas = salidas.order_by('registro').filter(status=None,categoria="Exportación")
-    return render(request, 'plantaE/inventarioProd_contenedores.html', {'registros': salidas})
+    # Filtrar las salidas para que solo contengan aquellas con cajas > 0
+    salidas = [i for i in salidas if i.cajas > 0]
+
+    # Retornar las salidas que cumplen con la condición (cajas > 0)
+    return render(request, 'template.html', {'salidas': salidas})
+
 
 def inventariogeneral_list(request):
     today = timezone.now().date()
