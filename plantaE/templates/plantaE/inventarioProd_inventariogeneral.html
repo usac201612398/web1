@@ -9,25 +9,27 @@
     <title>Inventario</title>
     <style>
         .inputs-row {
-            display: flex;
-            flex-wrap: wrap; /* Ajusta mejor en pantallas pequeñas */
-        }
-        #myInput, #myInput2, #myInput3 {
-            flex: 1; /* Cada input ocupa el mismo espacio */
-            font-size: 16px;
-            padding: 12px 20px;
-            border: 1px solid #ddd;
-            box-sizing: border-box;
-            min-width: 0;
-        }
+        display: flex;
+        flex-wrap: nwrap; /* Para que se acomoden bien en pantallas más pequeñas */
+    }
+    #myInput, #myInput2, #myInput3 {
+    flex: 1; /* Cada input ocupa el mismo espacio */
+    font-size: 16px;
+    padding: 12px 20px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    min-width: 0; /* Asegura que no haya un ancho mínimo inesperado */
+    }
         h1 {
             margin: 15px;
             font-family: Arial, sans-serif;
         }
+
         a {
             margin: 20px;
             font-family: Arial, sans-serif;
         }
+
     </style>
 </head>
 <body>
@@ -35,76 +37,130 @@
 
     <div class="container">
         <div class="inputs-row">
-            <input class="input" type="text" id="myInput" onkeyup="myFunction('myInput', 3)" placeholder="Buscar por nombre de item...">
-            <input class="input" type="text" id="myInput2" onkeyup="myFunction('myInput2', 1)" placeholder="Buscar por cultivo...">
-            <input class="input" type="text" id="myInput3" onkeyup="myFunction('myInput3', 0)" placeholder="Buscar por proveedor...">
+      
+              <input class="input" type="text" id="myInput" onkeyup="myFunction()" placeholder="Buscar por nombre de item...">
+              <input class="input" type="text" id="myInput2" onkeyup="myFunction2()" placeholder="Buscar por cultivo...">
+              <input class="input" type="text" id="myInput3" onkeyup="myFunction3()" placeholder="Buscar por proveedor...">
+         
         </div>
+
     </div>
 
     <div class="container">
         <div class="columns">
             <div class="column is-12">
-                <div class="table-container">
-                    <table class="table is-striped is-hoverable is-fullwidth" id="myTable">
-                        <thead id="enc1">
-                            <tr class="header">
-                                <th>Proveedor</th>
-                                <th>Cultivo</th>
-                                <th>itemSAPCode</th>
-                                <th>itemSAPName</th>
-                                <th>Cajas</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {% for registro in registros %}
-                            <!-- Solo muestra registros donde cajas_restantes > 0 -->
-                            {% if registro.cajas_restantes > 0 %}
-                                <tr> 
-                                    <td>{{ registro.proveedor }}</td>
-                                    <td>{{ registro.cultivo }}</td>
-                                    <td>{{ registro.itemsapcode }}</td>
-                                    <td>{{ registro.itemsapname }}</td>
-                                    <td><div contenteditable="true" class="editable-cell">{{ registro.cajas_restantes }}</div></td>
-                                </tr> 
-                            {% endif %}
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+            <div class="table-container">
+                <table class="table is-striped is-hoverable is is-fullwidth" id="myTable">
+                <thead id = "enc1">
+                    <tr class="header">
+                    <th >Proveedor</th>
+                    <th >Cultivo</th>
+                    <th >itemSAPCode</th>
+                    <th >itemSAPName</th>
+                    <th >Cajas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {%for registro in registros %} 
+                <tr> 
+                    <td>{{registro.proveedor}}</td>
+                    <td>{{registro.cultivo}}</td>
+                    <td>{{registro.itemsapcode}}</td>
+                    <td>{{registro.itemsapname}}</td>
+                    <td><div contenteditable="true" class="editable-cell">{{registro.cajas_restantes}}</div></td>
+                </tr> 
+                        
+                {% endfor %}
+                </tbody>
+                </table>
+            </div>
             </div>
         </div>
-    </div>
+        </div>
+        <br>
 
-    <br>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        // Obtén el contexto de registros pasados desde Django y conviértelos a un objeto JavaScript
-        var registros = JSON.parse('{{ registros|escapejs }}');
-        
-        // Imprimir los registros en la consola
-        console.log(registros);
-        
-        // Filtro para realizar la búsqueda de las filas
-        function myFunction(inputId, columnIndex) {
-            var input, filter, table, tr, td, i, txtValue;
-            input = document.getElementById(inputId);
-            filter = input.value.toUpperCase();
-            table = document.getElementById("myTable");
-            tr = table.getElementsByTagName("tr");
-
-            for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[columnIndex];
-                if (td) {
-                    txtValue = td.textContent || td.innerText;
-                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                        tr[i].style.display = "";
-                    } else {
-                        tr[i].style.display = "none";
-                    }
-                }  
-            }
-        }
-    </script>
 </body>
+<script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+
+
+function myFunction() {
+  // Declare variables
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[3];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+
+function myFunction2() {
+  // Declare variables
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput2");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[1];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+function myFunction3() {
+  // Declare variables
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput3");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+</script>
+
+<script>
+    // Django convierte el contexto de 'registros' a un JSON en el frontend
+    
+
+    $(document).ready(function() {
+        console.log("Página cargada");
+       
+        // Inicializa el total al cargar la página
+
+    });
+    </script>
+    
 </html>
