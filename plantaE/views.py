@@ -1857,7 +1857,8 @@ def cargacontenedores_list(request):
             i.cajas = i.cajas - int(cajasacum)
             if i.cajas == 0:
                 i.status = 'En proceso'
-        
+    
+    salidas = salidas.order_by('registro').filter(status=None,categoria="Exportación")
     return render(request, 'plantaE/inventarioProd_contenedores.html', {'registros': salidas})
 
 def inventariogeneral_list(request):
