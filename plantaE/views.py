@@ -1872,16 +1872,17 @@ def cargacontenedores_list(request):
     # Retornar las salidas que cumplen con la condición (cajas > 0)
     return render(request, 'plantaE/inventarioProd_contenedores.html', {'registros': salidas})
 
+
 def inventariogeneral_list(request):
     today = timezone.now().date()
 
     # Obtener todas las salidas de inventario y salidas de contenedores
     salidas = inventarioProdTerm.objects.all()
     salidas2 = salidacontenedores.objects.all()
-    
+
     # Filtrar las salidas de inventario para las que tienen categoría 'Exportación' y sin 'status'
     salidas = salidas.filter(categoria="Exportación").order_by('registro').exclude(status='Cerrado')
-    
+
     # Excluir los registros de salidas2 donde el contenedor esté vacío
     salidas2 = salidas2.exclude(contenedor='0')
 
@@ -1892,7 +1893,7 @@ def inventariogeneral_list(request):
     for salida in salidas:
         # Crear la clave de agrupación concatenando 'itemsapcode' y 'proveedor'
         clave_agrupacion = (salida.itemsapcode, salida.proveedor)
-        
+
         if clave_agrupacion not in agrupaciones:
             agrupaciones[clave_agrupacion] = {
                 'itemsapcode': salida.itemsapcode,
@@ -1907,31 +1908,34 @@ def inventariogeneral_list(request):
         # Acumular las cajas de las salidas
         agrupaciones[clave_agrupacion]['total_cajas_salidas'] += salida.cajas
         agrupaciones[clave_agrupacion]['salidas'].append(salida)
-    
+
     # Agrupar las salidas de contenedores (salidas2) por 'itemsapcode' y 'proveedor'
     for salida2 in salidas2:
         # Verificar si el contenedor no está vacío antes de acumular las cajas
         if salida2.contenedor is not None:
             # Crear la clave de agrupación concatenando 'itemsapcode' y 'proveedor'
             clave_agrupacion = (salida2.itemsapcode, salida2.proveedor)
-            
+
             if clave_agrupacion in agrupaciones:
                 # Acumular las cajas de las salidas2
                 agrupaciones[clave_agrupacion]['total_cajas_salidas2'] += salida2.cajas
-    
+
     # Ahora, restamos las cajas de 'salidas2' de las de 'salidas' para cada agrupación
     for agrupacion in agrupaciones.values():
         # Restar las cajas de las salidas2 de las de las salidas
         agrupacion['cajas_restantes'] = agrupacion['total_cajas_salidas'] - agrupacion['total_cajas_salidas2']
     
-    # Convertir el diccionario en una lista para pasarlo al contexto de la plantilla
-    registros_agrupados = list(agrupaciones.values())
-    
+    # Filtrar las agrupaciones donde las cajas restantes son mayores que 0
+    registros_agrupados = [
+        agrupacion for agrupacion in agrupaciones.values() if agrupacion['cajas_restantes'] > 0
+    ]
+
     # Ordenar la lista de registros por el campo 'proveedor'
     registros_agrupados = sorted(registros_agrupados, key=lambda x: x['proveedor'])
-    
+
     # Pasar los registros agrupados al renderizado de la plantilla
     return render(request, 'plantaE/inventarioProd_inventariogeneral.html', {'registros': registros_agrupados})
+
 def inventariogeneralfruta_list(request):
     today = timezone.now().date()
 
