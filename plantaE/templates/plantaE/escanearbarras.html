@@ -22,36 +22,37 @@
     <script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.18.7/dist/index.min.js"></script>
 
     <script>
-        function iniciarCamara() {
+        async function iniciarCamara() {
             const videoElement = document.getElementById('videoElement');
             const resultElement = document.getElementById('result');
 
-            // Solicitar acceso a la cámara
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then((stream) => {
-                    videoElement.srcObject = stream; // Asignamos el stream de video a nuestro elemento video
+            try {
+                // Solicitar acceso a la cámara
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                videoElement.srcObject = stream; // Asignamos el stream de video al elemento
 
-                    // Inicializamos el lector de códigos después de que el video esté en marcha
-                    const codeReader = new ZXing.BrowserMultiFormatReader();
+                // Inicializamos el lector de códigos
+                const codeReader = new ZXing.BrowserMultiFormatReader();
 
-                    codeReader.decodeFromVideoDevice(null, videoElement, (result, err) => {
-                        if (result) {
-                            resultElement.textContent = `Código escaneado: ${result.getText()}`;
-                            console.log("Código escaneado:", result.getText());
+                // Intentamos detectar el código de barras
+                codeReader.decodeFromVideoDevice(null, videoElement, (result, err) => {
+                    if (result) {
+                        resultElement.textContent = `Código escaneado: ${result.getText()}`;
+                        console.log("Código escaneado:", result.getText());
+                    }
+                    if (err) {
+                        if (err instanceof ZXing.NotFoundException) {
+                            console.log("Esperando un código...");
+                        } else {
+                            console.error("Error en el escaneo:", err);
                         }
-                        if (err) {
-                            if (err instanceof ZXing.NotFoundException) {
-                                console.log("Esperando un código...");
-                            } else {
-                                console.error("Error en el escaneo:", err);
-                            }
-                        }
-                    });
-                })
-                .catch((err) => {
-                    console.error('Error al acceder a la cámara:', err);
-                    alert('No se pudo acceder a la cámara. Asegúrate de haber otorgado los permisos necesarios.');
+                    }
                 });
+
+            } catch (err) {
+                console.error("Error al acceder a la cámara:", err);
+                alert('No se pudo acceder a la cámara. Asegúrate de haber otorgado los permisos necesarios.');
+            }
         }
 
         window.onload = function() {
