@@ -1843,8 +1843,6 @@ def procesarinvprodconten(request):
     
     return JsonResponse({'mensaje':mensaje,'registros':registros})   
 
-from django.db.models import Sum
-from django.utils import timezone
 
 def cargacontenedores_list(request):
     today = timezone.now().date()
@@ -1872,8 +1870,7 @@ def cargacontenedores_list(request):
     salidas = [i for i in salidas if i.cajas > 0]
 
     # Retornar las salidas que cumplen con la condición (cajas > 0)
-    return render(request, 'template.html', {'salidas': salidas})
-
+    return render(request, 'plantaE/inventarioProd_contenedores.html', {'registros': salidas})
 
 def inventariogeneral_list(request):
     today = timezone.now().date()
