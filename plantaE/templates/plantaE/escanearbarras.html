@@ -9,6 +9,7 @@
             width: 100%;
             height: auto;
             border: 1px solid black;
+            background-color: black;
         }
     </style>
 </head>
@@ -21,45 +22,43 @@
     <script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.18.7/dist/index.min.js"></script>
 
     <script>
-        // Función para iniciar la cámara y el escáner
         function iniciarEscaner() {
             const videoElement = document.getElementById('videoElement');
             const resultElement = document.getElementById('result');
 
-            // Crear el lector de códigos de barras
             const codeReader = new ZXing.BrowserMultiFormatReader();
 
-            // Intentar acceder a la cámara
+            // Acceder a la cámara y mostrar el video
             codeReader
                 .listVideoDevices()
                 .then((videoInputDevices) => {
-                    const firstDeviceId = videoInputDevices[0].deviceId;
-                    // Iniciar la cámara en el primer dispositivo disponible
-                    return codeReader.decodeFromVideoDevice(firstDeviceId, videoElement, (result, err) => {
-                        if (result) {
-                            // Cuando se escanea un código de barras exitosamente
-                            resultElement.textContent = result.getText();  // Mostrar el código escaneado
-                        }
-                        if (err && !(err instanceof ZXing.NotFoundException)) {
-                            console.error(err);
-                        }
-                    });
+                    // Verifica si existen dispositivos de cámara
+                    if (videoInputDevices.length > 0) {
+                        const firstDeviceId = videoInputDevices[0].deviceId;
+
+                        // Comienza a leer el video de la cámara
+                        return codeReader.decodeFromVideoDevice(firstDeviceId, videoElement, (result, err) => {
+                            if (result) {
+                                // Cuando se escanea un código de barras, mostramos el resultado
+                                resultElement.textContent = result.getText();
+                            }
+                            if (err && !(err instanceof ZXing.NotFoundException)) {
+                                console.error(err);
+                            }
+                        });
+                    } else {
+                        console.error('No se detectó ninguna cámara');
+                    }
                 })
                 .catch((err) => {
-                    console.error(err);
+                    console.error('Error al acceder a la cámara:', err);
                     resultElement.textContent = "Error al acceder a la cámara.";
                 });
         }
 
-        // Iniciar el escáner al cargar la página
         window.onload = function() {
             iniciarEscaner();
         };
-
-       // var registros = JSON.parse('{{ registros_json|escapejs }}');
-      
-      // Ver en la consola del navegador
-       // console.log(registros);
     </script>
 </body>
 </html>
