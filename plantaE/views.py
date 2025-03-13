@@ -2017,6 +2017,11 @@ def load_contenedores(request):
     adicionales = contenedores.objects.exclude(status='Cerrado').values('contenedor')
     return JsonResponse({'adicionales':list(adicionales)})
 
+def escanearbarras(request):
+    
+    context = {'msm': 'Listo.'}
+    return render(request, 'plantaE/escanearbarras.html',context)
+
 def contenedores_list(request):
     salidas = contenedores.objects.exclude(status='Cerrado')  # Excluye los que tienen status 'Cerrado'
     salidas = salidas.order_by('-created_at')
