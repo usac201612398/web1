@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Escanear Código de Barras</title>
+    <title>Escanear Código de Barras con Zona de Detección</title>
     <style>
         #videoElement {
             width: 100%;
@@ -14,7 +14,7 @@
     </style>
 </head>
 <body>
-    <h1>Escanear Código de Barras con QuaggaJS</h1>
+    <h1>Escanear Código de Barras con Zona de Detección</h1>
 
     <video id="videoElement" autoplay></video>
     <p>Escaneado: <span id="result">Ningún código escaneado</span></p>
@@ -56,6 +56,16 @@
                     type: "LiveStream",
                     target: videoElement, // Asignamos el video elemento para mostrar el stream
                 },
+                locator: {
+                    // Define un área de detección (x, y, width, height)
+                    patchSize: "medium", // Tamaño de los parches utilizados para la localización
+                    halfSample: true, // Utiliza una resolución más baja para hacer la detección más rápida
+                    // Zona de detección delimitada en la parte superior
+                    width: 800,  // Ancho del área (ajústalo según el tamaño del video)
+                    height: 200, // Altura del área (ajústalo para cubrir la parte superior)
+                    x: 100,      // Posición X de la zona (ajusta para centrarla en la parte superior)
+                    y: 50,       // Posición Y de la zona (ajústalo para cubrir la parte superior)
+                },
                 decoder: {
                     readers: ["code_128_reader", "ean_reader", "ean_8_reader", "upc_reader"] // Definir los tipos de códigos de barras que leeremos
                 }
@@ -83,6 +93,7 @@
     </script>
 </body>
 </html>
+
 
 
 
