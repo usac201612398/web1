@@ -7,7 +7,7 @@
     <style>
         #videoElement {
             width: 100%;
-            height: auto;
+            height: 400px;  /* Ajusta el tamaño de la cámara */
             border: 1px solid black;
             background-color: black;
         }
@@ -40,7 +40,9 @@
                         return codeReader.decodeFromVideoDevice(firstDeviceId, videoElement, (result, err) => {
                             if (result) {
                                 // Cuando se escanea un código de barras, mostramos el resultado
-                                resultElement.textContent = result.getText();
+                                resultElement.textContent = `Código escaneado: ${result.getText()}`;
+                                // Si quieres hacer algo con el código, puedes enviarlo a tu servidor o realizar alguna acción aquí
+                                console.log("Código escaneado:", result.getText());
                             }
                             if (err && !(err instanceof ZXing.NotFoundException)) {
                                 console.error(err);
@@ -62,3 +64,4 @@
     </script>
 </body>
 </html>
+
