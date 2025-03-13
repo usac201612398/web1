@@ -354,7 +354,7 @@ class salidacontenedores(models.Model):
     pesosinmerma = models.FloatField(blank=True, null=True)
     orden=models.CharField(max_length=20,null=True)
     boleta=models.BigIntegerField(blank=True, null=True)
-    reasignacion=models.CharField(max_length=75,null=True)
+    reasignacion=models.CharField(max_length=75,null=True, blank=True)
     importe =models.FloatField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)

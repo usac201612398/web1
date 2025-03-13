@@ -320,12 +320,12 @@ def inventarioProd_grabarplantilla(request):
             i[2] == None
         if productor_.tipo=="EM":
             inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[5],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=i[2],categoria=i[7],libras=i[3],lbsintara=pesosintara,pesostd=pesoestandar,merma=merma,pesorxcaja=pesoporcaja,orden="EM",pesostdxcaja=pesostdxcaja,tara=tara,pesosinmerma=pesosinmerma,calidad1=pesostd.calidad1)
-            if merma > 0:
-                inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[5],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=0,categoria="Merma",libras=0,lbsintara=merma,pesostd=0,merma=merma,pesorxcaja=0,orden="SM",pesostdxcaja=0,tara=tara,pesosinmerma=pesosinmerma,calidad1=pesostd.calidad1)       
+            #if merma > 0:
+            #    inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[5],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=0,categoria="Merma",libras=0,lbsintara=merma,pesostd=0,merma=merma,pesorxcaja=0,orden="SM",pesostdxcaja=0,tara=tara,pesosinmerma=pesosinmerma,calidad1=pesostd.calidad1)       
         else:
             inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[5],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=i[2],categoria=i[7],libras=i[3],lbsintara=pesosintara,pesostd=pesoestandar,merma=merma,pesorxcaja=pesoporcaja,orden=ordenemp,pesostdxcaja=pesostdxcaja,tara=tara,pesosinmerma=pesosinmerma,calidad1=pesostd.calidad1)
-            if merma > 0:
-                inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[5],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=0,categoria="Merma",libras=0,lbsintara=merma,pesostd=0,merma=merma,pesorxcaja=0,orden="SM",pesostdxcaja=0,tara=tara,pesosinmerma=pesosinmerma,calidad1=pesostd.calidad1)
+            #if merma > 0:
+            #    inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[5],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=0,categoria="Merma",libras=0,lbsintara=merma,pesostd=0,merma=merma,pesorxcaja=0,orden="SM",pesostdxcaja=0,tara=tara,pesosinmerma=pesosinmerma,calidad1=pesostd.calidad1)
         confirmacion = inventarioProdTerm.objects.filter(categoria="Exportación").order_by('-registro').first()
 
     return JsonResponse({'mensaje':mensaje,'msm': " Listo, en número de pesada es: " + str(confirmacion.registro)})
@@ -1855,6 +1855,8 @@ def cargacontenedores_list(request):
         cajasacum = salidas2.order_by('-created_at').filter(key=i.registro).aggregate(sumacajas=Sum('cajas'))['sumacajas']
         if  cajasacum != None:
             i.cajas = i.cajas - int(cajasacum)
+            if i.cajas == 0:
+                i.status = 'En proceso'
         
     return render(request, 'plantaE/inventarioProd_contenedores.html', {'registros': salidas})
 
