@@ -1872,9 +1872,6 @@ def cargacontenedores_list(request):
     # Retornar las salidas que cumplen con la condición (cajas > 0)
     return render(request, 'plantaE/inventarioProd_contenedores.html', {'registros': salidas})
 
-from django.shortcuts import render
-from django.core.serializers import serialize
-import json
 
 def inventariogeneral_list(request):
     today = timezone.now().date()
@@ -1940,7 +1937,7 @@ def inventariogeneral_list(request):
     registros_json = json.dumps(registros_agrupados)
 
     # Pasar los registros agrupados al renderizado de la plantilla
-    return render(request, 'plantaE/inventarioProd_inventariogeneral.html', {'registros': registros_json})
+    return render(request, 'plantaE/inventarioProd_inventariogeneral.html', {'registros': list(registros_json)})
 
 
 def inventariogeneralfruta_list(request):
