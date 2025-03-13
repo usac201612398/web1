@@ -1909,7 +1909,7 @@ def inventariogeneral_list(request):
 
         agrupaciones[clave_agrupacion]['total_cajas_salidas'] += salida.cajas
         agrupaciones[clave_agrupacion]['salidas'].append({
-            'id': salida.id,
+          
             'itemsapcode': salida.itemsapcode,
             'itemsapname': salida.itemsapname,
             'proveedor': salida.proveedor,
