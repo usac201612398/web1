@@ -199,13 +199,23 @@ function myFunction2() {
                     $('#Conten').append(
                         $('<option>').text('Seleccione un contenedor').attr('value', '')
                     );
-    
+                    
                     // Recorre los productos recibidos y añade opciones al campo 'select'
                     $.each(data.adicionales, function(index, product) {
                         $('#Conten').append(
                             $('<option>').text(product.contenedor.toString()).attr('value', product.contenedor.toString())
                         );
                     });
+                    // Verificar si hay un contenedor guardado en localStorage
+                    var selectedContenedor = localStorage.getItem('selectedContenedor');
+                    
+                    if (selectedContenedor !== null && selectedContenedor !== '') {
+                        // Si el valor existe en localStorage, seleccionar el contenedor
+                        $('#Conten').val(selectedContenedor);  // Seleccionar el contenedor guardado
+                    } else {
+                        // Si no existe un valor en localStorage, puedes dejar el select vacío o con un valor predeterminado
+                        $('#Conten').val('Seleccione un contenedor');  // O puedes poner otro valor predeterminado si lo prefieres
+                    }
     
                 },
                 error: function(xhr, status, error) {
@@ -270,9 +280,11 @@ function myFunction2() {
                 value_conten = conten.value,
                 text_conten = conten.options[conten.selectedIndex].innerText;
             filas.push(text_conten);
-
+            // Guardar el valor del contenedor en localStorage antes de recargar la página
+            localStorage.setItem('selectedContenedor', text_conten);  
             // Guardamos la fila seleccionada
             datos.push(filas);
+            
         }
     }
 
@@ -294,12 +306,13 @@ function myFunction2() {
             if (data.palet === 20) {
                 alert("Se completó contenedor.");
                 // Resetear contenedor, puedes hacerlo de esta forma si lo deseas:
+                localStorage.removeItem('selectedContenedor');  // Elimina el valor del contenedor del localStorage
                 $('#Conten').val('');  // Opcional: limpiar el contenedor seleccionado
                 window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/inventarioProd/packinglist'); // Redirigir
             } else {
                 // Si el palet es menor a 20, recargar la página pero mantener el contenedor seleccionado
-                loadProducts(); // Recargar los contenedores disponibles
-                $('#Conten').val(text_conten); // Mantener el contenedor seleccionado
+                //loadProducts(); // Recargar los contenedores disponibles
+                //$('#Conten').val(text_conten); // Mantener el contenedor seleccionado
                 location.reload(); // Recargar la página sin perder el contenedor
             }
 
