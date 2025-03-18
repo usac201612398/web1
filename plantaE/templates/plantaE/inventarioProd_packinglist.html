@@ -76,120 +76,76 @@
             border: none;
             background: transparent;
         }
-                /* Estilo global para los inputs */
-        input[type="button"] {
-            background-color: #4A90E2;  /* Azul profesional */
-            border: none;
-            color: white;
-            padding: 12px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            border-radius: 8px;  /* Bordes redondeados */
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
+        /* Estilo global para los inputs */
+input[type="button"] {
+    background-color: #4A90E2;  /* Azul profesional */
+    border: none;
+    color: white;
+    padding: 12px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    border-radius: 8px;  /* Bordes redondeados */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
 
-        input[type="button"]:hover {
-            background-color: #357ABD;  /* Azul más oscuro al pasar el ratón */
-            transform: translateY(-2px);  /* Efecto de elevación */
-        }
+input[type="button"]:hover {
+    background-color: #357ABD;  /* Azul más oscuro al pasar el ratón */
+    transform: translateY(-2px);  /* Efecto de elevación */
+}
 
-        input[type="button"]:focus {
-            outline: none;  /* Eliminar el contorno por defecto */
-        }
+input[type="button"]:focus {
+    outline: none;  /* Eliminar el contorno por defecto */
+}
 
-        /* Estilo para el botón Consultar */
-        #consultar {
-            background-color: #3B4C66;  /* Gris azulado oscuro para el botón Consultar */
-            border-radius: 8px;
-            padding: 12px 25px;
-            font-size: 16px;
-            color: white;
-            transition: background-color 0.3s ease;
-        }
+/* Estilo para el botón Consultar */
+#consultar {
+    background-color: #3B4C66;  /* Gris azulado oscuro para el botón Consultar */
+    border-radius: 8px;
+    padding: 12px 25px;
+    font-size: 16px;
+    color: white;
+    transition: background-color 0.3s ease;
+}
 
-        #consultar:hover {
-            background-color: #2A3A52;  /* Gris azulado aún más oscuro al pasar el ratón */
-        }
+#consultar:hover {
+    background-color: #2A3A52;  /* Gris azulado aún más oscuro al pasar el ratón */
+}
 
-        /* Estilo para los inputs de texto */
-        #myInput, #myInput2, #myInput3 {
-            width: 100%;  /* Asegura que los inputs ocupen todo el ancho del contenedor */
-            padding: 12px 20px;
-            margin: 10px 0;
-            font-size: 16px;
-            border: 1px solid #BDC3C7;  /* Borde gris claro */
-            border-radius: 5px;  /* Bordes redondeados */
-            box-sizing: border-box;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-            background-color: #F4F6F9;  /* Fondo gris muy claro */
-        }
+/* Estilo para los inputs de texto */
+#myInput, #myInput2, #myInput3 {
+    width: 100%;  /* Asegura que los inputs ocupen todo el ancho del contenedor */
+    padding: 12px 20px;
+    margin: 10px 0;
+    font-size: 16px;
+    border: 1px solid #BDC3C7;  /* Borde gris claro */
+    border-radius: 5px;  /* Bordes redondeados */
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: #F4F6F9;  /* Fondo gris muy claro */
+}
 
-        #myInput:focus, #myInput2:focus, #myInput3:focus {
-            border-color: #3498DB;  /* Azul brillante al enfocar */
-            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);  /* Sombra suave de color azul */
-            outline: none;  /* Eliminar el contorno por defecto */
-        }
-/* Estilo para el contenedor de la etiqueta + select */
+#myInput:focus, #myInput2:focus, #myInput3:focus {
+    border-color: #3498DB;  /* Azul brillante al enfocar */
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);  /* Sombra suave de color azul */
+    outline: none;  /* Eliminar el contorno por defecto */
+}
+
+/* Estilo para los inputs cuando están dentro de un contenedor con espacio */
 .inputs-row {
     display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 15px;
-    width: 100%;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
-/* Estilo de la etiqueta (Contenedor:) */
-.inputs-row label {
-    font-size: 16px;
-    font-weight: bold;
-    margin-right: 10px;
+.inputs-row input {
+    width: 48%;  /* Divide los inputs en dos columnas (si la pantalla es suficientemente ancha) */
+    margin-bottom: 10px;
 }
 
-/* Estilo del select */
-.select {
-    flex-grow: 1;  /* Asegura que el select ocupe el máximo espacio disponible */
-    max-width: 100%;
-    display: flex;
-}
-
-.select select {
-    width: 100%;  /* El select ocupa el ancho total disponible */
-    padding: 12px 20px;
-    font-size: 16px;
-    border: 1px solid #BDC3C7;
-    border-radius: 5px;
-    background-color: #F4F6F9;
-    box-sizing: border-box;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-    white-space: nowrap;  /* Evita el corte del texto largo */
-    text-overflow: ellipsis;  /* Añade "..." si el texto es muy largo */
-    overflow: hidden;  /* Oculta el texto que excede el ancho del select */
-}
-
-/* Estilo cuando el select recibe el foco */
-.select select:focus {
-    border-color: #3498DB;
-    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
-    background-color: #ffffff;
-    outline: none;
-}
-
-/* Para dispositivos pequeños */
-@media (max-width: 600px) {
-    .inputs-row {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .select select {
-        width: 100%;  /* Asegura que el select ocupe todo el ancho disponible */
-    }
-}
 
     </style>
 </head>
