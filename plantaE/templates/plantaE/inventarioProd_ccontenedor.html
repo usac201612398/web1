@@ -112,6 +112,63 @@
             transform: rotate(45deg);  /* Rota para formar una "X" */
         }
 
+                /* Estilo para el contenedor del select */
+        #Conten {
+            font-size: 16px;  /* Aumentamos el tamaño de fuente para mejor legibilidad */
+            padding: 8px 12px;  /* Espaciado interno para un mejor clic */
+            width: 100%;  /* Asegura que el select ocupe todo el ancho disponible */
+            border: 2px solid #ddd;  /* Borde sutil de color gris */
+            border-radius: 5px;  /* Bordes redondeados */
+            background-color: #fff;  /* Fondo blanco */
+            transition: all 0.3s ease;  /* Transición suave para cambios de estado */
+            appearance: none;  /* Eliminar el estilo predeterminado en algunos navegadores */
+        }
+
+        /* Cambiar color de fondo y borde cuando el select está enfocado */
+        #Conten:focus {
+            border-color: #4CAF50;  /* Cambiar el borde a verde cuando se hace foco */
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);  /* Sombra verde suave */
+            outline: none;  /* Eliminar borde de enfoque predeterminado */
+        }
+
+        /* Flecha personalizada para el select */
+        #Conten::-ms-expand {
+            display: none;  /* Eliminar la flecha por defecto en IE/Edge */
+        }
+
+        #Conten {
+            background-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%2210%22 viewBox=%220 0 10 10%22%3E%3Cpath fill=%22none%22 stroke=%22#333%22 stroke-width=%22.8%22 d=%22M1 3l4 4 4-4%22/%3E%3C/svg%3E');
+            background-position: right 10px center;
+            background-repeat: no-repeat;
+            padding-right: 30px;  /* Asegura que el contenido no se cubra con la flecha */
+        }
+
+        /* Mejorar la apariencia del dropdown cuando está abierto */
+        #Conten:active, #Conten:focus {
+            background-color: #f5f5f5;  /* Fondo ligeramente gris cuando se abre */
+            border-color: #4CAF50;  /* Bordes verdes */
+        }
+
+        /* Estilo para la lista de opciones dentro del select */
+        #Conten option {
+            padding: 10px;
+            font-size: 14px;
+            color: #333;  /* Color de texto */
+            background-color: #fff;  /* Fondo blanco */
+            transition: background-color 0.3s ease;  /* Transición suave al cambiar el fondo */
+        }
+
+        /* Resaltar la opción seleccionada */
+        #Conten option:checked {
+            background-color: #4CAF50;  /* Fondo verde para opción seleccionada */
+            color: white;  /* Texto blanco cuando se selecciona */
+        }
+
+        /* Estilo para el select cuando no tiene valor */
+        #Conten option:first-child {
+            color: #888;  /* Color gris claro para la opción predeterminada */
+        }
+
 
     </style>
 </head>
