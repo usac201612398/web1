@@ -1843,6 +1843,44 @@ def procesarinvprodconten(request):
     
     return JsonResponse({'mensaje':mensaje,'registros':registros})   
 
+def procesarinvprodcontenv2(request):
+
+    data = json.loads(request.body)
+    mensaje = data['array']
+    contenedor_=data['contenedor']
+    today = timezone.now().date()
+    semana_actual = today.isocalendar()[1]  # semana actual
+    #mensaje = request.POST.get('array')
+    
+    consulta = salidacontenedores.objects.exclude(status="Cerrado").filter(contenedor=contenedor_).order_by('-registro').first()
+    if consulta is None:
+        palet = 1
+    else:
+        palet = consulta.palet+1
+
+    registros =  []
+    
+    for i in mensaje:
+        ref=inventarioProdTerm.objects.get(registro = i[0])
+        ref2=productoTerm.objects.get(itemsapcode = i[4])
+        precio = float(ref2.precio) if ref2.precio is not None else 0.0
+        lbsintara = float(ref.lbsintara) if ref.lbsintara is not None else 0.0
+
+        importe=float(precio)*float(i[6])
+        salidacontenedores.objects.create(fecha=str(ref.fecha),palet=palet,importe=importe,fechasalcontenedor=today,contenedor=contenedor_,categoria=str(ref.categoria),cultivo=ref.cultivo,proveedor=ref.proveedor,itemsapcode = ref.itemsapcode,itemsapname = ref.itemsapname,orden=ref.orden,cajas=float(i[6]),lbsintara=(float(i[6])*lbsintara/ref.cajas),pesostdxcaja=ref.pesostdxcaja,pesostd=(float(i[6])*ref.pesostd/ref.cajas),merma=(float(i[6])*ref.merma/ref.cajas),pesorxcaja=ref.pesorxcaja,pesosinmerma=ref.pesosinmerma,calidad1=ref.calidad1)
+        # Crea un diccionario con los datos
+    '''
+    for i in mensaje:
+
+        salidas = inventarioProdTerm.objects.get(registro=i[0])
+        
+        salidas2= salidacontenedores.objects.all().filter(key=i[0]).aggregate(sumacajas=Sum('cajas'))['sumacajas']
+        
+        if str(salidas2) == str(salidas.cajas):
+            salidas.status = "En proceso"
+            salidas.save()
+    '''
+    return JsonResponse({'mensaje':mensaje,'registros':registros,'palet':palet})
 
 def cargacontenedores_listv2(request):
 
@@ -1906,7 +1944,7 @@ def cargacontenedores_listv2(request):
     registros_agrupados = sorted(registros_agrupados, key=lambda x: x['proveedor'])
     registros_json = json.dumps(registros_agrupados, default=str)  # Usar default=str para evitar errores con objetos no serializables
 
-    return render(request, 'plantaE/inventarioProd_ccontenedor.html', {'registros': registros_agrupados})
+    return render(request, 'plantaE/inventarioProd_ccontenedor.html', {'registros': registros_agrupados, 'registros_json':registros_json})
 
 
 def cargacontenedores_list(request):

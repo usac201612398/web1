@@ -199,10 +199,10 @@ $('.envio3').on('click', function() {
             }
 
             // Obtener el valor del input list en la columna "Palet" (columna 10)
-            var paletInput = row.querySelector('td:nth-child(10) input');  // Buscar el input en la columna 10 (Palet)
-            var paletValue = paletInput ? paletInput.value : '';  // Obtener el valor seleccionado, si existe
-            filas.push(paletValue);  // Añadir el valor de "Palet" a la fila de datos
-            console.log(paletValue)
+            //var paletInput = row.querySelector('td:nth-child(10) input');  // Buscar el input en la columna 10 (Palet)
+            //////var paletValue = paletInput ? paletInput.value : '';  // Obtener el valor seleccionado, si existe
+            ////filas.push(paletValue);  // Añadir el valor de "Palet" a la fila de datos
+            //console.log(paletValue)
             // Añadir la información del contenedor seleccionado
             var conten = document.getElementById('Conten'),
                 value_conten = conten.value,
@@ -218,7 +218,7 @@ $('.envio3').on('click', function() {
     console.log(datos);
 
     $.ajax({
-        url: '{% url "inventarioProd_contprocess" %}',  // URL para la vista AJAX
+        url: '{% url "inventarioProd_contprocessv2" %}',  // URL para la vista AJAX
         type: 'POST',
         dataType: "json",
         data: JSON.stringify({'array': datos, 'contenedor': text_conten}),
@@ -226,14 +226,18 @@ $('.envio3').on('click', function() {
         headers: {'X-CSRFToken': csrftoken},
         
         success: function(data) {
-            alert("Listo");
+            alert("Palet " + data.palet + " agregado a contenedor");
+            if (data.palet === 20){
+                alert("Se completó contenedor.")
+                window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/inventarioProd/packinglist');
+            }
             console.log(data);
         },
         error: function(xhr, status, error) {
             console.error('Error:', error);
         }
     });
-    window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/inventarioProd/packinglist');
+    //window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/inventarioProd/packinglist');
 });
 
 

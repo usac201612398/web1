@@ -50,6 +50,7 @@ urlpatterns = [
     path('recepcionesFruta/<int:pk>/edit/', views.recepciones_update, name='recepcionesFruta_update'),
     path("recepcionesFruta/process",views.procesarrecepcion,name='recepcionesFruta_process'),
     path("inventarioProd/process/",views.procesarinvprodconten,name='inventarioProd_contprocess'),
+    path("inventarioProd/processv2/",views.procesarinvprodcontenv2,name='inventarioProd_contprocessv2'),
     path("recepcionesFruta",views.recepciones_list,name='recepcionesFruta_list'),
     path("recepcionesFruta/reporteAcum",views.recepciones_reporteAcum,name='recepcionesFruta_reporteAcum'),
     path("recepcionesFruta/reporteAcumKgm2Orden",views.recepciones_reporteAcumKgm2Orden,name='recepcionesFruta_reporteAcumKgm2Orden'),
