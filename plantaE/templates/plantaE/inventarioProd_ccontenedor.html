@@ -41,7 +41,7 @@
             <div class="box">
                 <a href="{% url 'inventarioProd_packinglist' %}">Consulta OV</a> 
             </div>
-        </div>  
+        </div>   
     </div>
     <div class = "container"> 
         <div class="half">
@@ -175,7 +175,72 @@ function myFunction2() {
     }
   }
 }
-$('.envio3').on('click', function() {
+
+
+</script>
+
+<script>
+    $(document).ready(function() {
+        console.log("Página cargada");
+    
+        // Función para cargar contenedores
+        function loadProducts() {
+            console.log("Cargando contenedores...");
+            $.ajax({
+                url: '{% url "load_contenedores" %}',  // URL para la vista AJAX
+                data: {
+                    'category_id': 'Consulta' // Envia el ID de la categoría como parámetro
+                },
+                success: function(data) {
+                    console.log("Datos recibidos:", data);
+    
+                    // Limpia las opciones actuales del campo 'select'
+                    $('#Conten').html('');
+                    $('#Conten').append(
+                        $('<option>').text('Seleccione un contenedor').attr('value', '')
+                    );
+    
+                    // Recorre los productos recibidos y añade opciones al campo 'select'
+                    $.each(data.adicionales, function(index, product) {
+                        $('#Conten').append(
+                            $('<option>').text(product.contenedor.toString()).attr('value', product.contenedor.toString())
+                        );
+                    });
+    
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);  // Maneja errores de la solicitud
+                }
+            });
+        }
+    
+        // Llamar a la función de carga de contenedores
+        loadProducts();
+
+            // Función que actualiza el total de cajas
+        function updateTotal() {
+            var totalCajas = 0;
+            
+            // Recorre todas las filas que están seleccionadas (marcadas con checkbox)
+            $('input[type="checkbox"]:checked').each(function() {
+                var row = $(this).closest('tr');  // Encuentra la fila correspondiente
+                var cajas = parseFloat(row.find('td').eq(4).find('.editable-cell').text()) || 0;  // Obtenemos el valor de la columna "Cajas" (índice 6) desde .editable-cell
+                totalCajas += cajas;  // Acumula el total de cajas
+            });
+
+            // Actualiza el total en la fila correspondiente
+            $('#totalCajas').text(totalCajas);  // Muestra el total en la fila de suma
+        }
+
+        // Cuando se marque o desmarque un checkbox
+        $(document).on('change', 'input[type="checkbox"]', function() {
+            updateTotal();  // Llama a la función para actualizar el total
+        });
+
+        // Inicializa el total al cargar la página
+        updateTotal();
+
+        $('.envio3').on('click', function() {
     var resume_table = document.getElementById("myTable");
     var datos = [];
 
@@ -245,69 +310,6 @@ $('.envio3').on('click', function() {
         }
     });
 });
-
-</script>
-
-<script>
-    $(document).ready(function() {
-        console.log("Página cargada");
-    
-        // Función para cargar contenedores
-        function loadProducts() {
-            console.log("Cargando contenedores...");
-            $.ajax({
-                url: '{% url "load_contenedores" %}',  // URL para la vista AJAX
-                data: {
-                    'category_id': 'Consulta' // Envia el ID de la categoría como parámetro
-                },
-                success: function(data) {
-                    console.log("Datos recibidos:", data);
-    
-                    // Limpia las opciones actuales del campo 'select'
-                    $('#Conten').html('');
-                    $('#Conten').append(
-                        $('<option>').text('Seleccione un contenedor').attr('value', '')
-                    );
-    
-                    // Recorre los productos recibidos y añade opciones al campo 'select'
-                    $.each(data.adicionales, function(index, product) {
-                        $('#Conten').append(
-                            $('<option>').text(product.contenedor.toString()).attr('value', product.contenedor.toString())
-                        );
-                    });
-    
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error:', error);  // Maneja errores de la solicitud
-                }
-            });
-        }
-    
-        // Llamar a la función de carga de contenedores
-        loadProducts();
-
-            // Función que actualiza el total de cajas
-        function updateTotal() {
-            var totalCajas = 0;
-            
-            // Recorre todas las filas que están seleccionadas (marcadas con checkbox)
-            $('input[type="checkbox"]:checked').each(function() {
-                var row = $(this).closest('tr');  // Encuentra la fila correspondiente
-                var cajas = parseFloat(row.find('td').eq(4).find('.editable-cell').text()) || 0;  // Obtenemos el valor de la columna "Cajas" (índice 6) desde .editable-cell
-                totalCajas += cajas;  // Acumula el total de cajas
-            });
-
-            // Actualiza el total en la fila correspondiente
-            $('#totalCajas').text(totalCajas);  // Muestra el total en la fila de suma
-        }
-
-        // Cuando se marque o desmarque un checkbox
-        $(document).on('change', 'input[type="checkbox"]', function() {
-            updateTotal();  // Llama a la función para actualizar el total
-        });
-
-        // Inicializa el total al cargar la página
-        updateTotal();
 
     });
     </script>
