@@ -41,7 +41,7 @@
             <div class="box">
                 <a href="{% url 'inventarioProd_packinglist' %}">Consulta OV</a> 
             </div>
-           
+        </div>  
     </div>
     <div class = "container"> 
         <div class="half">
@@ -200,11 +200,6 @@ $('.envio3').on('click', function() {
                 }
             }
 
-            // Obtener el valor del input list en la columna "Palet" (columna 10)
-            //var paletInput = row.querySelector('td:nth-child(10) input');  // Buscar el input en la columna 10 (Palet)
-            //////var paletValue = paletInput ? paletInput.value : '';  // Obtener el valor seleccionado, si existe
-            ////filas.push(paletValue);  // Añadir el valor de "Palet" a la fila de datos
-            //console.log(paletValue)
             // Añadir la información del contenedor seleccionado
             var conten = document.getElementById('Conten'),
                 value_conten = conten.value,
@@ -226,25 +221,30 @@ $('.envio3').on('click', function() {
         data: JSON.stringify({'array': datos, 'contenedor': text_conten}),
         contentType: 'application/json',
         headers: {'X-CSRFToken': csrftoken},
-        
+
         success: function(data) {
             alert("Palet " + data.palet + " agregado a contenedor");
-            if (data.palet === 20){
-                alert("Se completó contenedor.")
-                window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/inventarioProd/packinglist');
+
+            // Si palet es 20, entonces resetear y redirigir
+            if (data.palet === 20) {
+                alert("Se completó contenedor.");
+                // Resetear contenedor, puedes hacerlo de esta forma si lo deseas:
+                $('#Conten').val('');  // Opcional: limpiar el contenedor seleccionado
+                window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/inventarioProd/packinglist'); // Redirigir
+            } else {
+                // Si el palet es menor a 20, recargar la página pero mantener el contenedor seleccionado
+                loadProducts(); // Recargar los contenedores disponibles
+                $('#Conten').val(text_conten); // Mantener el contenedor seleccionado
+                location.reload(); // Recargar la página sin perder el contenedor
             }
+
             console.log(data);
         },
         error: function(xhr, status, error) {
             console.error('Error:', error);
         }
     });
-    //window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/inventarioProd/packinglist');
 });
-
-
-    
-   
 
 </script>
 
@@ -293,7 +293,7 @@ $('.envio3').on('click', function() {
             // Recorre todas las filas que están seleccionadas (marcadas con checkbox)
             $('input[type="checkbox"]:checked').each(function() {
                 var row = $(this).closest('tr');  // Encuentra la fila correspondiente
-                var cajas = parseFloat(row.find('td').eq(6).find('.editable-cell').text()) || 0;  // Obtenemos el valor de la columna "Cajas" (índice 6) desde .editable-cell
+                var cajas = parseFloat(row.find('td').eq(4).find('.editable-cell').text()) || 0;  // Obtenemos el valor de la columna "Cajas" (índice 6) desde .editable-cell
                 totalCajas += cajas;  // Acumula el total de cajas
             });
 
