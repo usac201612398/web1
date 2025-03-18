@@ -1,7 +1,6 @@
+<!DOCTYPE html>
 <html>
 <head>
-
-    
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,11 +13,13 @@
             padding: 20px;
             border: 1px solid #ddd;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             table-layout: auto; /* Ajuste automático del ancho de columnas */
         }
+
         table th, table td {
             padding: 4px;
             border: 1px solid #ddd;
@@ -26,12 +27,47 @@
             word-wrap: break-word; /* Asegura que el texto largo se ajuste */
             font-size: 15px;
         }
+
+        /* Estilo para las tablas */
+        .header-table, .info-table {
+            width: 100%;
+            margin-bottom: 20px;
+            margin-top: 10px;
+        }
         
-        .header {
+        .header-table td, .info-table td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        /* Estilos para el encabezado con tres columnas */
+        .encabezado-table {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        .encabezado-table td {
+            padding: 10px;
             text-align: center;
-            font-size: 12px;
-            font-weight: bold;
-            line-height: 1.4; 
+            vertical-align: middle;
+        }
+        
+        .encabezado-logo {
+            width: 150px;  /* Ajusta el tamaño del logo */
+            height: auto;
+        }
+
+        .encabezado-info {
+            font-size: 14px;
+            text-align: left;
+            line-height: 1.4;
+        }
+
+        /* Para dispositivos pequeños */
+        @media (max-width: 600px) {
+            .encabezado-table td {
+                font-size: 12px;
+            }
         }
 
         @media print {
@@ -50,13 +86,13 @@
                 max-width: 100%;
                 overflow: hidden;
             }
-                        /* Ocultar el botón de impresión */
-                        .print-button {
+            /* Ocultar el botón de impresión */
+            .print-button {
                 display: none;
             }
-    
-                        /* Configuración para impresión horizontal */
-                        @page {
+
+            /* Configuración para impresión horizontal */
+            @page {
                 size: A4 landscape; /* Configura el tamaño de la página en horizontal */
                 margin: 0;
             }
@@ -70,15 +106,50 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <p>Packing List</p>
-            <p>Planta: {{ planta }} | Fecha: {{ fecha}}</p>
-            <p>Destino: {{ destino }} | #Viaje: {{ viaje }} | Temperatura: {{ temperatura }}</p>
-            <p>Contenedor: {{ contenedor }} | Piloto: {{ piloto }} | Firma Piloto: </p>
-            <p>Transportista: {{ transportista }} | Marchamo: {{ marchamo }} | Placa Camion: {{ placacamion }} | Hora Salida: {{ hora }} </p>
-        </div>
+        <!-- Encabezado con tres columnas -->
+        <table class="encabezado-table">
+            <tr>
+                <!-- Logo -->
+                <td style="width: 25%"><img src="logo.jpeg" alt="Logo" class="encabezado-logo"></td>
+                <!-- Guía de Embarque -->
+                <td style="width: 50%">
+                    <h3>Guía de Embarque</h3>
+                </td>
+                <!-- Información adicional -->
+                <td style="width: 25%" class="encabezado-info">
+                    <p><strong>Código:</strong> RE-EM-36</p>
+                    <p><strong>Versión:</strong> 3</p>
+                    <p><strong>Fecha de actualización:</strong> 18/03/2025</p>
+                </td>
+            </tr>
+        </table>
 
-        <table>
+        <!-- Datos de Packing List -->
+        <table class="header-table">
+            <tr>
+                <td><strong>Planta:</strong> {{ planta }}</td>
+                <td><strong>Fecha:</strong> {{ fecha }}</td>
+                <td><strong>Destino:</strong> {{ destino }}</td>
+            </tr>
+            <tr>
+                <td><strong>#Viaje:</strong> {{ viaje }}</td>
+                <td><strong>Temperatura:</strong> {{ temperatura }}</td>
+                <td><strong>Contenedor:</strong> {{ contenedor }}</td>
+            </tr>
+            <tr>
+                <td><strong>Piloto:</strong> {{ piloto }}</td>
+                <td><strong>Firma Piloto:</strong> </td>
+                <td><strong>Transportista:</strong> {{ transportista }}</td>
+            </tr>
+            <tr>
+                <td><strong>Marchamo:</strong> {{ marchamo }}</td>
+                <td><strong>Placa Camion:</strong> {{ placacamion }}</td>
+                <td><strong>Hora Salida:</strong> {{ hora }}</td>
+            </tr>
+        </table>
+
+        <!-- Tabla de productos -->
+        <table class="info-table">
             <thead>
                 <tr>
                     <th>Palet</th>
@@ -101,13 +172,14 @@
             </tbody>
         </table>
     </div>
-    <div class="container"> 
+
+    <!-- Botón de impresión -->
+    <div class="container">
         <button onclick="window.print()" class="print-button">
             <i class="fas fa-print"></i> <!-- Ícono de la impresora -->
             <span class="sr-only">Imprimir</span> <!-- Texto alternativo para accesibilidad -->
         </button>
     </div>
-    
 </body>
 </html>
 
