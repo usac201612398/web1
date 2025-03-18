@@ -348,11 +348,8 @@ function myFunction2() {
                     });
                     // Verificar si hay un contenedor guardado en localStorage
                     var selectedContenedor = localStorage.getItem('selectedContenedor');
-                    // Añadir la información del contenedor seleccionado
-                    var conten = document.getElementById('Conten'),
-                        value_conten = conten.value,
-                        text_conten = conten.options[conten.selectedIndex].innerText;
-                    if (selectedContenedor !== null && selectedContenedor !== '' && text_conten!=='Seleccione un contenedor' && text_conten!=='' ) {
+                   
+                    if (selectedContenedor !== null && selectedContenedor !== '' ) {
                         // Si el valor existe en localStorage, seleccionar el contenedor
                         $('#Conten').val(selectedContenedor);  // Seleccionar el contenedor guardado
                     } else {
