@@ -11,55 +11,107 @@
           .inputs-row {
         display: flex;
         flex-wrap: nwrap; /* Para que se acomoden bien en pantallas más pequeñas */
-    }
-    #myInput, #myInput2 {
-    flex: 1; /* Cada input ocupa el mismo espacio */
-    font-size: 16px;
-    padding: 12px 20px;
-    border: 1px solid #ddd;
-    box-sizing: border-box;
-    min-width: 0; /* Asegura que no haya un ancho mínimo inesperado */
-    }
-        h1 {
-            margin: 15px;
-            font-family: Arial, sans-serif;
+            }
+            #myInput, #myInput2 {
+            flex: 1; /* Cada input ocupa el mismo espacio */
+            font-size: 16px;
+            padding: 12px 20px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+            min-width: 0; /* Asegura que no haya un ancho mínimo inesperado */
+            }
+                h1 {
+                    margin: 15px;
+                    font-family: Arial, sans-serif;
+                }
+
+                a {
+                    margin: 20px;
+                    font-family: Arial, sans-serif;
+                }
+            /* Estilos generales para el botón input */
+        .envio3 {
+            background-color: #4CAF50;  /* Color de fondo verde */
+            color: white;  /* Texto blanco */
+            font-size: 16px;  /* Tamaño de fuente */
+            padding: 12px 24px;  /* Espaciado alrededor del texto */
+            border: none;  /* Sin borde */
+            border-radius: 25px;  /* Bordes redondeados */
+            cursor: pointer;  /* Aparece como cursor de mano */
+            transition: all 0.3s ease;  /* Transición suave para los efectos */
+            display: inline-flex;
+            align-items: center;  /* Alineación vertical del texto e ícono */
+            text-align: center; /* Centrar el texto en el input */
         }
 
-        a {
-            margin: 20px;
-            font-family: Arial, sans-serif;
+        /* Efecto hover */
+        .envio3:hover {
+            background-color: #45a049;  /* Fondo verde más oscuro al pasar el mouse */
+            transform: scale(1.05);  /* Ligeramente más grande */
         }
-    /* Estilos generales para el botón input */
-.envio3 {
-    background-color: #4CAF50;  /* Color de fondo verde */
-    color: white;  /* Texto blanco */
-    font-size: 16px;  /* Tamaño de fuente */
-    padding: 12px 24px;  /* Espaciado alrededor del texto */
-    border: none;  /* Sin borde */
-    border-radius: 25px;  /* Bordes redondeados */
-    cursor: pointer;  /* Aparece como cursor de mano */
-    transition: all 0.3s ease;  /* Transición suave para los efectos */
-    display: inline-flex;
-    align-items: center;  /* Alineación vertical del texto e ícono */
-    text-align: center; /* Centrar el texto en el input */
-}
 
-/* Efecto hover */
-.envio3:hover {
-    background-color: #45a049;  /* Fondo verde más oscuro al pasar el mouse */
-    transform: scale(1.05);  /* Ligeramente más grande */
-}
+        /* Efecto de enfoque (cuando se hace clic en el botón) */
+        .envio3:focus {
+            outline: none;  /* Quitar el borde por defecto al hacer clic */
+            box-shadow: 0 0 8px rgba(0, 128, 0, 0.5);  /* Sombra verde */
+        }
 
-/* Efecto de enfoque (cuando se hace clic en el botón) */
-.envio3:focus {
-    outline: none;  /* Quitar el borde por defecto al hacer clic */
-    box-shadow: 0 0 8px rgba(0, 128, 0, 0.5);  /* Sombra verde */
-}
+        /* Si usas un ícono en el botón */
+        .envio3 i {
+            margin-right: 8px;  /* Separación entre el ícono y el texto */
+        }
 
-/* Si usas un ícono en el botón */
-.envio3 i {
-    margin-right: 8px;  /* Separación entre el ícono y el texto */
-}
+                /* Estilo general para los checkboxes dentro de la tabla */
+        table .seleccionar {
+            width: 20px;  /* Tamaño más pequeño y proporcional */
+            height: 20px;
+            border-radius: 4px;  /* Bordes redondeados */
+            border: 2px solid #ddd;  /* Borde sutil */
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            background-color: #fff;  /* Fondo blanco */
+            cursor: pointer;  /* Cursor tipo puntero para indicar que es clickeable */
+        }
+
+        /* Estilo cuando el checkbox está marcado */
+        table .seleccionar:checked {
+            background-color: #4CAF50;  /* Fondo verde cuando está marcado */
+            border-color: #4CAF50;  /* Cambio de borde a verde */
+        }
+
+        /* Estilo cuando el checkbox está en foco */
+        table .seleccionar:focus {
+            outline: none;  /* Elimina el borde azul por defecto */
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);  /* Agrega sombra verde suave cuando tiene foco */
+        }
+
+        /* Para dar una apariencia personalizada de la casilla */
+        table .seleccionar {
+            -webkit-appearance: none;  /* Elimina el estilo por defecto en Webkit (Chrome, Safari) */
+            -moz-appearance: none;  /* Elimina el estilo por defecto en Firefox */
+            appearance: none;  /* Elimina el estilo por defecto en todos los navegadores */
+            border-radius: 5px;  /* Bordes más redondeados */
+            background-color: #fff;  /* Fondo blanco */
+            width: 18px;
+            height: 18px;
+            border: 2px solid #bbb;  /* Borde gris claro */
+            display: inline-block;  /* Hace que el checkbox se vea como un cuadro */
+            position: relative;
+        }
+
+        /* Estilo cuando el checkbox está marcado con una paloma (check) */
+        table .seleccionar:checked::before {
+            content: '';  /* No necesita texto, solo la marca */
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: 8px;
+            height: 8px;
+            background-color: white;
+            border-radius: 2px;
+            border: solid 2px #fff;
+            transform: rotate(45deg);  /* Rota para formar una "X" */
+        }
+
 
     </style>
 </head>
