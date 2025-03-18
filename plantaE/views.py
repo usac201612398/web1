@@ -1861,13 +1861,82 @@ def procesarinvprodcontenv2(request):
     registros =  []
     
     for i in mensaje:
-        ref=inventarioProdTerm.objects.get(registro = i[0])
-        ref2=productoTerm.objects.get(itemsapcode = i[4])
+        #ref=inventarioProdTerm.objects.get(registro = i[0])
+        ref2=productoTerm.objects.get(itemsapcode = i[2])
         precio = float(ref2.precio) if ref2.precio is not None else 0.0
-        lbsintara = float(ref.lbsintara) if ref.lbsintara is not None else 0.0
+        #lbsintara = float(ref.lbsintara) if ref.lbsintara is not None else 0.0
 
-        importe=float(precio)*float(i[6])
-        salidacontenedores.objects.create(fecha=str(ref.fecha),palet=palet,importe=importe,fechasalcontenedor=today,contenedor=contenedor_,categoria=str(ref.categoria),cultivo=ref.cultivo,proveedor=ref.proveedor,itemsapcode = ref.itemsapcode,itemsapname = ref.itemsapname,orden=ref.orden,cajas=float(i[6]),lbsintara=(float(i[6])*lbsintara/ref.cajas),pesostdxcaja=ref.pesostdxcaja,pesostd=(float(i[6])*ref.pesostd/ref.cajas),merma=(float(i[6])*ref.merma/ref.cajas),pesorxcaja=ref.pesorxcaja,pesosinmerma=ref.pesosinmerma,calidad1=ref.calidad1)
+        importe=float(precio)*float(i[4])
+
+        # Obtener todas las salidas de inventario y salidas de contenedores
+        salidas = inventarioProdTerm.objects.filter(proveedor=i[0],itemsapcode=i[2])
+        salidas2 = salidacontenedores.objects.filter(proveedor=i[0],itemsapcode=i[2])
+
+        # Filtrar las salidas de inventario para las que tienen categoría 'Exportación' y sin 'status'
+        salidas = salidas.filter(categoria="Exportación").order_by('registro').exclude(status='Cerrado')
+
+        # Excluir los registros de salidas2 donde el contenedor esté vacío
+        salidas2 = salidas2.exclude(contenedor='0')
+
+        # Crear un diccionario para almacenar los resultados agrupados por 'itemsapcode' y 'proveedor'
+        agrupaciones = {}
+
+        # Agrupar las salidas de inventario (salidas) por 'itemsapcode' y 'proveedor'
+        for salida in salidas:
+            # Crear la clave de agrupación concatenando 'itemsapcode' y 'proveedor'
+            clave_agrupacion = (salida.itemsapcode, salida.proveedor)
+
+            if clave_agrupacion not in agrupaciones:
+                agrupaciones[clave_agrupacion] = {
+                    'itemsapcode': salida.itemsapcode,
+                    'itemsapname': salida.itemsapname,
+                    'proveedor': salida.proveedor,
+                    'cultivo': salida.cultivo,
+                    'total_cajas_salidas': 0,  # Cajas de salidas
+                    'total_cajas_salidas2': 0,  # Cajas de salidas2
+                    'total_libras_salidas': 0,  # Cajas de salidas
+                    'total_libras_salidas2': 0,  # Cajas de salidas2
+                    'salidas': []
+                }
+
+            # Acumular las cajas de las salidas
+            agrupaciones[clave_agrupacion]['total_cajas_salidas'] += salida.cajas
+            agrupaciones[clave_agrupacion]['salidas'].append(salida)
+            agrupaciones[clave_agrupacion]['total_libras_salidas'] += salida.lbsintara
+
+            # Agrupar las salidas de contenedores (salidas2) por 'itemsapcode' y 'proveedor'
+            for salida2 in salidas2:
+                # Verificar si el contenedor no está vacío antes de acumular las cajas
+                if salida2.contenedor is not None:
+                    # Crear la clave de agrupación concatenando 'itemsapcode' y 'proveedor'
+                    clave_agrupacion = (salida2.itemsapcode, salida2.proveedor)
+
+                    if clave_agrupacion in agrupaciones:
+                        # Acumular las cajas de las salidas2
+                        agrupaciones[clave_agrupacion]['total_cajas_salidas2'] += salida2.cajas
+                        
+                        agrupaciones[clave_agrupacion]['total_libras_salidas2'] += salida2.lbsintara
+
+            # Ahora, restamos las cajas de 'salidas2' de las de 'salidas' para cada agrupación
+            for agrupacion in agrupaciones.values():
+                # Restar las cajas de las salidas2 de las de las salidas
+                agrupacion['cajas_restantes'] = agrupacion['total_cajas_salidas'] - agrupacion['total_cajas_salidas2']
+                agrupacion['libras_restantes'] = agrupacion['total_libras_salidas'] - agrupacion['total_libras_salidas2']
+            
+            # Filtrar las agrupaciones donde las cajas restantes son mayores que 0
+            registros_agrupados = [
+                agrupacion for agrupacion in agrupaciones.values() if agrupacion['cajas_restantes'] > 0
+            ]
+
+            # Ordenar la lista de registros por el campo 'proveedor'
+            registros_agrupados = sorted(registros_agrupados, key=lambda x: x['proveedor'])
+        lbsintara_= (float(i[4])*agrupacion['libras_restantes']/agrupacion['cajas_restantes'])
+        pesostd_= (float(i[4])*ref2.pesostdxcaja)
+        merma_ = lbsintara_ - pesostd_
+        if merma_ <= 0 :
+            merma_ = 0 
+
+        salidacontenedores.objects.create(fecha=today,palet=palet,importe=importe,fechasalcontenedor=today,contenedor=contenedor_,categoria=str(ref2.categoria),cultivo=i[1],proveedor=i[0],itemsapcode = i[2],itemsapname = i[3],orden=ref2.orden,cajas=float(i[4]),lbsintara=lbsintara_,pesostdxcaja=ref2.pesostdxcaja,pesostd=pesostd_,merma=merma_,pesorxcaja=lbsintara_/float(i[4]),pesosinmerma=lbsintara_-merma_,calidad1=ref2.calidad1)
         # Crea un diccionario con los datos
     '''
     for i in mensaje:
@@ -1912,12 +1981,15 @@ def cargacontenedores_listv2(request):
                 'cultivo': salida.cultivo,
                 'total_cajas_salidas': 0,  # Cajas de salidas
                 'total_cajas_salidas2': 0,  # Cajas de salidas2
+                'total_libras_salidas': 0,  # Cajas de salidas
+                'total_libras_salidas2': 0,  # Cajas de salidas2
                 'salidas': []
             }
 
         # Acumular las cajas de las salidas
         agrupaciones[clave_agrupacion]['total_cajas_salidas'] += salida.cajas
         agrupaciones[clave_agrupacion]['salidas'].append(salida)
+        agrupaciones[clave_agrupacion]['total_libras_salidas'] += salida.lbsintara
 
     # Agrupar las salidas de contenedores (salidas2) por 'itemsapcode' y 'proveedor'
     for salida2 in salidas2:
@@ -1929,11 +2001,14 @@ def cargacontenedores_listv2(request):
             if clave_agrupacion in agrupaciones:
                 # Acumular las cajas de las salidas2
                 agrupaciones[clave_agrupacion]['total_cajas_salidas2'] += salida2.cajas
+                
+                agrupaciones[clave_agrupacion]['total_libras_salidas2'] += salida2.lbsintara
 
     # Ahora, restamos las cajas de 'salidas2' de las de 'salidas' para cada agrupación
     for agrupacion in agrupaciones.values():
         # Restar las cajas de las salidas2 de las de las salidas
         agrupacion['cajas_restantes'] = agrupacion['total_cajas_salidas'] - agrupacion['total_cajas_salidas2']
+        agrupacion['libras_restantes'] = agrupacion['total_libras_salidas'] - agrupacion['total_libras_salidas2']
     
     # Filtrar las agrupaciones donde las cajas restantes son mayores que 0
     registros_agrupados = [
