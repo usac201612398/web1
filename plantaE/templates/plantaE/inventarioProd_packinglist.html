@@ -133,61 +133,63 @@
             box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);  /* Sombra suave de color azul */
             outline: none;  /* Eliminar el contorno por defecto */
         }
-        /* Estilo para el contenedor de la etiqueta + select */
-        .inputs-row {
-            display: flex;  /* Usamos flexbox para alinear los elementos */
-            justify-content: flex-start;  /* Alinea el contenido desde el inicio */
-            align-items: center;  /* Alinea los elementos verticalmente al centro */
-            gap: 15px;  /* Espacio entre la etiqueta y el select */
-            margin-bottom: 15px;  /* Espacio inferior para separar de otros elementos */
-            width: 100%;  /* Asegura que el contenedor ocupe todo el ancho */
-        }
+/* Estilo para el contenedor de la etiqueta + select */
+.inputs-row {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    width: 100%;
+}
 
-        /* Estilo de la etiqueta (Contenedor:) */
-        .inputs-row label {
-            font-size: 16px;  /* Tamaño de fuente apropiado */
-            font-weight: bold;  /* Resaltar la etiqueta */
-            margin-right: 10px;  /* Separación con el select */
-        }
+/* Estilo de la etiqueta (Contenedor:) */
+.inputs-row label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-right: 10px;
+}
 
-        /* Estilo del select */
-        .select {
-            flex-grow: 1;  /* Asegura que el select ocupe el máximo espacio disponible */
-            max-width: 100%;  /* Limita el tamaño máximo */
-            display: flex;  /* Flexbox para centrar el contenido dentro del select */
-        }
+/* Estilo del select */
+.select {
+    flex-grow: 1;  /* Asegura que el select ocupe el máximo espacio disponible */
+    max-width: 100%;
+    display: flex;
+}
 
-        .select select {
-            width: 100%;  /* El select ocupará todo el espacio dentro del contenedor */
-            padding: 12px 20px;
-            font-size: 16px;
-            border: 1px solid #BDC3C7;
-            border-radius: 5px;
-            background-color: #F4F6F9;
-            box-sizing: border-box;  /* Asegura que el padding no afecte el ancho total */
-            transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-        }
+.select select {
+    width: 100%;  /* El select ocupa el ancho total disponible */
+    padding: 12px 20px;
+    font-size: 16px;
+    border: 1px solid #BDC3C7;
+    border-radius: 5px;
+    background-color: #F4F6F9;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    white-space: nowrap;  /* Evita el corte del texto largo */
+    text-overflow: ellipsis;  /* Añade "..." si el texto es muy largo */
+    overflow: hidden;  /* Oculta el texto que excede el ancho del select */
+}
 
-        /* Estilo cuando el select recibe el foco */
-        .select select:focus {
-            border-color: #3498DB;
-            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
-            background-color: #ffffff;
-            outline: none;
-        }
+/* Estilo cuando el select recibe el foco */
+.select select:focus {
+    border-color: #3498DB;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+    background-color: #ffffff;
+    outline: none;
+}
 
-        /* Para dispositivos pequeños, el select debería ocupar el 100% del ancho disponible */
-        @media (max-width: 600px) {
-            .inputs-row {
-                flex-direction: column;  /* Coloca la etiqueta y el select en una columna */
-                align-items: flex-start;  /* Alinea la etiqueta al inicio */
-            }
+/* Para dispositivos pequeños */
+@media (max-width: 600px) {
+    .inputs-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 
-            .select select {
-                width: 100%;  /* El select ocupará todo el ancho disponible */
-            }
-        }
-
+    .select select {
+        width: 100%;  /* Asegura que el select ocupe todo el ancho disponible */
+    }
+}
 
     </style>
 </head>
