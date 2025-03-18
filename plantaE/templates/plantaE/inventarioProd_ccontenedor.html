@@ -209,7 +209,7 @@ function myFunction2() {
                     // Verificar si hay un contenedor guardado en localStorage
                     var selectedContenedor = localStorage.getItem('selectedContenedor');
                     
-                    if (selectedContenedor !== null && selectedContenedor !== '') {
+                    if (selectedContenedor !== null && selectedContenedor !== '' && selectedContenedor !== 'Seleccione un contenedor') {
                         // Si el valor existe en localStorage, seleccionar el contenedor
                         $('#Conten').val(selectedContenedor);  // Seleccionar el contenedor guardado
                     } else {
