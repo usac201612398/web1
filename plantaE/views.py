@@ -1844,8 +1844,8 @@ def procesarinvprodconten(request):
     return JsonResponse({'mensaje':mensaje,'registros':registros})   
 
 
-def cargacontenedores_list(request):
-    
+def cargacontenedores_listv2(request):
+
     today = timezone.now().date()
 
     # Obtener todas las salidas de inventario y salidas de contenedores
