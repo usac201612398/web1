@@ -133,66 +133,59 @@
             box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);  /* Sombra suave de color azul */
             outline: none;  /* Eliminar el contorno por defecto */
         }
-
-        /* Estilo para los inputs cuando están dentro de un contenedor con espacio */
+        /* Estilo para el contenedor de la etiqueta + select */
         .inputs-row {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
+            display: flex;  /* Usamos flexbox para alinear los elementos */
+            justify-content: flex-start;  /* Alinea el contenido desde el inicio */
+            align-items: center;  /* Alinea los elementos verticalmente al centro */
+            gap: 15px;  /* Espacio entre la etiqueta y el select */
+            margin-bottom: 15px;  /* Espacio inferior para separar de otros elementos */
+            width: 100%;  /* Asegura que el contenedor ocupe todo el ancho */
         }
 
-        .inputs-row input {
-            width: 48%;  /* Divide los inputs en dos columnas (si la pantalla es suficientemente ancha) */
-            margin-bottom: 10px;
+        /* Estilo de la etiqueta (Contenedor:) */
+        .inputs-row label {
+            font-size: 16px;  /* Tamaño de fuente apropiado */
+            font-weight: bold;  /* Resaltar la etiqueta */
+            margin-right: 10px;  /* Separación con el select */
         }
-        /* Estilo para el select (input de contenedor) */
+
+        /* Estilo del select */
+        .select {
+            flex-grow: 1;  /* Asegura que el select ocupe el máximo espacio disponible */
+            max-width: 100%;  /* Limita el tamaño máximo */
+            display: flex;  /* Flexbox para centrar el contenido dentro del select */
+        }
+
         .select select {
-            width: 100%;  /* Hace que ocupe todo el ancho del contenedor */
+            width: 100%;  /* El select ocupará todo el espacio dentro del contenedor */
             padding: 12px 20px;
-            margin: 10px 0;
             font-size: 16px;
-            border: 1px solid #BDC3C7;  /* Borde gris claro */
-            border-radius: 5px;  /* Bordes redondeados */
-            background-color: #F4F6F9;  /* Fondo gris muy claro */
-            box-sizing: border-box;
+            border: 1px solid #BDC3C7;
+            border-radius: 5px;
+            background-color: #F4F6F9;
+            box-sizing: border-box;  /* Asegura que el padding no afecte el ancho total */
             transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
         }
 
         /* Estilo cuando el select recibe el foco */
         .select select:focus {
-            border-color: #3498DB;  /* Borde azul brillante */
-            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);  /* Sombra suave azul */
-            background-color: #ffffff;  /* Fondo blanco al enfocar */
-            outline: none;  /* Eliminar el contorno por defecto */
+            border-color: #3498DB;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+            background-color: #ffffff;
+            outline: none;
         }
 
-        /* Estilo para los elementos de la lista de opciones */
-        .select select option {
-            font-size: 16px;
-            padding: 10px;
-        }
+        /* Para dispositivos pequeños, el select debería ocupar el 100% del ancho disponible */
+        @media (max-width: 600px) {
+            .inputs-row {
+                flex-direction: column;  /* Coloca la etiqueta y el select en una columna */
+                align-items: flex-start;  /* Alinea la etiqueta al inicio */
+            }
 
-        /* Estilo del contenedor del select para añadir algo de espacio */
-        .select {
-            position: relative;
-        }
-
-        /* Opcional: Personalizar el ícono de la flecha del select */
-        .select::after {
-            content: '\f0d7';  /* Código para la flecha hacia abajo (icono de Font Awesome) */
-            font-family: 'Font Awesome 5 Free';  /* Usando Font Awesome para los íconos */
-            font-weight: 900;
-            color: #4A90E2;  /* Color de la flecha */
-            position: absolute;
-            top: 50%;
-            right: 15px;  /* Coloca la flecha en el lado derecho */
-            transform: translateY(-50%);  /* Centra la flecha verticalmente */
-            pointer-events: none;  /* Evita que el icono interfiera con la selección */
-        }
-
-        /* Cambiar el color de fondo de la flecha cuando se pasa el mouse */
-        .select select:hover {
-            border-color: #357ABD;  /* Bordes más oscuros cuando el mouse está encima */
+            .select select {
+                width: 100%;  /* El select ocupará todo el ancho disponible */
+            }
         }
 
 
