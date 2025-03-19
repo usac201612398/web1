@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 {% load static %}
 <html>
@@ -37,7 +36,7 @@
             margin-bottom: 10px;
             margin-top: 5px;
         }
-        
+
         .header-table td, .info-table td {
             padding: 8px;
             text-align: left;
@@ -48,13 +47,13 @@
             width: 100%;
             margin-bottom: 5px;
         }
-        
+
         .encabezado-table td {
             padding: 5px;
             text-align: center;
             vertical-align: middle;
         }
-        
+
         .header-logo {
             width: 50%; /* Ajusta al 50% del ancho del contenedor */
             height: auto; /* Mantiene la proporción original de la imagen */
@@ -113,7 +112,7 @@
         <table class="encabezado-table">
             <tr>
                 <!-- Logo -->
-                <td style="width: 15%"><img src="{% static 'img/logo.jpg' %}"  alt="logo" class="encabezado-logo"></td>
+                <td style="width: 15%"><img src="{% static 'img/logo.jpg' %}" alt="logo" class="encabezado-logo"></td>
                 <!-- Guía de Embarque -->
                 <td style="width: 55%">
                     <h3>Guía de Embarque</h3>
@@ -152,7 +151,7 @@
         </table>
 
         <!-- Tabla de productos -->
-        <table class="info-table">
+        <table class="info-table" id="productos-table">
             <thead>
                 <tr>
                     <th>Palet</th>
@@ -169,24 +168,28 @@
                     <td>{{ item.proveedor }}</td>
                     <td>{{ item.itemsapname }}</td>
                     <td>{{ item.fechasalcontenedor }}</td>
-                    <td>{{ item.total_cajas }}</td>
+                    <td class="cajas">{{ item.total_cajas }}</td>
                 </tr>
                 {% endfor %}
+                <!-- Fila con el total de cajas -->
+                <tr id="total-row">
+                    <td colspan="4"><strong>Total de Cajas:</strong></td>
+                    <td><strong id="total-cajas">0</strong></td>
+                </tr>
             </tbody>
         </table>
+
+        <!-- Pie de página -->
+        <table class="footer-table">
+            <thead>
+                <tr>
+                    <th colspan="5">Elaborado por: </th>
+                </tr>
+            </thead>
+        </table>
+
     </div>
-    <table class="">
-        <thead>
-            <tr>
-                <th>Elaborado por:</th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-            </tr>
-        </thead>
-    </table>
-</div>
+
     <!-- Botón de impresión -->
     <div class="container">
         <button onclick="window.print()" class="print-button">
@@ -194,6 +197,22 @@
             <span class="sr-only">Imprimir</span> <!-- Texto alternativo para accesibilidad -->
         </button>
     </div>
+
+    <!-- JavaScript para calcular el total de cajas -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var totalCajas = 0;
+            var cajas = document.querySelectorAll('.cajas');
+
+            // Sumar las cajas
+            cajas.forEach(function(caja) {
+                totalCajas += parseInt(caja.textContent) || 0; // Asegúrate de manejar cualquier valor no numérico
+            });
+
+            // Mostrar el total en el pie de la tabla
+            document.getElementById('total-cajas').textContent = totalCajas;
+        });
+    </script>
 </body>
 </html>
 
