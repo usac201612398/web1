@@ -127,6 +127,7 @@
                     <th >Cajas</th>
                     <th >Libras</th>
                     <th >Created</th>
+                    <th >Eliminar</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -142,6 +143,8 @@
                     <td>{{registro.cajas}}</td>
                     <td>{{registro.lbsintara}}</td>
                     <td>{{registro.created_at}}</td>
+                    <th ><a href="{% url 'inventarioProd__delete' registro.pk %}"><i class="fas fa-trash-alt"></i></a></th>
+                    
                     </tr> 
                         
                 {% endfor %}
@@ -150,7 +153,9 @@
             </div>
             </div>
         </div>
-        </div>
+    </div>
+    
+
 </body>
 </html>
 
