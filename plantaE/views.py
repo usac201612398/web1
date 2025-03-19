@@ -1827,7 +1827,7 @@ def packinglist_update(request, pk):
             return redirect('inventarioProd_packinglist_detail')
     else:
         form = salidacontenedoresForm(instance=salidas)
-    return render(request, 'plantaE/inentarioProd_packinglist_form.html', {'form': form})
+    return render(request, 'plantaE/inventarioProd_packinglist_form.html', {'form': form})
 
 def packinglist_delete(request, pk):
     salidas = get_object_or_404(salidacontenedores, pk=pk)
