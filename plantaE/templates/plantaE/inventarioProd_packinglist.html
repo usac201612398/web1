@@ -173,6 +173,7 @@ input[type="button"]:focus {
 
       <div>
         <button id="consultar">Consultar</button>
+        <input type="button" value="Palets" class="envio5">
         <input type="button" value="Validar" class="envio3">
         <input type="button" value="Imprimir" class="envio4">
       </div>
@@ -212,7 +213,8 @@ input[type="button"]:focus {
             </div>
         </div>
         </div>
-        
+        <br>
+        <a href="{% url 'inventarioProd_contenlistv2' %}">Regresar</a>
 </body>
 </html>
 <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
@@ -354,6 +356,10 @@ $('.envio4').on('click', function() {
         // Abrir una nueva ventana con la URL construida
         window.open(url, '_blank');  // '_blank' abrirá en una nueva pestaña
     }
+});
+
+$('.envio5').on('click', function() {
+    window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/inventarioProd/packinglist_detail');
 });
 
 

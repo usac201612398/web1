@@ -5,7 +5,7 @@ from openpyxl import Workbook
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect
 from .models import Actpeso,salidacontenedores, productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
-from .forms import pesosForm,salidasFrutaForm, contenedoresForm,recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
+from .forms import pesosForm,salidacontenedoresForm,salidasFrutaForm, contenedoresForm,recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
 from django.db.models import Sum, Q
 from django.utils import timezone
 import matplotlib.pyplot as plt
@@ -1809,6 +1809,33 @@ def contenedorpacking_list(request):
             return JsonResponse({'mensaje': 'No se encontraron datos para el contenedor seleccionado'})
 
     return render(request, 'plantaE/inventarioProd_packinglist.html', context)
+
+
+def contenedorpacking_list_detail(request):
+
+    # Filtra tus datos según la opción seleccionada
+    contenedores = salidacontenedores.objects.exclude(status="Cerrado").order_by("registro").values('registro','proveedor','itemsapcode','itemsapname','contenedor','fechasalcontenedor','cajas','importe','cultivo')
+
+
+    return render(request, 'plantaE/inventarioProd_packinglist_detail.html', {'registros':contenedores})
+
+def packinglist_update(request, pk):
+    salidas = get_object_or_404(salidacontenedores, pk=pk)
+    if request.method == 'POST':
+        form = salidacontenedoresForm(request.POST, instance=salidas)
+        if form.is_valid():
+            form.save()
+            return redirect('inventarioProd_packinglist_detail')
+    else:
+        form = salidacontenedoresForm(instance=salidas)
+    return render(request, 'plantaE/inentarioProd_packinglist_form.html', {'form': form})
+
+def packinglist_delete(request, pk):
+    salidas = get_object_or_404(salidacontenedores, pk=pk)
+    if request.method == 'POST':
+        salidas.delete()
+        return redirect('inventarioProd_packinglist_detail')
+    return render(request, 'plantaE/inventarioProd_packinglist_confirm_delete.html', {'registros': salidas})
 
 def procesarinvprodconten(request):
 
