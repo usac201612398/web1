@@ -2042,7 +2042,7 @@ def cargacontenedores_listv2(request):
     registros_agrupados = sorted(registros_agrupados, key=lambda x: x['proveedor'])
     registros_json = json.dumps(registros_agrupados, default=str)  # Usar default=str para evitar errores con objetos no serializables
 
-    return render(request, 'plantaE/inventarioProd_ccontenedor.html', {'fecha':today,'registros': registros_agrupados, 'registros_json':registros_json})
+    return render(request, 'plantaE/inventarioProd_ccontenedor.html', {'registros': registros_agrupados, 'registros_json':registros_json})
 
 
 def cargacontenedores_list(request):
