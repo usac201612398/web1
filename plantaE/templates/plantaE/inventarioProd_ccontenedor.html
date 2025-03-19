@@ -194,13 +194,21 @@
                     </div>
                 </form>      
             </div>
+            <div class="box">
+                <form>
+                    <div><label for="fecha">Fecha:</label></div>
+                    <div>
+                        <input class="input" id="date" type="date" value={{fecha}}>
+                    </div>
+                </form>      
+            </div>
         </div>
     </div>
 
     <div class="container">
         <div class="inputs-row">
       
-              <input class="input" type="text" id="myInput2" onkeyup="myFunction2()" placeholder="Buscar por nombre de item...Buscar proveedor...">
+              <input class="input" type="text" id="myInput2" onkeyup="myFunction2()" placeholder="Buscar por nombre de item...">
               <input class="input" type="text" id="myInput" onkeyup="myFunction()" placeholder="Buscar proveedor...">
            
         </div>
@@ -333,7 +341,7 @@ function myFunction2() {
                 },
                 success: function(data) {
                     console.log("Datos recibidos:", data);
-    
+                    $('#date').val(data.fecha);
                     // Limpia las opciones actuales del campo 'select'
                     $('#Conten').html('');
                     $('#Conten').append(
@@ -419,11 +427,14 @@ function myFunction2() {
             var conten = document.getElementById('Conten'),
                 value_conten = conten.value,
                 text_conten = conten.options[conten.selectedIndex].innerText;
+            var fecha = document.getElementById('date').value;
             filas.push(text_conten);
             // Guardar el valor del contenedor en localStorage antes de recargar la página
-            localStorage.setItem('selectedContenedor', text_conten);  
+            localStorage.setItem('selectedContenedor', text_conten);
+            filas.push(fecha);
             // Guardamos la fila seleccionada
             datos.push(filas);
+            
             
         }
     }

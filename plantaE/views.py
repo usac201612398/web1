@@ -1640,9 +1640,6 @@ def generate_packing_list_pdf(request):
         return JsonResponse({'error': 'No hay datos disponibles para esta semana'}, status=400)
 
        
-
-
-
 def inventarioProd_create(request):
     if request.method == 'POST':
         opcion1 = request.POST.get('opcion1')
@@ -1962,7 +1959,7 @@ def procesarinvprodcontenv2(request):
         if merma_ <= 0 :
             merma_ = 0 
 
-        salidacontenedores.objects.create(fecha=today,palet=palet,importe=importe,fechasalcontenedor=today,contenedor=contenedor_,categoria=str(ref2.categoria),cultivo=i[1],proveedor=i[0],itemsapcode = i[2],itemsapname = i[3],orden=ref2.orden,cajas=float(i[4]),lbsintara=lbsintara_,pesostdxcaja=ref2.pesostdxcaja,pesostd=pesostd_,merma=merma_,pesorxcaja=lbsintara_/float(i[4]),pesosinmerma=lbsintara_-merma_,calidad1=ref2.calidad1)
+        salidacontenedores.objects.create(fecha=i[7],palet=palet,importe=importe,fechasalcontenedor=today,contenedor=contenedor_,categoria=str(ref2.categoria),cultivo=i[1],proveedor=i[0],itemsapcode = i[2],itemsapname = i[3],orden=ref2.orden,cajas=float(i[4]),lbsintara=lbsintara_,pesostdxcaja=ref2.pesostdxcaja,pesostd=pesostd_,merma=merma_,pesorxcaja=lbsintara_/float(i[4]),pesosinmerma=lbsintara_-merma_,calidad1=ref2.calidad1)
         # Crea un diccionario con los datos
     '''
     for i in mensaje:
@@ -2045,7 +2042,7 @@ def cargacontenedores_listv2(request):
     registros_agrupados = sorted(registros_agrupados, key=lambda x: x['proveedor'])
     registros_json = json.dumps(registros_agrupados, default=str)  # Usar default=str para evitar errores con objetos no serializables
 
-    return render(request, 'plantaE/inventarioProd_ccontenedor.html', {'registros': registros_agrupados, 'registros_json':registros_json})
+    return render(request, 'plantaE/inventarioProd_ccontenedor.html', {'fecha':today,'registros': registros_agrupados, 'registros_json':registros_json})
 
 
 def cargacontenedores_list(request):
@@ -2217,9 +2214,10 @@ def inventariogeneralfruta_list(request):
     return render(request, 'plantaE/inventarioProd_inventariogeneralfruta.html', {'registros': registros_agrupados})
 
 def load_contenedores(request):
-    
+    today = timezone.now().date()
     adicionales = contenedores.objects.exclude(status='Cerrado').values('contenedor')
-    return JsonResponse({'adicionales':list(adicionales)})
+
+    return JsonResponse({'adicionales':list(adicionales), 'fecha': today})
 
 def escanearbarras(request):
     
