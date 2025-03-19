@@ -1959,7 +1959,7 @@ def procesarinvprodcontenv2(request):
         if merma_ <= 0 :
             merma_ = 0 
 
-        salidacontenedores.objects.create(fecha=i[7],palet=palet,importe=importe,fechasalcontenedor=today,contenedor=contenedor_,categoria=str(ref2.categoria),cultivo=i[1],proveedor=i[0],itemsapcode = i[2],itemsapname = i[3],orden=ref2.orden,cajas=float(i[4]),lbsintara=lbsintara_,pesostdxcaja=ref2.pesostdxcaja,pesostd=pesostd_,merma=merma_,pesorxcaja=lbsintara_/float(i[4]),pesosinmerma=lbsintara_-merma_,calidad1=ref2.calidad1)
+        salidacontenedores.objects.create(fecha=i[9],palet=palet,importe=importe,fechasalcontenedor=today,contenedor=contenedor_,categoria=str(ref2.categoria),cultivo=i[1],proveedor=i[0],itemsapcode = i[2],itemsapname = i[3],orden=ref2.orden,cajas=float(i[4]),lbsintara=lbsintara_,pesostdxcaja=ref2.pesostdxcaja,pesostd=pesostd_,merma=merma_,pesorxcaja=lbsintara_/float(i[4]),pesosinmerma=lbsintara_-merma_,calidad1=ref2.calidad1)
         # Crea un diccionario con los datos
     '''
     for i in mensaje:
@@ -2214,10 +2214,19 @@ def inventariogeneralfruta_list(request):
     return render(request, 'plantaE/inventarioProd_inventariogeneralfruta.html', {'registros': registros_agrupados})
 
 def load_contenedores(request):
-    today = timezone.now().date()
+    now = datetime.datetime.now()
+    fecha = now.date()
+    dia= fecha.day
+    mes= fecha.month
+    año= fecha.year
+    if mes < 10:
+        mes = "0" + str(mes)
+    if dia < 10:
+        dia = "0" + str(dia)
+    fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
     adicionales = contenedores.objects.exclude(status='Cerrado').values('contenedor')
 
-    return JsonResponse({'adicionales':list(adicionales), 'fecha': today})
+    return JsonResponse({'adicionales':list(adicionales), 'fecha': fecha_})
 
 def escanearbarras(request):
     
