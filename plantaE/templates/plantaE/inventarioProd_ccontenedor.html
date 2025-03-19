@@ -184,6 +184,26 @@
             flex: auto; 
             height: 100%;    
         }
+
+        /* Estilo para el input de tipo fecha */
+input[type="date"] {
+    width: 100%;  /* Asegura que el input ocupe todo el ancho disponible dentro de su contenedor */
+    max-width: 250px;  /* Limita el ancho máximo del campo de fecha */
+    padding: 10px;  /* Ajusta el espacio dentro del input */
+    font-size: 14px;  /* Ajusta el tamaño de la fuente */
+    text-align: center;  /* Alinea el texto de la fecha al centro */
+    border: 1px solid #ddd;  /* Borde sutil */
+    border-radius: 5px;  /* Bordes redondeados */
+    background-color: #fff;  /* Fondo blanco */
+    transition: all 0.3s ease;  /* Transición suave para el enfoque */
+}
+
+input[type="date"]:focus {
+    border-color: #4CAF50;  /* Cambia el borde a verde cuando está en foco */
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);  /* Agrega una sombra suave cuando está enfocado */
+    outline: none;  /* Elimina el borde de enfoque predeterminado */
+}
+
         /* Estilo general para el campo de fecha */
 #date {
     width: 100%;  /* Asegura que ocupe el ancho completo del contenedor */
