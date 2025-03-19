@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
     <title>Carga Contenedores</title>
     <style>
+
           .inputs-row {
         display: flex;
         flex-wrap: nwrap; /* Para que se acomoden bien en pantallas más pequeñas */
@@ -183,6 +184,34 @@
             flex: auto; 
             height: 100%;    
         }
+        /* Estilo general para el campo de fecha */
+#date {
+    width: 100%;  /* Asegura que ocupe el ancho completo del contenedor */
+    padding: 10px 12px;  /* Espaciado interno */
+    font-size: 16px;  /* Tamaño de fuente */
+    border: 1px solid #ddd;  /* Borde suave */
+    border-radius: 5px;  /* Bordes redondeados */
+    background-color: #fff;  /* Fondo blanco */
+    transition: all 0.3s ease;  /* Transición suave para el enfoque */
+    -webkit-appearance: none;  /* Elimina el estilo predeterminado en Webkit (Chrome, Safari) */
+    -moz-appearance: none;  /* Elimina el estilo predeterminado en Firefox */
+    appearance: none;  /* Elimina el estilo predeterminado en todos los navegadores */
+}
+
+/* Cambio de estilo cuando el campo tiene foco (cuando está seleccionado) */
+#date:focus {
+    border-color: #4CAF50;  /* Borde verde cuando se hace foco */
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);  /* Sombra verde suave */
+    outline: none;  /* Eliminar el borde azul predeterminado */
+}
+
+/* Opcional: Personalización del ícono de calendario */
+#date::-webkit-calendar-picker-indicator {
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/3/3b/Calendar_icon_%28web%29.svg');
+    background-size: 18px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
 
     </style>
 </head>
@@ -210,7 +239,7 @@
             </div>
             <div class="box">
                 <form>
-                    <div><label for="fecha">Fecha:</label></div>
+                    <div><label for="fecha">Fecha - Produccion:</label></div>
                     <div>
                         <input class="input" id="date" type="date" value={{fecha}}>
                     </div>
