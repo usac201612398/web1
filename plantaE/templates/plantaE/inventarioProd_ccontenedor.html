@@ -168,7 +168,21 @@
         #Conten option:first-child {
             color: #888;  /* Color gris claro para la opción predeterminada */
         }
+        .half {
+        display: flex;
+        height: 100%;
+        grid-template-columns:  repeat(auto-fit, minmax(min-content, max-content)); /* Divide cada mitad en dos columnas iguales */
+        gap: 5px; /* Espacio entre columnas */
+        text-align: center;
+        }
 
+        .box {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 10px;
+            flex: auto; 
+            height: 100%;    
+        }
 
     </style>
 </head>
