@@ -1817,7 +1817,7 @@ def contenedorpacking_list_detail(request):
     contenedores = salidacontenedores.objects.exclude(status="Cerrado").order_by("registro").values('registro','proveedor','itemsapcode','itemsapname','contenedor','fechasalcontenedor','cajas','importe','cultivo')
 
 
-    return render(request, 'plantaE/inventarioProd_packinglist_detail.html', {'registros':contenedores})
+    return render(request, 'plantaE/inventarioProd_packinglist_detail.html', {'data':contenedores})
 
 def packinglist_update(request, pk):
     salidas = get_object_or_404(salidacontenedores, pk=pk)
