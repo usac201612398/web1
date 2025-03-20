@@ -101,6 +101,24 @@
             background-color: #5a6268;
         }
 
+        /* Alineación de las etiquetas */
+        .form-row {
+            display: flex;
+            flex-direction: row; /* Los elementos estarán en fila */
+            align-items: center; /* Alinea verticalmente el contenido */
+        }
+
+        .form-label {
+            width: 150px; /* Definir un ancho fijo para las etiquetas */
+            font-weight: 500;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
         /* Asegurando que los botones estén en una fila */
         .button-row {
             display: flex;
@@ -108,22 +126,6 @@
             gap: 15px;
         }
 
-        /* Alineando etiquetas y campos en una sola fila */
-        .form-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .form-row .form-group {
-            flex: 1 1 48%; /* Ocupa el 48% del espacio disponible (esto hace que los campos se alineen en una fila) */
-        }
-
-        /* Mejorando la apariencia de las etiquetas */
-        .form-label {
-            font-weight: 500;
-            margin-bottom: 10px;
-        }
     </style>
 </head>
 <body>
@@ -148,25 +150,29 @@
         {% endif %}
 
         <!-- Renderizar el formulario con etiquetas alineadas -->
-        <div class="form-row">
-            <div class="form-group">
+        <div class="form-group">
+            <div class="form-row">
                 <label for="proveedor" class="form-label">Proveedor</label>
                 {{ form.proveedor }}
             </div>
+        </div>
 
-            <div class="form-group">
+        <div class="form-group">
+            <div class="form-row">
                 <label for="itemsapname" class="form-label">Item SAP</label>
                 {{ form.itemsapname }}
             </div>
         </div>
 
-        <div class="form-row">
-            <div class="form-group">
+        <div class="form-group">
+            <div class="form-row">
                 <label for="cajas" class="form-label">Cajas</label>
                 {{ form.cajas }}
             </div>
+        </div>
 
-            <div class="form-group">
+        <div class="form-group">
+            <div class="form-row">
                 <label for="registro" class="form-label">Registro</label>
                 {{ form.registro }}
             </div>
