@@ -267,7 +267,7 @@
 
         <!-- Botones centrados en una fila -->
         <div class="form-group button-row">
-            <button type="submit" class="btn btn-primary">Actualizar</button>
+            <button type="submit" class="btn btn-primary">{{ form.instance.pk|yesno:"Actualizar,Crear" }}</button>
             <a href="{% url 'contenedores_list' %}" class="btn btn-secondary">Regresar</a>
         </div>
     </form>
