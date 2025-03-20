@@ -72,6 +72,8 @@ urlpatterns = [
     path("inventarioProd",views.inventarioProd_list,name='inventarioProd_list'),
     path('inventarioProd/<int:pk>/', views.inventarioProd_detail, name='inventarioProd_detail'),
     path('inventarioProd/new/', views.inventarioProd_create, name='inventarioProd_create'),
+    
+    path('inventarioProd/<int:pk>/edit/', views.inventarioProd_update, name='inventarioProd_update'),
     path('inventarioProd/<int:pk>/delete/', views.inventarioProd_delete, name='inventarioProd_delete'),
     path("inventarioProd/cargacontenedor",views.cargacontenedores_list,name='inventarioProd_contenlist'),
     path("inventarioProd/cargacontenedorv2",views.cargacontenedores_listv2,name='inventarioProd_contenlistv2'),

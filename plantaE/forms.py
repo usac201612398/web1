@@ -98,23 +98,19 @@ class ccalidadForm(forms.ModelForm):
 class inventarioFrutaForm(forms.ModelForm):
 
     op_empaque = [('Cajas','Cajas'),('Libras','Libras')]
-    op_proveedor = [('','-'),('RIO','RIO'),('VALLE','VALLE'),('CIP','CIP'),('PASTORIA','PASTORIA')]
+    op_proveedor = [('','-'),('INVERSIONES LA PASTORIA, S.A.','INVERSIONES LA PASTORIA, S.A.'),('SDC','SDC'),('AGROINDUSTRIAS SAN RAFAEL, S.A.','AGROINDUSTRIAS SAN RAFAEL, S.A.'),('INVERNADEROS TECNOLOGICOS S.A','INVERNADEROS TECNOLOGICOS S.A'),('HORTEX, S.A.','HORTEX, S.A.'),('DANIEL ESTUARDO GALICIA CARRERA','DANIEL ESTUARDO GALICIA CARRERA'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.')]
     op_cultivo = [('','-'),('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
     op_categoria = [('','-'),('Mastronardi','Mastronardi'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolucion','Devolucion')]
     
-    fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'my-input'}))
+    registro = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
     proveedor = forms.ChoiceField(choices=op_proveedor, widget=forms.Select(attrs={'class': 'my-input'}))
-    cultivo = forms.ChoiceField(choices=op_cultivo, widget=forms.Select(attrs={'class': 'my-input'}))
-    categoria = forms.ChoiceField(choices=op_categoria, widget=forms.Select(attrs={'class': 'my-input'}))
-    calidad1 = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))
-    empaque = forms.ChoiceField(choices=op_empaque, widget=forms.Select(attrs={'class': 'my-input'}))
-    cajas = forms.DecimalField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
-    libras = forms.DecimalField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
-
+    itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))   # Campo de texto
+    cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
+    
     class Meta:
         
         model = inventarioProdTerm
-        fields = ['fecha','proveedor', 'cultivo', 'categoria', 'calidad1','empaque','cajas','libras']
+        fields = ['registro','proveedor','itemsapname','cajas']
 
 class contenedoresForm(forms.ModelForm):
 

@@ -1673,6 +1673,18 @@ def inventarioProd_delete(request, pk):
         return redirect('inventarioProd_list')
     return render(request, 'plantaE/inventarioProd_confirm_delete.html', {'registros': salidas})
 
+def inventarioProd_update(request, pk):
+    salidas = get_object_or_404(inventarioProdTerm, pk=pk)
+    if request.method == 'POST':
+        form = inventarioFrutaForm(request.POST, instance=salidas)
+        if form.is_valid():
+            form.save()
+            return redirect('inventarioProd_list')
+    else:
+        form = inventarioFrutaForm(instance=salidas)
+        
+    return render(request, 'plantaE/inventarioProd_form_edit.html', {'form': form})
+
 def load_inventarioProdparam(request):
     cultivo_ = request.GET.get('campo1')
     categoria_ = request.GET.get('campo2')
