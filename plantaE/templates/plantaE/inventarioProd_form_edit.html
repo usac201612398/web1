@@ -107,6 +107,23 @@
             justify-content: center;
             gap: 15px;
         }
+
+        /* Alineando etiquetas y campos en una sola fila */
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1 1 48%; /* Ocupa el 48% del espacio disponible (esto hace que los campos se alineen en una fila) */
+        }
+
+        /* Mejorando la apariencia de las etiquetas */
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -130,25 +147,29 @@
             </div>
         {% endif %}
 
-        <!-- Renderizar el formulario -->
-        <div class="form-group">
-            <label for="proveedor">Proveedor</label>
-            {{ form.proveedor }}
-        </div>
-        
-        <div class="form-group">
-            <label for="itemsapname">Item SAP</label>
-            {{ form.itemsapname }}
-        </div>
-        
-        <div class="form-group">
-            <label for="cajas">Cajas</label>
-            {{ form.cajas }}
+        <!-- Renderizar el formulario con etiquetas alineadas -->
+        <div class="form-row">
+            <div class="form-group">
+                <label for="proveedor" class="form-label">Proveedor</label>
+                {{ form.proveedor }}
+            </div>
+
+            <div class="form-group">
+                <label for="itemsapname" class="form-label">Item SAP</label>
+                {{ form.itemsapname }}
+            </div>
         </div>
 
-        <div class="form-group">
-            <label for="registro">Registro</label>
-            {{ form.registro }}
+        <div class="form-row">
+            <div class="form-group">
+                <label for="cajas" class="form-label">Cajas</label>
+                {{ form.cajas }}
+            </div>
+
+            <div class="form-group">
+                <label for="registro" class="form-label">Registro</label>
+                {{ form.registro }}
+            </div>
         </div>
 
         <!-- Botones en una misma fila -->
@@ -163,5 +184,6 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
 
 
