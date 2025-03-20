@@ -1602,7 +1602,7 @@ def generate_packing_list_pdf(request):
     if not df_filtrado.empty:
         # Agrupar por 'itemsapcode', 'palet', 'proveedor' y calcular la suma de las cajas
         df_agrupado = df_filtrado.groupby(['itemsapcode', 'palet', 'proveedor'], as_index=False).agg(
-            fechasalcontenedor=('fechasalcontenedor', 'first'),
+            fecha=('fecha', 'first'),
             palet=('palet', 'first'),
             itemsapname=('itemsapname', 'first'),
             proveedor=('proveedor', 'first'),
