@@ -304,7 +304,7 @@ def inventarioProd_grabarplantilla(request):
     for i in mensaje:
         pesostd = productoTerm.objects.filter(itemsapcode=i[0]).first()
         productor_ = productores.objects.filter(productor=i[5]).first()
-        pesotarima = 54    
+        pesotarima = 57 
         tara  = float(pesostd.taraxcaja)*int(i[2]) + pesotarima
         pesosintara = int(i[3]) - tara 
         pesoestandar = float(pesostd.pesostdxcaja)*int(i[2])
@@ -1761,8 +1761,6 @@ def reporteInventario(request):
             return JsonResponse({'datos': registros_finales, 'opcion1': opcion1}, safe=False)
 
     return render(request, 'plantaE/inventarioProd_reporteInv.html', context)
-
-
 
 def contenedorpacking_list(request):
     opcion1 = timezone.now().date()
