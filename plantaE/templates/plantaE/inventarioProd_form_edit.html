@@ -119,11 +119,11 @@
             margin-bottom: 20px;
         }
 
-        /* Asegurando que los botones estén en una fila */
+        /* Asegurando que los botones estén en una fila y centrados */
         .button-row {
             display: flex;
-            justify-content: center;
-            gap: 15px;
+            justify-content: center; /* Centra los botones */
+            gap: 15px; /* Da espacio entre los botones */
         }
 
     </style>
@@ -178,7 +178,7 @@
             </div>
         </div>
 
-        <!-- Botones en una misma fila -->
+        <!-- Botones centrados en una fila -->
         <div class="form-group button-row">
             <button type="submit" class="btn btn-primary">Actualizar</button>
             <a href="{% url 'inventarioProd_list' %}" class="btn btn-secondary">Regresar</a>
@@ -190,6 +190,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
 
 
 
