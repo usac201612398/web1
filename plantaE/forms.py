@@ -196,7 +196,7 @@ class salidacontenedoresForm(forms.ModelForm):
                 precio = 0.0  # Si no se encuentra el itemsapcode, el precio será 0
             
             # Obtener la cantidad de cajas (taraxcaja)
-            cajas = cleaned_data.get('cajas', 0)
+            cajas = cleaned_data.get('cajas')
             
             # Calcular el importe
             importe = precio * cajas
