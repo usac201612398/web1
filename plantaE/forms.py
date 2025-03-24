@@ -1,5 +1,5 @@
 from django import forms
-from .models import Actpeso,salidacontenedores,salidasFruta, contenedores, Recepciones, Ccalidad, inventarioProdTerm,AcumFruta, enviosFrutaPlantilla
+from .models import Actpeso,salidacontenedores,salidasFruta, productoTerm,contenedores, Recepciones, Ccalidad, inventarioProdTerm,AcumFruta, enviosFrutaPlantilla
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Fieldset, Div
 
@@ -138,6 +138,28 @@ class contenedoresForm(forms.ModelForm):
         
         model = contenedores
         fields = ['fecha','destino','contenedor','transportista','viaje','piloto','temperatura', 'ventilacion', 'marchamo', 'placacamion','horasalida','eta','etd','bl','booking']
+
+class itemsForm(forms.ModelForm):
+
+    op_cultivo =   [('ROMA','ROMA'),('AGUACATE','AGUACATE'),('ARANDANO','ARANDANO'),('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('BEEF','BEEF'),('SALADETTE','SALADETTE'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
+    op_categoria = [('Exportación','Exportación'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolución','Devolución')]
+    op_tipo =      [('Tomate','Tomate'),('Aguacate','Aguacate'),('Chile','Chile'),('Arandano','Arandano')]
+    
+    cultivo = forms.ChoiceField(choices=op_cultivo, widget=forms.Select(attrs={'class': 'my-input'}))
+    itemsapcode = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
+    itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
+    calidad1 = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
+    categoria = forms.ChoiceField(choices=op_categoria, widget=forms.Select(attrs={'class': 'my-input'}))
+    precio = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input'})) 
+    taraxcaja = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input'})) 
+    pesostdxcaja = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input'})) 
+    tipo = forms.ChoiceField(choices=op_tipo, widget=forms.Select(attrs={'class': 'my-input'}))  # Campo numérico
+    orden = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
+    
+    class Meta:
+        
+        model = productoTerm
+        fields = ['cultivo','itemsapcode','itemsapname','calidad1','categoria','precio','taraxcaja', 'pesostdxcaja', 'tipo', 'orden']
 
 class salidacontenedoresForm(forms.ModelForm):
 
