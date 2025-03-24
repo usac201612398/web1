@@ -160,7 +160,8 @@ class itemsForm(forms.ModelForm):
         
         model = productoTerm
         fields = ['cultivo','itemsapcode','itemsapname','calidad1','categoria','precio','taraxcaja', 'pesostdxcaja', 'tipo', 'orden']
-
+    
+    
 class salidacontenedoresForm(forms.ModelForm):
 
     #op_status = [('Pendiente','-'),('Cerrado','Cerrado')]
@@ -174,11 +175,31 @@ class salidacontenedoresForm(forms.ModelForm):
     cultivo = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'})) 
     itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
+    # Agregar un campo "importe" solo para mostrarlo, no para que sea editado por el usuario
+    importe = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
 
     
     class Meta:
         
         model = salidacontenedores
-        fields = ['fecha','contenedor','palet','proveedor','cultivo', 'itemsapname', 'cajas']
+        fields = ['fecha','contenedor','palet','proveedor','cultivo', 'itemsapname', 'cajas', 'importe']
 
-
+    def clean(self):
+            cleaned_data = super().clean()
+            
+            # Obtener el precio relacionado con el itemsapcode
+            itemsapcode = cleaned_data.get('itemsapcode')
+            try:
+                ref2 = productoTerm.objects.get(itemsapcode=itemsapcode)
+                precio = ref2.precio if ref2.precio else 0.0
+            except productoTerm.DoesNotExist:
+                precio = 0.0  # Si no se encuentra el itemsapcode, el precio será 0
+            
+            # Obtener la cantidad de cajas (taraxcaja)
+            cajas = cleaned_data.get('cajas', 0)
+            
+            # Calcular el importe
+            importe = precio * cajas
+            cleaned_data['importe'] = importe
+            
+            return cleaned_data
