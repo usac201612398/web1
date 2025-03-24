@@ -197,12 +197,12 @@ class salidacontenedoresForm(forms.ModelForm):
             precio = 0.0  # Si no se encuentra el itemsapname, el precio será 0
         
         # Obtener las libras y cajas
-        libras = cleaned_data.get('libras')
+        lbsintara = cleaned_data.get('lbsintara')
         cajas = cleaned_data.get('cajas')
         
         # Si las cajas son 0, evita división por cero
         if cajas > 0:
-            libras_por_caja = libras / cajas  # Calcular las libras por caja
+            libras_por_caja = lbsintara / cajas  # Calcular las libras por caja
         else:
             libras_por_caja = 0  # Si no hay cajas, no calculamos libras por caja
 
