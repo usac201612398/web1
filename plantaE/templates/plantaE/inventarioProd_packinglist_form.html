@@ -48,13 +48,14 @@
             margin-bottom: 15px;
         }
 
+        /* Estilos globales para todos los campos de formulario */
         .form-control {
             border-radius: 4px;
             border: 1px solid #ddd;
-            padding: 12px 15px;
+            padding: 12px 15px;  /* Asegura que los campos tengan el mismo tamaño */
             font-size: 14px;
-            width: 100%;
-            box-sizing: border-box;
+            width: 100%;  /* Se asegura de que los campos usen el ancho completo disponible */
+            box-sizing: border-box; /* Asegura que el padding no afecte el ancho del campo */
         }
 
         .form-control:focus {
@@ -62,10 +63,25 @@
             box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
         }
 
+        /* Estilos para campos no editables */
         .form-control[readonly], .form-control[disabled] {
             background-color: #f7f7f7;
             border-color: #ccc;
             color: #6c757d;
+        }
+
+        /* Mejorando el estilo de los campos select */
+        select.form-control {
+            background-color: #ffffff;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            padding: 12px 15px;
+            font-size: 14px;
+        }
+
+        select.form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
         }
 
         .back-link {
@@ -85,26 +101,41 @@
             background-color: #5a6268;
         }
 
+        /* Alineación de las etiquetas */
         .form-row {
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: row; /* Los elementos estarán en fila */
+            align-items: center; /* Alinea verticalmente el contenido */
         }
 
-        .form-row .col-md-6 {
-            width: 50%; /* Cada columna ocupa el 50% */
-            padding: 10px;
-        }
-
-        /* Alineación de las etiquetas */
-        .form-row .form-label {
+        .form-label {
+            width: 150px; /* Definir un ancho fijo para las etiquetas */
             font-weight: 500;
         }
 
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        /* Asegurando que los botones estén en una fila y centrados */
         .button-row {
             display: flex;
-            justify-content: center;
-            gap: 20px;
+            justify-content: center; /* Centra los botones */
+            gap: 20px; /* Da espacio entre los botones */
         }
+
+        .button-row button {
+            width: auto; /* Asegura que los botones no se estiren */
+        }
+
+        /* Garantiza que los botones no ocupen todo el espacio */
+        .button-row a, .button-row button {
+            width: auto; /* Ajusta los botones a su contenido */
+            padding: 10px 20px; /* Tamaño adecuado de botones */
+        }
+
     </style>
 </head>
 <body>
@@ -128,95 +159,98 @@
             </div>
         {% endif %}
 
-        <!-- Dividir los campos en dos columnas -->
+        <!-- Renderizar el formulario con etiquetas alineadas -->
         <div class="form-group">
             <div class="form-row">
-                <div class="col-md-6">
-                    <label for="fecha" class="form-label">Fecha</label>
-                    {{ form.fecha }}
-                </div>
-                <div class="col-md-6">
-                    <label for="eta" class="form-label">Contenedor</label>
-                    {{ form.contenedor }}
-                </div>
+                <label for="fecha" class="form-label">Fecha</label>
+                {{ form.fecha }}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <div class="col-md-6">
-                    <label for="etd" class="form-label">Palet</label>
-                    {{ form.palet }}
-                </div>
-                <div class="col-md-6">
-                    <label for="destino" class="form-label">Proveedor</label>
-                    {{ form.proveedor }}
-                </div>
+                <label for="eta" class="form-label">Contenedor</label>
+                {{ form.contenedor }}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <div class="col-md-6">
-                    <label for="contenedor" class="form-label">Cultivo</label>
-                    {{ form.cultivo }}
-                </div>
-                <div class="col-md-6">
-                    <label for="bl" class="form-label">Item SAP (Nombre)</label>
-                    {{ form.itemsapname }}
-                </div>
+                <label for="etd" class="form-label">Palet</label>
+                {{ form.palet }}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <div class="col-md-6">
-                    <label for="booking" class="form-label">Cajas</label>
-                    {{ form.cajas }}
-                </div>
-                <div class="col-md-6">
-                    <label for="transportista" class="form-label">Total</label>
-                    {{ form.importe }}
-                </div>
+                <label for="destino" class="form-label">Proveedor</label>
+                {{ form.proveedor }}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <div class="col-md-6">
-                    <label for="booking" class="form-label">Libras</label>
-                    {{ form.lbsintara }}
-                </div>
-                <div class="col-md-6">
-                    <label for="booking" class="form-label">Peso STD</label>
-                    {{ form.pesostd }}
-                </div>
+                <label for="contenedor" class="form-label">Cultivo</label>
+                {{ form.cultivo }}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <div class="col-md-6">
-                    <label for="booking" class="form-label">Peso STD x Caja</label>
-                    {{ form.pesostdxcaja }}
-                </div>
-                <div class="col-md-6">
-                    <label for="booking" class="form-label">Peso Real x Caja</label>
-                    {{ form.pesorxcaja }}
-                </div>
+                <label for="bl" class="form-label">Item SAP (Nombre)</label>
+                {{ form.itemsapname }}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <div class="col-md-6">
-                    <label for="booking" class="form-label">Merma</label>
-                    {{ form.merma }}
-                </div>
-                <div class="col-md-6">
-                    <label for="booking" class="form-label">Sin Merma</label>
-                    {{ form.pesosinmerma }}
-                </div>
+                <label for="booking" class="form-label">Cajas</label>
+                {{ form.cajas }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-row">
+                <label for="transportista" class="form-label">Total</label>
+                {{ form.importe }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-row">
+                <label for="booking" class="form-label">Libras</label>
+                {{ form.lbsintara }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-row">
+                <label for="booking" class="form-label">Peso STD</label>
+                {{ form.pesostd }}
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-row">
+                <label for="booking" class="form-label">Peso STD x Caja</label>
+                {{ form.pesostdxcaja }}
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-row">
+                <label for="booking" class="form-label">Peso Real x Caja</label>
+                {{ form.pesorxcaja }}
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-row">
+                <label for="booking" class="form-label">Merma</label>
+                {{ form.merma }}
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-row">
+                <label for="booking" class="form-label">Sin Merma</label>
+                {{ form.pesosinmerma }}
             </div>
         </div>
 
@@ -232,5 +266,4 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
 
