@@ -107,12 +107,12 @@ class inventarioFrutaForm(forms.ModelForm):
     itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))   # Campo de texto
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
     libras = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
-    lbsintara=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
-    pesostd=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
-    pesosinmerma=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
-    merma=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
-    pesostdxcaja=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
-    pesorxcaja=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
+    lbsintara=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
+    pesostd=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
+    pesosinmerma=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
+    merma=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
+    pesostdxcaja=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
+    pesorxcaja=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
     
     class Meta:
         
