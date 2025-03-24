@@ -106,11 +106,69 @@ class inventarioFrutaForm(forms.ModelForm):
     proveedor = forms.ChoiceField(choices=op_proveedor, widget=forms.Select(attrs={'class': 'my-input'}))
     itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))   # Campo de texto
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
+    libras = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
+    lbsintara=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
+    pesostd=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
+    pesosinmerma=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
+    merma=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
+    pesostdxcaja=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
+    pesorxcaja=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
     
     class Meta:
         
         model = inventarioProdTerm
-        fields = ['registro','proveedor','itemsapname','cajas']
+        fields = ['registro','proveedor','itemsapname','cajas','libras','lbsintara','pesostd','pesostdxcaja','pesorxcaja','merma','pesosinmerma']
+    def clean(self):
+        cleaned_data = super().clean()
+
+        # Obtener el nombre del artículo (itemsapname) y buscar el precio
+        itemsapname = cleaned_data.get('itemsapname')
+        try:
+            ref2 = productoTerm.objects.get(itemsapname=itemsapname)
+            taraxcaja = ref2.taraxcaja if ref2.taraxcaja else 0.0
+            pesostdxcaja = ref2.pesostdxcaja if ref2.pesostdxcaja else 0.0
+        except productoTerm.DoesNotExist:
+            precio = 0.0  # Si no se encuentra el itemsapname, el precio será 0
+        
+        # Obtener las libras y las cajas
+        pesorxcaja = cleaned_data.get('pesorxcaja')
+        
+        libras = cleaned_data.get('libras')
+        cajas = cleaned_data.get('cajas')
+        
+        tara = taraxcaja*cajas
+        lbsintara = libras-tara
+        pesorxcaja = lbsintara/cajas
+        pesostd = pesostdxcaja*cajas
+        if lbsintara - pesostd > 0:
+            merma = lbsintara - pesostd
+            pesosinmerma = lbsintara-merma
+        else:
+            merma = 0 
+            pesosinmerma = lbsintara
+    
+        # Recalcular las libras totales después de la actualización de las cajas
+        if cajas > 0:
+            total_libras = float(pesorxcaja) * cajas  # Recalcular libras totales
+        else:
+            total_libras = 0  # Si no hay cajas, el total de libras es 0
+
+        # Guardar los valores calculados en cleaned_data
+        cleaned_data['pesostd'] = pesostd
+        cleaned_data['lbsintara'] = total_libras  # Guardamos el valor de libras totales
+        cleaned_data['pesorxcaja'] = total_libras/cajas  # Guardamos el valor de libras totales
+        cleaned_data['pesostdxcaja'] = pesorxcaja  # Guardamos el valor de libras totales
+        cleaned_data['tara'] =   tara# Guardamos el valor de libras totales
+        
+        if float(cleaned_data['lbsintara'])-float(cleaned_data['pesostd'])>0:
+            cleaned_data['merma'] = float(cleaned_data['lbsintara'])-float(cleaned_data['pesostd'])  # Guardamos el valor de libras totales
+            cleaned_data['pesosinmerma'] = float(cleaned_data['lbsintara'])-float(cleaned_data['merma'])  # Guardamos el valor de libras totales
+        else:
+            cleaned_data['merma'] = 0  # Guardamos el valor de libras totales
+            cleaned_data['pesosinmerma'] = float(cleaned_data['lbsintara'])  # Guardamos el valor de libras totales
+        
+            
+        return cleaned_data
 
 class contenedoresForm(forms.ModelForm):
 

@@ -157,6 +157,13 @@
                 </ul>
             </div>
         {% endif %}
+        
+        <div class="form-group">
+            <div class="form-row">
+                <label for="registro" class="form-label">Registro</label>
+                {{ form.registro }}
+            </div>
+        </div>
 
         <!-- Renderizar el formulario con etiquetas alineadas -->
         <div class="form-group">
@@ -182,8 +189,50 @@
 
         <div class="form-group">
             <div class="form-row">
-                <label for="registro" class="form-label">Registro</label>
-                {{ form.registro }}
+                <label for="libras" class="form-label">Libras Brutas</label>
+                {{ form.libras }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-row">
+                <label for="lbsintara" class="form-label">Libras sin tara</label>
+                {{ form.lbsintara }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-row">
+                <label for="pesostd" class="form-label">Peso STD</label>
+                {{ form.pesostd }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-row">
+                <label for="pesostdxcaja" class="form-label">Peso STD x Caja</label>
+                {{ form.pesostdxcaja }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-row">
+                <label for="pesorxcaja" class="form-label">Peso Real x Caja</label>
+                {{ form.pesorxcaja }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-row">
+                <label for="merma" class="form-label">Merma</label>
+                {{ form.Merma }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-row">
+                <label for="pesosinmerma" class="form-label">Peso sin merma</label>
+                {{ form.pesosinmerma }}
             </div>
         </div>
 
