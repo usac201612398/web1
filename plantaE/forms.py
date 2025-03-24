@@ -196,6 +196,10 @@ class salidacontenedoresForm(forms.ModelForm):
         lbsintara = cleaned_data.get('lbsintara')
         cajas = cleaned_data.get('cajas')
 
+        # Si no se proporcionaron libras iniciales, el valor debería ser 0.
+        if lbsintara is None:
+            lbsintara = 0
+
         # Si las cajas son mayor a 0, evitamos la división por cero
         if cajas > 0:
             libras_por_caja = lbsintara / cajas  # Calcular libras por caja
@@ -205,10 +209,12 @@ class salidacontenedoresForm(forms.ModelForm):
         # Calcular el importe
         importe = precio * cajas
         
+        # Recalcular las libras totales según las cajas actuales
+        total_libras = libras_por_caja * cajas
+
         # Guardar los valores calculados en cleaned_data
         cleaned_data['importe'] = importe
+        cleaned_data['lbsintara'] = total_libras  # Guardamos el valor de libras totales
         cleaned_data['libras_por_caja'] = libras_por_caja  # Guardamos el valor de libras por caja
 
         return cleaned_data
-
-
