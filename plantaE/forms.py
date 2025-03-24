@@ -171,7 +171,7 @@ class salidacontenedoresForm(forms.ModelForm):
     itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
     importe = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
-    lbsintara = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
+    lbsintara = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input','readonly':'readonly'}))  # Campo numérico
     
     # Aquí añadimos el campo libras_por_caja si lo quieres mostrar, pero si no es necesario guardarlo en el modelo,
     # solo lo mostramos como un campo calculado. 
