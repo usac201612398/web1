@@ -189,29 +189,25 @@ class salidacontenedoresForm(forms.ModelForm):
             precio = 0.0  # Si no se encuentra el itemsapname, el precio será 0
         
         # Obtener las libras y las cajas
-        lbsintara = cleaned_data.get('lbsintara')
+        pesorxcaja = cleaned_data.get('pesorxcaja')
         cajas = cleaned_data.get('cajas')
-
-        # Si las cajas son mayor a 0, evitamos la división por cero
-        if cajas > 0:
-            libras_por_caja = lbsintara / cajas  # Calcular libras por caja
-        else:
-            libras_por_caja = 0  # Si no hay cajas, no calculamos libras por caja
 
         # Calcular el importe
         importe = precio * cajas
         
         # Recalcular las libras totales después de la actualización de las cajas
         if cajas > 0:
-            total_libras = libras_por_caja * cajas  # Recalcular libras totales
+            total_libras = pesorxcaja * cajas  # Recalcular libras totales
         else:
             total_libras = 0  # Si no hay cajas, el total de libras es 0
 
         # Guardar los valores calculados en cleaned_data
         cleaned_data['importe'] = importe
         cleaned_data['lbsintara'] = total_libras  # Guardamos el valor de libras totales
-        cleaned_data['libras_por_caja'] = libras_por_caja  # Guardamos el valor de libras por caja
-
+        cleaned_data['pesorxcaja'] = total_libras/cajas  # Guardamos el valor de libras totales
+        if cleaned_data['lbsintara']-cleaned_data['pesostd']>0:
+            cleaned_data['merma'] = cleaned_data['lbsintara']-cleaned_data['pesostd']  # Guardamos el valor de libras totales
+            cleaned_data['pesosinmerma'] = cleaned_data['lbsintara']-cleaned_data['merma']  # Guardamos el valor de libras totales
         return cleaned_data
 
 
