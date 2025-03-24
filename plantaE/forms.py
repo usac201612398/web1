@@ -177,29 +177,41 @@ class salidacontenedoresForm(forms.ModelForm):
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
     # Agregar un campo "importe" solo para mostrarlo, no para que sea editado por el usuario
     importe = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
-
+    
+    libras = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
     
     class Meta:
         
         model = salidacontenedores
-        fields = ['fecha','contenedor','palet','proveedor','cultivo', 'itemsapname', 'cajas', 'importe']
+        fields = ['fecha','contenedor','palet','proveedor','cultivo', 'itemsapname', 'cajas', 'importe','libras']
 
     def clean(self):
-            cleaned_data = super().clean()
-            
-            # Obtener el precio relacionado con el itemsapcode
-            itemsapcode = cleaned_data.get('itemsapcode')
-            try:
-                ref2 = productoTerm.objects.get(itemsapcode=itemsapcode)
-                precio = ref2.precio if ref2.precio else 0.0
-            except productoTerm.DoesNotExist:
-                precio = 0.0  # Si no se encuentra el itemsapcode, el precio será 0
-            
-            # Obtener la cantidad de cajas (taraxcaja)
-            cajas = cleaned_data.get('cajas')
-            
-            # Calcular el importe
-            importe = precio * cajas
-            cleaned_data['importe'] = importe
-            
-            return cleaned_data
+        cleaned_data = super().clean()
+
+        # Obtener el itemsapcode (en tu formulario no veo este campo, supongo que lo extraes de otro campo como 'itemsapname')
+        itemsapname = cleaned_data.get('itemsapname')
+        try:
+            ref2 = productoTerm.objects.get(itemsapname=itemsapname)
+            precio = ref2.precio if ref2.precio else 0.0
+        except productoTerm.DoesNotExist:
+            precio = 0.0  # Si no se encuentra el itemsapname, el precio será 0
+        
+        # Obtener las libras y cajas
+        libras = cleaned_data.get('libras')
+        cajas = cleaned_data.get('cajas')
+        
+        # Si las cajas son 0, evita división por cero
+        if cajas > 0:
+            libras_por_caja = libras / cajas  # Calcular las libras por caja
+        else:
+            libras_por_caja = 0  # Si no hay cajas, no calculamos libras por caja
+
+        # Calcular el importe
+        importe = precio * cajas
+        
+        # Guardar los resultados calculados
+        cleaned_data['importe'] = importe
+        cleaned_data['libras_por_caja'] = libras_por_caja  # Almacenamos libras por caja
+
+        return cleaned_data
+
