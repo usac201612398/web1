@@ -157,7 +157,7 @@ class inventarioFrutaForm(forms.ModelForm):
         cleaned_data['pesostd'] = pesostd
         cleaned_data['lbsintara'] = total_libras  # Guardamos el valor de libras totales
         cleaned_data['pesorxcaja'] = total_libras/cajas  # Guardamos el valor de libras totales
-        cleaned_data['pesostdxcaja'] = pesorxcaja  # Guardamos el valor de libras totales
+        cleaned_data['pesostdxcaja'] = pesostdxcaja  # Guardamos el valor de libras totales
         cleaned_data['tara'] =   tara# Guardamos el valor de libras totales
 
         if float(cleaned_data['lbsintara'])-float(cleaned_data['pesostd'])>0:
