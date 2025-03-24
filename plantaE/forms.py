@@ -105,8 +105,8 @@ class inventarioFrutaForm(forms.ModelForm):
     registro = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
     proveedor = forms.ChoiceField(choices=op_proveedor, widget=forms.Select(attrs={'class': 'my-input'}))
     itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))   # Campo de texto
-    cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
-    libras = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
+    cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
+    libras = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
     lbsintara=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
     pesostd=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
     pesosinmerma=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
@@ -159,7 +159,7 @@ class inventarioFrutaForm(forms.ModelForm):
         cleaned_data['pesorxcaja'] = total_libras/cajas  # Guardamos el valor de libras totales
         cleaned_data['pesostdxcaja'] = pesorxcaja  # Guardamos el valor de libras totales
         cleaned_data['tara'] =   tara# Guardamos el valor de libras totales
-        
+
         if float(cleaned_data['lbsintara'])-float(cleaned_data['pesostd'])>0:
             cleaned_data['merma'] = float(cleaned_data['lbsintara'])-float(cleaned_data['pesostd'])  # Guardamos el valor de libras totales
             cleaned_data['pesosinmerma'] = float(cleaned_data['lbsintara'])-float(cleaned_data['merma'])  # Guardamos el valor de libras totales
