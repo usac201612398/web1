@@ -173,6 +173,7 @@ class salidacontenedoresForm(forms.ModelForm):
     lbsintara = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly':'readonly'}))  # Campo numérico
     pesorxcaja = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly':'readonly'}))  # Campo numérico
     pesostd = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly':'readonly'}))  # Campo numérico
+    pesostdxcaja = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly':'readonly'}))  # Campo numérico
     pesosinmerma = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly':'readonly'}))  # Campo numérico
     merma = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly':'readonly'}))  # Campo numérico
     
@@ -180,7 +181,7 @@ class salidacontenedoresForm(forms.ModelForm):
 
     class Meta:
         model = salidacontenedores
-        fields = ['fecha', 'contenedor','pesorxcaja','pesostd','pesosinmerma','merma', 'palet', 'proveedor', 'cultivo', 'itemsapname', 'cajas', 'importe', 'lbsintara', 'libras_por_caja']
+        fields = ['fecha', 'contenedor','pesorxcaja','pesostdxcaja','pesostd','pesosinmerma','merma', 'palet', 'proveedor', 'cultivo', 'itemsapname', 'cajas', 'importe', 'lbsintara', 'libras_por_caja']
 
     def clean(self):
         cleaned_data = super().clean()
@@ -210,6 +211,8 @@ class salidacontenedoresForm(forms.ModelForm):
         cleaned_data['importe'] = importe
         cleaned_data['lbsintara'] = total_libras  # Guardamos el valor de libras totales
         cleaned_data['pesorxcaja'] = total_libras/cajas  # Guardamos el valor de libras totales
+        
+        cleaned_data['pesostd'] =   cleaned_data['pesostdxcaja']*cajas# Guardamos el valor de libras totales
         if float(cleaned_data['lbsintara'])-float(cleaned_data['pesostd'])>0:
             cleaned_data['merma'] = float(cleaned_data['lbsintara'])-float(cleaned_data['pesostd'])  # Guardamos el valor de libras totales
             cleaned_data['pesosinmerma'] = float(cleaned_data['lbsintara'])-float(cleaned_data['merma'])  # Guardamos el valor de libras totales
