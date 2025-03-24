@@ -216,6 +216,11 @@ class salidacontenedoresForm(forms.ModelForm):
         if float(cleaned_data['lbsintara'])-float(cleaned_data['pesostd'])>0:
             cleaned_data['merma'] = float(cleaned_data['lbsintara'])-float(cleaned_data['pesostd'])  # Guardamos el valor de libras totales
             cleaned_data['pesosinmerma'] = float(cleaned_data['lbsintara'])-float(cleaned_data['merma'])  # Guardamos el valor de libras totales
+        else:
+            cleaned_data['merma'] = 0  # Guardamos el valor de libras totales
+            cleaned_data['pesosinmerma'] = float(cleaned_data['lbsintara'])  # Guardamos el valor de libras totales
+        
+            
         return cleaned_data
 
 
