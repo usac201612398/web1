@@ -163,32 +163,28 @@ class itemsForm(forms.ModelForm):
     
     
 class salidacontenedoresForm(forms.ModelForm):
-
-    #op_status = [('Pendiente','-'),('Cerrado','Cerrado')]
-    #op_destino = [('Jonestown','Jonestown'),('Lakeland','Lakeland'),('Laredo, Texas','Laredo, Texas'),('Miami','Miami')]
-    #op_naviera = [('SEABOARD','SEABOARD'),('CROWLEY','CROWLEY')]
-
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'my-input'}))
     contenedor = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
-    palet = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'})) 
+    palet = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))
     proveedor = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
-    cultivo = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'})) 
+    cultivo = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
     itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
-    # Agregar un campo "importe" solo para mostrarlo, no para que sea editado por el usuario
     importe = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
-    
     lbsintara = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
     
+    # Aquí añadimos el campo libras_por_caja si lo quieres mostrar, pero si no es necesario guardarlo en el modelo,
+    # solo lo mostramos como un campo calculado. 
+    libras_por_caja = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
+
     class Meta:
-        
         model = salidacontenedores
-        fields = ['fecha','contenedor','palet','proveedor','cultivo', 'itemsapname', 'cajas', 'importe','lbsintara']
+        fields = ['fecha', 'contenedor', 'palet', 'proveedor', 'cultivo', 'itemsapname', 'cajas', 'importe', 'lbsintara', 'libras_por_caja']
 
     def clean(self):
         cleaned_data = super().clean()
 
-        # Obtener el itemsapcode (en tu formulario no veo este campo, supongo que lo extraes de otro campo como 'itemsapname')
+        # Obtener el nombre del artículo (itemsapname) y buscar el precio
         itemsapname = cleaned_data.get('itemsapname')
         try:
             ref2 = productoTerm.objects.get(itemsapname=itemsapname)
@@ -196,22 +192,23 @@ class salidacontenedoresForm(forms.ModelForm):
         except productoTerm.DoesNotExist:
             precio = 0.0  # Si no se encuentra el itemsapname, el precio será 0
         
-        # Obtener las libras y cajas
+        # Obtener las libras y las cajas
         lbsintara = cleaned_data.get('lbsintara')
         cajas = cleaned_data.get('cajas')
-        
-        # Si las cajas son 0, evita división por cero
+
+        # Si las cajas son mayor a 0, evitamos la división por cero
         if cajas > 0:
-            libras_por_caja = lbsintara / cajas  # Calcular las libras por caja
+            libras_por_caja = lbsintara / cajas  # Calcular libras por caja
         else:
             libras_por_caja = 0  # Si no hay cajas, no calculamos libras por caja
 
         # Calcular el importe
         importe = precio * cajas
         
-        # Guardar los resultados calculados
+        # Guardar los valores calculados en cleaned_data
         cleaned_data['importe'] = importe
-        cleaned_data['libras_por_caja'] = libras_por_caja  # Almacenamos libras por caja
+        cleaned_data['libras_por_caja'] = libras_por_caja  # Guardamos el valor de libras por caja
 
         return cleaned_data
+
 
