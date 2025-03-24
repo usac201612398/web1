@@ -170,8 +170,7 @@ class salidacontenedoresForm(forms.ModelForm):
     itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
     importe = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
-    lbsintara = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input','readonly':'readonly'}))  # Campo numérico
-    
+    lbsintara = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly':'readonly'}))  # Campo numérico
     libras_por_caja = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
 
     class Meta:
@@ -193,7 +192,7 @@ class salidacontenedoresForm(forms.ModelForm):
         lbsintara = cleaned_data.get('lbsintara')
         cajas = cleaned_data.get('cajas')
 
-        # Calcular las libras por caja antes de la actualización
+        # Si las cajas son mayor a 0, evitamos la división por cero
         if cajas > 0:
             libras_por_caja = lbsintara / cajas  # Calcular libras por caja
         else:
@@ -214,4 +213,5 @@ class salidacontenedoresForm(forms.ModelForm):
         cleaned_data['libras_por_caja'] = libras_por_caja  # Guardamos el valor de libras por caja
 
         return cleaned_data
+
 
