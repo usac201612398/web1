@@ -43,6 +43,17 @@
         border: 1px solid #ddd; /* Add a grey border */
         box-sizing: border-box;
     }
+
+    #myInput4 {
+    /*  background-image: url('/css/searchicon.png'); /* Add a search icon to input */
+        background-position: 10px 12px; /* Position the search icon */
+        background-repeat: no-repeat; /* Do not repeat the icon image */
+        width: 25%; /* Full-width */
+        font-size: 16px; /* Increase font-size */
+        padding: 12px 20px 12px 40px; /* Add some padding */
+        border: 1px solid #ddd; /* Add a grey border */
+        box-sizing: border-box;
+    }
         h1 {
             margin: 15px;
             font-family: Arial, sans-serif;
@@ -91,7 +102,8 @@
       
               <input class="input" type="text" id="myInput" onkeyup="myFunction()" placeholder="Buscar cultivo...">
               <input class="input" type="text" id="myInput2" onkeyup="myFunction2()" placeholder="Buscar item nombre...">
-              <input class="input" type="text" id="myInput3" onkeyup="myFunction3()" placeholder="Buscar por calidad...">
+              <input class="input" type="text" id="myInput3" onkeyup="myFunction3()" placeholder="Buscar por categoría...">
+              <input class="input" type="text" id="myInput4" onkeyup="myFunction4()" placeholder="Buscar por calidad 1...">
               
         </div>
     </div>
@@ -123,8 +135,8 @@
                     <th >Calidad 1</th>
                     <th >Categoria</th>
                     <th >Precio</th>
-                    <th >TaraxCaja</th>
-                    <th >PesostdxCaja</th>
+                    <th >TaraxEmpaque</th>
+                    <th >PesostdxEmpaque</th>
                     <th >Tipo</th>
                     <th >Orden</th>
                     <th >Editar</th>
@@ -141,8 +153,8 @@
                     <td>{{registro.calidad1}}</td>
                     <td>{{registro.categoria}}</td>
                     <td>{{registro.precio}}</td>
-                    <td>{{registro.taraxempaque}}</td>
-                    <td>{{registro.pesostdxempaque}}</td>
+                    <td>{{registro.taraxcaja}}</td>
+                    <td>{{registro.pesostdxcaja}}</td>
                     <td>{{registro.tipo}}</td>
                     <td>{{registro.orden}}</td>
                     <th ><a href="{% url 'items_update' registro.pk %}"> <i class="fas fa-edit"></i>Editar</a></th>
@@ -217,6 +229,28 @@
         // Loop through all table rows, and hide those who don't match the search query
         for (i = 0; i < tr.length; i++) {
           td = tr[i].getElementsByTagName("td")[5];
+          if (td) {
+            txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+              tr[i].style.display = "";
+            } else {
+              tr[i].style.display = "none";
+            }
+          }
+        }
+      }
+
+      function myFunction4() {
+        // Declare variables
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput4");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+      
+        // Loop through all table rows, and hide those who don't match the search query
+        for (i = 0; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td")[4];
           if (td) {
             txtValue = td.textContent || td.innerText;
             if (txtValue.toUpperCase().indexOf(filter) > -1) {
