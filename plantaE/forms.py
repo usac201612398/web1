@@ -171,11 +171,16 @@ class salidacontenedoresForm(forms.ModelForm):
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
     importe = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
     lbsintara = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly':'readonly'}))  # Campo numérico
+    pesorxcaja = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly':'readonly'}))  # Campo numérico
+    pesostd = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly':'readonly'}))  # Campo numérico
+    pesosinmerma = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly':'readonly'}))  # Campo numérico
+    merma = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly':'readonly'}))  # Campo numérico
+    
     libras_por_caja = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
 
     class Meta:
         model = salidacontenedores
-        fields = ['fecha', 'contenedor', 'palet', 'proveedor', 'cultivo', 'itemsapname', 'cajas', 'importe', 'lbsintara', 'libras_por_caja']
+        fields = ['fecha', 'contenedor','pesorxcaja','pesostd','pesosinmerma','merma', 'palet', 'proveedor', 'cultivo', 'itemsapname', 'cajas', 'importe', 'lbsintara', 'libras_por_caja']
 
     def clean(self):
         cleaned_data = super().clean()
@@ -197,7 +202,7 @@ class salidacontenedoresForm(forms.ModelForm):
         
         # Recalcular las libras totales después de la actualización de las cajas
         if cajas > 0:
-            total_libras = pesorxcaja * cajas  # Recalcular libras totales
+            total_libras = float(pesorxcaja) * cajas  # Recalcular libras totales
         else:
             total_libras = 0  # Si no hay cajas, el total de libras es 0
 
@@ -205,9 +210,9 @@ class salidacontenedoresForm(forms.ModelForm):
         cleaned_data['importe'] = importe
         cleaned_data['lbsintara'] = total_libras  # Guardamos el valor de libras totales
         cleaned_data['pesorxcaja'] = total_libras/cajas  # Guardamos el valor de libras totales
-        if cleaned_data['lbsintara']-cleaned_data['pesostd']>0:
-            cleaned_data['merma'] = cleaned_data['lbsintara']-cleaned_data['pesostd']  # Guardamos el valor de libras totales
-            cleaned_data['pesosinmerma'] = cleaned_data['lbsintara']-cleaned_data['merma']  # Guardamos el valor de libras totales
+        if float(cleaned_data['lbsintara'])-float(cleaned_data['pesostd'])>0:
+            cleaned_data['merma'] = float(cleaned_data['lbsintara'])-float(cleaned_data['pesostd'])  # Guardamos el valor de libras totales
+            cleaned_data['pesosinmerma'] = float(cleaned_data['lbsintara'])-float(cleaned_data['merma'])  # Guardamos el valor de libras totales
         return cleaned_data
 
 
