@@ -172,8 +172,6 @@ class salidacontenedoresForm(forms.ModelForm):
     importe = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
     lbsintara = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input','readonly':'readonly'}))  # Campo numérico
     
-    # Aquí añadimos el campo libras_por_caja si lo quieres mostrar, pero si no es necesario guardarlo en el modelo,
-    # solo lo mostramos como un campo calculado. 
     libras_por_caja = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
 
     class Meta:
@@ -195,11 +193,7 @@ class salidacontenedoresForm(forms.ModelForm):
         lbsintara = cleaned_data.get('lbsintara')
         cajas = cleaned_data.get('cajas')
 
-        # Si no se proporcionaron libras iniciales, el valor debería ser 0.
-        if lbsintara is None:
-            lbsintara = 0
-
-        # Calcular libras por caja antes de la actualización
+        # Calcular las libras por caja antes de la actualización
         if cajas > 0:
             libras_por_caja = lbsintara / cajas  # Calcular libras por caja
         else:
@@ -209,7 +203,10 @@ class salidacontenedoresForm(forms.ModelForm):
         importe = precio * cajas
         
         # Recalcular las libras totales después de la actualización de las cajas
-        total_libras = libras_por_caja * cajas  # Libras totales = libras por caja * nuevas cajas
+        if cajas > 0:
+            total_libras = libras_por_caja * cajas  # Recalcular libras totales
+        else:
+            total_libras = 0  # Si no hay cajas, el total de libras es 0
 
         # Guardar los valores calculados en cleaned_data
         cleaned_data['importe'] = importe
@@ -217,3 +214,4 @@ class salidacontenedoresForm(forms.ModelForm):
         cleaned_data['libras_por_caja'] = libras_por_caja  # Guardamos el valor de libras por caja
 
         return cleaned_data
+
