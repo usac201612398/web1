@@ -257,8 +257,7 @@
         <!-- Botones centrados en una fila -->
         <div class="form-group button-row">
             <button type="submit" class="btn btn-primary">{{ form.instance.pk|yesno:"Actualizar,Crear" }}</button>
-
-            <a href="{% url 'inventarioProd_packinglist_detail' %}">Volver a la vista de palets</a>
+            <a href="{% url 'inventarioProd_packinglist_detail' %}" class="btn btn-secondary">Volver a la vista de palets</a>
         </div>
     </form>
   </div>
