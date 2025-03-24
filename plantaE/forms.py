@@ -161,7 +161,6 @@ class itemsForm(forms.ModelForm):
         model = productoTerm
         fields = ['cultivo','itemsapcode','itemsapname','calidad1','categoria','precio','taraxcaja', 'pesostdxcaja', 'tipo', 'orden']
     
-    
 class salidacontenedoresForm(forms.ModelForm):
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'my-input'}))
     contenedor = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
@@ -200,7 +199,7 @@ class salidacontenedoresForm(forms.ModelForm):
         if lbsintara is None:
             lbsintara = 0
 
-        # Si las cajas son mayor a 0, evitamos la división por cero
+        # Calcular libras por caja antes de la actualización
         if cajas > 0:
             libras_por_caja = lbsintara / cajas  # Calcular libras por caja
         else:
@@ -209,8 +208,8 @@ class salidacontenedoresForm(forms.ModelForm):
         # Calcular el importe
         importe = precio * cajas
         
-        # Recalcular las libras totales según las cajas actuales
-        total_libras = libras_por_caja * cajas
+        # Recalcular las libras totales después de la actualización de las cajas
+        total_libras = libras_por_caja * cajas  # Libras totales = libras por caja * nuevas cajas
 
         # Guardar los valores calculados en cleaned_data
         cleaned_data['importe'] = importe
