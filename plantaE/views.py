@@ -2322,5 +2322,5 @@ def items_update(request, pk):
             form.save()
             return redirect('items_list')
     else:
-        form = contenedoresForm(instance=salidas)
+        form = itemsForm(instance=salidas)
     return render(request, 'plantaE/items_form.html', {'form': form})
