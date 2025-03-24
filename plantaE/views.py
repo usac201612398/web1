@@ -2311,7 +2311,7 @@ def items_create(request):
              # Imprimir errores para depuración
             return JsonResponse({'errores': form.errors}, status=400)
     else:
-        form = contenedoresForm()
+        form = itemsForm()
     return render(request, 'plantaE/items_form.html', {'form': form})
 
 def items_update(request, pk):
