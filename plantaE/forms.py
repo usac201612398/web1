@@ -169,21 +169,21 @@ class salidacontenedoresForm(forms.ModelForm):
     #op_naviera = [('SEABOARD','SEABOARD'),('CROWLEY','CROWLEY')]
 
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'my-input'}))
-    contenedor = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
+    contenedor = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
     palet = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'})) 
-    proveedor = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    cultivo = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'})) 
-    itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
+    proveedor = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
+    cultivo = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'})) 
+    itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
     # Agregar un campo "importe" solo para mostrarlo, no para que sea editado por el usuario
     importe = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
     
-    libras = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
+    lbsintara = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
     
     class Meta:
         
         model = salidacontenedores
-        fields = ['fecha','contenedor','palet','proveedor','cultivo', 'itemsapname', 'cajas', 'importe','libras']
+        fields = ['fecha','contenedor','palet','proveedor','cultivo', 'itemsapname', 'cajas', 'importe','lbsintara']
 
     def clean(self):
         cleaned_data = super().clean()
