@@ -1989,7 +1989,7 @@ def cargacontenedores_listv2(request):
     today = timezone.now().date()
 
     # Obtener todas las salidas de inventario y salidas de contenedores
-    salidas = inventarioProdTerm.objects.all()
+    salidas = inventarioProdTerm.objects.filter(fecha__lte=today)
     salidas2 = salidacontenedores.objects.all()
 
     # Filtrar las salidas de inventario para las que tienen categoría 'Exportación' y sin 'status'
@@ -2088,7 +2088,7 @@ def inventariogeneral_list(request):
     today = timezone.now().date()
 
     # Obtener todas las salidas de inventario y salidas de contenedores
-    salidas = inventarioProdTerm.objects.all()
+    salidas = inventarioProdTerm.objects.filter(fecha__lte=today)
     salidas2 = salidacontenedores.objects.all()
 
     # Filtrar las salidas de inventario para las que tienen categoría 'Exportación' y sin 'status'
