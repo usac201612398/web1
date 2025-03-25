@@ -1588,12 +1588,12 @@ def generate_packing_list_pdf(request):
         return JsonResponse({'error': 'Contenedor no encontrado'}, status=404)
 
     # Filtra los contenedores que no tienen el status "Cerrado" y que están en el array de contenedores
-    contenedores_a_imprimir = salidacontenedores.objects.filter(contenedor=contenedor).order_by("registro").values('proveedor','itemsapcode','itemsapname','contenedor','fechasalcontenedor','fecha','cajas','importe','cultivo','palet')
+    contenedores_a_imprimir = salidacontenedores.objects.filter(contenedor=contenedor).order_by("registro").values('proveedor','itemsapcode','itemsapname','contenedor','fecha','cajas','importe','cultivo','palet')
 
     # Convierte el QuerySet a un DataFrame de pandas
     df = pd.DataFrame(list(contenedores_a_imprimir))
-    df['fechasalcontenedor'] = pd.to_datetime(df['fechasalcontenedor'], errors='coerce')
-    df['semana_contenedor'] = df['fechasalcontenedor'].dt.isocalendar().week
+    df['fecha'] = pd.to_datetime(df['fecha'], errors='coerce')
+    df['semana_contenedor'] = df['fecha'].dt.isocalendar().week
     df['semana_actual'] = semana_actual
 
     # Filtra el DataFrame para que solo contenga los registros de la semana actual

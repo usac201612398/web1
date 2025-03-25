@@ -73,6 +73,7 @@
                 <thead id = "enc1">
                     <tr class="header">
                     <th >Registro</th>
+                    <th >Fecha</th>
                     <th >Contenedor</th>
                     <th >Palet</th>
                     <th >Cultivo</th>
@@ -88,6 +89,7 @@
                 {%for registro in data %} 
                 <tr> 
                     <td> {{registro.registro}}</td>
+                    <td> {{registro.fecha}}</td>
                     <td> {{registro.contenedor}}</td>
                     <td> {{registro.palet}}</td>
                     <td> {{registro.cultivo}}</td>
