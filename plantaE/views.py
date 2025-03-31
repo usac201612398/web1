@@ -1411,9 +1411,6 @@ def ccalidad_delete(request, pk):
         return redirect('ccalidad_list')
     return render(request, 'plantaE/ccalidad_confirm_delete.html', {'registros': salidas})
 
-from django.db.models import Sum
-from django.http import JsonResponse
-import datetime
 
 def obtener_llave_recepcion(request):
     # Obtén los criterios únicos filtrando por 'recepcion' mayor o igual a 2875
@@ -1451,6 +1448,12 @@ def obtener_llave_recepcion(request):
 
     # Eliminar duplicados en la lista de concatenaciones
     datos_modificados = list(set(datos_modificados))
+
+    # Filtrar los datos_modificados para mantener solo aquellos con suma de porcentaje menor a 1
+    datos_modificados = [
+        clave for clave in datos_modificados
+        if suma_dict.get(clave, 0) < 1  # Solo mantener claves cuyo porcentaje es menor que 1
+    ]
 
     # Obtener las causas de rechazo
     causa_rechazo = causasRechazo.objects.all().values('causa')
