@@ -109,7 +109,7 @@
                         // Recorre los productos recibidos y añade opciones al campo 'name'
                         $.each(initialCategoryId, function(index, product) {
                             $('#id_llave').append(
-                                $('<option>').text(product.datos_filtrados.toString()).attr('value', product.datos_filtrados.toString())      
+                                $('<option>').text(product).attr('value', product)      
                             );
                         });
                         
