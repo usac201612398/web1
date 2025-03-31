@@ -1442,9 +1442,9 @@ def obtener_llave_recepcion(request):
 
         # Realizar la concatenación condicional de 'finca' o 'llave' y 'cultivo'
         if item.finca == "Productor":
-            clave = f"{semana}-{item.llave}-{item.cultivo}"
+            clave = f"{semana} | {item.llave} | {item.cultivo}"
         else:
-            clave = f"{semana}-{item.finca}-{item.cultivo}"
+            clave = f"{semana} | {item.finca} | {item.cultivo}"
 
         # Agregar la clave concatenada a la lista de datos modificados
         datos_modificados.append(clave)
