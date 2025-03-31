@@ -1,63 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Registro Form</title>
-</head>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
-<body>
-    <h1 class="roboto">{{ form.instance.pk|yesno:"Editar Registro,Crear Registro" }}</h1>
-    <form method="post" id = "formCcalidad">
-        {% csrf_token %}
-        <div class = "row">
-            <div class="col-md-6">
-                <div class="form-group row">
-                    <label for="llave" class="col-sm-3 col-form-label">Llave:</label>
-                    <div class="col-sm-9">
-                        {{ form.llave }}
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group row">
-                    <label for="fecha" class="col-sm-3 col-form-label">Fecha:</label>
-                    <div class="col-sm-9">
-                        {{ form.fecha }}
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group row">
-                    <label for="porcentaje" class="col-sm-3 col-form-label">Porcentaje:</label>
-                    <div class="col-sm-9">
-                        {{ form.porcentaje }}
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group row">
-                    <label for="causarechazo" class="col-sm-3 col-form-label">Causa (Rechazo):</label>
-                    <div class="col-sm-9">
-                        {{ form.causarechazo }}
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group row">
-                    <label for="observaciones" class="col-sm-3 col-form-label">Observaciones:</label>
-                    <div class="col-sm-9">
-                        {{ form.observaciones }}
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="form-group button-row">
-            <button type="submit" class="btn btn-primary">{{ form.instance.pk|yesno:"Actualizar,Crear" }}</button>
-            <a href="{% url 'ccalidad_list' %}" class="btn btn-secondary">Regresar</a>
-        </div>
-    </form>
-
-</body>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro y actualización</title>
+    <!-- Vincula a un archivo CSS de Bootstrap para una apariencia profesional -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
         body {
@@ -189,6 +137,72 @@
         }
 
     </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Registro y actualización</h1>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Mostrar los errores del formulario -->
+        {% if form.errors %}
+            <div class="alert alert-danger">
+                <ul>
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <!-- Renderizar el formulario con etiquetas alineadas -->
+        <div class="form-group">
+            <div class="form-row">
+                <label for="fecha" class="form-label">Fecha</label>
+                {{ form.fecha }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-row">
+                <label for="eta" class="form-label">ETA</label>
+                {{ form.llave }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-row">
+                <label for="etd" class="form-label">ETD</label>
+                {{ form.causarechazo }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-row">
+                <label for="destino" class="form-label">Destino</label>
+                {{ form.porcentaje}}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-row">
+                <label for="contenedor" class="form-label">Contenedor</label>
+                {{ form.observaciones }}
+            </div>
+        </div>
+
+        <!-- Botones centrados en una fila -->
+        <div class="form-group button-row">
+            <button type="submit" class="btn btn-primary">{{ form.instance.pk|yesno:"Actualizar,Crear" }}</button>
+            <a href="{% url 'clist_list' %}" class="btn btn-secondary">Regresar</a>
+        </div>
+    </form>
+  </div>
+</body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
