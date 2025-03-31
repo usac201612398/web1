@@ -97,9 +97,9 @@
                 },
                 success: function(data) {
                     // Limpia las opciones actuales del campo 'name'
-                    var initialCategoryId =data.datos_modificados;  // Obtiene el valor inicial del campo 'category'
+                    var initialCategoryId =data.datos_filtrados;  // Obtiene el valor inicial del campo 'category'
                     var initialCategoryId2 = data.causa;
-                    console.log(data.datos_modificados)
+                    console.log(data.datos_filtrados)
                     $('#id_fecha').val(data.fecha);
                     if (initialCategoryId) {
                         $('#id_llave').html('');
