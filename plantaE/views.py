@@ -1452,18 +1452,6 @@ def obtener_llave_recepcion(request):
     # Eliminar duplicados en la lista de concatenaciones
     datos_modificados = list(set(datos_modificados))
 
-    # Filtrar las llaves de recepción si su suma es igual a 1
-    llaves_recepcion_filtradas = [
-        llave for llave in llave_recepcion 
-        if suma_dict.get(llave['criterio'], 0) != 1
-    ]
-
-    # Filtrar las claves concatenadas si su suma de porcentaje en Ccalidad es menor a 1
-    datos_filtrados = [
-        clave for clave in datos_modificados
-        if suma_dict.get(clave.split('-')[1], 0) != 1  # Compara la llave/finca con Ccalidad
-    ]
-
     # Obtener las causas de rechazo
     causa_rechazo = causasRechazo.objects.all().values('causa')
 
@@ -1485,11 +1473,11 @@ def obtener_llave_recepcion(request):
 
     # Devolver los datos en formato JSON
     return JsonResponse({
-        'llaves': list(llaves_recepcion_filtradas),
+        'llaves': "",
         'causa': list(causa_rechazo),
         'fecha': fecha_,
         'llave': list(llave_recepcion2),
-        'datos_filtrados': datos_filtrados  # Aquí se agregan las claves filtradas
+        'datos_filtrados': datos_modificados  # Aquí se agregan las claves filtradas
     })
 
 def load_ccalidadparam(request):
