@@ -50,8 +50,8 @@
                     <td>{{registro.observaciones}}</td>
                     <td>{{registro.created}}</td>
                     <td>{{registro.updated_at}}</td>
-                    <th ><a href="{% url 'ccalidad_update' registro.pk %}"><i class="fas fa-edit"></i></a></th>
-                    <th ><a href="{% url 'ccalidad_delete' registro.pk %}"><i class="fas fa-trash-alt"></i></a></th>
+                    <td ><a href="{% url 'ccalidad_update' registro.pk %}"><i class="fas fa-edit"></i></a></td>
+                    <td ><a href="{% url 'ccalidad_delete' registro.pk %}"><i class="fas fa-trash-alt"></i></a></td>
                     </tr> 
                         
                 {% endfor %}
