@@ -1411,76 +1411,98 @@ def ccalidad_delete(request, pk):
         return redirect('ccalidad_list')
     return render(request, 'plantaE/ccalidad_confirm_delete.html', {'registros': salidas})
 
-def obtener_llave_recepcion(request):
-    # Obtén la fecha límite
+from django.db.models import Sum
+from django.http import JsonResponse
+import datetime
 
-    # Obtén los criterios únicos filtrando por fecha
-    llave_recepcion = detallerec.objects.filter(recepcion__gte=304).values('criterio').distinct()
-    llave_recepcion2 = detallerec.objects.filter(recepcion__gte=304).values('recepcion').distinct()
-    #valor = Ccalidad.objects.filter(llave=llave_recepcion).aggregate(suma=Sum('porcentaje'))['suma']
-    # Crea un diccionario para almacenar las sumas de porcentaje por llave
+def obtener_llave_recepcion(request):
+    # Obtén los criterios únicos filtrando por 'recepcion' mayor o igual a 2875
+    llave_recepcion = detallerec.objects.filter(recepcion__gte=2875).values('criterio').distinct()
+    llave_recepcion2 = detallerec.objects.filter(recepcion__gte=2875).values('recepcion').distinct()
+
+    # Crea un diccionario para almacenar las sumas de porcentaje por llave en Ccalidad
     suma_por_llave = Ccalidad.objects.values('llave').annotate(suma=Sum('porcentaje'))
 
     # Convierte el resultado a un diccionario para facilitar el acceso
     suma_dict = {item['llave']: item['suma'] for item in suma_por_llave}
 
-    # Filtra las llaves_recepcion si su suma es igual a 1
-    llaves_recepcion_filtradas = [
-        llave for llave in llave_recepcion 
-        if suma_dict.get(llave['criterio'], 0) != 1
-    ]
+    # Obtener los registros de detallerec filtrando por 'recepcion' y calculando la semana de 'fechasalidafruta'
+    datos = detallerec.objects.filter(recepcion__gte=2875)
 
-    causa_rechazo = causasRechazo.objects.all().values('causa')
-    now = datetime.datetime.now()
-    fecha = now.date()
-    dia= fecha.day
-    mes= fecha.month
-    año= fecha.year
-    if mes < 10:
-        mes = "0" + str(mes)
-    if dia < 10:
-        dia = "0" + str(dia)
-    fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
-    return JsonResponse({'llaves': list(llaves_recepcion_filtradas),'causa':list(causa_rechazo),'fecha':fecha_,'llave':list(llave_recepcion2)})
-
-def load_ccalidadparam(request):
-    llave_recepcion = request.GET.get('category_id')
-
-    # Obtener los datos de 'detallerec' que sean relevantes para esta llave_recepcion
-    datos = detallerec.objects.filter(criterio=llave_recepcion).values('recepcion', 'fechasalidafruta', 'finca', 'cultivo', 'llave')
-
-    # Crear una lista para almacenar las concatenaciones
+    # Lista para almacenar las concatenaciones de la semana, finca/llave y cultivo
     datos_modificados = []
 
     for item in datos:
-        # Extraer el número de semana de la columna 'fechasalidafruta'
-        fecha = item['fechasalidafruta']
+        # Extraer el número de semana de la fecha 'fechasalidafruta'
+        fecha = item.fechasalidafruta
         if fecha:
             semana = fecha.isocalendar()[1]  # Usamos isocalendar() para obtener el número de semana
         else:
             semana = None
 
-        # Realizar la concatenación condicional
-        if item['finca'] == "Productor":
-            clave = f"{semana}-{item['llave']}-{item['cultivo']}"
+        # Realizar la concatenación condicional de 'finca' o 'llave' y 'cultivo'
+        if item.finca == "Productor":
+            clave = f"{semana}-{item.llave}-{item.cultivo}"
         else:
-            clave = f"{semana}-{item['finca']}-{item['cultivo']}"
+            clave = f"{semana}-{item.finca}-{item.cultivo}"
 
-        # Agregar el valor concatenado a la lista de datos modificados
+        # Agregar la clave concatenada a la lista de datos modificados
         datos_modificados.append(clave)
 
-    # Eliminar duplicados en la lista de datos concatenados
+    # Eliminar duplicados en la lista de concatenaciones
     datos_modificados = list(set(datos_modificados))
 
-    # Ahora, verificar que la suma de los porcentajes en Ccalidad para esa llave_recepcion sea menor a 1
+    # Filtrar las llaves de recepción si su suma es igual a 1
+    llaves_recepcion_filtradas = [
+        llave for llave in llave_recepcion 
+        if suma_dict.get(llave['criterio'], 0) != 1
+    ]
+
+    # Filtrar las claves concatenadas si su suma de porcentaje en Ccalidad es menor a 1
+    datos_filtrados = [
+        clave for clave in datos_modificados
+        if suma_dict.get(clave.split('-')[1], 0) != 1  # Compara la llave/finca con Ccalidad
+    ]
+
+    # Obtener las causas de rechazo
+    causa_rechazo = causasRechazo.objects.all().values('causa')
+
+    # Obtener la fecha actual en formato 'YYYY-MM-DD'
+    now = datetime.datetime.now()
+    fecha = now.date()
+    dia = fecha.day
+    mes = fecha.month
+    año = fecha.year
+
+    # Asegurarse de que el día y el mes tengan 2 dígitos
+    if mes < 10:
+        mes = "0" + str(mes)
+    if dia < 10:
+        dia = "0" + str(dia)
+    
+    # Formatear la fecha
+    fecha_ = f"{año}-{mes}-{dia}"
+
+    # Devolver los datos en formato JSON
+    return JsonResponse({
+        'llaves': list(llaves_recepcion_filtradas),
+        'causa': list(causa_rechazo),
+        'fecha': fecha_,
+        'llave': list(llave_recepcion2),
+        'datos_filtrados': datos_filtrados  # Aquí se agregan las claves filtradas
+    })
+
+def load_ccalidadparam(request):
+    llave_recepcion = request.GET.get('category_id')
+    datos = detallerec.objects.filter(criterio=llave_recepcion).values('recepcion').distinct('recepcion')
     valor = Ccalidad.objects.filter(llave=llave_recepcion).aggregate(suma=Sum('porcentaje'))['suma']
-
-    # Si la suma es 1, eliminamos la opción de los datos concatenados
-    if valor is not None and valor == 1:
-        datos_modificados = []
-
-    # Devolver la respuesta con los datos modificados y el valor
-    return JsonResponse({'datos': datos_modificados, 'valor': valor if valor is not None else 1})
+    if valor != None:
+        valor = 1-float(Ccalidad.objects.filter(llave=llave_recepcion).aggregate(suma=Sum('porcentaje'))['suma'])
+        
+    else:
+        valor=1
+    
+    return JsonResponse({'datos': list(datos),'valor':valor})
 
 def inventarioProd_list(request):
     today = timezone.localtime(timezone.now()).date()
