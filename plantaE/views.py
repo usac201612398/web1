@@ -1445,15 +1445,42 @@ def obtener_llave_recepcion(request):
 
 def load_ccalidadparam(request):
     llave_recepcion = request.GET.get('category_id')
-    datos = detallerec.objects.filter(criterio=llave_recepcion).values('recepcion').distinct('recepcion')
+
+    # Obtener los datos de 'detallerec' que sean relevantes para esta llave_recepcion
+    datos = detallerec.objects.filter(criterio=llave_recepcion).values('recepcion', 'fechasalidafruta', 'finca', 'cultivo', 'llave')
+
+    # Crear una lista para almacenar las concatenaciones
+    datos_modificados = []
+
+    for item in datos:
+        # Extraer el número de semana de la columna 'fechasalidafruta'
+        fecha = item['fechasalidafruta']
+        if fecha:
+            semana = fecha.isocalendar()[1]  # Usamos isocalendar() para obtener el número de semana
+        else:
+            semana = None
+
+        # Realizar la concatenación condicional
+        if item['finca'] == "Productor":
+            clave = f"{semana}-{item['llave']}-{item['cultivo']}"
+        else:
+            clave = f"{semana}-{item['finca']}-{item['cultivo']}"
+
+        # Agregar el valor concatenado a la lista de datos modificados
+        datos_modificados.append(clave)
+
+    # Eliminar duplicados en la lista de datos concatenados
+    datos_modificados = list(set(datos_modificados))
+
+    # Ahora, verificar que la suma de los porcentajes en Ccalidad para esa llave_recepcion sea menor a 1
     valor = Ccalidad.objects.filter(llave=llave_recepcion).aggregate(suma=Sum('porcentaje'))['suma']
-    if valor != None:
-        valor = 1-float(Ccalidad.objects.filter(llave=llave_recepcion).aggregate(suma=Sum('porcentaje'))['suma'])
-        
-    else:
-        valor=1
-    
-    return JsonResponse({'datos': list(datos),'valor':valor})
+
+    # Si la suma es 1, eliminamos la opción de los datos concatenados
+    if valor is not None and valor == 1:
+        datos_modificados = []
+
+    # Devolver la respuesta con los datos modificados y el valor
+    return JsonResponse({'datos': datos_modificados, 'valor': valor if valor is not None else 1})
 
 def inventarioProd_list(request):
     today = timezone.localtime(timezone.now()).date()
