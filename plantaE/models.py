@@ -72,7 +72,7 @@ class AcumFruta(models.Model):
 
     id = models.AutoField(primary_key=True)
     fecha = models.DateField(blank=True, null=True)
-    finca = models.CharField(max_length=25,choices=op_finca,null=True)
+    finca = models.CharField(max_length=50,choices=op_finca,null=True)
     orden = models.CharField(max_length=20,choices=op_orden,null=True)
     cultivo = models.CharField(max_length=45,choices=op_cultivo,null=True)
     variedad = models.CharField(max_length=40,choices=op_variedad,null=True)
