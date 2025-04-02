@@ -86,6 +86,7 @@ class AcumFruta(models.Model):
     op_sap = models.CharField(max_length=20,blank=True, null=True)
     recepcion = models.BigIntegerField(blank=True, null=True)
     viaje = models.CharField(max_length=30,null=True,blank=True)
+    nsalidafruta = models.BigIntegerField(blank=True, null=True)
 
     def __str__(self):
         return (str(self.id) + " | " + str(self.fecha) + " | " + str(self.finca)+ " | " + str(self.cultivo) + " | " + str(self.variedad)+ " | " + str(self.estructura)+ " | " + str(self.viaje))
@@ -246,6 +247,7 @@ class Recepciones(models.Model):
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
     enviofruta = models.BigIntegerField(blank=True, null=True)
     orden = models.CharField(max_length=30, blank=True, null=True)
+    viaje = models.CharField(max_length=30, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -438,6 +440,7 @@ class detallerec(models.Model):
     boleta = models.BigIntegerField(blank=True, null = True)
     fechasalidafruta = models.DateField(blank=True, null=True)
     
+    viaje = models.CharField(max_length=30, blank=True, null=True)
     orden = models.CharField(max_length=30, blank=True, null=True)
 
 class detallerecaux(models.Model):
