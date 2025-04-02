@@ -120,7 +120,7 @@ class salidasFruta(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return (str(self.finca)+ " | " + str(self.encargado) + " | " + str(self.viaje)+ " | " + str(self.cultivo))
+        return (str(self.id)+ " | " + str(self.finca)+ " | " + str(self.encargado) + " | " + str(self.viaje)+ " | " + str(self.cultivo))
 
 class enviosFrutaPlantilla(models.Model):
     op_viajes = [('','-'),('Viaje 1','Viaje 1'),('Viaje 2','Viaje 2'),('Viaje 3', 'Viaje 3'),('Viaje 4','Viaje 4'),('Viaje 5','Viaje 5'),('Viaje 6','Viaje 6'),('Viaje 7','Viaje 7'),('Viaje 8','Viaje 8')]
