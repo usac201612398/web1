@@ -493,11 +493,12 @@ def guardar_plantillaValle(request):
 
     df = pd.DataFrame(mensaje,columns=['Encargado','Orden','Cultivo','Estructura','Variedad','Cajas','Blank','Finca','Viaje','Fecha','Correo'])
     
-    resultado = df.groupby(['Variedad','Cultivo'] ).agg({
+    resultado = df.groupby(['Variedad','Orden'] ).agg({
         'Encargado': 'first',  # O 'last', 'min', 'max', etc.
         'Finca': 'first',
         'Viaje': 'first',
         'Fecha': 'first',
+        'Cultivo': 'first',
         'Correo': 'first',
         'Cajas': 'sum'
     }).reset_index()
@@ -512,6 +513,7 @@ def guardar_plantillaValle(request):
             variedad=i['Variedad'],
             cajas=i['Cajas'],
             viaje=i['Viaje'],
+            orden=i['Orden'],
             correo=i['Correo']
         )
     

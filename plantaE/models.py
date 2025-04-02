@@ -111,7 +111,7 @@ class salidasFruta(models.Model):
     variedad = models.CharField(max_length=40,choices=op_variedad,null=True)
     cajas = models.IntegerField(blank=True, null=True)
     
-    #orden = models.CharField(max_length=20,choices=op_orden,null=True)
+    orden = models.CharField(max_length=20,choices=op_orden,null=True)
     libras = models.FloatField(blank=True, null=True)
     recepcion = models.BigIntegerField(blank=True, null=True)
     correo = models.CharField(max_length=75, blank=True,choices=op_correo,null=True)
