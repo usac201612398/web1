@@ -104,6 +104,7 @@ class inventarioFrutaForm(forms.ModelForm):
     
     registro = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
     proveedor = forms.ChoiceField(choices=op_proveedor, widget=forms.Select(attrs={'class': 'my-input'}))
+    itemsapcode = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'})) 
     itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))   # Campo de texto
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
     libras = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
@@ -117,14 +118,14 @@ class inventarioFrutaForm(forms.ModelForm):
     class Meta:
         
         model = inventarioProdTerm
-        fields = ['registro','proveedor','itemsapname','cajas','libras','lbsintara','pesostd','pesostdxcaja','pesorxcaja','merma','pesosinmerma']
+        fields = ['registro','proveedor','itemsapcode','itemsapname','cajas','libras','lbsintara','pesostd','pesostdxcaja','pesorxcaja','merma','pesosinmerma']
     def clean(self):
         cleaned_data = super().clean()
 
         # Obtener el nombre del artículo (itemsapname) y buscar el precio
-        itemsapname = cleaned_data.get('itemsapname')
+        itemsapcode = cleaned_data.get('itemsapcode')
         try:
-            ref2 = productoTerm.objects.get(itemsapname=itemsapname)
+            ref2 = productoTerm.objects.get(itemsapcode=itemsapcode)
             taraxcaja = ref2.taraxcaja if ref2.taraxcaja else 0.0
             pesostdxcaja = ref2.pesostdxcaja if ref2.pesostdxcaja else 0.0
         except productoTerm.DoesNotExist:
