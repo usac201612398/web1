@@ -2321,7 +2321,7 @@ def contenedores_create(request):
     # Si existe un último contenedor, pre-llenar el campo 'nombre' con el valor del último contenedor
     initial_data = {}
     if ultimo_contenedor:
-        initial_data['nombre'] = ultimo_contenedor.nombre  # Cambia 'nombre' por el nombre del campo relevante
+        initial_data['viaje'] = ultimo_contenedor.viaje  # Cambia 'nombre' por el nombre del campo relevante
 
     # Crear el formulario con los valores iniciales
     form = contenedoresForm(initial=initial_data)
