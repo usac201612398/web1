@@ -2310,11 +2310,26 @@ def contenedores_create(request):
                 return JsonResponse({'error': str(e)}, status=400)
             return redirect('contenedores_list')
         else:
-             # Imprimir errores para depuración
+            # Imprimir errores para depuración
             return JsonResponse({'errores': form.errors}, status=400)
     else:
         form = contenedoresForm()
-    return render(request, 'plantaE/contenedores_form.html', {'form': form})
+
+    # Obtener el último registro del contenedor
+    ultimo_contenedor = contenedores.objects.last()
+
+    # Si existe un último contenedor, pre-llenar el campo 'nombre' con el valor del último contenedor
+    initial_data = {}
+    if ultimo_contenedor:
+        initial_data['nombre'] = ultimo_contenedor.nombre  # Cambia 'nombre' por el nombre del campo relevante
+
+    # Crear el formulario con los valores iniciales
+    form = contenedoresForm(initial=initial_data)
+
+    return render(request, 'plantaE/contenedores_form.html', {
+        'form': form,
+        'ultimo_contenedor': ultimo_contenedor,
+    })
 
 def contenedores_update(request, pk):
     salidas = get_object_or_404(contenedores, pk=pk)
