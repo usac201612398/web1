@@ -385,6 +385,9 @@ class productoTerm(models.Model):
     cultivo = models.CharField(max_length=50, choices=op_cultivo, blank=True, null=True)
     itemsapcode  = models.CharField(max_length=50, blank=True, null=True)
     itemsapname = models.CharField(max_length=200, blank=True, null=True)
+    
+    itemsapcodelibra = models.CharField(max_length=200, blank=True, null=True)
+    
     calidad1 = models.CharField(max_length=200, blank=True, null=True)
     precio = models.FloatField(blank=True, null=True)
     categoria = models.CharField(max_length=50, choices=op_categoria, blank=True, null=True)
