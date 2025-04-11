@@ -205,7 +205,7 @@ class Boletas(models.Model):
     opsap = models.CharField(max_length=20, blank=True, null=True)
     categoria = models.CharField(max_length=30, blank=True, null=True)
     idpedido = models.BigIntegerField(blank=True, null=True)
-    itemsaplibracode = models.CharField(max_length=30, blank=True, null=True)
+    itemsapcodelibra = models.CharField(max_length=30, blank=True, null=True)
     emisiones = models.CharField(max_length=30, blank=True, null=True)
     comentario = models.CharField(max_length=30, blank=True, null=True)
     
