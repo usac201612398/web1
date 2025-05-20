@@ -1923,109 +1923,123 @@ def procesarinvprodcontenv2(request):
 
     data = json.loads(request.body)
     mensaje = data['array']
-    contenedor_=data['contenedor']
+    contenedor_ = data['contenedor']
     today = timezone.now().date()
-    semana_actual = today.isocalendar()[1]  # semana actual
-    #mensaje = request.POST.get('array')
-    
-    consulta = salidacontenedores.objects.exclude(status="Cerrado").filter(contenedor=contenedor_).order_by('-registro').first()
-    if consulta is None:
-        palet = 1
-    else:
-        palet = consulta.palet+1
+    registros = []
 
-    registros =  []
-    
     for i in mensaje:
-        #ref=inventarioProdTerm.objects.get(registro = i[0])
-        ref2=productoTerm.objects.get(itemsapcode = i[2])
-        precio = float(ref2.precio) if ref2.precio is not None else 0.0
-        #lbsintara = float(ref.lbsintara) if ref.lbsintara is not None else 0.0
+        itemsapcode = i[4]
+        proveedor = i[3]
+        cajas_a_enviar = float(i[6])
+        palet = i[12]
 
-        importe=float(precio)*float(i[4])
+        disponibles = inventarioProdTerm.objects.filter(
+            itemsapcode=itemsapcode,
+            proveedor=proveedor,
+            status__isnull=True
+        ).order_by('fecha', 'registro')
 
-        # Obtener todas las salidas de inventario y salidas de contenedores
-        salidas = inventarioProdTerm.objects.filter(proveedor=i[0],itemsapcode=i[2])
-        salidas2 = salidacontenedores.objects.filter(proveedor=i[0],itemsapcode=i[2])
+        usados = inventarioProdTermAux.objects.filter(
+            itemsapcode=itemsapcode,
+            proveedor=proveedor,
+        ).values('orden').annotate(
+            cajas_usadas=Sum('cajas'),
+            libras_usadas=Sum('lbsintara')
+        )
+        usados_map = {r['orden']: {'cajas': r['cajas_usadas'], 'lbs': r['libras_usadas']} for r in usados}
 
-        # Filtrar las salidas de inventario para las que tienen categoría 'Exportación' y sin 'status'
-        salidas = salidas.filter(categoria="Exportación").order_by('registro').exclude(status='Cerrado')
+        cajas_acumuladas = 0
 
-        # Excluir los registros de salidas2 donde el contenedor esté vacío
-        salidas2 = salidas2.exclude(contenedor='0')
+        for registro in disponibles:
+            orden = registro.orden
+            cajas_total = registro.cajas or 0
+            libras_total = registro.lbsintara or 0
 
-        # Crear un diccionario para almacenar los resultados agrupados por 'itemsapcode' y 'proveedor'
-        agrupaciones = {}
+            usadas = usados_map.get(orden, {'cajas': 0, 'lbs': 0})
+            cajas_disp = cajas_total - (usadas['cajas'] or 0)
+            libras_disp = libras_total - (usadas['lbs'] or 0)
 
-        # Agrupar las salidas de inventario (salidas) por 'itemsapcode' y 'proveedor'
-        for salida in salidas:
-            # Crear la clave de agrupación concatenando 'itemsapcode' y 'proveedor'
-            clave_agrupacion = (salida.itemsapcode, salida.proveedor)
+            if cajas_disp <= 0 or libras_disp <= 0:
+                continue
 
-            if clave_agrupacion not in agrupaciones:
-                agrupaciones[clave_agrupacion] = {
-                    'itemsapcode': salida.itemsapcode,
-                    'itemsapname': salida.itemsapname,
-                    'proveedor': salida.proveedor,
-                    'cultivo': salida.cultivo,
-                    'total_cajas_salidas': 0,  # Cajas de salidas
-                    'total_cajas_salidas2': 0,  # Cajas de salidas2
-                    'total_libras_salidas': 0,  # Cajas de salidas
-                    'total_libras_salidas2': 0,  # Cajas de salidas2
-                    'salidas': []
-                }
+            cajas_faltantes = cajas_a_enviar - cajas_acumuladas
 
-            # Acumular las cajas de las salidas
-            agrupaciones[clave_agrupacion]['total_cajas_salidas'] += salida.cajas
-            agrupaciones[clave_agrupacion]['salidas'].append(salida)
-            agrupaciones[clave_agrupacion]['total_libras_salidas'] += salida.lbsintara
+            if cajas_disp >= cajas_faltantes:
+                proporcion = cajas_faltantes / cajas_disp
+                libras_a_usar = libras_disp * proporcion
+                cajas_usadas = cajas_faltantes
+                usar_todo = False
+            else:
+                cajas_usadas = cajas_disp
+                libras_a_usar = libras_disp
+                usar_todo = True
 
-            # Agrupar las salidas de contenedores (salidas2) por 'itemsapcode' y 'proveedor'
-            for salida2 in salidas2:
-                # Verificar si el contenedor no está vacío antes de acumular las cajas
-                if salida2.contenedor is not None:
-                    # Crear la clave de agrupación concatenando 'itemsapcode' y 'proveedor'
-                    clave_agrupacion = (salida2.itemsapcode, salida2.proveedor)
+            producto = productoTerm.objects.filter(itemsapcode=itemsapcode).first()
+            precio = float(producto.precio) if producto and producto.precio else 0.0
+            importe = precio * cajas_usadas
 
-                    if clave_agrupacion in agrupaciones:
-                        # Acumular las cajas de las salidas2
-                        agrupaciones[clave_agrupacion]['total_cajas_salidas2'] += salida2.cajas
-                        
-                        agrupaciones[clave_agrupacion]['total_libras_salidas2'] += salida2.lbsintara
+            # Crear registro en salidacontenedores
+            salidacontenedores.objects.create(
+                fecha=registro.fecha,
+                palet=palet,
+                importe=importe,
+                fechasalcontenedor=today,
+                key=registro.registro,
+                contenedor=contenedor_,
+                categoria=registro.categoria,
+                cultivo=registro.cultivo,
+                proveedor=registro.proveedor,
+                itemsapcode=registro.itemsapcode,
+                itemsapname=registro.itemsapname,
+                orden=registro.orden,
+                cajas=cajas_usadas,
+                lbsintara=libras_a_usar,
+                pesostdxcaja=registro.pesostdxcaja,
+                pesostd=(cajas_usadas * registro.pesostd / cajas_total) if registro.pesostd else 0,
+                merma=(cajas_usadas * registro.merma / cajas_total) if registro.merma else 0,
+                pesorxcaja=registro.pesorxcaja,
+                pesosinmerma=registro.pesosinmerma,
+                calidad1=registro.calidad1,
+            )
 
-            # Ahora, restamos las cajas de 'salidas2' de las de 'salidas' para cada agrupación
-            for agrupacion in agrupaciones.values():
-                # Restar las cajas de las salidas2 de las de las salidas
-                agrupacion['cajas_restantes'] = agrupacion['total_cajas_salidas'] - agrupacion['total_cajas_salidas2']
-                agrupacion['libras_restantes'] = agrupacion['total_libras_salidas'] - agrupacion['total_libras_salidas2']
-            
-            # Filtrar las agrupaciones donde las cajas restantes son mayores que 0
-            registros_agrupados = [
-                agrupacion for agrupacion in agrupaciones.values() if agrupacion['cajas_restantes'] > 0
-            ]
+            # Crear registro en inventarioProdTermAux
+            inventarioProdTermAux.objects.create(
+                fecha=registro.fecha,
+                categoria=registro.categoria,
+                cultivo=registro.cultivo,
+                proveedor=registro.proveedor,
+                itemsapcode=registro.itemsapcode,
+                itemsapname=registro.itemsapname,
+                calidad1=registro.calidad1,
+                cajas=cajas_usadas,
+                libras=libras_a_usar,
+                lbsintara=libras_a_usar,
+                pesostdxcaja=registro.pesostdxcaja,
+                pesostd=(cajas_usadas * registro.pesostd / cajas_total) if registro.pesostd else 0,
+                merma=(cajas_usadas * registro.merma / cajas_total) if registro.merma else 0,
+                pesorxcaja=registro.pesorxcaja,
+                pesosinmerma=registro.pesosinmerma,
+                tara=registro.tara,
+                orden=registro.orden,
+                salidacontenedores=contenedor_,
+                status='Pendiente'
+            )
 
-            # Ordenar la lista de registros por el campo 'proveedor'
-            registros_agrupados = sorted(registros_agrupados, key=lambda x: x['proveedor'])
-        lbsintara_= (float(i[4])*agrupacion['libras_restantes']/agrupacion['cajas_restantes'])
-        pesostd_= (float(i[4])*ref2.pesostdxcaja)
-        merma_ = lbsintara_ - pesostd_
-        if merma_ <= 0 :
-            merma_ = 0 
+            cajas_acumuladas += cajas_usadas
 
-        salidacontenedores.objects.create(fecha=i[9],palet=palet,importe=importe,fechasalcontenedor=today,contenedor=contenedor_,categoria=str(ref2.categoria),cultivo=i[1],proveedor=i[0],itemsapcode = i[2],itemsapname = i[3],orden=ref2.orden,cajas=float(i[4]),lbsintara=lbsintara_,pesostdxcaja=ref2.pesostdxcaja,pesostd=pesostd_,merma=merma_,pesorxcaja=lbsintara_/float(i[4]),pesosinmerma=lbsintara_-merma_,calidad1=ref2.calidad1)
-        # Crea un diccionario con los datos
-    '''
-    for i in mensaje:
+            # Verificar si ya se usó todo ese registro y marcar como En proceso
+            aux_sum = inventarioProdTermAux.objects.filter(orden=orden).aggregate(
+                sumacajas=Sum('cajas'), sumalbs=Sum('lbsintara')
+            )
+            if (aux_sum['sumacajas'] or 0) >= cajas_total and (aux_sum['sumalbs'] or 0) >= libras_total:
+                registro.status = 'En proceso'
+                registro.save()
+                inventarioProdTermAux.objects.filter(orden=orden).update(status='En proceso')
 
-        salidas = inventarioProdTerm.objects.get(registro=i[0])
-        
-        salidas2= salidacontenedores.objects.all().filter(key=i[0]).aggregate(sumacajas=Sum('cajas'))['sumacajas']
-        
-        if str(salidas2) == str(salidas.cajas):
-            salidas.status = "En proceso"
-            salidas.save()
-    '''
-    return JsonResponse({'mensaje':mensaje,'registros':registros,'palet':palet})
+            if cajas_acumuladas >= cajas_a_enviar:
+                break
+
+    return JsonResponse({'mensaje': 'Procesado correctamente', 'registros': registros})
 
 def cargacontenedores_listv2(request):
 
