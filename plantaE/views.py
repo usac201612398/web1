@@ -1961,7 +1961,12 @@ def procesarinvprodcontenv2(request):
 
         cajas_acumuladas = 0
 
+        cajas_acumuladas = 0
+
         for registro in disponibles:
+            if cajas_acumuladas >= cajas_a_enviar:
+                break  # Ya tenemos suficientes cajas, salimos del bucle
+
             orden = registro.orden
             total_cajas = registro.cajas or 0
             total_libras = registro.lbsintara or 0
@@ -1973,15 +1978,12 @@ def procesarinvprodcontenv2(request):
             if cajas_disponibles <= 0 or libras_disponibles <= 0:
                 continue
 
+            # REVISAMOS CUÁNTAS FALTAN EN CADA ITERACIÓN
             faltan_cajas = cajas_a_enviar - cajas_acumuladas
 
-            if cajas_disponibles >= faltan_cajas:
-                proporcion = faltan_cajas / cajas_disponibles
-                libras_a_usar = libras_disponibles * proporcion
-                cajas_usadas = faltan_cajas
-            else:
-                cajas_usadas = cajas_disponibles
-                libras_a_usar = libras_disponibles
+            cajas_usadas = min(cajas_disponibles, faltan_cajas)
+            proporcion = cajas_usadas / cajas_disponibles
+            libras_a_usar = libras_disponibles * proporcion
 
             importe = precio * cajas_usadas
             pesostd = (cajas_usadas * registro.pesostd / total_cajas) if registro.pesostd else 0
