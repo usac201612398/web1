@@ -2031,8 +2031,7 @@ def procesarinvprodcontenv2(request):
                 pesorxcaja=pesorxcaja,
                 pesosinmerma=pesosinmerma,
                 orden=registro.orden,
-                salidacontenedores=str(conexion.registro),
-                status='Pendiente'
+                salidacontenedores=str(conexion.registro)
             )
 
             # Verificar si se agotó todo el stock de ese registro
@@ -2040,9 +2039,9 @@ def procesarinvprodcontenv2(request):
                 sumacajas=Sum('cajas'), sumalbs=Sum('lbsintara')
             )
             if (aux_sum['sumacajas'] or 0) >= total_cajas and (aux_sum['sumalbs'] or 0) >= total_libras:
-                registro.status = 'En proceso'
+                registro.status = 'Cerrado'
                 registro.save()
-                inventarioProdTermAux.objects.filter(orden=orden).update(status='En proceso')
+                inventarioProdTermAux.objects.filter(orden=orden).update(status='Cerrado')
 
             cajas_acumuladas += cajas_usadas
             if cajas_acumuladas >= cajas_a_enviar:
@@ -2059,7 +2058,7 @@ def cargacontenedores_listv2(request):
     salidas2 = inventarioProdTermAux.objects.all()
 
     # Filtrar las salidas de inventario para las que tienen categoría 'Exportación' y sin 'status'
-    salidas = salidas.filter(categoria="Exportación").order_by('registro').exclude(status='En proceso')
+    salidas = salidas.filter(categoria="Exportación").order_by('registro').exclude(status='Cerrado')
 
     # Excluir los registros de salidas2 donde el contenedor esté vacío
     #salidas2 = salidas2.filter(registro__gte=2799)
@@ -2141,7 +2140,7 @@ def cargacontenedores_list(request):
             
             # Cambiar el status si las cajas quedan en 0
             if i.cajas == 0:
-                i.status = 'En proceso'
+                i.status = 'Cerrado'
     
     # Filtrar las salidas para que solo contengan aquellas con cajas > 0
     salidas = [i for i in salidas if i.cajas > 0]
@@ -2158,7 +2157,7 @@ def inventariogeneral_list(request):
     salidas2 = inventarioProdTermAux.objects.exclude(status="Cerrado")
 
     # Filtrar las salidas de inventario para las que tienen categoría 'Exportación' y sin 'status'
-    salidas = salidas.filter(categoria="Exportación").order_by('registro').exclude(status='En proceso')
+    salidas = salidas.filter(categoria="Exportación").order_by('registro').exclude(status='Cerrado')
 
     # Excluir los registros de salidas2 donde el contenedor esté vacío
     #salidas2 = salidas2.filter(registro__gte=2799)
