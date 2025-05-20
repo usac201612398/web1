@@ -1919,11 +1919,6 @@ def procesarinvprodconten(request):
     
     return JsonResponse({'mensaje':mensaje,'registros':registros})   
 
-from django.db.models import Sum
-from django.utils import timezone
-from django.http import JsonResponse
-import json
-from .models import inventarioProdTerm, inventarioProdTermAux, salidacontenedores, productoTerm
 
 def procesarinvprodcontenv2(request):
     data = json.loads(request.body)
@@ -2018,7 +2013,7 @@ def procesarinvprodcontenv2(request):
                 pesosinmerma=pesosinmerma,
                 calidad1=registro.calidad1
             )
-
+            conexion = salidacontenedores.objects.last()
             # Crear registro en inventarioProdTermAux
             inventarioProdTermAux.objects.create(
                 fecha=registro.fecha,
@@ -2035,8 +2030,8 @@ def procesarinvprodcontenv2(request):
                 merma=merma,
                 pesorxcaja=pesorxcaja,
                 pesosinmerma=pesosinmerma,
-                orden=orden,
-                salidacontenedores=contenedor_,
+                orden=registro.orden,
+                salidacontenedores=str(conexion.registro),
                 status='Pendiente'
             )
 
