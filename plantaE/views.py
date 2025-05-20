@@ -2039,9 +2039,9 @@ def procesarinvprodcontenv2(request):
                 sumacajas=Sum('cajas'), sumalbs=Sum('lbsintara')
             )
             if (aux_sum['sumacajas'] or 0) >= total_cajas and (aux_sum['sumalbs'] or 0) >= total_libras:
-                registro.status = 'Cerrado'
+                registro.status = 'En proceso'
                 registro.save()
-                inventarioProdTermAux.objects.filter(orden=orden).update(status='Cerrado')
+                inventarioProdTermAux.objects.filter(orden=orden).update(status='En proceso')
 
             cajas_acumuladas += cajas_usadas
             if cajas_acumuladas >= cajas_a_enviar:
@@ -2058,7 +2058,7 @@ def cargacontenedores_listv2(request):
     salidas2 = inventarioProdTermAux.objects.all()
 
     # Filtrar las salidas de inventario para las que tienen categoría 'Exportación' y sin 'status'
-    salidas = salidas.filter(categoria="Exportación").order_by('registro').exclude(status='Cerrado')
+    salidas = salidas.filter(categoria="Exportación").order_by('registro').exclude(status='En proceso')
 
     # Excluir los registros de salidas2 donde el contenedor esté vacío
     #salidas2 = salidas2.filter(registro__gte=2799)
@@ -2154,10 +2154,10 @@ def inventariogeneral_list(request):
 
     # Obtener todas las salidas de inventario y salidas de contenedores
     salidas = inventarioProdTerm.objects.filter(fecha__lte=today)
-    salidas2 = inventarioProdTermAux.objects.exclude(status="Cerrado")
+    salidas2 = inventarioProdTermAux.objects.exclude(status="En proceso")
 
     # Filtrar las salidas de inventario para las que tienen categoría 'Exportación' y sin 'status'
-    salidas = salidas.filter(categoria="Exportación").order_by('registro').exclude(status='Cerrado')
+    salidas = salidas.filter(categoria="Exportación").order_by('registro').exclude(status='En proceso')
 
     # Excluir los registros de salidas2 donde el contenedor esté vacío
     #salidas2 = salidas2.filter(registro__gte=2799)
