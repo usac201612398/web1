@@ -2058,10 +2058,11 @@ def cargacontenedores_listv2(request):
 
     # Obtener todas las salidas de inventario y salidas de contenedores
     salidas = inventarioProdTerm.objects.filter(fecha__lte=today)
-    salidas2 = inventarioProdTermAux.objects.all()
+    salidas2 = inventarioProdTermAux.objects.exclude("En proceso")
 
     # Filtrar las salidas de inventario para las que tienen categoría 'Exportación' y sin 'status'
-    salidas = salidas.filter(categoria="Exportación").order_by('registro').exclude(status='En proceso')
+    salidas = salidas.filter(categoria="Exportación").order_by('registro').exclude(status__in=['En proceso', 'Cerrado'])
+
 
     # Excluir los registros de salidas2 donde el contenedor esté vacío
     #salidas2 = salidas2.filter(registro__gte=2799)
