@@ -4,7 +4,7 @@ import logging
 from openpyxl import Workbook
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect
-from .models import Actpeso,salidacontenedores, productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
+from .models import Actpeso,salidacontenedores, inventarioProdTermAux,productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
 from .forms import pesosForm,itemsForm,salidacontenedoresForm,salidasFrutaForm, contenedoresForm,recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
 from django.db.models import Sum, Q
 from django.utils import timezone
@@ -2132,13 +2132,13 @@ def inventariogeneral_list(request):
 
     # Obtener todas las salidas de inventario y salidas de contenedores
     salidas = inventarioProdTerm.objects.filter(fecha__lte=today)
-    salidas2 = salidacontenedores.objects.all()
+    salidas2 = inventarioProdTermAux.objects.exclude(status="Cerrado")
 
     # Filtrar las salidas de inventario para las que tienen categoría 'Exportación' y sin 'status'
     salidas = salidas.filter(categoria="Exportación").order_by('registro').exclude(status='En proceso')
 
     # Excluir los registros de salidas2 donde el contenedor esté vacío
-    salidas2 = salidas2.filter(registro__gte=2799)
+    #salidas2 = salidas2.filter(registro__gte=2799)
 
     # Crear un diccionario para almacenar los resultados agrupados por 'itemsapcode' y 'proveedor'
     agrupaciones = {}
