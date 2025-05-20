@@ -2033,13 +2033,13 @@ def cargacontenedores_listv2(request):
 
     # Obtener todas las salidas de inventario y salidas de contenedores
     salidas = inventarioProdTerm.objects.filter(fecha__lte=today)
-    salidas2 = salidacontenedores.objects.all()
+    salidas2 = inventarioProdTermAux.objects.all()
 
     # Filtrar las salidas de inventario para las que tienen categoría 'Exportación' y sin 'status'
     salidas = salidas.filter(categoria="Exportación").order_by('registro').exclude(status='En proceso')
 
     # Excluir los registros de salidas2 donde el contenedor esté vacío
-    salidas2 = salidas2.filter(registro__gte=2799)
+    #salidas2 = salidas2.filter(registro__gte=2799)
 
     # Crear un diccionario para almacenar los resultados agrupados por 'itemsapcode' y 'proveedor'
     agrupaciones = {}
@@ -2070,15 +2070,15 @@ def cargacontenedores_listv2(request):
     # Agrupar las salidas de contenedores (salidas2) por 'itemsapcode' y 'proveedor'
     for salida2 in salidas2:
         # Verificar si el contenedor no está vacío antes de acumular las cajas
-        if salida2.contenedor is not None:
+        #if salida2.contenedor is not None:
             # Crear la clave de agrupación concatenando 'itemsapcode' y 'proveedor'
-            clave_agrupacion = (salida2.itemsapcode, salida2.proveedor)
+        clave_agrupacion = (salida2.itemsapcode, salida2.proveedor)
 
-            if clave_agrupacion in agrupaciones:
-                # Acumular las cajas de las salidas2
-                agrupaciones[clave_agrupacion]['total_cajas_salidas2'] += salida2.cajas
-                
-                agrupaciones[clave_agrupacion]['total_libras_salidas2'] += salida2.lbsintara
+        if clave_agrupacion in agrupaciones:
+            # Acumular las cajas de las salidas2
+            agrupaciones[clave_agrupacion]['total_cajas_salidas2'] += salida2.cajas
+            
+            agrupaciones[clave_agrupacion]['total_libras_salidas2'] += salida2.lbsintara
 
     # Ahora, restamos las cajas de 'salidas2' de las de 'salidas' para cada agrupación
     for agrupacion in agrupaciones.values():
