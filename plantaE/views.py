@@ -1953,11 +1953,11 @@ def procesarinvprodcontenv2(request):
         usados = inventarioProdTermAux.objects.filter(
             proveedor=proveedor,
             itemsapcode=itemsapcode
-        ).values('orden').annotate(
+        ).values('inventarioreg').annotate(
             cajas_usadas=Sum('cajas'),
             lbs_usadas=Sum('lbsintara')
         )
-        usados_map = {r['orden']: {'cajas': r['cajas_usadas'], 'lbs': r['lbs_usadas']} for r in usados}
+        usados_map = {r['inventarioreg']: {'cajas': r['cajas_usadas'], 'lbs': r['lbs_usadas']} for r in usados}
 
         cajas_acumuladas = 0
 
