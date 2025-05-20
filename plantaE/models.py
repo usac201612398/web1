@@ -315,6 +315,7 @@ class inventarioProdTermAux(models.Model):
     op_status = [('Pendiente','-'),('Cerrado','Cerrado'),('En proceso','En proceso')]
 
     registro = models.BigAutoField(primary_key=True)
+    inventarioreg = models.BigIntegerField(blank=True, null = True)
     fecha = models.DateField(blank=True, null=True)
     categoria = models.CharField(max_length=50, choices=op_categoria, blank=True, null=True)
     cultivo = models.CharField(max_length=50, choices=op_cultivo, blank=True, null=True)

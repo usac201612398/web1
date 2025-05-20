@@ -2017,6 +2017,7 @@ def procesarinvprodcontenv2(request):
             # Crear registro en inventarioProdTermAux
             inventarioProdTermAux.objects.create(
                 fecha=registro.fecha,
+                inventarioreg=registro.registro,
                 categoria=registro.categoria,
                 cultivo=cultivo,
                 proveedor=proveedor,
@@ -2035,7 +2036,7 @@ def procesarinvprodcontenv2(request):
             )
 
             # Verificar si se agotó todo el stock de ese registro
-            aux_sum = inventarioProdTermAux.objects.filter(orden=orden).aggregate(
+            aux_sum = inventarioProdTermAux.objects.filter(inventarioreg=registro.registro).aggregate(
                 sumacajas=Sum('cajas'), sumalbs=Sum('lbsintara')
             )
             if (aux_sum['sumacajas'] or 0) >= total_cajas and (aux_sum['sumalbs'] or 0) >= total_libras:
