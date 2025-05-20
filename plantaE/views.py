@@ -2039,7 +2039,7 @@ def cargacontenedores_listv2(request):
     salidas = salidas.filter(categoria="Exportación").order_by('registro').exclude(status='Cerrado')
 
     # Excluir los registros de salidas2 donde el contenedor esté vacío
-    salidas2 = salidas2.exclude(contenedor='0')
+    salidas2 = salidas2.filter(registro__gte=2799)
 
     # Crear un diccionario para almacenar los resultados agrupados por 'itemsapcode' y 'proveedor'
     agrupaciones = {}
