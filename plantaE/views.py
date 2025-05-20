@@ -1919,127 +1919,143 @@ def procesarinvprodconten(request):
     
     return JsonResponse({'mensaje':mensaje,'registros':registros})   
 
-def procesarinvprodcontenv2(request):
+from django.db.models import Sum
+from django.utils import timezone
+from django.http import JsonResponse
+import json
+from .models import inventarioProdTerm, inventarioProdTermAux, salidacontenedores, productoTerm
 
+def procesarinvprodcontenv2(request):
     data = json.loads(request.body)
     mensaje = data['array']
     contenedor_ = data['contenedor']
     today = timezone.now().date()
+
+    # Obtener siguiente palet disponible
+    consulta = salidacontenedores.objects.exclude(status="Cerrado").filter(contenedor=contenedor_).order_by('-registro').first()
+    palet = 1 if consulta is None else (consulta.palet or 0) + 1
+
     registros = []
 
     for i in mensaje:
-        itemsapcode = i[4]
-        proveedor = i[3]
-        cajas_a_enviar = float(i[6])
-        palet = i[12]
+        proveedor = i[0]
+        cultivo = i[1]
+        itemsapcode = i[2]
+        itemsapname = i[3]
+        cajas_a_enviar = float(i[4])
+        fecha_salida = i[9]
+
+        producto = productoTerm.objects.filter(itemsapcode=itemsapcode).first()
+        precio = float(producto.precio) if producto and producto.precio else 0.0
 
         disponibles = inventarioProdTerm.objects.filter(
-            itemsapcode=itemsapcode,
             proveedor=proveedor,
+            itemsapcode=itemsapcode,
+            categoria="Exportación",
             status__isnull=True
         ).order_by('fecha', 'registro')
 
         usados = inventarioProdTermAux.objects.filter(
-            itemsapcode=itemsapcode,
             proveedor=proveedor,
+            itemsapcode=itemsapcode
         ).values('orden').annotate(
             cajas_usadas=Sum('cajas'),
-            libras_usadas=Sum('lbsintara')
+            lbs_usadas=Sum('lbsintara')
         )
-        usados_map = {r['orden']: {'cajas': r['cajas_usadas'], 'lbs': r['libras_usadas']} for r in usados}
+        usados_map = {r['orden']: {'cajas': r['cajas_usadas'], 'lbs': r['lbs_usadas']} for r in usados}
 
         cajas_acumuladas = 0
 
         for registro in disponibles:
             orden = registro.orden
-            cajas_total = registro.cajas or 0
-            libras_total = registro.lbsintara or 0
+            total_cajas = registro.cajas or 0
+            total_libras = registro.lbsintara or 0
 
             usadas = usados_map.get(orden, {'cajas': 0, 'lbs': 0})
-            cajas_disp = cajas_total - (usadas['cajas'] or 0)
-            libras_disp = libras_total - (usadas['lbs'] or 0)
+            cajas_disponibles = total_cajas - (usadas['cajas'] or 0)
+            libras_disponibles = total_libras - (usadas['lbs'] or 0)
 
-            if cajas_disp <= 0 or libras_disp <= 0:
+            if cajas_disponibles <= 0 or libras_disponibles <= 0:
                 continue
 
-            cajas_faltantes = cajas_a_enviar - cajas_acumuladas
+            faltan_cajas = cajas_a_enviar - cajas_acumuladas
 
-            if cajas_disp >= cajas_faltantes:
-                proporcion = cajas_faltantes / cajas_disp
-                libras_a_usar = libras_disp * proporcion
-                cajas_usadas = cajas_faltantes
-                usar_todo = False
+            if cajas_disponibles >= faltan_cajas:
+                proporcion = faltan_cajas / cajas_disponibles
+                libras_a_usar = libras_disponibles * proporcion
+                cajas_usadas = faltan_cajas
             else:
-                cajas_usadas = cajas_disp
-                libras_a_usar = libras_disp
-                usar_todo = True
+                cajas_usadas = cajas_disponibles
+                libras_a_usar = libras_disponibles
 
-            producto = productoTerm.objects.filter(itemsapcode=itemsapcode).first()
-            precio = float(producto.precio) if producto and producto.precio else 0.0
             importe = precio * cajas_usadas
+            pesostd = (cajas_usadas * registro.pesostd / total_cajas) if registro.pesostd else 0
+            merma = libras_a_usar - pesostd
+            if merma < 0:
+                merma = 0
+            pesorxcaja = libras_a_usar / cajas_usadas if cajas_usadas else 0
+            pesosinmerma = libras_a_usar - merma
 
             # Crear registro en salidacontenedores
             salidacontenedores.objects.create(
-                fecha=registro.fecha,
+                fecha=fecha_salida,
                 palet=palet,
                 importe=importe,
                 fechasalcontenedor=today,
-                key=registro.registro,
                 contenedor=contenedor_,
                 categoria=registro.categoria,
-                cultivo=registro.cultivo,
-                proveedor=registro.proveedor,
-                itemsapcode=registro.itemsapcode,
-                itemsapname=registro.itemsapname,
-                orden=registro.orden,
+                cultivo=cultivo,
+                proveedor=proveedor,
+                itemsapcode=itemsapcode,
+                itemsapname=itemsapname,
+                orden=orden,
                 cajas=cajas_usadas,
                 lbsintara=libras_a_usar,
                 pesostdxcaja=registro.pesostdxcaja,
-                pesostd=(cajas_usadas * registro.pesostd / cajas_total) if registro.pesostd else 0,
-                merma=(cajas_usadas * registro.merma / cajas_total) if registro.merma else 0,
-                pesorxcaja=registro.pesorxcaja,
-                pesosinmerma=registro.pesosinmerma,
-                calidad1=registro.calidad1,
+                pesostd=pesostd,
+                merma=merma,
+                pesorxcaja=pesorxcaja,
+                pesosinmerma=pesosinmerma,
+                calidad1=registro.calidad1
             )
 
             # Crear registro en inventarioProdTermAux
             inventarioProdTermAux.objects.create(
                 fecha=registro.fecha,
                 categoria=registro.categoria,
-                cultivo=registro.cultivo,
-                proveedor=registro.proveedor,
-                itemsapcode=registro.itemsapcode,
-                itemsapname=registro.itemsapname,
+                cultivo=cultivo,
+                proveedor=proveedor,
+                itemsapcode=itemsapcode,
+                itemsapname=itemsapname,
                 calidad1=registro.calidad1,
                 cajas=cajas_usadas,
                 libras=libras_a_usar,
                 lbsintara=libras_a_usar,
                 pesostdxcaja=registro.pesostdxcaja,
-                pesostd=(cajas_usadas * registro.pesostd / cajas_total) if registro.pesostd else 0,
-                merma=(cajas_usadas * registro.merma / cajas_total) if registro.merma else 0,
-                pesorxcaja=registro.pesorxcaja,
-                pesosinmerma=registro.pesosinmerma,
+                pesostd=pesostd,
+                merma=merma,
+                pesorxcaja=pesorxcaja,
+                pesosinmerma=pesosinmerma,
                 tara=registro.tara,
-                orden=registro.orden,
+                orden=orden,
                 salidacontenedores=contenedor_,
                 status='Pendiente'
             )
 
-            cajas_acumuladas += cajas_usadas
-
-            # Verificar si ya se usó todo ese registro y marcar como En proceso
+            # Verificar si se agotó todo el stock de ese registro
             aux_sum = inventarioProdTermAux.objects.filter(orden=orden).aggregate(
                 sumacajas=Sum('cajas'), sumalbs=Sum('lbsintara')
             )
-            if (aux_sum['sumacajas'] or 0) >= cajas_total and (aux_sum['sumalbs'] or 0) >= libras_total:
+            if (aux_sum['sumacajas'] or 0) >= total_cajas and (aux_sum['sumalbs'] or 0) >= total_libras:
                 registro.status = 'En proceso'
                 registro.save()
                 inventarioProdTermAux.objects.filter(orden=orden).update(status='En proceso')
 
+            cajas_acumuladas += cajas_usadas
             if cajas_acumuladas >= cajas_a_enviar:
                 break
 
-    return JsonResponse({'mensaje': 'Procesado correctamente', 'registros': registros})
+    return JsonResponse({'mensaje': 'Procesado correctamente', 'registros': registros, 'palet': palet})
 
 def cargacontenedores_listv2(request):
 
