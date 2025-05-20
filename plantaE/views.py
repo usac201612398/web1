@@ -1971,7 +1971,7 @@ def procesarinvprodcontenv2(request):
             total_cajas = registro.cajas or 0
             total_libras = registro.lbsintara or 0
 
-            usadas = usados_map.get('inventarioreg', {'cajas': 0, 'lbs': 0})
+            usadas = usados_map.get(registro.registro, {'cajas': 0, 'lbs': 0})
             cajas_disponibles = total_cajas - (usadas['cajas'] or 0)
             libras_disponibles = total_libras - (usadas['lbs'] or 0)
 
