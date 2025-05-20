@@ -2166,13 +2166,13 @@ def inventariogeneral_list(request):
     # Agrupar las salidas de contenedores (salidas2) por 'itemsapcode' y 'proveedor'
     for salida2 in salidas2:
         # Verificar si el contenedor no está vacío antes de acumular las cajas
-        if salida2.contenedor is not None:
-            # Crear la clave de agrupación concatenando 'itemsapcode' y 'proveedor'
-            clave_agrupacion = (salida2.itemsapcode, salida2.proveedor)
 
-            if clave_agrupacion in agrupaciones:
-                # Acumular las cajas de las salidas2
-                agrupaciones[clave_agrupacion]['total_cajas_salidas2'] += salida2.cajas
+        # Crear la clave de agrupación concatenando 'itemsapcode' y 'proveedor'
+        clave_agrupacion = (salida2.itemsapcode, salida2.proveedor)
+
+        if clave_agrupacion in agrupaciones:
+            # Acumular las cajas de las salidas2
+            agrupaciones[clave_agrupacion]['total_cajas_salidas2'] += salida2.cajas
 
     # Ahora, restamos las cajas de 'salidas2' de las de 'salidas' para cada agrupación
     for agrupacion in agrupaciones.values():
