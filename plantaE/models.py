@@ -412,7 +412,7 @@ class salidacontenedores(models.Model):
     status=models.CharField(max_length=25,null=True)
     palet = models.IntegerField(blank=True, null=True)
     def __str__(self):
-        return str(self.contenedor) + " | " + str(self.proveedor) + " | " + str(self.itemsapname)+ " | " + str(self.cultivo)
+        return str(self.registro) + " | " + str(self.contenedor) + " | " + str(self.proveedor) + " | " + str(self.itemsapname)+ " | " + str(self.cultivo)
     
 class productoTerm(models.Model):
     
