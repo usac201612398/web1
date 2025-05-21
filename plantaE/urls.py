@@ -68,11 +68,11 @@ urlpatterns = [
     path('ccalidad/new/', views.ccalidad_create, name='ccalidad_create'),
     path('ccalidad/<int:pk>/edit/', views.ccalidad_update, name='ccalidad_update'),
     path('ccalidad/<int:pk>/delete/', views.ccalidad_delete, name='ccalidad_delete'),
+
     path("inventarioProd/plantilla",views.inventarioProd_grabarplantilla,name='inventarioProd_grabar'),
     path("inventarioProd",views.inventarioProd_list,name='inventarioProd_list'),
     path('inventarioProd/<int:pk>/', views.inventarioProd_detail, name='inventarioProd_detail'),
     path('inventarioProd/new/', views.inventarioProd_create, name='inventarioProd_create'),
-    
     path('inventarioProd/<int:pk>/edit/', views.inventarioProd_update, name='inventarioProd_update'),
     path('inventarioProd/<int:pk>/delete/', views.inventarioProd_delete, name='inventarioProd_delete'),
     path("inventarioProd/cargacontenedor",views.cargacontenedores_list,name='inventarioProd_contenlist'),

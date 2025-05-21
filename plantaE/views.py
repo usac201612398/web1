@@ -1809,8 +1809,8 @@ def contenedorpacking_list(request):
     opcion1 = timezone.now().date()
 
     # Filtra tus datos según la opción seleccionada
-    contenedores = salidacontenedores.objects.exclude(status="Cerrado").order_by("registro").values('proveedor','itemsapcode','itemsapname','contenedor','fechasalcontenedor','cajas','importe','cultivo')
-
+    contenedores = salidacontenedores.objects.exclude(Q(registro__gte=2927) & Q(registro__lte=2948)).exclude(status="Cerrado")
+    contenedores = contenedores.order_by("registro").values('proveedor', 'itemsapcode', 'itemsapname', 'contenedor','fechasalcontenedor', 'cajas', 'importe', 'cultivo')
     # Crea un DataFrame a partir de los datos
     df = pd.DataFrame(list(contenedores))
     registros_finales = []
