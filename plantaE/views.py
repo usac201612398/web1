@@ -1458,7 +1458,7 @@ def ccalidad_list(request):
     today = timezone.localtime(timezone.now()).date()
     current_month = today.month
     current_year = today.year
-    salidas = Ccalidad.objects.filter(fecha__year=current_year,fecha__month=current_month).order_by('-registro').exclude(status="Anulado")
+    salidas = Ccalidad.objects.filter(fecha__year=current_year,fecha__month=current_month).order_by('-registro')
     
 
     return render(request, 'plantaE/ccalidad_list.html', {'registros': salidas})
