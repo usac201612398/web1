@@ -18,6 +18,7 @@ import pytz
 from openpyxl.utils.dataframe import dataframe_to_rows
 import pdfkit
 from django.template.loader import render_to_string
+from django.contrib import messages
 
 def vascula_monitor(request):
     return render(request, 'plantaE/vascula.html')
@@ -653,7 +654,9 @@ def article_update(request, pk):
 
 def article_delete(request, pk):
     salidas = get_object_or_404(salidasFruta, pk=pk)
-
+    if salidas.recepcion is not None:
+        messages.error(request, "No se puede cerrar este viaje porque ya tiene una recepción asignada.")
+        return redirect('salidasFruta_list')
     if request.method == 'POST':
         salidas.status = 'Cerrado'
         salidas.save()
@@ -666,11 +669,18 @@ def article_delete(request, pk):
             correo = salidas.correo,
             status__isnull=True  # Solo los abiertos
         ).update(status='Cerrado')
+        messages.success(request, "Registro cerrado correctamente.")
         return redirect('salidasFruta_list')
     return render(request, 'plantaE/salidasFruta_confirm_delete.html', {'registros': salidas})
 
 def article_deleteValle(request, pk):
+
     salidas = get_object_or_404(salidasFruta, pk=pk)
+
+    if salidas.recepcion is not None:
+        messages.error(request, "No se puede cerrar este viaje porque ya tiene una recepción asignada.")
+        return redirect('salidasFruta_listValle')
+    
     if request.method == 'POST':
         salidas.status = 'Cerrado'
         salidas.save()
@@ -683,6 +693,7 @@ def article_deleteValle(request, pk):
             correo = salidas.correo,
             status__isnull=True  # Solo los abiertos
         ).update(status='Cerrado')
+        messages.success(request, "Registro cerrado correctamente.")
         return redirect('salidasFruta_listValle')
     return render(request, 'plantaE/salidasFruta_confirm_deleteValle.html', {'registros': salidas})
 
@@ -730,6 +741,11 @@ def acumFruta_update(request, pk):
 
 def acumFruta_delete(request, pk):
     salidas = get_object_or_404(AcumFruta, pk=pk)
+
+    if salidas.recepcion is not None:
+        messages.error(request, "No se puede cerrar este viaje porque ya tiene una recepción asignada.")
+        return redirect('acumFruta_list')
+    
     if request.method == 'POST':
         salidas.status = 'Cerrado'
         salidas.save()
@@ -742,6 +758,8 @@ def acumFruta_delete(request, pk):
             correo = salidas.correo,
             status__isnull=True  # Solo los abiertos
         ).update(status='Cerrado')
+        
+        messages.success(request, "Registro cerrado correctamente.")
         return redirect('acumFruta_list')
     return render(request, 'plantaE/acumFruta_confirm_delete.html', {'registros': salidas})
 
