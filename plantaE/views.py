@@ -815,7 +815,7 @@ def recepciones_list(request):
     current_month = today.month
     current_year = today.year
     #salidas = Recepciones.objects.filter(fecha=today)
-    salidas= detallerec.objects.filter(fecha__year=current_year,fecha__month=current_month).order_by('recepcion').exclude(status="Anulado")
+    salidas= detallerec.objects.filter(fecha__year=current_year,fecha__month=current_month).order_by('-recepcion').exclude(status="Anulado")
     
     #for i in salidas:
     #    cajasacum = salidas2.order_by('-created').filter(Q(status="En proceso") | Q(status="Cerrado"),recepcion=i.recepcion).aggregate(sumacajas=Sum('cajas'))['sumacajas']
