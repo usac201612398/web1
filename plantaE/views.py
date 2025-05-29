@@ -655,10 +655,10 @@ def article_update(request, pk):
 def article_delete(request, pk):
     salidas = get_object_or_404(salidasFruta, pk=pk)
     if salidas.recepcion is not None:
-        messages.error(request, "No se puede cerrar este viaje porque ya tiene una recepción asignada.")
+        messages.error(request, "No se puede anular este viaje porque ya tiene una recepción asignada.")
         return redirect('salidasFruta_list')
     if request.method == 'POST':
-        salidas.status = 'Cerrado'
+        salidas.status = 'Anulado'
         salidas.save()
         AcumFruta.objects.filter(
             fecha=salidas.fecha,
@@ -668,8 +668,8 @@ def article_delete(request, pk):
             viaje=salidas.viaje,
             correo = salidas.correo,
             status__isnull=True  # Solo los abiertos
-        ).update(status='Cerrado')
-        messages.success(request, "Registro cerrado correctamente.")
+        ).update(status='Anulado')
+        messages.success(request, "Registro anulado correctamente.")
         return redirect('salidasFruta_list')
     return render(request, 'plantaE/salidasFruta_confirm_delete.html', {'registros': salidas})
 
@@ -678,11 +678,11 @@ def article_deleteValle(request, pk):
     salidas = get_object_or_404(salidasFruta, pk=pk)
 
     if salidas.recepcion is not None:
-        messages.error(request, "No se puede cerrar este viaje porque ya tiene una recepción asignada.")
+        messages.error(request, "No se puede anular este viaje porque ya tiene una recepción asignada.")
         return redirect('salidasFruta_listValle')
     
     if request.method == 'POST':
-        salidas.status = 'Cerrado'
+        salidas.status = 'Anulado'
         salidas.save()
         AcumFruta.objects.filter(
             fecha=salidas.fecha,
@@ -692,8 +692,8 @@ def article_deleteValle(request, pk):
             viaje=salidas.viaje,
             correo = salidas.correo,
             status__isnull=True  # Solo los abiertos
-        ).update(status='Cerrado')
-        messages.success(request, "Registro cerrado correctamente.")
+        ).update(status='Anulado')
+        messages.success(request, "Registro anulado correctamente.")
         return redirect('salidasFruta_listValle')
     return render(request, 'plantaE/salidasFruta_confirm_deleteValle.html', {'registros': salidas})
 
@@ -743,11 +743,11 @@ def acumFruta_delete(request, pk):
     salidas = get_object_or_404(AcumFruta, pk=pk)
 
     if salidas.recepcion is not None:
-        messages.error(request, "No se puede cerrar este viaje porque ya tiene una recepción asignada.")
+        messages.error(request, "No se puede anular este viaje porque ya tiene una recepción asignada.")
         return redirect('acumFruta_list')
     
     if request.method == 'POST':
-        salidas.status = 'Cerrado'
+        salidas.status = 'Anulado'
         salidas.save()
         salidasFruta.objects.filter(
             fecha=salidas.fecha,
@@ -757,9 +757,9 @@ def acumFruta_delete(request, pk):
             viaje=salidas.viaje,
             correo = salidas.correo,
             status__isnull=True  # Solo los abiertos
-        ).update(status='Cerrado')
+        ).update(status='Anulado')
         
-        messages.success(request, "Registro cerrado correctamente.")
+        messages.success(request, "Registro anulado correctamente.")
         return redirect('acumFruta_list')
     return render(request, 'plantaE/acumFruta_confirm_delete.html', {'registros': salidas})
 
@@ -832,6 +832,28 @@ def recepciones_list(request):
     #for i in len(salidas):
     #    existenciaCajas 
     return render(request, 'plantaE/recepciones_list.html', {'registros': salidas})
+
+def recepcionesFruta_delete(request, pk):
+    salidas = get_object_or_404(detallerec, pk=pk)# Verificar si existen registros en detallerecaux con la misma recepción
+    existe_en_aux = detallerecaux.objects.filter(recepcion=salidas.recepcion).exists()
+
+    if existe_en_aux:
+        messages.error(request, "No se puede anular esta recepción porque tiene registros relacionados en boletas.")
+        return redirect('recepcionesFruta_list')  # Cambia esto al nombre real de tu vista/lista
+
+    if request.method == 'POST':
+        salidas.status = 'Anulado'
+        salidas.save()
+        Actpeso.objects.filter(
+            recepcion = salidas.recepcion
+        ).update(status='Anulado')
+        Recepciones.objects.filter(
+            recepcion = salidas.recepcion
+        ).update(status='Anulado')
+
+        messages.success(request, "Registro anulado correctamente.")
+        return redirect('recepcionesFruta_list')
+    return render(request, 'plantaE/recepciones_confirm_delete.html', {'registros': salidas})
 
 def recepciones_reporteAcum(request):
     today = timezone.now().date()

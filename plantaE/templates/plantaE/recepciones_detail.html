@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>VisualizarDetalles</title>
+    <title>Visualizar Resumen de Recepcion</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
     <style>
 
@@ -38,7 +38,6 @@
                             <tr><td>Llave:</td><td>{{ registros.llave }} </td></tr>
                             <tr><td>Creado:</td><td>{{ registros.created }} </td></tr> 
                             <tr><td>Modificado:</td><td>{{ registros.updated_at }} </td></tr>  
-                            <tr><td><a href="{% url 'recepcionesFruta_update' registros.pk %}">Edit</a></td><td>-</td></tr> 
                         </tbody>
 
                   
