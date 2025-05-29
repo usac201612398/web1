@@ -836,7 +836,7 @@ def recepciones_list(request):
     page_number = request.GET.get('page')  # Obtener el número de página de la URL
     page_obj = paginator.get_page(page_number)
 
-    return render(request, 'plantaE/recepciones_list.html', {'registros': paginator})
+    return render(request, 'plantaE/recepciones_list.html', {'registros': page_obj})
 
 def recepcionesFruta_delete(request, pk):
     salidas = get_object_or_404(detallerec, pk=pk)# Verificar si existen registros en detallerecaux con la misma recepción
