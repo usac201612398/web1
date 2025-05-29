@@ -78,11 +78,11 @@ class recepcionesForm(forms.ModelForm):
 
 class ccalidadForm(forms.ModelForm):
 
-    registro = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))
+    registro = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'my-input'}))
     porcentaje= forms.DecimalField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
-    llave = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))
-    causarechazo = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))
+    llave = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
+    causarechazo = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
     observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
    
     class Meta:
