@@ -105,7 +105,7 @@ class salidasFruta(models.Model):
     #acumFruta = models.ForeignKey(AcumFruta, null=True, blank=True, on_delete=models.CASCADE)
 
     id = models.AutoField(primary_key=True)
-    fecha = models.DateField(blank=True,blank=True, null=True)
+    fecha = models.DateField(blank=True, null=True)
     finca = models.CharField(max_length=25,null=True)
     viaje = models.CharField(max_length=20, blank=True, null=True)
     encargado = models.CharField(max_length=30,blank=True, null=True)
