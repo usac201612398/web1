@@ -1548,9 +1548,9 @@ def acumFruta_consulta(request):
         opcion2 = request.POST.get('opcion2')
         nombre_usuario = request.user.username
         # Filtra tus datos según la opción seleccionada
-        datos = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario,libras__isnull=False,status__isnull=True) 
+        datos = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario,libras__isnull=False).exclude(status = "Anulado")  
         # Obtener todos los registros para el usuario y la fecha
-        registros = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario,libras__isnull=False,status__isnull=True)
+        registros = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario,libras__isnull=False).exclude(status = "Anulado") 
         df = pd.DataFrame(list(datos.values()),columns=['id','fecha','finca','viaje','orden','cultivo','variedad','cajas','libras','estructura'])
 
         df_agrupado = df.groupby(['orden','estructura','variedad'], as_index=False).agg(
@@ -1593,9 +1593,9 @@ def acumFruta_consultaValle(request):
         opcion2 = request.POST.get('opcion2')
         nombre_usuario = request.user.username
         # Filtra tus datos según la opción seleccionada
-        datos = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario,libras__isnull=False,status__isnull=True) 
+        datos = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario,libras__isnull=False).exclude(status = "Anulado") 
         # Obtener todos los registros para el usuario y la fecha
-        registros = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario,libras__isnull=False,status__isnull=True)
+        registros = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario,libras__isnull=False).exclude(status = "Anulado") 
         df = pd.DataFrame(list(datos.values()),columns=['id','fecha','finca','viaj','orden','cultivo','variedad','cajas','libras','estructura'])
 
         df_agrupado = df.groupby(['orden','estructura','variedad'], as_index=False).agg(
