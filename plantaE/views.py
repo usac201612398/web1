@@ -832,11 +832,11 @@ def recepciones_list(request):
     #rebajaLibras = finca=list(salidas2)[0]['libras']
     #for i in len(salidas):
     #    existenciaCajas 
-    paginator = Paginator(salidas, 10)  # 10 registros por página (ajusta según prefieras)
-    page_number = request.GET.get('page')  # Obtener el número de página de la URL
-    page_obj = paginator.get_page(page_number)
+    #paginator = Paginator(salidas, 10)  # 10 registros por página (ajusta según prefieras)
+    #page_number = request.GET.get('page')  # Obtener el número de página de la URL
+    #page_obj = paginator.get_page(page_number)
 
-    return render(request, 'plantaE/recepciones_list.html', {'registros': page_obj})
+    return render(request, 'plantaE/recepciones_list.html', {'registros': salidas})
 
 def recepcionesFruta_delete(request, pk):
     salidas = get_object_or_404(detallerec, pk=pk)# Verificar si existen registros en detallerecaux con la misma recepción
