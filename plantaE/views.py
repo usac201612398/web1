@@ -18,6 +18,7 @@ import pytz
 from openpyxl.utils.dataframe import dataframe_to_rows
 import pdfkit
 from django.template.loader import render_to_string
+from django import transaction
 
 def vascula_monitor(request):
     return render(request, 'plantaE/vascula.html')
@@ -240,9 +241,10 @@ def pesos_detail(request, pk):
     return render(request, 'plantaE/pesos_detail.html', {'registros': salidas})
 
 def article_list(request):
-    today = timezone.now().date()
+
+    today = timezone.localtime(timezone.now()).date()
     nombre_usuario = request.user.username
-    salidas = salidasFruta.objects.filter(fecha=today,correo=nombre_usuario)
+    salidas = salidasFruta.objects.filter(fecha=today,correo=nombre_usuario, status__isnull=True)
     salidas = salidas.order_by('-created_at')
     
     return render(request, 'plantaE/salidasFruta_list.html', {'registros': salidas})
@@ -255,9 +257,11 @@ def pesos_delete(request, pk):
     return render(request, 'plantaE/pesos_confirm_delete.html', {'registros': salidas})
 
 def article_listValle(request):
-    today = timezone.now().date()
+    
+    today = timezone.localtime(timezone.now()).date()
     nombre_usuario = request.user.username
-    salidas = salidasFruta.objects.filter(fecha=today,correo=nombre_usuario)
+    salidas = salidasFruta.objects.filter(fecha=today,correo=nombre_usuario, status__isnull=True)
+
     salidas = salidas.order_by('-created_at')
     
     return render(request, 'plantaE/salidasFruta_listValle.html', {'registros': salidas})
@@ -651,15 +655,36 @@ def article_update(request, pk):
 
 def article_delete(request, pk):
     salidas = get_object_or_404(salidasFruta, pk=pk)
+
     if request.method == 'POST':
-        salidas.delete()
+        salidas.status = 'Cerrado'
+        salidas.save()
+        AcumFruta.objects.filter(
+            fecha=salidas.fecha,
+            finca=salidas.finca,
+            cultivo=salidas.cultivo,
+            variedad=salidas.variedad,
+            viaje=salidas.viaje,
+            correo = salidas.correo,
+            status__isnull=True  # Solo los abiertos
+        ).update(status='Cerrado')
         return redirect('salidasFruta_list')
     return render(request, 'plantaE/salidasFruta_confirm_delete.html', {'registros': salidas})
 
 def article_deleteValle(request, pk):
     salidas = get_object_or_404(salidasFruta, pk=pk)
     if request.method == 'POST':
-        salidas.delete()
+        salidas.status = 'Cerrado'
+        salidas.save()
+        AcumFruta.objects.filter(
+            fecha=salidas.fecha,
+            finca=salidas.finca,
+            cultivo=salidas.cultivo,
+            variedad=salidas.variedad,
+            viaje=salidas.viaje,
+            correo = salidas.correo,
+            status__isnull=True  # Solo los abiertos
+        ).update(status='Cerrado')
         return redirect('salidasFruta_listValle')
     return render(request, 'plantaE/salidasFruta_confirm_deleteValle.html', {'registros': salidas})
 
@@ -708,7 +733,17 @@ def acumFruta_update(request, pk):
 def acumFruta_delete(request, pk):
     salidas = get_object_or_404(AcumFruta, pk=pk)
     if request.method == 'POST':
-        salidas.delete()
+        salidas.status = 'Cerrado'
+        salidas.save()
+        salidasFruta.objects.filter(
+            fecha=salidas.fecha,
+            finca=salidas.finca,
+            cultivo=salidas.cultivo,
+            variedad=salidas.variedad,
+            viaje=salidas.viaje,
+            correo = salidas.correo,
+            status__isnull=True  # Solo los abiertos
+        ).update(status='Cerrado')
         return redirect('acumFruta_list')
     return render(request, 'plantaE/acumFruta_confirm_delete.html', {'registros': salidas})
 

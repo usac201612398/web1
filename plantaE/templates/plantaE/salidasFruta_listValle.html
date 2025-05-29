@@ -123,7 +123,7 @@
                     <td>{{registro.cajas}}</td>
                     <td class="number-cell" data-value="{{ registro.libras }}">{{ registro.libras }}</td>
                     <th ><a href="{% url 'salidasFruta_update' registro.pk %}"> <i class="fas fa-edit"></i>Editar</a></th>
-                    <th ><a href="{% url 'salidasFruta_deleteValle' registro.pk %}"><i class="fas fa-trash-alt"></i>Eliminar</a></th>
+                    <th ><a href="{% url 'salidasFruta_deleteValle' registro.pk %}"><i class="fas fa-trash-alt"></i>Anular</a></th>
                     </tr> 
                         
                 {% endfor %}
