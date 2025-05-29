@@ -810,18 +810,24 @@ def procesarrecepcion(request):
     return JsonResponse({'mensaje':mensaje,'registros':registros})   
 
 def recepciones_list(request):
-    today = timezone.now().date()
+
+    today = timezone.localtime(timezone.now()).date()
+    current_month = today.month
+    current_year = today.year
     #salidas = Recepciones.objects.filter(fecha=today)
-    salidas= detallerec.objects.all()
-    salidas2= detallerecaux.objects.all()
-    salidas = salidas.order_by('recepcion').filter(status=None)
+    salidas= detallerec.objects.filter(
+        fecha__year=current_year,
+        fecha__month=current_month
+    )
+    #salidas2= detallerecaux.objects.all()
+    salidas = salidas.order_by('recepcion').exclude("Anulado")
     
-    for i in salidas:
-        cajasacum = salidas2.order_by('-created').filter(Q(status="En proceso") | Q(status="Cerrado"),recepcion=i.recepcion).aggregate(sumacajas=Sum('cajas'))['sumacajas']
-        librasacum = salidas2.order_by('-created').filter(Q(status="En proceso") | Q(status="Cerrado"),recepcion=i.recepcion).aggregate(sumalibras=Sum('libras'))['sumalibras']    
-        if librasacum != None and cajasacum != None:
-            i.cajas = i.cajas - int(cajasacum)
-            i.libras = i.libras - float(librasacum)
+    #for i in salidas:
+    #    cajasacum = salidas2.order_by('-created').filter(Q(status="En proceso") | Q(status="Cerrado"),recepcion=i.recepcion).aggregate(sumacajas=Sum('cajas'))['sumacajas']
+    #    librasacum = salidas2.order_by('-created').filter(Q(status="En proceso") | Q(status="Cerrado"),recepcion=i.recepcion).aggregate(sumalibras=Sum('libras'))['sumalibras']    
+    #    if librasacum != None and cajasacum != None:
+    #        i.cajas = i.cajas - int(cajasacum)
+    #        i.libras = i.libras - float(librasacum)
         
 
     #existenciaCajas = finca=list(salidas)[0]['cajas']
