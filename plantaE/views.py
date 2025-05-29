@@ -855,7 +855,20 @@ def recepcionesFruta_delete(request, pk):
         Recepciones.objects.filter(
             recepcion = salidas.recepcion
         ).update(status='Anulado')
-
+        AcumFruta.objects.filter(
+            recepcion = salidas.recepcion
+        ).update(
+            libras=None,
+            recepcion=None,
+            viaje=None,
+            nsalidafruta=None
+        )
+        salidasFruta.objects.filter(
+            recepcion = salidas.recepcion
+        ).update(
+            libras=None,
+            recepcion=None
+        )
         messages.success(request, "Registro anulado correctamente.")
         return redirect('recepcionesFruta_list')
     return render(request, 'plantaE/recepciones_confirm_delete.html', {'registros': salidas})
@@ -1420,7 +1433,7 @@ def boletas_list(request):
     #today = timezone.now().date()
     #salidas = Recepciones.objects.filter(fecha=today)
     salidas= Boletas.objects.all()
-    salidas = salidas.order_by('boleta')
+    salidas = salidas.order_by('-boleta')
      
     return render(request, 'plantaE/boletas_list.html', {'registros': salidas})
 
@@ -1442,7 +1455,11 @@ def recepciones_update(request, pk):
     return render(request, 'plantaE/recepciones_form.html', {'form': form})
 
 def ccalidad_list(request):
-    salidas = Ccalidad.objects.all()
+    today = timezone.localtime(timezone.now()).date()
+    current_month = today.month
+    current_year = today.year
+    salidas = Ccalidad.objects.filter(fecha__year=current_year,fecha__month=current_month).order_by('-registro').exclude(status="Anulado")
+    
 
     return render(request, 'plantaE/ccalidad_list.html', {'registros': salidas})
 
