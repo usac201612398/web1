@@ -101,8 +101,7 @@
                     <th >Cultivo</th>
                     <th >Estructura</th>
                     <th >Variedad</th>
-                    <th >Editar</th>
-                    <th >Eliminar</th>
+                    <th >Anular</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -119,8 +118,7 @@
                     <td>{{registro.cultivo}}</td>
                     <td>{{registro.estructura}}</td>
                     <td>{{registro.variedad}}</td>
-                    <th ><a href="{% url 'acumFruta_update' registro.pk %}"> <i class="fas fa-edit"></i>Editar</a></th>
-                    <th ><a href="{% url 'acumFruta_delete' registro.pk %}"><i class="fas fa-trash-alt"></i>Eliminar</a></th>
+                    <th ><a href="{% url 'acumFruta_delete' registro.pk %}"><i class="fas fa-trash-alt"></i>Anular</a></th>
                     </tr> 
                         
                 {% endfor %}
@@ -190,7 +188,6 @@ document.getElementById('consultar').addEventListener('click', function() {
                     <td>${item.cultivo}</td>
                     <td>${item.estructura}</td>
                     <td>${item.variedad}</td>
-                    <td><a href="${editUrl}"><i class="fas fa-edit"></i>Editar</a></td>
                     <td><a href="${deleteUrl}"><i class="fas fa-trash-alt"></i>Eliminar</a></td>
                 `;
                 
