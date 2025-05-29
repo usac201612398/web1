@@ -95,5 +95,46 @@ $(document).on('click', '.eliminar', function() {
     $(this).closest('tr').remove();
 });
 
+$('.envio3').on('click', function() {
+    var resume_table = document.getElementById("myTable");
+    var datos = [];
+    
+    for (var i = 1, row; row = resume_table.rows[i]; i++) {
+        var filas = [];
+        
+        for (var j = 0, col; col = row.cells[j]; j++) {
+            // Si la columna contiene una fecha, formateala
+            if (col.innerText.match(/^[A-Za-z]{3}\.\s\d{1,2},\s\d{4}$/)) { // Coincide con el formato "Oct. 10, 2024"
+                // Convertir la fecha
+                var fechaOriginal = col.innerText;
+                var fechaConvertida = new Date(fechaOriginal).toISOString().split('T')[0];
+                filas.push(fechaConvertida);
+            } else {
+                filas.push(col.innerText);
+            }
+        }
+        datos.push(filas);
+    }
+    
+    console.log(datos);
+
+    $.ajax({
+        url: '{% url "recepcionesFruta_process" %}',  // URL para la vista AJAX
+        type: 'POST',
+        dataType: "json",
+        data: JSON.stringify({'array': datos}),
+        contentType: 'application/json',
+        headers: {'X-CSRFToken': csrftoken}, 
+        
+        success: function(data) {
+            alert("Listo");
+            console.log(data);
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+});
+
 </script>
 </html>
