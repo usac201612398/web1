@@ -45,7 +45,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                {% for registro in page_obj %}
+                {% for registro in registros %}
                 <tr>
                     <td><a href="{% url 'recepcionesFruta_detail' registro.pk %}">{{ registro.registro }}</a></td>
                     <td>{{registro.recepcion}}</td>
