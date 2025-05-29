@@ -260,7 +260,6 @@ def article_listValle(request):
     today = timezone.localtime(timezone.now()).date()
     nombre_usuario = request.user.username
     salidas = salidasFruta.objects.filter(fecha=today,correo=nombre_usuario, status__isnull=True)
-
     salidas = salidas.order_by('-created_at')
     
     return render(request, 'plantaE/salidasFruta_listValle.html', {'registros': salidas})
@@ -688,9 +687,9 @@ def article_deleteValle(request, pk):
     return render(request, 'plantaE/salidasFruta_confirm_deleteValle.html', {'registros': salidas})
 
 def acumFruta_list(request):
-    today = timezone.now().date()
+    today = timezone.localtime(timezone.now()).date()
     nombre_usuario = request.user.username
-    salidas = AcumFruta.objects.filter(fecha=today,correo=nombre_usuario)
+    salidas = AcumFruta.objects.filter(fecha=today,correo=nombre_usuario, status__isnull=True)
     
     salidas = salidas.order_by('-created_at')
     
@@ -1549,9 +1548,9 @@ def acumFruta_consulta(request):
         opcion2 = request.POST.get('opcion2')
         nombre_usuario = request.user.username
         # Filtra tus datos según la opción seleccionada
-        datos = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario,libras__isnull=False) 
+        datos = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario,libras__isnull=False,status__isnull=True) 
         # Obtener todos los registros para el usuario y la fecha
-        registros = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario,libras__isnull=False)
+        registros = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario,libras__isnull=False,status__isnull=True)
         df = pd.DataFrame(list(datos.values()),columns=['id','fecha','finca','viaje','orden','cultivo','variedad','cajas','libras','estructura'])
 
         df_agrupado = df.groupby(['orden','estructura','variedad'], as_index=False).agg(
@@ -1594,9 +1593,9 @@ def acumFruta_consultaValle(request):
         opcion2 = request.POST.get('opcion2')
         nombre_usuario = request.user.username
         # Filtra tus datos según la opción seleccionada
-        datos = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario,libras__isnull=False) 
+        datos = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario,libras__isnull=False,status__isnull=True) 
         # Obtener todos los registros para el usuario y la fecha
-        registros = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario,libras__isnull=False)
+        registros = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario,libras__isnull=False,status__isnull=True)
         df = pd.DataFrame(list(datos.values()),columns=['id','fecha','finca','viaj','orden','cultivo','variedad','cajas','libras','estructura'])
 
         df_agrupado = df.groupby(['orden','estructura','variedad'], as_index=False).agg(
