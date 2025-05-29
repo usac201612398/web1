@@ -77,7 +77,7 @@ class AcumFruta(models.Model):
     cultivo = models.CharField(max_length=45,blank=True,null=True)
     variedad = models.CharField(max_length=40,blank=True,null=True)
     cajas = models.IntegerField(blank=True, null=True)
-    correo = models.CharField(max_length=75, blank=True,blank=True,null=True)
+    correo = models.CharField(max_length=75, blank=True,null=True)
     estructura=models.CharField(max_length=40,blank=True,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -103,7 +103,7 @@ class salidasFruta(models.Model):
     #op_estructura = [('CM1','CM1'),('FLE','FLE'),('MODULOS','MODULOS'),('CM2','CM2'),('CM3','CM3'),('CM4','CM4'),('CM5','CM5'),('CM6','CM6'),('CM6A','CM6A'),('CM6B','CM6B'),('CM7','CM7'),('INV1','INV1'),('INV2','INV2'),('CM8','CM8')]
     #op_status = [('Pendiente','-'),('Cerrado','Cerrado')]
     #acumFruta = models.ForeignKey(AcumFruta, null=True, blank=True, on_delete=models.CASCADE)
-    
+
     id = models.AutoField(primary_key=True)
     fecha = models.DateField(blank=True,blank=True, null=True)
     finca = models.CharField(max_length=25,null=True)
