@@ -18,7 +18,6 @@ import pytz
 from openpyxl.utils.dataframe import dataframe_to_rows
 import pdfkit
 from django.template.loader import render_to_string
-from django import transaction
 
 def vascula_monitor(request):
     return render(request, 'plantaE/vascula.html')
