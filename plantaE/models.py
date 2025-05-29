@@ -233,7 +233,7 @@ class Ccalidad(models.Model):
         db_table = 'ccalidad'
 
 class Recepciones(models.Model):
-    op_status = [('Pendiente','-'),('En proceso','En proceso')]
+    #op_status = [('Pendiente','-'),('En proceso','En proceso')]
     
     registro = models.BigAutoField(primary_key=True)
     recepcion = models.BigIntegerField(blank=True, null=True)
@@ -248,7 +248,7 @@ class Recepciones(models.Model):
     cultivo = models.CharField(max_length=50, blank=True, null=True)
     llave2 = models.CharField(max_length=200, blank=True, null=True)
     criterio = models.CharField(max_length=85, blank=True, null=True)
-    status = models.CharField(max_length=25, choices=op_status,blank=True, null=True)
+    status = models.CharField(max_length=25, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     classorigen = models.CharField(max_length=35, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
@@ -468,7 +468,6 @@ class cultivos(models.Model):
         return str(self.cultivo)
        
 class detallerec(models.Model):
-    op_status = [('Pendiente','-'),('En proceso','En proceso'),('Cerrado','Cerrado')]
 
     registro = models.BigAutoField(primary_key=True)
     recepcion = models.BigIntegerField(blank=True, null = True)
@@ -481,7 +480,7 @@ class detallerec(models.Model):
     cultivo = models.CharField(max_length=50, blank = True, null = True)
     criterio = models.CharField(max_length=85, blank = True, null = True)
     llave2 = models.CharField(max_length=200, blank=True, null=True)
-    status = models.CharField(max_length=25, choices=op_status,blank=True,null = True)
+    status = models.CharField(max_length=25,blank=True,null = True)
     created = models.DateTimeField(auto_now=True, blank=True,null = True)
     classorigen = models.CharField(max_length=35, blank= True, null = True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
