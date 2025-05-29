@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>VisualizarDetalles</title>
+    <title>Visualizar Datos de Origen</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
     <style>
 
@@ -36,7 +36,7 @@
                         <tr><td>Variedad:</td><td>{{ registros.variedad }} </td></tr>
                         <tr><td>Creado:</td><td>{{ registros.created_at }} </td></tr> 
                         <tr><td>Modificado:</td><td>{{ registros.updated_at }} </td></tr>  
-                        <tr><td><a href="{% url 'acumFruta_update' registros.pk %}">Edit</a></td><td><a href="{% url 'acumFruta_delete' registros.pk %}">Delete</a></td></tr> 
+                        <tr><td></td><td><a href="{% url 'acumFruta_delete' registros.pk %}">Anular</a></td></tr> 
                     </tbody>
                     </table>
                 </div>
