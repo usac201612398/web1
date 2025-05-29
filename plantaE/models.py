@@ -115,7 +115,7 @@ class salidasFruta(models.Model):
     orden = models.CharField(max_length=20, blank=True, null=True)
     libras = models.FloatField(blank=True, null=True)
     recepcion = models.BigIntegerField(blank=True, null=True)
-    correo = models.CharField(max_length=75, blank=True, blank=True, null=True)
+    correo = models.CharField(max_length=75, blank=True,  null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=20, blank=True, null=True)
