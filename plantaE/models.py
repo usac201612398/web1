@@ -228,6 +228,7 @@ class Ccalidad(models.Model):
     created = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     observaciones = models.CharField(max_length=125, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
+    status = models.CharField(max_length=20, blank=True, null=True)
 
     class Meta:
         managed = False

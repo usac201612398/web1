@@ -741,6 +741,7 @@ def acumFruta_update(request, pk):
     return render(request, 'plantaE/AcumFrutaDia_form.html', {'form': form})
 
 def acumFruta_delete(request, pk):
+
     salidas = get_object_or_404(AcumFruta, pk=pk)
 
     if salidas.recepcion is not None:
@@ -1458,7 +1459,7 @@ def ccalidad_list(request):
     today = timezone.localtime(timezone.now()).date()
     current_month = today.month
     current_year = today.year
-    salidas = Ccalidad.objects.filter(fecha__year=current_year,fecha__month=current_month).order_by('-registro')
+    salidas = Ccalidad.objects.filter(fecha__year=current_year,fecha__month=current_month).order_by('-registro').exclude(status="Anulado")
     
 
     return render(request, 'plantaE/ccalidad_list.html', {'registros': salidas})
@@ -1505,9 +1506,12 @@ def ccalidad_update_aux(request):
 
 def ccalidad_delete(request, pk):
     salidas = get_object_or_404(Ccalidad, pk=pk)
+
     if request.method == 'POST':
-        salidas.delete()
-        return redirect('ccalidad_list')
+        salidas.status = 'Anulado'
+        salidas.save()
+        
+        messages.success(request, "Registro anulado correctamente.")
     return render(request, 'plantaE/ccalidad_confirm_delete.html', {'registros': salidas})
 
 
