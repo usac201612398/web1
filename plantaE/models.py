@@ -481,8 +481,8 @@ class detallerec(models.Model):
     criterio = models.CharField(max_length=85, blank = True, null = True)
     llave2 = models.CharField(max_length=200, blank=True, null=True)
     status = models.CharField(max_length=25,blank=True,null = True)
-    created = models.DateTimeField(auto_now=True, blank=True,null = True)
     classorigen = models.CharField(max_length=35, blank= True, null = True)
+    created = models.DateTimeField(auto_now_add=True, blank=True,null = True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     enviofruta = models.BigIntegerField(blank=True, null=True)
     boleta = models.BigIntegerField(blank=True, null = True)
@@ -493,7 +493,7 @@ class detallerec(models.Model):
 
 class detallerecaux(models.Model):
 
-    op_status = [('Pendiente','-'),('En proceso','En proceso'),('Cerrado','Cerrado')]
+    #op_status = [('Pendiente','-'),('En proceso','En proceso'),('Cerrado','Cerrado')]
     
     registro = models.BigAutoField(primary_key=True)
     recepcion = models.BigIntegerField(blank=True, null = True)
@@ -506,14 +506,13 @@ class detallerecaux(models.Model):
     cultivo = models.CharField(max_length=50, blank = True, null = True)
     llave2 = models.CharField(max_length=200, blank=True, null=True)
     criterio = models.CharField(max_length=85, blank = True, null = True)
-    status = models.CharField(max_length=25, choices=op_status,blank=True,null = True)
-    created = models.DateTimeField(auto_now=True, blank=True,null = True)
+    status = models.CharField(max_length=25,blank=True,null = True)
     classorigen = models.CharField(max_length=35, blank= True, null = True)
+    created = models.DateTimeField(auto_now_add=True, blank=True,null = True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     enviofruta = models.BigIntegerField(blank=True, null=True)
     boleta = models.BigIntegerField(blank=True, null = True)
     fechasalidafruta = models.DateField(blank=True, null=True)
-    
     orden = models.CharField(max_length=30, blank=True, null=True)
 
 class enviosrec(models.Model):
