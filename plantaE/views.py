@@ -19,6 +19,7 @@ from openpyxl.utils.dataframe import dataframe_to_rows
 import pdfkit
 from django.template.loader import render_to_string
 from django.contrib import messages
+from django.core.paginator import Paginator
 
 def vascula_monitor(request):
     return render(request, 'plantaE/vascula.html')
@@ -831,7 +832,11 @@ def recepciones_list(request):
     #rebajaLibras = finca=list(salidas2)[0]['libras']
     #for i in len(salidas):
     #    existenciaCajas 
-    return render(request, 'plantaE/recepciones_list.html', {'registros': salidas})
+    paginator = Paginator(salidas, 10)  # 10 registros por página (ajusta según prefieras)
+    page_number = request.GET.get('page')  # Obtener el número de página de la URL
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'plantaE/recepciones_list.html', {'registros': paginator})
 
 def recepcionesFruta_delete(request, pk):
     salidas = get_object_or_404(detallerec, pk=pk)# Verificar si existen registros en detallerecaux con la misma recepción
