@@ -1981,29 +1981,32 @@ def packinglist_update(request, pk):
 
 def packinglist_delete(request, pk):
     salidas = get_object_or_404(salidacontenedores, pk=pk)
-    
+
+    # Buscar registros auxiliares vinculados al contenedor
     relacionados = inventarioProdTermAux.objects.filter(salidacontenedores=salidas.registro)
 
-    # Validar si existe algún registro relacionado con boleta NO nula
-    existe_boleta = relacionados.filter(boleta__isnull=False).exists()
-
-    if existe_boleta:
+    # Verificar si alguno tiene boleta asignada (no permitir anular)
+    if relacionados.filter(boleta__isnull=False).exists():
         messages.error(request, "No se puede anular esta paleta porque tiene boletas asignadas.")
-        return redirect('inventarioProd_packinglist_detail')  # Cambia esto al nombre correcto de tu vista
+        return redirect('inventarioProd_packinglist_detail')
 
-    
     if request.method == 'POST':
+        # Paso 1: Anular el contenedor
         salidas.status = 'Anulado'
         salidas.save()
-        inventarioProdTermAux.objects.filter(
-            salidacontenedores=salidas.registro
-        ).update(status='Anulado')
-        inventarioProdTerm.objects.filter(
-            registro=relacionados.inventarioreg
-        ).update(status=None)
-        
+
+        # Paso 2: Anular los registros en inventarioProdTermAux
+        relacionados.update(status='Anulado')
+
+        # Paso 3: Obtener todos los códigos únicos de inventarioreg
+        inventario_codigos = relacionados.values_list('inventarioreg', flat=True).distinct()
+
+        # Paso 4: Actualizar los registros en inventarioProdTerm a status=None
+        inventarioProdTerm.objects.filter(registro__in=inventario_codigos).update(status=None)
+
         messages.success(request, "Registro anulado correctamente.")
         return redirect('inventarioProd_packinglist_detail')
+
     return render(request, 'plantaE/inventarioProd_packinglist_confirm_delete.html', {'registros': salidas})
 
 def procesarinvprodconten(request):
