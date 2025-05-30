@@ -1706,7 +1706,7 @@ def validaroventa(request):
     # Filtra los contenedores que no tienen el status "Cerrado" y que están en el array de contenedores
     contenedores_a_cerrar = salidacontenedores.objects.filter(
         contenedor=contenedores_array
-    ).exclude(status='Cerrado')
+    ).exclude(Q(status='Cerrado') | Q(status='Anulado'))
 
     if contenedores_a_cerrar.exists():
         # Actualiza el status a "Cerrado" para los contenedores encontrados
@@ -1731,7 +1731,7 @@ def generate_packing_list_pdf(request):
         return JsonResponse({'error': 'Contenedor no encontrado'}, status=404)
 
     # Filtra los contenedores que no tienen el status "Cerrado" y que están en el array de contenedores
-    contenedores_a_imprimir = salidacontenedores.objects.filter(contenedor=contenedor).order_by("registro").values('proveedor','itemsapcode','itemsapname','contenedor','fechasalcontenedor','fecha','cajas','importe','cultivo','palet')
+    contenedores_a_imprimir = salidacontenedores.objects.filter(contenedor=contenedor).exclude(Q(status='Cerrado') | Q(status='Anulado')).order_by("registro").values('proveedor','itemsapcode','itemsapname','contenedor','fechasalcontenedor','fecha','cajas','importe','cultivo','palet')
 
     # Convierte el QuerySet a un DataFrame de pandas
     df = pd.DataFrame(list(contenedores_a_imprimir))
@@ -2281,7 +2281,7 @@ def inventariogeneral_list(request):
 
     # Obtener todas las salidas de inventario y salidas de contenedores
     salidas = inventarioProdTerm.objects.filter(fecha__lte=today)
-    salidas2 = inventarioProdTermAux.objects.exclude(status="En proceso")
+    salidas2 = inventarioProdTermAux.objects.exclude(Q(status='En proceso') | Q(status='Anulado'))
 
     # Filtrar las salidas de inventario para las que tienen categoría 'Exportación' y sin 'status'
     salidas = salidas.filter(categoria="Exportación").order_by('registro').exclude(status='En proceso')
