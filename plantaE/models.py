@@ -536,7 +536,6 @@ class enviosrec(models.Model):
     clasificacion = models.CharField(max_length= 25, blank = True, null =  True)
     rubro = models.CharField(max_length= 25, blank = True, null =  True)
     grupoarticulos = models.CharField(max_length= 25, blank = True, null =  True)
-    rubro = models.CharField(max_length= 25, blank = True, null =  True)
     almacen = models.CharField(max_length= 25, blank = True, null =  True)
     firma = models.CharField(max_length= 75, blank = True, null =  True)
     status = models.CharField(max_length=25,blank=True,null = True)

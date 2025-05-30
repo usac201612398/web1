@@ -4,7 +4,7 @@ import logging
 from openpyxl import Workbook
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect
-from .models import Actpeso,salidacontenedores, inventarioProdTermAux,productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
+from .models import Actpeso, enviosrec,salidacontenedores, inventarioProdTermAux,productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
 from .forms import pesosForm,itemsForm,salidacontenedoresForm,salidasFrutaForm, contenedoresForm,recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
 from django.db.models import Sum, Q
 from django.utils import timezone
@@ -873,6 +873,39 @@ def recepcionesFruta_delete(request, pk):
         messages.success(request, "Registro anulado correctamente.")
         return redirect('recepcionesFruta_list')
     return render(request, 'plantaE/recepciones_confirm_delete.html', {'registros': salidas})
+
+def envioslocal_list(request):
+
+    today = timezone.localtime(timezone.now()).date()
+    current_month = today.month
+    current_year = today.year
+    #salidas = Recepciones.objects.filter(fecha=today)
+    salidas= enviosrec.objects.filter(fecha__year=current_year,fecha__month=current_month).order_by('-recepcion').exclude(status="Anulado")
+
+    return render(request, 'plantaE/envioslocal_list.html', {'registros': salidas})
+
+def envioslocal_detail(request, pk):
+    salidas = get_object_or_404(enviosrec, pk=pk)
+    return render(request, 'plantaE/envioslocal_detail.html', {'registros': salidas})
+
+def envioslocal_delete(request, pk):
+    salidas = get_object_or_404(enviosrec, pk=pk)# Verificar si existen registros en detallerecaux con la misma recepción
+    #existe_en_aux = detallerecaux.objects.filter(recepcion=salidas.recepcion).exists()
+
+    #if existe_en_aux:
+    #    messages.error(request, "No se puede anular esta recepción porque tiene registros relacionados en boletas.")
+    #    return redirect('recepcionesFruta_list')  # Cambia esto al nombre real de tu vista/lista
+
+    if request.method == 'POST':
+        salidas.status = 'Anulado'
+        salidas.save()
+    #    Actpeso.objects.filter(
+    #        recepcion = salidas.recepcion
+    #    ).update(status='Anulado')
+        
+        messages.success(request, "Registro anulado correctamente.")
+        return redirect('envioslocal_list')
+    return render(request, 'plantaE/envioslocal_confirm_delete.html', {'registros': salidas})
 
 def recepciones_reporteAcum(request):
     today = timezone.now().date()

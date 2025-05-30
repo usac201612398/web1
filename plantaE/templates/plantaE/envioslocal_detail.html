@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Visualizar Resumen de Envios</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <style>
+
+        h1 {
+            margin: 15px;
+            font-family: Arial, sans-serif;
+        }
+
+        a {
+            margin: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+    </style>
+</head>
+<body>
+    <h1 class="roboto">Detalles</h1>
+    <div class="container">
+        <div class="columns">
+            <div class="column is-12">
+                <div class="table-container">
+                    <table class="table is-striped is-hoverable is is-fullwidth" id="myTable">
+                    
+                        <tbody>
+                            <tr><td>Key:</td><td>{{ registros.registro }} </td></tr>
+                            <tr><td>Envio:</td><td>{{ registros.envio }} </td></tr> 
+                            <tr><td>Fecha:</td><td>{{ registros.fecha }} </td></tr> 
+                            <tr><td>Productor:</td><td>{{ registros.productor }} </td></tr>
+                            <tr><td>Clasificación:</td><td>{{ registros.clasificacion}} </td></tr>
+                            <tr><td>Código de item SAP:</td><td>{{ registros.itemsap_code }} </td></tr> 
+                            <tr><td>Nombre de item SAP:</td><td>{{ registros.itemsap_name }} </td></tr>
+                            <tr><td>Calidad 1:</td><td>{{ registros.calidad1 }} </td></tr>
+                            <tr><td>Cantidad Externa:</td><td>{{ registros.u_m }} </td></tr>
+                            <tr><td>Unidad de Cantidad Ext:</td><td>{{ registros.cantidad }} </td></tr>
+                            <tr><td>Libras:</td><td>{{ registros.libras}} </td></tr>
+                            <tr><td>Cantidad de Empaque:</td><td>{{ registros.empaque_cnt}} </td></tr>
+                            <tr><td>Unidad de Empaque:</td><td>{{ registros.empaque_tipo}} </td></tr>
+                            <tr><td>Destino:</td><td>{{ registros.destino }} </td></tr> 
+                            <tr><td>Recibió:</td><td>{{ registros.recibe }} </td></tr>
+                            <tr><td>Firmó:</td><td>{{ registros.firma }} </td></tr>
+                            <tr><td>Observaciones:</td><td>{{ registros.observaciones }} </td></tr>
+                            <tr><td>Almacén:</td><td>{{ registros.almacen }} </td></tr>
+                            <tr><td>Creado:</td><td>{{ registros.created }} </td></tr> 
+                            <tr><td>Modificado:</td><td>{{ registros.updated_at }} </td></tr>  
+                            
+                        </tbody>
+
+                  
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="{% url 'envioslocal_list' %}">Regresar a panel</a>
+
+    
+    
+</body>
+</html>

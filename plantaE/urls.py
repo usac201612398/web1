@@ -70,6 +70,10 @@ urlpatterns = [
     path('ccalidad/<int:pk>/edit/', views.ccalidad_update, name='ccalidad_update'),
     path('ccalidad/<int:pk>/delete/', views.ccalidad_delete, name='ccalidad_delete'),
 
+    path("envioslocal",views.envioslocal_list,name='envioslocal_list'),
+    path('envioslocal/<int:pk>/delete/', views.envioslocal_delete, name='envioslocal_delete'),
+    path('envioslocal/<int:pk>/', views.envioslocal_detail, name='envioslocal_detail'),
+
     path("inventarioProd/plantilla",views.inventarioProd_grabarplantilla,name='inventarioProd_grabar'),
     path("inventarioProd",views.inventarioProd_list,name='inventarioProd_list'),
     path('inventarioProd/<int:pk>/', views.inventarioProd_detail, name='inventarioProd_detail'),
