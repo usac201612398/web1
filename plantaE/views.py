@@ -1726,12 +1726,12 @@ def generate_packing_list_pdf(request):
     semana_actual = hoy.isocalendar()[1]  # Semana actual
 
     # Obtiene el primer contenedor que coincida con los datos
-    infoconten = contenedores.objects.exclude(status="Cerrado").filter(contenedor=contenedor).first()
+    infoconten = contenedores.objects.exclude(status="Anulado").filter(contenedor=contenedor).first()
     if not infoconten:
         return JsonResponse({'error': 'Contenedor no encontrado'}, status=404)
 
     # Filtra los contenedores que no tienen el status "Cerrado" y que están en el array de contenedores
-    contenedores_a_imprimir = salidacontenedores.objects.filter(contenedor=contenedor).exclude(status='Cerrado').order_by("registro").values('proveedor','itemsapcode','itemsapname','contenedor','fechasalcontenedor','fecha','cajas','importe','cultivo','palet')
+    contenedores_a_imprimir = salidacontenedores.objects.filter(contenedor=contenedor).exclude(status='Anulado').order_by("registro").values('proveedor','itemsapcode','itemsapname','contenedor','fechasalcontenedor','fecha','cajas','importe','cultivo','palet')
     if not contenedores_a_imprimir:
         return JsonResponse({'error': 'No hay contenedor con status pendiente'}, status=404)
     # Convierte el QuerySet a un DataFrame de pandas
