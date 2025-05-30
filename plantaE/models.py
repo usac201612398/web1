@@ -308,7 +308,7 @@ class inventarioProdTerm(models.Model):
     op_sap = models.CharField(max_length=20,blank=True, null=True)
     boleta=models.BigIntegerField(blank=True, null=True)
     reasignacion=models.CharField(max_length=75,null=True,blank=True)
-    enviorec=models.BigAutoField(blank=True, null=True)
+    enviorec=models.BigIntegerField(blank=True, null=True)
     
     def __str__(self):
         return str(self.registro) + " | " + str(self.proveedor) + " | " + str(self.itemsapname)+ " | " + str(self.cultivo)
