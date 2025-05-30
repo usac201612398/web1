@@ -49,7 +49,7 @@
                 <tbody>
                 {% for registro in registros %}
                 <tr>
-                    <td><a href="{% url 'enviosrec_detail' registro.pk %}">{{ registro.registro }}</a></td>
+                    <td><a href="{% url 'envioslocal_detail' registro.pk %}">{{ registro.registro }}</a></td>
                     <td>{{registro.envio}}</td>
                     <td>{{registro.fecha}}</td>
                     <td>{{registro.productor}}</td>
