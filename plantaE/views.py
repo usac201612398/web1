@@ -1909,7 +1909,7 @@ def contenedorpacking_list(request):
     opcion1 = timezone.now().date()
 
     # Filtra tus datos según la opción seleccionada
-    contenedores = salidacontenedores.objects.exclude(status="Cerrado")
+    contenedores = salidacontenedores.objects.exclude(Q(status='Cerrado') | Q(status='Anulado'))
     contenedores = contenedores.order_by("registro").values('proveedor', 'itemsapcode', 'itemsapname', 'contenedor','fechasalcontenedor', 'cajas', 'importe', 'cultivo')
     # Crea un DataFrame a partir de los datos
     df = pd.DataFrame(list(contenedores))
@@ -1938,7 +1938,7 @@ def contenedorpacking_list(request):
         opcion1 = request.POST.get('opcion1')
 
         # Filtra los datos nuevamente
-        contenedor = salidacontenedores.objects.filter(contenedor=opcion1).exclude(status='Cerrado').order_by("registro").values('proveedor','itemsapcode','itemsapname','contenedor','fechasalcontenedor','cajas','importe','cultivo')
+        contenedor = salidacontenedores.objects.filter(contenedor=opcion1).exclude(Q(status='Cerrado') | Q(status='Anulado')).order_by("registro").values('proveedor','itemsapcode','itemsapname','contenedor','fechasalcontenedor','cajas','importe','cultivo')
 
 
         # Crea el DataFrame y agrupa
@@ -1964,7 +1964,7 @@ def contenedorpacking_list(request):
 def contenedorpacking_list_detail(request):
 
     # Filtra tus datos según la opción seleccionada
-    contenedores = salidacontenedores.objects.order_by("-registro")
+    contenedores = salidacontenedores.objects.order_by("-registro").exclude(status="Anulado")
 
     return render(request, 'plantaE/inventarioProd_packinglist_detail.html', {'data':contenedores})
 
@@ -1981,8 +1981,28 @@ def packinglist_update(request, pk):
 
 def packinglist_delete(request, pk):
     salidas = get_object_or_404(salidacontenedores, pk=pk)
+    
+    relacionados = inventarioProdTermAux.objects.filter(salidacontenedores=salidas.registro)
+
+    # Validar si existe algún registro relacionado con boleta NO nula
+    existe_boleta = relacionados.filter(boleta__isnull=False).exists()
+
+    if existe_boleta:
+        messages.error(request, "No se puede anular esta paleta porque tiene boletas asignadas.")
+        return redirect('inventarioProd_packinglist_detail')  # Cambia esto al nombre correcto de tu vista
+
+    
     if request.method == 'POST':
-        salidas.delete()
+        salidas.status = 'Anulado'
+        salidas.save()
+        inventarioProdTermAux.objects.filter(
+            salidacontenedores=salidas.registro
+        ).update(status='Anulado')
+        inventarioProdTerm.objects.filter(
+            registro=relacionados.inventarioreg
+        ).update(status=None)
+        
+        messages.success(request, "Registro anulado correctamente.")
         return redirect('inventarioProd_packinglist_detail')
     return render(request, 'plantaE/inventarioProd_packinglist_confirm_delete.html', {'registros': salidas})
 
