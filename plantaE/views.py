@@ -880,7 +880,7 @@ def envioslocal_list(request):
     current_month = today.month
     current_year = today.year
     #salidas = Recepciones.objects.filter(fecha=today)
-    salidas= enviosrec.objects.filter(fecha__year=current_year,fecha__month=current_month).order_by('-recepcion').exclude(status="Anulado")
+    salidas= enviosrec.objects.filter(fecha__year=current_year,fecha__month=current_month).order_by('-envio').exclude(status="Anulado")
 
     return render(request, 'plantaE/envioslocal_list.html', {'registros': salidas})
 
