@@ -2050,7 +2050,7 @@ def procesarinvprodcontenv2(request):
     today = timezone.now().date()
 
     # Obtener siguiente palet disponible
-    consulta = salidacontenedores.objects.exclude(status="Cerrado").filter(contenedor=contenedor_).order_by('-registro').first()
+    consulta = salidacontenedores.objects.exclude(Q(status='Cerrado') | Q(status='Anulado')).filter(contenedor=contenedor_).order_by('-registro').first()
     palet = 1 if consulta is None else (consulta.palet or 0) + 1
 
     registros = []
