@@ -889,36 +889,35 @@ def envioslocal_detail(request, pk):
     return render(request, 'plantaE/envioslocal_detail.html', {'registros': salidas})
 
 
+
 def envioslocal_delete(request, pk):
     # Obtener el objeto de envío
     salidas = get_object_or_404(enviosrec, pk=pk)
 
-    # Buscar registros vinculados al envío
+    # Buscar registros de inventario vinculados al envío
     relacionados = inventarioProdTerm.objects.filter(enviosrec=salidas.registro)
 
-    # Buscar registros auxiliares relacionados
+    # Buscar registros auxiliares que correspondan a los registros anteriores
     relacionadosaux = inventarioProdTermAux.objects.filter(
         inventarioreg__in=relacionados.values_list('registro', flat=True)
     )
 
-    # Verificar si alguno tiene boleta asignada
+    # Validar si hay alguna boleta asignada en los registros auxiliares
     if relacionadosaux.filter(boleta__isnull=False).exists():
         messages.error(request, "No se puede anular este envío porque tiene boletas asignadas.")
         return redirect('envioslocal_list')
 
-    # Si es una solicitud POST, realizar la anulación
     if request.method == 'POST':
         # Anular el envío
         salidas.status = 'Anulado'
         salidas.save()
 
-        # Anular los registros auxiliares relacionados
-        relacionadosaux.update(status='Anulado')
+        # Cerrar los registros principales de inventario
+        relacionados.update(status='Anulado', status3='Anulado')
 
-        messages.success(request, "Registro anulado correctamente.")
+        messages.success(request, "El envío y los registros de inventario  han sido anulados correctamente.")
         return redirect('envioslocal_list')
 
-    # Mostrar confirmación de borrado
     return render(request, 'plantaE/envioslocal_confirm_delete.html', {'registros': salidas})
 
 def recepciones_reporteAcum(request):
