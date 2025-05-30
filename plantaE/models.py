@@ -540,7 +540,7 @@ class enviosrec(models.Model):
     firma = models.CharField(max_length= 75, blank = True, null =  True)
     status = models.CharField(max_length=25,blank=True,null = True)
     productor = models.CharField(max_length= 75, blank = True, null =  True)
-    created = models.DateTimeField(auto_now=True, blank=True,null = True)
+    created = models.DateTimeField(auto_now_add=True, blank=True,null = True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     libras = models.FloatField(blank = True, null = True)
     
