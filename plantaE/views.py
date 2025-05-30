@@ -1964,7 +1964,7 @@ def contenedorpacking_list(request):
 def contenedorpacking_list_detail(request):
 
     # Filtra tus datos según la opción seleccionada
-    contenedores = salidacontenedores.objects.order_by("-registro").exclude(status="Anulado")
+    contenedores = salidacontenedores.objects.order_by("-registro").exclude(Q(status='Cerrado') | Q(status='Anulado'))
 
     return render(request, 'plantaE/inventarioProd_packinglist_detail.html', {'data':contenedores})
 
