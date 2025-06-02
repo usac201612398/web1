@@ -63,8 +63,8 @@
                     <td><div contenteditable="true" class="editable-cell">{{registro.librasxcaja}}</td>
                     <td><div contenteditable="true" class="editable-cell">{{registro.libras}}</td>
                     <td>{{registro.created}}</td>
-                    <th ><a href="{% url 'boletas_update' registro.pk %}"><i class="fas fa-edit"></i></a></th>
-                    <td><button class="eliminar"><i class="fas fa-trash-alt"></i></button></td>
+                    <td ><a href="{% url 'boletas_update' registro.pk %}"><i class="fas fa-edit"></i></a></td>
+                    <td><a href="{% url 'boletas_delete' registro.pk %}"><i class="fas fa-trash-alt"></i></a></td>
                     </tr> 
                         
                 {% endfor %}
@@ -89,13 +89,5 @@
     });
 
 </script>
-<script>
 
-const eliminarBotones = document.querySelectorAll('.eliminar');
-
-$(document).on('click', '.eliminar', function() {
-    $(this).closest('tr').remove();
-});
-
-</script>
 </html>
