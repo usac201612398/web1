@@ -90,6 +90,39 @@ class AcumFruta(models.Model):
     def __str__(self):
         return (str(self.id) + " | " + str(self.fecha) + " | " + str(self.finca)+ " | " + str(self.cultivo) + " | " + str(self.variedad)+ " | " + str(self.estructura)+ " | " + str(self.viaje))
 
+class AcumFrutaaux(models.Model):
+    
+    #op_cultivo = [('ROMA','ROMA'),('PEPINO','PEPINO'),('AGUACATE','AGUACATE'),('ARANDANO','ARANDANO'),('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('BEEF','BEEF'),('SALADETTE','SALADETTE'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
+    #op_variedad = [('HASS','HASS'),('P52','P52'),('KRASHIF','KRASHIF'),('DELTASTAR','DELTASTAR'),('BILOXI','BILOXI'),('TOMATAZO','TOMATAZO'),('TYRAL','TYRAL'),('HATENO','HATENO'),('SICYBELLE','SICYBELLE'),('EMYELLE','EMYELLE'),('ADORELLE','ADORELLE'),('CRYSTELLE','CRYSTELLE'),('LEE PETIT','LEE PETIT'),('LUAN','LUAN'),('FLAVUS','FLAVUS'),('LUMMEN','LUMMEN'),('ALANI','ALANI'),('T311457R','T311457R'),('319384','319384'),('CASCADE','CASCADE'),('EXTRADENA','EXTRADENA'),('TL152633','TL152633'),('TL162715','TL152715'),('8B16453','8B16453'),('8B19B091','8B19B091'),('DIONISIO','DIONISIO'),('TORERO','TORERO'),('VINCITORI','VINCITORI'),('MONTELIMAR','MONTELIMAR'),('SWEET MAX','SWEET MAX'),('PICOLO','PICOLO'),('HYRULE','HYRULE'),('DORMA','DORMA'),('BAMANO','BAMANO'),('TT 764','TT 764'),('TT 864','TT 864'),('CHOCOSTAR','CHOCOSTAR'),('DUNNE','DUNNE'),('IVORINO','IVORINO'),('KM 5512','KM 5512'),('NEBULA','NEBULA'),('ROJO','ROJO'),('AMARILLO','AMARILLO'),('ANARANJADO','ANARANJADO')]
+    #op_finca = [('VALLE','VALLE'),('RIO','RIO'),('CIP','CIP'),('FLE','FLE'),('FLA','FLA'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.'),]
+    #op_correo = [('otroscultivos@popoyan.com.gt','otroscultivos@popoyan.com.gt'),('cosecha.cip@popoyan.com.gt','cosecha.cip@popoyan.com.gt'),('cosecha.rio@popoyan.com.gt','cosecha.rio@popoyan.com.gt'),('provalle@popoyan.com.gt','provalle@popoyan.com.gt'),('cosecha.valle@popoyan.com.gt','cosecha.valle@popoyan.com.gt'),('cosecha.valle2@popoyan.com.gt','cosecha.valle2@popoyan.com.gt')]
+    #op_orden = [('PCIPT20242025','PCIPT20242025'),('64204019','64204019'),('60200040','60200040'),('64200000','64200000'),('310100052','310100052'),('60000019','60000019'),('60000020','60000020'),('PCIPB20242025','PCIPB20242025'),('PCIPMINI20242025','PCIPMINI20242025'),('PT20242025','PT20242025'),('PP20242025','PP20242025'),('60200039','60200039'),('64202052','64202052'),('64202053','64202053'),('64202052','64202052'),('64206054','64206054'),('64206055','64206055'),('64206056','64206056'),('64202048','64202048'),('64202049','64202049'),('64202050','64202050'),('64202051','64202051')]
+    #op_estructura = [('PASTORIA','PASTORIA'),('PARCELA','PARCELA'),('FASE 4','FASE 4'),('PANTE 10','PANTE 10'),('FASE 3','FASE 3'),('FASE 3.1','FASE 3.1'),('FASE 1','FASE 1'),('FASE 2','FASE 2'),('FASE 5','FASE 5.1'),('FASE 5.1','FASE 5.1'),('CM1','CM1'),('FLE','FLE'),('MODULOS','MODULOS'),('CM2','CM2'),('CM3','CM3'),('CM4','CM4'),('CM5','CM5'),('CM6','CM6'),('CM6A','CM6A'),('CM6B','CM6B'),('CM7','CM7'),('INV1','INV1'),('INV2','INV2'),('CM8','CM8')]
+    #op_status = [('Pendiente','-'),('Cargado','Cargado')]
+
+    id = models.AutoField(primary_key=True)
+    acumfrutaid = models.BigIntegerField(blank=True, null=True)
+    fecha = models.DateField(blank=True, null=True)
+    finca = models.CharField(max_length=50,blank=True,null=True)
+    orden = models.CharField(max_length=20,blank=True,null=True)
+    cultivo = models.CharField(max_length=45,blank=True,null=True)
+    variedad = models.CharField(max_length=40,blank=True,null=True)
+    cajas = models.IntegerField(blank=True, null=True)
+    correo = models.CharField(max_length=75, blank=True,null=True)
+    estructura=models.CharField(max_length=40,blank=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    libras = models.FloatField(blank=True, null=True)
+    status = models.CharField(max_length=25, blank=True, null=True)
+    op_sap = models.CharField(max_length=20,blank=True, null=True)
+    recepcion = models.BigIntegerField(blank=True, null=True)
+    viaje = models.CharField(max_length=30,null=True,blank=True)
+    nsalidafruta = models.BigIntegerField(blank=True, null=True)
+    boleta = models.BigIntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return (str(self.id) + " | " + str(self.fecha) + " | " + str(self.finca)+ " | " + str(self.cultivo) + " | " + str(self.variedad)+ " | " + str(self.estructura)+ " | " + str(self.viaje))
+
 class salidasFruta(models.Model):
 
     #op_viajes = [('','-'),('Viaje 1','Viaje 1'),('Viaje 2','Viaje 2'),('Viaje 3', 'Viaje 3'),('Viaje 4','Viaje 4'),('Viaje 5','Viaje 5'),('Viaje 6','Viaje 6'),('Viaje 7','Viaje 7'),('Viaje 8','Viaje 8'),('Viaje 9','Viaje 9'),('Viaje 10','Viaje 10')]
