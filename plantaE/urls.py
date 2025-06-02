@@ -64,6 +64,7 @@ urlpatterns = [
     path("salidasFrutaPublic/graficoPublic",views.recepciones_reportecurva2,name='recepcionesFruta_reportecurva2'),
     path("recepcionesFruta/reporteAcum/loadgrafico",views.graficas,name='load_grafico'),
     path("boletasFruta",views.boletas_list,name='boletasFruta_list'),
+    path('boletasFruta/<int:pk>/edit/', views.boletas_update, name='boletas_update'),
     path("ccalidad",views.ccalidad_list,name='ccalidad_list'),
     path('ccalidad/<int:pk>/', views.ccalidad_detail, name='ccalidad_detail'),
     path('ccalidad/new/', views.ccalidad_create, name='ccalidad_create'),
