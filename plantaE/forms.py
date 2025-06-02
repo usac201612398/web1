@@ -303,5 +303,5 @@ class boletasForm(forms.ModelForm):
     
     class Meta:
         model = Boletas
-        fields = ['fecha', 'registro','boleta','finca', 'ordenfinca','proveedor','cultivo','orden','calidad1','itemsapname','calidad' , 'cajas', 'lbxcaja', 'libras','observaciones']
+        fields = ['fecha', 'registro','boleta','finca', 'ordenfinca','proveedor','cultivo','orden','calidad1','itemsapname','calidad' , 'cajas', 'librasxcaja', 'libras','observaciones']
 
