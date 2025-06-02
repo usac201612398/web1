@@ -213,6 +213,7 @@ class Boletas(models.Model):
     itemsapcodelibra = models.CharField(max_length=30, blank=True, null=True)
     emisiones = models.CharField(max_length=30, blank=True, null=True)
     comentario = models.CharField(max_length=30, blank=True, null=True)
+    observaciones = comentario = models.CharField(max_length=50, blank=True, null=True)
     
     class Meta:
         managed = False

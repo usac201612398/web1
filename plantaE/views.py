@@ -5,7 +5,7 @@ from openpyxl import Workbook
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect
 from .models import Actpeso, enviosrec,salidacontenedores, inventarioProdTermAux,productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
-from .forms import pesosForm,itemsForm,salidacontenedoresForm,salidasFrutaForm, contenedoresForm,recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
+from .forms import pesosForm,boletasForm,itemsForm,salidacontenedoresForm,salidasFrutaForm, contenedoresForm,recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
 from django.db.models import Sum, Q
 from django.utils import timezone
 import matplotlib.pyplot as plt
@@ -1483,6 +1483,19 @@ def boletas_list(request):
     salidas = salidas.order_by('-boleta')
      
     return render(request, 'plantaE/boletas_list.html', {'registros': salidas})
+
+def boletas_update(request, pk):
+    salidas = get_object_or_404(Boletas, pk=pk)
+    if request.method == 'POST':
+        form = boletasForm(request.POST, instance=salidas)
+        if form.is_valid():
+            form.save()
+            return redirect('boletas_list')
+        else:
+            return JsonResponse({'errores': form.errors}, status=400)
+    else:
+        form = boletasForm(instance=salidas)
+    return render(request, 'plantaE/boletas_form.html', {'form': form})
 
 def recepciones_detail(request, pk):
     salidas = get_object_or_404(detallerec, pk=pk)

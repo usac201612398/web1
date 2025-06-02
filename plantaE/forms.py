@@ -1,5 +1,5 @@
 from django import forms
-from .models import Actpeso,salidacontenedores,salidasFruta, productoTerm,contenedores, Recepciones, Ccalidad, inventarioProdTerm,AcumFruta, enviosFrutaPlantilla
+from .models import Actpeso,Boletas,salidacontenedores,salidasFruta, productoTerm,contenedores, Recepciones, Ccalidad, inventarioProdTerm,AcumFruta, enviosFrutaPlantilla
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Fieldset, Div
 
@@ -282,4 +282,26 @@ class salidacontenedoresForm(forms.ModelForm):
             
         return cleaned_data
 
+
+class boletasForm(forms.ModelForm):
+    
+    registro = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'my-input'}))
+    boleta = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
+    finca = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
+    ordenfinca = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
+    proveedor = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
+    cultivo = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
+    orden = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
+    calidad1 = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
+    itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly':'readonly'}))  # Campo numérico
+    calidad = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
+    cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
+    librasxcaja = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
+    libras = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
+    observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
+    
+    class Meta:
+        model = Boletas
+        fields = ['fecha', 'registro','boleta','finca', 'ordenfinca','proveedor','cultivo','orden','calidad1','itemsapname','calidad' , 'cajas', 'lbxcaja', 'libras','observaciones']
 
