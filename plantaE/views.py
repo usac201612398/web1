@@ -331,7 +331,7 @@ def inventarioProd_grabarplantilla(request):
             inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[5],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=i[2],categoria=i[7],libras=i[3],lbsintara=pesosintara,pesostd=pesoestandar,merma=merma,pesorxcaja=pesoporcaja,orden=ordenemp,pesostdxcaja=pesostdxcaja,tara=tara,pesosinmerma=pesosinmerma,calidad1=pesostd.calidad1)
             #if merma > 0:
             #    inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[5],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=0,categoria="Merma",libras=0,lbsintara=merma,pesostd=0,merma=merma,pesorxcaja=0,orden="SM",pesostdxcaja=0,tara=tara,pesosinmerma=pesosinmerma,calidad1=pesostd.calidad1)
-        confirmacion = inventarioProdTerm.objects.filter(categoria="Exportación").order_by('-registro').first()
+        confirmacion = inventarioProdTerm.objects.filter(categoria="Exportación").exclude('Anulado').order_by('-registro').first()
 
     return JsonResponse({'mensaje':mensaje,'msm': " Listo, se tiene una merma de: " + str(pormerma) + "%"})
 
@@ -895,7 +895,7 @@ def envioslocal_delete(request, pk):
     salidas = get_object_or_404(enviosrec, pk=pk)
 
     # Buscar registros de inventario vinculados al envío
-    relacionados = inventarioProdTerm.objects.filter(enviosrec=salidas.registro)
+    relacionados = inventarioProdTerm.objects.filter(enviosrec=salidas.registro).exclude(status='Anulado')
 
     # Buscar registros auxiliares que correspondan a los registros anteriores
     relacionadosaux = inventarioProdTermAux.objects.filter(
@@ -1647,7 +1647,7 @@ def load_ccalidadparam(request):
 def inventarioProd_list(request):
     today = timezone.localtime(timezone.now()).date()
     #salidas = Recepciones.objects.filter(fecha=today)
-    salidas = inventarioProdTerm.objects.filter(fecha=today,categoria="Exportación")
+    salidas = inventarioProdTerm.objects.filter(fecha=today,categoria="Exportación").exclude(status='Anulado')
     return render(request, 'plantaE/inventarioProd_list.html', {'registros': salidas})
 
 def inventarioProd_detail(request, pk):
@@ -1858,9 +1858,18 @@ def inventarioProd_create(request):
 '''
 def inventarioProd_delete(request, pk):
     salidas = get_object_or_404(inventarioProdTerm, pk=pk)
+    salidasaux = inventarioProdTermAux.objects.filter(inventarioreg=salidas.registro)
+
+    if salidasaux.exists():
+        messages.error(request, "No se puede anular el registro porque tiene movimientos asociados.")
+        return redirect('inventarioProd_list')  # Cambia esto por la vista adecuada
+
     if request.method == 'POST':
-        salidas.delete()
-        return redirect('inventarioProd_list')
+        salidas.status = 'Anulado'
+        salidas.status3 = 'Anulado'
+        salidas.save()
+        
+        messages.success(request, "Registro anulado correctamente.")
     return render(request, 'plantaE/inventarioProd_confirm_delete.html', {'registros': salidas})
 
 def inventarioProd_update(request, pk):
@@ -1891,7 +1900,7 @@ def reporteInventario(request):
     opcion1 = timezone.now().date()
 
     # Filtra tus datos según la opción seleccionada
-    datos_empaque = inventarioProdTerm.objects.filter(fecha=opcion1,categoria="Exportación").values(
+    datos_empaque = inventarioProdTerm.objects.filter(fecha=opcion1,categoria="Exportación").exclude(status='Anulado').values(
         "fecha", "proveedor", "cultivo", "itemsapcode", "itemsapname", "categoria", "cajas", "lbsintara", "merma"
     )
 
@@ -1926,7 +1935,7 @@ def reporteInventario(request):
         opcion1 = request.POST.get('opcion2')
 
         # Filtra los datos nuevamente
-        datos_empaque = inventarioProdTerm.objects.filter(fecha=opcion1,categoria="Exportación").values(
+        datos_empaque = inventarioProdTerm.objects.filter(fecha=opcion1,categoria="Exportación").exclude(status = 'Anulado').values(
             "fecha", "proveedor", "cultivo", "itemsapcode", "itemsapname", "categoria", "cajas", "lbsintara", "merma"
         )
 
@@ -2049,7 +2058,7 @@ def packinglist_delete(request, pk):
         inventario_codigos = relacionados.values_list('inventarioreg', flat=True).distinct()
 
         # Paso 4: Actualizar los registros en inventarioProdTerm a status=None
-        inventarioProdTerm.objects.filter(registro__in=inventario_codigos).update(status=None)
+        inventarioProdTerm.objects.filter(registro__in=inventario_codigos).exclude(status = 'Anulado').update(status=None)
 
         messages.success(request, "Registro anulado correctamente.")
         return redirect('inventarioProd_packinglist_detail')
@@ -2118,7 +2127,7 @@ def procesarinvprodcontenv2(request):
             itemsapcode=itemsapcode,
             categoria="Exportación",
             status__isnull=True
-        ).order_by('fecha', 'registro')
+        ).exclude(status='Anulado').order_by('fecha', 'registro')
 
         usados = inventarioProdTermAux.objects.filter(
             proveedor=proveedor,
@@ -2227,7 +2236,7 @@ def cargacontenedores_listv2(request):
     today = timezone.now().date()
 
     # Obtener todas las salidas de inventario y salidas de contenedores
-    salidas = inventarioProdTerm.objects.filter(fecha__lte=today)
+    salidas = inventarioProdTerm.objects.filter(fecha__lte=today).exclude(status='Anulado')
     salidas2 = inventarioProdTermAux.objects.exclude(Q(status='En proceso') | Q(status='Anulado'))
 
     # Filtrar las salidas de inventario para las que tienen categoría 'Exportación' y sin 'status'
@@ -2327,7 +2336,7 @@ def inventariogeneral_list(request):
     today = timezone.now().date()
 
     # Obtener todas las salidas de inventario y salidas de contenedores
-    salidas = inventarioProdTerm.objects.filter(fecha__lte=today)
+    salidas = inventarioProdTerm.objects.filter(fecha__lte=today).exclude(status='Anulado')
     salidas2 = inventarioProdTermAux.objects.exclude(Q(status='En proceso') | Q(status='Anulado'))
 
     # Filtrar las salidas de inventario para las que tienen categoría 'Exportación' y sin 'status'
