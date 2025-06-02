@@ -1501,9 +1501,53 @@ def boletas_detail(request, pk):
     salidas = get_object_or_404(Boletas, pk=pk)
     return render(request, 'plantaE/boletas_detail.html', {'registros': salidas})
 
+def boletas_delete(request, pk):
+
+    salidas = get_object_or_404(Boletas, pk=pk)
+    boletas_relacionadas = Boletas.objects.filter(boleta=salidas.boleta)
+
+    if request.method == 'POST':
+
+        for boleta in boletas_relacionadas:
+            boleta.status = 'Anulado'
+            boleta.save()
+        
+        invrelacionado = inventarioProdTerm.objects.exclude(status='Anulado').filter(boleta=salidas.boleta)
+        
+        for elemento in invrelacionado:
+            elemento.status3 = None
+            elemento.save()
+        
+        recepciones_ids = detallerecaux.objects.exclude(status='Anulado') \
+                                               .filter(boleta=salidas.boleta) \
+                                               .values_list('recepcion', flat=True).distinct()
+        
+        for recepcion_id in recepciones_ids:
+
+            recepcion_aux = detallerecaux.objects.exclude(status='Anulado').filter(recepcion=recepcion_id)
+            for aux in recepcion_aux:
+                aux.status= 'En proceso'
+                aux.save()
+
+            recepcion_detalle = detallerec.objects.exclude(status='Anulado').filter(recepcion=recepcion_id)
+            for detalle in recepcion_detalle:
+                detalle.status = None
+                detalle.save()
+
+        detalleaux_anular = detallerecaux.objects.exclude(status='Anulado').filter(boleta=salidas.boleta)
+        
+        for detalle in detalleaux_anular:
+            detalle.status = 'Anulado'
+            detalle.save()
+
+        messages.success(request, "Registro anulado correctamente.")
+        return redirect('boletasFruta_list')
+    return render(request, 'plantaE/boletas_confirm_delete.html', {'registros': salidas})
+
 def recepciones_detail(request, pk):
     salidas = get_object_or_404(detallerec, pk=pk)
     return render(request, 'plantaE/recepciones_detail.html', {'registros': salidas})
+
 
 def recepciones_update(request, pk):
     salidas = get_object_or_404(detallerec, pk=pk)
