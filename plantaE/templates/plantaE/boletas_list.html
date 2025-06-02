@@ -50,7 +50,7 @@
                 <tbody>
                 {%for registro in registros %} 
                 <tr> 
-                    <td> <a href="{% url 'recepcionesFruta_detail' registro.pk %}">{{ registro.registro }}</a></td>
+                    <td> <a href="{% url 'boletas_detail' registro.pk %}">{{ registro.registro }}</a></td>
                     <td>{{registro.boleta}}</td>
                     <td>{{registro.fecha}}</td>
                     <td>{{registro.finca}}</td>

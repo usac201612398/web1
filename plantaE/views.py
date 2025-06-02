@@ -1497,6 +1497,10 @@ def boletas_update(request, pk):
         form = boletasForm(instance=salidas)
     return render(request, 'plantaE/boletas_form.html', {'form': form})
 
+def boletas_detail(request, pk):
+    salidas = get_object_or_404(Boletas, pk=pk)
+    return render(request, 'plantaE/boletas_detail.html', {'registros': salidas})
+
 def recepciones_detail(request, pk):
     salidas = get_object_or_404(detallerec, pk=pk)
     return render(request, 'plantaE/recepciones_detail.html', {'registros': salidas})
