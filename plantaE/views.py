@@ -888,8 +888,6 @@ def envioslocal_detail(request, pk):
     salidas = get_object_or_404(enviosrec, pk=pk)
     return render(request, 'plantaE/envioslocal_detail.html', {'registros': salidas})
 
-
-
 def envioslocal_delete(request, pk):
     # Obtener el objeto de envío
     salidas = get_object_or_404(enviosrec, pk=pk)
@@ -989,7 +987,6 @@ def recepciones_reporteAcum(request):
         return JsonResponse({'datos': list(registros_finales),'opcion2':opcion2,'resumen':registros_finales2}, safe=False)
 
     return render(request, 'plantaE/recepciones_reporteAcum.html', {'registros': registros_finales, 'registros2': registros_finales2})
-
 
 def recepciones_reporteAcumKgm2Orden(request):
 
@@ -1259,7 +1256,6 @@ def recepciones_reporteAcumKgm2Variedad(request):
 
     return render(request, 'plantaE/recepciones_reporteAcumKgm2Variedad.html', {'registros': registros_finales})
 
-
 def recepciones_reporteAcumSem(request):
 
     today = timezone.now().date()
@@ -1436,7 +1432,6 @@ def obtener_registros_y_graficar(filtros):
 
     return imagen_base64, registros_finales
 
-
 def graficas(request):
     data = json.loads(request.body)
     mensaje = data['array']
@@ -1535,7 +1530,7 @@ def boletas_delete(request, pk):
                 detalle.save()
 
         detalleaux_anular = detallerecaux.objects.exclude(status='Anulado').filter(boleta=salidas.boleta)
-        
+
         for detalle in detalleaux_anular:
             detalle.status = 'Anulado'
             detalle.save()
@@ -1547,7 +1542,6 @@ def boletas_delete(request, pk):
 def recepciones_detail(request, pk):
     salidas = get_object_or_404(detallerec, pk=pk)
     return render(request, 'plantaE/recepciones_detail.html', {'registros': salidas})
-
 
 def recepciones_update(request, pk):
     salidas = get_object_or_404(detallerec, pk=pk)
@@ -1620,7 +1614,6 @@ def ccalidad_delete(request, pk):
         
         messages.success(request, "Registro anulado correctamente.")
     return render(request, 'plantaE/ccalidad_confirm_delete.html', {'registros': salidas})
-
 
 def obtener_llave_recepcion(request):
     # Obtén los criterios únicos filtrando por 'recepcion' mayor o igual a 2875
@@ -1759,7 +1752,6 @@ def acumFruta_consulta(request):
         return JsonResponse({'datos': registros_finales,'opcion1':opcion1,'opcion2':opcion2,'resumen':registros_finales2}, safe=False)
     return render(request, 'plantaE/AcumFrutaDia_list.html')
 
-
 def acumFruta_consultaValle(request):
     
     if request.method == 'POST':
@@ -1802,8 +1794,6 @@ def acumFruta_consultaValle(request):
         registros_finales2 = df_agrupado.to_dict(orient='records')
         return JsonResponse({'datos': registros_finales,'opcion1':opcion1,'opcion2':opcion2,'resumen':registros_finales2}, safe=False)
     return render(request, 'plantaE/AcumFrutaDia_listValle.html')
-
-
 
 def validaroventa(request):
     # Recibe los datos desde el body de la solicitud
@@ -1889,7 +1879,6 @@ def generate_packing_list_pdf(request):
     else:
         # Si no hay datos, devuelve una respuesta vacía o de error
         return JsonResponse({'error': 'No hay datos disponibles para esta semana'}, status=400)
-
        
 def inventarioProd_create(request):
     if request.method == 'POST':
@@ -2077,7 +2066,6 @@ def contenedorpacking_list(request):
 
     return render(request, 'plantaE/inventarioProd_packinglist.html', context)
 
-
 def contenedorpacking_list_detail(request):
 
     # Filtra tus datos según la opción seleccionada
@@ -2158,7 +2146,6 @@ def procesarinvprodconten(request):
             salidas.save()
     
     return JsonResponse({'mensaje':mensaje,'registros':registros})   
-
 
 def procesarinvprodcontenv2(request):
     data = json.loads(request.body)
@@ -2363,7 +2350,6 @@ def cargacontenedores_listv2(request):
 
     return render(request, 'plantaE/inventarioProd_ccontenedor.html', {'registros': registros_agrupados, 'registros_json':registros_json})
 
-
 def cargacontenedores_list(request):
     today = timezone.now().date()
     
@@ -2391,7 +2377,6 @@ def cargacontenedores_list(request):
 
     # Retornar las salidas que cumplen con la condición (cajas > 0)
     return render(request, 'plantaE/inventarioProd_contenedores.html', {'registros': salidas})
-
 
 def inventariogeneral_list(request):
     today = timezone.now().date()
