@@ -33,7 +33,7 @@ def exportar_excel(request):
         ws.title = 'Rio'
 
         # Obtén los datos de tu modelo
-        datos_rio = AcumFruta.objects.filter(fecha=opcion1, finca="RIO").values(
+        datos_rio = AcumFruta.objects.filter(fecha=opcion1, finca="RIO").exclude(status='Anulado').values(
             "id","fecha", "finca", "orden", "cultivo", "variedad", "estructura", "cajas","correo","libras"
         ).order_by("orden")
 
@@ -48,7 +48,7 @@ def exportar_excel(request):
         ws_valle = wb.create_sheet(title='Valle')
         
         # Filtra tus datos según la opción seleccionada
-        datos_valle = AcumFruta.objects.filter(fecha=opcion1, finca="VALLE").values(
+        datos_valle = AcumFruta.objects.filter(fecha=opcion1, finca="VALLE").exclude('Anulado').values(
             "id", "fecha", "finca", "orden", "cultivo", "variedad", "estructura", "cajas","correo","libras"
         )
 
@@ -82,7 +82,7 @@ def exportar_excel(request):
         ws_provalle = wb.create_sheet(title='Provalle')
         
         # Filtra tus datos según la opción seleccionada
-        datos_provalle = AcumFruta.objects.filter(fecha=opcion1, finca="PRODUCTOS DEL VALLE, S.A.").values(
+        datos_provalle = AcumFruta.objects.filter(fecha=opcion1, finca="PRODUCTOS DEL VALLE, S.A.").exclude(status='Anulado').values(
             "id", "fecha", "finca", "orden", "cultivo", "variedad", "estructura", "cajas","correo","libras"
         )
         df = pd.DataFrame(list(datos_provalle))
@@ -276,7 +276,7 @@ def guardar_plantilla(request):
     #mensaje = request.POST.get('array')
     acumuladolibras = 0
     for i in mensaje:
-        datos = salidasFruta.objects.filter(fecha=i[8],finca=i[7],cultivo=i[2])
+        datos = salidasFruta.objects.filter(fecha=i[8],finca=i[7],cultivo=i[2]).exclude(status='Anulado')
         # Calcular las sumas
         suma_cajas = datos.aggregate(Sum('cajas'))['cajas__sum'] or 0
         suma_libras = datos.aggregate(Sum('libras'))['libras__sum'] or 0
@@ -339,7 +339,7 @@ def cuadrar_RioDia(request):
     today = timezone.now().date()
     nombre_usuario = request.user.username
      # Obtener todos los registros para el usuario y la fecha
-    registros = salidasFruta.objects.filter(fecha=today, correo=nombre_usuario, libras__isnull=False)
+    registros = salidasFruta.objects.filter(fecha=today, correo=nombre_usuario, libras__isnull=False).exclude(status='Anulado')
 
    # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
     df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','variedad','cajas','libras','created_at'])
@@ -375,7 +375,7 @@ def cuadrar_RioDia(request):
         opcion1 = request.POST.get('opcion1')
         opcion2 = request.POST.get('opcion2')
          # Obtener todos los registros para el usuario y la fecha
-        registros = salidasFruta.objects.filter(fecha=opcion2,cultivo=opcion1,correo=nombre_usuario,libras__isnull=False)
+        registros = salidasFruta.objects.filter(fecha=opcion2,cultivo=opcion1,correo=nombre_usuario,libras__isnull=False).exclude(status='Anulado')
 
     # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
         df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','variedad','cajas','libras','created_at'])
@@ -416,7 +416,7 @@ def cuadrar_ValleDia(request):
     nombre_usuario = request.user.username
     
     # Obtener todos los registros para el usuario y la fecha
-    registros = salidasFruta.objects.filter(fecha=today, correo=nombre_usuario,libras__isnull=False)
+    registros = salidasFruta.objects.filter(fecha=today, correo=nombre_usuario,libras__isnull=False).exclude(status='Anulado')
 
     # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
     df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','variedad','cajas','libras','created_at'])
@@ -453,7 +453,7 @@ def cuadrar_ValleDia(request):
         opcion1 = request.POST.get('opcion1')
         opcion2 = request.POST.get('opcion2')
          # Obtener todos los registros para el usuario y la fecha
-        registros = salidasFruta.objects.filter(fecha=opcion2,cultivo=opcion1,correo=nombre_usuario,libras__isnull=False)
+        registros = salidasFruta.objects.filter(fecha=opcion2,cultivo=opcion1,correo=nombre_usuario,libras__isnull=False).exclude('Anulado')
 
     # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
         df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','variedad','cajas','libras','created_at'])
@@ -1382,7 +1382,7 @@ def recepciones_reportecurva2(request):
     return render(request, 'plantaE/recepciones_reportegraficaPublic.html', {'usuario': nombre_usuario})
 
 def obtener_registros_y_graficar(filtros):
-    registros = AcumFruta.objects.filter(**filtros)
+    registros = AcumFruta.objects.exclude('Anulado').filter(**filtros)
     
 
     df = pd.DataFrame(list(registros.values()), columns=['fecha', 'orden', 'libras'])
@@ -2058,7 +2058,7 @@ def packinglist_delete(request, pk):
         inventario_codigos = relacionados.values_list('inventarioreg', flat=True).distinct()
 
         # Paso 4: Actualizar los registros en inventarioProdTerm a status=None
-        inventarioProdTerm.objects.filter(registro__in=inventario_codigos).exclude(status = 'Anulado').update(status=None)
+        inventarioProdTerm.objects.filter(registro__in=inventario_codigos).update(status=None)
 
         messages.success(request, "Registro anulado correctamente.")
         return redirect('inventarioProd_packinglist_detail')
