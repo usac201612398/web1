@@ -206,6 +206,7 @@ class Boletas(models.Model):
     libras = models.FloatField(blank=True, null=True)
     status = models.CharField(max_length=25, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True,blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
     ordenfinca = models.CharField(max_length=30, blank=True, null=True)
     opsap = models.CharField(max_length=20, blank=True, null=True)
     categoria = models.CharField(max_length=30, blank=True, null=True)
@@ -213,8 +214,8 @@ class Boletas(models.Model):
     itemsapcodelibra = models.CharField(max_length=30, blank=True, null=True)
     emisiones = models.CharField(max_length=30, blank=True, null=True)
     comentario = models.CharField(max_length=30, blank=True, null=True)
-    observaciones = comentario = models.CharField(max_length=50, blank=True, null=True)
-    
+    observaciones = models.CharField(max_length=50, blank=True, null=True)
+
     class Meta:
         managed = False
         db_table = 'boletas'

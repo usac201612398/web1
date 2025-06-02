@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Visualizar Resumen de Boleta</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <style>
+
+        h1 {
+            margin: 15px;
+            font-family: Arial, sans-serif;
+        }
+
+        a {
+            margin: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+    </style>
+</head>
+<body>
+    <h1 class="roboto">Detalles</h1>
+    <div class="container">
+        <div class="columns">
+            <div class="column is-12">
+                <div class="table-container">
+                    <table class="table is-striped is-hoverable is is-fullwidth" id="myTable">
+                    
+                        <tbody>
+                            <tr><td>Key:</td><td>{{ registros.registro }} </td></tr>
+                            <tr><td>Fecha:</td><td>{{ registros.fecha }} </td></tr> 
+                            <tr><td>Boleta:</td><td>{{ registros.boleta}} </td></tr> 
+                            <tr><td>Finca:</td><td>{{ registros.finca }} </td></tr> 
+                            <tr><td>Orden Finca:</td><td>{{ registros.ordenfinca }} </td></tr> 
+                            <tr><td>Proveedor:</td><td>{{ registros.proveedor }} </td></tr>
+                            <tr><td>Cultivo:</td><td>{{ registros.cultivo }} </td></tr>
+                            <tr><td>Orden:</td><td>{{ registros.orden }} </td></tr>
+                            <tr><td>Item Libra:</td><td>{{ registros.itemsapcodelibra}} </td></tr>
+                            <tr><td>Calidad1:</td><td>{{ registros.calidad1 }} </td></tr>
+                            <tr><td>ItemSAPCode:</td><td>{{ registros.itemsapcode }} </td></tr>
+                            <tr><td>ItemSAPName:</td><td>{{ registros.itemsapname }} </td></tr>
+                            <tr><td>Calidad:</td><td>{{ registros.Calidad }} </td></tr>
+                            <tr><td>Cajas:</td><td>{{ registros.cajas}} </td></tr>
+                            <tr><td>Libras/Caja:</td><td>{{ registros.librasxcaja}} </td></tr>
+                            <tr><td>Libras:</td><td>{{ registros.libras}} </td></tr>
+                            <tr><td>Observaciones:</td><td>{{ registros.observaciones }} </td></tr>
+                            <tr><td>Creado:</td><td>{{ registros.created }} </td></tr> 
+                            <tr><td>Modificado:</td><td>{{ registros.updated_at }} </td></tr>  
+                        </tbody>
+
+                  
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="{% url 'boletasFruta_list' %}">Regresar a panel</a>
+
+    
+    
+</body>
+</html>
