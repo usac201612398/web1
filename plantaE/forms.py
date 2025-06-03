@@ -207,6 +207,7 @@ class itemsForm(forms.ModelForm):
     cultivo = forms.ChoiceField(choices=op_cultivo, widget=forms.Select(attrs={'class': 'my-input'}))
     itemsapcode = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
     itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
+    itemsapcodelibra = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
     calidad1 = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
     categoria = forms.ChoiceField(choices=op_categoria, widget=forms.Select(attrs={'class': 'my-input'}))
     precio = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input'})) 
@@ -218,7 +219,7 @@ class itemsForm(forms.ModelForm):
     class Meta:
         
         model = productoTerm
-        fields = ['cultivo','itemsapcode','itemsapname','calidad1','categoria','precio','taraxcaja', 'pesostdxcaja', 'tipo', 'orden']
+        fields = ['cultivo','itemsapcode','itemsapcodelibra','itemsapname','calidad1','categoria','precio','taraxcaja', 'pesostdxcaja', 'tipo', 'orden']
     
 class salidacontenedoresForm(forms.ModelForm):
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'my-input'}))
