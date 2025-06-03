@@ -1920,6 +1920,7 @@ def inventarioProd_delete(request, pk):
         salidas.save()
         
         messages.success(request, "Registro anulado correctamente.")
+        return redirect('inventarioProd_list')
     return render(request, 'plantaE/inventarioProd_confirm_delete.html', {'registros': salidas})
 
 def inventarioProd_update(request, pk):
