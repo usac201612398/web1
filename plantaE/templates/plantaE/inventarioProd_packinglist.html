@@ -8,12 +8,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
     <title>Consulta Packing List /title>
     <style>
-
         .inputs-row {
-            display: flex;
-            flex-wrap: nwrap; /* Para que se acomoden bien en pantallas más pequeñas */
-        }
-
+        display: flex;
+        flex-wrap: nwrap; /* Para que se acomoden bien en pantallas más pequeñas */
+    }
         h1 {
             margin: 15px;
             font-family: Arial, sans-serif;
@@ -46,6 +44,30 @@
             border: none;
             background: transparent;
         }
+        /* Estilo global para los inputs */
+input[type="button"] {
+    background-color: #4A90E2;  /* Azul profesional */
+    border: none;
+    color: white;
+    padding: 12px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    border-radius: 8px;  /* Bordes redondeados */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+input[type="button"]:hover {
+    background-color: #357ABD;  /* Azul más oscuro al pasar el ratón */
+    transform: translateY(-2px);  /* Efecto de elevación */
+}
+
+input[type="button"]:focus {
+    outline: none;  /* Eliminar el contorno por defecto */
+}
 
 /* Estilo para el botón Consultar */
 #consultar {
