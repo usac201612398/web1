@@ -53,7 +53,6 @@ class detallesEstructuras(models.Model):
     estructura = models.CharField(max_length=35, blank=True)
     area =  models.FloatField(blank=True, null=True)
     variedad = models.CharField(max_length=40,blank=True)
-    
     encargado = models.CharField(max_length=40, blank=True)
 
     def __str__(self):
@@ -78,8 +77,8 @@ class AcumFruta(models.Model):
     cajas = models.IntegerField(blank=True, null=True)
     correo = models.CharField(max_length=75, blank=True,null=True)
     estructura=models.CharField(max_length=40,blank=True,null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     libras = models.FloatField(blank=True, null=True)
     status = models.CharField(max_length=25, blank=True, null=True)
     op_sap = models.CharField(max_length=20,blank=True, null=True)
@@ -110,8 +109,8 @@ class AcumFrutaaux(models.Model):
     cajas = models.IntegerField(blank=True, null=True)
     correo = models.CharField(max_length=75, blank=True,null=True)
     estructura=models.CharField(max_length=40,blank=True,null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     libras = models.FloatField(blank=True, null=True)
     status = models.CharField(max_length=25, blank=True, null=True)
     op_sap = models.CharField(max_length=20,blank=True, null=True)
@@ -148,8 +147,8 @@ class salidasFruta(models.Model):
     libras = models.FloatField(blank=True, null=True)
     recepcion = models.BigIntegerField(blank=True, null=True)
     correo = models.CharField(max_length=75, blank=True,  null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     status = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self):
@@ -174,8 +173,8 @@ class enviosFrutaPlantilla(models.Model):
     estructura=models.CharField(max_length=40,null=True)
     cajas = models.IntegerField(blank=True, null=True)
     correo = models.CharField(max_length=75, blank=True,null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     def __str__(self):
         return (str(self.finca)+ " | " + str(self.cultivo) + " | " + str(self.viaje)+ " | " + str(self.estructura))
@@ -207,13 +206,13 @@ class Actpeso(models.Model):
     libras = models.FloatField(blank=True, null=True)
     cultivo = models.CharField(max_length=50, blank=True, null=True)
     tipodecaja = models.CharField(max_length=85, blank=True, null=True)
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     viaje = models.CharField(max_length=30, blank=True, null=True)
     encargado = models.CharField(max_length=50, blank=True, null=True)
     variedad = models.CharField(max_length=30, blank=True, null=True)
     status = models.CharField(max_length=20, blank=True, null=True)
     fechasalidafruta = models.DateField(blank=True, null=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     
     class Meta:
         managed = False
@@ -238,8 +237,8 @@ class Boletas(models.Model):
     librasxcaja = models.FloatField(blank=True, null=True)
     libras = models.FloatField(blank=True, null=True)
     status = models.CharField(max_length=25, blank=True, null=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     ordenfinca = models.CharField(max_length=30, blank=True, null=True)
     opsap = models.CharField(max_length=20, blank=True, null=True)
     categoria = models.CharField(max_length=30, blank=True, null=True)
@@ -260,9 +259,9 @@ class Ccalidad(models.Model):
     porcentaje = models.DecimalField(max_digits=3, decimal_places=2, blank=True, null=True)
     fecha = models.DateField(blank=True, null=True)
     llave = models.CharField(max_length=200, blank=True, null=True)
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     observaciones = models.CharField(max_length=125, blank=True, null=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     status = models.CharField(max_length=20, blank=True, null=True)
 
     class Meta:
@@ -286,9 +285,9 @@ class Recepciones(models.Model):
     llave2 = models.CharField(max_length=200, blank=True, null=True)
     criterio = models.CharField(max_length=85, blank=True, null=True)
     status = models.CharField(max_length=25, blank=True, null=True)
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     classorigen = models.CharField(max_length=35, blank=True, null=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     enviofruta = models.BigIntegerField(blank=True, null=True)
     orden = models.CharField(max_length=30, blank=True, null=True)
     viaje = models.CharField(max_length=30, blank=True, null=True)
@@ -301,8 +300,8 @@ class causasRechazo(models.Model):
     
     registro = models.BigAutoField(primary_key=True)
     causa = models.CharField(max_length=75, blank=True, null=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     def __str__(self):
         return str(self.registro)
@@ -337,8 +336,8 @@ class inventarioProdTerm(models.Model):
     status = models.CharField(max_length=25, blank=True, null=True)
     status2 = models.CharField(max_length=25, blank=True, null=True)
     status3 = models.CharField(max_length=25, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     op_sap = models.CharField(max_length=20,blank=True, null=True)
     boleta=models.BigIntegerField(blank=True, null=True)
     reasignacion=models.CharField(max_length=75,null=True,blank=True)
@@ -376,8 +375,8 @@ class inventarioProdTermAux(models.Model):
     status = models.CharField(max_length=25,blank=True, null=True)
     status2 = models.CharField(max_length=25, blank=True, null=True)
     status3 = models.CharField(max_length=25, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     op_sap = models.CharField(max_length=20,blank=True, null=True)
     boleta=models.BigIntegerField(blank=True, null=True)
     salidacontenedores=models.CharField(max_length=20,blank=True,null=True)
@@ -411,8 +410,8 @@ class contenedores(models.Model):
     eta = models.DateField(blank=True, null=True)
     bl = models.CharField(max_length=50, blank=True, null=True)
     booking = models.CharField(max_length=50, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     
     def __str__(self):
         return str(self.registro) + " | " + str(self.fecha)+ " | " + str(self.contenedor)
@@ -448,8 +447,8 @@ class salidacontenedores(models.Model):
     boleta=models.BigIntegerField(blank=True, null=True)
     reasignacion=models.CharField(max_length=75,null=True, blank=True)
     importe =models.FloatField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     status=models.CharField(max_length=25,blank=True,null=True)
     palet = models.IntegerField(blank=True, null=True)
     def __str__(self):
@@ -474,8 +473,8 @@ class productoTerm(models.Model):
     taraxcaja = models.FloatField(blank=True, null=True)
     pesostdxcaja = models.FloatField(blank=True, null=True)
     tipo = models.CharField(max_length=50,  blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     orden= models.CharField(max_length=30, blank=True, null=True)
 
     def __str__(self):
@@ -519,8 +518,8 @@ class detallerec(models.Model):
     llave2 = models.CharField(max_length=200, blank=True, null=True)
     status = models.CharField(max_length=25,blank=True,null = True)
     classorigen = models.CharField(max_length=35, blank= True, null = True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     enviofruta = models.BigIntegerField(blank=True, null=True)
     boleta = models.BigIntegerField(blank=True, null = True)
     fechasalidafruta = models.DateField(blank=True, null=True)
@@ -545,8 +544,8 @@ class detallerecaux(models.Model):
     criterio = models.CharField(max_length=85, blank = True, null = True)
     status = models.CharField(max_length=25,blank=True,null = True)
     classorigen = models.CharField(max_length=35, blank= True, null = True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     enviofruta = models.BigIntegerField(blank=True, null=True)
     boleta = models.BigIntegerField(blank=True, null = True)
     fechasalidafruta = models.DateField(blank=True, null=True)
@@ -575,8 +574,8 @@ class enviosrec(models.Model):
     firma = models.CharField(max_length= 75, blank = True, null =  True)
     status = models.CharField(max_length=25,blank=True,null = True)
     productor = models.CharField(max_length= 75, blank = True, null =  True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     libras = models.FloatField(blank = True, null = True)
 
 class paramenvlocales(models.Model):
