@@ -4,7 +4,7 @@ import logging
 from openpyxl import Workbook
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect
-from .models import Actpeso, enviosrec,salidacontenedores, inventarioProdTermAux,productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
+from .models import Actpeso, enviosrec,AcumFrutaaux,salidacontenedores, inventarioProdTermAux,productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
 from .forms import pesosForm,boletasForm,itemsForm,salidacontenedoresForm,salidasFrutaForm, contenedoresForm,recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
 from django.db.models import Sum, Q
 from django.utils import timezone
@@ -1534,7 +1534,28 @@ def boletas_delete(request, pk):
         for detalle in detalleaux_anular:
             detalle.status = 'Anulado'
             detalle.save()
+        
+        acumfruta_ids = AcumFrutaaux.objects.exclude(status='Anulado') \
+                                               .filter(boleta=salidas.boleta) \
+                                               .values_list('acumfrutaid', flat=True).distinct()
 
+        for acumfruta_id in acumfruta_ids:
+
+            acumfruta_aux = AcumFrutaaux.objects.exclude(status='Anulado').filter(acumfrutaid=acumfruta_id)
+            for aux in acumfruta_aux:
+                aux.status= None
+                aux.save()
+
+            acumfruta_detalle = AcumFruta.objects.exclude(status='Anulado').filter(id=acumfruta_id)
+            for detalle in acumfruta_detalle:
+                detalle.status = None
+                detalle.save()
+
+        acumfruta_anular = AcumFrutaaux.objects.exclude(status='Anulado').filter(boleta=salidas.boleta)
+        for detalle in acumfruta_anular:
+            detalle.status = 'Anulado'
+            detalle.save()
+            
         messages.success(request, "Registro anulado correctamente.")
         return redirect('boletasFruta_list')
     return render(request, 'plantaE/boletas_confirm_delete.html', {'registros': salidas})
