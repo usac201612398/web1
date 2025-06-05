@@ -1535,26 +1535,27 @@ def boletas_delete(request, pk):
             detalle.status = 'Anulado'
             detalle.save()
         
-        acumfruta_ids = AcumFrutaaux.objects.exclude(status='Anulado') \
-                                               .filter(boleta=salidas.boleta) \
-                                               .values_list('acumfrutaid', flat=True).distinct()
+        
+            acumfruta_ids = AcumFrutaaux.objects.exclude(status='Anulado') \
+                                                .filter(boleta=salidas.boleta) \
+                                                .values_list('acumfrutaid', flat=True).distinct()
 
-        for acumfruta_id in acumfruta_ids:
+            for acumfruta_id in acumfruta_ids and acumfruta_ids.exists():
 
-            acumfruta_aux = AcumFrutaaux.objects.exclude(status='Anulado').filter(acumfrutaid=acumfruta_id)
-            for aux in acumfruta_aux:
-                aux.status= None
-                aux.save()
+                acumfruta_aux = AcumFrutaaux.objects.exclude(status='Anulado').filter(acumfrutaid=acumfruta_id)
+                for aux in acumfruta_aux:
+                    aux.status= None
+                    aux.save()
 
-            acumfruta_detalle = AcumFruta.objects.exclude(status='Anulado').filter(id=acumfruta_id)
-            for detalle in acumfruta_detalle:
-                detalle.status = None
+                acumfruta_detalle = AcumFruta.objects.exclude(status='Anulado').filter(id=acumfruta_id)
+                for detalle in acumfruta_detalle:
+                    detalle.status = None
+                    detalle.save()
+
+            acumfruta_anular = AcumFrutaaux.objects.exclude(status='Anulado').filter(boleta=salidas.boleta)
+            for detalle in acumfruta_anular:
+                detalle.status = 'Anulado'
                 detalle.save()
-
-        acumfruta_anular = AcumFrutaaux.objects.exclude(status='Anulado').filter(boleta=salidas.boleta)
-        for detalle in acumfruta_anular:
-            detalle.status = 'Anulado'
-            detalle.save()
             
         messages.success(request, "Registro anulado correctamente.")
         return redirect('boletasFruta_list')
