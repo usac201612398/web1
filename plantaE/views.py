@@ -2473,7 +2473,7 @@ def inventariogeneralfruta_list(request):
     salidas2 = detallerecaux.objects.all()
     
     # Filtrar las salidas de inventario para las que tienen categoría 'Exportación' y sin 'status'
-    salidas = salidas.order_by('registro').exclude(status='Cerrado')
+    salidas = salidas.order_by('registro').exclude(status='Cerrado').exclude(status = 'En proceso')
     
     # Excluir los registros de salidas2 donde el contenedor esté vacío
     salidas2 = salidas2.exclude(status='Cerrado')
