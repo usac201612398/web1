@@ -1485,7 +1485,7 @@ def boletas_update(request, pk):
         form = boletasForm(request.POST, instance=salidas)
         if form.is_valid():
             form.save()
-            return redirect('boletas_list')
+            return redirect('boletasFruta_list')
         else:
             return JsonResponse({'errores': form.errors}, status=400)
     else:
