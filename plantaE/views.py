@@ -2486,7 +2486,7 @@ def aprovechamientos(request):
     )
     
     # Obtener los numboleta únicos
-    boleta_ids = detalles.values_list('numboleta', flat=True)
+    boleta_ids = detalles.values_list('boleta', flat=True)
 
     # Obtener las boletas asociadas
     boletas = Boletas.objects.filter(id__in=boleta_ids)
