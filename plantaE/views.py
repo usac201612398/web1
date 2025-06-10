@@ -2524,8 +2524,9 @@ def aprovechamientos(request):
             'porcentaje_devolucion': round(datos['devolucion'] * 100 / total, 2),
             'porcentaje_mediano': round(datos['mediano'] * 100 / total, 2),
         })
+    registros_json = json.dumps(resultado, default=str)  # Usar default=str para evitar errores con objetos no serializables
 
-    return render(request, 'plantaE/inventarioProd_aprovechamientos.html', {'registros': resultado})
+    return render(request, 'plantaE/inventarioProd_aprovechamientos.html', {'registros': resultado,'registros_json':registros_json})
 
 def inventariogeneralfruta_list(request):
     today = timezone.now().date()
