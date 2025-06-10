@@ -2478,8 +2478,8 @@ def aprovechamientos(request):
 
     # Filtrar los registros de la semana actual
     detalles = detallerecaux.objects.annotate(
-        semana=ExtractWeek('fechasalidafruta'),
-        anio=ExtractYear('fechasalidafruta')
+        semana=ExtractWeek('boleta__fecha'),
+        anio=ExtractYear('boleta__fecha')
     ).filter(
         semana=semana_actual,
         anio=anio_actual
