@@ -2486,7 +2486,7 @@ def aprovechamientos(request):
     )
 
     # Agrupar por proveedor y cultivo
-    agrupados = detalles.values('proveedor', 'cultivo').annotate(
+    agrupados = detalles.values('finca', 'cultivo').annotate(
         total_libras=Sum('libras'),
         aprovechamiento=Sum(F('libras') * F('porcentaje_aprovechamiento') / 100.0),
         devolucion=Sum(F('libras') * F('porcentaje_devolucion') / 100.0),
@@ -2498,7 +2498,7 @@ def aprovechamientos(request):
     for grupo in agrupados:
         total = grupo['total_libras'] or 1  # Para evitar división por cero
         resultado.append({
-            'proveedor': grupo['proveedor'],
+            'proveedor': grupo['finca'],
             'cultivo': grupo['cultivo'],
             'porcentaje_aprovechamiento': round(grupo['aprovechamiento'] * 100 / total, 2),
             'porcentaje_devolucion': round(grupo['devolucion'] * 100 / total, 2),
