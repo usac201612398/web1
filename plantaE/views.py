@@ -2476,6 +2476,18 @@ def aprovechamientos(request):
     semana_actual = hoy.isocalendar()[1]
     anio_actual = hoy.year
 
+     # 1. Libras recepcionadas por finca y cultivo desde detallerec
+    recepciones = detallerec.objects.annotate(
+        semana=ExtractWeek('fecha'),
+        anio=ExtractYear('fecha')
+    ).filter(
+        semana=semana_actual,
+        anio=anio_actual
+    ).values('finca', 'cultivo').annotate(total_libras=Sum('libras')).order_by()
+
+    # Crear un diccionario para acceso rápido: {(finca, cultivo): total_libras}
+    recepciones_dict = {(r['finca'], r['cultivo']): r['total_libras'] for r in recepciones}
+
     # Filtrar los registros de la semana actual
     detalles = detallerecaux.objects.annotate(
         semana=ExtractWeek('fechasalidafruta'),
@@ -2513,16 +2525,22 @@ def aprovechamientos(request):
 
         agrupados[clave]['total'] += libras
 
-    # Calcular los porcentajes
+     # 3. Calcular porcentaje y pendiente
     resultado = []
-    for (proveedor, cultivo), datos in agrupados.items():
-        total = datos['total'] or 1  # Para evitar división por cero
+    for (finca, cultivo), datos in agrupados.items():
+        total = datos['total'] or 1
+        recepcion_libras = recepciones_dict.get((finca, cultivo), 0)
+        pendiente = recepcion_libras - datos['total']
+        if pendiente < 0:
+            pendiente = 0  # Por si hay algún desbalance, no mostrar negativo
+        porcentaje_pendiente = round(pendiente * 100 / recepcion_libras, 2)
         resultado.append({
-            'proveedor': proveedor,
+            'proveedor': finca,
             'cultivo': cultivo,
             'porcentaje_aprovechamiento': round(datos['aprovechamiento'] * 100 / total, 2),
             'porcentaje_devolucion': round(datos['devolucion'] * 100 / total, 2),
             'porcentaje_mediano': round(datos['mediano'] * 100 / total, 2),
+            'porcentaje_pendiente': porcentaje_pendiente,
         })
     registros_json = json.dumps(resultado, default=str)  # Usar default=str para evitar errores con objetos no serializables
 
