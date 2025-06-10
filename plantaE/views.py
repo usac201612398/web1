@@ -2478,7 +2478,7 @@ def aprovechamientos(request):
 
     # Subconsulta para obtener la fecha de la boleta asociada
     fecha_boleta = Boletas.objects.filter(
-        id=OuterRef('boleta')
+        boleta=OuterRef('boleta')
     ).values('fechasalidafruta')[:1]
 
     # Filtrar los registros de DetalleRecAux según la semana de la fecha de la boleta
