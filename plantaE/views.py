@@ -2540,9 +2540,9 @@ def aprovechamientos(request):
             'porcentaje_aprovechamiento': round(datos['aprovechamiento'] * 100 / total, 2),
             'porcentaje_devolucion': round(datos['devolucion'] * 100 / total, 2),
             'porcentaje_mediano': round(datos['mediano'] * 100 / total, 2),
-            'porcentaje_pendiente': porcentaje_pendiente,
-            'libras_recibidas': recepcion_libras,
-            'libras_cargadas': datos['total']
+            'porcentaje_pendiente': round(porcentaje_pendiente,2),
+            'libras_recibidas': round(recepcion_libras,2),
+            'libras_cargadas': round(datos['total'],2)
         })
     registros_json = json.dumps(resultado, default=str)  # Usar default=str para evitar errores con objetos no serializables
 
