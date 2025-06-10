@@ -6,7 +6,7 @@ from openpyxl import Workbook
 from django.shortcuts import get_object_or_404, redirect
 from .models import Actpeso, enviosrec,AcumFrutaaux,salidacontenedores, inventarioProdTermAux,productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
 from .forms import pesosForm,boletasForm,itemsForm,salidacontenedoresForm,salidasFrutaForm, contenedoresForm,recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
-from django.db.models import Sum, Q, F, FloatField, ExpressionWrapper,OuterRef, Subquery, Value as V
+from django.db.models import Sum, Q, F, FloatField, ExpressionWrapper, Value as V
 from django.utils import timezone
 from datetime import timedelta
 import matplotlib.pyplot as plt
@@ -2476,19 +2476,15 @@ def aprovechamientos(request):
     semana_actual = hoy.isocalendar()[1]
     anio_actual = hoy.year
 
-    # Subconsulta para obtener la fecha de la boleta asociada
-    fecha_boleta = Boletas.objects.filter(
-        boleta=OuterRef('boleta')
-    ).values('fecha')[:1]
-
-    # Filtrar los registros de DetalleRecAux según la semana de la fecha de la boleta
+    # Filtrar los registros de la semana actual
     detalles = detallerecaux.objects.annotate(
-        semana_boleta=ExtractWeek(Subquery(fecha_boleta)),
-        anio_boleta=ExtractYear(Subquery(fecha_boleta))
+        semana=ExtractWeek('fechasalidafruta'),
+        anio=ExtractYear('fechasalidafruta')
     ).filter(
-        semana_boleta=semana_actual,
-        anio_boleta=anio_actual
+        semana=semana_actual,
+        anio=anio_actual
     )
+    
     # Obtener los numboleta únicos
     boleta_ids = detalles.values_list('boleta', flat=True)
 
