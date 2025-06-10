@@ -2484,25 +2484,45 @@ def aprovechamientos(request):
         semana=semana_actual,
         anio=anio_actual
     )
+    
+    # Obtener los numboleta únicos
+    boleta_ids = detalles.values_list('numboleta', flat=True)
 
-    # Agrupar por proveedor y cultivo
-    agrupados = detalles.values('finca', 'cultivo').annotate(
-        total_libras=Sum('libras'),
-        aprovechamiento=Sum(F('libras') * F('porcentaje_aprovechamiento') / 100.0),
-        devolucion=Sum(F('libras') * F('porcentaje_devolucion') / 100.0),
-        mediano=Sum(F('libras') * F('porcentaje_mediano') / 100.0)
-    )
+    # Obtener las boletas asociadas
+    boletas = Boletas.objects.filter(id__in=boleta_ids)
+    boletas_dict = {b.id: b for b in boletas}
+
+    # Agrupar y sumar libras por calidad
+    agrupados = defaultdict(lambda: {'aprovechamiento': 0, 'devolucion': 0, 'mediano': 0, 'total': 0})
+
+    for detalle in detalles:
+        boleta = boletas_dict.get(detalle.boleta)
+        if not boleta:
+            continue
+        
+        clave = (boleta.finca, boleta.cultivo)
+        calidad = boleta.calidad.lower() if boleta.calidad else ''
+        libras = detalle.libras or 0
+
+        if 'aprovechamiento' in calidad:
+            agrupados[clave]['aprovechamiento'] += libras
+        elif 'devolucion' in calidad:
+            agrupados[clave]['devolucion'] += libras
+        elif 'mediano' in calidad:
+            agrupados[clave]['mediano'] += libras
+
+        agrupados[clave]['total'] += libras
 
     # Calcular los porcentajes
     resultado = []
-    for grupo in agrupados:
-        total = grupo['total_libras'] or 1  # Para evitar división por cero
+    for (proveedor, cultivo), datos in agrupados.items():
+        total = datos['total'] or 1  # Para evitar división por cero
         resultado.append({
-            'proveedor': grupo['finca'],
-            'cultivo': grupo['cultivo'],
-            'porcentaje_aprovechamiento': round(grupo['aprovechamiento'] * 100 / total, 2),
-            'porcentaje_devolucion': round(grupo['devolucion'] * 100 / total, 2),
-            'porcentaje_mediano': round(grupo['mediano'] * 100 / total, 2),
+            'proveedor': proveedor,
+            'cultivo': cultivo,
+            'porcentaje_aprovechamiento': round(datos['aprovechamiento'] * 100 / total, 2),
+            'porcentaje_devolucion': round(datos['devolucion'] * 100 / total, 2),
+            'porcentaje_mediano': round(datos['mediano'] * 100 / total, 2),
         })
 
     return render(request, 'plantaE/inventarioProd_aprovechamientos.html', {'registros': resultado})
