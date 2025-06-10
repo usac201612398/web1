@@ -2490,7 +2490,7 @@ def aprovechamientos(request):
 
     # Obtener las boletas asociadas
     boletas = Boletas.objects.filter(id__in=boleta_ids)
-    boletas_dict = {b.id: b for b in boletas}
+    boletas_dict = {b.boleta: b for b in boletas}
 
     # Agrupar y sumar libras por calidad
     agrupados = defaultdict(lambda: {'aprovechamiento': 0, 'devolucion': 0, 'mediano': 0, 'total': 0})
