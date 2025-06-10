@@ -6,8 +6,9 @@ from openpyxl import Workbook
 from django.shortcuts import get_object_or_404, redirect
 from .models import Actpeso, enviosrec,AcumFrutaaux,salidacontenedores, inventarioProdTermAux,productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
 from .forms import pesosForm,boletasForm,itemsForm,salidacontenedoresForm,salidasFrutaForm, contenedoresForm,recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
-from django.db.models import Sum, Q
+from django.db.models import Sum, Q, F, FloatField, ExpressionWrapper, Value as V
 from django.utils import timezone
+from datetime import timedelta
 import matplotlib.pyplot as plt
 import datetime
 from io import BytesIO
@@ -20,6 +21,8 @@ import pdfkit
 from django.template.loader import render_to_string
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.db.models.functions import Coalesce
+from collections import defaultdict
 
 def vascula_monitor(request):
     return render(request, 'plantaE/vascula.html')
@@ -2464,6 +2467,63 @@ def inventariogeneral_list(request):
 
     # Pasar los registros agrupados al renderizado de la plantilla
     return render(request, 'plantaE/inventarioProd_inventariogeneral.html', {'registros': registros_agrupados,'registros_json':registros_json})
+
+def aprovechamientos(request):
+    # Rango de fechas de esta semana
+    hoy = timezone.now().date()
+    inicio_semana = hoy - timedelta(days=hoy.weekday())  # lunes
+    fin_semana = inicio_semana + timedelta(days=6)  # domingo
+
+    # Paso 1: Filtrar DetalleRecAux de esta semana
+    detalles = detallerecaux.objects.filter(
+        recepcion__fecha__range=(inicio_semana, fin_semana)
+    ).select_related('boleta', 'recepcion')
+
+    # Paso 2: Calcular libras ponderadas por porcentaje
+    # (asumiendo porcentaje está en 0-100)
+    detalles = detalles.annotate(
+        libras_ponderadas=ExpressionWrapper(
+            F('boleta__libras') * F('porcentaje') / 100.0,
+            output_field=FloatField()
+        )
+    )
+
+    # Paso 3: Agrupar libras por proveedor, cultivo, calidad
+    agrupados = defaultdict(lambda: {'aprovechamiento': 0, 'devolucion': 0, 'mediano': 0, 'total': 0})
+
+    for d in detalles:
+        if d.finca == "Productor":
+            proveedor = d.llave
+        else:
+            proveedor = d.finca
+        cultivo = d.cultivo
+        calidad = d.boleta.lower()
+        libras = d.libras_ponderadas or 0
+
+        clave = (proveedor, cultivo)
+
+        if 'aprovechamiento' in calidad:
+            agrupados[clave]['aprovechamiento'] += libras
+        elif 'devolucion' in calidad:
+            agrupados[clave]['devolucion'] += libras
+        elif 'mediano' in calidad:
+            agrupados[clave]['mediano'] += libras
+
+        agrupados[clave]['total'] += libras
+
+    # Paso 4: Calcular porcentajes
+    resultado = []
+    for (proveedor, cultivo), datos in agrupados.items():
+        total = datos['total'] or 1  # evitar división por cero
+        resultado.append({
+            'proveedor': proveedor,
+            'cultivo': cultivo,
+            'porcentaje_aprovechamiento': round(datos['aprovechamiento'] * 100 / total, 2),
+            'porcentaje_devolucion': round(datos['devolucion'] * 100 / total, 2),
+            'porcentaje_mediano': round(datos['mediano'] * 100 / total, 2),
+        })
+
+    return render(request, 'plantaE/inventarioProd_aprovechamientos.html', {'registros': resultado})
 
 def inventariogeneralfruta_list(request):
     today = timezone.now().date()
