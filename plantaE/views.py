@@ -1,14 +1,12 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
-import logging
 from openpyxl import Workbook
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect
 from .models import Actpeso, enviosrec,AcumFrutaaux,salidacontenedores, inventarioProdTermAux,productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
-from .forms import pesosForm,boletasForm,itemsForm,salidacontenedoresForm,salidasFrutaForm, contenedoresForm,recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
-from django.db.models import Sum, Q, F, FloatField, ExpressionWrapper, Value as V
+from .forms import boletasForm,itemsForm,salidacontenedoresForm,salidasFrutaForm, contenedoresForm,recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
+from django.db.models import Sum, Q, Max,Value as V
 from django.utils import timezone
-from datetime import timedelta
 import matplotlib.pyplot as plt
 import datetime
 from io import BytesIO
@@ -20,8 +18,6 @@ from openpyxl.utils.dataframe import dataframe_to_rows
 import pdfkit
 from django.template.loader import render_to_string
 from django.contrib import messages
-from django.core.paginator import Paginator
-from django.db.models.functions import Coalesce
 from collections import defaultdict
 from django.db.models.functions import ExtractWeek, ExtractYear
 
@@ -2476,8 +2472,15 @@ def aprovechamientos(request):
     semana_actual = hoy.isocalendar()[1]
     anio_actual = hoy.year
 
-     # 1. Libras recepcionadas por finca y cultivo desde detallerec
-    recepciones = detallerec.objects.annotate(
+     # 1. Obtener fecha máxima en detallerecaux
+    fecha_max = detallerecaux.objects.aggregate(max_fecha=Max('fechasalidafruta'))['max_fecha']
+    if not fecha_max:
+        fecha_max = hoy  # Si no hay registros aún, usa hoy como fallback
+
+    # 2. Filtrar recepciones hasta esa fecha
+    recepciones = detallerec.objects.filter(
+        fecha__lte=fecha_max
+    ).annotate(
         semana=ExtractWeek('fecha'),
         anio=ExtractYear('fecha')
     ).filter(
