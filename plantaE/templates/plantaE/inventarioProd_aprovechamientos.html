@@ -90,9 +90,11 @@
     $(document).ready(function() {
         console.log("Página cargada");
         var registros = JSON.parse('{{ registros_json|escapejs }}');
+        var registros2 = JSON.parse('{{detalle_debug+|escapejs }}');
     
     // Ver en la consola del navegador
         console.log(registros);
+        console.log(registros2);
         // Inicializa el total al cargar la página
 
     });
