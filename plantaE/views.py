@@ -2527,14 +2527,15 @@ def aprovechamientos(request):
             agrupados[clave]['mediano'] += libras
 
         agrupados[clave]['total'] += libras
-        detalle_debug.append({
-            'boleta_id': detalle.boleta,
-            'finca': boleta.finca,
-            'cultivo': boleta.cultivo,
-            'calidad': boleta.calidad,
-            'libras': detalle.libras,
-            'fecha_salida': detalle.fechasalidafruta,
-        })
+        if boleta.finca == "VALLE" and  boleta.cultivo == "GRAPE":
+            detalle_debug.append({
+                'boleta_id': detalle.boleta,
+                'finca': boleta.finca,
+                'cultivo': boleta.cultivo,
+                'calidad': boleta.calidad,
+                'libras': detalle.libras,
+                'fecha_salida': detalle.fechasalidafruta,
+            })
      # 3. Calcular porcentaje y pendiente
     resultado = []
     for (finca, cultivo), datos in agrupados.items():
