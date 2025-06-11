@@ -2555,8 +2555,8 @@ def aprovechamientos(request):
             'libras_cargadas': round(datos['total'],2)
         })
     registros_json = json.dumps(resultado, default=str)  # Usar default=str para evitar errores con objetos no serializables
-
-    return render(request, 'plantaE/inventarioProd_aprovechamientos.html', {'registros': resultado,'registros_json':registros_json, 'detalle_debug': list(detalle_debug)})
+    detalle_debug = json.dumps(detalle_debug, default=str)
+    return render(request, 'plantaE/inventarioProd_aprovechamientos.html', {'registros': resultado,'registros_json':registros_json, 'detalle_debug': detalle_debug})
 
 def inventariogeneralfruta_list(request):
     today = timezone.now().date()
