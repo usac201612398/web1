@@ -2515,7 +2515,7 @@ def aprovechamientos(request):
         if not boleta:
             continue
         
-        clave = (detalle.finca, detalle.cultivo)
+        clave = (boleta.finca, boleta.cultivo)
         calidad = boleta.calidad.lower() if boleta.calidad else ''
         libras = detalle.libras or 0
 
@@ -2526,6 +2526,15 @@ def aprovechamientos(request):
         elif 'mediano' in calidad:
             agrupados[clave]['mediano'] += libras
 
+        agrupados[clave]['total'] += libras
+        detalle_debug.append({
+            'boleta_id': detalle.boleta,
+            'finca': boleta.finca,
+            'cultivo': boleta.cultivo,
+            'calidad': boleta.calidad,
+            'libras': detalle.libras,
+            'fecha_salida': detalle.fechasalidafruta,
+        })
      # 3. Calcular porcentaje y pendiente
     resultado = []
     for (finca, cultivo), datos in agrupados.items():
@@ -2547,7 +2556,7 @@ def aprovechamientos(request):
         })
     registros_json = json.dumps(resultado, default=str)  # Usar default=str para evitar errores con objetos no serializables
 
-    return render(request, 'plantaE/inventarioProd_aprovechamientos.html', {'registros': resultado,'registros_json':registros_json})
+    return render(request, 'plantaE/inventarioProd_aprovechamientos.html', {'registros': resultado,'registros_json':registros_json, 'detalle_debug': list(detalle_debug)})
 
 def inventariogeneralfruta_list(request):
     today = timezone.now().date()
