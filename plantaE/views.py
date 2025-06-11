@@ -2509,13 +2509,13 @@ def aprovechamientos(request):
 
     # Agrupar y sumar libras por calidad
     agrupados = defaultdict(lambda: {'aprovechamiento': 0, 'devolucion': 0, 'mediano': 0, 'total': 0})
-
+    detalle_debug = []
     for detalle in detalles:
         boleta = boletas_dict.get(detalle.boleta)
         if not boleta:
             continue
         
-        clave = (boleta.finca, boleta.cultivo)
+        clave = (detalle.finca, detalle.cultivo)
         calidad = boleta.calidad.lower() if boleta.calidad else ''
         libras = detalle.libras or 0
 
@@ -2525,8 +2525,6 @@ def aprovechamientos(request):
             agrupados[clave]['devolucion'] += libras
         elif 'mediano' in calidad:
             agrupados[clave]['mediano'] += libras
-
-        agrupados[clave]['total'] += libras
 
      # 3. Calcular porcentaje y pendiente
     resultado = []
