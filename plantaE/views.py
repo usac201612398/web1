@@ -2465,19 +2465,21 @@ def inventariogeneral_list(request):
     # Pasar los registros agrupados al renderizado de la plantilla
     return render(request, 'plantaE/inventarioProd_inventariogeneral.html', {'registros': registros_agrupados,'registros_json':registros_json})
 
+
+def formar_clave(finca, cultivo):
+    return (finca.strip().upper(), cultivo.strip().upper())
+
 def aprovechamientos(request):
-    
-    # Obtener la fecha actual y calcular la semana y el año
     hoy = timezone.now().date()
     semana_actual = hoy.isocalendar()[1]
     anio_actual = hoy.year
 
-     # 1. Obtener fecha máxima en detallerecaux
+    # 1. Obtener fecha máxima en detallerecaux
     fecha_max = detallerecaux.objects.aggregate(max_fecha=Max('fechasalidafruta'))['max_fecha']
     if not fecha_max:
-        fecha_max = hoy  # Si no hay registros aún, usa hoy como fallback
+        fecha_max = hoy  # fallback si no hay registros
 
-    # 2. Filtrar recepciones hasta esa fecha
+    # 2. Filtrar recepciones hasta esa fecha, semana actual
     recepciones = detallerec.objects.filter(
         fecha__lte=fecha_max
     ).annotate(
@@ -2488,10 +2490,12 @@ def aprovechamientos(request):
         anio=anio_actual
     ).values('finca', 'cultivo').annotate(total_libras=Sum('libras')).order_by()
 
-    # Crear un diccionario para acceso rápido: {(finca, cultivo): total_libras}
-    recepciones_dict = {(r['finca'], r['cultivo']): r['total_libras'] for r in recepciones}
+    # Crear dict con claves consistentes
+    recepciones_dict = {
+        formar_clave(r['finca'], r['cultivo']): r['total_libras'] for r in recepciones
+    }
 
-    # Filtrar los registros de la semana actual
+    # 3. Filtrar distribuciones por semana actual
     detalles = detallerecaux.objects.annotate(
         semana=ExtractWeek('fechasalidafruta'),
         anio=ExtractYear('fechasalidafruta')
@@ -2499,24 +2503,21 @@ def aprovechamientos(request):
         semana=semana_actual,
         anio=anio_actual
     )
-    
-    # Obtener los numboleta únicos
-    boleta_ids = detalles.values_list('boleta', flat=True)
 
-    # Obtener las boletas asociadas
+    boleta_ids = detalles.values_list('boleta', flat=True)
     boletas = Boletas.objects.filter(boleta__in=boleta_ids)
     boletas_dict = {b.boleta: b for b in boletas}
 
-    # Agrupar y sumar libras por calidad
     agrupados = defaultdict(lambda: {'aprovechamiento': 0, 'devolucion': 0, 'mediano': 0, 'total': 0})
     detalle_debug = []
+
     for detalle in detalles:
         boleta = boletas_dict.get(detalle.boleta)
         if not boleta:
             continue
-        
-        clave = (detalle.finca, detalle.cultivo)
-        calidad = boleta.calidad.lower() if boleta.calidad else ''
+
+        clave = formar_clave(detalle.finca, detalle.cultivo)
+        calidad = (boleta.calidad or '').strip().lower()
         libras = detalle.libras or 0
 
         if 'aprovechamiento' in calidad:
@@ -2527,37 +2528,47 @@ def aprovechamientos(request):
             agrupados[clave]['mediano'] += libras
 
         agrupados[clave]['total'] += libras
-        if detalle.finca == "VALLE" and  detalle.cultivo == "GRAPE":
+
+        # Solo para depuración: ejemplo con finca VALLE y cultivo GRAPE
+        if clave == formar_clave("VALLE", "GRAPE"):
             detalle_debug.append({
                 'boleta_id': detalle.boleta,
-                'finca': boleta.finca,
-                'cultivo': boleta.cultivo,
+                'finca': detalle.finca,
+                'cultivo': detalle.cultivo,
                 'calidad': boleta.calidad,
                 'libras': detalle.libras,
                 'fecha_salida': detalle.fechasalidafruta,
             })
-     # 3. Calcular porcentaje y pendiente
+
+    # 4. Calcular resultados finales
     resultado = []
     for (finca, cultivo), datos in agrupados.items():
-        total = datos['total'] or 1
+        total_distribuido = datos['total'] or 0
         recepcion_libras = recepciones_dict.get((finca, cultivo), 0)
-        pendiente = recepcion_libras - datos['total']
+        pendiente = recepcion_libras - total_distribuido
         if pendiente < 0:
-            pendiente = 0  # Por si hay algún desbalance, no mostrar negativo
-        porcentaje_pendiente = round(pendiente * 100 / recepcion_libras, 2)
+            pendiente = 0
+        porcentaje_pendiente = round(pendiente * 100 / recepcion_libras, 2) if recepcion_libras else 0
+
         resultado.append({
             'proveedor': finca,
             'cultivo': cultivo,
-            'porcentaje_aprovechamiento': round(datos['aprovechamiento'] * 100 / total, 2),
-            'porcentaje_devolucion': round(datos['devolucion'] * 100 / total, 2),
-            'porcentaje_mediano': round(datos['mediano'] * 100 / total, 2),
-            'porcentaje_pendiente': round(porcentaje_pendiente,2),
-            'libras_recibidas': round(recepcion_libras,2),
-            'libras_cargadas': round(datos['total'],2)
+            'porcentaje_aprovechamiento': round(datos['aprovechamiento'] * 100 / total_distribuido, 2) if total_distribuido else 0,
+            'porcentaje_devolucion': round(datos['devolucion'] * 100 / total_distribuido, 2) if total_distribuido else 0,
+            'porcentaje_mediano': round(datos['mediano'] * 100 / total_distribuido, 2) if total_distribuido else 0,
+            'porcentaje_pendiente': porcentaje_pendiente,
+            'libras_recibidas': round(recepcion_libras, 2),
+            'libras_cargadas': round(total_distribuido, 2),
         })
-    registros_json = json.dumps(resultado, default=str)  # Usar default=str para evitar errores con objetos no serializables
-    detalle_debug = json.dumps(detalle_debug, default=str)
-    return render(request, 'plantaE/inventarioProd_aprovechamientos.html', {'registros': resultado,'registros_json':registros_json, 'detalle_debug': detalle_debug})
+
+    registros_json = json.dumps(resultado, default=str)
+    detalle_debug_json = json.dumps(detalle_debug, default=str)
+
+    return render(request, 'plantaE/inventarioProd_aprovechamientos.html', {
+        'registros': resultado,
+        'registros_json': registros_json,
+        'detalle_debug': detalle_debug_json
+    })
 
 def inventariogeneralfruta_list(request):
     today = timezone.now().date()
