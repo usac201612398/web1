@@ -2515,7 +2515,7 @@ def aprovechamientos(request):
         if not boleta:
             continue
         
-        clave = (boleta.finca, boleta.cultivo)
+        clave = (detalle.finca, detalle.cultivo)
         calidad = boleta.calidad.lower() if boleta.calidad else ''
         libras = detalle.libras or 0
 
@@ -2527,7 +2527,7 @@ def aprovechamientos(request):
             agrupados[clave]['mediano'] += libras
 
         agrupados[clave]['total'] += libras
-        if boleta.finca == "VALLE" and  boleta.cultivo == "GRAPE":
+        if detalle.finca == "VALLE" and  detalle.cultivo == "GRAPE":
             detalle_debug.append({
                 'boleta_id': detalle.boleta,
                 'finca': boleta.finca,
