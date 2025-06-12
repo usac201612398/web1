@@ -2498,17 +2498,30 @@ def dashboard_acumfruta(request):
     libras = [d['libras_totales'] for d in datos]
     derivadas = [0] + [libras[i] - libras[i-1] for i in range(1, len(libras))]
 
-    # Obtener opciones únicas para los filtros
+    # Filtros y sus valores
+    filtros = [
+        ('Finca', 'finca'),
+        ('Orden', 'orden'),
+        ('Variedad', 'variedad'),
+        ('Cultivo', 'cultivo'),
+        ('Estructura', 'estructura'),
+    ]
+
+    valores_filtros = {
+        'finca': AcumFruta.objects.values_list('finca', flat=True).distinct(),
+        'orden': AcumFruta.objects.values_list('orden', flat=True).distinct(),
+        'variedad': AcumFruta.objects.values_list('variedad', flat=True).distinct(),
+        'cultivo': AcumFruta.objects.values_list('cultivo', flat=True).distinct(),
+        'estructura': AcumFruta.objects.values_list('estructura', flat=True).distinct(),
+    }
+
     context = {
         'fechas': fechas,
         'libras': libras,
         'derivadas': derivadas,
-        'fincas': AcumFruta.objects.values_list('finca', flat=True).distinct(),
-        'ordenes': AcumFruta.objects.values_list('orden', flat=True).distinct(),
-        'variedades': AcumFruta.objects.values_list('variedad', flat=True).distinct(),
-        'cultivos': AcumFruta.objects.values_list('cultivo', flat=True).distinct(),
-        'estructuras': AcumFruta.objects.values_list('estructura', flat=True).distinct(),
-        'request': request,  # para usar en el template
+        'filtros': filtros,
+        'valores_filtros': valores_filtros,
+        'request': request,  # para acceder en el template
     }
     return render(request, 'plantaE/dashboard_acumfruta.html', context)
 
