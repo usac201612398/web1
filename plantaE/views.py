@@ -2528,9 +2528,14 @@ def get_estructuras_por_orden(request):
         estructuras = AcumFruta.objects.filter(orden=orden)\
             .exclude(estructura__isnull=True)\
             .exclude(estructura='')\
-            .values_list('estructura', flat=True)\
+            .values_list('estructuras', flat=True)\
             .distinct()
-        return JsonResponse({'estructuras': list(estructuras)})
+        cultivos = AcumFruta.objects.filter(orden=orden)\
+            .exclude(cultivo__isnull=True)\
+            .exclude(cultivo='')\
+            .values_list('cultivos', flat=True)\
+            .distinct()
+        return JsonResponse({'estructuras': list(estructuras), 'cultivos':list(cultivos)})
     return JsonResponse({'estructuras': []})
 
 def get_variedades_por_estructura(request):

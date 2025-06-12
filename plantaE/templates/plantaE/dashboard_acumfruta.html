@@ -209,11 +209,18 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             console.log(data);
             estructuraSelect.innerHTML = '<option value="">Todas</option>';
-            data.estructura.forEach(estructura => {
+            data.estructuras.forEach(estructuras => {
                 const option = document.createElement('option');
-                option.value = estructura;
-                option.textContent = estructura;
-                ordenSelect.appendChild(option);
+                option.value = estructuras;
+                option.textContent = estructuras;
+                estructuraSelect.appendChild(option);
+            });
+            cultivoSelect.innerHTML = '<option value="">Todas</option>';
+            data.cultivos.forEach(cultivos => {
+                const option = document.createElement('option');
+                option.value = cultivos;
+                option.textContent = cultivos;
+                cultivoSelect.appendChild(option);
             });
         })
         .catch(error => {
