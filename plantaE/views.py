@@ -2534,10 +2534,10 @@ def get_estructuras_por_orden(request):
     return JsonResponse({'estructuras': []})
 
 @require_GET
-def get_variedades_por_orden(request):
-    orden = request.GET.get('orden')
-    if orden:
-        variedades = AcumFruta.objects.filter(orden=orden)\
+def get_variedades_por_estructura(request):
+    estructura = request.GET.get('estructura')
+    if estructura:
+        variedades = AcumFruta.objects.filter(estructura=estructura)\
             .exclude(variedad__isnull=True)\
             .exclude(variedad='')\
             .values_list('variedad', flat=True)\
@@ -2546,10 +2546,10 @@ def get_variedades_por_orden(request):
     return JsonResponse({'variedades': []})
 
 @require_GET
-def get_cultivos_por_variedad(request):
-    variedad = request.GET.get('variedad')
-    if variedad:
-        cultivos = AcumFruta.objects.filter(variedad=variedad)\
+def get_cultivos_por_orden(request):
+    orden = request.GET.get('orden')
+    if orden:
+        cultivos = AcumFruta.objects.filter(orden=orden)\
             .exclude(cultivo__isnull=True)\
             .exclude(cultivo='')\
             .values_list('cultivo', flat=True)\

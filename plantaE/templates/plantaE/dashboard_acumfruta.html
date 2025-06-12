@@ -133,75 +133,42 @@ document.addEventListener('DOMContentLoaded', function() {
     const estructuraSelect = document.getElementById('estructura-select');
     const variedadSelect = document.getElementById('variedad-select');
     const cultivoSelect = document.getElementById('cultivo-select');
-
-    // Función para actualizar las opciones de un select
-    function actualizarSelect(selectElement, opciones) {
-        selectElement.innerHTML = '<option value="">Todas</option>';
-        opciones.forEach(opcion => {
-            const option = document.createElement('option');
-            option.value = opcion;
-            option.textContent = opcion;
-            selectElement.appendChild(option);
-        });
-    }
-
-    // Evento de cambio para Finca
-    fincaSelect.addEventListener('change', function() {
+    
+    fincaSelect.addEventListener('change', function () {
         const finca = fincaSelect.value;
-        if (finca) {
-            fetch(`/api/ordenes/?finca=${encodeURIComponent(finca)}`)
-                .then(response => response.json())
-                .then(data => {
-                    actualizarSelect(ordenSelect, data.ordenes);
-                    actualizarSelect(estructuraSelect, []);
-                    actualizarSelect(variedadSelect, []);
-                    actualizarSelect(cultivoSelect, []);
-                });
-        } else {
-            actualizarSelect(ordenSelect, []);
-            actualizarSelect(estructuraSelect, []);
-            actualizarSelect(variedadSelect, []);
-            actualizarSelect(cultivoSelect, []);
-        }
-    });
+        ordenSelect.innerHTML = '<option value="">Cargando...</option>';
 
-    // Evento de cambio para Orden
-    ordenSelect.addEventListener('change', function() {
-        const orden = ordenSelect.value;
-        if (orden) {
-            fetch(`/api/estructuras/?orden=${encodeURIComponent(orden)}`)
-                .then(response => response.json())
-                .then(data => {
-                    actualizarSelect(estructuraSelect, data.estructuras);
-                    actualizarSelect(variedadSelect, []);
-                    actualizarSelect(cultivoSelect, []);
-                });
-            fetch(`/api/variedades/?orden=${encodeURIComponent(orden)}`)
-                .then(response => response.json())
-                .then(data => {
-                    actualizarSelect(variedadSelect, data.variedades);
-                    actualizarSelect(cultivoSelect, []);
-                });
-        } else {
-            actualizarSelect(estructuraSelect, []);
-            actualizarSelect(variedadSelect, []);
-            actualizarSelect(cultivoSelect, []);
-        }
+        fetch('{% url "api_ordenes_por_finca" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: new URLSearchParams({
+                'finca': finca
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            ordenSelect.innerHTML = '<option value="">Todas</option>';
+            data.ordenes.forEach(orden => {
+                const option = document.createElement('option');
+                option.value = orden;
+                option.textContent = orden;
+                ordenSelect.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error('Error cargando ordenes:', error);
+            ordenSelect.innerHTML = '<option value="">Error</option>';
+        });
     });
-
-    // Evento de cambio para Variedad
-    variedadSelect.addEventListener('change', function() {
-        const variedad = variedadSelect.value;
-        if (variedad) {
-            fetch(`/api/cultivos/?variedad=${encodeURIComponent(variedad)}`)
-                .then(response => response.json())
-                .then(data => {
-                    actualizarSelect(cultivoSelect, data.cultivos);
-                });
-        } else {
-            actualizarSelect(cultivoSelect, []);
-        }
-    });
+    
 });
 </script>
 
