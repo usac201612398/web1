@@ -128,11 +128,27 @@
 </script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
     const fincaSelect = document.getElementById('finca-select');
     const ordenSelect = document.getElementById('orden-select');
     const estructuraSelect = document.getElementById('estructura-select');
     const variedadSelect = document.getElementById('variedad-select');
     const cultivoSelect = document.getElementById('cultivo-select');
+    
     
     fincaSelect.addEventListener('change', function () {
         const finca = fincaSelect.value;
