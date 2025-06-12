@@ -2521,6 +2521,42 @@ def get_ordenes_por_finca(request):
         return JsonResponse({'ordenes': list(ordenes)})
     return JsonResponse({'ordenes': []})
 
+@require_GET
+def get_estructuras_por_orden(request):
+    orden = request.GET.get('orden')
+    if orden:
+        estructuras = AcumFruta.objects.filter(orden=orden)\
+            .exclude(estructura__isnull=True)\
+            .exclude(estructura='')\
+            .values_list('estructura', flat=True)\
+            .distinct()
+        return JsonResponse({'estructuras': list(estructuras)})
+    return JsonResponse({'estructuras': []})
+
+@require_GET
+def get_variedades_por_orden(request):
+    orden = request.GET.get('orden')
+    if orden:
+        variedades = AcumFruta.objects.filter(orden=orden)\
+            .exclude(variedad__isnull=True)\
+            .exclude(variedad='')\
+            .values_list('variedad', flat=True)\
+            .distinct()
+        return JsonResponse({'variedades': list(variedades)})
+    return JsonResponse({'variedades': []})
+
+@require_GET
+def get_cultivos_por_variedad(request):
+    variedad = request.GET.get('variedad')
+    if variedad:
+        cultivos = AcumFruta.objects.filter(variedad=variedad)\
+            .exclude(cultivo__isnull=True)\
+            .exclude(cultivo='')\
+            .values_list('cultivo', flat=True)\
+            .distinct()
+        return JsonResponse({'cultivos': list(cultivos)})
+    return JsonResponse({'cultivos': []})
+
 def formar_clave(finca, cultivo):
     return (finca.strip().upper(), cultivo.strip().upper())
 
