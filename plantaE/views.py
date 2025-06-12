@@ -2469,6 +2469,49 @@ def inventariogeneral_list(request):
 def formar_clave(finca, cultivo):
     return (finca.strip().upper(), cultivo.strip().upper())
 
+def dashboard_acumfruta(request):
+    qs = AcumFruta.objects.exclude(finca="CIP").exclude(libras__isnull=True)
+
+    # Leer filtros del GET
+    finca = request.GET.get('finca')
+    orden = request.GET.get('orden')
+    variedad = request.GET.get('variedad')
+    cultivo = request.GET.get('cultivo')
+    estructura = request.GET.get('estructura')
+
+    # Aplicar filtros
+    if finca:
+        qs = qs.filter(finca=finca)
+    if orden:
+        qs = qs.filter(orden=orden)
+    if variedad:
+        qs = qs.filter(variedad=variedad)
+    if cultivo:
+        qs = qs.filter(cultivo=cultivo)
+    if estructura:
+        qs = qs.filter(estructura=estructura)
+
+    # Agrupar por fecha
+    datos = qs.values('fecha').annotate(libras_totales=Sum('libras')).order_by('fecha')
+
+    fechas = [d['fecha'].strftime('%Y-%m-%d') for d in datos]
+    libras = [d['libras_totales'] for d in datos]
+    derivadas = [0] + [libras[i] - libras[i-1] for i in range(1, len(libras))]
+
+    # Obtener opciones únicas para los filtros
+    context = {
+        'fechas': fechas,
+        'libras': libras,
+        'derivadas': derivadas,
+        'fincas': AcumFruta.objects.values_list('finca', flat=True).distinct(),
+        'ordenes': AcumFruta.objects.values_list('orden', flat=True).distinct(),
+        'variedades': AcumFruta.objects.values_list('variedad', flat=True).distinct(),
+        'cultivos': AcumFruta.objects.values_list('cultivo', flat=True).distinct(),
+        'estructuras': AcumFruta.objects.values_list('estructura', flat=True).distinct(),
+        'request': request,  # para usar en el template
+    }
+    return render(request, 'plantaE/dashboard_acumfruta.html', context)
+
 def aprovechamientos(request):
     hoy = timezone.now().date()
     semana_actual = hoy.isocalendar()[1]

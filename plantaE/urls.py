@@ -103,6 +103,5 @@ urlpatterns = [
     path('items/<int:pk>/delete/', views.items_delete, name='items_delete'),
     path('generate_packing_list_pdf/', views.generate_packing_list_pdf, name='generate_packing_list_pdf'),
     path('escanearbarras/', views.escanearbarras, name='escanearbarras'),
-    
-    
+    path('dashboard/', views.dashboard_acumfruta, name='dashboard_acumfruta'),
 ]

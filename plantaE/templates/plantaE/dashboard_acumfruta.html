@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard AcumFruta</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="container mt-4">
+
+    <h2 class="mb-4">Dashboard de Producción - AcumFruta</h2>
+
+    <!-- Filtros -->
+    <form method="get" class="row g-3 mb-4">
+        {% for label, field in [('Finca','finca'), ('Orden','orden'), ('Variedad','variedad'), ('Cultivo','cultivo'), ('Estructura','estructura')] %}
+        <div class="col-md-2">
+            <label class="form-label">{{ label }}</label>
+            <select name="{{ field }}" class="form-select">
+                <option value="">Todos</option>
+                {% for val in context[field + 's'] %}
+                    <option value="{{ val }}" {% if val == request.GET[field] %}selected{% endif %}>{{ val }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {% endfor %}
+        <div class="col-md-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">Aplicar filtros</button>
+        </div>
+    </form>
+
+    <!-- Gráficos -->
+    <div class="card mb-4">
+        <div class="card-header">Producción (libras) por Día</div>
+        <div class="card-body">
+            <canvas id="graficoProduccion"></canvas>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">Variación Diaria de Producción (Derivada)</div>
+        <div class="card-body">
+            <canvas id="graficoDerivada"></canvas>
+        </div>
+    </div>
+
+</div>
+
+<script id="fechas-data" type="application/json">{{ fechas|json_script:"fechas-data" }}</script>
+<script id="libras-data" type="application/json">{{ libras|json_script:"libras-data" }}</script>
+<script id="derivadas-data" type="application/json">{{ derivadas|json_script:"derivadas-data" }}</script>
+
+
+
+<script>
+    
+    const fechas = JSON.parse(document.getElementById('fechas-data').textContent);
+    const libras = JSON.parse(document.getElementById('libras-data').textContent);
+    const derivadas = JSON.parse(document.getElementById('derivadas-data').textContent);
+    new Chart(document.getElementById('graficoProduccion'), {
+        type: 'line',
+        data: {
+            labels: fechas,
+            datasets: [{
+                label: 'Producción diaria (libras)',
+                data: libras,
+                borderColor: 'green',
+                backgroundColor: 'rgba(0,128,0,0.1)',
+                fill: true,
+                tension: 0.2
+            }]
+        }
+    });
+
+    new Chart(document.getElementById('graficoDerivada'), {
+        type: 'line',
+        data: {
+            labels: fechas,
+            datasets: [{
+                label: 'Variación diaria',
+                data: derivadas,
+                borderColor: 'red',
+                backgroundColor: 'rgba(255,0,0,0.1)',
+                fill: true,
+                tension: 0.2
+            }]
+        }
+    });
+</script>
+</body>
+</html>

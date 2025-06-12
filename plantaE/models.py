@@ -245,7 +245,7 @@ class Boletas(models.Model):
     idpedido = models.BigIntegerField(blank=True, null=True)
     itemsapcodelibra = models.CharField(max_length=30, blank=True, null=True)
     emisiones = models.CharField(max_length=30, blank=True, null=True)
-    comentario = models.CharField(max_length=30, blank=True, null=True)
+    comentario = models.CharField(max_length=150, blank=True, null=True)
     observaciones = models.CharField(max_length=50, blank=True, null=True)
 
     class Meta:
