@@ -209,7 +209,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             console.log(data);
             estructuraSelect.innerHTML = '<option value="">Todas</option>';
-            data.estructura.forEach(orden => {
+            data.estructura.forEach(estructura => {
                 const option = document.createElement('option');
                 option.value = estructura;
                 option.textContent = estructura;
@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => {
             console.error('Error cargando ordenes:', error);
-            ordenSelect.innerHTML = '<option value="">Error</option>';
+            estructuraSelect.innerHTML = '<option value="">Error</option>';
         });
     });
     
