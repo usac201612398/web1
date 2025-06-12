@@ -94,6 +94,7 @@
         }
     });
 </script>
+
 <script>
 document.getElementById('finca-select').addEventListener('change', function() {
     const finca = this.value;
@@ -105,6 +106,7 @@ document.getElementById('finca-select').addEventListener('change', function() {
     fetch(`/api/ordenes/?finca=${encodeURIComponent(finca)}`)
         .then(response => response.json())
         .then(data => {
+            console.log(data);
             ordenSelect.innerHTML = '<option value="">Todas</option>';
             data.ordenes.forEach(orden => {
                 const option = document.createElement('option');
