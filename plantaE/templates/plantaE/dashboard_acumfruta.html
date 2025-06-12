@@ -187,9 +187,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     ordenSelect.addEventListener('change', function () {
-        const finca = fincaSelect.value;
-        ordenSelect.innerHTML = '<option value="">Cargando...</option>';
-        console.log(finca);
+        const orden = ordenSelect.value;
+        estructuraSelect.innerHTML = '<option value="">Cargando...</option>';
+        console.log(orden);
         fetch('{% url "api_estructuras_por_orden" %}', {
             method: 'POST',
             headers: {
@@ -208,8 +208,8 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(data => {
             console.log(data);
-            ordenSelect.innerHTML = '<option value="">Todas</option>';
-            data.ordenes.forEach(orden => {
+            estructuraSelect.innerHTML = '<option value="">Todas</option>';
+            data.estructura.forEach(orden => {
                 const option = document.createElement('option');
                 option.value = estructura;
                 option.textContent = estructura;
