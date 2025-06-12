@@ -1,6 +1,4 @@
 {% load static %}
-{% load json_script %}
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -13,7 +11,7 @@
 <div class="container mt-4">
     <h2 class="mb-4">Dashboard de Producción - AcumFruta</h2>
 
-    <!-- Formulario de filtros -->
+    <!-- Filtros -->
     <form method="get" class="row g-3 mb-4">
         {% for label, field in filtros %}
             <div class="col-md-2">
@@ -21,7 +19,7 @@
                 <select name="{{ field }}" class="form-select">
                     <option value="">Todos</option>
                     {% for val in valores_filtros[field] %}
-                        <option value="{{ val }}" {% if val == request.GET[field] %}selected{% endif %}>{{ val }}</option>
+                        <option value="{{ val }}" {% if val == request.GET.field %}selected{% endif %}>{{ val }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -31,7 +29,7 @@
         </div>
     </form>
 
-    <!-- Gráfico de producción -->
+    <!-- Gráfica de producción -->
     <div class="card mb-4">
         <div class="card-header">Producción diaria (libras)</div>
         <div class="card-body">
@@ -39,7 +37,7 @@
         </div>
     </div>
 
-    <!-- Gráfico de variación -->
+    <!-- Gráfica de derivada -->
     <div class="card mb-4">
         <div class="card-header">Variación diaria (derivada)</div>
         <div class="card-body">
@@ -48,15 +46,11 @@
     </div>
 </div>
 
-<!-- Cargar datos con json_script -->
-{{ fechas|json_script:"fechas-data" }}
-{{ libras|json_script:"libras-data" }}
-{{ derivadas|json_script:"derivadas-data" }}
-
+<!-- JavaScript con datos desde el backend -->
 <script>
-    const fechas = JSON.parse(document.getElementById("fechas-data").textContent);
-    const libras = JSON.parse(document.getElementById("libras-data").textContent);
-    const derivadas = JSON.parse(document.getElementById("derivadas-data").textContent);
+    const fechas = {{ fechas_json|safe }};
+    const libras = {{ libras_json|safe }};
+    const derivadas = {{ derivadas_json|safe }};
 
     new Chart(document.getElementById('graficoProduccion'), {
         type: 'line',
@@ -66,7 +60,7 @@
                 label: 'Producción diaria (libras)',
                 data: libras,
                 borderColor: 'green',
-                backgroundColor: 'rgba(0, 128, 0, 0.1)',
+                backgroundColor: 'rgba(0,128,0,0.1)',
                 fill: true,
                 tension: 0.3
             }]
@@ -81,7 +75,7 @@
                 label: 'Variación diaria',
                 data: derivadas,
                 borderColor: 'red',
-                backgroundColor: 'rgba(255, 0, 0, 0.1)',
+                backgroundColor: 'rgba(255,0,0,0.1)',
                 fill: true,
                 tension: 0.3
             }]
@@ -90,4 +84,3 @@
 </script>
 </body>
 </html>
-

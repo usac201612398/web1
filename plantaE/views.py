@@ -2466,39 +2466,32 @@ def inventariogeneral_list(request):
     return render(request, 'plantaE/inventarioProd_inventariogeneral.html', {'registros': registros_agrupados,'registros_json':registros_json})
 
 
-def formar_clave(finca, cultivo):
-    return (finca.strip().upper(), cultivo.strip().upper())
-
 def dashboard_acumfruta(request):
+    # Base queryset, sin finca "CIP" y sin libras nulas
     qs = AcumFruta.objects.exclude(finca="CIP").exclude(libras__isnull=True)
 
-    # Leer filtros del GET
-    finca = request.GET.get('finca')
-    orden = request.GET.get('orden')
-    variedad = request.GET.get('variedad')
-    cultivo = request.GET.get('cultivo')
-    estructura = request.GET.get('estructura')
+    # Leer filtros desde GET
+    filtros_get = {
+        'finca': request.GET.get('finca'),
+        'orden': request.GET.get('orden'),
+        'variedad': request.GET.get('variedad'),
+        'cultivo': request.GET.get('cultivo'),
+        'estructura': request.GET.get('estructura'),
+    }
 
-    # Aplicar filtros
-    if finca:
-        qs = qs.filter(finca=finca)
-    if orden:
-        qs = qs.filter(orden=orden)
-    if variedad:
-        qs = qs.filter(variedad=variedad)
-    if cultivo:
-        qs = qs.filter(cultivo=cultivo)
-    if estructura:
-        qs = qs.filter(estructura=estructura)
+    for campo, valor in filtros_get.items():
+        if valor:
+            qs = qs.filter(**{campo: valor})
 
     # Agrupar por fecha
     datos = qs.values('fecha').annotate(libras_totales=Sum('libras')).order_by('fecha')
 
+    # Preparar listas para gráficas
     fechas = [d['fecha'].strftime('%Y-%m-%d') for d in datos]
     libras = [d['libras_totales'] for d in datos]
-    derivadas = [0] + [libras[i] - libras[i-1] for i in range(1, len(libras))]
+    derivadas = [0] + [libras[i] - libras[i - 1] for i in range(1, len(libras))]
 
-    # Filtros y sus valores
+    # Definir filtros disponibles
     filtros = [
         ('Finca', 'finca'),
         ('Orden', 'orden'),
@@ -2516,14 +2509,19 @@ def dashboard_acumfruta(request):
     }
 
     context = {
-        'fechas': fechas,
-        'libras': libras,
-        'derivadas': derivadas,
         'filtros': filtros,
         'valores_filtros': valores_filtros,
-        'request': request,  # para acceder en el template
+        'fechas_json': json.dumps(fechas),
+        'libras_json': json.dumps(libras),
+        'derivadas_json': json.dumps(derivadas),
+        'request': request,
     }
-    return render(request, 'plantaE/dashboard_acumfruta.html', context)
+
+    return render(request, 'dashboard_acumfruta.html', context)
+
+def formar_clave(finca, cultivo):
+    return (finca.strip().upper(), cultivo.strip().upper())
+
 
 def aprovechamientos(request):
     hoy = timezone.now().date()
