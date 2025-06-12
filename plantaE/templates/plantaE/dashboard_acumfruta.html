@@ -186,6 +186,42 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
+    ordenSelect.addEventListener('change', function () {
+        const finca = fincaSelect.value;
+        ordenSelect.innerHTML = '<option value="">Cargando...</option>';
+        console.log(finca);
+        fetch('{% url "api_estructuras_por_orden" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: new URLSearchParams({
+                'orden': orden
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+            ordenSelect.innerHTML = '<option value="">Todas</option>';
+            data.ordenes.forEach(orden => {
+                const option = document.createElement('option');
+                option.value = estructura;
+                option.textContent = estructura;
+                ordenSelect.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error('Error cargando ordenes:', error);
+            ordenSelect.innerHTML = '<option value="">Error</option>';
+        });
+    });
+    
 });
 </script>
 
