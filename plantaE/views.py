@@ -2517,7 +2517,7 @@ def dashboard_acumfruta(request):
         'request': request,
     }
 
-    return render(request, 'dashboard_acumfruta.html', context)
+    return render(request, 'plantaE/dashboard_acumfruta.html', context)
 
 def formar_clave(finca, cultivo):
     return (finca.strip().upper(), cultivo.strip().upper())
