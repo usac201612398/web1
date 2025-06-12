@@ -2519,7 +2519,7 @@ def get_ordenes_por_finca(request):
             .values_list('orden', flat=True)\
             .distinct()
         return JsonResponse({'ordenes': list(ordenes)})
-    return JsonResponse({'ordenes': finca})
+    return JsonResponse({'ordenes': [],'finca':finca})
 
 
 def get_estructuras_por_orden(request):
