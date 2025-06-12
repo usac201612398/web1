@@ -2467,10 +2467,7 @@ def inventariogeneral_list(request):
 
 
 def dashboard_acumfruta(request):
-    # Base queryset, sin finca "CIP" y sin libras nulas
-    qs = AcumFruta.objects.exclude(finca="CIP").exclude(libras__isnull=True)
-
-    # Leer filtros desde GET
+    # Filtros desde GET
     filtros_get = {
         'finca': request.GET.get('finca'),
         'orden': request.GET.get('orden'),
@@ -2479,38 +2476,31 @@ def dashboard_acumfruta(request):
         'estructura': request.GET.get('estructura'),
     }
 
+    # Query base
+    qs = AcumFruta.objects.exclude(finca="CIP").exclude(libras__isnull=True)
+
+    # Aplicar filtros
     for campo, valor in filtros_get.items():
         if valor:
             qs = qs.filter(**{campo: valor})
 
-    # Agrupar por fecha
+    # Agrupación por fecha
     datos = qs.values('fecha').annotate(libras_totales=Sum('libras')).order_by('fecha')
-
-    # Preparar listas para gráficas
     fechas = [d['fecha'].strftime('%Y-%m-%d') for d in datos]
     libras = [d['libras_totales'] for d in datos]
     derivadas = [0] + [libras[i] - libras[i - 1] for i in range(1, len(libras))]
 
-    # Definir filtros disponibles
-    filtros = [
-        ('Finca', 'finca'),
-        ('Orden', 'orden'),
-        ('Variedad', 'variedad'),
-        ('Cultivo', 'cultivo'),
-        ('Estructura', 'estructura'),
+    # Filtros disponibles
+    filtros_completos = [
+        ('Finca', 'finca', AcumFruta.objects.exclude(finca__isnull=True).exclude(finca='').values_list('finca', flat=True).distinct()),
+        ('Orden', 'orden', AcumFruta.objects.exclude(orden__isnull=True).exclude(orden='').values_list('orden', flat=True).distinct()),
+        ('Variedad', 'variedad', AcumFruta.objects.exclude(variedad__isnull=True).exclude(variedad='').values_list('variedad', flat=True).distinct()),
+        ('Cultivo', 'cultivo', AcumFruta.objects.exclude(cultivo__isnull=True).exclude(cultivo='').values_list('cultivo', flat=True).distinct()),
+        ('Estructura', 'estructura', AcumFruta.objects.exclude(estructura__isnull=True).exclude(estructura='').values_list('estructura', flat=True).distinct()),
     ]
 
-    valores_filtros = {
-        'finca': AcumFruta.objects.values_list('finca', flat=True).distinct(),
-        'orden': AcumFruta.objects.values_list('orden', flat=True).distinct(),
-        'variedad': AcumFruta.objects.values_list('variedad', flat=True).distinct(),
-        'cultivo': AcumFruta.objects.values_list('cultivo', flat=True).distinct(),
-        'estructura': AcumFruta.objects.values_list('estructura', flat=True).distinct(),
-    }
-
     context = {
-        'filtros': filtros,
-        'valores_filtros': valores_filtros,
+        'filtros_completos': filtros_completos,
         'fechas_json': json.dumps(fechas),
         'libras_json': json.dumps(libras),
         'derivadas_json': json.dumps(derivadas),

@@ -13,19 +13,19 @@
 
     <!-- Filtros -->
     <form method="get" class="row g-3 mb-4">
-        {% for label, field in filtros %}
+        {% for label, field, opciones in filtros_completos %}
             <div class="col-md-2">
                 <label class="form-label">{{ label }}</label>
                 <select name="{{ field }}" class="form-select">
                     <option value="">Todos</option>
-                    {% for val in valores_filtros[field] %}
-                        <option value="{{ val }}" {% if val == request.GET.field %}selected{% endif %}>{{ val }}</option>
+                    {% for val in opciones %}
+                        <option value="{{ val }}" {% if request.GET.field == val %}selected{% endif %}>{{ val }}</option>
                     {% endfor %}
                 </select>
             </div>
         {% endfor %}
         <div class="col-md-2 d-flex align-items-end">
-            <button type="submit" class="btn btn-primary w-100">Aplicar filtros</button>
+            <button type="submit" class="btn btn-primary w-100">Filtrar</button>
         </div>
     </form>
 
@@ -46,21 +46,21 @@
     </div>
 </div>
 
-<!-- JavaScript con datos desde el backend -->
+<!-- Script JS para Chart.js -->
 <script>
-    const fechas = {{ fechas_json|safe }};
-    const libras = {{ libras_json|safe }};
-    const derivadas = {{ derivadas_json|safe }};
+    const fechas = JSON.parse('{{ fechas_json|escapejs }}');
+    const libras = JSON.parse('{{ libras_json|escapejs }}');
+    const derivadas = JSON.parse('{{ derivadas_json|escapejs }}');
 
     new Chart(document.getElementById('graficoProduccion'), {
         type: 'line',
         data: {
             labels: fechas,
             datasets: [{
-                label: 'Producción diaria (libras)',
+                label: 'Producción (libras)',
                 data: libras,
                 borderColor: 'green',
-                backgroundColor: 'rgba(0,128,0,0.1)',
+                backgroundColor: 'rgba(0,128,0,0.2)',
                 fill: true,
                 tension: 0.3
             }]
@@ -75,7 +75,7 @@
                 label: 'Variación diaria',
                 data: derivadas,
                 borderColor: 'red',
-                backgroundColor: 'rgba(255,0,0,0.1)',
+                backgroundColor: 'rgba(255,0,0,0.2)',
                 fill: true,
                 tension: 0.3
             }]
@@ -84,3 +84,4 @@
 </script>
 </body>
 </html>
+
