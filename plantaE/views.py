@@ -2511,7 +2511,7 @@ def dashboard_acumfruta(request):
 
 
 def get_ordenes_por_finca(request):
-    finca = request.GET.get('finca')
+    finca = request.POST.get('finca')
     if finca:
         ordenes = AcumFruta.objects.filter(finca=finca)\
             .exclude(orden__isnull=True)\
@@ -2519,11 +2519,11 @@ def get_ordenes_por_finca(request):
             .values_list('orden', flat=True)\
             .distinct()
         return JsonResponse({'ordenes': list(ordenes)})
-    return JsonResponse({'ordenes': [],'finca':finca})
+    return JsonResponse({'ordenes': []})
 
 
 def get_estructuras_por_orden(request):
-    orden = request.GET.get('orden')
+    orden = request.POST.get('orden')
     if orden:
         estructuras = AcumFruta.objects.filter(orden=orden)\
             .exclude(estructura__isnull=True)\
@@ -2534,7 +2534,7 @@ def get_estructuras_por_orden(request):
     return JsonResponse({'estructuras': []})
 
 def get_variedades_por_estructura(request):
-    estructura = request.GET.get('estructura')
+    estructura = request.POST.get('estructura')
     if estructura:
         variedades = AcumFruta.objects.filter(estructura=estructura)\
             .exclude(variedad__isnull=True)\
@@ -2545,7 +2545,7 @@ def get_variedades_por_estructura(request):
     return JsonResponse({'variedades': []})
 
 def get_cultivos_por_orden(request):
-    orden = request.GET.get('orden')
+    orden = request.POST.get('orden')
     if orden:
         cultivos = AcumFruta.objects.filter(orden=orden)\
             .exclude(cultivo__isnull=True)\
