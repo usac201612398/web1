@@ -15,11 +15,11 @@ import json
 import pandas as pd
 import pytz
 from openpyxl.utils.dataframe import dataframe_to_rows
-import pdfkit
 from django.template.loader import render_to_string
 from django.contrib import messages
 from collections import defaultdict
 from django.db.models.functions import ExtractWeek, ExtractYear
+from django.views.decorators.http import require_GET
 
 def vascula_monitor(request):
     return render(request, 'plantaE/vascula.html')
@@ -2508,6 +2508,18 @@ def dashboard_acumfruta(request):
     }
 
     return render(request, 'plantaE/dashboard_acumfruta.html', context)
+
+@require_GET
+def get_ordenes_por_finca(request):
+    finca = request.GET.get('finca')
+    if finca:
+        ordenes = AcumFruta.objects.filter(finca=finca)\
+            .exclude(orden__isnull=True)\
+            .exclude(orden='')\
+            .values_list('orden', flat=True)\
+            .distinct()
+        return JsonResponse({'ordenes': list(ordenes)})
+    return JsonResponse({'ordenes': []})
 
 def formar_clave(finca, cultivo):
     return (finca.strip().upper(), cultivo.strip().upper())

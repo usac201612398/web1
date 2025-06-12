@@ -104,4 +104,5 @@ urlpatterns = [
     path('generate_packing_list_pdf/', views.generate_packing_list_pdf, name='generate_packing_list_pdf'),
     path('escanearbarras/', views.escanearbarras, name='escanearbarras'),
     path('dashboard/', views.dashboard_acumfruta, name='dashboard_acumfruta'),
+    path('api/ordenes/', views.get_ordenes_por_finca, name='api_ordenes_por_finca'),
 ]

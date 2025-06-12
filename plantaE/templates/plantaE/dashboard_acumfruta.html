@@ -13,21 +13,33 @@
 
     <!-- Filtros -->
     <form method="get" class="row g-3 mb-4">
-        {% for label, field, opciones in filtros_completos %}
-            <div class="col-md-2">
-                <label class="form-label">{{ label }}</label>
-                <select name="{{ field }}" class="form-select">
-                    <option value="">Todos</option>
-                    {% for val in opciones %}
-                        <option value="{{ val }}" {% if request.GET.field == val %}selected{% endif %}>{{ val }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        {% endfor %}
-        <div class="col-md-2 d-flex align-items-end">
-            <button type="submit" class="btn btn-primary w-100">Filtrar</button>
-        </div>
-    </form>
+    <!-- Finca -->
+    <div class="col-md-2">
+        <label class="form-label">Finca</label>
+        <select name="finca" id="finca-select" class="form-select">
+            <option value="">Todas</option>
+            {% for finca in filtros_completos.0.2 %}
+                <option value="{{ finca }}" {% if request.GET.finca == finca %}selected{% endif %}>{{ finca }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Orden (dependiente de finca) -->
+    <div class="col-md-2">
+        <label class="form-label">Orden</label>
+        <select name="orden" id="orden-select" class="form-select">
+            <option value="">Todas</option>
+            {% for orden in filtros_completos.1.2 %}
+                <option value="{{ orden }}" {% if request.GET.orden == orden %}selected{% endif %}>{{ orden }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col-md-2 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+    </div>
+</form>
+
 
     <!-- Gráfica de producción -->
     <div class="card mb-4">
@@ -82,6 +94,28 @@
         }
     });
 </script>
+<script>
+document.getElementById('finca-select').addEventListener('change', function() {
+    const finca = this.value;
+    const ordenSelect = document.getElementById('orden-select');
+
+    // Limpiar opciones
+    ordenSelect.innerHTML = '<option value="">Cargando...</option>';
+
+    fetch(`/api/ordenes/?finca=${encodeURIComponent(finca)}`)
+        .then(response => response.json())
+        .then(data => {
+            ordenSelect.innerHTML = '<option value="">Todas</option>';
+            data.ordenes.forEach(orden => {
+                const option = document.createElement('option');
+                option.value = orden;
+                option.textContent = orden;
+                ordenSelect.appendChild(option);
+            });
+        });
+});
+</script>
+
 </body>
 </html>
 
