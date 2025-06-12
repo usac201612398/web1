@@ -2509,7 +2509,7 @@ def dashboard_acumfruta(request):
 
     return render(request, 'plantaE/dashboard_acumfruta.html', context)
 
-@require_GET
+
 def get_ordenes_por_finca(request):
     finca = request.GET.get('finca')
     if finca:
@@ -2521,7 +2521,7 @@ def get_ordenes_por_finca(request):
         return JsonResponse({'ordenes': list(ordenes)})
     return JsonResponse({'ordenes': []})
 
-@require_GET
+
 def get_estructuras_por_orden(request):
     orden = request.GET.get('orden')
     if orden:
@@ -2533,7 +2533,6 @@ def get_estructuras_por_orden(request):
         return JsonResponse({'estructuras': list(estructuras)})
     return JsonResponse({'estructuras': []})
 
-@require_GET
 def get_variedades_por_estructura(request):
     estructura = request.GET.get('estructura')
     if estructura:
@@ -2545,7 +2544,6 @@ def get_variedades_por_estructura(request):
         return JsonResponse({'variedades': list(variedades)})
     return JsonResponse({'variedades': []})
 
-@require_GET
 def get_cultivos_por_orden(request):
     orden = request.GET.get('orden')
     if orden:
