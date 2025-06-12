@@ -171,6 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return response.json();
         })
         .then(data => {
+            console.log(data);
             ordenSelect.innerHTML = '<option value="">Todas</option>';
             data.ordenes.forEach(orden => {
                 const option = document.createElement('option');
