@@ -228,6 +228,45 @@ document.addEventListener('DOMContentLoaded', function() {
             estructuraSelect.innerHTML = '<option value="">Error</option>';
         });
     });
+
+    estructuraSelect.addEventListener('change', function () {
+        const orden = ordenSelect.value;
+        const estructura = estructuraSelect.value;
+
+        variedadSelect.innerHTML = '<option value="">Cargando...</option>';
+        
+        fetch('{% url "api_variedades_por_estructura" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: new URLSearchParams({
+                'orden': orden,
+                'estructura': estructura
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+            variedadSelect.innerHTML = '<option value="">Todas</option>';
+            data.variedad.forEach(variedad => {
+                const option = document.createElement('option');
+                option.value = variedad;
+                option.textContent = variedad;
+                variedadSelect.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error('Error cargando ordenes:', error);
+            variedadSelect.innerHTML = '<option value="">Error</option>';
+        });
+    });
     
 });
 </script>
