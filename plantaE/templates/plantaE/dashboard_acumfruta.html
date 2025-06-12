@@ -94,7 +94,7 @@
         }
     });
 </script>
-
+<script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
 <script>
 document.getElementById('finca-select').addEventListener('change', function() {
     const finca = this.value;
@@ -103,7 +103,16 @@ document.getElementById('finca-select').addEventListener('change', function() {
     // Limpiar opciones
     ordenSelect.innerHTML = '<option value="">Cargando...</option>';
 
-    fetch(`/api/ordenes/?finca=${encodeURIComponent(finca)}`)
+     fetch('{% url "api_ordenes_por_finca" %}', { // Asegúrate de poner la URL correcta
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': getCookie('csrftoken')  // Asegúrate de incluir CSRF token
+        },
+        body: new URLSearchParams({
+            'opcion2': ordenSelect.value
+        })
+    })
         .then(response => response.json())
         .then(data => {
             console.log(data);
