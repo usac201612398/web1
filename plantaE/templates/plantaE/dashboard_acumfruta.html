@@ -89,8 +89,9 @@
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 
-<!-- Script JS para Chart.js -->
 <script>
     const fechas = JSON.parse('{{ fechas_json|escapejs }}');
     const libras = JSON.parse('{{ libras_json|escapejs }}');
@@ -108,6 +109,23 @@
                 fill: true,
                 tension: 0.3
             }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'week',
+                        tooltipFormat: 'dd/MM/yyyy'
+                    },
+                    ticks: {
+                        autoSkip: true,
+                        maxTicksLimit: 10,
+                        maxRotation: 45
+                    }
+                }
+            }
         }
     });
 
@@ -123,9 +141,27 @@
                 fill: true,
                 tension: 0.3
             }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'week',
+                        tooltipFormat: 'dd/MM/yyyy'
+                    },
+                    ticks: {
+                        autoSkip: true,
+                        maxTicksLimit: 10,
+                        maxRotation: 45
+                    }
+                }
+            }
         }
     });
 </script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     function getCookie(name) {
