@@ -2171,6 +2171,7 @@ def procesarinvprodconten(request):
     return JsonResponse({'mensaje':mensaje,'registros':registros})   
 
 def procesarinvprodcontenv2(request):
+    
     data = json.loads(request.body)
     mensaje = data['array']
     contenedor_ = data['contenedor']
@@ -2211,12 +2212,7 @@ def procesarinvprodcontenv2(request):
 
         cajas_acumuladas = 0
 
-        cajas_acumuladas = 0
-
         for registro in disponibles:
-            if cajas_acumuladas >= cajas_a_enviar:
-                break  # Ya tenemos suficientes cajas, salimos del bucle
-
             orden = registro.orden
             total_cajas = registro.cajas or 0
             total_libras = registro.lbsintara or 0
@@ -2225,25 +2221,24 @@ def procesarinvprodcontenv2(request):
             cajas_disponibles = total_cajas - (usadas['cajas'] or 0)
             libras_disponibles = total_libras - (usadas['lbs'] or 0)
 
-            if cajas_disponibles < 0 or libras_disponibles < 0:
+            if cajas_disponibles <= 0 or libras_disponibles <= 0:
+                continue  # nada que usar, siguiente registro
+
+            faltan_cajas = cajas_a_enviar - cajas_acumuladas
+            cajas_usadas = min(cajas_disponibles, faltan_cajas)
+            if cajas_usadas <= 0:
                 continue
 
-            # REVISAMOS CUÁNTAS FALTAN EN CADA ITERACIÓN
-            faltan_cajas = cajas_a_enviar - cajas_acumuladas
-
-            cajas_usadas = min(cajas_disponibles, faltan_cajas)
             proporcion = cajas_usadas / cajas_disponibles
             libras_a_usar = libras_disponibles * proporcion
 
             importe = precio * cajas_usadas
             pesostd = (cajas_usadas * registro.pesostd / total_cajas) if registro.pesostd else 0
-            merma = libras_a_usar - pesostd
-            if merma < 0:
-                merma = 0
+            merma = max(libras_a_usar - pesostd, 0)
             pesorxcaja = libras_a_usar / cajas_usadas if cajas_usadas else 0
             pesosinmerma = libras_a_usar - merma
 
-            # Crear registro en salidacontenedores
+            # Crear en salidacontenedores
             salidacontenedores.objects.create(
                 fecha=fecha_salida,
                 palet=palet,
@@ -2266,7 +2261,8 @@ def procesarinvprodcontenv2(request):
                 calidad1=registro.calidad1
             )
             conexion = salidacontenedores.objects.last()
-            # Crear registro en inventarioProdTermAux
+
+            # Crear en inventarioProdTermAux
             inventarioProdTermAux.objects.create(
                 fecha=registro.fecha,
                 inventarioreg=registro.registro,
@@ -2287,20 +2283,27 @@ def procesarinvprodcontenv2(request):
                 salidacontenedores=str(conexion.registro)
             )
 
-            # Verificar si se agotó todo el stock de ese registro
+            # Verificar si se agotó todo el stock del registro
             aux_sum = inventarioProdTermAux.objects.filter(inventarioreg=registro.registro).aggregate(
-                sumacajas=Sum('cajas'), sumalbs=Sum('lbsintara')
+                sumacajas=Sum('cajas'),
+                sumalbs=Sum('lbsintara')
             )
             if (aux_sum['sumacajas'] or 0) >= total_cajas and (aux_sum['sumalbs'] or 0) >= total_libras:
                 registro.status = 'En proceso'
                 registro.save()
                 inventarioProdTermAux.objects.filter(orden=orden).update(status='En proceso')
 
+            # Solo aquí se suma una vez
             cajas_acumuladas += cajas_usadas
+
             if cajas_acumuladas >= cajas_a_enviar:
                 break
 
-    return JsonResponse({'mensaje': 'Procesado correctamente', 'registros': registros, 'palet': palet,'totalcajas':total_cajas, 'usadas': usadas})
+    return JsonResponse({
+        'mensaje': 'Procesado correctamente',
+        'palet': palet,
+        'total_registros_procesados': len(mensaje),
+    })
 
 def cargacontenedores_listv2(request):
 
