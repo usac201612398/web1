@@ -2225,7 +2225,7 @@ def procesarinvprodcontenv2(request):
             cajas_disponibles = total_cajas - (usadas['cajas'] or 0)
             libras_disponibles = total_libras - (usadas['lbs'] or 0)
 
-            if cajas_disponibles <= 0 or libras_disponibles <= 0:
+            if cajas_disponibles < 0 or libras_disponibles < 0:
                 continue
 
             # REVISAMOS CUÁNTAS FALTAN EN CADA ITERACIÓN
