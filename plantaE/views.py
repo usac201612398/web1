@@ -2300,7 +2300,7 @@ def procesarinvprodcontenv2(request):
             if cajas_acumuladas >= cajas_a_enviar:
                 break
 
-    return JsonResponse({'mensaje': 'Procesado correctamente', 'registros': registros, 'palet': palet})
+    return JsonResponse({'mensaje': 'Procesado correctamente', 'registros': registros, 'palet': palet,'disponibles':cajas_disponibles, 'usadas': usadas})
 
 def cargacontenedores_listv2(request):
 
