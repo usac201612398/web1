@@ -470,12 +470,12 @@ $(document).on('click', '.eliminar', function() {
                 // Resetear contenedor, puedes hacerlo de esta forma si lo deseas:
                 localStorage.removeItem('selectedContenedor');  // Elimina el valor del contenedor del localStorage
                 $('#Conten').val('');  // Opcional: limpiar el contenedor seleccionado
-                //window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/inventarioProd/packinglist'); // Redirigir
+                window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/inventarioProd/packinglist'); // Redirigir
             } else {
                 // Si el palet es menor a 20, recargar la página pero mantener el contenedor seleccionado
                 //loadProducts(); // Recargar los contenedores disponibles
                 //$('#Conten').val(text_conten); // Mantener el contenedor seleccionado
-                //location.reload(); // Recargar la página sin perder el contenedor
+                location.reload(); // Recargar la página sin perder el contenedor
             }
 
             console.log(data);
