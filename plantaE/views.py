@@ -2219,9 +2219,12 @@ def reporte_tabla_pivote(request):
         # Calcular rendimiento (kg/m²) por semana
         semanas = [col for col in df_merge.columns if col.startswith('20')]
         for semana in semanas:
-            df_merge[semana] = df_merge[semana] / df_merge['area_total']
+            if df_merge['area_total'] == None:
+                df_merge[semana] = 0
+            else:
+                df_merge[semana] = df_merge[semana] / df_merge['area_total']
 
-        df_merge[semanas] = df_merge[semanas].round(2)
+                df_merge[semanas] = df_merge[semanas].round(2)
 
         # Convertir resultado final a tabla HTML
         tabla_html = df_merge.to_html(
