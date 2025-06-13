@@ -2206,7 +2206,7 @@ def reporte_tabla_pivote(request):
         ).round(2)
 
         tabla_html = pivot.reset_index().to_html(
-            classes='table table-bordered table-striped table-sm table-hover', index=False,
+            classes='table table-striped table-bordered table-sm table-hover',
             index=False,
             table_id='tabla-pivote'
         )
