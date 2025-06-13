@@ -58,14 +58,14 @@ $(document).ready(function () {
         scrollX: true,
         paging: true,
         ordering: true,
-        info: true,  // activar info de registros
+        info: true, // muestra "Mostrando 1 a 10 de X registros"
         searching: true,
         dom: 'Bfrtip',
+        lengthMenu: [10, 25, 50, 100], // menú desplegable
+        pageLength: 10, // valor por defecto al cargar
         buttons: ['excelHtml5', 'csvHtml5'],
-        lengthMenu: [10, 25, 50, 100],  // aquí defines las opciones de cantidad de filas
-        pageLength: 10,  // valor por defecto al cargar la tabla
         language: {
-            url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
+            url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json" // importante para idioma español
         }
     });
 });
