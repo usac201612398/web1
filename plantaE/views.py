@@ -2196,6 +2196,7 @@ def reporte_tabla_pivote(request):
         df['semana'] = df['fecha'].dt.strftime('%Y-W%V')
         df['kg'] = df['total_libras'] / 2.20462  # convertir a kilogramos
 
+        # Crear tabla pivote: kilos por semana
         pivot = pd.pivot_table(
             df,
             values='kg',
@@ -2205,7 +2206,25 @@ def reporte_tabla_pivote(request):
             fill_value=0
         ).round(2)
 
-        tabla_html = pivot.reset_index().to_html(
+        # Obtener áreas por finca-orden-estructura
+        areas_qs = detallesEstructuras.objects.values('finca', 'orden', 'estructura').annotate(
+            area_total=Sum('area')
+        )
+        df_areas = pd.DataFrame(list(areas_qs))
+
+        # Unir pivot con áreas
+        pivot = pivot.reset_index()
+        df_merge = pd.merge(pivot, df_areas, on=['finca', 'orden', 'estructura'], how='left')
+
+        # Calcular rendimiento (kg/m²) por semana
+        semanas = [col for col in df_merge.columns if col.startswith('20')]
+        for semana in semanas:
+            df_merge[semana] = df_merge[semana] / df_merge['area_total']
+
+        df_merge[semanas] = df_merge[semanas].round(2)
+
+        # Convertir resultado final a tabla HTML
+        tabla_html = df_merge.to_html(
             classes='table table-striped table-bordered table-sm table-hover',
             index=False,
             table_id='tabla-pivote'
@@ -2213,7 +2232,7 @@ def reporte_tabla_pivote(request):
     else:
         tabla_html = "<p>No hay datos para los filtros aplicados.</p>"
 
-    # mismos filtros que ya usas en el dashboard
+    # Filtros disponibles
     filtros_completos = [
         ('Finca', 'finca', AcumFruta.objects.exclude(finca__isnull=True).exclude(finca='').values_list('finca', flat=True).distinct()),
         ('Orden', 'orden', AcumFruta.objects.exclude(orden__isnull=True).exclude(orden='').values_list('orden', flat=True).distinct()),
