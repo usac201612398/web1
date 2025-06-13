@@ -2171,7 +2171,6 @@ def procesarinvprodconten(request):
     return JsonResponse({'mensaje':mensaje,'registros':registros})   
 
 def procesarinvprodcontenv2(request):
-    
     data = json.loads(request.body)
     mensaje = data['array']
     contenedor_ = data['contenedor']
@@ -2209,7 +2208,19 @@ def procesarinvprodcontenv2(request):
             lbs_usadas=Sum('lbsintara')
         )
         usados_map = {r['inventarioreg']: {'cajas': r['cajas_usadas'], 'lbs': r['lbs_usadas']} for r in usados}
+        # Formatear disponibles en una lista de diccionarios
+        disponibles_data = [{
+            'registro': r.registro,
+            'fecha': r.fecha,
+            'cajas': r.cajas,
+            'lbsintara': r.lbsintara,
+            'orden': r.orden,
+            'categoria': r.categoria,
+            'status': r.status
+        } for r in disponibles]
 
+        # Convertir los usados directamente desde la query
+        usados_data = list(usados)
         cajas_acumuladas = 0
 
         for registro in disponibles:
@@ -2303,6 +2314,8 @@ def procesarinvprodcontenv2(request):
         'mensaje': 'Procesado correctamente',
         'palet': palet,
         'total_registros_procesados': len(mensaje),
+        'disponibles':disponibles_data,
+        'usados' : usados_data
     })
 
 def cargacontenedores_listv2(request):
