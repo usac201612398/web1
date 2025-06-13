@@ -26,7 +26,14 @@
     </form>
 
     <div style="overflow-x: auto;">
-        {{ tabla_html|safe }}
+        <div class="card mb-4">
+            <div class="card-header">Producción semanal (kg/m²)</div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    {{ tabla_html|safe }}
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -34,7 +41,22 @@
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.0/jszip.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        $('#tabla-pivote').DataTable({
+            scrollX: true,
+            paging: true,
+            ordering: true,
+            info: false,
+            searching: true, // o true si quieres buscar
+            language: {
+                url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
+            }
+        });
+    });
+</script>
 <script>
     $(document).ready(function () {
         $('#tabla-pivote').DataTable({

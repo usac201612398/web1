@@ -2206,7 +2206,9 @@ def reporte_tabla_pivote(request):
         ).round(2)
 
         tabla_html = pivot.reset_index().to_html(
-            classes='table table-bordered table-striped table-sm', index=False
+            classes='table table-bordered table-striped table-sm table-hover', index=False,
+            index=False,
+            table_id='tabla-pivote'
         )
     else:
         tabla_html = "<p>No hay datos para los filtros aplicados.</p>"
