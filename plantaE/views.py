@@ -2187,7 +2187,7 @@ def procesarinvprodcontenv2(request):
         cultivo = i[1]
         itemsapcode = i[2]
         itemsapname = i[3]
-        cajas_a_enviar = float(i[4])
+        cajas_a_enviar = int(i[4])
         fecha_salida = i[9]
 
         producto = productoTerm.objects.filter(itemsapcode=itemsapcode).first()
