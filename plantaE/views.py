@@ -2220,8 +2220,15 @@ def reporte_tabla_pivote(request):
         semanas = [col for col in df_merge.columns if col.startswith('20')]
         for semana in semanas:
             df_merge[semana] = df_merge[semana] / df_merge['area_total']
-            df_merge[semanas] = df_merge[semanas].round(2)
+         
+        df_merge[semanas] = df_merge[semanas].round(2)
 
+        # Agregar columna total kilos por fila (sumar las semanas en kg)
+        # Para total kilos, sumamos las semanas en el pivot original
+        df_merge['total_kilos'] = pivot[semanas].sum(axis=1).round(2)
+
+        # Agregar columna total kg/m² (sumar las semanas ya divididas por área)
+        df_merge['total_kg_m2'] = df_merge[semanas].sum(axis=1).round(2)
         # Convertir resultado final a tabla HTML
         tabla_html = df_merge.to_html(
             classes='table table-striped table-bordered table-sm table-hover',
