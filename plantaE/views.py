@@ -2202,7 +2202,8 @@ def procesarinvprodcontenv2(request):
 
         usados = inventarioProdTermAux.objects.filter(
             proveedor=proveedor,
-            itemsapcode=itemsapcode
+            itemsapcode=itemsapcode,
+            status__isnull=True
         ).values('inventarioreg').annotate(
             cajas_usadas=Sum('cajas'),
             lbs_usadas=Sum('lbsintara')
