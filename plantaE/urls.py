@@ -107,4 +107,6 @@ urlpatterns = [
     path('api/ordenes/', views.get_ordenes_por_finca, name='api_ordenes_por_finca'),
     path('api/estructuras/', views.get_estructuras_por_orden, name='api_estructuras_por_orden'),
     path('api/variedad/', views.get_variedades_por_estructura, name='api_variedades_por_estructura'),
+    
+    path('reporte-pivote/', views.reporte_tabla_pivote, name='reporte_tabla_pivote'),
 ]

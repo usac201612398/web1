@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Tabla Pivote - Kg por m² por Semana</h2>
+
+    <!-- Filtros (idéntico a los del dashboard) -->
+    <form method="get" class="row g-3 mb-4">
+        {% for nombre, campo, valores in filtros_completos %}
+        <div class="col-md-2">
+            <label class="form-label">{{ nombre }}</label>
+            <select name="{{ campo }}" class="form-select">
+                <option value="">Todos</option>
+                {% for valor in valores %}
+                    <option value="{{ valor }}" {% if request.GET|get_item:campo == valor %}selected{% endif %}>{{ valor }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {% endfor %}
+        <div class="col-md-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">Aplicar filtros</button>
+        </div>
+    </form>
+
+    <div style="overflow-x: auto;">
+        {{ tabla_html|safe }}
+    </div>
+</div>
+{% endblock %}

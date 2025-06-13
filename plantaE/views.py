@@ -2170,6 +2170,62 @@ def procesarinvprodconten(request):
     
     return JsonResponse({'mensaje':mensaje,'registros':registros})   
 
+
+def reporte_tabla_pivote(request):
+    filtros_get = {
+        'finca': request.GET.get('finca'),
+        'orden': request.GET.get('orden'),
+        'estructura': request.GET.get('estructura'),
+        'variedad': request.GET.get('variedad'),
+        'cultivo': request.GET.get('cultivo'),
+    }
+
+    qs = AcumFruta.objects.exclude(finca="CIP").exclude(libras__isnull=True)
+
+    for campo, valor in filtros_get.items():
+        if valor:
+            qs = qs.filter(**{campo: valor})
+
+    data = qs.values('fecha', 'finca', 'orden', 'estructura').annotate(
+        total_libras=Sum('libras')
+    )
+
+    if data:
+        df = pd.DataFrame(data)
+        df['fecha'] = pd.to_datetime(df['fecha'])
+        df['semana'] = df['fecha'].dt.strftime('%Y-W%V')
+        df['kg'] = df['total_libras'] / 2.20462  # convertir a kilogramos
+
+        pivot = pd.pivot_table(
+            df,
+            values='kg',
+            index=['finca', 'orden', 'estructura'],
+            columns='semana',
+            aggfunc='sum',
+            fill_value=0
+        ).round(2)
+
+        tabla_html = pivot.reset_index().to_html(
+            classes='table table-bordered table-striped table-sm', index=False
+        )
+    else:
+        tabla_html = "<p>No hay datos para los filtros aplicados.</p>"
+
+    # mismos filtros que ya usas en el dashboard
+    filtros_completos = [
+        ('Finca', 'finca', AcumFruta.objects.exclude(finca__isnull=True).exclude(finca='').values_list('finca', flat=True).distinct()),
+        ('Orden', 'orden', AcumFruta.objects.exclude(orden__isnull=True).exclude(orden='').values_list('orden', flat=True).distinct()),
+        ('Variedad', 'variedad', AcumFruta.objects.exclude(variedad__isnull=True).exclude(variedad='').values_list('variedad', flat=True).distinct()),
+        ('Cultivo', 'cultivo', AcumFruta.objects.exclude(cultivo__isnull=True).exclude(cultivo='').values_list('cultivo', flat=True).distinct()),
+        ('Estructura', 'estructura', AcumFruta.objects.exclude(estructura__isnull=True).exclude(estructura='').values_list('estructura', flat=True).distinct()),
+    ]
+
+    return render(request, 'plantaE/reporte_tabla_pivote.html', {
+        'tabla_html': tabla_html,
+        'filtros_completos': filtros_completos,
+        'request': request
+    })
+
 def procesarinvprodcontenv2(request):
     data = json.loads(request.body)
     mensaje = data['array']
