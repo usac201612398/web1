@@ -2702,8 +2702,10 @@ def aprovechamientos(request):
         boleta = boletas_dict.get(detalle.boleta)
         if not boleta:
             continue
-
-        clave = formar_clave(detalle.finca, detalle.cultivo)
+        if detalle.finca == "Productor":
+            clave = formar_clave(detalle.llave, detalle.cultivo)
+        else:
+            clave = formar_clave(detalle.finca, detalle.cultivo)
         calidad = (boleta.calidad or '').strip().lower()
         libras = detalle.libras or 0
 
