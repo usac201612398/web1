@@ -2695,7 +2695,7 @@ def aprovechamientos(request):
     boletas = Boletas.objects.filter(boleta__in=boleta_ids)
     boletas_dict = {b.boleta: b for b in boletas}
 
-    agrupados = defaultdict(lambda: {'aprovechamiento': 0, 'devolucion': 0, 'mediano': 0, 'total': 0})
+    agrupados = defaultdict(lambda: {'aprovechamiento': 0, 'devolución': 0, 'mediano': 0, 'total': 0})
     detalle_debug = []
 
     for detalle in detalles:
@@ -2709,8 +2709,8 @@ def aprovechamientos(request):
 
         if 'aprovechamiento' in calidad:
             agrupados[clave]['aprovechamiento'] += libras
-        elif 'devolucion' in calidad:
-            agrupados[clave]['devolucion'] += libras
+        elif 'devolución' in calidad:
+            agrupados[clave]['devolución'] += libras
         elif 'mediano' in calidad:
             agrupados[clave]['mediano'] += libras
 
@@ -2741,7 +2741,7 @@ def aprovechamientos(request):
             'proveedor': finca,
             'cultivo': cultivo,
             'porcentaje_aprovechamiento': round(datos['aprovechamiento'] * 100 / total_distribuido, 2) if total_distribuido else 0,
-            'porcentaje_devolucion': round(datos['devolucion'] * 100 / total_distribuido, 2) if total_distribuido else 0,
+            'porcentaje_devolucion': round(datos['devolución'] * 100 / total_distribuido, 2) if total_distribuido else 0,
             'porcentaje_mediano': round(datos['mediano'] * 100 / total_distribuido, 2) if total_distribuido else 0,
             'porcentaje_pendiente': porcentaje_pendiente,
             'libras_recibidas': round(recepcion_libras, 2),
