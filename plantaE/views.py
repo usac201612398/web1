@@ -1497,31 +1497,30 @@ def boletas_detail(request, pk):
     return render(request, 'plantaE/boletas_detail.html', {'registros': salidas})
 
 def boletas_delete(request, pk):
-
     salidas = get_object_or_404(Boletas, pk=pk)
     boletas_relacionadas = Boletas.objects.filter(boleta=salidas.boleta)
 
     if request.method == 'POST':
-
+        # Anular boletas relacionadas
         for boleta in boletas_relacionadas:
             boleta.status = 'Anulado'
             boleta.save()
-        
+
+        # Actualizar inventario relacionado
         invrelacionado = inventarioProdTerm.objects.exclude(status='Anulado').filter(boleta=salidas.boleta)
-        
         for elemento in invrelacionado:
             elemento.status3 = None
             elemento.save()
-        
+
+        # Obtener recepciones relacionadas
         recepciones_ids = detallerecaux.objects.exclude(status='Anulado') \
                                                .filter(boleta=salidas.boleta) \
                                                .values_list('recepcion', flat=True).distinct()
-        
-        for recepcion_id in recepciones_ids:
 
+        for recepcion_id in recepciones_ids:
             recepcion_aux = detallerecaux.objects.exclude(status='Anulado').filter(recepcion=recepcion_id)
             for aux in recepcion_aux:
-                aux.status= 'En proceso'
+                aux.status = 'En proceso'
                 aux.save()
 
             recepcion_detalle = detallerec.objects.exclude(status='Anulado').filter(recepcion=recepcion_id)
@@ -1529,37 +1528,39 @@ def boletas_delete(request, pk):
                 detalle.status = None
                 detalle.save()
 
+        # Anular detalles auxiliares
         detalleaux_anular = detallerecaux.objects.exclude(status='Anulado').filter(boleta=salidas.boleta)
-
         for detalle in detalleaux_anular:
             detalle.status = 'Anulado'
             detalle.save()
-        
-        
-            acumfruta_ids = AcumFrutaaux.objects.exclude(status='Anulado') \
-                                                .filter(boleta=salidas.boleta) \
-                                                .values_list('acumfrutaid', flat=True).distinct()
 
-            for acumfruta_id in acumfruta_ids and acumfruta_ids.exists():
+        # Procesar AcumFruta relacionados
+        acumfruta_ids = AcumFrutaaux.objects.exclude(status='Anulado') \
+                                            .filter(boleta=salidas.boleta) \
+                                            .values_list('acumfrutaid', flat=True).distinct()
 
-                acumfruta_aux = AcumFrutaaux.objects.exclude(status='Anulado').filter(acumfrutaid=acumfruta_id)
-                for aux in acumfruta_aux:
-                    aux.status= None
-                    aux.save()
+        for acumfruta_id in acumfruta_ids:
+            acumfruta_aux = AcumFrutaaux.objects.exclude(status='Anulado').filter(acumfrutaid=acumfruta_id)
+            for aux in acumfruta_aux:
+                aux.status = None
+                aux.save()
 
-                acumfruta_detalle = AcumFruta.objects.exclude(status='Anulado').filter(id=acumfruta_id)
-                for detalle in acumfruta_detalle:
-                    detalle.status = None
-                    detalle.save()
-
-            acumfruta_anular = AcumFrutaaux.objects.exclude(status='Anulado').filter(boleta=salidas.boleta)
-            for detalle in acumfruta_anular:
-                detalle.status = 'Anulado'
+            acumfruta_detalle = AcumFruta.objects.exclude(status='Anulado').filter(id=acumfruta_id)
+            for detalle in acumfruta_detalle:
+                detalle.status = None
                 detalle.save()
-            
+
+        # Anular acumfruta auxiliar
+        acumfruta_anular = AcumFrutaaux.objects.exclude(status='Anulado').filter(boleta=salidas.boleta)
+        for detalle in acumfruta_anular:
+            detalle.status = 'Anulado'
+            detalle.save()
+
         messages.success(request, "Registro anulado correctamente.")
         return redirect('boletasFruta_list')
+
     return render(request, 'plantaE/boletas_confirm_delete.html', {'registros': salidas})
+
 
 def recepciones_detail(request, pk):
     salidas = get_object_or_404(detallerec, pk=pk)
