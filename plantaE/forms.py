@@ -227,6 +227,7 @@ class itemsenviosForm(forms.ModelForm):
     op_almacen = [('PH-0100','PH-0100'),('PH-0200','PH-0200'),('PH-0400','PH-0400'),('PH-0600','PH-0600'),('PH-0603','PH-0603'),('02','02')]
     op_rubro =   [('Empaque','Empaque'),('Fruta','Fruta'),('Insumos','Insumos'),('MAT.LIMPIEZA','MAT.LIMPIEZA')]
     op_grupo =   [('Empaque','Empaque'),('Fruta','Fruta'),('MAT.LIMPIEZA','MAT.LIMPIEZA'),('Insumos','Insumos')]
+    u_m =   [('gl','gl'),('kg','kg'),('g','g'),('lb','lb'),('lt','lt'),('mil','mil'),('millar','millar'),('und','und'),('mts','mts'),('pie','pie'),('par','par'),('rl','rl')]
     
     item = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
     descripcion = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))

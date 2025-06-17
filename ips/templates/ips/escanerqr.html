@@ -155,7 +155,15 @@
                 <a href="{% url 'ips_exportar' %}">Exportar</a>
             </div>
         </div>
+        <form method="get" action="{% url 'ips_exportar' %}" class="box" style="display: flex; flex-direction: column; align-items: center;">
+            <label for="fecha_inicio">Desde:</label>
+            <input type="datetime-local" id="fecha_inicio" name="fecha_inicio" required>
 
+            <label for="fecha_fin">Hasta:</label>
+            <input type="datetime-local" id="fecha_fin" name="fecha_fin" required>
+
+            <button type="submit" class="button is-primary mt-2">Exportar por fecha</button>
+        </form>
         <h1>Escanear Código QR</h1>
 
         <div class="video-container">

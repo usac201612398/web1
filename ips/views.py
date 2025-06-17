@@ -20,13 +20,26 @@ def exportar_excel(request):
     wb = Workbook()
     ws = wb.active
     ws.title = 'Datos'
-
+    # Obtiene parámetros de fecha desde GET
+    fecha_inicio_str = request.GET.get('fecha_inicio')
+    fecha_fin_str = request.GET.get('fecha_fin')
     # Obtén los datos de tu modelo
     datos = QRCodeData.objects.all()
 
     # Especifica la zona horaria deseada
     zona_horaria_deseada = pytz.timezone('America/Guatemala')  # Cambia esto según sea necesario
+    # Filtra por rango de fechas si se proporcionan ambas fechas
+    if fecha_inicio_str and fecha_fin_str:
+        try:
+            fecha_inicio = datetime.datetime.fromisoformat(fecha_inicio_str)
+            fecha_fin = datetime.datetime.fromisoformat(fecha_fin_str)
 
+            # Asegura que fecha_fin incluya todo el día si solo se colocó la hora 00:00
+            fecha_fin = fecha_fin.replace(microsecond=999999)
+
+            datos = datos.filter(created_at__range=(fecha_inicio, fecha_fin))
+        except ValueError:
+            pass  # Opcional: manejar errores de formato de fecha
     # Agrega los encabezados
     ws.append([field.name for field in QRCodeData._meta.fields])
     # Agrega los datos  
