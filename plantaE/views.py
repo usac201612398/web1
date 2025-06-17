@@ -3,8 +3,8 @@ from django.http import JsonResponse, HttpResponse
 from openpyxl import Workbook
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect
-from .models import Actpeso, enviosrec,AcumFrutaaux,salidacontenedores, inventarioProdTermAux,productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
-from .forms import boletasForm,itemsForm,salidacontenedoresForm,salidasFrutaForm, contenedoresForm,recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
+from .models import Actpeso, paramenvlocales,enviosrec,AcumFrutaaux,salidacontenedores, inventarioProdTermAux,productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
+from .forms import boletasForm,itemsForm, itemsenviosForm,salidacontenedoresForm,salidasFrutaForm, contenedoresForm,recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
 from django.db.models import Sum, Q, Max,Value as V
 from django.utils import timezone
 import matplotlib.pyplot as plt
@@ -2948,3 +2948,44 @@ def items_update(request, pk):
     else:
         form = itemsForm(instance=salidas)
     return render(request, 'plantaE/items_form.html', {'form': form})
+
+def itemsenvios_list(request):
+    salidas = paramenvlocales.objects.all() # Excluye los que tienen status 'Cerrado'
+    salidas = salidas.order_by('-registro')
+    
+    return render(request, 'plantaE/itemsenvios_list.html', {'registros': salidas})
+
+def itemsenvios_delete(request, pk):
+    salidas = get_object_or_404(paramenvlocales, pk=pk)
+    if request.method == 'POST':
+        salidas.delete()
+        return redirect('itemsenvios_list')
+    return render(request, 'plantaE/itemsenvios_confirm_delete.html', {'registros': salidas})
+
+def itemsenvios_create(request):
+    if request.method == 'POST':
+        form = itemsenviosForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+            except Exception as e:
+                # Manejar excepciones específicas (por ejemplo, UniqueConstraintError)
+                return JsonResponse({'error': str(e)}, status=400)
+            return redirect('itemsenvios_list')
+        else:
+             # Imprimir errores para depuración
+            return JsonResponse({'errores': form.errors}, status=400)
+    else:
+        form = itemsenviosForm()
+    return render(request, 'plantaE/itemsenvios_form.html', {'form': form})
+
+def itemsenvios_update(request, pk):
+    salidas = get_object_or_404(paramenvlocales, pk=pk)
+    if request.method == 'POST':
+        form = itemsenviosForm(request.POST, instance=salidas)
+        if form.is_valid():
+            form.save()
+            return redirect('itemsenvios_list')
+    else:
+        form = itemsenviosForm(instance=salidas)
+    return render(request, 'plantaE/itemsenvios_form.html', {'form': form})

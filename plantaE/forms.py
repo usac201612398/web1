@@ -1,5 +1,5 @@
 from django import forms
-from .models import Actpeso,Boletas,salidacontenedores,salidasFruta, productoTerm,contenedores, Recepciones, Ccalidad, inventarioProdTerm,AcumFruta, enviosFrutaPlantilla
+from .models import Actpeso,paramenvlocales,Boletas,salidacontenedores,salidasFruta, productoTerm,contenedores, Recepciones, Ccalidad, inventarioProdTerm,AcumFruta, enviosFrutaPlantilla
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Fieldset, Div
 
@@ -220,6 +220,27 @@ class itemsForm(forms.ModelForm):
         
         model = productoTerm
         fields = ['cultivo','itemsapcode','itemsapcodelibra','itemsapname','calidad1','categoria','precio','taraxcaja', 'pesostdxcaja', 'tipo', 'orden']
+
+class itemsenviosForm(forms.ModelForm):
+
+    op_clasificacion =   [('EMPAQUE','EMPAQUE'),('FRUTA','FRUTA'),('FERRETERIA','FERRETERIA')]
+    op_almacen = [('PH-0100','PH-0100'),('PH-0200','PH-0200'),('PH-0400','PH-0400'),('PH-0600','PH-0600'),('PH-0603','PH-0603'),('02','02')]
+    op_rubro =   [('Empaque','Empaque'),('Fruta','Fruta'),('Insumos','Insumos'),('MAT.LIMPIEZA','MAT.LIMPIEZA')]
+    op_grupo =   [('Empaque','Empaque'),('Fruta','Fruta'),('MAT.LIMPIEZA','MAT.LIMPIEZA'),('Insumos','Insumos')]
+    
+    item = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
+    descripcion = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
+    u_m = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
+    clasificacion = forms.ChoiceField(choices=op_clasificacion, widget=forms.Select(attrs={'class': 'my-input'}))
+    almacen = forms.ChoiceField(choices=op_almacen, widget=forms.Select(attrs={'class': 'my-input'}))
+    grupo = forms.ChoiceField(choices=op_grupo, widget=forms.Select(attrs={'class': 'my-input'}))
+    rubro = forms.ChoiceField(choices=op_rubro, widget=forms.Select(attrs={'class': 'my-input'}))
+    
+    class Meta:
+        
+        model = paramenvlocales
+        fields = ['item','descripcion','u_m','clasificacion','almacen','grupo','rubro']
+
     
 class salidacontenedoresForm(forms.ModelForm):
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'my-input'}))
