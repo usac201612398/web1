@@ -61,18 +61,29 @@
 <body>
     <h1 class="roboto">Panel</h1>
     <br>
-    
-    <div class="container">
-        <form method="get" action="{% url 'ips_exportar' %}" class="box" style="display: flex; flex-direction: column; align-items: center;">
-            <label for="fecha_inicio">Desde:</label>
-            <input type="date" id="fecha_inicio" name="fecha_inicio" required>
 
-            <label for="fecha_fin">Hasta:</label>
-            <input type="date" id="fecha_fin" name="fecha_fin" required>
+    <form method="get" action="{% url 'ips_exportar' %}" class="box d-flex align-items-end gap-3 flex-wrap" style="justify-content: center;">
+        <div class="field">
+            <label class="label" for="fecha_inicio">Desde:</label>
+            <div class="control">
+                <input type="date" id="fecha_inicio" name="fecha_inicio" class="input is-small" required>
+            </div>
+        </div>
 
-            <button type="submit" class="button is-primary mt-2">Exportar por fechas</button>
-        </form>
-    </div>
+        <div class="field">
+            <label class="label" for="fecha_fin">Hasta:</label>
+            <div class="control">
+                <input type="date" id="fecha_fin" name="fecha_fin" class="input is-small" required>
+            </div>
+        </div>
+
+        <div class="field mt-4">
+            <div class="control">
+                <button type="submit" class="button is-primary is-small">Exportar por fechas</button>
+            </div>
+        </div>
+    </form>
+
 
     <div class="container">
         <div class="columns">
