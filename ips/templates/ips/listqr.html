@@ -63,26 +63,21 @@
     <br>
     <div class="container">
         <form method="get" action="{% url 'ips_exportar' %}" class="box">
-            <div class="field is-grouped is-align-items-end is-flex-wrap-wrap">
+            <div class="columns is-vcentered is-mobile">
                 
-                <div class="field mr-4">
-                <label class="label" for="fecha_inicio">Desde:</label>
-                <div class="control">
-                    <input type="date" id="fecha_inicio" name="fecha_inicio" class="input is-small" required>
-                </div>
+                <div class="column is-narrow">
+                <label class="label mb-1" for="fecha_inicio">Desde:</label>
+                <input type="date" id="fecha_inicio" name="fecha_inicio" class="input is-small" required>
                 </div>
 
-                <div class="field mr-4">
-                <label class="label" for="fecha_fin">Hasta:</label>
-                <div class="control">
-                    <input type="date" id="fecha_fin" name="fecha_fin" class="input is-small" required>
-                </div>
+                <div class="column is-narrow">
+                <label class="label mb-1" for="fecha_fin">Hasta:</label>
+                <input type="date" id="fecha_fin" name="fecha_fin" class="input is-small" required>
                 </div>
 
-                <div class="field">
-                <div class="control" style="margin-top: 1.2em;">
-                    <button type="submit" class="button is-primary is-small">Exportar</button>
-                </div>
+                <div class="column is-narrow">
+                <label class="label mb-1">&nbsp;</label> <!-- Espacio para alinear verticalmente -->
+                <button type="submit" class="button is-primary is-small">Exportar</button>
                 </div>
 
             </div>
