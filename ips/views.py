@@ -71,6 +71,12 @@ def ips_visualizar(request):
     
     return render(request, 'ips/listqr.html', {'registros': salidas})
 
+def ips_visualizarall(request):
+    salidas = QRCodeData.objects.all()  # Excluye los que tienen status 'Cerrado'
+    salidas = salidas.order_by('-created_at')
+    
+    return render(request, 'ips/listqrall.html', {'registros': salidas})
+
 def ips_borrar(request, pk):
     salidas = get_object_or_404(QRCodeData, pk=pk)
     if request.method == 'POST':

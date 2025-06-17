@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous">   
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <title>panelVisualizacion</title>
+    <style>
+        h1 {
+            margin: 15px;
+            font-family: Arial, sans-serif;
+        }
+
+        a {
+            margin: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+    </style>
+</head>
+
+    <style>
+        h1 {
+            margin: 15px;
+            font-family: Arial, sans-serif;
+        }
+
+        a {
+            margin: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        .half {
+        display: flex;
+        height: 100%;
+        grid-template-columns:  repeat(auto-fit, minmax(min-content, max-content)); /* Divide cada mitad en dos columnas iguales */
+        gap: 5px; /* Espacio entre columnas */
+        text-align: center;
+        }
+
+        .box {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 10px;
+            flex: auto; 
+            height: 100%;    
+        }
+        td {
+            padding: 0;
+        }
+        td input {
+            width: 100%;
+            border: none;
+            background: transparent;
+        }
+
+    </style>
+</head>
+
+<body>
+    <h1 class="roboto">Panel</h1>
+    <br>
+    <div class="container">
+        <form method="get" action="{% url 'ips_exportar' %}" class="box">
+            <div class="columns is-vcentered is-mobile">
+                
+                <div class="column is-narrow">
+                <label class="label mb-1" for="fecha_inicio">Desde:</label>
+                <input type="date" id="fecha_inicio" name="fecha_inicio" class="input is-small" required>
+                </div>
+
+                <div class="column is-narrow">
+                <label class="label mb-1" for="fecha_fin">Hasta:</label>
+                <input type="date" id="fecha_fin" name="fecha_fin" class="input is-small" required>
+                </div>
+
+                <div class="column is-narrow">
+                <label class="label mb-1">&nbsp;</label> <!-- Espacio para alinear verticalmente -->
+                <button type="submit" class="button is-primary is-small">Exportar</button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+    <br>
+    <div class="container">
+        <div class="columns">
+            <div class="column is-12">
+            <div class="table-container">
+                <table class="table is-striped is-hoverable is is-fullwidth" id="myTable">
+                <thead id = "enc1">
+                    <tr class="header">
+                    <th >id</th>
+                    <th >Codigo</th>
+                    <th >Cantidad</th>
+                    <th >Color</th>
+                    <th >Cosechador</th>
+                    <th >Blossom</th>
+                    <th >N_semillas</th>
+                    <th >Peso</th>
+                    <th >Status</th>
+                    <th >Fecha</th>
+                    <th >Editar</th>
+                    <th >Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {%for registro in registros %} 
+                <tr> 
+                    <td>{{ registro.id_escaner }}</a></td>
+                    <td>{{registro.data}}</td>
+                    <td>{{registro.cantidad}}</td>
+                    <td>{{registro.color}}</td>
+                    <td>{{registro.cosechador}}</td>
+                    <td>{{registro.blossom}}</td>
+                    <td>{{registro.n_semillas}}</td>
+                    <td>{{registro.peso}}</td>
+                    <td>{{registro.status}}</td>
+                    <td>{{registro.created_at}}</td>
+                    <th ><a href="{% url 'ips_actualizar' registro.pk %}"><i class="fas fa-edit"></i>Editar</a></th>
+                    <th ><a href="{% url 'ips_delete' registro.pk %}"><i class="fas fa-trash-alt"></i>Eliminar</a></th>
+                  
+                </tr> 
+                        
+                {% endfor %}
+                </tbody>
+                </table>
+            </div>
+            </div>
+        </div>
+    </div>
+    <a href="{% url 'index' %}">Home</a>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+<script>
+
+    $(document).ready(function() {
+        $('#myTable').DataTable();
+    });
+
+</script>
+
+<script>
+    // Función para formatear los números en ambas tablas
+    const formatCells = (tableId) => {
+        const cells = document.querySelectorAll(`#${tableId} td.number-cell`);
+        cells.forEach(cell => {
+            const value = Number(cell.getAttribute('data-value'));
+            if (!isNaN(value)) {
+                // Usa toLocaleString para formatear correctamente
+                cell.textContent = value.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+            }
+        });
+    };
+
+    // Llama a la función para ambas tablas
+    document.addEventListener('DOMContentLoaded', () => {
+        formatCells('myTable');
+    });
+</script>
+</html>
