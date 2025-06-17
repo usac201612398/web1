@@ -110,7 +110,7 @@ urlpatterns = [
     
     path('reporte-pivote/', views.reporte_tabla_pivote, name='reporte_tabla_pivote'),
 
-    path("itemsenvios",views.itemsevios_list,name='itemsenvios_list'),
+    path("itemsenvios",views.itemsenvios_create,name='itemsenvios_list'),
     path('itemsenvios/new/', views.itemsenvios_create, name='itemsenvios_create'),
     path('itemsenvios/<int:pk>/edit/', views.itemsenvios_update, name='itemsenvios_update'),
     path('itemsenvios/<int:pk>/delete/', views.itemsenvios_delete, name='itemsenvios_delete'),
