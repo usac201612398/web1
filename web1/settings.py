@@ -75,7 +75,7 @@ MIDDLEWARE = [
     'django_auth_adfs.middleware.LoginRequiredMiddleware',
 ]
 
-#CUSTOM_FAILED_RESPONSE_VIEW = 'dot.path.to.custom.views.login_failed'
+CUSTOM_FAILED_RESPONSE_VIEW = 'dot.path.to.custom.views.login_failed'
 ROOT_URLCONF = 'web1.urls'
 
 TEMPLATES = [
@@ -106,14 +106,19 @@ client_secret =  'jbn8Q~dlmoXCud3hbtgbNplWmMvzA9eXJ~M-Oa4b'
 tenant_id = '2e932f25-355e-45b3-bd8b-764aaf3fd625'
 
 AUTH_ADFS = {
-    'AUDIENCE': client_id,
     'CLIENT_ID': client_id,
     'CLIENT_SECRET': client_secret,
-    'GROUPS_CLAIM': 'groups',   # usa groups, no roles
-    'MIRROR_GROUPS': False,     # evita que falle si no hay grupos
-    'USERNAME_CLAIM': 'upn',
-    'TENANT_ID': tenant_id,
+    'AUDIENCE': client_id,
     'RELYING_PARTY_ID': client_id,
+    'TENANT_ID': tenant_id,
+    'CLAIM_MAPPING': {
+        'first_name': 'given_name',
+        'last_name': 'family_name',
+        'email': 'email'  # o 'upn' si ya lo agregaste en Azure
+    },
+    'USERNAME_CLAIM': 'upn',  # puedes cambiarlo por 'email' si eres invitado
+    'GROUPS_CLAIM': 'groups',  # asegúrate que el token lo incluya
+    'MIRROR_GROUPS': False,     # evita fallos si no hay grupos
 }
 '''
 AUTH_ADFS = {
