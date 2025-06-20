@@ -102,9 +102,9 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 client_id = 'd27b7533-221a-4742-b79d-9450ff8ffe26'
-client_secret =  'jbn8Q~dlmoXCud3hbtgbNplWmMvzA9eXJ~M-Oa4b'
+client_secret =  'MkX8Q~zPl8IQ-Aqgs3fwk9Qz7NcO_Y22clVRUbO7'
 tenant_id = '2e932f25-355e-45b3-bd8b-764aaf3fd625'
-
+'''
 AUTH_ADFS = {
     'CLIENT_ID': client_id,
     'CLIENT_SECRET': client_secret,
@@ -133,7 +133,7 @@ AUTH_ADFS = {
     'TENANT_ID': tenant_id,
     'RELYING_PARTY_ID': client_id,
 }
-'''
+
 WSGI_APPLICATION = 'web1.wsgi.application'
 
 # Database
