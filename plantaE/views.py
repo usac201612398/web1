@@ -20,13 +20,12 @@ from django.contrib import messages
 from collections import defaultdict
 from django.db.models.functions import ExtractWeek, ExtractYear
 from django.views.decorators.http import require_GET
-from django.contrib.auth.decorators import login_required
 
-@login_required
+
+
 def vascula_monitor(request):
     return render(request, 'plantaE/vascula.html')
 
-@login_required
 def exportar_excel(request):
     if request.method == 'POST':
         opcion1 = request.POST.get('opcion1')
@@ -126,7 +125,6 @@ def exportar_excel(request):
 
     return render(request, 'plantaE/consulta_envios.html')
 
-@login_required
 def obtener_nombre_usuario(request):
     # Obtén el nombre de usuario del usuario autenticado
     now = datetime.datetime.now()
@@ -145,7 +143,6 @@ def obtener_nombre_usuario(request):
     adicionales = detallesEstructuras.objects.filter(finca=list(datos)[0]['finca']).values('cultivo').distinct('cultivo')
     return JsonResponse({'username': nombre_usuario,'fecha':fecha_,'adicionales':list(adicionales),'finca':list(datos)[0]['finca'] })
 
-@login_required
 def obtenerfecha_invFruta(request):
     # Obtén el nombre de usuario del usuario autenticado
     now = datetime.datetime.now()
@@ -161,7 +158,6 @@ def obtenerfecha_invFruta(request):
     fecha_= "{}-{}-{}".format(str(año),str(mes),str(dia))
     return JsonResponse({'fecha':fecha_})
 
-@login_required
 def load_dataUsuario(request):
     correo_id = request.GET.get('category_id')
     datos = usuariosAppFruta.objects.filter(correo=correo_id).values('finca', 'encargado')
@@ -169,7 +165,6 @@ def load_dataUsuario(request):
     adicionales_ = datosProduccion.objects.filter(finca=list(datos)[0]['finca']).values('orden').distinct('orden')
     return JsonResponse({'datos': list(datos),'correo':correo_id,'adicionales':list(adicionales),'ordenes':list(adicionales_)})
 
-@login_required
 def load_dataUsuario4(request):
     ordenSelect = request.GET.get('orden')
     cultivo_ = request.GET.get('cultivo')
@@ -180,7 +175,6 @@ def load_dataUsuario4(request):
     estructura = detallesEstructuras.objects.filter(cultivo=cultivo_,orden=ordenSelect,finca=finca_).values('estructura').distinct('estructura')
     return JsonResponse({'estructura': list(estructura),'variedad': list(variedad)})
 
-@login_required
 def load_dataUsuario2(request):
     ordenSelect = request.GET.get('category_id')
     cultivo_ = request.GET.get('cultivo')
@@ -212,7 +206,6 @@ def load_dataUsuario2(request):
         'ordenes': list(orden)
     })
 
-@login_required
 def load_dataUsuario3(request):
     cultivo_ = request.GET.get('category_id')
     finca_ = request.GET.get('finca')
@@ -238,7 +231,7 @@ def load_dataUsuario3(request):
     #variedad = cultivoxFinca.objects.filter(cultivo=list(cultivo)[0]['cultivo']).values('variedad')
     return JsonResponse({'datos': list(variedad),'cultivo': list(cultivo),'semana':semana_año_list})
 
-@login_required
+
 def pesos_list(request):
     today = timezone.now().date()
     salidas = Actpeso.objects.filter(fecha=today)
@@ -246,12 +239,10 @@ def pesos_list(request):
     
     return render(request, 'plantaE/pesos_list.html', {'registros': salidas})
 
-@login_required
 def pesos_detail(request, pk):
     salidas = get_object_or_404(Actpeso, pk=pk)
     return render(request, 'plantaE/pesos_detail.html', {'registros': salidas})
 
-@login_required
 def article_list(request):
 
     today = timezone.localtime(timezone.now()).date()
@@ -260,7 +251,7 @@ def article_list(request):
     salidas = salidas.order_by('-created_at')
     
     return render(request, 'plantaE/salidasFruta_list.html', {'registros': salidas})
-@login_required
+
 def pesos_delete(request, pk):
     salidas = get_object_or_404(Actpeso, pk=pk)
     if request.method == 'POST':
@@ -268,7 +259,6 @@ def pesos_delete(request, pk):
         return redirect('pesos_list')
     return render(request, 'plantaE/pesos_confirm_delete.html', {'registros': salidas})
 
-@login_required
 def article_listValle(request):
     
     today = timezone.localtime(timezone.now()).date()
@@ -278,12 +268,10 @@ def article_listValle(request):
     
     return render(request, 'plantaE/salidasFruta_listValle.html', {'registros': salidas})
 
-@login_required
 def article_detail(request, pk):
     salidas = get_object_or_404(salidasFruta, pk=pk)
     return render(request, 'plantaE/salidasFruta_detail.html', {'registros': salidas})
 
-@login_required
 def guardar_plantilla(request):
     data = json.loads(request.body)
     mensaje = data['array']
@@ -303,7 +291,6 @@ def guardar_plantilla(request):
     
     return JsonResponse({'mensaje':mensaje})
 
-@login_required
 def guardar_plantillaRio(request):
     data = json.loads(request.body)
     mensaje = data['array']
@@ -314,7 +301,6 @@ def guardar_plantillaRio(request):
         
     return JsonResponse({'mensaje':mensaje})
 
-@login_required
 def inventarioProd_grabarplantilla(request):
     data = json.loads(request.body)
     mensaje = data['array']
@@ -351,7 +337,6 @@ def inventarioProd_grabarplantilla(request):
 
     return JsonResponse({'mensaje':mensaje,'msm': " Listo, se tiene una merma de: " + str(pormerma) + "%"})
 
-@login_required
 def cuadrar_RioDia(request):
     today = timezone.now().date()
     nombre_usuario = request.user.username
@@ -427,7 +412,6 @@ def cuadrar_RioDia(request):
 
     return render(request, 'plantaE/salidasFruta_cuadre.html', {'registros': registros_finales, 'registros2': registros_finales2})
 
-@login_required
 def cuadrar_ValleDia(request):
 
     today = timezone.now().date()
@@ -506,7 +490,6 @@ def cuadrar_ValleDia(request):
 
     return render(request, 'plantaE/salidasFruta_cuadreValle.html', {'registros': registros_finales, 'registros2': registros_finales2})
 
-@login_required
 def guardar_plantillaValle(request):
     data = json.loads(request.body)
     mensaje = data['array']
@@ -548,7 +531,6 @@ def guardar_plantillaValle(request):
     
     return JsonResponse({'mensaje':resultado_lista})                  
 
-@login_required
 def article_create_plantilla(request):
     
     now = datetime.datetime.now()
@@ -576,7 +558,6 @@ def article_create_plantilla(request):
     
     return render(request, 'plantaE/salidasFruta_envio.html',context)
 
-@login_required
 def article_create_plantillaValle(request):
     
     now = datetime.datetime.now()
@@ -619,7 +600,6 @@ def article_create_plantillaValle(request):
     
     return render(request, 'plantaE/salidasFruta_envioValle.html',context)
 
-@login_required
 def article_create(request):
     if request.method == 'POST':
         form = salidasFrutaForm(request.POST)
@@ -637,7 +617,6 @@ def article_create(request):
         form = salidasFrutaForm()
     return render(request, 'plantaE/salidasFruta_form.html', {'form': form})
 
-@login_required
 def article_formPlantilla(request):
     now = datetime.datetime.now()
     fecha = now.date()
@@ -664,7 +643,7 @@ def article_formPlantilla(request):
     
     return render(request, 'plantaE/salidasFruta_formplantilla.html',context)
 
-@login_required
+
 def article_update(request, pk):
     salidas = get_object_or_404(salidasFruta, pk=pk)
     if request.method == 'POST':
@@ -676,7 +655,6 @@ def article_update(request, pk):
         form = salidasFrutaForm(instance=salidas)
     return render(request, 'plantaE/salidasFruta_form.html', {'form': form})
 
-@login_required
 def article_delete(request, pk):
     salidas = get_object_or_404(salidasFruta, pk=pk)
     if salidas.recepcion is not None:
@@ -698,7 +676,6 @@ def article_delete(request, pk):
         return redirect('salidasFruta_list')
     return render(request, 'plantaE/salidasFruta_confirm_delete.html', {'registros': salidas})
 
-@login_required
 def article_deleteValle(request, pk):
 
     salidas = get_object_or_404(salidasFruta, pk=pk)
@@ -723,7 +700,6 @@ def article_deleteValle(request, pk):
         return redirect('salidasFruta_listValle')
     return render(request, 'plantaE/salidasFruta_confirm_deleteValle.html', {'registros': salidas})
 
-@login_required
 def acumFruta_list(request):
     today = timezone.localtime(timezone.now()).date()
     nombre_usuario = request.user.username
@@ -734,12 +710,10 @@ def acumFruta_list(request):
     
     return render(request, 'plantaE/AcumFrutaDia_list.html', {'registros': salidas})
 
-@login_required
 def acumFruta_detail(request, pk):
     salidas = get_object_or_404(AcumFruta, pk=pk)
     return render(request, 'plantaE/AcumFrutaDia_detail.html', {'registros': salidas})
 
-@login_required
 def  acumFruta_create(request):
     if request.method == 'POST':
         form = acumFrutaForm(request.POST)
@@ -757,7 +731,6 @@ def  acumFruta_create(request):
         form = acumFrutaForm()
     return render(request, 'plantaE/AcumFrutaDia_form.html', {'form': form})
 
-@login_required
 def acumFruta_update(request, pk):
     salidas = get_object_or_404(AcumFruta, pk=pk)
     if request.method == 'POST':
@@ -769,7 +742,6 @@ def acumFruta_update(request, pk):
         form = acumFrutaForm(instance=salidas)
     return render(request, 'plantaE/AcumFrutaDia_form.html', {'form': form})
 
-@login_required
 def acumFruta_delete(request, pk):
 
     salidas = get_object_or_404(AcumFruta, pk=pk)
@@ -795,7 +767,6 @@ def acumFruta_delete(request, pk):
         return redirect('acumFruta_list')
     return render(request, 'plantaE/acumFruta_confirm_delete.html', {'registros': salidas})
 
-@login_required
 def procesarrecepcion(request):
 
     data = json.loads(request.body)
@@ -842,7 +813,6 @@ def procesarrecepcion(request):
     
     return JsonResponse({'mensaje':mensaje,'registros':registros})   
 
-@login_required
 def recepciones_list(request):
 
     today = timezone.localtime(timezone.now()).date()
@@ -871,7 +841,6 @@ def recepciones_list(request):
 
     return render(request, 'plantaE/recepciones_list.html', {'registros': salidas})
 
-@login_required
 def recepcionesFruta_delete(request, pk):
     salidas = get_object_or_404(detallerec, pk=pk)# Verificar si existen registros en detallerecaux con la misma recepción
     existe_en_aux = detallerecaux.objects.filter(recepcion=salidas.recepcion).exists()
@@ -907,7 +876,6 @@ def recepcionesFruta_delete(request, pk):
         return redirect('recepcionesFruta_list')
     return render(request, 'plantaE/recepciones_confirm_delete.html', {'registros': salidas})
 
-@login_required
 def envioslocal_list(request):
 
     today = timezone.localtime(timezone.now()).date()
@@ -918,12 +886,10 @@ def envioslocal_list(request):
 
     return render(request, 'plantaE/envioslocal_list.html', {'registros': salidas})
 
-@login_required
 def envioslocal_detail(request, pk):
     salidas = get_object_or_404(enviosrec, pk=pk)
     return render(request, 'plantaE/envioslocal_detail.html', {'registros': salidas})
 
-@login_required
 def envioslocal_delete(request, pk):
     # Obtener el objeto de envío
     salidas = get_object_or_404(enviosrec, pk=pk)
@@ -954,7 +920,6 @@ def envioslocal_delete(request, pk):
 
     return render(request, 'plantaE/envioslocal_confirm_delete.html', {'registros': salidas})
 
-@login_required
 def recepciones_reporteAcum(request):
     today = timezone.now().date()
 
@@ -1025,7 +990,6 @@ def recepciones_reporteAcum(request):
 
     return render(request, 'plantaE/recepciones_reporteAcum.html', {'registros': registros_finales, 'registros2': registros_finales2})
 
-@login_required
 def recepciones_reporteAcumKgm2Orden(request):
 
     today = timezone.now().date()
@@ -1114,7 +1078,6 @@ def recepciones_reporteAcumKgm2Orden(request):
 
     return render(request, 'plantaE/recepciones_reporteAcumKgm2Orden.html', {'registros': registros_finales})
 
-@login_required
 def recepciones_reporteAcumKgm2Estruc(request):
 
     today = timezone.now().date()
@@ -1205,7 +1168,6 @@ def recepciones_reporteAcumKgm2Estruc(request):
 
     return render(request, 'plantaE/recepciones_reporteAcumKgm2Estruc.html', {'registros': registros_finales})
 
-@login_required
 def recepciones_reporteAcumKgm2Variedad(request):
 
     today = timezone.now().date()
@@ -1296,7 +1258,6 @@ def recepciones_reporteAcumKgm2Variedad(request):
 
     return render(request, 'plantaE/recepciones_reporteAcumKgm2Variedad.html', {'registros': registros_finales})
 
-@login_required
 def recepciones_reporteAcumSem(request):
 
     today = timezone.now().date()
@@ -1346,7 +1307,6 @@ def recepciones_reporteAcumSem(request):
         'registros2': registros_finales2
     })
 
-@login_required
 def recepciones_reporteAcumSemPublic(request):
     today = timezone.now().date()
     current_week = today.isocalendar()[1]  # Obtener el número de semana actual
@@ -1407,21 +1367,18 @@ def recepciones_reporteAcumSemPublic(request):
         'registros2': registros_finales2
     })
 
-@login_required
 def recepciones_reportecurva(request):
     nombre_usuario = request.user.username
     #mensaje = request.POST.get('array')
     
     return render(request, 'plantaE/recepciones_reportegrafica.html', {'usuario': nombre_usuario})
 
-@login_required
 def recepciones_reportecurva2(request):
     nombre_usuario = request.user.username
     #mensaje = request.POST.get('array')
     
     return render(request, 'plantaE/recepciones_reportegraficaPublic.html', {'usuario': nombre_usuario})
 
-@login_required
 def obtener_registros_y_graficar(filtros):
     registros = AcumFruta.objects.exclude('Anulado').filter(**filtros)
     
@@ -1477,7 +1434,6 @@ def obtener_registros_y_graficar(filtros):
 
     return imagen_base64, registros_finales
 
-@login_required
 def graficas(request):
     data = json.loads(request.body)
     mensaje = data['array']
@@ -1516,7 +1472,7 @@ def graficas(request):
             'dataframe': dataframe
         })
 
-@login_required
+
 def boletas_list(request):
     #today = timezone.now().date()
     #salidas = Recepciones.objects.filter(fecha=today)
@@ -1524,8 +1480,6 @@ def boletas_list(request):
     salidas = salidas.order_by('-boleta')
      
     return render(request, 'plantaE/boletas_list.html', {'registros': salidas})
-
-@login_required
 
 def boletas_update(request, pk):
     salidas = get_object_or_404(Boletas, pk=pk)
@@ -1540,12 +1494,10 @@ def boletas_update(request, pk):
         form = boletasForm(instance=salidas)
     return render(request, 'plantaE/boletas_form.html', {'form': form})
 
-@login_required
 def boletas_detail(request, pk):
     salidas = get_object_or_404(Boletas, pk=pk)
     return render(request, 'plantaE/boletas_detail.html', {'registros': salidas})
 
-@login_required
 def boletas_delete(request, pk):
     salidas = get_object_or_404(Boletas, pk=pk)
     boletas_relacionadas = Boletas.objects.filter(boleta=salidas.boleta)
@@ -1611,12 +1563,11 @@ def boletas_delete(request, pk):
 
     return render(request, 'plantaE/boletas_confirm_delete.html', {'registros': salidas})
 
-@login_required
+
 def recepciones_detail(request, pk):
     salidas = get_object_or_404(detallerec, pk=pk)
     return render(request, 'plantaE/recepciones_detail.html', {'registros': salidas})
 
-@login_required
 def recepciones_update(request, pk):
     salidas = get_object_or_404(detallerec, pk=pk)
     if request.method == 'POST':
@@ -1630,7 +1581,6 @@ def recepciones_update(request, pk):
         form = recepcionesForm(instance=salidas)
     return render(request, 'plantaE/recepciones_form.html', {'form': form})
 
-@login_required
 def ccalidad_list(request):
     today = timezone.localtime(timezone.now()).date()
     current_month = today.month
@@ -1640,12 +1590,10 @@ def ccalidad_list(request):
 
     return render(request, 'plantaE/ccalidad_list.html', {'registros': salidas})
 
-@login_required
 def ccalidad_detail(request, pk):
     salidas = get_object_or_404(Ccalidad, pk=pk)
     return render(request, 'plantaE/ccalidad_detail.html', {'registros': salidas})
 
-@login_required
 def ccalidad_create(request):
     if request.method == 'POST':
         form = ccalidadForm(request.POST)
@@ -1663,7 +1611,6 @@ def ccalidad_create(request):
         form = ccalidadForm()
     return render(request, 'plantaE/ccalidad_form.html', {'form': form})
 
-@login_required
 def ccalidad_update(request, pk):
     salidas = get_object_or_404(Ccalidad, pk=pk)
     if request.method == 'POST':
@@ -1676,14 +1623,13 @@ def ccalidad_update(request, pk):
         
     return render(request, 'plantaE/ccalidad_form_edit.html', {'form': form})
 
-@login_required
 def ccalidad_update_aux(request):
     pk = request.GET.get('pk')
     salidas = get_object_or_404(Ccalidad, pk=pk)
     causa_rechazo = causasRechazo.objects.all().values('causa')
     return JsonResponse({'llave': salidas.llave,'recepcion':salidas.recepcion,'causa_select':salidas.causarechazo,'causas':list(causa_rechazo)})
     
-@login_required
+
 def ccalidad_delete(request, pk):
     salidas = get_object_or_404(Ccalidad, pk=pk)
 
@@ -1694,7 +1640,6 @@ def ccalidad_delete(request, pk):
         messages.success(request, "Registro anulado correctamente.")
     return render(request, 'plantaE/ccalidad_confirm_delete.html', {'registros': salidas})
 
-@login_required
 def obtener_llave_recepcion(request):
     # Obtén los criterios únicos filtrando por 'recepcion' mayor o igual a 2875
     llave_recepcion = detallerec.objects.filter(recepcion__gte=2875).values('criterio').distinct()
@@ -1766,7 +1711,6 @@ def obtener_llave_recepcion(request):
         'datos_filtrados': datos_modificados  # Aquí se agregan las claves filtradas
     })
 
-@login_required
 def load_ccalidadparam(request):
     llave_recepcion = request.GET.get('category_id')
     datos = detallerec.objects.filter(criterio=llave_recepcion).values('recepcion').distinct('recepcion')
@@ -1779,19 +1723,16 @@ def load_ccalidadparam(request):
     
     return JsonResponse({'datos': list(datos),'valor':valor})
 
-@login_required
 def inventarioProd_list(request):
     today = timezone.localtime(timezone.now()).date()
     #salidas = Recepciones.objects.filter(fecha=today)
     salidas = inventarioProdTerm.objects.filter(fecha=today,categoria="Exportación").exclude(status='Anulado')
     return render(request, 'plantaE/inventarioProd_list.html', {'registros': salidas})
 
-@login_required
 def inventarioProd_detail(request, pk):
     salidas = get_object_or_404(inventarioProdTerm, pk=pk)
     return render(request, 'plantaE/inventarioProd_detail.html', {'registros': salidas})
 
-@login_required
 def acumFruta_consulta(request):
 
     if request.method == 'POST':
@@ -1836,7 +1777,6 @@ def acumFruta_consulta(request):
         return JsonResponse({'datos': registros_finales,'opcion1':opcion1,'opcion2':opcion2,'resumen':registros_finales2}, safe=False)
     return render(request, 'plantaE/AcumFrutaDia_list.html')
 
-@login_required
 def acumFruta_consultaValle(request):
     
     if request.method == 'POST':
@@ -1880,7 +1820,6 @@ def acumFruta_consultaValle(request):
         return JsonResponse({'datos': registros_finales,'opcion1':opcion1,'opcion2':opcion2,'resumen':registros_finales2}, safe=False)
     return render(request, 'plantaE/AcumFrutaDia_listValle.html')
 
-@login_required
 def validaroventa(request):
     # Recibe los datos desde el body de la solicitud
     data = json.loads(request.body)
@@ -1899,7 +1838,6 @@ def validaroventa(request):
     # Si no se encontraron contenedores
         return JsonResponse({'msm': "No se encontraron contenedores para cerrar"}, safe=False)
 
-@login_required
 def generate_packing_list_pdf(request):
     # Obtén el parámetro 'contenedor' de la URL (GET)
     contenedor = request.GET.get('contenedor')
@@ -1966,8 +1904,7 @@ def generate_packing_list_pdf(request):
     else:
         # Si no hay datos, devuelve una respuesta vacía o de error
         return JsonResponse({'error': 'No hay datos disponibles para esta semana'}, status=400)
-
-@login_required     
+       
 def inventarioProd_create(request):
     if request.method == 'POST':
         opcion1 = request.POST.get('opcion1')
@@ -1994,7 +1931,6 @@ def inventarioProd_create(request):
         form = inventarioFrutaForm()
     return render(request, 'plantaE/inventarioProd_form.html', {'form': form})
 '''
-@login_required
 def inventarioProd_delete(request, pk):
     salidas = get_object_or_404(inventarioProdTerm, pk=pk)
     salidasaux = inventarioProdTermAux.objects.filter(inventarioreg=salidas.registro)
@@ -2012,7 +1948,6 @@ def inventarioProd_delete(request, pk):
         return redirect('inventarioProd_list')
     return render(request, 'plantaE/inventarioProd_confirm_delete.html', {'registros': salidas})
 
-@login_required
 def inventarioProd_update(request, pk):
     salidas = get_object_or_404(inventarioProdTerm, pk=pk)
     if request.method == 'POST':
@@ -2025,7 +1960,6 @@ def inventarioProd_update(request, pk):
         
     return render(request, 'plantaE/inventarioProd_form_edit.html', {'form': form})
 
-@login_required
 def load_inventarioProdparam(request):
     cultivo_ = request.GET.get('campo1')
     categoria_ = request.GET.get('campo2')
@@ -2035,11 +1969,9 @@ def load_inventarioProdparam(request):
     
     return JsonResponse({'datos': list(datos),'cultivo':cultivo_,'categoria':categoria_})
 
-@login_required
 def plantaEhomepage(request):
     return render(request,'plantaE/plantaE_home.html')
 
-@login_required
 def reporteInventario(request):
     opcion1 = timezone.now().date()
 
@@ -2105,7 +2037,6 @@ def reporteInventario(request):
 
     return render(request, 'plantaE/inventarioProd_reporteInv.html', context)
 
-@login_required
 def contenedorpacking_list(request):
     opcion1 = timezone.now().date()
 
@@ -2161,7 +2092,6 @@ def contenedorpacking_list(request):
 
     return render(request, 'plantaE/inventarioProd_packinglist.html', context)
 
-@login_required
 def contenedorpacking_list_detail(request):
 
     # Filtra tus datos según la opción seleccionada
@@ -2169,7 +2099,6 @@ def contenedorpacking_list_detail(request):
 
     return render(request, 'plantaE/inventarioProd_packinglist_detail.html', {'data':contenedores})
 
-@login_required
 def packinglist_update(request, pk):
     salidas = get_object_or_404(salidacontenedores, pk=pk)
     if request.method == 'POST':
@@ -2181,7 +2110,6 @@ def packinglist_update(request, pk):
         form = salidacontenedoresForm(instance=salidas)
     return render(request, 'plantaE/inventarioProd_packinglist_form.html', {'form': form})
 
-@login_required
 def packinglist_delete(request, pk):
     salidas = get_object_or_404(salidacontenedores, pk=pk)
 
@@ -2212,7 +2140,6 @@ def packinglist_delete(request, pk):
 
     return render(request, 'plantaE/inventarioProd_packinglist_confirm_delete.html', {'registros': salidas})
 
-@login_required
 def procesarinvprodconten(request):
 
     data = json.loads(request.body)
@@ -2246,7 +2173,7 @@ def procesarinvprodconten(request):
     
     return JsonResponse({'mensaje':mensaje,'registros':registros})   
 
-@login_required
+
 def reporte_tabla_pivote(request):
     filtros_get = {
         'finca': request.GET.get('finca'),
@@ -2329,7 +2256,6 @@ def reporte_tabla_pivote(request):
         'request': request
     })
 
-@login_required
 def procesarinvprodcontenv2(request):
     data = json.loads(request.body)
     mensaje = data['array']
@@ -2479,7 +2405,6 @@ def procesarinvprodcontenv2(request):
         'usados' : usados_data
     })
 
-@login_required
 def cargacontenedores_listv2(request):
 
     today = timezone.now().date()
@@ -2551,7 +2476,6 @@ def cargacontenedores_listv2(request):
 
     return render(request, 'plantaE/inventarioProd_ccontenedor.html', {'registros': registros_agrupados, 'registros_json':registros_json})
 
-@login_required
 def cargacontenedores_list(request):
     today = timezone.now().date()
     
@@ -2580,7 +2504,6 @@ def cargacontenedores_list(request):
     # Retornar las salidas que cumplen con la condición (cajas > 0)
     return render(request, 'plantaE/inventarioProd_contenedores.html', {'registros': salidas})
 
-@login_required
 def inventariogeneral_list(request):
     today = timezone.now().date()
 
@@ -2645,7 +2568,7 @@ def inventariogeneral_list(request):
     # Pasar los registros agrupados al renderizado de la plantilla
     return render(request, 'plantaE/inventarioProd_inventariogeneral.html', {'registros': registros_agrupados,'registros_json':registros_json})
 
-@login_required
+
 def dashboard_acumfruta(request):
     # Filtros desde GET
     filtros_get = {
@@ -2689,7 +2612,7 @@ def dashboard_acumfruta(request):
 
     return render(request, 'plantaE/dashboard_acumfruta.html', context)
 
-@login_required
+
 def get_ordenes_por_finca(request):
     finca = request.POST.get('finca')
     if finca:
@@ -2701,7 +2624,7 @@ def get_ordenes_por_finca(request):
         return JsonResponse({'ordenes': list(ordenes)})
     return JsonResponse({'ordenes': []})
 
-@login_required
+
 def get_estructuras_por_orden(request):
     orden = request.POST.get('orden')
     if orden:
@@ -2718,7 +2641,6 @@ def get_estructuras_por_orden(request):
         return JsonResponse({'estructuras': list(estructuras), 'cultivos':list(cultivos)})
     return JsonResponse({'estructuras': []})
 
-@login_required
 def get_variedades_por_estructura(request):
     estructura = request.POST.get('estructura')
     orden = request.POST.get('orden')
@@ -2731,11 +2653,12 @@ def get_variedades_por_estructura(request):
         return JsonResponse({'variedad': list(variedades)})
     return JsonResponse({'variedad': []})
 
-@login_required
+
+
 def formar_clave(finca, cultivo):
     return (finca.strip().upper(), cultivo.strip().upper())
 
-@login_required
+
 def aprovechamientos(request):
     hoy = timezone.now().date()
     semana_actual = hoy.isocalendar()[1]
@@ -2839,7 +2762,6 @@ def aprovechamientos(request):
         'detalle_debug': detalle_debug_json
     })
 
-@login_required
 def inventariogeneralfruta_list(request):
     today = timezone.now().date()
 
@@ -2912,7 +2834,6 @@ def inventariogeneralfruta_list(request):
     # Pasar los registros agrupados al renderizado de la plantilla
     return render(request, 'plantaE/inventarioProd_inventariogeneralfruta.html', {'registros': registros_agrupados})
 
-@login_required
 def load_contenedores(request):
     now = datetime.datetime.now()
     fecha = now.date()
@@ -2928,20 +2849,17 @@ def load_contenedores(request):
 
     return JsonResponse({'adicionales':list(adicionales), 'fecha': fecha_})
 
-@login_required
 def escanearbarras(request):
     
     context = {'msm': 'Listo.'}
     return render(request, 'plantaE/escanearbarras.html',context)
 
-@login_required
 def contenedores_list(request):
     salidas = contenedores.objects.exclude(status='Cerrado')  # Excluye los que tienen status 'Cerrado'
     salidas = salidas.order_by('-created_at')
     
     return render(request, 'plantaE/contenedores_list.html', {'registros': salidas})
 
-@login_required
 def contenedores_delete(request, pk):
     salidas = get_object_or_404(contenedores, pk=pk)
     if request.method == 'POST':
@@ -2949,7 +2867,6 @@ def contenedores_delete(request, pk):
         return redirect('contenedores_list')
     return render(request, 'plantaE/contenedores_confirm_delete.html', {'registros': salidas})
 
-@login_required
 def contenedores_create(request):
     if request.method == 'POST':
         form = contenedoresForm(request.POST)
@@ -2982,7 +2899,6 @@ def contenedores_create(request):
         'ultimo_contenedor': ultimo_contenedor,
     })
 
-@login_required
 def contenedores_update(request, pk):
     salidas = get_object_or_404(contenedores, pk=pk)
     if request.method == 'POST':
@@ -2994,14 +2910,12 @@ def contenedores_update(request, pk):
         form = contenedoresForm(instance=salidas)
     return render(request, 'plantaE/contenedores_form.html', {'form': form})
 
-@login_required
 def items_list(request):
     salidas = productoTerm.objects.all() # Excluye los que tienen status 'Cerrado'
     salidas = salidas.order_by('-registro')
     
     return render(request, 'plantaE/items_list.html', {'registros': salidas})
 
-@login_required
 def items_delete(request, pk):
     salidas = get_object_or_404(productoTerm, pk=pk)
     if request.method == 'POST':
@@ -3009,7 +2923,6 @@ def items_delete(request, pk):
         return redirect('items_list')
     return render(request, 'plantaE/items_confirm_delete.html', {'registros': salidas})
 
-@login_required
 def items_create(request):
     if request.method == 'POST':
         form = itemsForm(request.POST)
@@ -3027,7 +2940,6 @@ def items_create(request):
         form = itemsForm()
     return render(request, 'plantaE/items_form.html', {'form': form})
 
-@login_required
 def items_update(request, pk):
     salidas = get_object_or_404(productoTerm, pk=pk)
     if request.method == 'POST':
@@ -3039,14 +2951,12 @@ def items_update(request, pk):
         form = itemsForm(instance=salidas)
     return render(request, 'plantaE/items_form.html', {'form': form})
 
-@login_required
 def itemsenvios_list(request):
     salidas = paramenvlocales.objects.all() # Excluye los que tienen status 'Cerrado'
     salidas = salidas.order_by('-registro')
     
     return render(request, 'plantaE/itemsenvios_list.html', {'registros': salidas})
 
-@login_required
 def itemsenvios_delete(request, pk):
     salidas = get_object_or_404(paramenvlocales, pk=pk)
     if request.method == 'POST':
@@ -3054,7 +2964,6 @@ def itemsenvios_delete(request, pk):
         return redirect('itemsenvios_list')
     return render(request, 'plantaE/itemsenvios_confirm_delete.html', {'registros': salidas})
 
-@login_required
 def itemsenvios_create(request):
     if request.method == 'POST':
         form = itemsenviosForm(request.POST)
@@ -3072,7 +2981,6 @@ def itemsenvios_create(request):
         form = itemsenviosForm()
     return render(request, 'plantaE/itemsenvios_form.html', {'form': form})
 
-@login_required
 def itemsenvios_update(request, pk):
     salidas = get_object_or_404(paramenvlocales, pk=pk)
     if request.method == 'POST':
