@@ -105,6 +105,20 @@ client_id = 'd27b7533-221a-4742-b79d-9450ff8ffe26'
 client_secret =  'MkX8Q~zPl8IQ-Aqgs3fwk9Qz7NcO_Y22clVRUbO7'
 tenant_id = '2e932f25-355e-45b3-bd8b-764aaf3fd625'
 '''
+
+AUTH_ADFS = {
+
+    'AUDIENCE': client_id,
+    'CLIENT_ID': client_id,
+    'CLIENT_SECRET': client_secret,
+    
+    'GROUPS_CLAIM': 'roles',
+    'MIRROR_GROUPS': True,
+    'USERNAME_CLAIM': 'upn',
+    'TENANT_ID': tenant_id,
+    'RELYING_PARTY_ID': client_id,
+}
+'''
 AUTH_ADFS = {
     'CLIENT_ID': client_id,
     'CLIENT_SECRET': client_secret,
@@ -120,7 +134,6 @@ AUTH_ADFS = {
     'GROUPS_CLAIM': 'groups',  # asegúrate que el token lo incluya
     'MIRROR_GROUPS': False,     # evita fallos si no hay grupos
 }
-'''
 import logging
 
 LOGGING = {
@@ -138,18 +151,7 @@ LOGGING = {
     },
 }
 
-AUTH_ADFS = {
 
-    'AUDIENCE': client_id,
-    'CLIENT_ID': client_id,
-    'CLIENT_SECRET': client_secret,
-    
-    'GROUPS_CLAIM': 'roles',
-    'MIRROR_GROUPS': True,
-    'USERNAME_CLAIM': 'upn',
-    'TENANT_ID': tenant_id,
-    'RELYING_PARTY_ID': client_id,
-}
 
 WSGI_APPLICATION = 'web1.wsgi.application'
 
