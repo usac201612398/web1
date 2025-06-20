@@ -121,6 +121,23 @@ AUTH_ADFS = {
     'MIRROR_GROUPS': False,     # evita fallos si no hay grupos
 }
 '''
+import logging
+
+LOGGING = {
+    'version': 1,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django_auth_adfs': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}
+
 AUTH_ADFS = {
 
     'AUDIENCE': client_id,
