@@ -21,8 +21,6 @@ from collections import defaultdict
 from django.db.models.functions import ExtractWeek, ExtractYear
 from django.views.decorators.http import require_GET
 
-
-
 def vascula_monitor(request):
     return render(request, 'plantaE/vascula.html')
 
