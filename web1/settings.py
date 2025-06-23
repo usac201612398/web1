@@ -78,6 +78,10 @@ MIDDLEWARE = [
 CUSTOM_FAILED_RESPONSE_VIEW = 'dot.path.to.custom.views.login_failed'
 ROOT_URLCONF = 'web1.urls'
 
+
+# Agrega una pequeña tolerancia de desviación del reloj (por ejemplo, 5 minutos = 300 segundos)
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -118,7 +122,7 @@ AUTH_ADFS = {
     'TENANT_ID': tenant_id,
     'RELYING_PARTY_ID': client_id,
 }
-'''
+
 AUTH_ADFS = {
     'CLIENT_ID': client_id,
     'CLIENT_SECRET': client_secret,
@@ -134,6 +138,26 @@ AUTH_ADFS = {
     'GROUPS_CLAIM': 'groups',  # asegúrate que el token lo incluya
     'MIRROR_GROUPS': False,     # evita fallos si no hay grupos
 }
+
+'''
+AUTH_ADFS = {
+    'CLIENT_ID': client_id,
+    'CLIENT_SECRET': client_secret,
+    'AUDIENCE': client_id,
+    'RELYING_PARTY_ID': client_id,
+    'TENANT_ID': tenant_id,
+    'CLAIM_MAPPING': {
+        'first_name': 'given_name',
+        'last_name': 'family_name',
+        'email': 'email'   # o 'upn' si ya lo agregaste en Azure
+    },
+    'USERNAME_CLAIM': 'upn',    # puedes cambiarlo por 'email' si eres invitado
+    'GROUPS_CLAIM': 'groups',   # asegúrate que el token lo incluya
+    'MIRROR_GROUPS': False,     # evita fallos si no hay grupos
+    # Agrega una pequeña tolerancia de desviación del reloj (por ejemplo, 5 minutos = 300 segundos)
+    'JWT_LEEWAY': 300, # <<<<< ESTA ES LA CONFIGURACIÓN CORRECTA PARA django_auth_adfs
+}
+
 import logging
 
 LOGGING = {
