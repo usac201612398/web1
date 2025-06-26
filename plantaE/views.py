@@ -1846,7 +1846,7 @@ def generate_packing_list_pdf(request):
     semana_actual = hoy.isocalendar()[1]  # Semana actual
 
     # Obtiene el primer contenedor que coincida con los datos
-    infoconten = contenedores.objects.exclude(status="Anulado").order_by("registro").filter(contenedor=contenedor).first()
+    infoconten = contenedores.objects.exclude(status="Anulado").exclude(status="Cerrado").order_by("registro").filter(contenedor=contenedor).first()
     if not infoconten:
         return JsonResponse({'error': 'Contenedor no encontrado'}, status=404)
 
