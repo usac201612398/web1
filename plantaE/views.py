@@ -2408,11 +2408,15 @@ def cargacontenedores_listv2(request):
     today = timezone.now().date()
 
     # Obtener todas las salidas de inventario y salidas de contenedores
-    salidas = inventarioProdTerm.objects.filter(fecha__lte=today).exclude(status='Anulado')
+    salidas = inventarioProdTerm.objects.filter(
+        fecha__lte=today,
+        categoria="Exportación"
+    ).filter(
+        Q(status='') | Q(status__isnull=True)
+    ).order_by('registro')
     salidas2 = inventarioProdTermAux.objects.exclude(Q(status='En proceso') | Q(status='Anulado'))
 
     # Filtrar las salidas de inventario para las que tienen categoría 'Exportación' y sin 'status'
-    salidas = salidas.filter(categoria="Exportación").order_by('registro').exclude(status__in=['En proceso', 'Cerrado'])
 
 
     # Excluir los registros de salidas2 donde el contenedor esté vacío
@@ -2506,11 +2510,15 @@ def inventariogeneral_list(request):
     today = timezone.now().date()
 
     # Obtener todas las salidas de inventario y salidas de contenedores
-    salidas = inventarioProdTerm.objects.filter(fecha__lte=today).exclude(status='Anulado')
+    salidas = inventarioProdTerm.objects.filter(
+        fecha__lte=today,
+        categoria="Exportación"
+    ).filter(
+        Q(status='') | Q(status__isnull=True)
+    ).order_by('registro')
     salidas2 = inventarioProdTermAux.objects.exclude(Q(status='En proceso') | Q(status='Anulado'))
 
     # Filtrar las salidas de inventario para las que tienen categoría 'Exportación' y sin 'status'
-    salidas = salidas.filter(categoria="Exportación").order_by('registro').exclude(status='En proceso')
 
     # Excluir los registros de salidas2 donde el contenedor esté vacío
     #salidas2 = salidas2.filter(registro__gte=2799)
