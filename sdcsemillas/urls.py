@@ -7,8 +7,7 @@ app_min = 'sdcsemillas'
 
 urlpatterns = [
 
-    path('', views.index, name='index'),  # Página principal
-    
+#    path('', views.index, name='index'),  # Página principal
     path("lotes",views.lotes_list,name='lotes_list'),
     path('lotes/<int:pk>/', views.lotes_detail, name='lotes_detail'),
     path('lotes/new/', views.lotes_create, name='lotes_create'),
