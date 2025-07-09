@@ -9,8 +9,7 @@ from django.contrib import messages
 # Create your views here.
 def lotes_list(request):
     today = timezone.localtime(timezone.now()).date()
-    nombre_usuario = request.user.username
-    salidas = lotes.objects.filter(fecha=today,correo=nombre_usuario, status__isnull=True)
+    salidas = lotes.objects.filter(fecha=today, status__isnull=True)
     return render(request, 'sdcsemillas/lotes_list.html', {'registros': salidas})
 
 def lotes_detail(request, pk):
