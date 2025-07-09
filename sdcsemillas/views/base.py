@@ -7,12 +7,12 @@ class BaseListView(ListView):
 
 class BaseCreateView(CreateView):
     template_name = 'form.html'
-    success_url = reverse_lazy('home')  # cambiar luego
+#    success_url = reverse_lazy('home')  # cambiar luego
 
 class BaseUpdateView(UpdateView):
     template_name = 'form.html'
-    success_url = reverse_lazy('home')
+#    success_url = reverse_lazy('home')
 
 class BaseDeleteView(DeleteView):
     template_name = 'confirm_delete.html'
-    success_url = reverse_lazy('home')
+#    success_url = reverse_lazy('home')
