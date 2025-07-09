@@ -29,8 +29,9 @@ class lotesForm(forms.ModelForm):
     metodo_prod = forms.ChoiceField(choices=op_metodos,widget=forms.Select(attrs={'class': 'my-input'}))
     target = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'})) 
     surface = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input'}))
+    lote_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  
 
     class Meta:
     
         model = lotes
-        fields = ['fecha_pl','lote_code','variedad_code','apodo_variedad','cultivo', 'ubicacion', 'estructura', 'plantas_padre','plantas_madre','harvest_code','status','siembra_madre','metodo_prod','target','surface']
+        fields = ['fecha_pl','lote_code','variedad_code','apodo_variedad','cultivo', 'ubicacion', 'estructura', 'plantas_padre','plantas_madre','harvest_code','status','siembra_madre','metodo_prod','target','surface','observaciones']

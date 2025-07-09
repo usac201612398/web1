@@ -12,7 +12,7 @@ class lotes(models.Model):
     cultivo = models.CharField(max_length= 50, blank = True, null =  True)
     ubicación = models.CharField(max_length= 50, blank = True, null =  True)
     estructura = models.CharField(max_length= 50, blank = True, null =  True)
-    platas_padre = models.CharField(max_length= 50, blank = True, null =  True)
+    plantas_padre = models.CharField(max_length= 50, blank = True, null =  True)
     plantas_madre = models.CharField(max_length= 50, blank = True, null =  True)
     harvest_code = models.CharField(max_length= 50, blank = True, null =  True)
     status = models.CharField(max_length= 50, blank = True, null =  True)
@@ -23,6 +23,7 @@ class lotes(models.Model):
     metodo_prod = models.CharField(max_length= 50, blank = True, null =  True)
     target = models.IntegerField(blank = True, null = True)
     surface = models.FloatField(blank = True, null = True)
+    observaciones = models.CharField(max_length= 75, blank = True, null =  True)
 
 #Variedades
 class variedades(models.Model):
