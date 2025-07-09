@@ -1,12 +1,12 @@
 {% extends "base/base.html" %}
 {% block content %}
 <h2>Listado</h2>
-<a href="{% url model|add:'_create' %}">Nuevo registro</a>
+<a href="{% url 'sdcsemillas:conteoplantas_create' %}">Nuevo Registro</a>
 <ul>
   {% for object in object_list %}
     <li>{{ object }} |
-      <a href="{% url model|add:'_update' object.id %}">Editar</a> |
-      <a href="{% url model|add:'_delete' object.id %}">Borrar</a>
+      <a href="{% url 'sdcsemillas:conteoplantas_update' object.id %}">Editar</a> |
+      <a href="{% url 'sdcsemillas:conteoplantas_delete' object.id %}">Borrar</a>
     </li>
   {% endfor %}
 </ul>
