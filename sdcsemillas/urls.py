@@ -2,7 +2,8 @@
 from django.urls import path
 from .views import conteoplantas as cp
 
-app_main ="sdcsemillas"
+
+app_name = 'sdcsemillas'
 
 urlpatterns = [
     path('conteoplantas/', cp.ConteoPlantasList.as_view(), name='conteoplantas_list'),
