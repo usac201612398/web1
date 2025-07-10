@@ -108,3 +108,52 @@ def variedades_delete(request, pk):
 def variedades_detail(request, pk):
     salidas = get_object_or_404(variedades, pk=pk)
     return render(request, 'sdcsemillas/variedades_detail.html', {'registros': salidas})
+
+def conteoplantas_list(request):
+    #today = timezone.localtime(timezone.now()).date()
+    salidas = conteoplantas.objects.filter( status__isnull=True)
+    return render(request, 'sdcsemillas/conteoplantas_list.html', {'registros': salidas})
+
+def  conteoplantas_create(request):
+    if request.method == 'POST':
+        form = conteoplantasForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+            except Exception as e:
+                # Manejar excepciones específicas (por ejemplo, UniqueConstraintError)
+                return JsonResponse({'error': str(e)}, status=400)
+            return redirect('conteoplantas_list')
+        else:
+             # Imprimir errores para depuración
+            return JsonResponse({'errores': form.errors}, status=400)
+    else:
+        form = conteoplantasForm()
+    return render(request, 'sdcsemillas/conteoplantas_form.html', {'form': form})
+
+def conteoplantas_update(request, pk):
+    salidas = get_object_or_404(conteoplantas, pk=pk)
+    if request.method == 'POST':
+        form = conteoplantasForm(request.POST, instance=salidas)
+        if form.is_valid():
+            form.save()
+            return redirect('conteoplantas_list')
+    else:
+        form = conteoplantasForm(instance=salidas)
+    return render(request, 'sdcsemillas/conteoplantas_form.html', {'form': form})
+
+def conteoplantas_delete(request, pk):
+
+    salidas = get_object_or_404(conteoplantas, pk=pk)
+
+    if request.method == 'POST':
+        salidas.status = 'Anulado'
+        salidas.save()
+        messages.success(request, "Variedad anulado correctamente.")
+        return redirect('conteoplantas_list')
+    
+    return render(request, 'sdcsemillas/conteoplantas_confirm_delete.html', {'registros': salidas})
+
+def conteoplantas_detail(request, pk):
+    salidas = get_object_or_404(conteoplantas, pk=pk)
+    return render(request, 'sdcsemillas/conteoplantas_detail.html', {'registros': salidas})
