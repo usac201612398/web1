@@ -20,4 +20,10 @@ urlpatterns = [
     path('variedades/<int:pk>/edit/', views.variedades_update, name='variedades_update'),
     path('variedades/<int:pk>/delete/', views.variedades_delete, name='variedades_delete'),
 
+    path("conteoplantas",views.variedades_list,name='variedades_list'),
+    path('conteoplantas/<int:pk>/', views.variedades_detail, name='variedades_detail'),
+    path('conteoplantas/new/', views.variedades_create, name='variedades_create'),
+    path('conteoplantas/<int:pk>/edit/', views.variedades_update, name='variedades_update'),
+    path('conteoplantas/<int:pk>/delete/', views.variedades_delete, name='variedades_delete'),
+
 ]
