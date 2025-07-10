@@ -160,23 +160,17 @@
         {% endif %}
 
         <!-- Renderizar el formulario con etiquetas alineadas -->
+
         <div class="form-group">
             <div class="form-row">
-                <label for="lote" class="form-label">Lote</label>
-                {{ form.lote_code }}
+                <label for="lote" class="form-label">Codigo Variedad</label>
+                {{ form.codigo_variedad }}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <label for="variedad_code" class="form-label">Codigo Variedad</label>
-                {{ form.variedad_code }}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="apodo_variedad" class="form-label">Nombre Variedad</label>
+                <label for="variedad_code" class="form-label">Apodo Variedad</label>
                 {{ form.apodo_variedad }}
             </div>
         </div>
@@ -190,43 +184,15 @@
 
         <div class="form-group">
             <div class="form-row">
-                <label for="ubicacion" class="form-label">ubicacion</label>
-                {{ form.ubicacion}}
+                <label for="codigo_padre" class="form-label">Código-Padre</label>
+                {{ form.codigo_padre}}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <label for="estructura" class="form-label">Estructura</label>
-                {{ form.estructura }}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="plantas_padre" class="form-label">Cantidad Plantas Padre</label>
-                {{ form.plantas_padre }}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="plantas_madre" class="form-label">Cantidad Plantas Madre</label>
-                {{ form.plantas_madre}}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="harvest_code" class="form-label">Harvest Code</label>
-                {{ form.harvest_code }}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="calidad" class="form-label">Calidad</label>
-                {{ form.calidad }}
+                <label for="codigo-madre" class="form-label">Código-Madre</label>
+                {{ form.codigo_madre}}
             </div>
         </div>
 
@@ -237,45 +203,10 @@
             </div>
         </div>
 
-        <div class="form-group">
-            <div class="form-row">
-                <label for="fecha_pl" class="form-label">Fecha PL</label>
-                {{ form.fecha_pl }}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="siembra_madre" class="form-label">Fecha Siembra Madre</label>
-                {{ form.siembra_madre }}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="metodo_prod" class="form-label">Metodo de Producción</label>
-                {{ form.metodo_prod}}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="target" class="form-label">Target</label>
-                {{ form.target}}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="surface" class="form-label">Surface</label>
-                {{ form.surface}}
-            </div>
-        </div>
-
         <!-- Botones centrados en una fila -->
         <div class="form-group button-row">
             <button type="submit" class="btn btn-primary">{{ form.instance.pk|yesno:"Actualizar,Crear" }}</button>
-            <a href="{% url 'lotes_list' %}" class="btn btn-secondary">Regresar</a>
+            <a href="{% url 'variedades_list' %}" class="btn btn-secondary">Regresar</a>
         </div>
     </form>
   </div>

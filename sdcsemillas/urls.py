@@ -14,4 +14,10 @@ urlpatterns = [
     path('lotes/<int:pk>/edit/', views.lotes_update, name='lotes_update'),
     path('lotes/<int:pk>/delete/', views.lotes_delete, name='lotes_delete'),
 
+    path("variedades",views.variedades_list,name='variedades_list'),
+    path('variedades/<int:pk>/', views.variedades_detail, name='variedades_detail'),
+    path('variedades/new/', views.variedades_create, name='variedades_create'),
+    path('variedades/<int:pk>/edit/', views.variedades_update, name='variedades_update'),
+    path('variedades/<int:pk>/delete/', views.variedades_delete, name='variedades_delete'),
+
 ]

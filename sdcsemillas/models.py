@@ -30,8 +30,8 @@ class variedades(models.Model):
     #op_status = [('Pendiente','-'),('En proceso','En proceso'),('Cerrado','Cerrado')]
     id = models.BigAutoField(primary_key=True)
     variedad_code = models.CharField(max_length= 50, blank = True, null =  True)
-    variedad_name = models.CharField(max_length= 50, blank = True, null =  True)
-    apodo_lote = models.CharField(max_length= 50, blank = True, null =  True)
+#    variedad_name = models.CharField(max_length= 50, blank = True, null =  True)
+    apodo_variedad = models.CharField(max_length= 50, blank = True, null =  True)
     cultivo = models.CharField(max_length= 50, blank = True, null =  True)
     cod_padre = models.CharField(max_length= 50, blank = True, null =  True)
     cod_madre = models.CharField(max_length= 50, blank = True, null =  True)

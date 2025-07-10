@@ -35,3 +35,20 @@ class lotesForm(forms.ModelForm):
     
         model = lotes
         fields = ['fecha_pl','lote_code','variedad_code','apodo_variedad','cultivo', 'ubicacion', 'estructura', 'plantas_padre','plantas_madre','harvest_code','status','siembra_madre','metodo_prod','target','surface','observaciones']
+
+class variedadesForm(forms.ModelForm):
+
+    op_cultivo = [('','-'),('Chile','Tomate')]
+    op_status = [('','-'),('En proceso','En proceso'),('Finalizado','Finalizado'),]
+
+    variedad_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  
+    apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
+    cultivo = forms.ChoiceField(choices=op_cultivo,widget=forms.Select(attrs={'class': 'my-input'})) 
+    codigo_padre = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  
+    codigo_madre = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'})) 
+    status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'my-input'}))
+    
+    class Meta:
+    
+        model = lotes
+        fields = ['variedad_code','apodo_variedad','cultivo', 'codigo_padre','codigo_madre','status']
