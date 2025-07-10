@@ -25,5 +25,5 @@ urlpatterns = [
     path('conteoplantas/new/', views.conteoplantas_create, name='conteoplantas_create'),
     path('conteoplantas/<int:pk>/edit/', views.conteoplantas_update, name='conteoplantas_update'),
     path('conteoplantas/<int:pk>/delete/', views.conteoplantas_delete, name='conteoplantas_delete'),
-
+    
 ]
