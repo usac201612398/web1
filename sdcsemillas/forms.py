@@ -51,7 +51,7 @@ class variedadesForm(forms.ModelForm):
     
     class Meta:
     
-        model = lotes
+        model = variedades
         fields = ['variedad_code','apodo_variedad','cultivo', 'codigo_padre','codigo_madre','status']
 
 class conteoplantasForm(forms.ModelForm):
@@ -86,5 +86,5 @@ class conteoplantasForm(forms.ModelForm):
 
     class Meta:
     
-        model = lotes
+        model = conteoplantas
         fields = ['operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','codigo_planta','codigo_madre','plantas_activas','plantas_faltantes','fecha','camas_completas','camas_incompletas','cocosxcamaincompletas', 'estructura', 'status','evento','observaciones']
