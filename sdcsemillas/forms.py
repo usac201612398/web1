@@ -87,4 +87,4 @@ class conteoplantasForm(forms.ModelForm):
     class Meta:
     
         model = lotes
-        fields = ['operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','codigo_planta','codigo_madre','planta_activas','plantas_faltantes','fecha','camas_completas','camas_incompletas','cocosxcamaincompletas', 'estructura', 'status','evento','observaciones']
+        fields = ['operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','codigo_planta','codigo_madre','plantas_activas','plantas_faltantes','fecha','camas_completas','camas_incompletas','cocosxcamaincompletas', 'estructura', 'status','evento','observaciones']
