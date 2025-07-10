@@ -11,7 +11,7 @@ class lotesForm(forms.ModelForm):
     op_status = [('','-'),('En proceso','En proceso'),('Finalizado','Finalizado'),]
     op_estructura = op_invernadero + op_modulo + op_malla
     
-    op_metodos = [('Greenhouse','Greenhouse'),('Macrotunel','Macrotunel'),('Nethouse','Nethouse')]
+    op_metodos = [('','-'),('Greenhouse','Greenhouse'),('Macrotunel','Macrotunel'),('Nethouse','Nethouse')]
 
     fecha_pl = forms.DateField(widget=forms.DateInput(attrs={'class': 'my-input'}))
     lote_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  
