@@ -461,7 +461,7 @@ def conteoflores_detail(request, pk):
 def controlcosecha_list(request):
     #today = timezone.localtime(timezone.now()).date()
     salidas = controlcosecha.objects.filter( status__isnull=True)
-    return render(request, 'sdcsemillas/controlcosecha _list.html', {'registros': salidas})
+    return render(request, 'sdcsemillas/controlcosecha_list.html', {'registros': salidas})
 
 def controlcosecha_create(request):
     if request.method == 'POST':
