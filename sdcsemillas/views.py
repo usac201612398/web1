@@ -486,10 +486,10 @@ def controlcosecha_update(request, pk):
         form = controlcosechaForm(request.POST, instance=salidas)
         if form.is_valid():
             form.save()
-            return redirect('controlcoseca_list')
+            return redirect('controlcosecHa_list')
     else:
         form = controlcosechaForm(instance=salidas)
-    return render(request, 'sdcsemillas/controlcosecha_form.html', {'form': form})
+    return render(request, 'sdcsemillas/controlcosecha_list.html', {'form': form})
 
 def controlcosecha_delete(request, pk):
 
