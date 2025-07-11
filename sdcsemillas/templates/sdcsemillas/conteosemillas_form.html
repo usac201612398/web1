@@ -197,6 +197,13 @@
 
         <div class="form-group">
             <div class="form-row">
+                <label for="semana" class="form-label">Semana</label>
+                {{ form.nsemana }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-row">
                 <label for="supervisor_name" class="form-label">Supervisor</label>
                 {{ form.supervisor_name }}
             </div>
@@ -208,61 +215,32 @@
                 {{ form.operario_name}}
             </div>
         </div>
-        
 
         <div class="form-group">
             <div class="form-row">
-                <label for="codigo_madre" class="form-label">Código-Madre</label>
-                {{ form.codigo_madre }}
+                <label for="cantidad_frutos" class="form-label">Cantidad-Frutos</label>
+                {{ form.cantidad_frutos }}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <label for="codigo_planta" class="form-label">Código-Planta</label>
-                {{ form.codigo_planta}}
+                <label for="semillaxfruto" class="form-label">Semilla por fruto</label>
+                {{ form.semillaxfruto}}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <label for="plantas_activas" class="form-label">Plantas-Activas</label>
-                {{ form.plantas_activas}}
+                <label for="prom_semillasxfruto" class="form-label">Prom semillas/fruto</label>
+                {{ form.prom_semillasxfruto}}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <label for="plantas_faltantes" class="form-label">Plantas-Faltantes</label>
-                {{ form.plantas_faltantes }}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="camas_completas" class="form-label">Camas-Completas</label>
-                {{ form.camas_completas }}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="camas_incompletas" class="form-label">Camas-Incompletas</label>
-                {{ form.camas_incompletas }}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="cocosxcamaincompleta" class="form-label">Cocos/Cama Incompleta</label>
-                {{ form.cocosxcamaincompleta}}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="evento" class="form-label">Evento</label>
-                {{ form.evento}}
+                <label for="evento" class="form-label">Clasificacion</label>
+                {{ form.clasificacion}}
             </div>
         </div>
 
@@ -283,7 +261,7 @@
         <!-- Botones centrados en una fila -->
         <div class="form-group button-row">
             <button type="submit" class="btn btn-primary">{{ form.instance.pk|yesno:"Actualizar,Crear" }}</button>
-            <a href="{% url 'conteoplantas_list' %}" class="btn btn-secondary">Regresar</a>
+            <a href="{% url 'conteosemillas_list' %}" class="btn btn-secondary">Regresar</a>
         </div>
     </form>
   </div>

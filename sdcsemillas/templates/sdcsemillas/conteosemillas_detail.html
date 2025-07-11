@@ -33,15 +33,12 @@
                             <tr><td>Estructura:</td><td>{{ registros.estructura }} </td></tr>
                             <tr><td>Apodo-Variedad:</td><td>{{ registros.apodo_variedad }} </td></tr> 
                             <tr><td>Cultivo:</td><td>{{ registros.tipo_cultivo }} </td></tr> 
-                            <tr><td>Código | Madre:</td><td>{{ registros.codigo_madre }} </td></tr>
-                            <tr><td>Código | Planta:</td><td>{{ registros.codigo_planta}} </td></tr>
+                            <tr><td>Frutos:</td><td>{{ registros.cantidad_frutos}} </td></tr>
+                            <tr><td>Semillas por Fruto:</td><td>{{ registros.semillasxfruto}} </td></tr>
+                            <tr><td>Promedio de Semillas x Fruto:</td><td>{{ registros.prom_semillasxfruto}} </td></tr>
                             <tr><td>Fecha:</td><td>{{ registros.fecha }} </td></tr>
-                            <tr><td>Plantas activas:</td><td>{{ registros.plantas_activas }} </td></tr>
-                            <tr><td>Plantas faltantes:</td><td>{{ registros.plantas_faltantes }} </td></tr>
-                            <tr><td>Camas completas:</td><td>{{ registros.camas_completas }} </td></tr>
-                            <tr><td>Camas incompletas:</td><td>{{ registros.camas_incompletas }} </td></tr>
-                            <tr><td>Cocos por cama incompleta:</td><td>{{ registros.cocosxcamaincompleta }} </td></tr>
-                            <tr><td>Evento:</td><td>{{ registros.evento}} </td></tr>
+                            <tr><td>Semana:</td><td>{{ registros.nsemana}} </td></tr>
+                            <tr><td>Clasificación:</td><td>{{ registros.clasificacion}} </td></tr>
                             <tr><td>Status:</td><td>{{ registros.status}} </td></tr>
                             <tr><td>Observaciones:</td><td>{{ registros.observaciones }} </td></tr>
                             <tr><td>Creado:</td><td>{{ registros.created }} </td></tr> 
@@ -55,7 +52,7 @@
         </div>
     </div>
 
-    <a href="{% url 'conteoplantas_list' %}">Regresar a panel</a>
+    <a href="{% url 'conteosemillas_list' %}">Regresar a panel</a>
 
     
     

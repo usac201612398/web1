@@ -208,61 +208,53 @@
                 {{ form.operario_name}}
             </div>
         </div>
-        
 
         <div class="form-group">
             <div class="form-row">
-                <label for="codigo_madre" class="form-label">Código-Madre</label>
-                {{ form.codigo_madre }}
+                <label for="cajas_revisadas" class="form-label">Cajas-Revisadas</label>
+                {{ form.cajas_revisadas }}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <label for="codigo_planta" class="form-label">Código-Planta</label>
-                {{ form.codigo_planta}}
+                <label for="frutos_autopol" class="form-label">Frutos-Autopolinizados</label>
+                {{ form.frutos_autopol }}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <label for="plantas_activas" class="form-label">Plantas-Activas</label>
-                {{ form.plantas_activas}}
+                <label for="frutos_sinmarca" class="form-label">Frutos-SinMarca</label>
+                {{ form.frutos_sinmarca }}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <label for="plantas_faltantes" class="form-label">Plantas-Faltantes</label>
-                {{ form.plantas_faltantes }}
+                <label for="frutos_sinlana" class="form-label">Frutos-SinLana</label>
+                {{ form.frutos_sinlana}}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <label for="camas_completas" class="form-label">Camas-Completas</label>
-                {{ form.camas_completas }}
+                <label for="frutos_fueratipo" class="form-label">Flores-FueraTipo</label>
+                {{ form.frutos_fueratipo}}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <label for="camas_incompletas" class="form-label">Camas-Incompletas</label>
-                {{ form.camas_incompletas }}
+                <label for="llenado_caja" class="form-label">Llenado de caja</label>
+                {{ form.llenado_caja}}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <label for="cocosxcamaincompleta" class="form-label">Cocos/Cama Incompleta</label>
-                {{ form.cocosxcamaincompleta}}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="evento" class="form-label">Evento</label>
-                {{ form.evento}}
+                <label for="punto_maduracion" class="form-label">Punto-Maduración</label>
+                {{ form.punto_maduracion}}
             </div>
         </div>
 
@@ -283,7 +275,7 @@
         <!-- Botones centrados en una fila -->
         <div class="form-group button-row">
             <button type="submit" class="btn btn-primary">{{ form.instance.pk|yesno:"Actualizar,Crear" }}</button>
-            <a href="{% url 'conteoplantas_list' %}" class="btn btn-secondary">Regresar</a>
+            <a href="{% url 'controlcosecha_list' %}" class="btn btn-secondary">Regresar</a>
         </div>
     </form>
   </div>

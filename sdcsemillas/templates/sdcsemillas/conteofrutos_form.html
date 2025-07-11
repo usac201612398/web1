@@ -197,6 +197,13 @@
 
         <div class="form-group">
             <div class="form-row">
+                <label for="semana" class="form-label">Semana</label>
+                {{ form.nsemana }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-row">
                 <label for="supervisor_name" class="form-label">Supervisor</label>
                 {{ form.supervisor_name }}
             </div>
@@ -208,54 +215,46 @@
                 {{ form.operario_name}}
             </div>
         </div>
-        
 
         <div class="form-group">
             <div class="form-row">
-                <label for="codigo_madre" class="form-label">Código-Madre</label>
-                {{ form.codigo_madre }}
+                <label for="prom_autopolinizados" class="form-label">Promedio-Autopolinizados</label>
+                {{ form.prom_autopolinizados }}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <label for="codigo_planta" class="form-label">Código-Planta</label>
-                {{ form.codigo_planta}}
+                <label for="prom_floresabiertas" class="form-label">Promedio-Flores Abiertas</label>
+                {{ form.prom_floresabiertas }}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <label for="plantas_activas" class="form-label">Plantas-Activas</label>
-                {{ form.plantas_activas}}
+                <label for="prom_polinizados" class="form-label">Promedio-polinizados</label>
+                {{ form.prom_polinizados }}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <label for="plantas_faltantes" class="form-label">Plantas-Faltantes</label>
-                {{ form.plantas_faltantes }}
+                <label for="prom_cama" class="form-label">Promedio-Cama</label>
+                {{ form.prom_cama }}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <label for="camas_completas" class="form-label">Camas-Completas</label>
-                {{ form.camas_completas }}
+                <label for="prom_area" class="form-label">Promedio-Area</label>
+                {{ form.prom_area }}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <label for="camas_incompletas" class="form-label">Camas-Incompletas</label>
-                {{ form.camas_incompletas }}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="cocosxcamaincompleta" class="form-label">Cocos/Cama Incompleta</label>
-                {{ form.cocosxcamaincompleta}}
+                <label for="prom_general" class="form-label">Promedio-general</label>
+                {{ form.prom_general }}
             </div>
         </div>
 
@@ -283,7 +282,7 @@
         <!-- Botones centrados en una fila -->
         <div class="form-group button-row">
             <button type="submit" class="btn btn-primary">{{ form.instance.pk|yesno:"Actualizar,Crear" }}</button>
-            <a href="{% url 'conteoplantas_list' %}" class="btn btn-secondary">Regresar</a>
+            <a href="{% url 'conteofrutos_list' %}" class="btn btn-secondary">Regresar</a>
         </div>
     </form>
   </div>

@@ -197,6 +197,20 @@
 
         <div class="form-group">
             <div class="form-row">
+                <label for="nsemana" class="form-label">Semana</label>
+                {{ form.nsemana }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-row">
+                <label for="diasemana" class="form-label">Dia</label>
+                {{ form.diasemana }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-row">
                 <label for="supervisor_name" class="form-label">Supervisor</label>
                 {{ form.supervisor_name }}
             </div>
@@ -208,61 +222,60 @@
                 {{ form.operario_name}}
             </div>
         </div>
-        
 
         <div class="form-group">
             <div class="form-row">
-                <label for="codigo_madre" class="form-label">Código-Madre</label>
-                {{ form.codigo_madre }}
+                <label for="flores_abiertas" class="form-label">Flores-Abiertas</label>
+                {{ form.flores_abiertas }}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <label for="codigo_planta" class="form-label">Código-Planta</label>
-                {{ form.codigo_planta}}
+                <label for="flores_antenas" class="form-label">Flores-Antenas</label>
+                {{ form.flores_antenas }}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <label for="plantas_activas" class="form-label">Plantas-Activas</label>
-                {{ form.plantas_activas}}
+                <label for="flores_polinizadas" class="form-label">Flores-Polinizadas</label>
+                {{ form.flores_polinizadas }}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <label for="plantas_faltantes" class="form-label">Plantas-Faltantes</label>
-                {{ form.plantas_faltantes }}
+                <label for="flores_enmasculadas" class="form-label">Flores-Enmasculadas</label>
+                {{ form.flores_enmasculadas}}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <label for="camas_completas" class="form-label">Camas-Completas</label>
-                {{ form.camas_completas }}
+                <label for="flores_sinpistilo" class="form-label">Flores-Sin pistilo</label>
+                {{ form.flores_sinpistilo}}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <label for="camas_incompletas" class="form-label">Camas-Incompletas</label>
-                {{ form.camas_incompletas }}
+                <label for="flores_viejas" class="form-label">Flores-Viejas</label>
+                {{ form.flores_viejas}}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <label for="cocosxcamaincompleta" class="form-label">Cocos/Cama Incompleta</label>
-                {{ form.cocosxcamaincompleta}}
+                <label for="lastimado" class="form-label">Lastimado</label>
+                {{ form.flores_lastimado}}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <label for="evento" class="form-label">Evento</label>
-                {{ form.evento}}
+                <label for="flores_boton_pequeño" class="form-label">Boton-Pequeño</label>
+                {{ form.flores_boton_pequeño}}
             </div>
         </div>
 
@@ -283,7 +296,7 @@
         <!-- Botones centrados en una fila -->
         <div class="form-group button-row">
             <button type="submit" class="btn btn-primary">{{ form.instance.pk|yesno:"Actualizar,Crear" }}</button>
-            <a href="{% url 'conteoplantas_list' %}" class="btn btn-secondary">Regresar</a>
+            <a href="{% url 'conteoflores_list' %}" class="btn btn-secondary">Regresar</a>
         </div>
     </form>
   </div>

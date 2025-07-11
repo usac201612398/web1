@@ -208,54 +208,18 @@
                 {{ form.operario_name}}
             </div>
         </div>
-        
+
+        <div class="form-group">
+            <div class="form-row">
+                <label for="codigo_padre" class="form-label">Código-Padre</label>
+                {{ form.codigo_padre }}
+            </div>
+        </div>
 
         <div class="form-group">
             <div class="form-row">
                 <label for="codigo_madre" class="form-label">Código-Madre</label>
                 {{ form.codigo_madre }}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="codigo_planta" class="form-label">Código-Planta</label>
-                {{ form.codigo_planta}}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="plantas_activas" class="form-label">Plantas-Activas</label>
-                {{ form.plantas_activas}}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="plantas_faltantes" class="form-label">Plantas-Faltantes</label>
-                {{ form.plantas_faltantes }}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="camas_completas" class="form-label">Camas-Completas</label>
-                {{ form.camas_completas }}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="camas_incompletas" class="form-label">Camas-Incompletas</label>
-                {{ form.camas_incompletas }}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="cocosxcamaincompleta" class="form-label">Cocos/Cama Incompleta</label>
-                {{ form.cocosxcamaincompleta}}
             </div>
         </div>
 
@@ -283,7 +247,7 @@
         <!-- Botones centrados en una fila -->
         <div class="form-group button-row">
             <button type="submit" class="btn btn-primary">{{ form.instance.pk|yesno:"Actualizar,Crear" }}</button>
-            <a href="{% url 'conteoplantas_list' %}" class="btn btn-secondary">Regresar</a>
+            <a href="{% url 'etapasdelote_list' %}" class="btn btn-secondary">Regresar</a>
         </div>
     </form>
   </div>

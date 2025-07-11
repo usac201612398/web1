@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Visualizar Resumen de Lote</title>
+    <title>Visualizar Detalles de Flores</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
     <style>
 
@@ -24,7 +24,6 @@
             <div class="column is-12">
                 <div class="table-container">
                     <table class="table is-striped is-hoverable is is-fullwidth" id="myTable">
-                    
                         <tbody>
                             <tr><td>Registro:</td><td>{{ registros.id }} </td></tr>
                             <tr><td>Supervisor:</td><td>{{ registros.supervisor_name }} </td></tr> 
@@ -33,29 +32,29 @@
                             <tr><td>Estructura:</td><td>{{ registros.estructura }} </td></tr>
                             <tr><td>Apodo-Variedad:</td><td>{{ registros.apodo_variedad }} </td></tr> 
                             <tr><td>Cultivo:</td><td>{{ registros.tipo_cultivo }} </td></tr> 
-                            <tr><td>Código | Madre:</td><td>{{ registros.codigo_madre }} </td></tr>
-                            <tr><td>Código | Planta:</td><td>{{ registros.codigo_planta}} </td></tr>
+                            <tr><td>Color-Lana:</td><td>{{ registros.flores_abiertas}} </td></tr>
+                            <tr><td>Cantidad-Camas:</td><td>{{ registros.flores_antenas}} </td></tr>
+                            <tr><td>Cantidad-Index:</td><td>{{ registros.flores_polinizadas}} </td></tr>
+                            <tr><td>Promedio:</td><td>{{ registros.flores_enmasculadas}} </td></tr>
+                            <tr><td>Color-Lana:</td><td>{{ registros.flores_sinpistilo}} </td></tr>
+                            <tr><td>Cantidad-Camas:</td><td>{{ registros.flores_viejas}} </td></tr>
+                            <tr><td>Cantidad-Index:</td><td>{{ registros.flores_enmasculadas}} </td></tr>
+                            <tr><td>Promedio:</td><td>{{ registros.flores_boton_pequeño}} </td></tr>
                             <tr><td>Fecha:</td><td>{{ registros.fecha }} </td></tr>
-                            <tr><td>Plantas activas:</td><td>{{ registros.plantas_activas }} </td></tr>
-                            <tr><td>Plantas faltantes:</td><td>{{ registros.plantas_faltantes }} </td></tr>
-                            <tr><td>Camas completas:</td><td>{{ registros.camas_completas }} </td></tr>
-                            <tr><td>Camas incompletas:</td><td>{{ registros.camas_incompletas }} </td></tr>
-                            <tr><td>Cocos por cama incompleta:</td><td>{{ registros.cocosxcamaincompleta }} </td></tr>
-                            <tr><td>Evento:</td><td>{{ registros.evento}} </td></tr>
+                            <tr><td>Semana:</td><td>{{ registros.nsemana }} </td></tr>
+                            <tr><td>Dia:</td><td>{{ registros.diasemana }} </td></tr>
                             <tr><td>Status:</td><td>{{ registros.status}} </td></tr>
                             <tr><td>Observaciones:</td><td>{{ registros.observaciones }} </td></tr>
                             <tr><td>Creado:</td><td>{{ registros.created }} </td></tr> 
                             <tr><td>Modificado:</td><td>{{ registros.updated_at }} </td></tr>  
                         </tbody>
-
                     </table>
-
                 </div>
             </div>
         </div>
     </div>
 
-    <a href="{% url 'conteoplantas_list' %}">Regresar a panel</a>
+    <a href="{% url 'conteoflores_list' %}">Regresar a panel</a>
 
     
     
