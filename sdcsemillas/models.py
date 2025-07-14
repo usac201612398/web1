@@ -11,7 +11,7 @@ class usuariosAppFruta(models.Model):
     finca = models.CharField(max_length=30, blank = True, null =  True)
     
     def __str__(self):
-        return (self.codigoEvo + " | " + self.encargado)
+        return (str(self.codigoEvo) + " | " + self.encargado)
     
 class lotes(models.Model):
     #op_status = [('Pendiente','-'),('En proceso','En proceso'),('Cerrado','Cerrado')]
