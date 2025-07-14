@@ -344,5 +344,5 @@ class operariosForm(forms.ModelForm):
     
     class Meta:
     
-        model = variedades
+        model = operariosApp
         fields = ['codigo_empleado','codigoEvo','nombre_operario', 'status','codigo_lote']
