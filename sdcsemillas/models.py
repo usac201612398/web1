@@ -7,8 +7,8 @@ class usuariosAppFruta(models.Model):
     
     correo = models.CharField(primary_key=True,max_length=75, blank=True)
     encargado = models.CharField(max_length=30)
-    codigoEvo = models.BigIntegerField(max_length=25)
-    finca = models.CharField(max_length=30)
+    codigoEvo = models.BigIntegerField(blank = True, null =  True)
+    finca = models.CharField(max_length=30, blank = True, null =  True)
     
     def __str__(self):
         return (self.codigoEvo + " | " + self.encargado)
