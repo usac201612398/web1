@@ -177,7 +177,7 @@ class etapasdeloteForm(forms.ModelForm):
     tipo_cultivo = forms.ChoiceField(choices=op_cultivo,widget=forms.Select(attrs={'class': 'my-input'})) 
     codigo_madre = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'})) 
     codigo_padre = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'})) 
-    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'my-input'}))
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'my-input','type': 'date'}))
     estructura = forms.ChoiceField(choices=op_estructura, widget=forms.TextInput(attrs={'class': 'my-input'}))  
     status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'my-input'}))
     evento = forms.ChoiceField(choices=op_clasificacion,widget=forms.Select(attrs={'class': 'my-input'}))
