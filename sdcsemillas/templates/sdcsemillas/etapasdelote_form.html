@@ -142,7 +142,8 @@
 
   <div class="container">
     <h1>Registro y actualización</h1>
-
+    <button type="button" class="btn btn-success" onclick="startScanner()">Escanear QR</button>
+    <div id="reader" style="width: 300px; margin-top: 20px;"></div>
     <form method="post">
         {% csrf_token %}
 
@@ -160,6 +161,13 @@
         {% endif %}
 
         <!-- Renderizar el formulario con etiquetas alineadas -->
+        <div class="form-group">
+            <div class="form-row">
+                <label for="codigo_lote" class="form-label">Codigo de lote</label>
+                {{ form.codigo_lote }}
+            </div>
+        </div>
+
         <div class="form-group">
             <div class="form-row">
                 <label for="apodo_lote" class="form-label">Variedad</label>
@@ -256,4 +264,41 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   
 </body>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+<script>
+function startScanner() {
+    const html5QrCode = new Html5Qrcode("reader");
+    const qrConfig = { fps: 10, qrbox: 250 };
+
+    html5QrCode.start(
+        { facingMode: "environment" },
+        qrConfig,
+        (decodedText, decodedResult) => {
+            html5QrCode.stop();
+
+            const parts = decodedText.split("|").map(p => p.trim());
+            if (parts.length >= 5) {
+                // Asignar valores automáticamente
+                document.getElementById("id_codigo_lote").value = parts[0];
+                document.getElementById("id_apodo_variedad").value = parts[1];
+                document.getElementById("id_ubicacion_lote").value = parts[2];
+                document.getElementById("id_estructura").value = parts[3];
+                document.getElementById("id_tipo_cultivo").value = parts[4];
+            } else {
+                alert("QR inválido. Formato esperado: Código | Variedad | Ubicación | Estructura | Cultivo");
+            }
+        },
+        (errorMessage) => {
+            console.log(errorMessage);
+        }
+    ).catch(err => {
+        console.error("Error al iniciar la cámara: ", err);
+    });
+}
+</script>
+
+
 </html>

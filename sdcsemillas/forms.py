@@ -170,6 +170,7 @@ class etapasdeloteForm(forms.ModelForm):
     op_clasificacion = [('','-'),('Cosecha','Cosecha'),('Polinizacion','Polinizacion')]
 
     operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
+    codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))
     supervisor_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
     ubicacion_lote = forms.ChoiceField(choices=op_ubicacion,widget=forms.TextInput(attrs={'class': 'my-input'})) 
     apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
