@@ -2,6 +2,17 @@ from django.db import models
 
 # Create your models here.
 # Lotes
+# Create your models here.
+class usuariosAppFruta(models.Model):
+    
+    correo = models.CharField(primary_key=True,max_length=75, blank=True)
+    encargado = models.CharField(max_length=30)
+    codigoEvo = models.BigIntegerField(max_length=25)
+    finca = models.CharField(max_length=30)
+    
+    def __str__(self):
+        return (self.codigoEvo + " | " + self.encargado)
+    
 class lotes(models.Model):
     #op_status = [('Pendiente','-'),('En proceso','En proceso'),('Cerrado','Cerrado')]
     id = models.BigAutoField(primary_key=True)

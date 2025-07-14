@@ -279,7 +279,11 @@ def etapasdelote_create(request):
              # Imprimir errores para depuración
             return JsonResponse({'errores': form.errors}, status=400)
     else:
-        form = etapasdeloteForm()
+        initial_data = {
+            'supervisor_name': request.user.username
+        }
+        form = etapasdeloteForm(initial=initial_data)
+
     return render(request, 'sdcsemillas/etapasdelote_form.html', {'form': form})
 
 def etapasdelote_update(request, pk):
@@ -290,6 +294,7 @@ def etapasdelote_update(request, pk):
             form.save()
             return redirect('etapasdelote_list')
     else:
+        
         form = etapasdeloteForm(instance=salidas)
     return render(request, 'sdcsemillas/etapasdelote_form.html', {'form': form})
 
