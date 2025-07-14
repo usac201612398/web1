@@ -169,7 +169,7 @@ class etapasdeloteForm(forms.ModelForm):
     
     op_clasificacion = [('','-'),('Cosecha','Cosecha'),('Polinizacion','Polinizacion')]
 
-    operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
+    #operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
     codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))
     supervisor_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
     ubicacion_lote = forms.ChoiceField(choices=op_ubicacion,widget=forms.TextInput(attrs={'class': 'my-input'})) 
@@ -186,7 +186,7 @@ class etapasdeloteForm(forms.ModelForm):
     class Meta:
     
         model = etapasdelote
-        fields = ['operario_name','codigo_lote','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','codigo_madre','codigo_padre','fecha','estructura','status','evento','observaciones']
+        fields = ['codigo_lote','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','codigo_madre','codigo_padre','fecha','estructura','status','evento','observaciones']
 
 class ccalidadpolenForm(forms.ModelForm):
 
