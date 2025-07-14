@@ -2,7 +2,6 @@ from django.db import models
 
 # Create your models here.
 # Lotes
-# Create your models here.
 class usuariosApp(models.Model):
     
     correo = models.CharField(primary_key=True,max_length=75, blank=True)
@@ -14,7 +13,7 @@ class usuariosApp(models.Model):
         return (str(self.codigoEvo) + " | " + self.encargado)
     
 class operariosApp(models.Model):
-    
+
     id = models.BigAutoField(primary_key=True)
     codigo_empleado = models.CharField(max_length=75, blank=True)
     codigoEvo = models.BigIntegerField(blank = True, null =  True)
