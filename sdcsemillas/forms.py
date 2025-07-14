@@ -334,10 +334,11 @@ class controlcosechaForm(forms.ModelForm):
 class operariosForm(forms.ModelForm):
 
     op_status = [('','-'),('Activo','Activo'),('Inactivo','Inactivo'),('Anulado','Anulado')]
-
+    op_supervisores = [('','-'),('A','A'),('B','B'),('C','C')]
     codigo_empleado= forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  
     codigoEvo = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))
-    nombreo_perario = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  
+    nombreo_perario = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'})) 
+    supervisor = forms.ChoiceField(choices = op_supervisores,widget=forms.TextInput(attrs={'class': 'my-input'}))  
     status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'my-input'}))
     codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input','readonly': 'readonly'}))
     
