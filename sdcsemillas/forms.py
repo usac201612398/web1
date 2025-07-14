@@ -8,7 +8,7 @@ class lotesForm(forms.ModelForm):
     op_invernadero = [('','-'),('Invernadero 1','Invernadero 1'),('Invernadero 2','Invernadero 2'),('Invernadero 3', 'Invernadero 3'),('Invernadero 4','Invernadero 4'),('Invernadero 5','Invernadero 5'),('Invernadero 6', 'Invernadero 6'),('Invernadero 7','Invernadero 7'),('Invernadero 8','Invernadero 8'),('Invernadero 9', 'Invernadero 9'),('Invernadero 10','Invernadero 10'),('Invernadero 11','Invernadero 11')]
     op_malla = [('','-'),('Casa Malla','Casa Malla')]
     op_cultivo = [('','-'),('Chile','Tomate')]
-    op_status = [('','-'),('En proceso','En proceso'),('Finalizado','Finalizado')]
+    op_status = [('','-'),('En proceso','En proceso'),('Finalizado','Finalizado'),('Anulado','Anulado')]
     op_estructura = op_invernadero + op_modulo + op_malla
     
     op_metodos = [('','-'),('Greenhouse','Greenhouse'),('Macrotunel','Macrotunel'),('Nethouse','Nethouse')]
@@ -40,7 +40,7 @@ class lotesForm(forms.ModelForm):
 class variedadesForm(forms.ModelForm):
 
     op_cultivo = [('','-'),('Chile','Tomate')]
-    op_status = [('','-'),('En proceso','En proceso'),('Finalizado','Finalizado')]
+    op_status = [('','-'),('En proceso','En proceso'),('Finalizado','Finalizado'),('Anulado','Anulado')]
 
     variedad_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  
     apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
@@ -330,3 +330,19 @@ class controlcosechaForm(forms.ModelForm):
     
         model = controlcosecha
         fields = ['operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','cajas_revisadas','frutos_autopol','frutos_sinmarca','frutos_sinlana','frutos_fueratipo','llenado_caja','punto_maduracion','fecha','estructura','status','observaciones']
+
+class operariosForm(forms.ModelForm):
+
+    op_status = [('','-'),('Activo','Activo'),('Inactivo','Inactivo'),('Anulado','Anulado')]
+
+    codigo_empleado= forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  
+    codigoEvo = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))
+    nombreo_perario = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  
+    status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'my-input'}))
+    codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input','readonly': 'readonly'}))
+    
+    
+    class Meta:
+    
+        model = variedades
+        fields = ['codigo_empleado','codigoEvo','nombre_operario', 'status','codigo_lote']

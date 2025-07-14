@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Visualizar Detalles de Operario</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <style>
+
+        h1 {
+            margin: 15px;
+            font-family: Arial, sans-serif;
+        }
+
+        a {
+            margin: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+    </style>
+</head>
+<body>
+    <h1 class="roboto">Detalles</h1>
+    <div class="container">
+        <div class="columns">
+            <div class="column is-12">
+                <div class="table-container">
+                    <table class="table is-striped is-hoverable is is-fullwidth" id="myTable">
+                    
+                        <tbody>
+                            <tr><td>Código Empleado:</td><td>{{ registros.codigo_empleado}} </td></tr> 
+                            <tr><td>Código Evolution:</td><td>{{ registros.codigoEvo}} </td></tr> 
+                            <tr><td>Nombre Empleado:</td><td>{{ registros.nombre_operario }} </td></tr> 
+                            <tr><td>Código de Lote:</td><td>{{ registros.codigo_lote }} </td></tr>
+                            <tr><td>Supervisor:</td><td>{{ registros.supervisor }} </td></tr>
+                            <tr><td>Status:</td><td>{{ registros.status }} </td></tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="{% url 'operarios_list' %}">Regresar a panel</a>
+
+    
+    
+</body>
+</html>

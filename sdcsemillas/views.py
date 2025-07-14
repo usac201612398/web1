@@ -535,3 +535,53 @@ def controlcosecha_delete(request, pk):
 def controlcosecha_detail(request, pk):
     salidas = get_object_or_404(controlcosecha, pk=pk)
     return render(request, 'sdcsemillas/controlcosecha_detail.html', {'registros': salidas})
+
+# Create your views here.
+def operarios_list(request):
+    #today = timezone.localtime(timezone.now()).date()
+    salidas = operariosApp.objects.filter( status__isnull=True)
+    return render(request, 'sdcsemillas/operarios_list.html', {'registros': salidas})
+
+def operarios_detail(request, pk):
+    salidas = get_object_or_404(operariosApp, pk=pk)
+    return render(request, 'sdcsemillas/operarios_detail.html', {'registros': salidas})
+
+def  operarios_create(request):
+    if request.method == 'POST':
+        form = operariosForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+            except Exception as e:
+                # Manejar excepciones específicas (por ejemplo, UniqueConstraintError)
+                return JsonResponse({'error': str(e)}, status=400)
+            return redirect('operarios_list')
+        else:
+             # Imprimir errores para depuración
+            return JsonResponse({'errores': form.errors}, status=400)
+    else:
+        form = operariosForm()
+    return render(request, 'sdcsemillas/operarios_form.html', {'form': form})
+
+def operarios_update(request, pk):
+    salidas = get_object_or_404(operariosApp, pk=pk)
+    if request.method == 'POST':
+        form = operariosForm(request.POST, instance=salidas)
+        if form.is_valid():
+            form.save()
+            return redirect('operarios_list')
+    else:
+        form = operariosForm(instance=salidas)
+    return render(request, 'sdcsemillas/operarios_form.html', {'form': form})
+
+def operarios_delete(request, pk):
+
+    salidas = get_object_or_404(operariosApp, pk=pk)
+
+    if request.method == 'POST':
+        salidas.status = 'Anulado'
+        salidas.save()
+        messages.success(request, "Persona eliminada correctamente.")
+        return redirect('operarios_list')
+    
+    return render(request, 'sdcsemillas/operarios_confirm_delete.html', {'registros': salidas})

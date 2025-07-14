@@ -21,6 +21,12 @@ urlpatterns = [
     path('variedades/<int:pk>/edit/', views.variedades_update, name='variedades_update'),
     path('variedades/<int:pk>/delete/', views.variedades_delete, name='variedades_delete'),
 
+    path("operarios",views.operarios_list,name='operarios_list'),
+    path('operarios/<int:pk>/', views.operarios_detail, name='operarios_detail'),
+    path('operarios/new/', views.operarios_create, name='operarios_create'),
+    path('operarios/<int:pk>/edit/', views.operarios_update, name='operarios_update'),
+    path('operarios/<int:pk>/delete/', views.operarios_delete, name='operarios_delete'),
+
     path("conteoplantas/",views.conteoplantas_list,name='conteoplantas_list'),
     path('conteoplantas/<int:pk>/', views.conteoplantas_detail, name='conteoplantas_detail'),
     path('conteoplantas/new/', views.conteoplantas_create, name='conteoplantas_create'),
@@ -68,6 +74,8 @@ urlpatterns = [
     path('controlcosecha/new/', views.controlcosecha_create, name='controlcosecha_create'),
     path('controlcosecha/<int:pk>/edit/', views.controlcosecha_update, name='controlcosecha_update'),
     path('controlcosecha/<int:pk>/delete/', views.controlcosecha_delete, name='controlcosecha_delete'),
+
+
     
     path('api/lote/<int:codigo_lote>/', views.obtener_datos_lote, name='api_obtener_lote'),
 ]

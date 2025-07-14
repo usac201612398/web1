@@ -13,6 +13,19 @@ class usuariosApp(models.Model):
     def __str__(self):
         return (str(self.codigoEvo) + " | " + self.encargado)
     
+class operariosApp(models.Model):
+    
+    id = models.BigAutoField(primary_key=True)
+    codigo_empleado = models.CharField(max_length=75, blank=True)
+    codigoEvo = models.BigIntegerField(blank = True, null =  True)
+    nombre_operario = models.CharField(max_length=75, blank=True)
+    codigo_lote = models.BigIntegerField(blank=True,null=True)
+    supervisor = models.CharField(max_length=30)
+    status = models.CharField(max_length= 30, blank = True, null =  True)
+    
+    def __str__(self):
+        return (str(self.codigo_empleado) + " | " + self.nombre_operario)
+    
 class lotes(models.Model):
     #op_status = [('Pendiente','-'),('En proceso','En proceso'),('Cerrado','Cerrado')]
     id = models.BigAutoField(primary_key=True)
