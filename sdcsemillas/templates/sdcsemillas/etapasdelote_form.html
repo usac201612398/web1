@@ -279,7 +279,7 @@ function startScanner() {
         (decodedText, decodedResult) => {
             html5QrCode.stop();
 
-            const parts = decodedText.split("|").map(p => p.trim());
+            const parts = decodedText.split(" | ").map(p => p.trim());
             if (parts.length >= 5) {
                 // Asignar valores automáticamente
                 document.getElementById("id_codigo_lote").value = parts[0];
