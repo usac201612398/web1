@@ -269,29 +269,39 @@ function startScanner() {
     html5QrCode.start(
         { facingMode: "environment" },
         qrConfig,
-        (decodedText, decodedResult) => {
+        (decodedText) => {
             html5QrCode.stop();
+            const codigoLote = decodedText.trim();
 
-            const parts = decodedText.split(" | ").map(p => p.trim());
-            if (parts.length >= 5) {
-                // Asignar valores automáticamente
-                document.getElementById("id_codigo_lote").value = parts[0];
-                document.getElementById("id_apodo_variedad").value = parts[1];
-                document.getElementById("id_ubicacion_lote").value = parts[2];
-                document.getElementById("id_estructura").value = parts[3];
-                document.getElementById("id_tipo_cultivo").value = parts[4];
-            } else {
-                alert("QR inválido. Formato esperado: Código | Variedad | Ubicación | Estructura | Cultivo");
-            }
+            fetch(`/api/lote/${codigoLote}/`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Lote no encontrado");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById("id_codigo_lote").value = data.codigo_lote;
+                    document.getElementById("id_apodo_variedad").value = data.apodo_variedad;
+                    document.getElementById("id_tipo_cultivo").value = data.tipo_cultivo;
+                    document.getElementById("id_ubicacion_lote").value = data.ubicacion_lote;
+                    document.getElementById("id_estructura").value = data.estructura;
+                    document.getElementById("id_codigo_padre").value = data.codigo_padre;
+                    document.getElementById("id_codigo_madre").value = data.codigo_madre;
+                })
+                .catch(error => {
+                    alert(error.message);
+                });
         },
         (errorMessage) => {
-            console.log(errorMessage);
+            console.warn(errorMessage);
         }
     ).catch(err => {
-        console.error("Error al iniciar la cámara: ", err);
+        console.error("Error al iniciar el escáner QR:", err);
     });
 }
 </script>
+
 
 
 </html>
