@@ -186,7 +186,7 @@ class etapasdeloteForm(forms.ModelForm):
     class Meta:
     
         model = etapasdelote
-        fields = ['operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','codigo_madre','codigo_padre','fecha','estructura','status','evento','observaciones']
+        fields = ['operario_name','codigo_lote','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','codigo_madre','codigo_padre','fecha','estructura','status','evento','observaciones']
 
 class ccalidadpolenForm(forms.ModelForm):
 
