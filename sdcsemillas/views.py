@@ -265,25 +265,30 @@ def etapasdelote_list(request):
     salidas = etapasdelote.objects.filter( status__isnull=True)
     return render(request, 'sdcsemillas/etapasdelote_list.html', {'registros': salidas})
 
+from .models import UsuarioAppFruta  # Asegúrate de importar el modelo
+
 def etapasdelote_create(request):
+    nombre_supervisor = ''
+    
+    try:
+        usuario = usuariosApp.objects.get(correo=request.user.email)
+        nombre_supervisor = usuario.encargado
+    except usuariosApp.DoesNotExist:
+        nombre_supervisor = request.user.username  # Fallback si no se encuentra
+
     if request.method == 'POST':
         form = etapasdeloteForm(request.POST)
         if form.is_valid():
-            try:
-                form.save()
-            except Exception as e:
-                # Manejar excepciones específicas (por ejemplo, UniqueConstraintError)
-                return JsonResponse({'error': str(e)}, status=400)
+            form.save()
             return redirect('etapasdelote_list')
         else:
-             # Imprimir errores para depuración
             return JsonResponse({'errores': form.errors}, status=400)
     else:
         initial_data = {
-            'supervisor_name': request.user.username
+            'supervisor_name': nombre_supervisor
         }
         form = etapasdeloteForm(initial=initial_data)
-
+    
     return render(request, 'sdcsemillas/etapasdelote_form.html', {'form': form})
 
 def etapasdelote_update(request, pk):

@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 # Lotes
 # Create your models here.
-class usuariosAppFruta(models.Model):
+class usuariosApp(models.Model):
     
     correo = models.CharField(primary_key=True,max_length=75, blank=True)
     encargado = models.CharField(max_length=30)
