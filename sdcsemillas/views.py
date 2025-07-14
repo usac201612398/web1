@@ -265,7 +265,7 @@ def etapasdelote_list(request):
     salidas = etapasdelote.objects.filter( status__isnull=True)
     return render(request, 'sdcsemillas/etapasdelote_list.html', {'registros': salidas})
 
-from .models import UsuarioAppFruta  # Asegúrate de importar el modelo
+
 
 def etapasdelote_create(request):
     nombre_supervisor = ''
