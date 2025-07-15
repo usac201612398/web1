@@ -15,7 +15,7 @@ class lotesForm(forms.ModelForm):
     op_status = [('', '-'), ('En proceso', 'En proceso'), ('Finalizado', 'Finalizado'), ('Anulado', 'Anulado')]
     op_metodos = [('', '-'), ('Greenhouse', 'Greenhouse'), ('Macrotunel', 'Macrotunel'), ('Nethouse', 'Nethouse')]
 
-    fecha_pl = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','type':'date'}))
+    
     lote_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     apodo_variedad = forms.ChoiceField(
