@@ -91,7 +91,7 @@ def variedades_update(request, pk):
         form = variedadesForm(request.POST, instance=salidas)
         if form.is_valid():
             form.save()
-            return redirect('lotes_list')
+            return redirect('variedades_list')
     else:
         form = variedadesForm(instance=salidas)
     return render(request, 'sdcsemillas/variedades_form.html', {'form': form})
