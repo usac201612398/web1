@@ -74,11 +74,11 @@ class variedadesForm(forms.ModelForm):
     
     #op_status = [('','-'),('En proceso','En proceso'),('Finalizado','Finalizado'),('Anulado','Anulado')]
 
-    variedad_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  
-    apodo_variedad = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    cultivo = forms.ChoiceField(choices=op_cultivo,widget=forms.Select(attrs={'class': 'my-input'})) 
-    cod_padre = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  
-    cod_madre = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'})) 
+    variedad_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
+    apodo_variedad = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    cultivo = forms.ChoiceField(choices=op_cultivo,widget=forms.Select(attrs={'class': 'form-control'})) 
+    cod_padre = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
+    cod_madre = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'})) 
     #status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'my-input'}))
     
     class Meta:

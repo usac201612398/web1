@@ -98,7 +98,7 @@ def  variedades_create(request):
             return JsonResponse({'errores': form.errors}, status=400)
     else:
         form = variedadesForm()
-    return render(request, 'sdcsemillas/variedades_form.html', {'form': form})
+    return render(request, 'sdcsemillas/variedades_form.html', {'form': form,'modo':'crear'})
 
 def variedades_update(request, pk):
     salidas = get_object_or_404(variedades, pk=pk)
@@ -109,7 +109,7 @@ def variedades_update(request, pk):
             return redirect('variedades_list')
     else:
         form = variedadesForm(instance=salidas)
-    return render(request, 'sdcsemillas/variedades_form.html', {'form': form})
+    return render(request, 'sdcsemillas/variedades_form.html', {'form': form,'modo':'actualizar'})
 
 def variedades_delete(request, pk):
 
