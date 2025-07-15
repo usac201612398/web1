@@ -45,7 +45,6 @@
                     <th >Cultivo</th>
                     <th >Codigo-Padre</th>
                     <th >Codigo-Madre</th>
-                    <th >Status</th>
                     <th >Editar</th>
                     <th >Anular</th>
                     </tr>
@@ -59,7 +58,6 @@
                         <td>{{registro.cultivo}}</td>
                         <td>{{registro.codigo_padre}}</td>
                         <td>{{registro.codigo_madre}}</td>
-                        <td>{{registro.status}}</td>
                         <td ><a href="{% url 'variedades_update' registro.pk %}"><i class="fas fa-edit"></i></a></td>
                         <td><a href="{% url 'variedades_delete' registro.pk %}"><i class="fas fa-trash-alt"></i></a></td>
                     </tr> 
