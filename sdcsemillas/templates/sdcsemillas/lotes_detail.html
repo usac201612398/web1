@@ -26,6 +26,7 @@
                     <table class="table is-striped is-hoverable is is-fullwidth" id="myTable">
                     
                         <tbody>
+
                             <tr><td>Registro:</td><td>{{ registros.id }} </td></tr>
                             <tr><td>Lote:</td><td>{{ registros.lote_code }} </td></tr> 
                             <tr><td>Código Variedad:</td><td>{{ registros.variedad_code}} </td></tr> 
@@ -37,14 +38,17 @@
                             <tr><td>Plantas | Madre:</td><td>{{ registros.plantas_madre}} </td></tr>
                             <tr><td>Harvest Code:</td><td>{{ registros.harvest_code }} </td></tr>
                             <tr><td>Status:</td><td>{{ registros.status }} </td></tr>
-                            <tr><td>Fecha PL:</td><td>{{ registros.fecha_pl }} </td></tr>
                             <tr><td>Fecha Siembra Madre:</td><td>{{ registros.siembra_madre}} </td></tr>
                             <tr><td>Metodo de Produccion:</td><td>{{ registros.metodo_prod}} </td></tr>
+                            <tr><td>Shipment Hub:</td><td>{{ registros.shipment_hub}} </td></tr>
+                            <tr><td>Target Nb of plants-Padre:</td><td>{{ registros.as_per_SDCMale}} </td></tr>
+                            <tr><td>Target Nb of plants-Madre:</td><td>{{ registros.as_per_SDCFemale }} </td></tr>
                             <tr><td>Target:</td><td>{{ registros.target}} </td></tr>
                             <tr><td>Surface:</td><td>{{ registros.surface}} </td></tr>
                             <tr><td>Observaciones:</td><td>{{ registros.observaciones }} </td></tr>
                             <tr><td>Creado:</td><td>{{ registros.created }} </td></tr> 
                             <tr><td>Modificado:</td><td>{{ registros.updated_at }} </td></tr>  
+
                         </tbody>
 
                     </table>

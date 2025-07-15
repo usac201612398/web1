@@ -35,11 +35,10 @@ class lotes(models.Model):
     cultivo = models.CharField(max_length= 50, blank = True, null =  True)
     ubicación = models.CharField(max_length= 50, blank = True, null =  True)
     estructura = models.CharField(max_length= 50, blank = True, null =  True)
-    plantas_padre = models.FloatField(max_length= 50, blank = True, null =  True)
-    plantas_madre = models.FloatField(max_length= 50, blank = True, null =  True)
+    plantas_padre = models.FloatField(blank = True, null =  True)
+    plantas_madre = models.FloatField(blank = True, null =  True)
     harvest_code = models.CharField(max_length= 50, blank = True, null =  True)
     status = models.CharField(max_length= 50, blank = True, null =  True)
-    fecha_pl = models.DateField(blank=True, null=True)
     siembra_madre = models.DateField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
@@ -47,6 +46,9 @@ class lotes(models.Model):
     target = models.IntegerField(blank = True, null = True)
     surface = models.FloatField(blank = True, null = True)
     observaciones = models.CharField(max_length= 75, blank = True, null =  True)
+    shipment_hub = models.CharField(max_length= 50, blank = True, null =  True)
+    as_per_SDCMale = models.FloatField(blank = True, null =  True)
+    as_per_SDCFemale = models.FloatField(blank = True, null =  True)
 
 #Variedades
 class variedades(models.Model):

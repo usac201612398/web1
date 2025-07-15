@@ -41,7 +41,7 @@
                     <tr class="header">
                     <th >Id</th>
                     <th >Lote</th>
-                    <th >Fecha_lote</th>
+                    <th >Fecha_SMadre</th>
                     <th >Ubicacion</th>
                     <th >Estructura</th>
                     <th >Cultivo</th>
@@ -56,7 +56,7 @@
                     <tr> 
                         <td> <a href="{% url 'lotes_detail' registro.pk %}">{{ registro.id }}</a></td>
                         <td>{{registro.lote_code}}</td>
-                        <td>{{registro.fecha_pl}}</td>
+                        <td>{{registro.siembra_madre}}</td>
                         <td>{{registro.ubicacion}}</td>
                         <td>{{registro.estructura}}</td>
                         <td>{{registro.cultivo}}</td>

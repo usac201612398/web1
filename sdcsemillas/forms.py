@@ -49,13 +49,17 @@ class lotesForm(forms.ModelForm):
         widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
     )
 
+    shipment_hub = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    as_per_SDCMale = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    as_per_SDCFemale = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+
     class Meta:
         model = lotes
         fields = [
             'fecha_pl', 'lote_code', 'variedad_code', 'apodo_variedad', 'cultivo',
             'ubicacion', 'estructura', 'plantas_padre', 'plantas_madre',
             'harvest_code', 'status', 'siembra_madre', 'metodo_prod',
-            'target', 'surface', 'observaciones'
+            'target', 'surface', 'observaciones','shipment_hub','as_per_SDCMale','as_per_SDCFemale'
         ]
 
     def __init__(self, *args, **kwargs):
