@@ -15,7 +15,7 @@ class lotesForm(forms.ModelForm):
     op_status = [('', '-'), ('En proceso', 'En proceso'), ('Finalizado', 'Finalizado'), ('Anulado', 'Anulado')]
     op_metodos = [('', '-'), ('Greenhouse', 'Greenhouse'), ('Macrotunel', 'Macrotunel'), ('Nethouse', 'Nethouse')]
 
-    fecha_pl = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control'}))
+    fecha_pl = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','type':'date'}))
     lote_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     apodo_variedad = forms.ChoiceField(
@@ -38,7 +38,7 @@ class lotesForm(forms.ModelForm):
     harvest_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     status = forms.ChoiceField(choices=op_status, widget=forms.Select(attrs={'class': 'form-control'}))
 
-    siembra_madre = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control'}))
+    siembra_madre = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','type':'date'}))
     metodo_prod = forms.ChoiceField(choices=op_metodos, widget=forms.Select(attrs={'class': 'form-control'}))
 
     target = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
