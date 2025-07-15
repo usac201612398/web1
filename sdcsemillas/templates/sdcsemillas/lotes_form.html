@@ -277,4 +277,27 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   
 </body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#id_variedad_code').change(function () {
+            let code = $(this).val();
+            if (code) {
+                $.get('/ajax/obtener-variedad/', { codigo: code }, function (data) {
+                    $('#id_apodo_variedad').val(data.nombre);
+                });
+            }
+        });
+
+        $('#id_apodo_variedad').change(function () {
+            let nombre = $(this).val();
+            if (nombre) {
+                $.get('/ajax/obtener-variedad/', { nombre: nombre }, function (data) {
+                    $('#id_variedad_code').val(data.codigo);
+                });
+            }
+        });
+    });
+</script>
+
 </html>

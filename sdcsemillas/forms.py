@@ -14,10 +14,22 @@ class lotesForm(forms.ModelForm):
     op_metodos = [('','-'),('Greenhouse','Greenhouse'),('Macrotunel','Macrotunel'),('Nethouse','Nethouse')]
 
     fecha_pl = forms.DateField(widget=forms.DateInput(attrs={'class': 'my-input'}))
-    lote_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  
-    variedad_code = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'})) 
+    lote_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'})) 
+    variedad_code = forms.ModelChoiceField(
+        queryset=variedades.objects.all().distinct('variedad_code'),
+        widget=forms.Select(attrs={'class': 'form-control', 'id': 'id_variedad_code'}),
+        empty_label="-"
+    )
+
+    apodo_variedad = forms.ModelChoiceField(
+        queryset=variedades.objects.all().distinct('apodo_variedad'),
+        widget=forms.Select(attrs={'class': 'form-control', 'id': 'id_apodo_variedad'}),
+        empty_label="-"
+    )
+ 
+    #variedad_code = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'})) 
     #variedad_name = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'})) 
-    apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
+    #apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
     cultivo = forms.ChoiceField(choices=op_cultivo,widget=forms.Select(attrs={'class': 'my-input'})) 
     ubicacion = forms.ChoiceField(choices=op_ubicacion,widget=forms.Select(attrs={'class': 'my-input'})) 
     estructura = forms.ChoiceField(choices=op_estructura, widget=forms.Select(attrs={'class': 'my-input'}))  

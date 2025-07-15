@@ -19,6 +19,21 @@ def lotes_detail(request, pk):
     salidas = get_object_or_404(lotes, pk=pk)
     return render(request, 'sdcsemillas/lotes_detail.html', {'registros': salidas})
 
+def obtener_variedad_relacionada(request):
+    codigo = request.GET.get('codigo')
+    nombre = request.GET.get('nombre')
+
+    if codigo:
+        variedad = variedades.objects.filter(variedad_code=codigo).first()
+        if variedad:
+            return JsonResponse({'nombre': variedad.apodo_variedad})
+    elif nombre:
+        variedad = variedades.objects.filter(apodo_variedad=nombre).first()
+        if variedad:
+            return JsonResponse({'codigo': variedad.variedad_code})
+
+    return JsonResponse({}, status=404)
+
 def  lotes_create(request):
     if request.method == 'POST':
         form = lotesForm(request.POST)
