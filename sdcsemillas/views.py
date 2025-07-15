@@ -12,7 +12,7 @@ def sdcsemillashomepage(request):
 # Create your views here.
 def lotes_list(request):
     #today = timezone.localtime(timezone.now()).date()
-    salidas = lotes.objects.filter( status__isnull=True)
+    salidas = lotes.objects.all()
     return render(request, 'sdcsemillas/lotes_list.html', {'registros': salidas})
 
 def lotes_detail(request, pk):
