@@ -49,7 +49,7 @@ def  lotes_create(request):
             return JsonResponse({'errores': form.errors}, status=400)
     else:
         form = lotesForm()
-    return render(request, 'sdcsemillas/lotes_form.html', {'form': form})
+    return render(request, 'sdcsemillas/lotes_form.html', {'form': form,'modo':'crear'})
 
 def lotes_update(request, pk):
     salidas = get_object_or_404(lotes, pk=pk)
@@ -60,7 +60,7 @@ def lotes_update(request, pk):
             return redirect('lotes_list')
     else:
         form = lotesForm(instance=salidas)
-    return render(request, 'sdcsemillas/lotes_form.html', {'form': form})
+    return render(request, 'sdcsemillas/lotes_form.html', {'form': form,'modo':'actualizar'})
 
 def lotes_delete(request, pk):
 

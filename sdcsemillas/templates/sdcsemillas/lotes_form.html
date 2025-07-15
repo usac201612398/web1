@@ -141,11 +141,17 @@
 <body>
 
   <div class="container">
-    <h1>Registro y actualización</h1>
+    <h1>
+    {% if modo == "actualizar" %}
+        Actualización de Lote
+    {% else %}
+        Nuevo Registro de Lote
+    {% endif %}
+    </h1>
 
     <form method="post">
         {% csrf_token %}
-
+        
         <!-- Mostrar los errores del formulario -->
         {% if form.errors %}
             <div class="alert alert-danger">
