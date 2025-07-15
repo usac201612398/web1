@@ -39,7 +39,7 @@ class lotesForm(forms.ModelForm):
 
 class variedadesForm(forms.ModelForm):
 
-    op_cultivo = [('','-'),('Chile','Tomate')]
+    op_cultivo = [('','-'),('Chile','Chile'),('Tomate','Tomate')]
     op_status = [('','-'),('En proceso','En proceso'),('Finalizado','Finalizado'),('Anulado','Anulado')]
 
     variedad_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  
