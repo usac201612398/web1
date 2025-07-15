@@ -46,14 +46,14 @@ class variedadesForm(forms.ModelForm):
     variedad_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  
     apodo_variedad = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
     cultivo = forms.ChoiceField(choices=op_cultivo,widget=forms.Select(attrs={'class': 'my-input'})) 
-    codigo_padre = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  
-    codigo_madre = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'})) 
+    cod_padre = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  
+    cod_madre = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'})) 
     #status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'my-input'}))
     
     class Meta:
     
         model = variedades
-        fields = ['variedad_code','apodo_variedad','cultivo', 'codigo_padre','codigo_madre']
+        fields = ['variedad_code','apodo_variedad','cultivo', 'cod_padre','cod_madre']
 
 class conteoplantasForm(forms.ModelForm):
 
