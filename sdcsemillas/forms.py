@@ -56,7 +56,7 @@ class lotesForm(forms.ModelForm):
     class Meta:
         model = lotes
         fields = [
-            'fecha_pl', 'lote_code', 'variedad_code', 'apodo_variedad', 'cultivo',
+            'lote_code', 'variedad_code', 'apodo_variedad', 'cultivo',
             'ubicacion', 'estructura', 'plantas_padre', 'plantas_madre',
             'harvest_code', 'status', 'siembra_madre', 'metodo_prod',
             'target', 'surface', 'observaciones','shipment_hub','as_per_SDCMale','as_per_SDCFemale'
