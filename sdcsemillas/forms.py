@@ -44,7 +44,7 @@ class variedadesForm(forms.ModelForm):
     #op_status = [('','-'),('En proceso','En proceso'),('Finalizado','Finalizado'),('Anulado','Anulado')]
 
     variedad_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  
-    apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
+    apodo_variedad = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
     cultivo = forms.ChoiceField(choices=op_cultivo,widget=forms.Select(attrs={'class': 'my-input'})) 
     codigo_padre = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  
     codigo_madre = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'})) 
