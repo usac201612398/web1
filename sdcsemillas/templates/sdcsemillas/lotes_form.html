@@ -279,25 +279,26 @@
 </body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function () {
+    $(function () {
         $('#id_variedad_code').change(function () {
-            let code = $(this).val();
-            if (code) {
-                $.get('/ajax/obtener-variedad/', { codigo: code }, function (data) {
+            const codigo = $(this).val();
+            if (codigo) {
+                $.get("{% url 'obtener_variedad' %}", { codigo: codigo }, function (data) {
                     $('#id_apodo_variedad').val(data.nombre);
                 });
             }
         });
 
         $('#id_apodo_variedad').change(function () {
-            let nombre = $(this).val();
+            const nombre = $(this).val();
             if (nombre) {
-                $.get('/ajax/obtener-variedad/', { nombre: nombre }, function (data) {
+                $.get("{% url 'obtener_variedad' %}", { nombre: nombre }, function (data) {
                     $('#id_variedad_code').val(data.codigo);
                 });
             }
         });
     });
 </script>
+
 
 </html>

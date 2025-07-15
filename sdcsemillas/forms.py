@@ -15,17 +15,16 @@ class lotesForm(forms.ModelForm):
 
     fecha_pl = forms.DateField(widget=forms.DateInput(attrs={'class': 'my-input'}))
     lote_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'})) 
-    variedad_code = forms.ModelChoiceField(
-        queryset=variedades.objects.all().distinct('variedad_code'),
-        widget=forms.Select(attrs={'class': 'form-control', 'id': 'id_variedad_code'}),
-        empty_label="-"
+    variedad_code = forms.ChoiceField(
+        choices=[],
+        widget=forms.Select(attrs={'class': 'form-control', 'id': 'id_variedad_code'})
+    )
+    apodo_variedad = forms.ChoiceField(
+        choices=[],
+        required=False,
+        widget=forms.Select(attrs={'class': 'form-control', 'id': 'id_apodo_variedad'})
     )
 
-    apodo_variedad = forms.ModelChoiceField(
-        queryset=variedades.objects.all().distinct('apodo_variedad'),
-        widget=forms.Select(attrs={'class': 'form-control', 'id': 'id_apodo_variedad'}),
-        empty_label="-"
-    )
  
     #variedad_code = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'})) 
     #variedad_name = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'})) 
@@ -48,6 +47,11 @@ class lotesForm(forms.ModelForm):
         model = lotes
         fields = ['fecha_pl','lote_code','variedad_code','apodo_variedad','cultivo', 'ubicacion', 'estructura', 'plantas_padre','plantas_madre','harvest_code','status','siembra_madre','metodo_prod','target','surface','observaciones']
 
+    def __init__(self, *args, **kwargs):
+        super(lotesForm, self).__init__(*args, **kwargs)
+        variedades_qs = variedades.objects.all()
+        self.fields['variedad_code'].choices = [('', '-')] + [(v.variedad_code, v.variedad_code) for v in variedades_qs]
+        self.fields['apodo_variedad'].choices = [('', '-')] + [(v.apodo_variedad, v.apodo_variedad) for v in variedades_qs]
 
 class variedadesForm(forms.ModelForm):
 
