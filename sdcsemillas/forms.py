@@ -15,14 +15,14 @@ class lotesForm(forms.ModelForm):
         model = lotes
         fields = [
             'fecha_pl','lote_code','variedad_code','apodo_variedad','cultivo', 
-            'ubicacion', 'estructura', 'plantas_padre','plantas_madre',
+            'ubicación', 'estructura', 'plantas_padre','plantas_madre',
             'harvest_code','status','siembra_madre','metodo_prod','target','surface','observaciones'
         ]
         widgets = {
             'fecha_pl': forms.DateInput(attrs={'class': 'my-input'}),
             'lote_code': forms.TextInput(attrs={'class': 'my-input'}),
             'cultivo': forms.Select(attrs={'class': 'my-input'}),
-            'ubicacion': forms.Select(attrs={'class': 'my-input'}),
+            'ubicación': forms.Select(attrs={'class': 'my-input'}),
             'estructura': forms.Select(attrs={'class': 'my-input'}),
             'plantas_padre': forms.NumberInput(attrs={'class': 'my-input'}),
             'plantas_madre': forms.NumberInput(attrs={'class': 'my-input'}),
