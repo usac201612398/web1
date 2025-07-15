@@ -53,11 +53,11 @@
                 {%for registro in registros %} 
                     <tr> 
                         <td> <a href="{% url 'variedades_detail' registro.pk %}">{{ registro.id }}</a></td>
-                        <td>{{registro.codigo_variedad}}</td>
+                        <td>{{registro.variedad_code}}</td>
                         <td>{{registro.apodo_variedad}}</td>
                         <td>{{registro.cultivo}}</td>
-                        <td>{{registro.codigo_padre}}</td>
-                        <td>{{registro.codigo_madre}}</td>
+                        <td>{{registro.cod_padre}}</td>
+                        <td>{{registro.cod_madre}}</td>
                         <td ><a href="{% url 'variedades_update' registro.pk %}"><i class="fas fa-edit"></i></a></td>
                         <td><a href="{% url 'variedades_delete' registro.pk %}"><i class="fas fa-trash-alt"></i></a></td>
                     </tr> 
