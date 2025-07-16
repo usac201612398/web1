@@ -154,8 +154,7 @@
         Nuevo Personal
     {% endif %}
     </h1>
-    <button type="button" class="btn btn-success" onclick="startScanner()">Escanear QR</button>
-    <div id="reader" style="width: 300px; margin: 20px auto;"></div>
+    
 
     <form method="post">
         {% csrf_token %}
@@ -202,7 +201,8 @@
                 {{ form.supervisor}}
             </div>
         </div>
-
+        <button type="button" class="btn btn-success" onclick="startScanner()">Escanear QR</button>
+        <div id="reader" style="width: 300px; margin: 20px auto;"></div>
         <div class="form-group">
             <div class="form-row">
                 <label for="codigo_lote" class="form-label">Código Lote</label>
