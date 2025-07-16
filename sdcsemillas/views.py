@@ -576,7 +576,7 @@ def  operarios_create(request):
             return JsonResponse({'errores': form.errors}, status=400)
     else:
         form = operariosForm()
-    return render(request, 'sdcsemillas/operarios_form.html', {'form': form})
+    return render(request, 'sdcsemillas/operarios_form.html', {'form': form,'modo':'crear'})
 
 def operarios_update(request, pk):
     salidas = get_object_or_404(operariosApp, pk=pk)
@@ -587,7 +587,7 @@ def operarios_update(request, pk):
             return redirect('operarios_list')
     else:
         form = operariosForm(instance=salidas)
-    return render(request, 'sdcsemillas/operarios_form.html', {'form': form})
+    return render(request, 'sdcsemillas/operarios_form.html', {'form': form,'modo':'actualizar'})
 
 def operarios_delete(request, pk):
 
