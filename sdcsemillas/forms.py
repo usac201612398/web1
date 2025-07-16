@@ -370,7 +370,7 @@ class operariosForm(forms.ModelForm):
     
     codigo_empleado= forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
     codigoEvo = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
-    nombre_perario = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
+    nombre_operario= forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
     supervisor = forms.ChoiceField(choices=op_supervisores,widget=forms.Select(attrs={'class': 'form-control'}))  
     status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'form-control'}))
     codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control','readonly': 'readonly'}))
