@@ -366,14 +366,14 @@ class controlcosechaForm(forms.ModelForm):
 class operariosForm(forms.ModelForm):
 
     op_status = [('','-'),('Activo','Activo'),('Inactivo','Inactivo'),('Anulado','Anulado')]
-    op_supervisores = [('','-'),('A','A'),('B','B'),('C','C')]
+    op_supervisores = [('','-'),('Beberly Colindres','Beberly Colindres'),('Astrid García','Astrid García'),('Adi Salazar','Adi Salazar'),('Fatima Franco','Fatima Franco'),('Marlon Aguilar','Marlon Aguilar')]
     
-    codigo_empleado= forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  
-    codigoEvo = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))
-    nombreo_perario = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'})) 
-    supervisor = forms.ChoiceField(choices=op_supervisores,widget=forms.TextInput(attrs={'class': 'my-input'}))  
-    status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'my-input'}))
-    codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input','readonly': 'readonly'}))
+    codigo_empleado= forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
+    codigoEvo = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    nombreo_perario = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    supervisor = forms.ChoiceField(choices=op_supervisores,widget=forms.TextInput(attrs={'class': 'form-control'}))  
+    status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'form-cotrol'}))
+    codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     
     class Meta:
     
