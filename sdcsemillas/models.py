@@ -47,6 +47,7 @@ class lotes(models.Model):
     surface = models.FloatField(blank = True, null = True)
     observaciones = models.CharField(max_length= 75, blank = True, null =  True)
     shipment_hub = models.CharField(max_length= 50, blank = True, null =  True)
+    tipo = models.CharField(max_length= 50, blank = True, null =  True)
     as_per_SDCMale = models.FloatField(blank = True, null =  True)
     as_per_SDCFemale = models.FloatField(blank = True, null =  True)
 

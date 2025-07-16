@@ -14,7 +14,6 @@ class lotesForm(forms.ModelForm):
     op_cultivo = [('', '-'), ('Chile', 'Chile'), ('Tomate', 'Tomate')]
     op_status = [('', '-'), ('En proceso', 'En proceso'), ('Finalizado', 'Finalizado'), ('Anulado', 'Anulado')]
     op_metodos = [('', '-'), ('Greenhouse', 'Greenhouse'), ('Macrotunel', 'Macrotunel'), ('Nethouse', 'Nethouse')]
-
     
     lote_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
 
@@ -50,6 +49,7 @@ class lotesForm(forms.ModelForm):
     )
 
     shipment_hub = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    tipo = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     as_per_SDCMale = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     as_per_SDCFemale = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
 
@@ -59,7 +59,7 @@ class lotesForm(forms.ModelForm):
             'lote_code', 'variedad_code', 'apodo_variedad', 'cultivo',
             'ubicación', 'estructura', 'plantas_padre', 'plantas_madre',
             'harvest_code', 'status', 'siembra_madre', 'metodo_prod',
-            'target', 'surface', 'observaciones','shipment_hub','as_per_SDCMale','as_per_SDCFemale'
+            'target', 'surface', 'observaciones','shipment_hub','tipo','as_per_SDCMale','as_per_SDCFemale'
         ]
 
     def __init__(self, *args, **kwargs):
