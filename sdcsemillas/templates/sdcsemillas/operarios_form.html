@@ -224,82 +224,7 @@
         </div>
     </form>
   </div>
-
-  <!-- Script de Bootstrap -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-  
-</body>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-
-<body>
-
-  <div class="container">
-    <h1>Registro y actualización</h1>
-    <button type="button" class="btn btn-success" onclick="startScanner()">Escanear QR</button>
-
-    <div id="reader" style="width: 300px; margin: 20px auto;"></div>
-
-    <form method="post">
-        {% csrf_token %}
-        {% if form.errors %}
-            <div class="alert alert-danger">
-                <ul>
-                    {% for field in form %}
-                        {% for error in field.errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
-
-        <!-- Campos -->
-        <div class="form-group">
-            <div class="form-row">
-                <label for="codigo_empleado" class="form-label">Código-Empleado</label>
-                {{ form.codigo_empleado }}
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="form-row">
-                <label for="codigoEvo" class="form-label">Código-Evolution</label>
-                {{ form.codigoEvo }}
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="form-row">
-                <label for="nombre_operario" class="form-label">Nombre</label>
-                {{ form.nombre_operario }}
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="form-row">
-                <label for="supervisor" class="form-label">Supervisor</label>
-                {{ form.supervisor }}
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="form-row">
-                <label for="codigo_lote" class="form-label">Código-Lote</label>
-                {{ form.codigo_lote }}
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="form-row">
-                <label for="status" class="form-label">Status</label>
-                {{ form.status }}
-            </div>
-        </div>
-
-        <div class="form-group button-row">
-            <button type="submit" class="btn btn-primary">{{ form.instance.pk|yesno:"Actualizar,Crear" }}</button>
-            <a href="{% url 'operarios_list' %}" class="btn btn-secondary">Regresar</a>
-        </div>
-    </form>
-  </div>
-
+  </body>
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
@@ -326,7 +251,7 @@
   }
   </script>
 
-</body>
+
 
 
 </html>
