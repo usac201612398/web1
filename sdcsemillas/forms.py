@@ -29,7 +29,7 @@ class lotesForm(forms.ModelForm):
     )
 
     cultivo = forms.ChoiceField(choices=op_cultivo, widget=forms.Select(attrs={'class': 'form-control'}))
-    ubicacion = forms.ChoiceField(choices=op_ubicacion, widget=forms.Select(attrs={'class': 'form-control'}))
+    ubicación = forms.ChoiceField(choices=op_ubicacion, widget=forms.Select(attrs={'class': 'form-control'}))
     estructura = forms.ChoiceField(choices=op_estructura, widget=forms.Select(attrs={'class': 'form-control'}))
 
     plantas_padre = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
@@ -57,7 +57,7 @@ class lotesForm(forms.ModelForm):
         model = lotes
         fields = [
             'lote_code', 'variedad_code', 'apodo_variedad', 'cultivo',
-            'ubicacion', 'estructura', 'plantas_padre', 'plantas_madre',
+            'ubicación', 'estructura', 'plantas_padre', 'plantas_madre',
             'harvest_code', 'status', 'siembra_madre', 'metodo_prod',
             'target', 'surface', 'observaciones','shipment_hub','as_per_SDCMale','as_per_SDCFemale'
         ]
