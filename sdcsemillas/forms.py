@@ -242,7 +242,7 @@ class ccalidadpolenForm(forms.ModelForm):
     tipo_cultivo = forms.ChoiceField(choices=op_cultivo,widget=forms.Select(attrs={'class': 'form-control'})) 
     calidad = forms.ChoiceField(choices=op_calidad,widget=forms.Select(attrs={'class': 'form-control'}))
     cosistencia = forms.ChoiceField(choices=op_consistencia,widget=forms.Select(attrs={'class': 'form-control'}))
-    ag_externos=forms.ChoiceField(choices=op_agexternos,widget=forms.Select(attrs={'class': 'form-control'}))
+    ag_externos = forms.ChoiceField(choices=op_agexternos,widget=forms.Select(attrs={'class': 'form-control'}))
     fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control'}))
     estructura = forms.ChoiceField(choices=op_estructura, widget=forms.TextInput(attrs={'class': 'form-control'}))  
     status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'form-control'}))
