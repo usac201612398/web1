@@ -214,7 +214,6 @@ class floresabiertas(models.Model):
     flores_enmasculadas = models.IntegerField(blank = True, null = True) #Index por caja
     flores_sinpistilo =models.CharField(max_length= 20, blank = True, null =  True)
     flores_viejas = models.CharField(max_length= 20, blank = True, null =  True)
-    lastimado  =models.CharField(max_length= 20, blank = True, null =  True)
     boton_pequeño = models.CharField(max_length= 20, blank = True, null =  True)
     created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
