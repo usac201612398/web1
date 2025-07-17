@@ -360,6 +360,14 @@ def ccalidadpolen_list(request):
     return render(request, 'sdcsemillas/ccalidadpolen_list.html', {'registros': salidas})
 
 def ccalidadpolen_create(request):
+    nombre_supervisor = ''
+    
+    try:
+        usuario = usuariosApp.objects.get(correo=request.user.email)
+        nombre_supervisor = usuario.encargado
+    except usuariosApp.DoesNotExist:
+        nombre_supervisor = request.user.username  # Fallback si no se encuentra
+
     if request.method == 'POST':
         form = ccalidadpolenForm(request.POST)
         if form.is_valid():
@@ -373,7 +381,11 @@ def ccalidadpolen_create(request):
              # Imprimir errores para depuración
             return JsonResponse({'errores': form.errors}, status=400)
     else:
-        form = ccalidadpolenForm()
+        initial_data = {
+            'supervisor_name': nombre_supervisor
+        }
+        form = ccalidadpolenForm(initial=initial_data)
+     
     return render(request, 'sdcsemillas/ccalidadpolen_form.html', {'form': form,'modo':'crear'})
 
 def ccalidadpolen_update(request, pk):
@@ -458,6 +470,14 @@ def conteoflores_list(request):
     return render(request, 'sdcsemillas/conteoflores_list.html', {'registros': salidas})
 
 def conteoflores_create(request):
+    nombre_supervisor = ''
+    
+    try:
+        usuario = usuariosApp.objects.get(correo=request.user.email)
+        nombre_supervisor = usuario.encargado
+    except usuariosApp.DoesNotExist:
+        nombre_supervisor = request.user.username  # Fallback si no se encuentra
+
     if request.method == 'POST':
         form = conteofloresForm(request.POST)
         if form.is_valid():
@@ -471,7 +491,11 @@ def conteoflores_create(request):
              # Imprimir errores para depuración
             return JsonResponse({'errores': form.errors}, status=400)
     else:
-        form = conteofloresForm()
+        initial_data = {
+            'supervisor_name': nombre_supervisor
+        }
+        form = conteofloresForm(initial=initial_data)
+       
     return render(request, 'sdcsemillas/conteoflores_form.html', {'form': form,'modo':'crear'})
 
 def conteoflores_update(request, pk):
@@ -507,6 +531,15 @@ def controlcosecha_list(request):
     return render(request, 'sdcsemillas/controlcosecha_list.html', {'registros': salidas})
 
 def controlcosecha_create(request):
+    
+    nombre_supervisor = ''
+    
+    try:
+        usuario = usuariosApp.objects.get(correo=request.user.email)
+        nombre_supervisor = usuario.encargado
+    except usuariosApp.DoesNotExist:
+        nombre_supervisor = request.user.username  # Fallback si no se encuentra
+
     if request.method == 'POST':
         form = controlcosechaForm(request.POST)
         if form.is_valid():
@@ -520,7 +553,11 @@ def controlcosecha_create(request):
              # Imprimir errores para depuración
             return JsonResponse({'errores': form.errors}, status=400)
     else:
-        form = controlcosechaForm()
+        initial_data = {
+            'supervisor_name': nombre_supervisor
+        }
+        form = controlcosechaForm(initial=initial_data)
+       
     return render(request, 'sdcsemillas/controlcosecha_form.html', {'form': form,'modo':'crear'})
 
 def controlcosecha_update(request, pk):
