@@ -173,7 +173,7 @@ class conteofrutosForm(forms.ModelForm):
     apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     tipo_cultivo = forms.ChoiceField(choices=op_cultivo,widget=forms.Select(attrs={'class': 'form-control'})) 
     prom_autopolinizados = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
-    prom_foresabiertas= forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
+    prom_floresabiertas = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     prom_polinizados = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
     prom_cama = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
     prom_area = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
