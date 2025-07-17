@@ -339,24 +339,24 @@ class controlcosechaForm(forms.ModelForm):
     op_punto = [('','-'),('Maduro','Maduro'),('Verde','Verde'),('Camagua','Camagua')]
     
 
-    operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    supervisor_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    ubicacion_lote = forms.ChoiceField(choices=op_ubicacion,widget=forms.TextInput(attrs={'class': 'my-input'})) 
-    apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    tipo_cultivo = forms.ChoiceField(choices=op_cultivo,widget=forms.Select(attrs={'class': 'my-input'})) 
+    operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    supervisor_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    ubicacion_lote = forms.ChoiceField(choices=op_ubicacion,widget=forms.TextInput(attrs={'class': 'form-control'})) 
+    apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    tipo_cultivo = forms.ChoiceField(choices=op_cultivo,widget=forms.Select(attrs={'class': 'form-control'})) 
    
-    cajas_revisadas=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))
-    frutos_autopol=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))
-    frutos_sinmarca=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))
-    frutos_sinlana=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))
-    frutos_fueratipo=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))
-    llenado_caja=forms.ChoiceField(choices=op_sel,widget=forms.Select(attrs={'class': 'my-input'}))
-    punto_maduracion=forms.ChoiceField(choices=op_punto,widget=forms.Select(attrs={'class': 'my-input'}))
+    cajas_revisadas=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    frutos_autopol=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    frutos_sinmarca=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    frutos_sinlana=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    frutos_fueratipo=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    llenado_caja=forms.ChoiceField(choices=op_sel,widget=forms.Select(attrs={'class': 'form-control'}))
+    punto_maduracion=forms.ChoiceField(choices=op_punto,widget=forms.Select(attrs={'class': 'form-control'}))
     
-    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'my-input'}))
-    estructura = forms.ChoiceField(choices=op_estructura, widget=forms.TextInput(attrs={'class': 'my-input'}))  
-    status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'my-input'}))
-    observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control'}))
+    estructura = forms.ChoiceField(choices=op_estructura, widget=forms.TextInput(attrs={'class': 'form-control'}))  
+    status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'form-control'}))
+    observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
 
     class Meta:
     
