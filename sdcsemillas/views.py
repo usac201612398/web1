@@ -472,7 +472,7 @@ def conteoflores_create(request):
              # Imprimir errores para depuración
             return JsonResponse({'errores': form.errors}, status=400)
     else:
-        form = indexpolinizacionForm()
+        form = conteofloresForm()
     return render(request, 'sdcsemillas/conteoflores_form.html', {'form': form})
 
 def conteoflores_update(request, pk):
