@@ -94,6 +94,7 @@ class conteoplantas(models.Model):
 class conteosemillas(models.Model):
     #op_status = [('Pendiente','-'),('En proceso','En proceso'),('Cerrado','Cerrado')]
     id = models.BigAutoField(primary_key=True)
+    codigo_lote = models.BigIntegerField(blank=True, null=True)
     fecha = models.DateField(blank=True, null=True)
     supervisor_name = models.CharField(max_length= 50, blank = True, null =  True)
     operario_name = models.CharField(max_length= 50, blank = True, null =  True)
@@ -116,15 +117,14 @@ class conteofrutos(models.Model):
     #op_status = [('Pendiente','-'),('En proceso','En proceso'),('Cerrado','Cerrado')]
     id = models.BigAutoField(primary_key=True)
     fecha = models.DateField(blank=True, null=True)
+    codigo_lote = models.BigIntegerField(blank=True, null=True)
     supervisor_name = models.CharField(max_length= 50, blank = True, null =  True)
     operario_name = models.CharField(max_length= 50, blank = True, null =  True)
     ubicacion_lote = models.CharField(max_length= 50, blank = True, null =  True)
     apodo_variedad = models.CharField(max_length= 50, blank = True, null =  True)
     tipo_cultivo = models.CharField(max_length= 20, blank = True, null =  True)
-
     prom_autopolinizados = models.FloatField(blank = True, null = True) # Frutos/planta
     prom_floresabiertas = models.FloatField(blank = True, null = True) # Frores/planta
-    
     prom_polinizados = models.FloatField(blank = True, null = True) # Frutos/planta
     estructura = models.CharField(max_length= 50, blank = True, null =  True)
     prom_cama = models.FloatField(blank = True, null = True) # Frutos/planta
@@ -181,7 +181,6 @@ class ccalidadpolen(models.Model):
 class indexpolinizacion(models.Model):
     #op_status = [('Pendiente','-'),('En proceso','En proceso'),('Cerrado','Cerrado')]
     id = models.BigAutoField(primary_key=True)
-    
     codigo_lote = models.BigIntegerField(blank=True, null=True)
     fecha = models.DateField(blank=True, null=True)
     diasemana= models.CharField(max_length= 50, blank = True, null =  True)

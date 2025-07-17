@@ -131,28 +131,28 @@ class conteosemillasForm(forms.ModelForm):
     op_cultivo = [('','-'),('Chile','Chile'),('Tomtate','Tomate')]
     op_status = [('','-'),('En proceso','En proceso'),('Finalizado','Finalizado')]
     op_estructura = op_invernadero + op_modulo + op_malla
-    
     op_clasificacion = [('','-'),('Fruto maduro','Fruto maduro'),('Fruto verde','Fruto verde')]
-
-    operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    supervisor_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    ubicacion_lote = forms.ChoiceField(choices=op_ubicacion,widget=forms.TextInput(attrs={'class': 'my-input'})) 
-    apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    tipo_cultivo = forms.ChoiceField(choices=op_cultivo,widget=forms.Select(attrs={'class': 'my-input'})) 
-    cantidad_frutos = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'})) 
-    semillasxfruto= forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'})) 
-    prom_semillasxfruto = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'})) 
-    nsemana = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'})) 
-    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'my-input'}))
-    estructura = forms.ChoiceField(choices=op_estructura, widget=forms.TextInput(attrs={'class': 'my-input'}))  
-    status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'my-input'}))
-    clasificacion = forms.ChoiceField(choices=op_clasificacion,widget=forms.Select(attrs={'class': 'my-input'}))
-    observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  
+    
+    codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    supervisor_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    ubicacion_lote = forms.ChoiceField(choices=op_ubicacion,widget=forms.TextInput(attrs={'class': 'form-control'})) 
+    apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    tipo_cultivo = forms.ChoiceField(choices=op_cultivo,widget=forms.Select(attrs={'class': 'form-control'})) 
+    cantidad_frutos = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
+    semillasxfruto= forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
+    prom_semillasxfruto = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
+    nsemana = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control'}))
+    estructura = forms.ChoiceField(choices=op_estructura, widget=forms.TextInput(attrs={'class': 'form-control'}))  
+    status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'form-control'}))
+    clasificacion = forms.ChoiceField(choices=op_clasificacion,widget=forms.Select(attrs={'class': 'form-control'}))
+    observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
 
     class Meta:
     
         model = conteosemillas
-        fields = ['operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','cantidad_frutos','semillasxfruto','prom_semillasxfruto','nsemana','fecha','estructura','status','clasificacion','observaciones']
+        fields = ['codigo_lote','operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','cantidad_frutos','semillasxfruto','prom_semillasxfruto','nsemana','fecha','estructura','status','clasificacion','observaciones']
 
 class conteofrutosForm(forms.ModelForm):
 
@@ -165,30 +165,30 @@ class conteofrutosForm(forms.ModelForm):
     op_estructura = op_invernadero + op_modulo + op_malla
     
     op_clasificacion = [('','-'),('Autopolinizado','Autopolinizado'),('Postpolinizado','Postpolinizado'),('General','General')]
-
-    operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    supervisor_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    ubicacion_lote = forms.ChoiceField(choices=op_ubicacion,widget=forms.TextInput(attrs={'class': 'my-input'})) 
-    apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    tipo_cultivo = forms.ChoiceField(choices=op_cultivo,widget=forms.Select(attrs={'class': 'my-input'})) 
     
-    prom_autopolinizados = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input'}))
-    prom_foresabiertas= forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input'})) 
-    prom_polinizados = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input'})) 
-    prom_cama = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input'})) 
-    prom_area = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input'})) 
-    prom_general = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input'})) 
-    nsemana = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'})) 
-    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'my-input'}))
-    estructura = forms.ChoiceField(choices=op_estructura, widget=forms.TextInput(attrs={'class': 'my-input'}))  
-    status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'my-input'}))
-    evento = forms.ChoiceField(choices=op_clasificacion,widget=forms.Select(attrs={'class': 'my-input'}))
-    observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  
+    codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    supervisor_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    ubicacion_lote = forms.ChoiceField(choices=op_ubicacion,widget=forms.TextInput(attrs={'class': 'form-control'})) 
+    apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    tipo_cultivo = forms.ChoiceField(choices=op_cultivo,widget=forms.Select(attrs={'class': 'form-control'})) 
+    prom_autopolinizados = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    prom_foresabiertas= forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
+    prom_polinizados = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
+    prom_cama = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
+    prom_area = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
+    prom_general = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
+    nsemana = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control'}))
+    estructura = forms.ChoiceField(choices=op_estructura, widget=forms.TextInput(attrs={'class': 'form-control'}))  
+    status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'form-control'}))
+    evento = forms.ChoiceField(choices=op_clasificacion,widget=forms.Select(attrs={'class': 'form-control'}))
+    observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
 
     class Meta:
     
         model = conteofrutos
-        fields = ['operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','prom_autopolinizados','prom_floresabiertas','prom_polinizados','prom_cama','prom_area','prom_general','nsemana','fecha','estructura','status','evento','observaciones']
+        fields = ['codigo_lote','operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','prom_autopolinizados','prom_floresabiertas','prom_polinizados','prom_cama','prom_area','prom_general','nsemana','fecha','estructura','status','evento','observaciones']
 
 class etapasdeloteForm(forms.ModelForm):
 

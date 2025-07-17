@@ -195,6 +195,14 @@ def conteosemillas_list(request):
     return render(request, 'sdcsemillas/conteosemillas_list.html', {'registros': salidas})
 
 def conteosemillas_create(request):
+    nombre_supervisor = ''
+    
+    try:
+        usuario = usuariosApp.objects.get(correo=request.user.email)
+        nombre_supervisor = usuario.encargado
+    except usuariosApp.DoesNotExist:
+        nombre_supervisor = request.user.username  # Fallback si no se encuentra
+
     if request.method == 'POST':
         form = conteosemillasForm(request.POST)
         if form.is_valid():
@@ -208,8 +216,12 @@ def conteosemillas_create(request):
              # Imprimir errores para depuración
             return JsonResponse({'errores': form.errors}, status=400)
     else:
-        form = conteosemillasForm()
-    return render(request, 'sdcsemillas/conteosemillas_form.html', {'form': form})
+        initial_data = {
+            'supervisor_name': nombre_supervisor
+        }
+        form = conteosemillasForm(initial=initial_data)
+        
+    return render(request, 'sdcsemillas/conteosemillas_form.html', {'form': form,'modo':'crear'})
 
 def conteosemillas_update(request, pk):
     salidas = get_object_or_404(conteosemillas, pk=pk)
@@ -220,7 +232,7 @@ def conteosemillas_update(request, pk):
             return redirect('conteosemillas_list')
     else:
         form = conteosemillasForm(instance=salidas)
-    return render(request, 'sdcsemillas/conteosemillas_form.html', {'form': form})
+    return render(request, 'sdcsemillas/conteosemillas_form.html', {'form': form,'modo':'actualizar'})
 
 def conteosemillas_delete(request, pk):
 
@@ -244,6 +256,15 @@ def conteofrutos_list(request):
     return render(request, 'sdcsemillas/conteofrutos_list.html', {'registros': salidas})
 
 def conteofrutos_create(request):
+    
+    nombre_supervisor = ''
+    
+    try:
+        usuario = usuariosApp.objects.get(correo=request.user.email)
+        nombre_supervisor = usuario.encargado
+    except usuariosApp.DoesNotExist:
+        nombre_supervisor = request.user.username  # Fallback si no se encuentra
+
     if request.method == 'POST':
         form = conteofrutosForm(request.POST)
         if form.is_valid():
@@ -257,8 +278,12 @@ def conteofrutos_create(request):
              # Imprimir errores para depuración
             return JsonResponse({'errores': form.errors}, status=400)
     else:
-        form = conteofrutosForm()
-    return render(request, 'sdcsemillas/conteofrutos_form.html', {'form': form})
+        initial_data = {
+            'supervisor_name': nombre_supervisor
+        }
+        form = conteofrutosForm(initial=initial_data)
+        
+    return render(request, 'sdcsemillas/conteofrutos_form.html', {'form': form,'modo':'crear'})
 
 def conteofrutos_update(request, pk):
     salidas = get_object_or_404(conteofrutos, pk=pk)
@@ -269,7 +294,7 @@ def conteofrutos_update(request, pk):
             return redirect('conteofrutos_list')
     else:
         form = conteofrutosForm(instance=salidas)
-    return render(request, 'sdcsemillas/conteofrutos_form.html', {'form': form})
+    return render(request, 'sdcsemillas/conteofrutos_form.html', {'form': form,'modo':'actualizar'})
 
 def conteofrutos_delete(request, pk):
 
