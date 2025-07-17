@@ -452,7 +452,6 @@ def indexpolinizacion_detail(request, pk):
     salidas = get_object_or_404(indexpolinizacion, pk=pk)
     return render(request, 'sdcsemillas/indexpolinizacion_detail.html', {'registros': salidas})
 
-
 def conteoflores_list(request):
     #today = timezone.localtime(timezone.now()).date()
     salidas = floresabiertas.objects.filter( status__isnull=True)
@@ -473,7 +472,7 @@ def conteoflores_create(request):
             return JsonResponse({'errores': form.errors}, status=400)
     else:
         form = conteofloresForm()
-    return render(request, 'sdcsemillas/conteoflores_form.html', {'form': form})
+    return render(request, 'sdcsemillas/conteoflores_form.html', {'form': form,'modo':'crear'})
 
 def conteoflores_update(request, pk):
     salidas = get_object_or_404(floresabiertas, pk=pk)
@@ -484,7 +483,7 @@ def conteoflores_update(request, pk):
             return redirect('conteoflores_list')
     else:
         form = conteofloresForm(instance=salidas)
-    return render(request, 'sdcsemillas/conteoflores_form.html', {'form': form})
+    return render(request, 'sdcsemillas/conteoflores_form.html', {'form': form,'modo':'actualizar'})
 
 def conteoflores_delete(request, pk):
 
@@ -522,7 +521,7 @@ def controlcosecha_create(request):
             return JsonResponse({'errores': form.errors}, status=400)
     else:
         form = controlcosechaForm()
-    return render(request, 'sdcsemillas/conteocosecha_form.html', {'form': form})
+    return render(request, 'sdcsemillas/conteocosecha_form.html', {'form': form,'modo':'crear'})
 
 def controlcosecha_update(request, pk):
     salidas = get_object_or_404(controlcosecha, pk=pk)
@@ -533,7 +532,7 @@ def controlcosecha_update(request, pk):
             return redirect('controlcosecHa_list')
     else:
         form = controlcosechaForm(instance=salidas)
-    return render(request, 'sdcsemillas/controlcosecha_list.html', {'form': form})
+    return render(request, 'sdcsemillas/controlcosecha_list.html', {'form': form,'modo':'actualizar'})
 
 def controlcosecha_delete(request, pk):
 

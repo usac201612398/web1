@@ -338,7 +338,7 @@ class controlcosechaForm(forms.ModelForm):
     op_sel = [('','-'),('Adecuado','Adecuado'),('Mejorar','Mejorar')]
     op_punto = [('','-'),('Maduro','Maduro'),('Verde','Verde'),('Camagua','Camagua')]
     
-
+    codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     supervisor_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     ubicacion_lote = forms.ChoiceField(choices=op_ubicacion,widget=forms.TextInput(attrs={'class': 'form-control'})) 
