@@ -521,7 +521,7 @@ def controlcosecha_create(request):
             return JsonResponse({'errores': form.errors}, status=400)
     else:
         form = controlcosechaForm()
-    return render(request, 'sdcsemillas/conteocosecha_form.html', {'form': form,'modo':'crear'})
+    return render(request, 'sdcsemillas/controlcosecha_form.html', {'form': form,'modo':'crear'})
 
 def controlcosecha_update(request, pk):
     salidas = get_object_or_404(controlcosecha, pk=pk)
