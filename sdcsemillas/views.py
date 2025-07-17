@@ -433,6 +433,14 @@ def indexpolinizacion_list(request):
     return render(request, 'sdcsemillas/indexpolinizacion_list.html', {'registros': salidas})
 
 def indexpolinizacion_create(request):
+    nombre_supervisor = ''
+    
+    try:
+        usuario = usuariosApp.objects.get(correo=request.user.email)
+        nombre_supervisor = usuario.encargado
+    except usuariosApp.DoesNotExist:
+        nombre_supervisor = request.user.username  # Fallback si no se encuentra
+
     if request.method == 'POST':
         form = indexpolinizacionForm(request.POST)
         if form.is_valid():
@@ -446,8 +454,12 @@ def indexpolinizacion_create(request):
              # Imprimir errores para depuración
             return JsonResponse({'errores': form.errors}, status=400)
     else:
-        form = indexpolinizacionForm()
-    return render(request, 'sdcsemillas/indexpolinizacion_form.html', {'form': form})
+        initial_data = {
+            'supervisor_name': nombre_supervisor
+        }
+        form = indexpolinizacionForm(initial=initial_data)
+      
+    return render(request, 'sdcsemillas/indexpolinizacion_form.html', {'form': form,'modo':'crear'})
 
 def indexpolinizacion_update(request, pk):
     salidas = get_object_or_404(indexpolinizacion, pk=pk)
@@ -458,7 +470,7 @@ def indexpolinizacion_update(request, pk):
             return redirect('indexpolinizacion_list')
     else:
         form = indexpolinizacionForm(instance=salidas)
-    return render(request, 'sdcsemillas/indexpolinizacion_form.html', {'form': form})
+    return render(request, 'sdcsemillas/indexpolinizacion_form.html', {'form': form,'modo':'actualizar'})
 
 def indexpolinizacion_delete(request, pk):
 

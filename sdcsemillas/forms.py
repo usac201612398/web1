@@ -267,26 +267,26 @@ class indexpolinizacionForm(forms.ModelForm):
     op_colores= [('','-'),('Rojo','Rojo'),('Verde','Verde'),('Azul','Azul'),('Negro','Negro'),('Blanco','Blanco'),('Amarillo','Amarillo'),('Anaranjado','Anaranjado'),('Celeste','Celeste'),('Morado','Morado')]
     op_estructura = op_invernadero + op_modulo + op_malla
     
-   
-    operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    supervisor_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    ubicacion_lote = forms.ChoiceField(choices=op_ubicacion,widget=forms.TextInput(attrs={'class': 'my-input'})) 
-    apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    tipo_cultivo = forms.ChoiceField(choices=op_cultivo,widget=forms.Select(attrs={'class': 'my-input'})) 
-    color_lana = forms.ChoiceField(choices=op_colores,widget=forms.Select(attrs={'class': 'my-input'}))
-    diasemana = forms.ChoiceField(choices=op_dias,widget=forms.Select(attrs={'class': 'my-input'}))
-    cantidad_camas=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))
-    cantidad_index=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))
-    promedio=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input'}))
-    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'my-input'}))
-    estructura = forms.ChoiceField(choices=op_estructura, widget=forms.TextInput(attrs={'class': 'my-input'}))  
-    status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'my-input'}))
-    observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  
+    codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    supervisor_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    ubicacion_lote = forms.ChoiceField(choices=op_ubicacion,widget=forms.TextInput(attrs={'class': 'form-control'})) 
+    apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    tipo_cultivo = forms.ChoiceField(choices=op_cultivo,widget=forms.Select(attrs={'class': 'form-control'})) 
+    color_lana = forms.ChoiceField(choices=op_colores,widget=forms.Select(attrs={'class': 'form-control'}))
+    diasemana = forms.ChoiceField(choices=op_dias,widget=forms.Select(attrs={'class': 'form-control'}))
+    cantidad_camas=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    cantidad_index=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    promedio=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control'}))
+    estructura = forms.ChoiceField(choices=op_estructura, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'form-control'}))
+    observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
 
     class Meta:
     
         model = indexpolinizacion
-        fields = ['operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','color_lana','diasemana','cantidad_camas','cantidad_index','promedio','fecha','estructura','status','observaciones']
+        fields = ['codigo_lote','operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','color_lana','diasemana','cantidad_camas','cantidad_index','promedio','fecha','estructura','status','observaciones']
 
 class conteofloresForm(forms.ModelForm):
 
