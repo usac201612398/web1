@@ -154,7 +154,9 @@
         Nuevo Registro
     {% endif %}
     </h1>
-
+    <button type="button" class="btn btn-success" onclick="startScanner()">Escanear QR</button>
+    <div id="reader" style="width: 300px; margin-top: 20px;"></div>
+    
     <form method="post">
         {% csrf_token %}
 
