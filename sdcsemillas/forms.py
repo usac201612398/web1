@@ -299,27 +299,27 @@ class conteofloresForm(forms.ModelForm):
     op_estructura = op_invernadero + op_modulo + op_malla
     op_sel = [('','-'),('Si','Si'),('No','No')]
 
-    operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    supervisor_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    ubicacion_lote = forms.ChoiceField(choices=op_ubicacion,widget=forms.TextInput(attrs={'class': 'my-input'})) 
-    apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    tipo_cultivo = forms.ChoiceField(choices=op_cultivo,widget=forms.Select(attrs={'class': 'my-input'})) 
-    diasemana = forms.ChoiceField(choices=op_dias,widget=forms.Select(attrs={'class': 'my-input'}))
-    nsemana = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))
+    operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    supervisor_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    ubicacion_lote = forms.ChoiceField(choices=op_ubicacion,widget=forms.TextInput(attrs={'class': 'form-control'})) 
+    apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    tipo_cultivo = forms.ChoiceField(choices=op_cultivo,widget=forms.Select(attrs={'class': 'form-control'})) 
+    diasemana = forms.ChoiceField(choices=op_dias,widget=forms.Select(attrs={'class': 'form-control'}))
+    nsemana = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     
-    flores_abiertas=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))
-    flores_antenas=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))
-    flores_polinizadas=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))
-    flores_enmasculadas=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))
-    flores_sinpistilo=forms.ChoiceField(choices=op_sel,widget=forms.Select(attrs={'class': 'my-input'}))
-    flores_viejas=forms.ChoiceField(choices=op_sel,widget=forms.Select(attrs={'class': 'my-input'}))
-    lastimado=forms.ChoiceField(choices=op_sel,widget=forms.Select(attrs={'class': 'my-input'}))
-    boton_pequeño=forms.ChoiceField(choices=op_sel,widget=forms.Select(attrs={'class': 'my-input'}))
+    flores_abiertas=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    flores_antenas=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    flores_polinizadas=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    flores_enmasculadas=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    flores_sinpistilo=forms.ChoiceField(choices=op_sel,widget=forms.Select(attrs={'class': 'form-control'}))
+    flores_viejas=forms.ChoiceField(choices=op_sel,widget=forms.Select(attrs={'class': 'form-control'}))
+    lastimado=forms.ChoiceField(choices=op_sel,widget=forms.Select(attrs={'class': 'form-control'}))
+    boton_pequeño=forms.ChoiceField(choices=op_sel,widget=forms.Select(attrs={'class': 'form-control'}))
     
-    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'my-input'}))
-    estructura = forms.ChoiceField(choices=op_estructura, widget=forms.TextInput(attrs={'class': 'my-input'}))  
-    status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'my-input'}))
-    observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control'}))
+    estructura = forms.ChoiceField(choices=op_estructura, widget=forms.TextInput(attrs={'class': 'form-control'}))  
+    status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'form-control'}))
+    observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
 
     class Meta:
     
