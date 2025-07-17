@@ -226,6 +226,7 @@ class floresabiertas(models.Model):
 class controlcosecha(models.Model):
     #op_status = [('Pendiente','-'),('En proceso','En proceso'),('Cerrado','Cerrado')]
     id = models.BigAutoField(primary_key=True)
+    codigo_lote = models.BigIntegerField(blank=True, null=True)
     fecha = models.DateField(blank=True, null=True)
     supervisor_name = models.CharField(max_length= 50, blank = True, null =  True)
     operario_name = models.CharField(max_length= 50, blank = True, null =  True)
