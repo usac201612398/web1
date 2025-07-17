@@ -304,7 +304,7 @@ def etapasdelote_create(request):
         }
         form = etapasdeloteForm(initial=initial_data)
     
-    return render(request, 'sdcsemillas/etapasdelote_form.html', {'form': form})
+    return render(request, 'sdcsemillas/etapasdelote_form.html', {'form': form,'modo':'crear'})
 
 def obtener_datos_lote(request, codigo_lote):
     try:
@@ -335,7 +335,7 @@ def etapasdelote_update(request, pk):
     else:
         
         form = etapasdeloteForm(instance=salidas)
-    return render(request, 'sdcsemillas/etapasdelote_form.html', {'form': form})
+    return render(request, 'sdcsemillas/etapasdelote_form.html', {'form': form,'modo':'actualizar'})
 
 def etapasdelote_delete(request, pk):
 

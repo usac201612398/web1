@@ -202,18 +202,18 @@ class etapasdeloteForm(forms.ModelForm):
     op_clasificacion = [('','-'),('Cosecha','Cosecha'),('Polinizacion','Polinizacion')]
 
     #operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input','readonly': 'readonly'}))
-    supervisor_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input','readonly': 'readonly'}))
-    ubicacion_lote = forms.ChoiceField(choices=op_ubicacion,widget=forms.TextInput(attrs={'class': 'my-input','readonly': 'readonly'})) 
-    apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input','readonly': 'readonly'}))
-    tipo_cultivo = forms.ChoiceField(choices=op_cultivo,widget=forms.Select(attrs={'class': 'my-input','readonly': 'readonly'})) 
-    codigo_madre = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'})) 
-    codigo_padre = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'})) 
-    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'my-input','type': 'date'}))
-    estructura = forms.ChoiceField(choices=op_estructura, widget=forms.TextInput(attrs={'class': 'my-input','readonly': 'readonly'}))  
-    status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'my-input'}))
-    evento = forms.ChoiceField(choices=op_clasificacion,widget=forms.Select(attrs={'class': 'my-input'}))
-    observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  
+    codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    supervisor_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    ubicacion_lote = forms.ChoiceField(choices=op_ubicacion,widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'})) 
+    apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    tipo_cultivo = forms.ChoiceField(choices=op_cultivo,widget=forms.Select(attrs={'class': 'form-control','readonly': 'readonly'})) 
+    codigo_madre = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'})) 
+    codigo_padre = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'})) 
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','type': 'date'}))
+    estructura = forms.ChoiceField(choices=op_estructura, widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))  
+    status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'form-control'}))
+    evento = forms.ChoiceField(choices=op_clasificacion,widget=forms.Select(attrs={'class': 'form-control'}))
+    observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
 
     class Meta:
     
