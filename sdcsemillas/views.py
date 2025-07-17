@@ -374,7 +374,7 @@ def ccalidadpolen_create(request):
             return JsonResponse({'errores': form.errors}, status=400)
     else:
         form = ccalidadpolenForm()
-    return render(request, 'sdcsemillas/ccalidadpolen_form.html', {'form': form})
+    return render(request, 'sdcsemillas/ccalidadpolen_form.html', {'form': form,'modo':'crear'})
 
 def ccalidadpolen_update(request, pk):
     salidas = get_object_or_404(ccalidadpolen, pk=pk)
@@ -385,7 +385,7 @@ def ccalidadpolen_update(request, pk):
             return redirect('ccalidadpolen_list')
     else:
         form = ccalidadpolenForm(instance=salidas)
-    return render(request, 'sdcsemillas/ccalidadpolen_form.html', {'form': form})
+    return render(request, 'sdcsemillas/ccalidadpolen_form.html', {'form': form,'modo':'actualizar'})
 
 def ccalidadpolen_delete(request, pk):
 

@@ -234,24 +234,24 @@ class ccalidadpolenForm(forms.ModelForm):
     op_agexternos= [('','-'),('Insectos','Insectos'),('Restos de vegetales','Restos de vegetales')]
     op_estructura = op_invernadero + op_modulo + op_malla
     
-   
-    operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    supervisor_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    ubicacion_lote = forms.ChoiceField(choices=op_ubicacion,widget=forms.TextInput(attrs={'class': 'my-input'})) 
-    apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    tipo_cultivo = forms.ChoiceField(choices=op_cultivo,widget=forms.Select(attrs={'class': 'my-input'})) 
-    calidad = forms.ChoiceField(choices=op_calidad,widget=forms.Select(attrs={'class': 'my-input'}))
-    cosistencia = forms.ChoiceField(choices=op_consistencia,widget=forms.Select(attrs={'class': 'my-input'}))
-    ag_externos=forms.ChoiceField(choices=op_agexternos,widget=forms.Select(attrs={'class': 'my-input'}))
-    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'my-input'}))
-    estructura = forms.ChoiceField(choices=op_estructura, widget=forms.TextInput(attrs={'class': 'my-input'}))  
-    status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'my-input'}))
-    observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  
+    codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    supervisor_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    ubicacion_lote = forms.ChoiceField(choices=op_ubicacion,widget=forms.TextInput(attrs={'class': 'form-control'})) 
+    apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    tipo_cultivo = forms.ChoiceField(choices=op_cultivo,widget=forms.Select(attrs={'class': 'form-control'})) 
+    calidad = forms.ChoiceField(choices=op_calidad,widget=forms.Select(attrs={'class': 'form-control'}))
+    cosistencia = forms.ChoiceField(choices=op_consistencia,widget=forms.Select(attrs={'class': 'form-control'}))
+    ag_externos=forms.ChoiceField(choices=op_agexternos,widget=forms.Select(attrs={'class': 'form-control'}))
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control'}))
+    estructura = forms.ChoiceField(choices=op_estructura, widget=forms.TextInput(attrs={'class': 'form-control'}))  
+    status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'form-control'}))
+    observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
 
     class Meta:
     
         model = ccalidadpolen
-        fields = ['operario_name','supervisor_name','ubicacion_lote','apodo_variedad','calidad','consistencia','ag_externos','fecha','estructura','status','observaciones']
+        fields = ['codigo_lote','operario_name','supervisor_name','ubicacion_lote','apodo_variedad','calidad','consistencia','ag_externos','fecha','estructura','status','observaciones']
 
 
 class indexpolinizacionForm(forms.ModelForm):
@@ -361,7 +361,7 @@ class controlcosechaForm(forms.ModelForm):
     class Meta:
     
         model = controlcosecha
-        fields = ['operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','cajas_revisadas','frutos_autopol','frutos_sinmarca','frutos_sinlana','frutos_fueratipo','llenado_caja','punto_maduracion','fecha','estructura','status','observaciones']
+        fields = ['codigo_lote','operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','cajas_revisadas','frutos_autopol','frutos_sinmarca','frutos_sinlana','frutos_fueratipo','llenado_caja','punto_maduracion','fecha','estructura','status','observaciones']
 
 class operariosForm(forms.ModelForm):
 
