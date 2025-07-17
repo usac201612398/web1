@@ -133,6 +133,14 @@ def conteoplantas_list(request):
     return render(request, 'sdcsemillas/conteoplantas_list.html', {'registros': salidas})
 
 def  conteoplantas_create(request):
+    nombre_supervisor = ''
+    
+    try:
+        usuario = usuariosApp.objects.get(correo=request.user.email)
+        nombre_supervisor = usuario.encargado
+    except usuariosApp.DoesNotExist:
+        nombre_supervisor = request.user.username  # Fallback si no se encuentra
+
     if request.method == 'POST':
         form = conteoplantasForm(request.POST)
         if form.is_valid():
@@ -146,8 +154,12 @@ def  conteoplantas_create(request):
              # Imprimir errores para depuración
             return JsonResponse({'errores': form.errors}, status=400)
     else:
-        form = conteoplantasForm()
-    return render(request, 'sdcsemillas/conteoplantas_form.html', {'form': form})
+        initial_data = {
+            'supervisor_name': nombre_supervisor
+        }
+        form = conteoplantasForm(initial=initial_data)
+    
+    return render(request, 'sdcsemillas/conteoplantas_form.html', {'form': form,'modo':'crear'})
 
 def conteoplantas_update(request, pk):
     salidas = get_object_or_404(conteoplantas, pk=pk)
@@ -158,7 +170,7 @@ def conteoplantas_update(request, pk):
             return redirect('conteoplantas_list')
     else:
         form = conteoplantasForm(instance=salidas)
-    return render(request, 'sdcsemillas/conteoplantas_form.html', {'form': form})
+    return render(request, 'sdcsemillas/conteoplantas_form.html', {'form': form,'modo':'actualizar'})
 
 def conteoplantas_delete(request, pk):
 

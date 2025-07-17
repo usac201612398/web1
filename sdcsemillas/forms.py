@@ -98,28 +98,29 @@ class conteoplantasForm(forms.ModelForm):
     
     op_eventos = [('','-'),('Al transplante','Al transplante'),('Polinización','Polinización'),('Cosecha','Cosecha')]
 
-    operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    supervisor_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    ubicacion_lote = forms.ChoiceField(choices=op_ubicacion,widget=forms.TextInput(attrs={'class': 'my-input'})) 
-    apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    tipo_cultivo = forms.ChoiceField(choices=op_cultivo,widget=forms.Select(attrs={'class': 'my-input'})) 
-    codigo_planta = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'}))  
-    codigo_madre = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'my-input'})) 
-    plantas_activas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'})) 
-    plantas_faltantes = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'})) 
-    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'my-input'}))
-    camas_completas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'})) 
-    camas_incompletas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'})) 
-    cocosxcamaincompletas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'})) 
-    estructura = forms.ChoiceField(choices=op_estructura, widget=forms.TextInput(attrs={'class': 'my-input'}))  
-    status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'my-input'}))
-    evento = forms.ChoiceField(choices=op_eventos,widget=forms.Select(attrs={'class': 'my-input'}))
-    observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  
+    codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    supervisor_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    ubicacion_lote = forms.ChoiceField(choices=op_ubicacion,widget=forms.TextInput(attrs={'class': 'form-control'})) 
+    apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    tipo_cultivo = forms.ChoiceField(choices=op_cultivo,widget=forms.Select(attrs={'class': 'form-control'})) 
+    codigo_planta = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
+    codigo_madre = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'})) 
+    plantas_activas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
+    plantas_faltantes = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control'}))
+    camas_completas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
+    camas_incompletas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
+    cocosxcamaincompletas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
+    estructura = forms.ChoiceField(choices=op_estructura, widget=forms.TextInput(attrs={'class': 'form-control'}))  
+    status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'form-control'}))
+    evento = forms.ChoiceField(choices=op_eventos,widget=forms.Select(attrs={'class': 'form-control'}))
+    observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
 
     class Meta:
     
         model = conteoplantas
-        fields = ['operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','codigo_planta','codigo_madre','plantas_activas','plantas_faltantes','fecha','camas_completas','camas_incompletas','cocosxcamaincompletas', 'estructura', 'status','evento','observaciones']
+        fields = ['codigo_lote','operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','codigo_planta','codigo_madre','plantas_activas','plantas_faltantes','fecha','camas_completas','camas_incompletas','cocosxcamaincompletas', 'estructura', 'status','evento','observaciones']
 
 class conteosemillasForm(forms.ModelForm):
 
