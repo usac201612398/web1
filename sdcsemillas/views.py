@@ -346,7 +346,7 @@ def etapasdelote_create(request):
 def obtener_datos_lote(request, codigo_lote):
     try:
 
-        lote = lotes.objects.get(id=codigo_lote)
+        lote = lotes.objects.get(id=int(codigo_lote))
         variedad = variedades.objects.get(variedad_code=lote.variedad_code)
 
         data = {
@@ -360,7 +360,7 @@ def obtener_datos_lote(request, codigo_lote):
         }
         return JsonResponse(data)
     except lotes.DoesNotExist:
-        return JsonResponse({'error': 'Lote no encontrado','lote':list(lote)}, status=404)
+        return JsonResponse({'error': 'Lote no encontrado'}, status=404)
     
 def etapasdelote_update(request, pk):
     salidas = get_object_or_404(etapasdelote, pk=pk)
