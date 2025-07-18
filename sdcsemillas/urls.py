@@ -79,5 +79,7 @@ urlpatterns = [
     
     path('api/lote/<int:codigo_lote>/', views.obtener_datos_lote, name='api_obtener_lote'),
     path('ajax/obtener-variedad/', views.obtener_variedad_relacionada, name='obtener_variedad'),
+    path('api/empleado/<str:codigo_empleado>/', views.obtener_datos_empleado, name='obtener_datos_empleado'),
+
 
 ]

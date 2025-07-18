@@ -166,8 +166,9 @@ class conteofrutosForm(forms.ModelForm):
     
     op_clasificacion = [('','-'),('Autopolinizado','Autopolinizado'),('Postpolinizado','Postpolinizado'),('General','General')]
     
+    codigo_empleado = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control','readonly': 'readonly'}))
-    operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     supervisor_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     ubicacion_lote = forms.ChoiceField(choices=op_ubicacion,widget=forms.TextInput(attrs={'class': 'form-control'})) 
     apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -188,7 +189,7 @@ class conteofrutosForm(forms.ModelForm):
     class Meta:
     
         model = conteofrutos
-        fields = ['codigo_lote','operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','prom_autopolinizados','prom_floresabiertas','prom_polinizados','prom_cama','prom_area','prom_general','nsemana','fecha','estructura','status','evento','observaciones']
+        fields = ['codigo_lote','codigo_empleado','operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','prom_autopolinizados','prom_floresabiertas','prom_polinizados','prom_cama','prom_area','prom_general','nsemana','fecha','estructura','status','evento','observaciones']
 
 class etapasdeloteForm(forms.ModelForm):
 

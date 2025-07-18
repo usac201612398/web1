@@ -229,6 +229,16 @@
             </div>
         </div>
 
+        <button type="button" class="btn btn-info" onclick="startEmpleadoScanner()">Escanear Empleado</button>
+        <div id="reader-empleado" style="width: 300px; margin-top: 20px;"></div>
+        
+        <div class="form-group">
+            <div class="form-row">
+                <label for="codigo_empleado" class="form-label">Código-Empleado</label>
+                {{ form.codigo_empleado}}
+            </div>
+        </div>
+        
         <div class="form-group">
             <div class="form-row">
                 <label for="operario_name" class="form-label">Operario</label>
@@ -353,4 +363,42 @@ function startScanner() {
     });
 }
 </script>
+
+<script>
+function startEmpleadoScanner() {
+    const html5QrCodeEmpleado = new Html5Qrcode("reader-empleado");
+    const qrConfig = { fps: 10, qrbox: 250 };
+
+    html5QrCodeEmpleado.start(
+        { facingMode: "environment" },
+        qrConfig,
+        (decodedText) => {
+            html5QrCodeEmpleado.stop(); // Detener escaneo
+            const codigoEmpleado = decodedText.trim();
+
+            fetch(`/api/empleado/${codigoEmpleado}/`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Empleado no encontrado");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Asigna los datos a los campos del formulario
+                    document.getElementById("id_codigo_empleado").value = data.codigo_empleado;
+                    document.getElementById("id_nombre_operario").value = data.nombre_operario;
+                })
+                .catch(error => {
+                    alert(error.message);
+                });
+        },
+        (errorMessage) => {
+            console.warn(errorMessage);
+        }
+    ).catch(err => {
+        console.error("Error al iniciar el escáner de empleado:", err);
+    });
+}
+</script>
+
 </html>
