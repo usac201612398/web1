@@ -366,41 +366,43 @@ function startScanner() {
 </script>
 
 <script>
-function startEmpleadoScanner() {
-    const html5QrCodeEmpleado = new Html5Qrcode("reader-empleado");
-    const qrConfig = { fps: 10, qrbox: 250 };
-
-    html5QrCodeEmpleado.start(
-        { facingMode: "environment" },
-        qrConfig,
-        (decodedText) => {
-            html5QrCodeEmpleado.stop(); // Detener escaneo
-            const codigoEmpleado = decodedText.trim();
-            console.log(codigoEmpleado)
-            const codigo = encodeURIComponent("PS 304");
-            fetch(`/api/empleado/${codigoEmpleado}/`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error("Empleado no encontrado");
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    // Asigna los datos a los campos del formulario
-                    document.getElementById("id_codigo_empleado").value = data.codigo_empleado;
-                    document.getElementById("id_nombre_operario").value = data.nombre_operario;
-                })
-                .catch(error => {
-                    alert(error.message);
-                });
-        },
-        (errorMessage) => {
-            console.warn(errorMessage);
+    function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
         }
-    ).catch(err => {
-        console.error("Error al iniciar el escáner de empleado:", err);
-    });
+    }
+    return cookieValue;
 }
+
+const data = new URLSearchParams();
+data.append('codigo_empleado', 'PS 304');
+
+fetch('/api/empleado/', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: data.toString()
+})
+.then(response => {
+    if (!response.ok) throw new Error('Empleado no encontrado');
+    return response.json();
+})
+.then(data => {
+    console.log('Empleado:', data);
+})
+.catch(error => {
+    console.error('Error:', error.message);
+});
+
 </script>
 
 </html>
