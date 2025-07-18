@@ -366,7 +366,7 @@ function startScanner() {
 </script>
 
 <script>
-    function getCookie(name) {
+function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';');
@@ -381,28 +381,51 @@ function startScanner() {
     return cookieValue;
 }
 
-const data = new URLSearchParams();
-data.append('codigo_empleado', 'PS 304');
+function startEmpleadoScanner() {
+    const html5QrCode = new Html5Qrcode("reader-empleado");
+    const qrConfig = { fps: 10, qrbox: 250 };
 
-fetch('/api/empleado/', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'X-CSRFToken': getCookie('csrftoken')
-    },
-    body: data.toString()
-})
-.then(response => {
-    if (!response.ok) throw new Error('Empleado no encontrado');
-    return response.json();
-})
-.then(data => {
-    console.log('Empleado:', data);
-})
-.catch(error => {
-    console.error('Error:', error.message);
-});
+    html5QrCode.start(
+        { facingMode: "environment" },
+        qrConfig,
+        (decodedText) => {
+            html5QrCode.stop();
+            const codigoEmpleado = decodedText.trim();
+            console.log("Código escaneado:", codigoEmpleado);
 
+            const data = new URLSearchParams();
+            data.append('codigo_empleado', codigoEmpleado);
+
+            fetch('/api/empleado/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: data.toString()
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Empleado no encontrado');
+                return response.json();
+            })
+            .then(data => {
+                console.log('Empleado:', data);
+                document.getElementById("id_codigo_empleado").value = data.codigo_empleado;
+                document.getElementById("id_operario_name").value = data.nombre_operario;
+            })
+            .catch(error => {
+                alert(error.message);
+                console.error('Error:', error.message);
+            });
+        },
+        (errorMessage) => {
+            console.warn(errorMessage);
+        }
+    ).catch(err => {
+        console.error("Error al iniciar el escáner de empleado:", err);
+    });
+}
 </script>
+
 
 </html>

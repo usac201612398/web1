@@ -636,21 +636,21 @@ def controlcosecha_detail(request, pk):
     salidas = get_object_or_404(controlcosecha, pk=pk)
     return render(request, 'sdcsemillas/controlcosecha_detail.html', {'registros': salidas})
 
-def obtener_datos_empleado(request, codigo_empleado):
-    try:
-        empleado = operariosApp.objects.get(codigo_empleado=str(codigo_empleado))
-        
-        data = {
-            'codigo_empleado': empleado.codigo_empleado,
-            'codigoevo': empleado.codigoevo,
-            'nombre_operario': empleado.nombre_operario
-            #'supervisor': empleado.supervisor,
-            
-            #'status': empleado.status
-        }
-        return JsonResponse(data)
-    except operariosApp.DoesNotExist:
-        return JsonResponse({'error': 'Empleado no encontrado'}, status=404)
+def obtener_datos_empleado_post(request):
+    if request.method == "POST":
+        codigo = request.POST.get('codigo_empleado', '').strip()
+        try:
+            empleado = operariosApp.objects.get(codigo_empleado=codigo)
+            data = {
+                'codigo_empleado': empleado.codigo_empleado,
+                'codigoevo': empleado.codigoevo,
+                'nombre_operario': empleado.nombre_operario
+            }
+            return JsonResponse(data)
+        except operariosApp.DoesNotExist:
+            return JsonResponse({'error': 'Empleado no encontrado'}, status=404)
+    else:
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
 
 # Create your views here.
 def operarios_list(request):
