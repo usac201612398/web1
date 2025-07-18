@@ -325,7 +325,7 @@
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
 <script>
-function startScanner() {
+ function startScanner() {
     const html5QrCode = new Html5Qrcode("reader");
     const qrConfig = { fps: 10, qrbox: 250 };
 
@@ -335,9 +335,13 @@ function startScanner() {
         (decodedText) => {
             html5QrCode.stop();
             const codigoLote = decodedText.trim();
-            console.log(codigoLote);
-            fetch(`/api/lote/${codigoLote}/`)
-                .then(response => { 
+            console.log("Código escaneado:", codigoLote);
+
+            // Construir URL con Django url y reemplazar parámetro dinámico
+            const url = `{% url 'lote_detail' 'codigo_lote_param' %}`.replace('codigo_lote_param', codigoLote);
+
+            fetch(url)
+                .then(response => {
                     if (!response.ok) {
                         throw new Error("Lote no encontrado");
                     }
@@ -349,11 +353,18 @@ function startScanner() {
                     document.getElementById("id_tipo_cultivo").value = data.tipo_cultivo;
                     document.getElementById("id_ubicacion_lote").value = data.ubicacion_lote;
                     document.getElementById("id_estructura").value = data.estructura;
-                    document.getElementById("id_codigo_padre").value = data.codigo_padre;
-                    document.getElementById("id_codigo_madre").value = data.codigo_madre;
+
+                    // Solo si los tienes en tu formulario, de lo contrario quita estos campos
+                    if(document.getElementById("id_codigo_padre")) {
+                      document.getElementById("id_codigo_padre").value = data.codigo_padre;
+                    }
+                    if(document.getElementById("id_codigo_madre")) {
+                      document.getElementById("id_codigo_madre").value = data.codigo_madre;
+                    }
                 })
                 .catch(error => {
                     alert(error.message);
+                    console.error(error);
                 });
         },
         (errorMessage) => {
@@ -363,6 +374,7 @@ function startScanner() {
         console.error("Error al iniciar el escáner QR:", err);
     });
 }
+
 </script>
 
 <script>
