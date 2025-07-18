@@ -347,7 +347,7 @@ def obtener_datos_lote(request, codigo_lote):
     try:
 
         lote = lotes.objects.get(id=int(codigo_lote))
-        variedad = variedades.objects.get(variedad_code=lote.variedad_code)
+        #variedad = variedades.objects.get(variedad_code=lote.variedad_code)
 
         data = {
             'codigo_lote': lote.id,
@@ -355,8 +355,8 @@ def obtener_datos_lote(request, codigo_lote):
             'tipo_cultivo': lote.cultivo,
             'ubicacion_lote': lote.ubicación,
             'estructura': lote.estructura,
-            'codigo_padre': variedad.cod_padre,
-            'codigo_madre': variedad.cod_madre
+            #'codigo_padre': variedad.cod_padre,
+            #'codigo_madre': variedad.cod_madre
         }
         return JsonResponse(data)
     except lotes.DoesNotExist:
