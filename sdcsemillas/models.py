@@ -20,7 +20,7 @@ class operariosApp(models.Model):
     nombre_operario = models.CharField(max_length=75, blank=True)
     codigo_lote = models.BigIntegerField(blank=True,null=True)
     camas = models.FloatField(blank=True,null=True)
-    supervisor = models.CharField(max_length=30)
+    supervisor = models.CharField(max_length=30,blank=True,null=True)
     status = models.CharField(max_length= 30, blank = True, null =  True)
     
     def __str__(self):
