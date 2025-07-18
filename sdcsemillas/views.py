@@ -650,6 +650,7 @@ def obtener_datos_empleado(request, codigo_empleado):
         return JsonResponse(data)
     except operariosApp.DoesNotExist:
         return JsonResponse({'error': 'Empleado no encontrado'}, status=404)
+
 # Create your views here.
 def operarios_list(request):
     #today = timezone.localtime(timezone.now()).date()
