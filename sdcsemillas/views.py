@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.http import JsonResponse
 from.forms import *
 from django.contrib import messages
+import json
 
 def sdcsemillashomepage(request):
     return render(request,'sdcsemillas/sdcsemillas_home.html')
@@ -343,24 +344,30 @@ def etapasdelote_create(request):
     
     return render(request, 'sdcsemillas/etapasdelote_form.html', {'form': form,'modo':'crear'})
 
-def obtener_datos_lote(request, codigo_lote):
-    try:
+def obtener_datos_lote(request):
+    if request.method == 'POST':
+        # Asumiendo que recibes un JSON o form-urlencoded con 'codigo_lote'
+        codigo_lote = request.POST.get('codigo_lote') or json.loads(request.body).get('codigo_lote')
 
-        lote = lotes.objects.get(id=int(codigo_lote))
-        variedad = variedades.objects.get(variedad_code=lote.variedad_code)
+        try:
+            lote = lotes.objects.get(id=int(codigo_lote))
+            variedad = variedades.objects.get(variedad_code=lote.variedad_code)
 
-        data = {
-            'codigo_lote': lote.id,
-            'apodo_variedad': lote.apodo_variedad,
-            'tipo_cultivo': lote.cultivo,
-            'ubicacion_lote': lote.ubicación,
-            'estructura': lote.estructura,
-            'codigo_padre': variedad.cod_padre,
-            'codigo_madre': variedad.cod_madre
-        }
-        return JsonResponse(data)
-    except lotes.DoesNotExist:
-        return JsonResponse({'error': 'Lote no encontrado'}, status=404)
+            data = {
+                'codigo_lote': lote.id,
+                'apodo_variedad': lote.apodo_variedad,
+                'tipo_cultivo': lote.cultivo,
+                'ubicacion_lote': lote.ubicación,
+                'estructura': lote.estructura,
+                'codigo_padre': variedad.cod_padre,
+                'codigo_madre': variedad.cod_madre
+            }
+            return JsonResponse(data)
+
+        except lotes.DoesNotExist:
+            return JsonResponse({'error': 'Lote no encontrado'}, status=404)
+    else:
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
     
 def etapasdelote_update(request, pk):
     salidas = get_object_or_404(etapasdelote, pk=pk)
