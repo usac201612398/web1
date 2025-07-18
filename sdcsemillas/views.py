@@ -638,14 +638,15 @@ def controlcosecha_detail(request, pk):
 
 def obtener_datos_empleado(request, codigo_empleado):
     try:
-        empleado = operariosApp.objects.get(codigo_empleado=codigo_empleado)
+        empleado = operariosApp.objects.get(codigo_empleado=str(codigo_empleado))
         
         data = {
             'codigo_empleado': empleado.codigo_empleado,
             'codigoevo': empleado.codigoevo,
-            'nombre_operario': empleado.nombre_operario,
-            'supervisor': empleado.supervisor,
-            'status': empleado.status
+            'nombre_operario': empleado.nombre_operario
+            #'supervisor': empleado.supervisor,
+            
+            #'status': empleado.status
         }
         return JsonResponse(data)
     except operariosApp.DoesNotExist:

@@ -337,7 +337,7 @@ function startScanner() {
             const codigoLote = decodedText.trim();
             console.log(codigoLote);
             fetch(`/api/lote/${codigoLote}/`)
-                .then(response => {
+                .then(response => { 
                     if (!response.ok) {
                         throw new Error("Lote no encontrado");
                     }
