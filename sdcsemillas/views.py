@@ -360,7 +360,7 @@ def obtener_datos_lote(request, codigo_lote):
         }
         return JsonResponse(data)
     except lotes.DoesNotExist:
-        return JsonResponse({'error': 'Lote no encontrado'}, status=404)
+        return JsonResponse({'error': 'Lote no encontrado'+ str(codigo_lote)}, status=404)
     
 def etapasdelote_update(request, pk):
     salidas = get_object_or_404(etapasdelote, pk=pk)
