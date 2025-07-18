@@ -335,7 +335,7 @@ function startScanner() {
         (decodedText) => {
             html5QrCode.stop();
             const codigoLote = decodedText.trim();
-
+            console.log(codigoLote);
             fetch(`/api/lote/${codigoLote}/`)
                 .then(response => {
                     if (!response.ok) {
@@ -376,6 +376,7 @@ function startEmpleadoScanner() {
         (decodedText) => {
             html5QrCodeEmpleado.stop(); // Detener escaneo
             const codigoEmpleado = decodedText.trim();
+            console.log(codigoEmpleado)
 
             fetch(`/api/empleado/${codigoEmpleado}/`)
                 .then(response => {
