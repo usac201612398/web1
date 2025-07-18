@@ -639,7 +639,7 @@ def controlcosecha_detail(request, pk):
 # Create your views here.
 def operarios_list(request):
     #today = timezone.localtime(timezone.now()).date()
-    salidas = operariosApp.objects.filter( status__isnull=True)
+    salidas = operariosApp.objects.all()
     return render(request, 'sdcsemillas/operarios_list.html', {'registros': salidas})
 
 def operarios_detail(request, pk):
