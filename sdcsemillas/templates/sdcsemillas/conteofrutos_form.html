@@ -377,7 +377,7 @@ function startEmpleadoScanner() {
             html5QrCodeEmpleado.stop(); // Detener escaneo
             const codigoEmpleado = decodedText.trim();
             console.log(codigoEmpleado)
-
+            const codigo = encodeURIComponent("PS 304");
             fetch(`/api/empleado/${codigoEmpleado}/`)
                 .then(response => {
                     if (!response.ok) {
