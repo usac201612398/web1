@@ -370,7 +370,7 @@ class operariosForm(forms.ModelForm):
     op_supervisores = [('','-'),('Beberly Colindres','Beberly Colindres'),('Astrid García','Astrid García'),('Adi Salazar','Adi Salazar'),('Fatima Franco','Fatima Franco'),('Marlon Aguilar','Marlon Aguilar')]
     
     codigo_empleado= forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
-    codigoEvo = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    codigoevo = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     nombre_operario= forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
     supervisor = forms.ChoiceField(choices=op_supervisores,widget=forms.Select(attrs={'class': 'form-control'}))  
     status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'form-control'}))
@@ -379,4 +379,4 @@ class operariosForm(forms.ModelForm):
     class Meta:
     
         model = operariosApp
-        fields = ['codigo_empleado','codigoEvo','nombre_operario', 'supervisor','status','codigo_lote']
+        fields = ['codigo_empleado','codigoevo','nombre_operario', 'supervisor','status','codigo_lote']

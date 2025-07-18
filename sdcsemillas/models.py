@@ -16,7 +16,7 @@ class operariosApp(models.Model):
 
     id = models.BigAutoField(primary_key=True)
     codigo_empleado = models.CharField(max_length=75, blank=True)
-    codigoEvo = models.BigIntegerField(blank = True, null =  True)
+    codigoevo = models.BigIntegerField(blank = True, null =  True)
     nombre_operario = models.CharField(max_length=75, blank=True)
     codigo_lote = models.BigIntegerField(blank=True,null=True)
     camas = models.FloatField(blank=True,null=True)
