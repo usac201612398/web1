@@ -45,6 +45,12 @@ urlpatterns = [
     path('conteofrutos/<int:pk>/edit/', views.conteofrutos_update, name='conteofrutos_update'),
     path('conteofrutos/<int:pk>/delete/', views.conteofrutos_delete, name='conteofrutos_delete'),
 
+    path("conteofrutosplan/",views.conteofrutosplan_list,name='conteofrutosplan_list'),
+    path('conteofrutosplan/<int:pk>/', views.conteofrutosplan_detail, name='conteofrutosplan_detail'),
+    path('conteofrutosplan/new/', views.conteofrutosplan_create, name='conteofrutosplan_create'),
+    path('conteofrutosplan/<int:pk>/edit/', views.conteofrutosplan_update, name='conteofrutosplan_update'),
+    path('conteofrutosplan/<int:pk>/delete/', views.conteofrutosplan_delete, name='conteofrutosplan_delete'),
+
     path("etapasdelote/",views.etapasdelote_list,name='etapasdelote_list'),
     path('etapasdelote/<int:pk>/', views.etapasdelote_detail, name='etapasdelote_detail'),
     path('etapasdelote/new/', views.etapasdelote_create, name='etapasdelote_create'),

@@ -115,6 +115,32 @@ class conteosemillas(models.Model):
     observaciones = models.CharField(max_length= 75, blank = True, null =  True)
     status = models.TextField(max_length= 30, blank = True, null =  True)
 
+#Conteo de frutos planilla
+class conteofrutosplanilla(models.Model):
+    #op_status = [('Pendiente','-'),('En proceso','En proceso'),('Cerrado','Cerrado')]
+    id = models.BigAutoField(primary_key=True)
+    fecha = models.DateField(blank=True, null=True)
+    codigo_lote = models.BigIntegerField(blank=True, null=True)
+    supervisor_name = models.CharField(max_length= 50, blank = True, null =  True)
+    codigo_empleado = models.CharField(max_length=75, blank=True)
+    operario_name = models.CharField(max_length= 50, blank = True, null =  True)
+    ubicacion_lote = models.CharField(max_length= 50, blank = True, null =  True)
+    apodo_variedad = models.CharField(max_length= 50, blank = True, null =  True)
+    tipo_cultivo = models.CharField(max_length= 20, blank = True, null =  True)
+    estructura = models.CharField(max_length= 50, blank = True, null =  True)
+    cama1 = models.IntegerFieldField(blank = True, null = True) # Frutos/cama
+    cama2 = models.IntegerFieldField(blank = True, null = True) # Frutos/cama
+    cama3 = models.IntegerFieldField(blank = True, null = True) # Frutos/cama
+    cama4 = models.IntegerFieldField(blank = True, null = True) # Frutos/cama
+    cama5 = models.IntegerFieldField(blank = True, null = True) # Frutos/cama
+    media = models.IntegerFieldField(blank = True, null = True) # Frutos/cama
+    prom_area = models.FloatField(blank = True, null = True) # Frutos/planta
+    prom_general = models.FloatField(blank = True, null = True) # Frutos/planta
+    created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
+    observaciones = models.CharField(max_length= 75, blank = True, null =  True)
+    status = models.TextField(max_length= 30, blank = True, null =  True)
+
 #Conteo de frutos general
 class conteofrutos(models.Model):
     #op_status = [('Pendiente','-'),('En proceso','En proceso'),('Cerrado','Cerrado')]
@@ -131,13 +157,9 @@ class conteofrutos(models.Model):
     prom_floresabiertas = models.FloatField(blank = True, null = True) # Frores/planta
     prom_polinizados = models.FloatField(blank = True, null = True) # Frutos/planta
     estructura = models.CharField(max_length= 50, blank = True, null =  True)
-    prom_cama = models.FloatField(blank = True, null = True) # Frutos/planta
-    prom_area = models.FloatField(blank = True, null = True) # Frutos/planta
-    prom_general = models.FloatField(blank = True, null = True) # Frutos/planta
     created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     observaciones = models.CharField(max_length= 75, blank = True, null =  True)
-    nsemana = models.IntegerField(blank = True, null = True)
     evento = models.TextField(max_length= 30, blank = True, null =  True) #AUTOPOLINIZADO, POST-POLINIZADO, GENERAL
     status = models.TextField(max_length= 30, blank = True, null =  True)
 
@@ -199,7 +221,13 @@ class indexpolinizacion(models.Model):
     color_lana= models.CharField(max_length= 20, blank = True, null =  True)
     cantidad_camas = models.IntegerField(blank = True, null = True)
     cantidad_index = models.IntegerField(blank = True, null = True) #Index por cama colocados
-    promedio  = models.FloatField(blank = True, null = True)
+    cama1  = models.CharField(max_length= 50, blank = True, null =  True)
+    cama2  = models.CharField(max_length= 50, blank = True, null =  True)
+    cama3  = models.CharField(max_length= 50, blank = True, null =  True)
+    cama4  = models.CharField(max_length= 50, blank = True, null =  True)
+    cama5  = models.CharField(max_length= 50, blank = True, null =  True)
+    media  = models.CharField(max_length= 50, blank = True, null =  True)
+    total_index=  models.IntegerField(blank = True, null = True)
     created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     observaciones = models.CharField(max_length= 75, blank = True, null =  True)

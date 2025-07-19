@@ -178,10 +178,6 @@ class conteofrutosForm(forms.ModelForm):
     prom_autopolinizados = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     prom_floresabiertas = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     prom_polinizados = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
-    prom_cama = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
-    prom_area = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
-    prom_general = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
-    nsemana = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
     fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','type': 'date'}))
     estructura = forms.ChoiceField(choices=op_estructura, widget=forms.TextInput(attrs={'class': 'form-control'}))  
     status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'form-control'}))
@@ -191,7 +187,42 @@ class conteofrutosForm(forms.ModelForm):
     class Meta:
     
         model = conteofrutos
-        fields = ['codigo_lote','codigo_empleado','operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','prom_autopolinizados','prom_floresabiertas','prom_polinizados','prom_cama','prom_area','prom_general','nsemana','fecha','estructura','status','evento','observaciones']
+        fields = ['codigo_lote','codigo_empleado','operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','prom_autopolinizados','prom_floresabiertas','prom_polinizados','fecha','estructura','status','evento','observaciones']
+
+class conteofrutosplanillaForm(forms.ModelForm):
+
+    op_ubicacion = [('','-'),('SL','SL'),('CIP','CIP'),('Cecilio', 'Cecilio'),('Bella Vista', 'Bella Vista')]
+    op_modulo = [('','-'),('Modulo 1','Modulo 1'),('Modulo 2','Modulo 2'),('Modulo 3', 'Modulo 3'),('Modulo 4','Modulo 4'),('Modulo 5','Modulo 5'),('Modulo 6', 'Modulo 6'),('Modulo 7','Modulo 7'),('Modulo 8','Modulo 8'),('Modulo 9', 'Modulo 9'),('Modulo 10','Modulo 10'),('Modulo 11','Modulo 11')]
+    op_invernadero = [('','-'),('Invernadero 1','Invernadero 1'),('Invernadero 2','Invernadero 2'),('Invernadero 3', 'Invernadero 3'),('Invernadero 4','Invernadero 4'),('Invernadero 5','Invernadero 5'),('Invernadero 6', 'Invernadero 6'),('Invernadero 7','Invernadero 7'),('Invernadero 8','Invernadero 8'),('Invernadero 9', 'Invernadero 9'),('Invernadero 10','Invernadero 10'),('Invernadero 11','Invernadero 11')]
+    op_malla = [('','-'),('Casa Malla','Casa Malla')]
+    op_cultivo = [('','-'),('Chile','Chile'),('Tomtate','Tomate')]
+    op_status = [('','-'),('En proceso','En proceso'),('Finalizado','Finalizado')]
+    op_estructura = op_invernadero + op_modulo + op_malla
+    
+    codigo_empleado = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    supervisor_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    ubicacion_lote = forms.ChoiceField(choices=op_ubicacion,widget=forms.TextInput(attrs={'class': 'form-control'})) 
+    apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    tipo_cultivo = forms.ChoiceField(choices=op_cultivo,widget=forms.Select(attrs={'class': 'form-control'})) 
+    cama1 = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    cama2 = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    cama3 = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    cama4 = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    cama5 = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    media = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    prom_area = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
+    prom_general = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','type': 'date'}))
+    estructura = forms.ChoiceField(choices=op_estructura, widget=forms.TextInput(attrs={'class': 'form-control'}))  
+    status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'form-control'}))
+    observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
+
+    class Meta:
+    
+        model = conteofrutosplanilla
+        fields = ['codigo_lote','codigo_empleado','operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','cama1','cama2','cama3','cama4','cama5','media','prom_area','prom_general','fecha','estructura','status','observaciones']
 
 class etapasdeloteForm(forms.ModelForm):
 
@@ -270,7 +301,7 @@ class indexpolinizacionForm(forms.ModelForm):
     op_dias = [('','-'),('Lunes','Lunes'),('Martes','Martes'),('Miércoles','Miércoles'),('Jueves','Jueves'),('Viernes','Viernes'),('Sábado','Sábado'),('Domingo','Domingo')]
     op_colores= [('','-'),('Rojo','Rojo'),('Verde','Verde'),('Azul','Azul'),('Negro','Negro'),('Blanco','Blanco'),('Amarillo','Amarillo'),('Anaranjado','Anaranjado'),('Celeste','Celeste'),('Morado','Morado')]
     op_estructura = op_invernadero + op_modulo + op_malla
-    
+    op_index = [('','-'),('Index 1','Index 1'),('Index 2','Index 2'),('Index 3','Index 3'),('Index 4','Index 4'),('Index 5','Index 5'),('Ninguno','Ninguno')]
     codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     codigo_empleado = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
@@ -282,7 +313,13 @@ class indexpolinizacionForm(forms.ModelForm):
     diasemana = forms.ChoiceField(choices=op_dias,widget=forms.Select(attrs={'class': 'form-control'}))
     cantidad_camas=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     cantidad_index=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
-    promedio=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    cama1=forms.ChoiceField(choices=op_index,widget=forms.Select(attrs={'class': 'form-control'}))
+    cama2=forms.ChoiceField(choices=op_index,widget=forms.Select(attrs={'class': 'form-control'}))
+    cama3=forms.ChoiceField(choices=op_index,widget=forms.Select(attrs={'class': 'form-control'}))
+    cama4=forms.ChoiceField(choices=op_index,widget=forms.Select(attrs={'class': 'form-control'}))
+    cama5=forms.ChoiceField(choices=op_index,widget=forms.Select(attrs={'class': 'form-control'}))
+    media=forms.ChoiceField(choices=op_index,widget=forms.Select(attrs={'class': 'form-control'}))
+    total_index = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','type': 'date'}))
     estructura = forms.ChoiceField(choices=op_estructura, widget=forms.TextInput(attrs={'class': 'form-control'}))
     status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'form-control'}))
@@ -291,7 +328,7 @@ class indexpolinizacionForm(forms.ModelForm):
     class Meta:
     
         model = indexpolinizacion
-        fields = ['codigo_lote','codigo_empleado','operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','color_lana','diasemana','cantidad_camas','cantidad_index','promedio','fecha','estructura','status','observaciones']
+        fields = ['codigo_lote','codigo_empleado','operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','color_lana','diasemana','cantidad_camas','cantidad_index','media','cama1','cama2','cama3','cama4','cama5','total_index','fecha','estructura','status','observaciones']
 
 class conteofloresForm(forms.ModelForm):
 
@@ -305,6 +342,7 @@ class conteofloresForm(forms.ModelForm):
     op_estructura = op_invernadero + op_modulo + op_malla
     op_sel = [('','-'),('Si','Si'),('No','No')]
     op_semana = [('','-'),(1,'1'),(2,'2'),(3,'3'),(4,'4'),(5,'5'),(6,'6')]
+    
 
     codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))

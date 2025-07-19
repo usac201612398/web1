@@ -130,7 +130,7 @@ def variedades_detail(request, pk):
 
 def conteoplantas_list(request):
     #today = timezone.localtime(timezone.now()).date()
-    salidas = conteoplantas.objects.filter( status__isnull=True)
+    salidas = conteoplantas.objects.exclude(status__in=["Anulado", "Cerrado"])
     return render(request, 'sdcsemillas/conteoplantas_list.html', {'registros': salidas})
 
 def  conteoplantas_create(request):
@@ -192,7 +192,7 @@ def conteoplantas_detail(request, pk):
 
 def conteosemillas_list(request):
     #today = timezone.localtime(timezone.now()).date()
-    salidas = conteosemillas.objects.filter( status__isnull=True)
+    salidas = conteosemillas.objects.exclude(status__in=["Anulado", "Cerrado"])
     return render(request, 'sdcsemillas/conteosemillas_list.html', {'registros': salidas})
 
 def conteosemillas_create(request):
@@ -251,9 +251,68 @@ def conteosemillas_detail(request, pk):
     salidas = get_object_or_404(conteosemillas, pk=pk)
     return render(request, 'sdcsemillas/conteosemillas_detail.html', {'registros': salidas})
 
+
+def conteofrutosplan_list(request):
+    #today = timezone.localtime(timezone.now()).date()
+    salidas =  conteofrutosplanilla.objects.exclude(status__in=["Anulado", "Cerrado"])
+    return render(request, 'sdcsemillas/conteofrutosplan_list.html', {'registros': salidas})
+
+def conteofrutosplan_create(request):
+    
+    nombre_supervisor = ''
+    
+    try:
+        usuario = usuariosApp.objects.get(correo=request.user.email)
+        nombre_supervisor = usuario.encargado
+    except usuariosApp.DoesNotExist:
+        nombre_supervisor = request.user.username  # Fallback si no se encuentra
+
+    if request.method == 'POST':
+        form = conteofrutosplanillaForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+            except Exception as e:
+                # Manejar excepciones específicas (por ejemplo, UniqueConstraintError)
+                return JsonResponse({'error': str(e)}, status=400)
+            return redirect('conteofrutosplan_list')
+        else:
+             # Imprimir errores para depuración
+            return JsonResponse({'errores': form.errors}, status=400)
+    else:
+        initial_data = {
+            'supervisor_name': nombre_supervisor
+        }
+        form = conteofrutosplanillaForm(initial=initial_data)
+        
+    return render(request, 'sdcsemillas/conteofrutosplan_form.html', {'form': form,'modo':'crear'})
+
+def conteofrutosplan_update(request, pk):
+    salidas = get_object_or_404(conteofrutosplanilla, pk=pk)
+    if request.method == 'POST':
+        form = conteofrutosplanillaForm(request.POST, instance=salidas)
+        if form.is_valid():
+            form.save()
+            return redirect('conteofrutosplan_list')
+    else:
+        form = conteofrutosForm(instance=salidas)
+    return render(request, 'sdcsemillas/conteofrutosplan_form.html', {'form': form,'modo':'actualizar'})
+
+def conteofrutosplan_delete(request, pk):
+
+    salidas = get_object_or_404(conteofrutosplanilla, pk=pk)
+
+    if request.method == 'POST':
+        salidas.status = 'Anulado'
+        salidas.save()
+        messages.success(request, "Conteo anulado correctamente.")
+        return redirect('conteofrutosplan_list')
+    
+    return render(request, 'sdcsemillas/conteofrutospla_confirm_delete.html', {'registros': salidas})
+
 def conteofrutos_list(request):
     #today = timezone.localtime(timezone.now()).date()
-    salidas = conteofrutos.objects.filter( status__isnull=True)
+    salidas = conteofrutos.objects.exclude(status__in=["Anulado", "Cerrado"])
     return render(request, 'sdcsemillas/conteofrutos_list.html', {'registros': salidas})
 
 def conteofrutos_create(request):
@@ -315,10 +374,8 @@ def conteofrutos_detail(request, pk):
 
 def etapasdelote_list(request):
     #today = timezone.localtime(timezone.now()).date()
-    salidas = etapasdelote.objects.filter( status__isnull=True)
+    salidas = etapasdelote.objects.objects.exclude(status__in=["Anulado", "Cerrado"])
     return render(request, 'sdcsemillas/etapasdelote_list.html', {'registros': salidas})
-
-
 
 def etapasdelote_create(request):
     nombre_supervisor = ''
@@ -400,7 +457,7 @@ def etapasdelote_detail(request, pk):
 
 def ccalidadpolen_list(request):
     #today = timezone.localtime(timezone.now()).date()
-    salidas = ccalidadpolen.objects.filter( status__isnull=True)
+    salidas = ccalidadpolen.objects.exclude(status__in=["Anulado", "Cerrado"])
     return render(request, 'sdcsemillas/ccalidadpolen_list.html', {'registros': salidas})
 
 def ccalidadpolen_create(request):
@@ -461,7 +518,7 @@ def ccalidadpolen_detail(request, pk):
 
 def indexpolinizacion_list(request):
     #today = timezone.localtime(timezone.now()).date()
-    salidas = indexpolinizacion.objects.filter( status__isnull=True)
+    salidas = indexpolinizacion.objects.exclude(status__in=["Anulado", "Cerrado"])
     return render(request, 'sdcsemillas/indexpolinizacion_list.html', {'registros': salidas})
 
 def indexpolinizacion_create(request):
@@ -522,7 +579,7 @@ def indexpolinizacion_detail(request, pk):
 
 def conteoflores_list(request):
     #today = timezone.localtime(timezone.now()).date()
-    salidas = floresabiertas.objects.filter( status__isnull=True)
+    salidas = floresabiertas.objects.exclude(status__in=["Anulado", "Cerrado"])
     return render(request, 'sdcsemillas/conteoflores_list.html', {'registros': salidas})
 
 def conteoflores_create(request):
@@ -583,7 +640,7 @@ def conteoflores_detail(request, pk):
 
 def controlcosecha_list(request):
     #today = timezone.localtime(timezone.now()).date()
-    salidas = controlcosecha.objects.filter( status__isnull=True)
+    salidas = controlcosecha.objects.exclude(status__in=["Anulado", "Cerrado"])
     return render(request, 'sdcsemillas/controlcosecha_list.html', {'registros': salidas})
 
 def controlcosecha_create(request):

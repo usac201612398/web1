@@ -241,29 +241,57 @@
 
         <div class="form-group">
             <div class="form-row">
-                <label for="prom_autopolinizados" class="form-label">Promedio-Autopolinizados</label>
-                {{ form.prom_autopolinizados }}
+                <label for="cama1" class="form-label">Cama 1</label>
+                {{ form.cama1 }}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <label for="prom_floresabiertas" class="form-label">Promedio-Flores Abiertas</label>
-                {{ form.prom_floresabiertas }}
+                <label for="cama2" class="form-label">Cama 2</label>
+                {{ form.cama2 }}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <label for="prom_polinizados" class="form-label">Promedio-polinizados</label>
-                {{ form.prom_polinizados }}
+                <label for="cama3" class="form-label">Cama 3</label>
+                {{ form.cama3 }}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <label for="evento" class="form-label">Evento</label>
-                {{ form.evento}}
+                <label for="cama4" class="form-label">Cama 4</label>
+                {{ form.cama4 }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-row">
+                <label for="cama5" class="form-label">Cama 5</label>
+                {{ form.cama5 }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-row">
+                <label for="media" class="form-label">Media</label>
+                {{ form.media }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-row">
+                <label for="prom_area" class="form-label">Promedio-Area</label>
+                {{ form.prom_area }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-row">
+                <label for="prom_general" class="form-label">Promedio-general</label>
+                {{ form.prom_general }}
             </div>
         </div>
 
@@ -284,7 +312,7 @@
         <!-- Botones centrados en una fila -->
         <div class="form-group button-row">
             <button type="submit" class="btn btn-primary">{{ form.instance.pk|yesno:"Actualizar,Crear" }}</button>
-            <a href="{% url 'conteofrutos_list' %}" class="btn btn-secondary">Regresar</a>
+            <a href="{% url 'conteofrutosplan_list' %}" class="btn btn-secondary">Regresar</a>
         </div>
     </form>
   </div>

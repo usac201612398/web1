@@ -32,11 +32,16 @@
                             <tr><td>Estructura:</td><td>{{ registros.estructura }} </td></tr>
                             <tr><td>Apodo-Variedad:</td><td>{{ registros.apodo_variedad }} </td></tr> 
                             <tr><td>Cultivo:</td><td>{{ registros.tipo_cultivo }} </td></tr> 
-                            <tr><td>Promedio - Autopolinizados:</td><td>{{ registros.prom_autopolinizados}} </td></tr>
-                            <tr><td>Promedio - Flores abiertas:</td><td>{{ registros.prom_floresabiertas}} </td></tr>
-                            <tr><td>Promedio - Polinizados:</td><td>{{ registros.prom_polinizados}} </td></tr>
+                            
+                            <tr><td>Cama 1:</td><td>{{ registros.cama1}} </td></tr>
+                            <tr><td>Cama 2:</td><td>{{ registros.cama2}} </td></tr>
+                            <tr><td>Cama 3:</td><td>{{ registros.cama3}} </td></tr>
+                            <tr><td>Cama 4:</td><td>{{ registros.cama4}} </td></tr>
+                            <tr><td>Cama 5:</td><td>{{ registros.cama5}} </td></tr>
+                            <tr><td>Media:</td><td>{{ registros.media}} </td></tr>
+                            <tr><td>Promedio - Area:</td><td>{{ registros.prom_area}} </td></tr>
+                            <tr><td>Promedio - General:</td><td>{{ registros.prom_general}} </td></tr>
                             <tr><td>Fecha:</td><td>{{ registros.fecha }} </td></tr>
-                            <tr><td>Evento:</td><td>{{ registros.evento}} </td></tr>
                             <tr><td>Status:</td><td>{{ registros.status}} </td></tr>
                             <tr><td>Observaciones:</td><td>{{ registros.observaciones }} </td></tr>
                             <tr><td>Creado:</td><td>{{ registros.created }} </td></tr> 
@@ -48,7 +53,7 @@
         </div>
     </div>
 
-    <a href="{% url 'conteofrutos_list' %}">Regresar a panel</a>
+    <a href="{% url 'conteofrutosplan_list' %}">Regresar a panel</a>
 
     
     
