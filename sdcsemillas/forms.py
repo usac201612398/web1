@@ -99,7 +99,8 @@ class conteoplantasForm(forms.ModelForm):
     op_eventos = [('','-'),('Al transplante','Al transplante'),('Polinización','Polinización'),('Cosecha','Cosecha')]
 
     codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control','readonly': 'readonly'}))
-    operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    codigo_empleado = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     supervisor_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     ubicacion_lote = forms.ChoiceField(choices=op_ubicacion,widget=forms.TextInput(attrs={'class': 'form-control'})) 
     apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -120,7 +121,7 @@ class conteoplantasForm(forms.ModelForm):
     class Meta:
     
         model = conteoplantas
-        fields = ['codigo_lote','operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','codigo_planta','codigo_madre','plantas_activas','plantas_faltantes','fecha','camas_completas','camas_incompletas','cocosxcamaincompleta', 'estructura', 'status','evento','observaciones']
+        fields = ['codigo_lote','codigo_empleado','operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','codigo_planta','codigo_madre','plantas_activas','plantas_faltantes','fecha','camas_completas','camas_incompletas','cocosxcamaincompleta', 'estructura', 'status','evento','observaciones']
 
 class conteosemillasForm(forms.ModelForm):
 
@@ -134,7 +135,8 @@ class conteosemillasForm(forms.ModelForm):
     op_clasificacion = [('','-'),('Fruto maduro','Fruto maduro'),('Fruto verde','Fruto verde')]
     
     codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control','readonly': 'readonly'}))
-    operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    codigo_empleado = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     supervisor_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     ubicacion_lote = forms.ChoiceField(choices=op_ubicacion,widget=forms.TextInput(attrs={'class': 'form-control'})) 
     apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -152,7 +154,7 @@ class conteosemillasForm(forms.ModelForm):
     class Meta:
     
         model = conteosemillas
-        fields = ['codigo_lote','operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','cantidad_frutos','semillasxfruto','prom_semillasxfruto','nsemana','fecha','estructura','status','clasificacion','observaciones']
+        fields = ['codigo_lote','codigo_empleado','operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','cantidad_frutos','semillasxfruto','prom_semillasxfruto','nsemana','fecha','estructura','status','clasificacion','observaciones']
 
 class conteofrutosForm(forms.ModelForm):
 
@@ -237,7 +239,8 @@ class ccalidadpolenForm(forms.ModelForm):
     op_estructura = op_invernadero + op_modulo + op_malla
     
     codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control','readonly': 'readonly'}))
-    operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    codigo_empleado = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     supervisor_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     ubicacion_lote = forms.ChoiceField(choices=op_ubicacion,widget=forms.TextInput(attrs={'class': 'form-control'})) 
     apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -253,7 +256,7 @@ class ccalidadpolenForm(forms.ModelForm):
     class Meta:
     
         model = ccalidadpolen
-        fields = ['codigo_lote','operario_name','supervisor_name','ubicacion_lote','apodo_variedad','calidad','consistencia','ag_externos','fecha','estructura','status','observaciones']
+        fields = ['codigo_lote','codigo_empleado','operario_name','supervisor_name','ubicacion_lote','apodo_variedad','calidad','consistencia','ag_externos','fecha','estructura','status','observaciones']
 
 
 class indexpolinizacionForm(forms.ModelForm):
@@ -269,7 +272,8 @@ class indexpolinizacionForm(forms.ModelForm):
     op_estructura = op_invernadero + op_modulo + op_malla
     
     codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control','readonly': 'readonly'}))
-    operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    codigo_empleado = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     supervisor_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     ubicacion_lote = forms.ChoiceField(choices=op_ubicacion,widget=forms.TextInput(attrs={'class': 'form-control'})) 
     apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -287,7 +291,7 @@ class indexpolinizacionForm(forms.ModelForm):
     class Meta:
     
         model = indexpolinizacion
-        fields = ['codigo_lote','operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','color_lana','diasemana','cantidad_camas','cantidad_index','promedio','fecha','estructura','status','observaciones']
+        fields = ['codigo_lote','codigo_empleado','operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','color_lana','diasemana','cantidad_camas','cantidad_index','promedio','fecha','estructura','status','observaciones']
 
 class conteofloresForm(forms.ModelForm):
 
@@ -302,7 +306,8 @@ class conteofloresForm(forms.ModelForm):
     op_sel = [('','-'),('Si','Si'),('No','No')]
 
     codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control','readonly': 'readonly'}))
-    operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    codigo_empleado = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     supervisor_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     ubicacion_lote = forms.ChoiceField(choices=op_ubicacion,widget=forms.TextInput(attrs={'class': 'form-control'})) 
     apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -326,7 +331,7 @@ class conteofloresForm(forms.ModelForm):
     class Meta:
     
         model = floresabiertas
-        fields = ['codigo_lote','operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','diasemana','nsemana','flores_abiertas','flores_antenas','flores_polinizadas','flores_enmasculadas','flores_sinpistilo','flores_viejas','boton_pequeño','fecha','estructura','status','observaciones']
+        fields = ['codigo_lote','codigo_empleado','operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','diasemana','nsemana','flores_abiertas','flores_antenas','flores_polinizadas','flores_enmasculadas','flores_sinpistilo','flores_viejas','boton_pequeño','fecha','estructura','status','observaciones']
 
 class controlcosechaForm(forms.ModelForm):
 
@@ -341,7 +346,8 @@ class controlcosechaForm(forms.ModelForm):
     op_punto = [('','-'),('Maduro','Maduro'),('Verde','Verde'),('Camagua','Camagua')]
     
     codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control','readonly': 'readonly'}))
-    operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    codigo_empleado = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     supervisor_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     ubicacion_lote = forms.ChoiceField(choices=op_ubicacion,widget=forms.TextInput(attrs={'class': 'form-control'})) 
     apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -363,7 +369,7 @@ class controlcosechaForm(forms.ModelForm):
     class Meta:
     
         model = controlcosecha
-        fields = ['codigo_lote','operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','cajas_revisadas','frutos_autopol','frutos_sinmarca','frutos_sinlana','frutos_fueratipo','llenado_caja','punto_maduracion','fecha','estructura','status','observaciones']
+        fields = ['codigo_lote','codigo_empleado','operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','cajas_revisadas','frutos_autopol','frutos_sinmarca','frutos_sinlana','frutos_fueratipo','llenado_caja','punto_maduracion','fecha','estructura','status','observaciones']
 
 class operariosForm(forms.ModelForm):
 

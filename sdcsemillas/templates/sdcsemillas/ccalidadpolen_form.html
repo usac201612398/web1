@@ -223,12 +223,23 @@
             </div>
         </div>
 
+        <button type="button" class="btn btn-success" onclick="startEmpleadoScanner()">Escanear Empleado</button>
+        <div id="reader-empleado" style="width: 300px; margin-top: 20px;"></div>
+        
+        <div class="form-group">
+            <div class="form-row">
+                <label for="codigo_empleado" class="form-label">Código-Empleado</label>
+                {{ form.codigo_empleado}}
+            </div>
+        </div>
+
         <div class="form-group">
             <div class="form-row">
                 <label for="operario_name" class="form-label">Operario</label>
                 {{ form.operario_name}}
             </div>
         </div>
+
 
         <div class="form-group">
             <div class="form-row">
@@ -280,6 +291,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
+
 <script>
 function startScanner() {
     const html5QrCode = new Html5Qrcode("reader");
@@ -292,25 +304,37 @@ function startScanner() {
             html5QrCode.stop();
             const codigoLote = decodedText.trim();
 
-            fetch(`/api/lote/${codigoLote}/`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error("Lote no encontrado");
-                    }
-                    return response.json();
+            fetch('{% url "obtener_datos_lote" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': getCookie('csrftoken')  // función getCookie que ya tienes
+                },
+                body: new URLSearchParams({
+                    'codigo_lote': codigoLote
                 })
-                .then(data => {
-                    document.getElementById("id_codigo_lote").value = data.codigo_lote;
-                    document.getElementById("id_apodo_variedad").value = data.apodo_variedad;
-                    document.getElementById("id_tipo_cultivo").value = data.tipo_cultivo;
-                    document.getElementById("id_ubicacion_lote").value = data.ubicacion_lote;
-                    document.getElementById("id_estructura").value = data.estructura;
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Lote no encontrado');
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById("id_codigo_lote").value = data.codigo_lote;
+                document.getElementById("id_apodo_variedad").value = data.apodo_variedad;
+                document.getElementById("id_tipo_cultivo").value = data.tipo_cultivo;
+                document.getElementById("id_ubicacion_lote").value = data.ubicacion_lote;
+                document.getElementById("id_estructura").value = data.estructura;
+                if(document.getElementById("id_codigo_padre")) {
                     document.getElementById("id_codigo_padre").value = data.codigo_padre;
+                }
+                if(document.getElementById("id_codigo_madre")) {
                     document.getElementById("id_codigo_madre").value = data.codigo_madre;
-                })
-                .catch(error => {
-                    alert(error.message);
-                });
+                }
+            })
+            .catch(error => {
+                alert(error.message);
+                console.error(error);
+            });
         },
         (errorMessage) => {
             console.warn(errorMessage);
@@ -319,6 +343,69 @@ function startScanner() {
         console.error("Error al iniciar el escáner QR:", err);
     });
 }
+
 </script>
+
+<script>
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function startEmpleadoScanner() {
+    const html5QrCode = new Html5Qrcode("reader-empleado");
+    const qrConfig = { fps: 10, qrbox: 250 };
+
+    html5QrCode.start(
+        { facingMode: "environment" },
+        qrConfig,
+        (decodedText) => {
+            html5QrCode.stop();
+            const codigoEmpleado = decodedText.trim();
+            console.log("Código escaneado:", codigoEmpleado);
+
+            fetch('{% url "obtener_datos_empleado_post" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: new URLSearchParams({
+                    'codigo_empleado': codigoEmpleado
+                })
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Empleado no encontrado');
+                return response.json();
+            })
+            .then(data => {
+                console.log('Empleado:', data);
+                document.getElementById("id_codigo_empleado").value = data.codigo_empleado;
+                document.getElementById("id_operario_name").value = data.nombre_operario;
+            })
+            .catch(error => {
+                alert(error.message);
+                console.error('Error:', error.message);
+            });
+        },
+        (errorMessage) => {
+            console.warn(errorMessage);
+        }
+    ).catch(err => {
+        console.error("Error al iniciar el escáner de empleado:", err);
+    });
+}
+</script>
+
 
 </html>
