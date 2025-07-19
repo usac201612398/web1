@@ -128,12 +128,12 @@ class conteofrutosplanilla(models.Model):
     apodo_variedad = models.CharField(max_length= 50, blank = True, null =  True)
     tipo_cultivo = models.CharField(max_length= 20, blank = True, null =  True)
     estructura = models.CharField(max_length= 50, blank = True, null =  True)
-    cama1 = models.IntegerFieldField(blank = True, null = True) # Frutos/cama
-    cama2 = models.IntegerFieldField(blank = True, null = True) # Frutos/cama
-    cama3 = models.IntegerFieldField(blank = True, null = True) # Frutos/cama
-    cama4 = models.IntegerFieldField(blank = True, null = True) # Frutos/cama
-    cama5 = models.IntegerFieldField(blank = True, null = True) # Frutos/cama
-    media = models.IntegerFieldField(blank = True, null = True) # Frutos/cama
+    cama1 = models.IntegerField(blank = True, null = True) # Frutos/cama
+    cama2 = models.IntegerField(blank = True, null = True) # Frutos/cama
+    cama3 = models.IntegerField(blank = True, null = True) # Frutos/cama
+    cama4 = models.IntegerField(blank = True, null = True) # Frutos/cama
+    cama5 = models.IntegerField(blank = True, null = True) # Frutos/cama
+    media = models.IntegerField(blank = True, null = True) # Frutos/cama
     prom_area = models.FloatField(blank = True, null = True) # Frutos/planta
     prom_general = models.FloatField(blank = True, null = True) # Frutos/planta
     created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
