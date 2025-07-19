@@ -304,6 +304,7 @@ class conteofloresForm(forms.ModelForm):
     op_dias = [('','-'),('Lunes','Lunes'),('Martes','Martes'),('Miércoles','Miércoles'),('Jueves','Jueves'),('Viernes','Viernes'),('Sábado','Sábado'),('Domingo','Domingo')]
     op_estructura = op_invernadero + op_modulo + op_malla
     op_sel = [('','-'),('Si','Si'),('No','No')]
+    op_semana = [('','-'),(1,'1'),(2,'2'),(3,'3'),(4,'4'),(5,'5'),(6,'6')]
 
     codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
@@ -313,7 +314,7 @@ class conteofloresForm(forms.ModelForm):
     apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     tipo_cultivo = forms.ChoiceField(choices=op_cultivo,widget=forms.Select(attrs={'class': 'form-control'})) 
     diasemana = forms.ChoiceField(choices=op_dias,widget=forms.Select(attrs={'class': 'form-control'}))
-    nsemana = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    nsemana = forms.ChoiceField(choices=op_semana,widget=forms.Select(attrs={'class': 'form-control'}))
     
     flores_abiertas=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     flores_antenas=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
