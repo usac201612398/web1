@@ -310,6 +310,11 @@ def conteofrutosplan_delete(request, pk):
     
     return render(request, 'sdcsemillas/conteofrutospla_confirm_delete.html', {'registros': salidas})
 
+
+def conteofrutosplan_detail(request, pk):
+    salidas = get_object_or_404(conteofrutosplanilla, pk=pk)
+    return render(request, 'sdcsemillas/conteofrutosplan_detail.html', {'registros': salidas})
+
 def conteofrutos_list(request):
     #today = timezone.localtime(timezone.now()).date()
     salidas = conteofrutos.objects.exclude(status__in=["Anulado", "Cerrado"])
