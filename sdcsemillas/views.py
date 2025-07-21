@@ -443,7 +443,7 @@ def obtener_semana_desde_polinizacion(request):
 
         try:
             etapa = etapasdelote.objects.filter(
-                lote=int(codigo_lote),
+                codigo_lote=int(codigo_lote),
                 status='Inicio',
                 evento='Polinización'
             ).order_by('fecha').first()
