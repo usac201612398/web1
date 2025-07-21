@@ -389,8 +389,8 @@ function startScanner() {
                         console.log("Semana calculada desde polinización:", respData.semana);
                     } else {
                         document.getElementById("id_nsemana").value = "";
-                        alert(data.mensaje_semana);  // Puedes usar un modal o alerta en vez de alert()
-                        console.warn(data.mensaje_semana);
+                        alert(data.mensaje);  // Puedes usar un modal o alerta en vez de alert()
+                        console.warn(data.mensaje);
                     }
                 })
                 .catch(error => {
