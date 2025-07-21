@@ -392,6 +392,10 @@ function startScanner() {
                         alert(respData.mensaje);  // Puedes usar un modal o alerta en vez de alert()
                         console.warn(respData.mensaje);
                     }
+                    if (respData.mensaje) {
+                        alert(respData.mensaje);  // Puedes usar un modal o alerta en vez de alert()
+                        console.warn(respData.mensaje);
+                    }
                 })
                 .catch(error => {
                     console.error("Error en semana de polinización:", error);
