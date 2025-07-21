@@ -85,6 +85,7 @@ urlpatterns = [
     path('ajax/obtener-variedad/', views.obtener_variedad_relacionada, name='obtener_variedad'),
     path('api/empleado/', views.obtener_datos_empleado_post, name='obtener_datos_empleado_post'),
     path('obtener_semana_polinizacion/', views.obtener_semana_desde_polinizacion, name='obtener_semana_polinizacion'),
+    path('obtener_semana_cosecha/', views.obtener_semana_desde_cosecha, name='obtener_semana_cosecha'),
 
 
 

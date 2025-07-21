@@ -487,6 +487,44 @@ def obtener_semana_desde_polinizacion(request):
 
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
+        
+
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+def obtener_semana_desde_cosecha(request):
+    if request.method == 'POST':
+        codigo_lote = request.POST.get('codigo_lote')
+
+        if not codigo_lote:
+            return JsonResponse({'error': 'Código de lote requerido'}, status=400)
+
+        try:
+            etapa = etapasdelote.objects.filter(
+                codigo_lote=int(codigo_lote),
+                status='Inicio',
+                evento='Cosecha'
+            ).order_by('fecha').first()
+
+            if etapa:
+                fecha_inicio = etapa.fecha
+                dias_diff = (date.today() - fecha_inicio).days
+                semanas = (dias_diff // 7) + 1 if dias_diff >= 0 else 1
+                semanas = min(semanas, 6)
+                mensaje_semana = ""
+            else:
+                fecha_inicio = ""
+                semanas = ""
+                mensaje_semana = "No se ha indicado la fecha de inicio de cosecha para este lote."
+
+            return JsonResponse({
+                'fecha_inicio': fecha_inicio.isoformat() if fecha_inicio else "",
+                'semana': semanas,
+                'mensaje':mensaje_semana
+            })
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+        
 
     return JsonResponse({'error': 'Método no permitido'}, status=405)
 

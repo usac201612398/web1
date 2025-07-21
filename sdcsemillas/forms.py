@@ -133,7 +133,8 @@ class conteosemillasForm(forms.ModelForm):
     op_status = [('','-'),('En proceso','En proceso'),('Finalizado','Finalizado')]
     op_estructura = op_invernadero + op_modulo + op_malla
     op_clasificacion = [('','-'),('Fruto maduro','Fruto maduro'),('Fruto verde','Fruto verde')]
-    
+    op_semana = [('','-'),(1,'1'),(2,'2'),(3,'3'),(4,'4'),(5,'5'),(6,'6')]
+    nsemana = forms.ChoiceField(choices=op_semana,widget=forms.Select(attrs={'class': 'form-control'}))
     codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     codigo_empleado = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
@@ -144,7 +145,6 @@ class conteosemillasForm(forms.ModelForm):
     cantidad_frutos = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
     semillasxfruto= forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
     prom_semillasxfruto = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
-    nsemana = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
     fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','type': 'date'}))
     estructura = forms.ChoiceField(choices=op_estructura, widget=forms.TextInput(attrs={'class': 'form-control'}))  
     status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'form-control'}))
@@ -342,7 +342,6 @@ class conteofloresForm(forms.ModelForm):
     op_estructura = op_invernadero + op_modulo + op_malla
     op_sel = [('','-'),('Si','Si'),('No','No')]
     op_semana = [('','-'),(1,'1'),(2,'2'),(3,'3'),(4,'4'),(5,'5'),(6,'6')]
-    
 
     codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
