@@ -384,17 +384,18 @@ function startScanner() {
                 })
                 .then(resp => resp.json())
                 .then(respData => {
-                    if (respData.semana) {
-                        document.getElementById("id_nsemana").value = respData.semana;
-                        console.log("Semana calculada desde polinización:", respData.semana);
-                    } else {
-                        document.getElementById("id_nsemana").value = "";
-                        alert(respData.mensaje);  // Puedes usar un modal o alerta en vez de alert()
-                        console.warn(respData.mensaje);
+                    const semana = respData.semana;
+                    const mensaje = respData.mensaje || "";
+
+                    document.getElementById("id_nsemana").value = semana || "";
+
+                    if (!semana && mensaje) {
+                        alert(mensaje);
+                        console.warn(mensaje);
                     }
-                    if (respData.mensaje) {
-                        alert(respData.mensaje);  // Puedes usar un modal o alerta en vez de alert()
-                        console.warn(respData.mensaje);
+
+                    if (semana) {
+                        console.log("Semana calculada desde polinización:", semana);
                     }
                 })
                 .catch(error => {
