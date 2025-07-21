@@ -401,8 +401,12 @@ def etapasdelote_create(request):
         else:
             return JsonResponse({'errores': form.errors}, status=400)
     else:
+        hoy = date.today()
+        dia_semana = calendar.day_name[hoy.weekday()]  # e.g., 'Monday'
+        
         initial_data = {
-            'supervisor_name': nombre_supervisor
+            'supervisor_name': nombre_supervisor,
+            'fecha': hoy
         }
         form = etapasdeloteForm(initial=initial_data)
     
