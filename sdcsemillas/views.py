@@ -458,9 +458,9 @@ def obtener_semana_desde_polinizacion(request):
                 fecha_inicio = ""
                 semanas = ""
                 mensaje_semana = "No se ha indicado la fecha de inicio de polinización para este lote."
-                
+
             return JsonResponse({
-                'fecha_inicio': fecha_inicio.isoformat(),
+                'fecha_inicio': fecha_inicio.isoformat() if fecha_inicio else "",
                 'semana': semanas,
                 'mensaje':mensaje_semana
             })
