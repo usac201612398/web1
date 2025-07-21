@@ -381,7 +381,7 @@ def conteofrutos_detail(request, pk):
 
 def etapasdelote_list(request):
     #today = timezone.localtime(timezone.now()).date()
-    salidas = etapasdelote.objects.objects.exclude(status__in=["Anulado", "Cerrado"])
+    salidas = etapasdelote.objects.exclude(status__in=["Anulado", "Cerrado"])
     return render(request, 'sdcsemillas/etapasdelote_list.html', {'registros': salidas})
 
 def etapasdelote_create(request):
