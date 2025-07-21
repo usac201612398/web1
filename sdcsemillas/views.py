@@ -157,8 +157,12 @@ def  conteoplantas_create(request):
              # Imprimir errores para depuración
             return JsonResponse({'errores': form.errors}, status=400)
     else:
+        hoy = date.today()
+        #dia_semana = calendar.day_name[hoy.weekday()]  # e.g., 'Monday'
+        
         initial_data = {
-            'supervisor_name': nombre_supervisor
+            'supervisor_name': nombre_supervisor,
+            'fecha': hoy
         }
         form = conteoplantasForm(initial=initial_data)
     
@@ -219,8 +223,12 @@ def conteosemillas_create(request):
              # Imprimir errores para depuración
             return JsonResponse({'errores': form.errors}, status=400)
     else:
+        hoy = date.today()
+        #dia_semana = calendar.day_name[hoy.weekday()]  # e.g., 'Monday'
+        
         initial_data = {
-            'supervisor_name': nombre_supervisor
+            'supervisor_name': nombre_supervisor,
+            'fecha': hoy
         }
         form = conteosemillasForm(initial=initial_data)
         
@@ -282,8 +290,12 @@ def conteofrutosplan_create(request):
              # Imprimir errores para depuración
             return JsonResponse({'errores': form.errors}, status=400)
     else:
+        hoy = date.today()
+        #dia_semana = calendar.day_name[hoy.weekday()]  # e.g., 'Monday'
+        
         initial_data = {
-            'supervisor_name': nombre_supervisor
+            'supervisor_name': nombre_supervisor,
+            'fecha': hoy
         }
         form = conteofrutosplanillaForm(initial=initial_data)
         
@@ -345,8 +357,12 @@ def conteofrutos_create(request):
              # Imprimir errores para depuración
             return JsonResponse({'errores': form.errors}, status=400)
     else:
+        hoy = date.today()
+        #dia_semana = calendar.day_name[hoy.weekday()]  # e.g., 'Monday'
+        
         initial_data = {
-            'supervisor_name': nombre_supervisor
+            'supervisor_name': nombre_supervisor,
+            'fecha': hoy
         }
         form = conteofrutosForm(initial=initial_data)
         
@@ -530,8 +546,12 @@ def ccalidadpolen_create(request):
              # Imprimir errores para depuración
             return JsonResponse({'errores': form.errors}, status=400)
     else:
+        hoy = date.today()
+        #dia_semana = calendar.day_name[hoy.weekday()]  # e.g., 'Monday'
+        
         initial_data = {
-            'supervisor_name': nombre_supervisor
+            'supervisor_name': nombre_supervisor,
+            'fecha': hoy
         }
         form = ccalidadpolenForm(initial=initial_data)
      
@@ -591,8 +611,12 @@ def indexpolinizacion_create(request):
              # Imprimir errores para depuración
             return JsonResponse({'errores': form.errors}, status=400)
     else:
+        hoy = date.today()
+        #dia_semana = calendar.day_name[hoy.weekday()]  # e.g., 'Monday'
+        
         initial_data = {
-            'supervisor_name': nombre_supervisor
+            'supervisor_name': nombre_supervisor,
+            'fecha': hoy
         }
         form = indexpolinizacionForm(initial=initial_data)
       
@@ -728,8 +752,12 @@ def controlcosecha_create(request):
              # Imprimir errores para depuración
             return JsonResponse({'errores': form.errors}, status=400)
     else:
+        hoy = date.today()
+        #dia_semana = calendar.day_name[hoy.weekday()]  # e.g., 'Monday'
+        
         initial_data = {
-            'supervisor_name': nombre_supervisor
+            'supervisor_name': nombre_supervisor,
+            'fecha': hoy
         }
         form = controlcosechaForm(initial=initial_data)
        
