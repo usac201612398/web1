@@ -5,6 +5,8 @@ from django.shortcuts import get_object_or_404, redirect
 from django.http import JsonResponse
 from.forms import *
 from django.contrib import messages
+from datetime import date
+import calendar
 import json
 
 def sdcsemillashomepage(request):
@@ -431,6 +433,41 @@ def obtener_datos_lote(request):
     else:
         return JsonResponse({'error': 'Método no permitido'}, status=405)
     
+
+def obtener_semana_desde_polinizacion(request):
+    if request.method == 'POST':
+        codigo_lote = request.POST.get('codigo_lote')
+
+        if not codigo_lote:
+            return JsonResponse({'error': 'Código de lote requerido'}, status=400)
+
+        try:
+            etapa = etapasdelote.objects.filter(
+                lote=int(codigo_lote),
+                status='Inicio',
+                evento='Polinización'
+            ).order_by('fecha').first()
+
+            if not etapa:
+                return JsonResponse({'error': 'No se encontró etapa de polinización'}, status=404)
+
+            fecha_inicio = etapa.fecha
+            fecha_actual = date.today()
+
+            diferencia_dias = (fecha_actual - fecha_inicio).days
+            semanas = (diferencia_dias // 7) + 1 if diferencia_dias >= 0 else 1
+            semanas = min(semanas, 6)  # En tu formulario solo manejas hasta 6
+
+            return JsonResponse({
+                'fecha_inicio': fecha_inicio.isoformat(),
+                'semana': semanas
+            })
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
+
 def etapasdelote_update(request, pk):
     salidas = get_object_or_404(etapasdelote, pk=pk)
     if request.method == 'POST':
@@ -609,8 +646,22 @@ def conteoflores_create(request):
              # Imprimir errores para depuración
             return JsonResponse({'errores': form.errors}, status=400)
     else:
+        hoy = date.today()
+        dia_semana = calendar.day_name[hoy.weekday()]  # e.g., 'Monday'
+        dias_traducidos = {
+            'Monday': 'Lunes',
+            'Tuesday': 'Martes',
+            'Wednesday': 'Miércoles',
+            'Thursday': 'Jueves',
+            'Friday': 'Viernes',
+            'Saturday': 'Sábado',
+            'Sunday': 'Domingo',
+        }
+
         initial_data = {
-            'supervisor_name': nombre_supervisor
+            'supervisor_name': nombre_supervisor,
+            'fecha': hoy,
+            'diasemana': dias_traducidos.get(dia_semana, ''),
         }
         form = conteofloresForm(initial=initial_data)
        

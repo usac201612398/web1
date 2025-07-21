@@ -371,6 +371,29 @@ function startScanner() {
                 if(document.getElementById("id_codigo_madre")) {
                     document.getElementById("id_codigo_madre").value = data.codigo_madre;
                 }
+                // Consulta adicional para obtener la semana desde la polinización
+                fetch("{% url 'obtener_semana_polinizacion' %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "X-CSRFToken": getCookie("csrftoken")
+                    },
+                    body: new URLSearchParams({
+                        "codigo_lote": data.codigo_lote
+                    })
+                })
+                .then(resp => resp.json())
+                .then(respData => {
+                    if (respData.semana) {
+                        document.getElementById("id_nsemana").value = respData.semana;
+                        console.log("Semana calculada desde polinización:", respData.semana);
+                    } else {
+                        console.warn("No se pudo obtener semana:", respData.error);
+                    }
+                })
+                .catch(error => {
+                    console.error("Error en semana de polinización:", error);
+                });
             })
             .catch(error => {
                 alert(error.message);
