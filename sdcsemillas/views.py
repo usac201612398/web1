@@ -612,11 +612,21 @@ def indexpolinizacion_create(request):
             return JsonResponse({'errores': form.errors}, status=400)
     else:
         hoy = date.today()
-        #dia_semana = calendar.day_name[hoy.weekday()]  # e.g., 'Monday'
-        
+        dia_semana = calendar.day_name[hoy.weekday()]  # e.g., 'Monday'
+        dias_traducidos = {
+            'Monday': 'Lunes',
+            'Tuesday': 'Martes',
+            'Wednesday': 'Miércoles',
+            'Thursday': 'Jueves',
+            'Friday': 'Viernes',
+            'Saturday': 'Sábado',
+            'Sunday': 'Domingo',
+        }
+
         initial_data = {
             'supervisor_name': nombre_supervisor,
-            'fecha': hoy
+            'fecha': hoy,
+            'diasemana': dias_traducidos.get(dia_semana, ''),
         }
         form = indexpolinizacionForm(initial=initial_data)
       
