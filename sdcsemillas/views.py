@@ -448,19 +448,20 @@ def obtener_semana_desde_polinizacion(request):
                 evento='Polinización'
             ).order_by('fecha').first()
 
-            if not etapa:
-                return JsonResponse({'error': 'No se encontró etapa de polinización'}, status=404)
-
-            fecha_inicio = etapa.fecha
-            fecha_actual = date.today()
-
-            diferencia_dias = (fecha_actual - fecha_inicio).days
-            semanas = (diferencia_dias // 7) + 1 if diferencia_dias >= 0 else 1
-            semanas = min(semanas, 6)  # En tu formulario solo manejas hasta 6
-
+            if etapa:
+                fecha_inicio = etapa.fecha
+                dias_diff = (date.today() - fecha_inicio).days
+                semanas = (dias_diff // 7) + 1 if dias_diff >= 0 else 1
+                semanas = min(semanas, 6)
+                mensaje_semana = ""
+            else:
+                fecha_inicio = ""
+                semanas = ""
+                mensaje_semana = "No se ha indicado la fecha de inicio de polinización para este lote."
             return JsonResponse({
                 'fecha_inicio': fecha_inicio.isoformat(),
-                'semana': semanas
+                'semana': semanas,
+                'mensaje':mensaje_semana
             })
 
         except Exception as e:

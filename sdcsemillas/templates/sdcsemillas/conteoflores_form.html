@@ -388,7 +388,9 @@ function startScanner() {
                         document.getElementById("id_nsemana").value = respData.semana;
                         console.log("Semana calculada desde polinización:", respData.semana);
                     } else {
-                        console.warn("No se pudo obtener semana:", respData.error);
+                        document.getElementById("id_nsemana").value = "";
+                        alert(data.mensaje_semana);  // Puedes usar un modal o alerta en vez de alert()
+                        console.warn(data.mensaje_semana);
                     }
                 })
                 .catch(error => {
