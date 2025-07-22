@@ -139,18 +139,22 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        $(document).ready(function () {
-            
-            $('#myTable').DataTable({
-                scrollX: true,
-                autoWidth: false,
-                language: {
-                    url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
-                }
-            }).columns.adjust();
-
+    $(document).ready(function () {
+        var table = $('#myTable').DataTable({
+            scrollX: true,
+            autoWidth: false,
+            language: {
+                url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
+            }
         });
+
+        // Solo ajusta columnas cuando DataTables esté inicializado
+        $('#myTable').on('init.dt', function () {
+            table.columns.adjust();
+        });
+    });
     </script>
+
 </body>
 </html>
 
