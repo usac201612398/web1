@@ -287,25 +287,38 @@ function startScanner() {
             html5QrCode.stop();
             const codigoLote = decodedText.trim();
 
-            fetch(`/api/lote/${codigoLote}/`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error("Lote no encontrado");
-                    }
-                    return response.json();
+            fetch('{% url "obtener_datos_lote" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': getCookie('csrftoken')  // función getCookie que ya tienes
+                },
+                body: new URLSearchParams({
+                    'codigo_lote': codigoLote
                 })
-                .then(data => {
-                    document.getElementById("id_codigo_lote").value = data.codigo_lote;
-                    document.getElementById("id_apodo_variedad").value = data.apodo_variedad;
-                    document.getElementById("id_tipo_cultivo").value = data.tipo_cultivo;
-                    document.getElementById("id_ubicacion_lote").value = data.ubicacion_lote;
-                    document.getElementById("id_estructura").value = data.estructura;
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Lote no encontrado');
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById("id_codigo_lote").value = data.codigo_lote;
+                document.getElementById("id_apodo_variedad").value = data.apodo_variedad;
+                document.getElementById("id_tipo_cultivo").value = data.tipo_cultivo;
+                document.getElementById("id_ubicacion_lote").value = data.ubicacion_lote;
+                document.getElementById("id_estructura").value = data.estructura;
+                if(document.getElementById("id_codigo_padre")) {
                     document.getElementById("id_codigo_padre").value = data.codigo_padre;
+                }
+                if(document.getElementById("id_codigo_madre")) {
                     document.getElementById("id_codigo_madre").value = data.codigo_madre;
-                })
-                .catch(error => {
-                    alert(error.message);
-                });
+                }
+
+            })
+            .catch(error => {
+                alert(error.message);
+                console.error(error);
+            });
         },
         (errorMessage) => {
             console.warn(errorMessage);
@@ -314,8 +327,21 @@ function startScanner() {
         console.error("Error al iniciar el escáner QR:", err);
     });
 }
+
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
 </script>
-
-
-
 </html>
