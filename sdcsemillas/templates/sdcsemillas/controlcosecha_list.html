@@ -24,8 +24,6 @@
             background: linear-gradient(to right, #6c757d, #495057);
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            padding: 15px;
-            margin-bottom: 20px;
         }
 
         .page-header-box h1 {
@@ -54,7 +52,8 @@
 <body>
 <div class="container py-3">
 
-    <!-- Botones -->
+
+    <!-- Botones superiores -->
     <div class="d-flex justify-content-between flex-wrap mb-3">
         <a href="{% url 'controlcosecha_create' %}" class="btn btn-outline-success mb-2">
             <i class="fas fa-plus"></i> Agregar
@@ -69,7 +68,7 @@
         <table class="table table-striped table-bordered" id="myTable">
             <thead class="table-custom-header">
                 <tr>
-                    <th>Id</th>
+                    <th>ID</th>
                     <th>Apodo Variedad</th>
                     <th>Ubicación</th>
                     <th>Estructura</th>
