@@ -13,7 +13,7 @@
 
     <style>
         .table-custom-header th {
-            background: linear-gradient(to right, #6c757d, #495057);
+            background: #6c757d;
             color: white;
             font-weight: 600;
             text-align: center;
@@ -25,9 +25,9 @@
                 font-size: 13px;
                 white-space: nowrap;
             }
+
             .btn {
                 font-size: 13px;
-                margin-bottom: 4px;
             }
         }
     </style>
@@ -37,17 +37,17 @@
 
     <!-- Botones superiores -->
     <div class="d-flex justify-content-between flex-wrap mb-3">
-        <a href="{% url 'conteofrutosplan_create' %}" class="btn btn-outline-success mb-2">
+        <a href="{% url 'conteofrutosplan_create' %}" class="btn btn-outline-success">
             <i class="fas fa-plus"></i> Agregar
         </a>
-        <a href="{% url 'exportar_excel_generico' 'conteofrutosplan' %}" class="btn btn-outline-success mb-2">
+        <a href="{% url 'exportar_excel_generico' 'conteofrutosplan' %}" class="btn btn-outline-success">
             <i class="fas fa-file-excel"></i> Exportar
         </a>
     </div>
 
     <!-- Tabla en pantallas grandes -->
     <div class="table-responsive d-none d-md-block">
-        <table class="table table-striped table-bordered" id="myTable">
+        <table id="myTable" class="table table-striped table-hover table-bordered">
             <thead class="table-custom-header">
                 <tr>
                     <th>Id</th>
@@ -94,7 +94,7 @@
     <!-- Cards para móviles -->
     <div class="d-block d-md-none">
         {% for registro in registros %}
-        <div class="card mb-2">
+        <div class="card mb-3 shadow-sm">
             <div class="card-body">
                 <h5 class="card-title">{{ registro.apodo_variedad }}</h5>
                 <p class="card-text">
@@ -122,7 +122,6 @@
             <i class="fas fa-home"></i> Home
         </a>
     </div>
-
 </div>
 
 <!-- Scripts -->
@@ -134,7 +133,7 @@
 <script>
     $(document).ready(function () {
         $('#myTable').DataTable({
-            scrollX: true,
+            responsive: true,
             language: {
                 url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
             }
@@ -143,5 +142,6 @@
 </script>
 </body>
 </html>
+
 
 
