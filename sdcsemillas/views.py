@@ -18,7 +18,7 @@ def sdcsemillashomepage(request):
 def exportar_excel_generico(request, nombre_modelo):
     # Obtiene el modelo desde el nombre
     try:
-        Modelo = apps.get_model('tu_app', nombre_modelo)
+        Modelo = apps.get_model('sdcsemillas', nombre_modelo)
     except LookupError:
         return HttpResponse("Modelo no encontrado", status=404)
 
