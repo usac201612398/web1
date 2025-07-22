@@ -89,7 +89,6 @@
                     {% if user.username == "brandon.portillo@popoyan.com.gt" %}
                         <a class="navbar-item" href="{% url 'variedades_list'%}">Variedades</a>
                         <a class="navbar-item" href="{% url 'lotes_list'%}">Lotes</a>
-                        <a class="navbar-item" href="{% url 'operarios_list'%}">Personal</a>
                     {% endif %}
                     <a class="navbar-item" href="#">Sobre Nosotros</a>
 
@@ -99,6 +98,7 @@
                         </a>
                         <div class="navbar-dropdown">
                             
+                            <a class="navbar-item" href="{% url 'operarios_list'%}">Personal</a>
                             <a class="navbar-item" href="{% url 'etapasdelote_list'%}">Periodos</a>
                             <a class="navbar-item" href="{% url 'conteoplantas_list'%}">Plantas</a>
                             <a class="navbar-item" href="{% url 'conteoflores_list'%}">Flores</a>
