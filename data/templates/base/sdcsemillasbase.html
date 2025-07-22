@@ -91,14 +91,14 @@
                         <a class="navbar-item" href="{% url 'lotes_list'%}">Lotes</a>
                     {% endif %}
                     <a class="navbar-item" href="#">Sobre Nosotros</a>
-
+                    <a class="navbar-item" href="{% url 'operarios_list'%}">Personal</a>
                     <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-link">
                             Registros
                         </a>
                         <div class="navbar-dropdown">
                             
-                            <a class="navbar-item" href="{% url 'operarios_list'%}">Personal</a>
+                            
                             <a class="navbar-item" href="{% url 'etapasdelote_list'%}">Periodos</a>
                             <a class="navbar-item" href="{% url 'conteoplantas_list'%}">Plantas</a>
                             <a class="navbar-item" href="{% url 'conteoflores_list'%}">Flores</a>
