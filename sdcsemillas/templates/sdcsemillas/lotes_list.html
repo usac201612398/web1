@@ -16,19 +16,12 @@
             margin: 15px 0;
             font-family: Arial, sans-serif;
         }
-
-        thead.custom-header {
-            background-color: #005b96; /* Azul corporativo */
+        .table-custom-header th {
+            background: linear-gradient(to right, #6c757d, #495057);  /* mismo degradado que el banner */
             color: white;
-        }
-
-        thead.custom-header th {
-            font-weight: 500;
-            font-size: 14px;
-        }
-
-        th, td {
-            white-space: nowrap;
+            font-weight: 600;
+            text-align: center;
+            border-bottom: 2px solid #dee2e6;
         }
 
         @media (max-width: 768px) {
@@ -76,7 +69,7 @@
         <!-- Tabla en pantallas medianas y grandes -->
         <div class="table-responsive d-none d-md-block">
             <table class="table table-striped table-bordered" id="myTable">
-                <thead class="table-secondary">
+                <thead class="table-custom-header">
                     <tr>
                         <th>Id</th>
                         <th>Lote</th>
