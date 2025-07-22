@@ -7,16 +7,17 @@
     <title>Conteo de Frutos Planificados</title>
 
     <!-- CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
 
     <style>
         .table-custom-header th {
-            background: #6c757d;
+            background: linear-gradient(to right, #6c757d, #495057);
             color: white;
             font-weight: 600;
             text-align: center;
+            white-space: nowrap;
         }
 
         @media (max-width: 768px) {
@@ -24,9 +25,9 @@
                 font-size: 13px;
                 white-space: nowrap;
             }
-
             .btn {
                 font-size: 13px;
+                margin-bottom: 4px;
             }
         }
     </style>
@@ -34,13 +35,12 @@
 <body>
 <div class="container py-3">
 
-
     <!-- Botones superiores -->
     <div class="d-flex justify-content-between flex-wrap mb-3">
-        <a href="{% url 'conteofrutosplan_create' %}" class="btn btn-outline-success">
+        <a href="{% url 'conteofrutosplan_create' %}" class="btn btn-outline-success mb-2">
             <i class="fas fa-plus"></i> Agregar
         </a>
-        <a href="{% url 'exportar_excel_generico' 'conteofrutosplan' %}" class="btn btn-outline-success">
+        <a href="{% url 'exportar_excel_generico' 'conteofrutosplan' %}" class="btn btn-outline-success mb-2">
             <i class="fas fa-file-excel"></i> Exportar
         </a>
     </div>
@@ -91,7 +91,7 @@
         </table>
     </div>
 
-    <!-- Cards para móviles (opcional, igual que en conteosemillas) -->
+    <!-- Cards para móviles -->
     <div class="d-block d-md-none">
         {% for registro in registros %}
         <div class="card mb-2">
@@ -129,12 +129,12 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-<script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
+<script type="text/javascript" src="{% static 'lib/cockies.js' %}"></script>
 
 <script>
     $(document).ready(function () {
         $('#myTable').DataTable({
-            responsive: true,
+            scrollX: true,
             language: {
                 url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
             }
@@ -143,4 +143,5 @@
 </script>
 </body>
 </html>
+
 
