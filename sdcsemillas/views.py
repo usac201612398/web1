@@ -8,9 +8,55 @@ from django.contrib import messages
 from datetime import date
 import calendar
 import json
+from openpyxl import Workbook
+from django.apps import apps
+from django.http import HttpResponse
 
 def sdcsemillashomepage(request):
     return render(request,'sdcsemillas/sdcsemillas_home.html')
+
+def exportar_excel_generico(request, nombre_modelo):
+    # Obtiene el modelo desde el nombre
+    try:
+        Modelo = apps.get_model('tu_app', nombre_modelo)
+    except LookupError:
+        return HttpResponse("Modelo no encontrado", status=404)
+
+    # Crear libro y hoja
+    wb = Workbook()
+    ws = wb.active
+    ws.title = nombre_modelo
+
+    EXPORT_FIELDS = {
+        'operariosApp': ['codigo_empleado', 'codigoevo', 'nombre_operario','codigo_lote','camas','supervisor','status'],
+        'lotes': ['lote_code', 'variedad_code','apodo_variedad','cultivo','ubicación','estructura','plantas_padre','plantas_madre','harvest_code','status','siembra_madre','metodo_prod','target','surface','tipo','shipment_hub','as_per_SDCMale','as_per_SDCFemale','observaciones'],
+        'variedades': ['variedad_codigo', 'apodo_variedad', 'cultivo','cod_padre','cod_madre','status'],
+        'conteoplantas': ['codigo_lote', 'operario_name','codigo_empleado','supervisor_name','ubicacion_lote','estructura','apodo_variedad','tipo_cultivo','codigo_madre','codigo_planta','plantas_activas','plantas_faltantes','fecha','camas_incompletas','camas_completas','cocosxcamaincompleta','evento','status','observaciones'],
+        'conteosemillas': ['codigo_lote', 'operario_name','codigo_empleado','supervisor_name','ubicacion_lote','estructura','apodo_variedad','tipo_cultivo','fecha','camas_incompletas','cantidad_frutos','semillasxfruto','prom_semillasxfruto','nsemana','clasificacion','status','observaciones'],
+        'conteofrutosplanilla': ['codigo_lote', 'operario_name','codigo_empleado','supervisor_name','ubicacion_lote','estructura','apodo_variedad','tipo_cultivo','fecha','cama1','cama2','cama3','cama4','cama5','media','prom_area','prom_general','status','observaciones'],
+        'conteofrutos': ['codigo_lote', 'operario_name','codigo_empleado','supervisor_name','ubicacion_lote','estructura','apodo_variedad','tipo_cultivo','fecha','prom_autopolinizados','prom_floresabiertas','prom_polinizados','evento','status','observaciones'],
+        'etapasdelote': ['codigo_lote', 'operario_name','codigo_empleado','supervisor_name','ubicacion_lote','estructura','apodo_variedad','tipo_cultivo','fecha','codigo_padre','codigo_madre','evento','status','observaciones'],
+        'ccalidadpolen': ['codigo_lote', 'operario_name','codigo_empleado','supervisor_name','ubicacion_lote','estructura','apodo_variedad','tipo_cultivo','fecha','calidad','consistencia','ag_externos','status','observaciones'],
+        'indexpolinizacion': ['codigo_lote', 'operario_name','codigo_empleado','supervisor_name','ubicacion_lote','estructura','apodo_variedad','tipo_cultivo','fecha','diasemana','color_lana','cantidad_camas','cantidad_index','cama1','cama2','cama3','cama4','cama5','media','total_index','status','observaciones'],
+        'floresabiertas': ['codigo_lote', 'operario_name','codigo_empleado','supervisor_name','ubicacion_lote','estructura','apodo_variedad','tipo_cultivo','fecha','diasemana','nsemana','flores_abiertas','flores_antenas','flores_polinizadas','flores_enmasculadas','flores_sinpistilo','flores_viejas','boton_pequeño','status','observaciones'],
+        'controlcosecha': ['codigo_lote', 'operario_name','codigo_empleado','supervisor_name','ubicacion_lote','estructura','apodo_variedad','tipo_cultivo','fecha','cajas_revisadas','frutos_autopol','frutos_sinmarca','frutos_sinlana','frutos_fueratipo','llenado_caja','punto_maduracion','status','observaciones']
+    }
+    # Obtener todos los campos del modelo
+    campos = EXPORT_FIELDS.get(nombre_modelo, [f.name for f in Modelo._meta.fields])
+
+    # Encabezados
+    ws.append(campos)
+
+    # Filas de datos
+    for obj in Modelo.objects.all():
+        fila = [getattr(obj, campo) for campo in campos]
+        ws.append(fila)
+
+    # Respuesta HTTP
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename={nombre_modelo}.xlsx'
+    wb.save(response)
+    return response
 
 # Create your views here.
 def lotes_list(request):

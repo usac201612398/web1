@@ -86,6 +86,7 @@ urlpatterns = [
     path('api/empleado/', views.obtener_datos_empleado_post, name='obtener_datos_empleado_post'),
     path('obtener_semana_polinizacion/', views.obtener_semana_desde_polinizacion, name='obtener_semana_polinizacion'),
     path('obtener_semana_cosecha/', views.obtener_semana_desde_cosecha, name='obtener_semana_cosecha'),
+    path('exportar/<str:nombre_modelo>/', views.exportar_excel_generico, name='exportar_excel_generico'),
 
 
 

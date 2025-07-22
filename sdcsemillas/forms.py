@@ -4,6 +4,7 @@ from .models import *
 from django import forms
 from .models import lotes, variedades
 
+
 class lotesForm(forms.ModelForm):
 
     op_ubicacion = [('', '-'), ('SL', 'SL'), ('CIP', 'CIP'), ('Cecilio', 'Cecilio'), ('Bella Vista', 'Bella Vista')]
