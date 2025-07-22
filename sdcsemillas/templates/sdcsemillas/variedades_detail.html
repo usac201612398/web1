@@ -1,56 +1,68 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Detalles de Variedad</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" />
+
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding-top: 20px;
+        }
+
         h1 {
-            margin: 15px 0;
-            font-family: Arial, sans-serif;
+            margin-bottom: 20px;
         }
-        a {
-            margin: 20px 0;
-            font-family: Arial, sans-serif;
+
+        .detail-label {
+            font-weight: 600;
+            width: 200px;
         }
-        
-        .detail-card {
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            border-radius: 8px;
-            padding: 1.5rem;
+
+        .table td {
+            vertical-align: middle;
         }
     </style>
 </head>
 <body>
     <div class="container">
-
+        <!-- Banner -->
         <div class="page-header-box text-white text-center py-3 mb-4" style="background: linear-gradient(to right, #6c757d, #495057); border-radius: 8px;">
             <h1 class="m-0">Detalles de Variedad</h1>
         </div>
 
-        <div class="detail-card">
-            <table class="table is-striped is-hoverable is-fullwidth">
-                <tbody>
-                    <tr><td><strong>Registro:</strong></td><td>{{ registros.id }}</td></tr>
-                    <tr><td><strong>Código Variedad:</strong></td><td>{{ registros.variedad_code }}</td></tr>
-                    <tr><td><strong>Apodo Variedad:</strong></td><td>{{ registros.apodo_variedad }}</td></tr>
-                    <tr><td><strong>Cultivo:</strong></td><td>{{ registros.cultivo }}</td></tr>
-                    <tr><td><strong>Código | Padre:</strong></td><td>{{ registros.cod_padre }}</td></tr>
-                    <tr><td><strong>Código | Madre:</strong></td><td>{{ registros.cod_madre }}</td></tr>
-                    <tr><td><strong>Status:</strong></td><td>{{ registros.status }}</td></tr>
-                    <tr><td><strong>Creado:</strong></td><td>{{ registros.created }}</td></tr>
-                    <tr><td><strong>Modificado:</strong></td><td>{{ registros.updated_at }}</td></tr>
-                </tbody>
-            </table>
+        <!-- Card de detalle -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tbody>
+                        <tr><td class="detail-label">Registro:</td><td>{{ registros.id }}</td></tr>
+                        <tr><td class="detail-label">Código Variedad:</td><td>{{ registros.variedad_code }}</td></tr>
+                        <tr><td class="detail-label">Apodo Variedad:</td><td>{{ registros.apodo_variedad }}</td></tr>
+                        <tr><td class="detail-label">Cultivo:</td><td>{{ registros.cultivo }}</td></tr>
+                        <tr><td class="detail-label">Código | Padre:</td><td>{{ registros.cod_padre }}</td></tr>
+                        <tr><td class="detail-label">Código | Madre:</td><td>{{ registros.cod_madre }}</td></tr>
+                        <tr><td class="detail-label">Status:</td><td>{{ registros.status }}</td></tr>
+                        <tr><td class="detail-label">Creado:</td><td>{{ registros.created }}</td></tr>
+                        <tr><td class="detail-label">Modificado:</td><td>{{ registros.updated_at }}</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
-        <div class="has-text-centered mt-5">
-            <a href="{% url 'variedades_list' %}" class="button is-link is-light">
-                <span class="icon"><i class="fas fa-arrow-left"></i></span>
-                <span>Regresar a panel</span>
+        <!-- Botón regresar -->
+        <div class="text-center">
+            <a href="{% url 'variedades_list' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Regresar al Panel
             </a>
         </div>
     </div>
 
-    <script defer src="https://use.fontawesome.com/releases/v6.4.0/js/all.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
