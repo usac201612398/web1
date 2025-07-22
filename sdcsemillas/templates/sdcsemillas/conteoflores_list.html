@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-
 {% load static %}
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -15,24 +13,10 @@
 
     <style>
         .table-custom-header th {
-            background: linear-gradient(to right, #6c757d, #495057);
+            background: #6c757d;
             color: white;
             font-weight: 600;
             text-align: center;
-            white-space: nowrap;
-        }
-
-        .page-header-box {
-            background: linear-gradient(to right, #6c757d, #495057);
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        .page-header-box h1 {
-            font-size: 1.8rem;
-            font-weight: bold;
-            margin: 0;
-            color: white;
         }
 
         @media (max-width: 768px) {
@@ -44,29 +28,18 @@
             .btn {
                 font-size: 13px;
             }
-
-            .page-header-box h1 {
-                font-size: 1.4rem;
-            }
         }
     </style>
-    <style>
-        /* Fuerza que todo el contenedor de la tabla tenga scroll horizontal si es necesario */
-        .dataTables_wrapper {
-            overflow-x: auto;
-        }
-    </style>
-
 </head>
 <body>
 <div class="container py-3">
 
     <!-- Botones superiores -->
     <div class="d-flex justify-content-between flex-wrap mb-3">
-        <a href="{% url 'conteoflores_create' %}" class="btn btn-outline-success mb-2">
+        <a href="{% url 'conteoflores_create' %}" class="btn btn-outline-success">
             <i class="fas fa-plus"></i> Agregar
         </a>
-        <a href="{% url 'exportar_excel_generico' 'floresabiertas' %}" class="btn btn-outline-success mb-2">
+        <a href="{% url 'exportar_excel_generico' 'floresabiertas' %}" class="btn btn-outline-success">
             <i class="fas fa-file-excel"></i> Exportar
         </a>
     </div>
@@ -178,4 +151,5 @@
 </script>
 </body>
 </html>
+
 
