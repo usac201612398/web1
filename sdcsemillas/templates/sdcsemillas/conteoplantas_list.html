@@ -7,7 +7,7 @@
     <title>Conteo Plantas</title>
 
     <!-- CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
 
@@ -17,7 +17,6 @@
             color: white;
             font-weight: 600;
             text-align: center;
-            white-space: nowrap;
         }
 
         @media (max-width: 768px) {
@@ -35,7 +34,7 @@
 <body>
 <div class="container py-3">
 
-    <!-- Botones superiores -->
+    <!-- Botones -->
     <div class="d-flex justify-content-between flex-wrap mb-3">
         <a href="{% url 'conteoplantas_create' %}" class="btn btn-outline-secondary">
             <i class="fas fa-plus"></i> Agregar
@@ -45,9 +44,9 @@
         </a>
     </div>
 
-    <!-- Tabla escritorio -->
+    <!-- Tabla escritorio con scroll -->
     <div class="table-responsive d-none d-md-block">
-        <table id="myTable" class="table table-striped table-hover table-bordered">
+        <table id="myTable" class="table table-striped table-bordered table-hover">
             <thead class="table-custom-header">
                 <tr>
                     <th>Id</th>
@@ -96,7 +95,7 @@
     <!-- Cards móviles -->
     <div class="d-block d-md-none">
         {% for registro in registros %}
-        <div class="card mb-3 shadow-sm">
+        <div class="card mb-2">
             <div class="card-body">
                 <h5 class="card-title">{{ registro.apodo_variedad }}</h5>
                 <p class="card-text">
@@ -136,7 +135,7 @@
 <script>
     $(document).ready(function () {
         $('#myTable').DataTable({
-            responsive: true,
+            scrollX: true,
             language: {
                 url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
             }
