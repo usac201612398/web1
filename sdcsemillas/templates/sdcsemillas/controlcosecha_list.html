@@ -13,10 +13,26 @@
 
     <style>
         .table-custom-header th {
-            background: #6c757d;
+            background: linear-gradient(to right, #6c757d, #495057);
             color: white;
             font-weight: 600;
             text-align: center;
+            white-space: nowrap;
+        }
+
+        .page-header-box {
+            background: linear-gradient(to right, #6c757d, #495057);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .page-header-box h1 {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 0;
+            color: white;
         }
 
         @media (max-width: 768px) {
@@ -28,23 +44,27 @@
             .btn {
                 font-size: 13px;
             }
+
+            .page-header-box h1 {
+                font-size: 1.4rem;
+            }
         }
     </style>
 </head>
 <body>
 <div class="container py-3">
 
-    <!-- Botones superiores -->
+    <!-- Botones -->
     <div class="d-flex justify-content-between flex-wrap mb-3">
-        <a href="{% url 'controlcosecha_create' %}" class="btn btn-outline-secondary">
+        <a href="{% url 'controlcosecha_create' %}" class="btn btn-outline-success mb-2">
             <i class="fas fa-plus"></i> Agregar
         </a>
-        <a href="{% url 'exportar_excel_generico' 'controlcosecha' %}" class="btn btn-outline-secondary">
+        <a href="{% url 'exportar_excel_generico' 'controlcosecha' %}" class="btn btn-outline-success mb-2">
             <i class="fas fa-file-excel"></i> Exportar
         </a>
     </div>
 
-    <!-- Tabla en pantallas grandes -->
+    <!-- Tabla escritorio -->
     <div class="table-responsive d-none d-md-block">
         <table class="table table-striped table-bordered" id="myTable">
             <thead class="table-custom-header">
@@ -88,12 +108,12 @@
         </table>
     </div>
 
-    <!-- Cards en móviles -->
+    <!-- Cards móviles -->
     <div class="d-block d-md-none">
         {% for registro in registros %}
         <div class="card mb-2">
             <div class="card-body">
-                <h5 class="card-title">Variedad: {{ registro.apodo_variedad }}</h5>
+                <h5 class="card-title">{{ registro.apodo_variedad }}</h5>
                 <p class="card-text">
                     <strong>Ubicación:</strong> {{ registro.ubicacion_lote }}<br>
                     <strong>Estructura:</strong> {{ registro.estructura }}<br>
@@ -129,7 +149,7 @@
 <script>
     $(document).ready(function () {
         $('#myTable').DataTable({
-            responsive: true,
+            scrollX: true,
             language: {
                 url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
             }
