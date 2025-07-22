@@ -4,64 +4,85 @@
     <title>Visualizar Resumen de Lote</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
     <style>
-
         h1 {
-            margin: 15px;
+            margin: 15px 0;
             font-family: Arial, sans-serif;
         }
-
         a {
-            margin: 20px;
+            margin: 20px 0;
             font-family: Arial, sans-serif;
         }
-
+        .page-header-box {
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+        .detail-card {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            padding: 1.5rem;
+            overflow-x: auto;
+        }
+        table td:first-child {
+            font-weight: 600;
+            width: 200px;
+            white-space: nowrap;
+        }
+        .btn-container {
+            text-align: center;
+            margin-top: 2rem;
+        }
     </style>
 </head>
 <body>
-    <h1 class="roboto">Detalles</h1>
     <div class="container">
-        <div class="columns">
-            <div class="column is-12">
-                <div class="table-container">
-                    <table class="table is-striped is-hoverable is is-fullwidth" id="myTable">
-                    
-                        <tbody>
 
-                            <tr><td>Registro:</td><td>{{ registros.id }} </td></tr>
-                            <tr><td>Lote:</td><td>{{ registros.lote_code }} </td></tr> 
-                            <tr><td>Código Variedad:</td><td>{{ registros.variedad_code}} </td></tr> 
-                            <tr><td>Nombre Variedad:</td><td>{{ registros.apodo_variedad }} </td></tr> 
-                            <tr><td>Tipo:</td><td>{{ registros.tipo}} </td></tr>
-                            <tr><td>Cultivo:</td><td>{{ registros.cultivo }} </td></tr> 
-                            <tr><td>Ubicacion:</td><td>{{ registros.ubicación }} </td></tr>
-                            <tr><td>Estructura:</td><td>{{ registros.estructura }} </td></tr>
-                            <tr><td>Plantas | Padre:</td><td>{{ registros.plantas_padre }} </td></tr>
-                            <tr><td>Plantas | Madre:</td><td>{{ registros.plantas_madre}} </td></tr>
-                            <tr><td>Harvest Code:</td><td>{{ registros.harvest_code }} </td></tr>
-                            <tr><td>Status:</td><td>{{ registros.status }} </td></tr>
-                            <tr><td>Fecha Siembra Madre:</td><td>{{ registros.siembra_madre}} </td></tr>
-                            <tr><td>Metodo de Produccion:</td><td>{{ registros.metodo_prod}} </td></tr>
-                            <tr><td>Shipment Hub:</td><td>{{ registros.shipment_hub}} </td></tr>
-                            <tr><td>Target Nb of plants-Padre:</td><td>{{ registros.as_per_SDCMale}} </td></tr>
-                            <tr><td>Target Nb of plants-Madre:</td><td>{{ registros.as_per_SDCFemale }} </td></tr>
-                            <tr><td>Target:</td><td>{{ registros.target}} </td></tr>
-                            <tr><td>Surface:</td><td>{{ registros.surface}} </td></tr>
-                            <tr><td>Observaciones:</td><td>{{ registros.observaciones }} </td></tr>
-                            <tr><td>Creado:</td><td>{{ registros.created }} </td></tr> 
-                            <tr><td>Modificado:</td><td>{{ registros.updated_at }} </td></tr>  
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-            </div>
+        <div class="page-header-box">
+            <h1 class="title is-3">Resumen de Lote</h1>
         </div>
+
+        <div class="detail-card">
+            <table class="table is-striped is-hoverable is-fullwidth">
+                <tbody>
+                    <tr><td>Registro:</td><td>{{ registros.id }}</td></tr>
+                    <tr><td>Lote:</td><td>{{ registros.lote_code }}</td></tr>
+                    <tr><td>Código Variedad:</td><td>{{ registros.variedad_code }}</td></tr>
+                    <tr><td>Nombre Variedad:</td><td>{{ registros.apodo_variedad }}</td></tr>
+                    <tr><td>Tipo:</td><td>{{ registros.tipo }}</td></tr>
+                    <tr><td>Cultivo:</td><td>{{ registros.cultivo }}</td></tr>
+                    <tr><td>Ubicación:</td><td>{{ registros.ubicación }}</td></tr>
+                    <tr><td>Estructura:</td><td>{{ registros.estructura }}</td></tr>
+                    <tr><td>Plantas | Padre:</td><td>{{ registros.plantas_padre }}</td></tr>
+                    <tr><td>Plantas | Madre:</td><td>{{ registros.plantas_madre }}</td></tr>
+                    <tr><td>Harvest Code:</td><td>{{ registros.harvest_code }}</td></tr>
+                    <tr><td>Status:</td><td>{{ registros.status }}</td></tr>
+                    <tr><td>Fecha Siembra Madre:</td><td>{{ registros.siembra_madre }}</td></tr>
+                    <tr><td>Método de Producción:</td><td>{{ registros.metodo_prod }}</td></tr>
+                    <tr><td>Shipment Hub:</td><td>{{ registros.shipment_hub }}</td></tr>
+                    <tr><td>Target Nb of plants - Padre:</td><td>{{ registros.as_per_SDCMale }}</td></tr>
+                    <tr><td>Target Nb of plants - Madre:</td><td>{{ registros.as_per_SDCFemale }}</td></tr>
+                    <tr><td>Target:</td><td>{{ registros.target }}</td></tr>
+                    <tr><td>Superficie:</td><td>{{ registros.surface }}</td></tr>
+                    <tr><td>Observaciones:</td><td>{{ registros.observaciones }}</td></tr>
+                    <tr><td>Creado:</td><td>{{ registros.created }}</td></tr>
+                    <tr><td>Modificado:</td><td>{{ registros.updated_at }}</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="btn-container">
+            <a href="{% url 'lotes_list' %}" class="button is-link is-light">
+                <span class="icon"><i class="fas fa-arrow-left"></i></span>
+                <span>Regresar a panel</span>
+            </a>
+        </div>
+
     </div>
 
-    <a href="{% url 'lotes_list' %}">Regresar a panel</a>
-
-    
-    
+    <script defer src="https://use.fontawesome.com/releases/v6.4.0/js/all.js"></script>
 </body>
 </html>

@@ -4,49 +4,61 @@
     <title>Visualizar Detalles de Variedad</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
     <style>
-
         h1 {
-            margin: 15px;
+            margin: 15px 0;
             font-family: Arial, sans-serif;
         }
-
         a {
-            margin: 20px;
+            margin: 20px 0;
             font-family: Arial, sans-serif;
         }
-
+        .page-header-box {
+            background: linear-gradient(to right, #6c757d, #495057);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+        .detail-card {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
     </style>
 </head>
 <body>
-    <h1 class="roboto">Detalles</h1>
     <div class="container">
-        <div class="columns">
-            <div class="column is-12">
-                <div class="table-container">
-                    <table class="table is-striped is-hoverable is is-fullwidth" id="myTable">
-                    
-                        <tbody>
-                            <tr><td>Registro:</td><td>{{ registros.id }} </td></tr>
-                            <tr><td>Código Variedad:</td><td>{{ registros.variedad_code}} </td></tr> 
-                            <tr><td>Apodo Variedad:</td><td>{{ registros.apodo_variedad }} </td></tr> 
-                            <tr><td>Cultivo:</td><td>{{ registros.cultivo }} </td></tr> 
-                            <tr><td>Código | Padre:</td><td>{{ registros.cod_padre }} </td></tr>
-                            <tr><td>Código | Madre:</td><td>{{ registros.cod_madre}} </td></tr>
-                            <tr><td>Status:</td><td>{{ registros.status }} </td></tr>
-                            <tr><td>Creado:</td><td>{{ registros.created }} </td></tr> 
-                            <tr><td>Modificado:</td><td>{{ registros.updated_at }} </td></tr>  
-                        </tbody>
 
-                    </table>
+        <div class="page-header-box">
+            <h1 class="title is-3">Detalles de Variedad</h1>
+        </div>
 
-                </div>
-            </div>
+        <div class="detail-card">
+            <table class="table is-striped is-hoverable is-fullwidth">
+                <tbody>
+                    <tr><td><strong>Registro:</strong></td><td>{{ registros.id }}</td></tr>
+                    <tr><td><strong>Código Variedad:</strong></td><td>{{ registros.variedad_code }}</td></tr>
+                    <tr><td><strong>Apodo Variedad:</strong></td><td>{{ registros.apodo_variedad }}</td></tr>
+                    <tr><td><strong>Cultivo:</strong></td><td>{{ registros.cultivo }}</td></tr>
+                    <tr><td><strong>Código | Padre:</strong></td><td>{{ registros.cod_padre }}</td></tr>
+                    <tr><td><strong>Código | Madre:</strong></td><td>{{ registros.cod_madre }}</td></tr>
+                    <tr><td><strong>Status:</strong></td><td>{{ registros.status }}</td></tr>
+                    <tr><td><strong>Creado:</strong></td><td>{{ registros.created }}</td></tr>
+                    <tr><td><strong>Modificado:</strong></td><td>{{ registros.updated_at }}</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="has-text-centered mt-5">
+            <a href="{% url 'variedades_list' %}" class="button is-link is-light">
+                <span class="icon"><i class="fas fa-arrow-left"></i></span>
+                <span>Regresar a panel</span>
+            </a>
         </div>
     </div>
 
-    <a href="{% url 'variedades_list' %}">Regresar a panel</a>
-
-    
-    
+    <script defer src="https://use.fontawesome.com/releases/v6.4.0/js/all.js"></script>
 </body>
 </html>
