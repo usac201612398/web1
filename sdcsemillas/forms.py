@@ -413,7 +413,7 @@ class controlcosechaForm(forms.ModelForm):
 class operariosForm(forms.ModelForm):
 
     op_status = [('','-'),('Activo','Activo'),('Inactivo','Inactivo'),('Anulado','Anulado')]
-    op_supervisores = [('','-'),('Beberly Colindres','Beberly Colindres'),('Astrid García','Astrid García'),('Adi Salazar','Adi Salazar'),('Fatima Franco','Fatima Franco'),('Marlon Aguilar','Marlon Aguilar')]
+    op_supervisores = [('','-'),('Astrid García','Astrid García'),('Adi Salazar','Adi Salazar'),('Fatima Franco','Fatima Franco'),('Marlon Aguilar','Marlon Aguilar')]
     
     codigo_empleado= forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
     codigoevo = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
