@@ -2,29 +2,25 @@
 <html lang="es">
 {% load static %}
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Polen - Calidad</title>
-    <meta name="description" content="Panel de calidad de polen para agregar, editar y exportar registros." />
 
     <!-- Estilos e iconos -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css"/>
 
     <style>
-        /* Estilos generales */
         h1 {
             margin: 15px 0;
             font-family: Arial, sans-serif;
-            font-weight: 700;
         }
 
         th, td {
             white-space: nowrap;
         }
 
-        /* Estilos responsivos para móviles */
         @media (max-width: 768px) {
             h1 {
                 font-size: 1.5rem;
@@ -38,23 +34,17 @@
                 font-size: 13px;
             }
         }
-
-        /* Estilo customizado para el header de tabla */
+    </style>
+    <style>
         thead.custom-header {
-            background-color: #1b2a38; /* Azul oscuro más accesible */
-            color: #fff;
+            background-color: #2c3e50; /* Azul oscuro elegante */
+            color: #ffffff;
         }
 
         thead.custom-header th {
             font-weight: 600;
             font-size: 14px;
             border-bottom: 2px solid #ddd;
-        }
-
-        /* Card para vista móvil con mejor padding */
-        .card-body p strong {
-            min-width: 110px;
-            display: inline-block;
         }
     </style>
 </head>
@@ -68,11 +58,11 @@
                 <i class="fas fa-plus"></i> Agregar
             </a>
             <a href="{% url 'exportar_excel_generico' 'ccalidadpolen' %}" class="btn btn-outline-primary mb-2">
-                <i class="fas fa-file-excel"></i> Exportar Excel
+                <i class="fas fa-file-excel"></i> Exportar
             </a>
         </div>
 
-        <!-- Tabla visible en desktop/tablets -->
+        <!-- Tabla (solo visible en pantallas medianas o grandes) -->
         <div class="table-responsive d-none d-md-block">
             <table class="table table-striped table-bordered table-hover" id="myTable">
                 <thead class="custom-header">
@@ -84,11 +74,11 @@
                         <th>Cultivo</th>
                         <th>Calidad</th>
                         <th>Consistencia</th>
-                        <th>Agentes Externos</th>
+                        <th>Agentes-Externos</th>
                         <th>Fecha</th>
                         <th>Status</th>
-                        <th class="text-center" style="width: 50px;">Editar</th>
-                        <th class="text-center" style="width: 50px;">Anular</th>
+                        <th>Editar</th>
+                        <th>Anular</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -105,12 +95,12 @@
                         <td>{{ registro.fecha }}</td>
                         <td>{{ registro.status }}</td>
                         <td class="text-center">
-                            <a href="{% url 'ccalidadpolen_update' registro.pk %}" class="text-warning" aria-label="Editar registro {{ registro.id }}">
+                            <a href="{% url 'ccalidadpolen_update' registro.pk %}" class="text-warning">
                                 <i class="fas fa-edit"></i>
                             </a>
                         </td>
                         <td class="text-center">
-                            <a href="{% url 'ccalidadpolen_delete' registro.pk %}" class="text-danger" aria-label="Eliminar registro {{ registro.id }}">
+                            <a href="{% url 'ccalidadpolen_delete' registro.pk %}" class="text-danger">
                                 <i class="fas fa-trash-alt"></i>
                             </a>
                         </td>
@@ -120,20 +110,18 @@
             </table>
         </div>
 
-        <!-- Vista tarjetas para móviles -->
+        <!-- Vista tipo tarjeta para móviles -->
         <div class="d-block d-md-none">
             {% for registro in registros %}
-            <div class="card mb-3 shadow-sm">
+            <div class="card mb-2">
                 <div class="card-body">
-                    <h5 class="card-title fw-bold">{{ registro.apodo_variedad }}</h5>
-                    <p class="card-text mb-1">
-                        <strong>Ubicación:</strong> {{ registro.ubicacion_lote }}<br />
-                        <strong>Estructura:</strong> {{ registro.estructura }}<br />
-                        <strong>Cultivo:</strong> {{ registro.tipo_cultivo }}<br />
-                        <strong>Calidad:</strong> {{ registro.calidad }}<br />
-                        <strong>Consistencia:</strong> {{ registro.consistencia }}<br />
-                        <strong>Agentes Externos:</strong> {{ registro.ag_externos }}<br />
-                        <strong>Fecha:</strong> {{ registro.fecha }}<br />
+                    <h5 class="card-title">{{ registro.apodo_variedad }}</h5>
+                    <p class="card-text">
+                        <strong>Ubicación:</strong> {{ registro.ubicacion_lote }}<br>
+                        <strong>Estructura:</strong> {{ registro.estructura }}<br>
+                        <strong>Cultivo:</strong> {{ registro.tipo_cultivo }}<br>
+                        <strong>Calidad:</strong> {{ registro.calidad }}<br>
+                        <strong>Fecha:</strong> {{ registro.fecha }}<br>
                         <strong>Status:</strong> {{ registro.status }}
                     </p>
                     <div class="d-flex justify-content-between">
@@ -148,9 +136,7 @@
 
         <!-- Botón Home -->
         <div class="text-center mt-4">
-            <a href="{% url 'sdcsemillas_home' %}" class="btn btn-secondary">
-                <i class="fas fa-home"></i> Home
-            </a>
+            <a href="{% url 'sdcsemillas_home' %}" class="btn btn-secondary"><i class="fas fa-home"></i> Home</a>
         </div>
     </div>
 
@@ -165,12 +151,9 @@
                 scrollX: true,
                 language: {
                     url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
-                },
-                lengthMenu: [10, 25, 50], // Opciones de paginación
-                pageLength: 10
+                }
             });
         });
     </script>
 </body>
 </html>
-
