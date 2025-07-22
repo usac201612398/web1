@@ -54,6 +54,10 @@
 <body>
 <div class="container py-3">
 
+    <div class="page-header-box">
+        <h1>Etapas de Lote</h1>
+    </div>
+
     <!-- Botones -->
     <div class="d-flex justify-content-between flex-wrap mb-3">
         <a href="{% url 'etapasdelote_create' %}" class="btn btn-outline-success mb-2">
@@ -146,7 +150,7 @@
 <script>
     $(document).ready(function () {
         $('#myTable').DataTable({
-            responsive: true,
+            scrollX: true,
             language: {
                 url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
             }
@@ -155,6 +159,3 @@
 </script>
 </body>
 </html>
-
-
-
