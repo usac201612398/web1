@@ -1,5 +1,5 @@
 from django import forms
-from .models import Actpeso,paramenvlocales,Boletas,salidacontenedores,salidasFruta, productoTerm,contenedores, Recepciones, Ccalidad, inventarioProdTerm,AcumFruta, enviosFrutaPlantilla
+from .models import Actpeso, causasRechazo,paramenvlocales,Boletas,salidacontenedores,salidasFruta, productoTerm,contenedores, Recepciones, Ccalidad, inventarioProdTerm,AcumFruta, enviosFrutaPlantilla
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Fieldset, Div
 
@@ -95,12 +95,22 @@ class ccalidadForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['observaciones'].required = False
         self.fields['registro'].required = False
+        # Si estamos editando
         if self.instance and self.instance.pk:
-            # Modo edición: cargar opciones actuales para que el select no quede vacío
+            # -- CAUSAS DE RECHAZO --
+            causas = causasRechazo.objects.all()
+            opciones = [(c.causa, c.causa) for c in causas]
+
+            # Si la causa del registro no está en la lista, la añadimos para no perderla
+            if self.instance.causarechazo and (self.instance.causarechazo, self.instance.causarechazo) not in opciones:
+                opciones.insert(0, (self.instance.causarechazo, self.instance.causarechazo))
+
+            self.fields['causarechazo'].choices = opciones
+
+            # -- LLAVE --
             self.fields['llave'].choices = [(self.instance.llave, self.instance.llave)]
-            self.fields['causarechazo'].choices = [(self.instance.causarechazo, self.instance.causarechazo)]
         else:
-            # Modo creación: dejar choices vacíos (serán llenados por JS)
+            # En modo creación: dejar choices vacíos (los llena JavaScript)
             self.fields['llave'].choices = []
             self.fields['causarechazo'].choices = []
 
