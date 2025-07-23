@@ -208,6 +208,12 @@
                 {{ form.rubro }}
             </div>
         </div>
+        <!-- Botones centrados en una fila -->
+        <div class="form-group button-row">
+            <button type="submit" class="btn btn-primary">{{ form.instance.pk|yesno:"Actualizar,Crear" }}</button>
+            <a href="{% url 'itemsenvios_list' %}" class="btn btn-secondary">Regresar</a>
+        </div>
+
     </form>
   </div>
 

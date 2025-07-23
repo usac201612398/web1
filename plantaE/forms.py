@@ -24,14 +24,14 @@ class salidasFrutaForm(forms.ModelForm):
 
 class pesosForm(forms.ModelForm):
 
-    recepcion = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'my-input'}))
-    llave = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de correo electrónico
-    finca = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
-    cultivo = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
-    tarimas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
-    cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
-    libras = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
+    recepcion = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control'}))
+    llave = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de correo electrónico
+    finca = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de texto
+    cultivo = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de texto
+    tarimas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
+    cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
+    libras = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
     
     class Meta:
     
@@ -40,14 +40,14 @@ class pesosForm(forms.ModelForm):
 
 class acumFrutaForm(forms.ModelForm):
     
-    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'my-input'}))
-    correo = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de correo electrónico
-    finca = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
-    cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
-    orden = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
-    cultivo = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
-    variedad = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
-    estructura = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control'}))
+    correo = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  # Campo de correo electrónico
+    finca = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  # Campo de texto
+    cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
+    orden = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  # Campo de texto
+    cultivo = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  # Campo de texto
+    variedad = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  # Campo de texto
+    estructura = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  # Campo de texto
     
     class Meta:
     
@@ -58,14 +58,14 @@ class recepcionesForm(forms.ModelForm):
 
     op_status = [('Pendiente','-'),('En proceso','En proceso')]
 
-    recepcion = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'my-input'}))
-    finca = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
-    cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
-    libras = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
-    cultivo = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
-    observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))  # Campo de texto
-    status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'my-input'}))
+    recepcion = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control'}))
+    finca = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  # Campo de texto
+    cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
+    libras = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
+    cultivo = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  # Campo de texto
+    observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  # Campo de texto
+    status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'form-control'}))
 
     class Meta:
     
@@ -78,12 +78,12 @@ class recepcionesForm(forms.ModelForm):
 
 class ccalidadForm(forms.ModelForm):
 
-    registro = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
-    fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'my-input'}))
-    porcentaje= forms.DecimalField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
-    llave = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))
-    causarechazo = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))
-    observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
+    registro = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
+    porcentaje= forms.DecimalField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
+    llave = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))
+    causarechazo = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))
+    observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
    
     class Meta:
     
@@ -102,18 +102,18 @@ class inventarioFrutaForm(forms.ModelForm):
     op_cultivo = [('','-'),('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
     op_categoria = [('','-'),('Mastronardi','Mastronardi'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolucion','Devolucion')]
     
-    registro = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
-    proveedor = forms.ChoiceField(choices=op_proveedor, widget=forms.Select(attrs={'class': 'my-input'}))
-    itemsapcode = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'})) 
-    itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))   # Campo de texto
-    cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
-    libras = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
-    lbsintara=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
-    pesostd=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
-    pesosinmerma=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
-    merma=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
-    pesostdxcaja=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
-    pesorxcaja=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))  # Campo numérico
+    registro = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    proveedor = forms.ChoiceField(choices=op_proveedor, widget=forms.Select(attrs={'class': 'form-control'}))
+    itemsapcode = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'})) 
+    itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))   # Campo de texto
+    cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
+    libras = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
+    lbsintara=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))  # Campo numérico
+    pesostd=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))  # Campo numérico
+    pesosinmerma=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))  # Campo numérico
+    merma=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))  # Campo numérico
+    pesostdxcaja=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))  # Campo numérico
+    pesorxcaja=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))  # Campo numérico
     
     class Meta:
         
@@ -177,21 +177,21 @@ class contenedoresForm(forms.ModelForm):
     op_destino = [('Jonestown','Jonestown'),('Lakeland','Lakeland'),('Laredo, Texas','Laredo, Texas'),('Miami','Miami')]
     op_naviera = [('SEABOARD','SEABOARD'),('CROWLEY','CROWLEY')]
 
-    fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'my-input'}))
-    eta = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'my-input'}))
-    etd = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'my-input'}))
-    destino = forms.ChoiceField(choices=op_destino, widget=forms.Select(attrs={'class': 'my-input'}))
-    contenedor = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    bl = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    booking = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    transportista = forms.ChoiceField(choices=op_naviera, widget=forms.Select(attrs={'class': 'my-input'}))
-    viaje = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
-    piloto = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    temperatura = forms.DecimalField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
-    ventilacion = forms.DecimalField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
-    marchamo = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    placacamion = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    horasalida = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'my-input'}))  # Campo numérico
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
+    eta = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
+    etd = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
+    destino = forms.ChoiceField(choices=op_destino, widget=forms.Select(attrs={'class': 'form-control'}))
+    contenedor = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    bl = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    booking = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    transportista = forms.ChoiceField(choices=op_naviera, widget=forms.Select(attrs={'class': 'form-control'}))
+    viaje = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
+    piloto = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    temperatura = forms.DecimalField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
+    ventilacion = forms.DecimalField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
+    marchamo = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    placacamion = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    horasalida = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'form-control'}))  # Campo numérico
     
     class Meta:
         
@@ -204,17 +204,17 @@ class itemsForm(forms.ModelForm):
     op_categoria = [('Exportación','Exportación'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolución','Devolución')]
     op_tipo =      [('Tomate','Tomate'),('Aguacate','Aguacate'),('Chile','Chile'),('Arandano','Arandano'),('Pitaya','Pitaya'),('Pepino','Pepino')]
     
-    cultivo = forms.ChoiceField(choices=op_cultivo, widget=forms.Select(attrs={'class': 'my-input'}))
-    itemsapcode = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    itemsapcodelibra = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    calidad1 = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    categoria = forms.ChoiceField(choices=op_categoria, widget=forms.Select(attrs={'class': 'my-input'}))
-    precio = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input'})) 
-    taraxcaja = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input'})) 
-    pesostdxcaja = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input'})) 
-    tipo = forms.ChoiceField(choices=op_tipo, widget=forms.Select(attrs={'class': 'my-input'}))  # Campo numérico
-    orden = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
+    cultivo = forms.ChoiceField(choices=op_cultivo, widget=forms.Select(attrs={'class': 'form-control'}))
+    itemsapcode = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    itemsapcodelibra = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    calidad1 = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    categoria = forms.ChoiceField(choices=op_categoria, widget=forms.Select(attrs={'class': 'form-control'}))
+    precio = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
+    taraxcaja = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
+    pesostdxcaja = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
+    tipo = forms.ChoiceField(choices=op_tipo, widget=forms.Select(attrs={'class': 'form-control'}))  # Campo numérico
+    orden = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     
     class Meta:
         
@@ -229,13 +229,13 @@ class itemsenviosForm(forms.ModelForm):
     op_grupo =   [('Empaque','Empaque'),('Fruta','Fruta'),('MAT.LIMPIEZA','MAT.LIMPIEZA'),('Insumos','Insumos')]
     u_m =   [('gl','gl'),('kg','kg'),('g','g'),('lb','lb'),('lt','lt'),('mil','mil'),('millar','millar'),('und','und'),('mts','mts'),('pie','pie'),('par','par'),('rl','rl')]
     
-    item = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    descripcion = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    u_m = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
-    clasificacion = forms.ChoiceField(choices=op_clasificacion, widget=forms.Select(attrs={'class': 'my-input'}))
-    almacen = forms.ChoiceField(choices=op_almacen, widget=forms.Select(attrs={'class': 'my-input'}))
-    grupo = forms.ChoiceField(choices=op_grupo, widget=forms.Select(attrs={'class': 'my-input'}))
-    rubro = forms.ChoiceField(choices=op_rubro, widget=forms.Select(attrs={'class': 'my-input'}))
+    item = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    descripcion = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    u_m = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    clasificacion = forms.ChoiceField(choices=op_clasificacion, widget=forms.Select(attrs={'class': 'form-control'}))
+    almacen = forms.ChoiceField(choices=op_almacen, widget=forms.Select(attrs={'class': 'form-control'}))
+    grupo = forms.ChoiceField(choices=op_grupo, widget=forms.Select(attrs={'class': 'form-control'}))
+    rubro = forms.ChoiceField(choices=op_rubro, widget=forms.Select(attrs={'class': 'form-control'}))
     
     class Meta:
         
@@ -244,22 +244,22 @@ class itemsenviosForm(forms.ModelForm):
 
     
 class salidacontenedoresForm(forms.ModelForm):
-    fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'my-input'}))
-    contenedor = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
-    palet = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))
-    proveedor = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
-    cultivo = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
-    itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
-    cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly':'readonly'}))  # Campo numérico
-    importe = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
-    lbsintara = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly':'readonly'}))  # Campo numérico
-    pesorxcaja = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly':'readonly'}))  # Campo numérico
-    pesostd = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly':'readonly'}))  # Campo numérico
-    pesostdxcaja = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly':'readonly'}))  # Campo numérico
-    pesosinmerma = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly':'readonly'}))  # Campo numérico
-    merma = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly':'readonly'}))  # Campo numérico
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
+    contenedor = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    palet = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    proveedor = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    cultivo = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly':'readonly'}))  # Campo numérico
+    importe = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    lbsintara = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly':'readonly'}))  # Campo numérico
+    pesorxcaja = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly':'readonly'}))  # Campo numérico
+    pesostd = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly':'readonly'}))  # Campo numérico
+    pesostdxcaja = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly':'readonly'}))  # Campo numérico
+    pesosinmerma = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly':'readonly'}))  # Campo numérico
+    merma = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly':'readonly'}))  # Campo numérico
     
-    libras_por_caja = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
+    libras_por_caja = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
 
     class Meta:
         model = salidacontenedores
@@ -308,21 +308,21 @@ class salidacontenedoresForm(forms.ModelForm):
 
 class boletasForm(forms.ModelForm):
     
-    registro = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
-    fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'my-input'}))
-    boleta = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
-    finca = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
-    ordenfinca = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
-    proveedor = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
-    cultivo = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
-    orden = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
-    calidad1 = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
-    itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly':'readonly'}))  # Campo numérico
-    calidad = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
-    cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
-    librasxcaja = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
-    libras = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'my-input', 'readonly': 'readonly'}))
-    observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'my-input'}))
+    registro = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
+    boleta = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    finca = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    ordenfinca = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    proveedor = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    cultivo = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    orden = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    calidad1 = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly':'readonly'}))  # Campo numérico
+    calidad = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    librasxcaja = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    libras = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     
     class Meta:
         model = Boletas
