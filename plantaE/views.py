@@ -2996,4 +2996,4 @@ def itemsenvios_update(request, pk):
             return redirect('itemsenvios_list')
     else:
         form = itemsenviosForm(instance=salidas)
-    return render(request, 'plantaE/itemsenvios_form.html', {'form': form,'modo':'crear'})
+    return render(request, 'plantaE/itemsenvios_form.html', {'form': form,'modo':'actualizar'})
