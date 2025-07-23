@@ -86,7 +86,8 @@
                 <div class="navbar-start">
                     
                     <a class="navbar-item" href="{% url 'sdcsemillas_home'%}">Inicio</a>
-                    {% if user.username == "brandon.portillo@popoyan.com.gt" %}
+                    {% if user.username in "brandon.portillo@popoyan.com.gt, claudia.moreno@popoyan.com.gt" %}
+
                         <a class="navbar-item" href="{% url 'variedades_list'%}">Variedades</a>
                         <a class="navbar-item" href="{% url 'lotes_list'%}">Lotes</a>
                     {% endif %}
