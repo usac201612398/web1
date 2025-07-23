@@ -2985,7 +2985,7 @@ def itemsenvios_create(request):
             return JsonResponse({'errores': form.errors}, status=400)
     else:
         form = itemsenviosForm()
-    return render(request, 'plantaE/itemsenvios_form.html', {'form': form})
+    return render(request, 'plantaE/itemsenvios_form.html', {'form': form,'modo':'crear'})
 
 def itemsenvios_update(request, pk):
     salidas = get_object_or_404(paramenvlocales, pk=pk)
@@ -2996,4 +2996,4 @@ def itemsenvios_update(request, pk):
             return redirect('itemsenvios_list')
     else:
         form = itemsenviosForm(instance=salidas)
-    return render(request, 'plantaE/itemsenvios_form.html', {'form': form})
+    return render(request, 'plantaE/itemsenvios_form.html', {'form': form,'modo':'crear'})
