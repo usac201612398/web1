@@ -81,8 +81,9 @@ class ccalidadForm(forms.ModelForm):
     registro = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
     porcentaje= forms.DecimalField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
-    llave = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))
-    causarechazo = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))
+    llave = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'form-control'}))
+    causarechazo = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'form-control'}))
+
     observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
    
     class Meta:
@@ -94,6 +95,14 @@ class ccalidadForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['observaciones'].required = False
         self.fields['registro'].required = False
+        if self.instance and self.instance.pk:
+            # Modo edición: cargar opciones actuales para que el select no quede vacío
+            self.fields['llave'].choices = [(self.instance.llave, self.instance.llave)]
+            self.fields['causarechazo'].choices = [(self.instance.causarechazo, self.instance.causarechazo)]
+        else:
+            # Modo creación: dejar choices vacíos (serán llenados por JS)
+            self.fields['llave'].choices = []
+            self.fields['causarechazo'].choices = []
 
 class inventarioFrutaForm(forms.ModelForm):
 
