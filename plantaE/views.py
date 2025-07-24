@@ -893,7 +893,7 @@ def envioslocal_detail(request, pk):
 def envioslocal_delete(request, pk):
     salidas = get_object_or_404(enviosrec, pk=pk)
 
-    relacionados = inventarioProdTerm.objects.filter(enviosrec=salidas.registro).exclude(status='Anulado')
+    relacionados = inventarioProdTerm.objects.filter(enviorec=salidas.envio).exclude(status='Anulado')
 
     relacionadosaux = inventarioProdTermAux.objects.filter(
         inventarioreg__in=relacionados.values_list('registro', flat=True)
