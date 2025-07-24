@@ -20,6 +20,8 @@ from django.contrib import messages
 from collections import defaultdict
 from django.db.models.functions import ExtractWeek, ExtractYear
 from django.views.decorators.http import require_GET
+from django.urls import reverse
+
 
 def vascula_monitor(request):
     return render(request, 'plantaE/vascula.html')
@@ -900,10 +902,13 @@ def envioslocal_delete(request, pk):
         inventarioreg__in=relacionados.values_list('registro', flat=True)
     )
 
-    # Validar si hay alguna boleta asignada en los registros auxiliares
     if relacionadosaux.filter(boleta__isnull=False).exists():
-        messages.error(request, "No se puede anular este envío porque tiene boletas asignadas.")
-        return redirect('envioslocal_list')
+        return render(request, 'plantaE/envioslocal_confirm_delete.html', {
+            'registros': salidas,
+            'alert_message': "No se puede anular este envío porque tiene boletas asignadas.",
+            'redirect_url': reverse('envioslocal_list')
+        })
+
 
     if request.method == 'POST':
         # Anular el envío
