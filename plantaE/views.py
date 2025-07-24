@@ -251,11 +251,26 @@ def article_list(request):
     
     return render(request, 'plantaE/salidasFruta_list.html', {'registros': salidas})
 
+
 def pesos_delete(request, pk):
     salidas = get_object_or_404(Actpeso, pk=pk)
+
+    # Validar si tiene recepción asignada
+    if salidas.recepcion:
+        return render(request, 'plantaE/pesos_confirm_delete.html', {
+            'registros': salidas,
+            'alert_message': "No se puede anular este peso porque ya tiene una recepción asignada.",
+            'redirect_url': reverse('pesos_list')
+        })
+
     if request.method == 'POST':
-        salidas.delete()
-        return redirect('pesos_list')
+        salidas.status = 'Anulado'
+        salidas.save()
+        return render(request, 'plantaE/pesos_confirm_delete.html', {
+            'alert_message': "El registro fue anulado correctamente.",
+            'redirect_url': reverse('pesos_list')
+        })
+
     return render(request, 'plantaE/pesos_confirm_delete.html', {'registros': salidas})
 
 def article_listValle(request):

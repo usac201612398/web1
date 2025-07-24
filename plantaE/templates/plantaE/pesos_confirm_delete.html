@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Confirmar Anulación</title>
+    <title>Confirmar Eliminación</title>
 
     <!-- Enlace a fuentes y bibliotecas de estilo -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
@@ -96,7 +96,7 @@
 <body>
 
     <div id="container">
-        <h1>¿Está seguro de anular la recepcion con ID "{{ registros.recepcion }}"?</h1>
+        <h1>¿Está seguro de eliminar el registro con ID "{{ registros.registro }}"?</h1>
     </div>
 
     <div id="container">
@@ -107,7 +107,7 @@
     </div>
 
     <div class="container-btns">
-        <a href="{% url 'recepcionesFruta_list' %}" class="btn-cancel">
+        <a href="{% url 'pesos_list' %}" class="btn-cancel">
             <i class="fas fa-times-circle"></i> Cancelar
         </a>
     </div>
