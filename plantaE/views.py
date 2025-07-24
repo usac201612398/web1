@@ -2944,7 +2944,7 @@ def items_create(request):
             return JsonResponse({'errores': form.errors}, status=400)
     else:
         form = itemsForm()
-    return render(request, 'plantaE/items_form.html', {'form': form})
+    return render(request, 'plantaE/items_form.html', {'form': form,'modo':'crear'})
 
 def items_update(request, pk):
     salidas = get_object_or_404(productoTerm, pk=pk)
@@ -2955,7 +2955,7 @@ def items_update(request, pk):
             return redirect('items_list')
     else:
         form = itemsForm(instance=salidas)
-    return render(request, 'plantaE/items_form.html', {'form': form})
+    return render(request, 'plantaE/items_form.html', {'form': form,'modo':'actualizar'})
 
 def itemsenvios_list(request):
     salidas = paramenvlocales.objects.all() # Excluye los que tienen status 'Cerrado'
