@@ -902,7 +902,9 @@ def envioslocal_delete(request, pk):
     ).exclude(status='Anulado')
 
     # Validar si alguno de esos registros ya tiene boleta asignada
-    boletas_asignadas = inventarios_relacionados.filter(boleta__isnull=False).exists()
+    boletas_asignadas = inventarios_relacionados.filter(
+        boleta__isnull=False
+    ).exclude(boleta=0).exists()
 
     if boletas_asignadas:
         return render(request, 'plantaE/envioslocal_confirm_delete.html', {
