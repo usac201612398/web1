@@ -893,7 +893,7 @@ def envioslocal_delete(request, pk):
     salidas = get_object_or_404(enviosrec, pk=pk)
 
     # Buscar registros de inventario vinculados al envío
-    relacionados = inventarioProdTerm.objects.filter(enviosrec=salidas.registro).exclude(status='Anulado')
+    relacionados = inventarioProdTerm.objects.filter(enviorec=salidas.envio).exclude(status='Anulado')
 
     # Buscar registros auxiliares que correspondan a los registros anteriores
     relacionadosaux = inventarioProdTermAux.objects.filter(
