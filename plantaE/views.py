@@ -254,12 +254,12 @@ def article_list(request):
 
 def pesos_delete(request, pk):
     salidas = get_object_or_404(Actpeso, pk=pk)
-
+    recepcion = Recepciones.objects.filter(recepcion=salidas.recepcion)
     # Validar si tiene recepción asignada
-    if salidas.recepcion:
+    if recepcion.exists():
         return render(request, 'plantaE/pesos_confirm_delete.html', {
             'registros': salidas,
-            'alert_message': "No se puede anular este peso porque ya tiene una recepción asignada.",
+            'alert_message': "No se puede anular este peso porque ya tiene una recepción asignada, anule la recepcion.",
             'redirect_url': reverse('pesos_list')
         })
 
