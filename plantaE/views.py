@@ -891,37 +891,33 @@ def envioslocal_detail(request, pk):
     return render(request, 'plantaE/envioslocal_detail.html', {'registros': salidas})
 
 def envioslocal_delete(request, pk):
-    # Obtener el objeto de envío
     salidas = get_object_or_404(enviosrec, pk=pk)
 
-    # Buscar registros de inventario vinculados al envío
-    relacionados = inventarioProdTerm.objects.filter(enviorec=salidas.envio).exclude(status='Anulado')
+    relacionados = inventarioProdTerm.objects.filter(enviosrec=salidas.registro).exclude(status='Anulado')
 
-    # Buscar registros auxiliares que correspondan a los registros anteriores
     relacionadosaux = inventarioProdTermAux.objects.filter(
         inventarioreg__in=relacionados.values_list('registro', flat=True)
     )
 
     if relacionadosaux.filter(boleta__isnull=False).exists():
+        # Mostrar mensaje con alert y redirigir
+        alert_message = "No se puede anular este envío porque tiene boletas asignadas."
+        redirect_url = reverse('envioslocal_list')
         return render(request, 'plantaE/envioslocal_confirm_delete.html', {
             'registros': salidas,
-            'alert_message': "No se puede anular este envío porque tiene boletas asignadas.",
-            'redirect_url': reverse('envioslocal_list')
+            'alert_message': alert_message,
+            'redirect_url': redirect_url
         })
 
-
     if request.method == 'POST':
-        # Anular el envío
         salidas.status = 'Anulado'
         salidas.save()
-
-        # Cerrar los registros principales de inventario
         relacionados.update(status='Anulado', status3='Anulado')
-
-        messages.success(request, "El envío y los registros de inventario  han sido anulados correctamente.")
+        messages.success(request, "El envío y los registros de inventario han sido anulados correctamente.")
         return redirect('envioslocal_list')
 
     return render(request, 'plantaE/envioslocal_confirm_delete.html', {'registros': salidas})
+
 
 def recepciones_reporteAcum(request):
     today = timezone.now().date()
