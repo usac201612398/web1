@@ -85,9 +85,16 @@
             <div id="navbarMenu" class="navbar-menu">
                 <div class="navbar-start">
                     {% if user.username in "brandon.portillo@popoyan.com.gt, armando.caravantes@popoyan.com.gt" %}
-
-                        <a class="navbar-item" href="{% url 'itemsenvios_list'%}">Items - SAP</a>
-                        <a class="navbar-item" href="{% url 'items_list'%}">Items</a>
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-link">
+                                Items
+                            </a>
+                            <div class="navbar-dropdown">
+                                <a class="navbar-item" href="{% url 'itemsenvios_list'%}">Items - Envios</a>
+                                <a class="navbar-item" href="{% url 'items_list'%}">Items - ProdTerm</a>
+                            </div>
+                        </div>
+                        
                     {% endif %}
                     <a class="navbar-item" href="{% url 'plantaE_home'%}">Inicio</a>
                     <a class="navbar-item" href="{% url 'exportar_excel'%}">Cosecha</a>
