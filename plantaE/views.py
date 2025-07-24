@@ -889,8 +889,8 @@ def envioslocal_detail(request, pk):
     salidas = get_object_or_404(enviosrec, pk=pk)
     return render(request, 'plantaE/envioslocal_detail.html', {'registros': salidas})
 
-
 def envioslocal_delete(request, pk):
+
     envio_original = get_object_or_404(enviosrec, pk=pk)
 
     # Obtener todos los registros con el mismo "envio" (o 'registro')
@@ -898,7 +898,7 @@ def envioslocal_delete(request, pk):
 
     # Registros de inventario relacionados
     inventarios_relacionados = inventarioProdTerm.objects.filter(
-        enviorec__in=registros_a_anular
+        enviorec=envio_original.envio
     ).exclude(status='Anulado')
 
     # Validar si alguno de esos registros ya tiene boleta asignada
