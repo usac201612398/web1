@@ -915,10 +915,10 @@ def envioslocal_delete(request, pk):
 
     if request.method == 'POST':
         # Anular todos los registros de envío relacionados
-        #registros_a_anular.update(status='Anulado')
+        registros_a_anular.update(status='Anulado')
 
         # Anular registros de inventario
-        #inventarios_relacionados.update(status='Anulado', status3='Anulado')
+        inventarios_relacionados.update(status='Anulado', status3='Anulado')
 
         return render(request, 'plantaE/envioslocal_confirm_delete.html', {
             'registros': envio_original,
@@ -1510,20 +1510,17 @@ def boletas_detail(request, pk):
     return render(request, 'plantaE/boletas_detail.html', {'registros': salidas})
 
 def boletas_delete(request, pk):
+
     salidas = get_object_or_404(Boletas, pk=pk)
     boletas_relacionadas = Boletas.objects.filter(boleta=salidas.boleta)
 
     if request.method == 'POST':
         # Anular boletas relacionadas
-        for boleta in boletas_relacionadas:
-            boleta.status = 'Anulado'
-            boleta.save()
+        boletas_relacionadas.update(status='Anulado')
 
         # Actualizar inventario relacionado
         invrelacionado = inventarioProdTerm.objects.exclude(status='Anulado').filter(boleta=salidas.boleta)
-        for elemento in invrelacionado:
-            elemento.status3 = None
-            elemento.save()
+        invrelacionado.update(status3=None)
 
         # Obtener recepciones relacionadas
         recepciones_ids = detallerecaux.objects.exclude(status='Anulado') \
@@ -1532,20 +1529,14 @@ def boletas_delete(request, pk):
 
         for recepcion_id in recepciones_ids:
             recepcion_aux = detallerecaux.objects.exclude(status='Anulado').filter(recepcion=recepcion_id)
-            for aux in recepcion_aux:
-                aux.status = 'En proceso'
-                aux.save()
+            recepcion_aux.update(status='En proceso')
 
             recepcion_detalle = detallerec.objects.exclude(status='Anulado').filter(recepcion=recepcion_id)
-            for detalle in recepcion_detalle:
-                detalle.status = None
-                detalle.save()
+            recepcion_detalle.update(status=None)
 
         # Anular detalles auxiliares
         detalleaux_anular = detallerecaux.objects.exclude(status='Anulado').filter(boleta=salidas.boleta)
-        for detalle in detalleaux_anular:
-            detalle.status = 'Anulado'
-            detalle.save()
+        detalleaux_anular.update(status='Anulado')
 
         # Procesar AcumFruta relacionados
         acumfruta_ids = AcumFrutaaux.objects.exclude(status='Anulado') \
@@ -1554,20 +1545,14 @@ def boletas_delete(request, pk):
 
         for acumfruta_id in acumfruta_ids:
             acumfruta_aux = AcumFrutaaux.objects.exclude(status='Anulado').filter(acumfrutaid=acumfruta_id)
-            for aux in acumfruta_aux:
-                aux.status = None
-                aux.save()
+            acumfruta_aux.update(status=None)
 
             acumfruta_detalle = AcumFruta.objects.exclude(status='Anulado').filter(id=acumfruta_id)
-            for detalle in acumfruta_detalle:
-                detalle.status = None
-                detalle.save()
+            acumfruta_detalle.update(status=None)
 
         # Anular acumfruta auxiliar
         acumfruta_anular = AcumFrutaaux.objects.exclude(status='Anulado').filter(boleta=salidas.boleta)
-        for detalle in acumfruta_anular:
-            detalle.status = 'Anulado'
-            detalle.save()
+        acumfruta_anular.update(status='Anulado')
 
         messages.success(request, "Registro anulado correctamente.")
         return redirect('boletasFruta_list')
