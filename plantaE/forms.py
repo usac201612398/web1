@@ -6,7 +6,7 @@ from crispy_forms.layout import Submit, Layout, Fieldset, Div
 class salidasFrutaForm(forms.ModelForm):
 
     op_viajes = [('','-'),('Viaje 1','Viaje 1'),('Viaje 2','Viaje 2'),('Viaje 3', 'Viaje 3'),('Viaje 4','Viaje 4'),('Viaje 5','Viaje 5'),('Viaje 6','Viaje 6'),('Viaje 7','Viaje 7'),('Viaje 8','Viaje 8')]
-    op_cultivo = [('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
+    op_cultivo = [('','-'),('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
     
     fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'my-input'}))
     correo = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de correo electrónico
@@ -56,7 +56,7 @@ class acumFrutaForm(forms.ModelForm):
 
 class recepcionesForm(forms.ModelForm):
 
-    op_status = [('Pendiente','-'),('En proceso','En proceso')]
+    op_status = [('','-'),('Pendiente','-'),('En proceso','En proceso')]
 
     recepcion = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control'}))
@@ -116,7 +116,7 @@ class ccalidadForm(forms.ModelForm):
 
 class inventarioFrutaForm(forms.ModelForm):
 
-    op_empaque = [('Cajas','Cajas'),('Libras','Libras')]
+    op_empaque = [('','-'),('Cajas','Cajas'),('Libras','Libras')]
     op_proveedor = [('','-'),('INVERSIONES LA PASTORIA, S.A.','INVERSIONES LA PASTORIA, S.A.'),('SDC','SDC'),('AGROINDUSTRIAS SAN RAFAEL, S.A.','AGROINDUSTRIAS SAN RAFAEL, S.A.'),('INVERNADEROS TECNOLOGICOS S.A','INVERNADEROS TECNOLOGICOS S.A'),('HORTEX, S.A.','HORTEX, S.A.'),('DANIEL ESTUARDO GALICIA CARRERA','DANIEL ESTUARDO GALICIA CARRERA'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.')]
     op_cultivo = [('','-'),('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
     op_categoria = [('','-'),('Mastronardi','Mastronardi'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolucion','Devolucion')]
@@ -192,9 +192,9 @@ class inventarioFrutaForm(forms.ModelForm):
 
 class contenedoresForm(forms.ModelForm):
 
-    op_status = [('Pendiente','-'),('Cerrado','Cerrado')]
-    op_destino = [('Jonestown','Jonestown'),('Lakeland','Lakeland'),('Laredo, Texas','Laredo, Texas'),('Miami','Miami')]
-    op_naviera = [('SEABOARD','SEABOARD'),('CROWLEY','CROWLEY')]
+    op_status = [('','-'),('Pendiente','-'),('Cerrado','Cerrado')]
+    op_destino = [('','-'),('Jonestown','Jonestown'),('Lakeland','Lakeland'),('Laredo, Texas','Laredo, Texas'),('Miami','Miami')]
+    op_naviera = [('','-'),('SEABOARD','SEABOARD'),('CROWLEY','CROWLEY')]
 
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
     eta = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
@@ -219,9 +219,9 @@ class contenedoresForm(forms.ModelForm):
 
 class itemsForm(forms.ModelForm):
 
-    op_cultivo =   [('ROMA','ROMA'),('AGUACATE','AGUACATE'),('PEPINO','PEPINO'),('PITAYA','PITAYA'),('ARANDANO','ARANDANO'),('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('BEEF','BEEF'),('SALADETTE','SALADETTE'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
-    op_categoria = [('Exportación','Exportación'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolución','Devolución')]
-    op_tipo =      [('Tomate','Tomate'),('Aguacate','Aguacate'),('Chile','Chile'),('Arandano','Arandano'),('Pitaya','Pitaya'),('Pepino','Pepino')]
+    op_cultivo =   [('','-'),('ROMA','ROMA'),('AGUACATE','AGUACATE'),('PEPINO','PEPINO'),('PITAYA','PITAYA'),('ARANDANO','ARANDANO'),('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('BEEF','BEEF'),('SALADETTE','SALADETTE'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
+    op_categoria = [('','-'),('Exportación','Exportación'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolución','Devolución')]
+    op_tipo =      [('','-'),('Tomate','Tomate'),('Aguacate','Aguacate'),('Chile','Chile'),('Arandano','Arandano'),('Pitaya','Pitaya'),('Pepino','Pepino')]
     
     cultivo = forms.ChoiceField(choices=op_cultivo, widget=forms.Select(attrs={'class': 'form-control'}))
     itemsapcode = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -242,11 +242,11 @@ class itemsForm(forms.ModelForm):
 
 class itemsenviosForm(forms.ModelForm):
 
-    op_clasificacion =   [('EMPAQUE','EMPAQUE'),('FRUTA','FRUTA'),('FERRETERIA','FERRETERIA')]
-    op_almacen = [('PH-0100','PH-0100'),('PH-0200','PH-0200'),('PH-0400','PH-0400'),('PH-0600','PH-0600'),('PH-0603','PH-0603'),('02','02')]
-    op_rubro =   [('Empaque','Empaque'),('Fruta','Fruta'),('Insumos','Insumos'),('MAT.LIMPIEZA','MAT.LIMPIEZA')]
-    op_grupo =   [('Empaque','Empaque'),('Fruta','Fruta'),('MAT.LIMPIEZA','MAT.LIMPIEZA'),('Insumos','Insumos')]
-    u_m =   [('gl','gl'),('kg','kg'),('g','g'),('lb','lb'),('lt','lt'),('mil','mil'),('millar','millar'),('und','und'),('mts','mts'),('pie','pie'),('par','par'),('rl','rl')]
+    op_clasificacion =   [('','-'),('EMPAQUE','EMPAQUE'),('FRUTA','FRUTA'),('FERRETERIA','FERRETERIA')]
+    op_almacen = [('','-'),('PH-0100','PH-0100'),('PH-0200','PH-0200'),('PH-0400','PH-0400'),('PH-0600','PH-0600'),('PH-0603','PH-0603'),('02','02')]
+    op_rubro =   [('','-'),('Empaque','Empaque'),('Fruta','Fruta'),('Insumos','Insumos'),('MAT.LIMPIEZA','MAT.LIMPIEZA')]
+    op_grupo =   [('','-'),('Empaque','Empaque'),('Fruta','Fruta'),('MAT.LIMPIEZA','MAT.LIMPIEZA'),('Insumos','Insumos')]
+    u_m =   [('','-'),('gl','gl'),('kg','kg'),('g','g'),('lb','lb'),('lt','lt'),('mil','mil'),('millar','millar'),('und','und'),('mts','mts'),('pie','pie'),('par','par'),('rl','rl')]
     
     item = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     descripcion = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
