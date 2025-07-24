@@ -121,12 +121,11 @@
     <!-- Bootstrap JS para que funcionen los alerts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     {% if alert_message and redirect_url %}
-    <script>
-        alert("{{ alert_message|escapejs }}");
-        window.location.href = "{{ redirect_url }}";
-    </script>
-{% endif %}
-
+        <script>
+            alert("{{ alert_message|escapejs }}");
+            window.location.href = "{{ redirect_url }}";
+        </script>
+    {% endif %}
 </body>
 </html>
 

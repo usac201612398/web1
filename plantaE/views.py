@@ -22,7 +22,6 @@ from django.db.models.functions import ExtractWeek, ExtractYear
 from django.views.decorators.http import require_GET
 from django.urls import reverse
 
-
 def vascula_monitor(request):
     return render(request, 'plantaE/vascula.html')
 
@@ -890,34 +889,45 @@ def envioslocal_detail(request, pk):
     salidas = get_object_or_404(enviosrec, pk=pk)
     return render(request, 'plantaE/envioslocal_detail.html', {'registros': salidas})
 
+
 def envioslocal_delete(request, pk):
-    salidas = get_object_or_404(enviosrec, pk=pk)
+    envio_original = get_object_or_404(enviosrec, pk=pk)
 
-    relacionados = inventarioProdTerm.objects.filter(enviorec=salidas.envio).exclude(status='Anulado')
+    # Obtener todos los registros con el mismo "envio" (o 'registro')
+    registros_a_anular = enviosrec.objects.filter(envio=envio_original.envio)
 
-    relacionadosaux = inventarioProdTermAux.objects.filter(
-        inventarioreg__in=relacionados.values_list('registro', flat=True)
-    )
+    # Registros de inventario relacionados
+    inventarios_relacionados = inventarioProdTerm.objects.filter(
+        enviorec__in=registros_a_anular
+    ).exclude(status='Anulado')
 
-    if relacionadosaux.filter(boleta__isnull=False).exists():
-        # Mostrar mensaje con alert y redirigir
-        alert_message = "No se puede anular este envío porque tiene boletas asignadas."
-        redirect_url = reverse('envioslocal_list')
+    # Validar si alguno de esos registros ya tiene boleta asignada
+    boletas_asignadas = inventarios_relacionados.filter(boleta__isnull=False).exists()
+
+    if boletas_asignadas:
         return render(request, 'plantaE/envioslocal_confirm_delete.html', {
-            'registros': salidas,
-            'alert_message': alert_message,
-            'redirect_url': redirect_url
+            'registros': envio_original,
+            'alert_message': "No se puede anular este envío porque uno o más registros tienen boletas asignadas.",
+            'redirect_url': reverse('envioslocal_list')
         })
 
     if request.method == 'POST':
-        salidas.status = 'Anulado'
-        salidas.save()
-        relacionados.update(status='Anulado', status3='Anulado')
-        messages.success(request, "El envío y los registros de inventario han sido anulados correctamente.")
-        return redirect('envioslocal_list')
+        # Anular todos los registros de envío relacionados
+        registros_a_anular.update(status='Anulado')
 
-    return render(request, 'plantaE/envioslocal_confirm_delete.html', {'registros': salidas})
+        # Anular registros de inventario
+        inventarios_relacionados.update(status='Anulado', status3='Anulado')
 
+        return render(request, 'plantaE/envioslocal_confirm_delete.html', {
+            'registros': envio_original,
+            'alert_message': "El envío y todos los registros relacionados fueron anulados correctamente.",
+            'redirect_url': reverse('envioslocal_list')
+        })
+
+    # Mostrar la confirmación inicial
+    return render(request, 'plantaE/envioslocal_confirm_delete.html', {
+        'registros': envio_original
+    })
 
 def recepciones_reporteAcum(request):
     today = timezone.now().date()
