@@ -111,6 +111,11 @@
             <i class="fas fa-times-circle"></i> Cancelar
         </a>
     </div>
-
+    {% if alert_message %}
+    <script>
+        alert("{{ alert_message|escapejs }}");
+        window.location.href = "{{ redirect_url }}";
+    </script>
+    {% endif %}
 </body>
 </html>

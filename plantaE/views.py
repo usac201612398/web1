@@ -841,38 +841,45 @@ def recepciones_list(request):
     return render(request, 'plantaE/recepciones_list.html', {'registros': salidas})
 
 def recepcionesFruta_delete(request, pk):
-    salidas = get_object_or_404(detallerec, pk=pk)# Verificar si existen registros en detallerecaux con la misma recepción
+    salidas = get_object_or_404(detallerec, pk=pk)
+
+    # Verificar si existen registros en detallerecaux con la misma recepción
     existe_en_aux = detallerecaux.objects.filter(recepcion=salidas.recepcion).exists()
 
     if existe_en_aux:
-        messages.error(request, "No se puede anular esta recepción porque tiene registros relacionados en boletas.")
-        return redirect('recepcionesFruta_list')  # Cambia esto al nombre real de tu vista/lista
+        return render(request, 'plantaE/recepciones_confirm_delete.html', {
+            'registros': salidas,
+            'alert_message': "No se puede anular esta recepción porque tiene registros relacionados en boletas.",
+            'redirect_url': reverse('recepcionesFruta_list')
+        })
 
     if request.method == 'POST':
+        # Anular detallerec
         salidas.status = 'Anulado'
         salidas.save()
-        Actpeso.objects.filter(
-            recepcion = salidas.recepcion
-        ).update(status='Anulado')
-        Recepciones.objects.filter(
-            recepcion = salidas.recepcion
-        ).update(status='Anulado')
-        AcumFruta.objects.filter(
-            recepcion = salidas.recepcion
-        ).update(
+
+        # Anular Actpeso y Recepciones
+        Actpeso.objects.filter(recepcion=salidas.recepcion).exclude(status='Anulado').update(status='Anulado')
+        Recepciones.objects.filter(recepcion=salidas.recepcion).exclude(status='Anulado').update(status='Anulado')
+
+        # Limpiar campos en AcumFruta y salidasFruta
+        AcumFruta.objects.filter(recepcion=salidas.recepcion).exclude(status='Anulado').update(
             libras=None,
             recepcion=None,
             viaje=None,
             nsalidafruta=None
         )
-        salidasFruta.objects.filter(
-            recepcion = salidas.recepcion
-        ).update(
+        salidasFruta.objects.filter(recepcion=salidas.recepcion).exclude(status='Anulado').update(
             libras=None,
             recepcion=None
         )
-        messages.success(request, "Registro anulado correctamente.")
-        return redirect('recepcionesFruta_list')
+
+        return render(request, 'plantaE/recepciones_confirm_delete.html', {
+            'registros': salidas,
+            'alert_message': "Registro anulado correctamente.",
+            'redirect_url': reverse('recepcionesFruta_list')
+        })
+
     return render(request, 'plantaE/recepciones_confirm_delete.html', {'registros': salidas})
 
 def envioslocal_list(request):
@@ -1559,7 +1566,6 @@ def boletas_delete(request, pk):
 
     return render(request, 'plantaE/boletas_confirm_delete.html', {'registros': salidas})
 
-
 def recepciones_detail(request, pk):
     salidas = get_object_or_404(detallerec, pk=pk)
     return render(request, 'plantaE/recepciones_detail.html', {'registros': salidas})
@@ -1625,7 +1631,6 @@ def ccalidad_update_aux(request):
     causa_rechazo = causasRechazo.objects.all().values('causa')
     return JsonResponse({'llave': salidas.llave,'recepcion':salidas.recepcion,'causa_select':salidas.causarechazo,'causas':list(causa_rechazo)})
     
-
 def ccalidad_delete(request, pk):
     salidas = get_object_or_404(Ccalidad, pk=pk)
 
@@ -1927,21 +1932,30 @@ def inventarioProd_create(request):
         form = inventarioFrutaForm()
     return render(request, 'plantaE/inventarioProd_form.html', {'form': form})
 '''
+
 def inventarioProd_delete(request, pk):
     salidas = get_object_or_404(inventarioProdTerm, pk=pk)
     salidasaux = inventarioProdTermAux.objects.filter(inventarioreg=salidas.registro)
 
+    # Si tiene movimientos asociados, no se puede anular
     if salidasaux.exists():
-        messages.error(request, "No se puede anular el registro porque tiene movimientos asociados.")
-        return redirect('inventarioProd_list')  # Cambia esto por la vista adecuada
+        return render(request, 'plantaE/inventarioProd_confirm_delete.html', {
+            'registros': salidas,
+            'alert_message': "No se puede anular el registro porque tiene movimientos asociados.",
+            'redirect_url': reverse('inventarioProd_list')
+        })
 
     if request.method == 'POST':
         salidas.status = 'Anulado'
         salidas.status3 = 'Anulado'
         salidas.save()
-        
-        messages.success(request, "Registro anulado correctamente.")
-        return redirect('inventarioProd_list')
+
+        return render(request, 'plantaE/inventarioProd_confirm_delete.html', {
+            'registros': salidas,
+            'alert_message': "Registro anulado correctamente.",
+            'redirect_url': reverse('inventarioProd_list')
+        })
+
     return render(request, 'plantaE/inventarioProd_confirm_delete.html', {'registros': salidas})
 
 def inventarioProd_update(request, pk):
@@ -2105,6 +2119,53 @@ def packinglist_update(request, pk):
     else:
         form = salidacontenedoresForm(instance=salidas)
     return render(request, 'plantaE/inventarioProd_packinglist_form.html', {'form': form})
+
+
+def packinglist_delete(request, pk):
+    
+    salidas = get_object_or_404(salidacontenedores, pk=pk)
+
+   # Buscar registros auxiliares vinculados al contenedor
+    relacionados = inventarioProdTermAux.objects.filter(salidacontenedores=salidas.registro)
+
+    # Buscar en inventarioProdTerm los registros asociados
+    relacionados2 = inventarioProdTerm.objects.filter(
+        registro__in=relacionados.values_list('inventarioreg', flat=True)
+    )
+
+    # Verificar si alguno tiene boleta asignada
+    tiene_boletas = relacionados2.filter(boleta__isnull=False).exclude(boleta=0).exists()
+
+    if tiene_boletas:
+        return render(request, 'plantaE/inventarioProd_packinglist_confirm_delete.html', {
+            'registros': salidas,
+            'alert_message': "No se puede anular esta paleta porque tiene boletas asignadas.",
+            'redirect_url': reverse('inventarioProd_packinglist_detail')
+        })
+
+    if request.method == 'POST':
+        # Paso 1: Anular el contenedor
+        salidas.status = 'Anulado'
+        salidas.save()
+
+        # Paso 2: Anular los registros auxiliares
+        relacionados.update(status='Anulado')
+
+        # Paso 3: Obtener los inventarioreg únicos
+        inventario_codigos = relacionados.values_list('inventarioreg', flat=True).distinct()
+
+        # Paso 4: Actualizar inventario principal
+        inventarioProdTerm.objects.filter(registro__in=inventario_codigos).exclude(status='Anulado').update(status=None)
+
+        return render(request, 'plantaE/inventarioProd_packinglist_confirm_delete.html', {
+            'registros': salidas,
+            'alert_message': "Paleta anulada correctamente.",
+            'redirect_url': reverse('inventarioProd_packinglist_detail')
+        })
+
+    return render(request, 'plantaE/inventarioProd_packinglist_confirm_delete.html', {
+        'registros': salidas
+    })
 
 def packinglist_delete(request, pk):
     salidas = get_object_or_404(salidacontenedores, pk=pk)
@@ -2285,8 +2346,9 @@ def procesarinvprodcontenv2(request):
         usados = inventarioProdTermAux.objects.filter(
             proveedor=proveedor,
             itemsapcode=itemsapcode,
+            categoria="Exportación",
             status__isnull=True
-        ).values('inventarioreg').annotate(
+        ).exclude(status='Anulado').values('inventarioreg').annotate(
             cajas_usadas=Sum('cajas'),
             lbs_usadas=Sum('lbsintara')
         )
@@ -2412,10 +2474,11 @@ def cargacontenedores_listv2(request):
     ).filter(
         Q(status='') | Q(status__isnull=True)
     ).order_by('registro')
-    salidas2 = inventarioProdTermAux.objects.exclude(Q(status='En proceso') | Q(status='Anulado'))
+    salidas2 = inventarioProdTermAux.objects.filter(
+        fecha__lte=today,
+        categoria="Exportación").exclude(Q(status='En proceso') | Q(status='Anulado'))
 
     # Filtrar las salidas de inventario para las que tienen categoría 'Exportación' y sin 'status'
-
 
     # Excluir los registros de salidas2 donde el contenedor esté vacío
     #salidas2 = salidas2.filter(registro__gte=2799)
@@ -2514,7 +2577,9 @@ def inventariogeneral_list(request):
     ).filter(
         Q(status='') | Q(status__isnull=True)
     ).order_by('registro')
-    salidas2 = inventarioProdTermAux.objects.exclude(Q(status='En proceso') | Q(status='Anulado'))
+    salidas2 = inventarioProdTermAux.objects.filter(
+        fecha__lte=today,
+        categoria="Exportación").exclude(Q(status='En proceso') | Q(status='Anulado'))
 
     # Filtrar las salidas de inventario para las que tienen categoría 'Exportación' y sin 'status'
 

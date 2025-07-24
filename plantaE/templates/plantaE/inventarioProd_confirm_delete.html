@@ -112,5 +112,10 @@
         </a>
     </div>
 
+    <script>
+        alert("{{ alert_message|escapejs }}");
+        window.location.href = "{{ redirect_url }}";
+    </script>
+
 </body>
 </html>
