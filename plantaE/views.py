@@ -915,10 +915,10 @@ def envioslocal_delete(request, pk):
 
     if request.method == 'POST':
         # Anular todos los registros de envío relacionados
-        registros_a_anular.update(status='Anulado')
+        #registros_a_anular.update(status='Anulado')
 
         # Anular registros de inventario
-        inventarios_relacionados.update(status='Anulado', status3='Anulado')
+        #inventarios_relacionados.update(status='Anulado', status3='Anulado')
 
         return render(request, 'plantaE/envioslocal_confirm_delete.html', {
             'registros': envio_original,
