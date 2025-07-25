@@ -206,6 +206,28 @@
         authUsuario();
     });
 </script>
+<script>
+    $(document).ready(function () {
+        $('#id_encargado').change(function () {
+            var encargado = $(this).val();
+
+            $.ajax({
+                url: "{% url 'get_correos_por_encargado' %}",
+                data: {
+                    'encargado': encargado
+                },
+                success: function (data) {
+                    var $correoSelect = $('#id_correo');
+                    $correoSelect.empty();
+                    $correoSelect.append($('<option>').text('---------').attr('value', ''));
+                    $.each(data.correos, function (index, value) {
+                        $correoSelect.append($('<option>').text(value).attr('value', value));
+                    });
+                }
+            });
+        });
+    });
+</script>
 
 </body>
 </html>

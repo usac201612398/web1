@@ -1,12 +1,12 @@
 from django import forms
-from .models import Actpeso, causasRechazo,paramenvlocales,Boletas,salidacontenedores,salidasFruta, productoTerm,contenedores, Recepciones, Ccalidad, inventarioProdTerm,AcumFruta, enviosFrutaPlantilla
+from .models import Actpeso,usuariosAppFruta, detallesEstructuras, causasRechazo,paramenvlocales,Boletas,salidacontenedores,salidasFruta, productoTerm,contenedores, Recepciones, Ccalidad, inventarioProdTerm,AcumFruta, enviosFrutaPlantilla
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Fieldset, Div
 
 class salidasFrutaForm(forms.ModelForm):
 
     op_viajes = [('','-'),('Viaje 1','Viaje 1'),('Viaje 2','Viaje 2'),('Viaje 3', 'Viaje 3'),('Viaje 4','Viaje 4'),('Viaje 5','Viaje 5'),('Viaje 6','Viaje 6'),('Viaje 7','Viaje 7'),('Viaje 8','Viaje 8')]
-    op_cultivo = [('','-'),('CHERRY','CHERRY'),('PEPINO','PEPINO'),('AGUACATE','AGUACATE'),('ROMA','ROMA'),('PITAYA','PITAYA'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
+    #op_cultivo = [('','-'),('CHERRY','CHERRY'),('PEPINO','PEPINO'),('AGUACATE','AGUACATE'),('ROMA','ROMA'),('PITAYA','PITAYA'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
     
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
     correo = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de correo electrónico
@@ -21,6 +21,34 @@ class salidasFrutaForm(forms.ModelForm):
     
         model = salidasFruta
         fields = ['correo','fecha','viaje','encargado',  'finca', 'cajas', 'cultivo','variedad']
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Valores únicos de cuenta
+        cuentas = usuariosAppFruta.objects.order_by('encargado').values_list('encargado', flat=True).distinct()
+        self.fields['encargado'].widget = forms.Select(choices=[(c, c) for c in cuentas])
+        self.fields['encargado'].widget.attrs.update({'class': 'form-control'})
+
+        # Valores únicos de cuenta
+        correos = usuariosAppFruta.objects.order_by('correo').values_list('correo', flat=True).distinct()
+        self.fields['correo'].widget = forms.Select(choices=[(c, c) for c in correos])
+        self.fields['correo'].widget.attrs.update({'class': 'form-control'})
+
+        # Cultivos únicos
+        cultivos = detallesEstructuras.objects.order_by('cultivo').values_list('cultivo', flat=True).distinct()
+        self.fields['cultivo'].widget = forms.Select(choices=[('', '---------')] + [(c, c) for c in cultivos])
+        self.fields['cultivo'].widget.attrs.update({'class': 'form-control'})
+
+        # Variedades únicos
+        variedades = detallesEstructuras.objects.order_by('variedad').values_list('variedad', flat=True).distinct()
+        self.fields['variedad'].widget = forms.Select(choices=[('', '---------')] + [(v, v) for v in variedades])
+        self.fields['variedad'].widget.attrs.update({'class': 'form-control'})
+
+        # Fincas únicos
+        fincas = detallesEstructuras.objects.order_by('finca').values_list('finca', flat=True).distinct()
+        self.fields['finca'].widget = forms.Select(choices=[('', '---------')] + [(f, f) for f in fincas])
+        self.fields['finca'].widget.attrs.update({'class': 'form-control'})
 
 class pesosForm(forms.ModelForm):
 

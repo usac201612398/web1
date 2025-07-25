@@ -641,6 +641,12 @@ def article_create(request):
         form = salidasFrutaForm()
     return render(request, 'plantaE/salidasFruta_form.html', {'form': form})
 
+def get_correos_por_encargado(request):
+    encargado = request.GET.get('encargado')
+    correos = usuariosAppFruta.objects.filter(encargado=encargado).values_list('correo', flat=True).distinct()
+    data = list(correos)
+    return JsonResponse({'correos': data})
+
 def article_formPlantilla(request):
     now = datetime.datetime.now()
     fecha = now.date()
