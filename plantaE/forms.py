@@ -27,12 +27,12 @@ class salidasFrutaForm(forms.ModelForm):
 
         # Valores únicos de cuenta
         cuentas = usuariosAppFruta.objects.order_by('encargado').values_list('encargado', flat=True).distinct()
-        self.fields['encargado'].widget = forms.Select(choices=[(c, c) for c in cuentas])
+        self.fields['encargado'].widget = forms.Select(choices=[('', '---------')] + [(c, c) for c in cuentas])
         self.fields['encargado'].widget.attrs.update({'class': 'form-control'})
 
         # Valores únicos de cuenta
         correos = usuariosAppFruta.objects.order_by('correo').values_list('correo', flat=True).distinct()
-        self.fields['correo'].widget = forms.Select(choices=[(c, c) for c in correos])
+        self.fields['correo'].widget = forms.Select(choices=[('', '---------')] + [(c, c) for c in correos])
         self.fields['correo'].widget.attrs.update({'class': 'form-control'})
 
         # Cultivos únicos
