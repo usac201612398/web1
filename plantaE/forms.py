@@ -6,16 +6,16 @@ from crispy_forms.layout import Submit, Layout, Fieldset, Div
 class salidasFrutaForm(forms.ModelForm):
 
     op_viajes = [('','-'),('Viaje 1','Viaje 1'),('Viaje 2','Viaje 2'),('Viaje 3', 'Viaje 3'),('Viaje 4','Viaje 4'),('Viaje 5','Viaje 5'),('Viaje 6','Viaje 6'),('Viaje 7','Viaje 7'),('Viaje 8','Viaje 8')]
-    op_cultivo = [('','-'),('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
+    op_cultivo = [('','-'),('CHERRY','CHERRY'),('PEPINO','PEPINO'),('AGUACATE','AGUACATE'),('ROMA','ROMA'),('PITAYA','PITAYA'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
     
-    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'my-input'}))
-    correo = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de correo electrónico
-    encargado = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
-    finca = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
-    variedad = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
-    viaje = forms.ChoiceField(choices=op_viajes,widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
-    cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'my-input'}))  # Campo numérico
-    cultivo = forms.CharField(widget=forms.Select(attrs={'class': 'my-input'}))  # Campo de texto
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control'}))
+    correo = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de correo electrónico
+    encargado = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de texto
+    finca = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de texto
+    variedad = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de texto
+    viaje = forms.ChoiceField(choices=op_viajes,widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de texto
+    cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
+    cultivo = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de texto
     
     class Meta:
     
@@ -40,7 +40,7 @@ class pesosForm(forms.ModelForm):
 
 class acumFrutaForm(forms.ModelForm):
     
-    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control'}))
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
     correo = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  # Campo de correo electrónico
     finca = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  # Campo de texto
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
@@ -59,7 +59,7 @@ class recepcionesForm(forms.ModelForm):
     op_status = [('','-'),('Pendiente','-'),('En proceso','En proceso')]
 
     recepcion = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
-    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control'}))
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
     finca = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  # Campo de texto
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
     libras = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
