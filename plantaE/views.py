@@ -251,7 +251,7 @@ def article_list(request):
     
     return render(request, 'plantaE/salidasFruta_list.html', {'registros': salidas})
 
-def salidasFruta_list2(request):
+def salidasFruta_list(request):
     today = timezone.localtime(timezone.now()).date()
 
     salidas = salidasFruta.objects.all()
