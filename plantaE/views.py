@@ -633,7 +633,7 @@ def article_create(request):
             except Exception as e:
                 # Manejar excepciones específicas (por ejemplo, UniqueConstraintError)
                 return JsonResponse({'error': str(e)}, status=400)
-            return redirect('salidasFruta_list')
+            return redirect('salidasFruta_list2')
         else:
              # Imprimir errores para depuración
             return JsonResponse({'errores': form.errors}, status=400)

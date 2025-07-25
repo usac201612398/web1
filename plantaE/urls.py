@@ -36,6 +36,8 @@ urlpatterns = [
     path("salidasFrutaView",views.salidasFruta_list,name='salidasFruta_list2'),
     path("salidasFruta",views.article_list,name='salidasFruta_list'),
     path("salidasFrutaValle",views.article_listValle,name='salidasFruta_listValle'),
+    
+    path('salidasFruta2/new/', views.article_create, name='salidasFruta_create2'),
     path('salidasFruta/new/', views.article_formPlantilla, name='salidasFruta_create'),
     path('salidasFruta/new/plantilla', views.article_create_plantilla, name='salidasFruta_create_plantilla'),
     path('salidasFruta/new/plantillaValle', views.article_create_plantillaValle, name='salidasFruta_create_plantillaValle'),
