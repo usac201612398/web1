@@ -860,7 +860,7 @@ def acumFruta_update(request, pk):
         form = acumFrutaForm(request.POST, instance=salidas)
         if form.is_valid():
             form.save()
-            return redirect('acumFruta_list')
+            return redirect('acumFruta_list2')
     else:
         form = acumFrutaForm(instance=salidas)
     return render(request, 'plantaE/AcumFrutaDia_form.html', {'form': form})

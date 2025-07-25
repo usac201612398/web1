@@ -71,77 +71,76 @@
 <div class="container">
     <h1>{{ form.instance.pk|yesno:"Editar Registro,Crear Registro" }}</h1>
 
-    <form method="post" id="formFruta">
-        {% csrf_token %}
+<form method="post" id="formFruta">
+    {% csrf_token %}
 
-        {% if form.errors %}
-            <div class="alert alert-danger">
-                <ul>
-                    {% for field in form %}
-                        {% for error in field.errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
+    {% if form.errors %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li>{{ error }}</li>
                     {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
-
-        <div class="form-group">
-            <label class="form-label">Fecha</label>
-            {{ form.fecha }}
+                {% endfor %}
+            </ul>
         </div>
+    {% endif %}
 
-        <div class="form-group">
-            <label class="form-label">Encargado</label>
-            {{ form.encargado }}
-        </div>
+    <div class="form-group">
+        <label class="form-label">Fecha</label>
+        {{ form.fecha }}
+    </div>
 
-        <div class="form-group">
-            <label class="form-label">Cuenta</label>
-            {{ form.correo }}
-        </div>
+    <div class="form-group">
+        <label class="form-label">Encargado</label>
+        {{ form.encargado }}
+    </div>
 
-        <div class="form-group">
-            <label class="form-label">Finca</label>
-            {{ form.finca }}
-        </div>
+    <div class="form-group">
+        <label class="form-label">Cuenta</label>
+        {{ form.correo }}
+    </div>
 
-        <div class="form-group">
-            <label class="form-label">Cultivo</label>
-            {{ form.cultivo }}
-        </div>
+    <div class="form-group">
+        <label class="form-label">Finca</label>
+        {{ form.finca }}
+    </div>
 
-        <div class="form-group">
-            <label class="form-label">Variedad</label>
-            {{ form.variedad }}
-        </div>
+    <div class="form-group">
+        <label class="form-label">Cultivo</label>
+        {{ form.cultivo }}
+    </div>
 
-        <div class="form-group">
-            <label class="form-label">Orden</label>
-            {{ form.orden }}
-        </div>
+    <div class="form-group">
+        <label class="form-label">Variedad</label>
+        {{ form.variedad }}
+    </div>
 
-        <div class="form-group">
-            <label class="form-label">Estructura</label>
-            {{ form.estructura }}
-        </div>
+    <div class="form-group">
+        <label class="form-label">Orden</label>
+        {{ form.orden }}
+    </div>
 
-        <div class="form-group">
-            <label class="form-label">Viaje</label>
-            {{ form.viaje }}
-        </div>
+    <div class="form-group">
+        <label class="form-label">Estructura</label>
+        {{ form.estructura }}
+    </div>
 
-        <div class="form-group">
-            <label class="form-label">Cajas</label>
-            {{ form.cajas }}
-        </div>
+    <div class="form-group">
+        <label class="form-label">Viaje</label>
+        {{ form.viaje }}
+    </div>
 
-        <div class="button-row">
-            <button type="submit" class="btn btn-primary">{{ form.instance.pk|yesno:"Actualizar,Crear" }}</button>
-            <a href="{% url 'acumFruta_list2' %}" class="btn btn-secondary">Regresar</a>
-        </div>
-    </form>
-</div>
+    <div class="form-group">
+        <label class="form-label">Cajas</label>
+        {{ form.cajas }}
+    </div>
+
+    <div class="button-row">
+        <button type="submit" class="btn btn-primary">{{ form.instance.pk|yesno:"Actualizar,Crear" }}</button>
+        <a href="{% url 'acumFruta_list2' %}" class="btn btn-secondary">Regresar</a>
+    </div>
+</form>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
