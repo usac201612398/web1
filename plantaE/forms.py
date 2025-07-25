@@ -96,35 +96,58 @@ class acumFrutaForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
         if self.instance and self.instance.pk:
+            # Encargado
             cuentas = usuariosAppFruta.objects.order_by('encargado').values_list('encargado', flat=True).distinct()
-            self.fields['encargado'].choices = [('', '---------')] + [(c, c) for c in cuentas]
-            self.fields['encargado'].widget.attrs.update({'class': 'form-control'})
+            opciones_encargado = [('', '---------')] + [(c, c) for c in cuentas]
 
+            # Agregar el valor actual si no está en las opciones
+            if self.instance.encargado and (self.instance.encargado, self.instance.encargado) not in opciones_encargado:
+                opciones_encargado.insert(0, (self.instance.encargado, self.instance.encargado))
+            self.fields['encargado'].choices = opciones_encargado
+
+            # Repetir para estructura
             estructuras = detallesEstructuras.objects.order_by('estructura').values_list('estructura', flat=True).distinct()
-            self.fields['estructura'].choices = [('', '---------')] + [(c, c) for c in estructuras]
-            self.fields['estructura'].widget.attrs.update({'class': 'form-control'})
+            opciones_estructura = [('', '---------')] + [(e, e) for e in estructuras]
+            if self.instance.estructura and (self.instance.estructura, self.instance.estructura) not in opciones_estructura:
+                opciones_estructura.insert(0, (self.instance.estructura, self.instance.estructura))
+            self.fields['estructura'].choices = opciones_estructura
 
+            # Correo
             correos = usuariosAppFruta.objects.order_by('correo').values_list('correo', flat=True).distinct()
-            self.fields['correo'].choices = [('', '---------')] + [(c, c) for c in correos]
-            self.fields['correo'].widget.attrs.update({'class': 'form-control'})
+            opciones_correo = [('', '---------')] + [(c, c) for c in correos]
+            if self.instance.correo and (self.instance.correo, self.instance.correo) not in opciones_correo:
+                opciones_correo.insert(0, (self.instance.correo, self.instance.correo))
+            self.fields['correo'].choices = opciones_correo
 
+            # Cultivo
             cultivos = detallesEstructuras.objects.order_by('cultivo').values_list('cultivo', flat=True).distinct()
-            self.fields['cultivo'].choices = [('', '---------')] + [(c, c) for c in cultivos]
-            self.fields['cultivo'].widget.attrs.update({'class': 'form-control'})
+            opciones_cultivo = [('', '---------')] + [(c, c) for c in cultivos]
+            if self.instance.cultivo and (self.instance.cultivo, self.instance.cultivo) not in opciones_cultivo:
+                opciones_cultivo.insert(0, (self.instance.cultivo, self.instance.cultivo))
+            self.fields['cultivo'].choices = opciones_cultivo
 
+            # Variedad
             variedades = detallesEstructuras.objects.order_by('variedad').values_list('variedad', flat=True).distinct()
-            self.fields['variedad'].choices = [('', '---------')] + [(v, v) for v in variedades]
-            self.fields['variedad'].widget.attrs.update({'class': 'form-control'})
+            opciones_variedad = [('', '---------')] + [(v, v) for v in variedades]
+            if self.instance.variedad and (self.instance.variedad, self.instance.variedad) not in opciones_variedad:
+                opciones_variedad.insert(0, (self.instance.variedad, self.instance.variedad))
+            self.fields['variedad'].choices = opciones_variedad
 
+            # Finca
             fincas = detallesEstructuras.objects.order_by('finca').values_list('finca', flat=True).distinct()
-            self.fields['finca'].choices = [('', '---------')] + [(f, f) for f in fincas]
-            self.fields['finca'].widget.attrs.update({'class': 'form-control'})
+            opciones_finca = [('', '---------')] + [(f, f) for f in fincas]
+            if self.instance.finca and (self.instance.finca, self.instance.finca) not in opciones_finca:
+                opciones_finca.insert(0, (self.instance.finca, self.instance.finca))
+            self.fields['finca'].choices = opciones_finca
 
+            # Orden
             ordenes = detallesEstructuras.objects.order_by('orden').values_list('orden', flat=True).distinct()
-            self.fields['orden'].choices = [('', '---------')] + [(o, o) for o in ordenes]
-            self.fields['orden'].widget.attrs.update({'class': 'form-control'})
-
+            opciones_orden = [('', '---------')] + [(o, o) for o in ordenes]
+            if self.instance.orden and (self.instance.orden, self.instance.orden) not in opciones_orden:
+                opciones_orden.insert(0, (self.instance.orden, self.instance.orden))
+            self.fields['orden'].choices = opciones_orden
 
 
 class recepcionesForm(forms.ModelForm):
