@@ -659,14 +659,17 @@ def get_correos_por_encargado(request):
     cultivos = detallesEstructuras.objects.filter(finca__in=finca_list).values_list('cultivo', flat=True).distinct()
     variedades = detallesEstructuras.objects.filter(finca__in=finca_list).values_list('variedad', flat=True).distinct()
     ordenes = detallesEstructuras.objects.filter(finca__in=finca_list).values_list('orden', flat=True).distinct()
+    estructuras = detallesEstructuras.objects.filter(finca__in=finca_list).values_list('estructura', flat=True).distinct()
 
     return JsonResponse({
         'correos': list(correos),
         'fincas': finca_list,
         'ordenes':list(ordenes),
         'cultivos': list(cultivos),
-        'variedades': list(variedades)
+        'variedades': list(variedades),
+        'estructura': list(estructuras),
     })
+
 def article_formPlantilla(request):
     now = datetime.datetime.now()
     fecha = now.date()

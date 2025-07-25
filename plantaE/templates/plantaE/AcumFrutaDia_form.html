@@ -154,6 +154,7 @@
                 url: "{% url 'get_correos_por_encargado' %}",
                 data: { 'encargado': encargado },
                 success: function (data) {
+                    
                     let $correo = $('#id_correo');
                     $correo.empty().append($('<option>').text('---------').attr('value', ''));
                     $.each(data.correos, function (i, val) {
