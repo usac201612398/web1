@@ -638,14 +638,21 @@ def article_create(request):
              # Imprimir errores para depuración
             return JsonResponse({'errores': form.errors}, status=400)
     else:
-        form = salidasFrutaForm()
+        hoy = datetime.date.today()
+        #dia_semana = calendar.day_name[hoy.weekday()]  # e.g., 'Monday'
+        
+        initial_data = {
+            'fecha': hoy
+        }
+        form = salidasFrutaForm(initial=initial_data)
     return render(request, 'plantaE/salidasFruta_form.html', {'form': form})
 
 def get_correos_por_encargado(request):
     encargado = request.GET.get('encargado')
     correos = usuariosAppFruta.objects.filter(encargado=encargado).values_list('correo', flat=True).distinct()
+    finca = usuariosAppFruta.objects.filter(encargado=encargado).values_list('finca', flat=True).distinct()
     data = list(correos)
-    return JsonResponse({'correos': data})
+    return JsonResponse({'correos': data, 'finca':finca})
 
 def article_formPlantilla(request):
     now = datetime.datetime.now()

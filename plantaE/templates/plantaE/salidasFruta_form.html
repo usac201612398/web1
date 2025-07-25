@@ -86,10 +86,7 @@
             </div>
         {% endif %}
 
-        <div class="form-group">
-            <label class="form-label">Cuenta</label>
-            {{ form.correo }}
-        </div>
+       
 
         <div class="form-group">
             <label class="form-label">Fecha</label>
@@ -97,13 +94,18 @@
         </div>
 
         <div class="form-group">
+            <label class="form-label">Encargado</label>
+            {{ form.encargado }}
+        </div>
+
+        <div class="form-group">
             <label class="form-label">Finca</label>
             {{ form.finca }}
         </div>
 
-        <div class="form-group">
-            <label class="form-label">Encargado</label>
-            {{ form.encargado }}
+         <div class="form-group">
+            <label class="form-label">Cuenta</label>
+            {{ form.correo }}
         </div>
 
         <div class="form-group">
@@ -152,6 +154,13 @@
                     $correoSelect.append($('<option>').text('---------').attr('value', ''));
                     $.each(data.correos, function (index, value) {
                         $correoSelect.append($('<option>').text(value).attr('value', value));
+                    });
+
+                    var $fincaSelect = $('#id_finca');
+                    $fincaSelect.empty();
+                    $fincaSelect.append($('<option>').text('---------').attr('value', ''));
+                    $.each(data.finca, function (index, value) {
+                        $fincaSelect.append($('<option>').text(value).attr('value', value));
                     });
                 }
             });
