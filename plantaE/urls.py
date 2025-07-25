@@ -28,6 +28,7 @@ urlpatterns = [
     path("pesos",views.pesos_list,name='pesos_list'),
     path('pesos/<int:pk>/', views.pesos_detail, name='pesos_detail'),
     path('pesos/<int:pk>/delete/', views.pesos_delete, name='pesos_delete'),
+
     path('salidasFruta/<int:pk>/', views.article_detail, name='salidasFruta_detail'),
     path("salidasFruta/cuadre",views.cuadrar_RioDia,name='salidasFruta_cuadre'),
     path("salidasFruta/cuadreValle",views.cuadrar_ValleDia,name='salidasFruta_cuadreValle'),
@@ -39,7 +40,9 @@ urlpatterns = [
     path('salidasFruta/new/plantillaValle', views.article_create_plantillaValle, name='salidasFruta_create_plantillaValle'),
     path('salidasFruta/<int:pk>/edit/', views.article_update, name='salidasFruta_update'),
     path('salidasFruta/<int:pk>/delete/', views.article_delete, name='salidasFruta_delete'),
+    path('salidasFruta2/<int:pk>/delete/', views.article_delete2, name='salidasFruta_delete2'),
     path('salidasFruta/<int:pk>/delete/Valle', views.article_deleteValle, name='salidasFruta_deleteValle'),
+
     path("acumFrutaView",views.acumFruta_list2,name='acumFruta_list2'),
     path("acumFruta",views.acumFruta_list,name='acumFruta_list'),
     path("acumFruta/Valle",views.acumFruta_list,name='acumFruta_listValle'),

@@ -700,6 +700,27 @@ def article_delete(request, pk):
         return redirect('salidasFruta_list')
     return render(request, 'plantaE/salidasFruta_confirm_delete.html', {'registros': salidas})
 
+def article_delete2(request, pk):
+    salidas = get_object_or_404(salidasFruta, pk=pk)
+    if salidas.recepcion is not None:
+        messages.error(request, "No se puede anular este viaje porque ya tiene una recepción asignada. Anule la recepción primero.")
+        return redirect('salidasFruta_list2')
+    if request.method == 'POST':
+        salidas.status = 'Anulado'
+        salidas.save()
+        AcumFruta.objects.filter(
+            fecha=salidas.fecha,
+            finca=salidas.finca,
+            cultivo=salidas.cultivo,
+            variedad=salidas.variedad,
+            viaje=salidas.viaje,
+            correo = salidas.correo,
+            status__isnull=True  # Solo los abiertos
+        ).update(status='Anulado')
+        messages.success(request, "Registro anulado correctamente.")
+        return redirect('salidasFruta_list2')
+    return render(request, 'plantaE/salidasFruta_confirm_delete2.html', {'registros': salidas})
+
 def article_deleteValle(request, pk):
 
     salidas = get_object_or_404(salidasFruta, pk=pk)
