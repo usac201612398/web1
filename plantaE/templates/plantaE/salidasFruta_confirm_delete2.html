@@ -113,4 +113,12 @@
     </div>
 
 </body>
+
+{% if alert_message and redirect_url %}
+    <script>
+        alert("{{ alert_message|escapejs }}");
+        window.location.href = "{{ redirect_url }}";
+    </script>
+{% endif %}
+
 </html>

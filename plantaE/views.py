@@ -724,18 +724,23 @@ def article_delete(request, pk):
         return redirect('salidasFruta_list')
     return render(request, 'plantaE/salidasFruta_confirm_delete.html', {'registros': salidas})
 
-
 def article_delete2(request, pk):
     salidas = get_object_or_404(salidasFruta, pk=pk)
-    recepcion = Recepciones.objects.filter(recepcion=salidas.recepcion) if salidas.recepcion else None
-    if recepcion and recepcion.exists():
 
+    # Verificamos si tiene una recepción activa
+    tiene_recepcion = (
+        salidas.recepcion and
+        Recepciones.objects.filter(recepcion=salidas.recepcion).exists()
+    )
+
+    # Si ya tiene recepción, mostrar alerta y redireccionar
+    if tiene_recepcion:
         return render(request, 'plantaE/salidasFruta_confirm_delete2.html', {
-            'registros': salidas,
             'alert_message': "No se puede anular este viaje porque ya tiene una recepción asignada. Anule la recepción primero.",
             'redirect_url': reverse('salidasFruta_list2')
         })
 
+    # Si es POST, entonces anular
     if request.method == 'POST':
         salidas.status = 'Anulado'
         salidas.save()
@@ -751,11 +756,11 @@ def article_delete2(request, pk):
         ).update(status='Anulado')
 
         return render(request, 'plantaE/salidasFruta_confirm_delete2.html', {
-            'registros': salidas,
             'alert_message': "El registro fue anulado correctamente.",
             'redirect_url': reverse('salidasFruta_list2')
         })
 
+    # Si no hay recepción y aún no es POST, mostrar confirmación normal
     return render(request, 'plantaE/salidasFruta_confirm_delete2.html', {
         'registros': salidas
     })
