@@ -20,7 +20,7 @@ class salidasFrutaForm(forms.ModelForm):
     class Meta:
     
         model = salidasFruta
-        fields = ['correo','fecha','viaje','encargado',  'finca', 'cajas', 'cultivo','variedad']
+        fields = ['correo','fecha','viaje','encargado', 'orden', 'finca', 'cajas', 'cultivo','variedad']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -49,6 +49,11 @@ class salidasFrutaForm(forms.ModelForm):
         fincas = detallesEstructuras.objects.order_by('finca').values_list('finca', flat=True).distinct()
         self.fields['finca'].widget = forms.Select(choices=[('', '---------')] + [(f, f) for f in fincas])
         self.fields['finca'].widget.attrs.update({'class': 'form-control'})
+
+        # Fincas únicos
+        ordenes = detallesEstructuras.objects.order_by('orden').values_list('orden', flat=True).distinct()
+        self.fields['orden'].widget = forms.Select(choices=[('', '---------')] + [(f, f) for f in ordenes])
+        self.fields['orden'].widget.attrs.update({'class': 'form-control'})
 
 class pesosForm(forms.ModelForm):
 

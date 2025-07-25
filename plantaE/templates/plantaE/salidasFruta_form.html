@@ -183,7 +183,15 @@
                     $.each(data.variedades, function (i, val) {
                         $variedad.append($('<option>').text(val).attr('value', val));
                     });
+
+                    // Actualizar ordenes
+                    let $orden = $('#id_orden');
+                    $orden.empty().append($('<option>').text('---------').attr('value', ''));
+                    $.each(data.ordenes, function (i, val) {
+                        $orden.append($('<option>').text(val).attr('value', val));
+                    });
                 }
+
             });
         });
     });

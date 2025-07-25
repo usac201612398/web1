@@ -658,10 +658,12 @@ def get_correos_por_encargado(request):
     # Cultivos y variedades filtrados por las fincas encontradas
     cultivos = detallesEstructuras.objects.filter(finca__in=finca_list).values_list('cultivo', flat=True).distinct()
     variedades = detallesEstructuras.objects.filter(finca__in=finca_list).values_list('variedad', flat=True).distinct()
+    ordenes = detallesEstructuras.objects.filter(finca__in=finca_list).values_list('orden', flat=True).distinct()
 
     return JsonResponse({
         'correos': list(correos),
         'fincas': finca_list,
+        'ordenes':list(ordenes),
         'cultivos': list(cultivos),
         'variedades': list(variedades)
     })
@@ -717,6 +719,7 @@ def article_delete(request, pk):
             cultivo=salidas.cultivo,
             variedad=salidas.variedad,
             viaje=salidas.viaje,
+            orden=salidas.orden,
             correo = salidas.correo,
             status__isnull=True  # Solo los abiertos
         ).update(status='Anulado')
@@ -751,6 +754,7 @@ def article_delete2(request, pk):
             cultivo=salidas.cultivo,
             variedad=salidas.variedad,
             viaje=salidas.viaje,
+            orden=salidas.orden,
             correo=salidas.correo,
             status__isnull=True
         ).update(status='Anulado')
@@ -764,7 +768,6 @@ def article_delete2(request, pk):
     return render(request, 'plantaE/salidasFruta_confirm_delete2.html', {
         'registros': salidas
     })
-
 
 def article_deleteValle(request, pk):
 
@@ -783,6 +786,7 @@ def article_deleteValle(request, pk):
             cultivo=salidas.cultivo,
             variedad=salidas.variedad,
             viaje=salidas.viaje,
+            orden=salidas.orden,
             correo = salidas.correo,
             status__isnull=True  # Solo los abiertos
         ).update(status='Anulado')
