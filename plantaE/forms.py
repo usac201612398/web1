@@ -9,7 +9,7 @@ class salidasFrutaForm(forms.ModelForm):
     op_cultivo = [('','-'),('CHERRY','CHERRY'),('PEPINO','PEPINO'),('AGUACATE','AGUACATE'),('ROMA','ROMA'),('PITAYA','PITAYA'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
     
     fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control'}))
-    correo = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de correo electrónico
+    correo = forms.CharField(widget=forms.Select(attrs={'type':'date','class': 'form-control'}))  # Campo de correo electrónico
     encargado = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de texto
     finca = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de texto
     variedad = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de texto
@@ -25,7 +25,7 @@ class salidasFrutaForm(forms.ModelForm):
 class pesosForm(forms.ModelForm):
 
     recepcion = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
-    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control'}))
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
     llave = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de correo electrónico
     finca = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de texto
     cultivo = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de texto
