@@ -254,9 +254,11 @@ def article_list(request):
 def salidasFruta_list2(request):
     today = timezone.localtime(timezone.now()).date()
 
-    salidas=salidasFruta.objects.filter(
-    Q(fecha=today) | Q(status__isnull=True) | Q(status=''),
-    id__gte=8687).order_by('-created_at')
+    salidas = salidasFruta.objects.filter(
+        id__gte=8687
+    ).filter(
+        Q(fecha=today) | Q(status__isnull=True) | Q(status='')
+    ).order_by('-created_at')
 
     return render(request, 'plantaE/salidasFruta_list2.html', {'registros': salidas})
 
