@@ -649,11 +649,22 @@ def article_create(request):
 
 def get_correos_por_encargado(request):
     encargado = request.GET.get('encargado')
-    correos = usuariosAppFruta.objects.filter(encargado=encargado).values_list('correo', flat=True).distinct()
-    finca = usuariosAppFruta.objects.filter(encargado=encargado).values_list('finca', flat=True).distinct()
-    data = list(correos)
-    return JsonResponse({'correos': data, 'finca':list(finca)})
 
+    # Correos y fincas asociadas al encargado
+    correos = usuariosAppFruta.objects.filter(encargado=encargado).values_list('correo', flat=True).distinct()
+    fincas = usuariosAppFruta.objects.filter(encargado=encargado).values_list('finca', flat=True).distinct()
+    finca_list = list(fincas)
+
+    # Cultivos y variedades filtrados por las fincas encontradas
+    cultivos = detallesEstructuras.objects.filter(finca__in=finca_list).values_list('cultivo', flat=True).distinct()
+    variedades = detallesEstructuras.objects.filter(finca__in=finca_list).values_list('variedad', flat=True).distinct()
+
+    return JsonResponse({
+        'correos': list(correos),
+        'fincas': finca_list,
+        'cultivos': list(cultivos),
+        'variedades': list(variedades)
+    })
 def article_formPlantilla(request):
     now = datetime.datetime.now()
     fecha = now.date()

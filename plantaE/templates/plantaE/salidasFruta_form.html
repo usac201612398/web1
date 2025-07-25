@@ -162,6 +162,27 @@
                     $.each(data.finca, function (index, value) {
                         $fincaSelect.append($('<option>').text(value).attr('value', value));
                     });
+
+                    // Actualizar fincas
+                    let $finca = $('#id_finca');
+                    $finca.empty().append($('<option>').text('---------').attr('value', ''));
+                    $.each(data.fincas, function (i, val) {
+                        $finca.append($('<option>').text(val).attr('value', val));
+                    });
+
+                    // Actualizar cultivos
+                    let $cultivo = $('#id_cultivo');
+                    $cultivo.empty().append($('<option>').text('---------').attr('value', ''));
+                    $.each(data.cultivos, function (i, val) {
+                        $cultivo.append($('<option>').text(val).attr('value', val));
+                    });
+
+                    // Actualizar variedades
+                    let $variedad = $('#id_variedad');
+                    $variedad.empty().append($('<option>').text('---------').attr('value', ''));
+                    $.each(data.variedades, function (i, val) {
+                        $variedad.append($('<option>').text(val).attr('value', val));
+                    });
                 }
             });
         });
