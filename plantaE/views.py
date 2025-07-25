@@ -652,7 +652,7 @@ def get_correos_por_encargado(request):
     correos = usuariosAppFruta.objects.filter(encargado=encargado).values_list('correo', flat=True).distinct()
     finca = usuariosAppFruta.objects.filter(encargado=encargado).values_list('finca', flat=True).distinct()
     data = list(correos)
-    return JsonResponse({'correos': data, 'finca':finca})
+    return JsonResponse({'correos': data, 'finca':list(finca)})
 
 def article_formPlantilla(request):
     now = datetime.datetime.now()
