@@ -39,7 +39,7 @@
                         <tr><td>Recepcion:</td><td>{{ registros.recepcion }} </td></tr>  
                         <tr><td>Creado:</td><td>{{ registros.created_at }} </td></tr> 
                         <tr><td>Modificado:</td><td>{{ registros.updated_at }} </td></tr>  
-                        <tr><td></td><td><a href="{% url 'salidasFruta_delete2' registros.pk %}">Anular</a></td></tr> 
+                        <tr><td><a href="{% url 'salidasFruta_update' registros.pk %}">Editar</a></td><td><a href="{% url 'salidasFruta_delete2' registros.pk %}">Anular</a></td></tr> 
                     </tbody>
                     </table>
                 </div>
