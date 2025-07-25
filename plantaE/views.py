@@ -769,6 +769,10 @@ def acumFruta_detail(request, pk):
     salidas = get_object_or_404(AcumFruta, pk=pk)
     return render(request, 'plantaE/AcumFrutaDia_detail.html', {'registros': salidas})
 
+def salidasFruta_detail2(request, pk):
+    salidas = get_object_or_404(salidasFruta, pk=pk)
+    return render(request, 'plantaE/salidasFruta_detail2.html', {'registros': salidas})
+
 def  acumFruta_create(request):
     if request.method == 'POST':
         form = acumFrutaForm(request.POST)
