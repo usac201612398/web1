@@ -11,37 +11,40 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 
     <style>
-        h1, a {
+        h1 {
             margin: 15px;
             font-family: Arial, sans-serif;
         }
 
+        a {
+            margin: 20px;
+            font-family: Arial, sans-serif;
+        }
+
         .half {
-            display: flex;
-            gap: 5px;
-            justify-content: center;
-            align-items: stretch; 
+        display: flex;
+        height: 100%;
+        grid-template-columns:  repeat(auto-fit, minmax(min-content, max-content)); /* Divide cada mitad en dos columnas iguales */
+        gap: 5px; /* Espacio entre columnas */
+        text-align: center;
         }
 
         .box {
             background-color: #f0f0f0;
             border: 1px solid #ddd;
-            padding: 10px 20px;
-            min-width: 200px;
-            height: auto; 
+            padding: 10px;
+            flex: auto; 
+            height: 100%;    
         }
-
-
         td {
             padding: 0;
         }
-
         td input {
             width: 100%;
             border: none;
             background: transparent;
         }
-    </style>
+</style>        
 </head>
 
 <body>
