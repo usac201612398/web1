@@ -703,7 +703,7 @@ def article_update(request, pk):
         form = salidasFrutaForm(request.POST, instance=salidas)
         if form.is_valid():
             form.save()
-            return redirect('salidasFruta_list')
+            return redirect('salidasFruta_list2')
     else:
         form = salidasFrutaForm(instance=salidas)
     return render(request, 'plantaE/salidasFruta_form.html', {'form': form})

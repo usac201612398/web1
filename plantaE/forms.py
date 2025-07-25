@@ -80,14 +80,15 @@ class acumFrutaForm(forms.ModelForm):
     ]
     viaje = forms.ChoiceField(choices=op_viajes, widget=forms.Select(attrs={'class': 'form-control'}))
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}))
-    correo = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))
-    finca = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))
-    cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
-    orden = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))
-    cultivo = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))
-    variedad = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))
-    estructura = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))
-    encargado = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))
+    
+    correo = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'form-control'}))
+    finca = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'form-control'}))
+    orden = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'form-control'}))
+    cultivo = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'form-control'}))
+    variedad = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'form-control'}))
+    estructura = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'form-control'}))
+    encargado = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'form-control'}))
+
 
     class Meta:
         model = AcumFruta
@@ -97,32 +98,33 @@ class acumFrutaForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         cuentas = usuariosAppFruta.objects.order_by('encargado').values_list('encargado', flat=True).distinct()
-        self.fields['encargado'].widget = forms.Select(choices=[('', '---------')] + [(c, c) for c in cuentas])
+        self.fields['encargado'].choices = [('', '---------')] + [(c, c) for c in cuentas]
         self.fields['encargado'].widget.attrs.update({'class': 'form-control'})
 
         estructuras = detallesEstructuras.objects.order_by('estructura').values_list('estructura', flat=True).distinct()
-        self.fields['estructura'].widget = forms.Select(choices=[('', '---------')] + [(c, c) for c in estructuras])
+        self.fields['estructura'].choices = [('', '---------')] + [(c, c) for c in estructuras]
         self.fields['estructura'].widget.attrs.update({'class': 'form-control'})
 
         correos = usuariosAppFruta.objects.order_by('correo').values_list('correo', flat=True).distinct()
-        self.fields['correo'].widget = forms.Select(choices=[('', '---------')] + [(c, c) for c in correos])
+        self.fields['correo'].choices = [('', '---------')] + [(c, c) for c in correos]
         self.fields['correo'].widget.attrs.update({'class': 'form-control'})
 
         cultivos = detallesEstructuras.objects.order_by('cultivo').values_list('cultivo', flat=True).distinct()
-        self.fields['cultivo'].widget = forms.Select(choices=[('', '---------')] + [(c, c) for c in cultivos])
+        self.fields['cultivo'].choices = [('', '---------')] + [(c, c) for c in cultivos]
         self.fields['cultivo'].widget.attrs.update({'class': 'form-control'})
 
         variedades = detallesEstructuras.objects.order_by('variedad').values_list('variedad', flat=True).distinct()
-        self.fields['variedad'].widget = forms.Select(choices=[('', '---------')] + [(v, v) for v in variedades])
+        self.fields['variedad'].choices = [('', '---------')] + [(v, v) for v in variedades]
         self.fields['variedad'].widget.attrs.update({'class': 'form-control'})
 
         fincas = detallesEstructuras.objects.order_by('finca').values_list('finca', flat=True).distinct()
-        self.fields['finca'].widget = forms.Select(choices=[('', '---------')] + [(f, f) for f in fincas])
+        self.fields['finca'].choices = [('', '---------')] + [(f, f) for f in fincas]
         self.fields['finca'].widget.attrs.update({'class': 'form-control'})
 
         ordenes = detallesEstructuras.objects.order_by('orden').values_list('orden', flat=True).distinct()
-        self.fields['orden'].widget = forms.Select(choices=[('', '---------')] + [(o, o) for o in ordenes])
+        self.fields['orden'].choices = [('', '---------')] + [(o, o) for o in ordenes]
         self.fields['orden'].widget.attrs.update({'class': 'form-control'})
+
 
 
 class recepcionesForm(forms.ModelForm):
