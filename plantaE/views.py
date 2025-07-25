@@ -801,17 +801,18 @@ def acumFruta_list(request):
     
     salidas = salidas.order_by('-created_at')
     
-    
     return render(request, 'plantaE/AcumFrutaDia_list.html', {'registros': salidas})
 
 def acumFruta_list2(request):
-    today = timezone.localtime(timezone.now()).date()
+    #today = timezone.localtime(timezone.now()).date()
     salidas = AcumFruta.objects.filter(
         id__gte=10518
-    ).filter(
+    )
+    '''
+    .filter(
         Q(fecha=today) | Q(status__isnull=True) | Q(status='')
     ).order_by('-created_at')
-    
+    '''
     return render(request, 'plantaE/AcumFrutaDia_list2.html', {'registros': salidas})
 
 def acumFruta_detail(request, pk):
@@ -836,7 +837,14 @@ def  acumFruta_create(request):
              # Imprimir errores para depuración
             return JsonResponse({'errores': form.errors}, status=400)
     else:
-        form = acumFrutaForm()
+        
+        hoy = datetime.date.today()
+        #dia_semana = calendar.day_name[hoy.weekday()]  # e.g., 'Monday'
+        
+        initial_data = {
+            'fecha': hoy
+        }
+        form = acumFrutaForm(initial=initial_data)
     return render(request, 'plantaE/AcumFrutaDia_form.html', {'form': form})
 
 def acumFruta_update(request, pk):
