@@ -8,8 +8,8 @@ class salidasFrutaForm(forms.ModelForm):
     op_viajes = [('','-'),('Viaje 1','Viaje 1'),('Viaje 2','Viaje 2'),('Viaje 3', 'Viaje 3'),('Viaje 4','Viaje 4'),('Viaje 5','Viaje 5'),('Viaje 6','Viaje 6'),('Viaje 7','Viaje 7'),('Viaje 8','Viaje 8')]
     op_cultivo = [('','-'),('CHERRY','CHERRY'),('PEPINO','PEPINO'),('AGUACATE','AGUACATE'),('ROMA','ROMA'),('PITAYA','PITAYA'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
     
-    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control'}))
-    correo = forms.CharField(widget=forms.Select(attrs={'type':'date','class': 'form-control'}))  # Campo de correo electrónico
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
+    correo = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de correo electrónico
     encargado = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de texto
     finca = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de texto
     variedad = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de texto
