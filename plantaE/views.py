@@ -736,8 +736,11 @@ def acumFruta_list(request):
 
 def acumFruta_list2(request):
     today = timezone.localtime(timezone.now()).date()
-    salidas = AcumFruta.objects.filter(fecha=today, status__isnull=True)
-    salidas = salidas.order_by('-created_at')
+    salidas = AcumFruta.objects.filter(
+        id__gte=10518
+    ).filter(
+        Q(fecha=today) | Q(status__isnull=True) | Q(status='')
+    ).order_by('-created_at')
     
     return render(request, 'plantaE/AcumFrutaDia_list2.html', {'registros': salidas})
 
