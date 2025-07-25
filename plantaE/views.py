@@ -256,8 +256,6 @@ def salidasFruta_list2(request):
 
     salidas = salidasFruta.objects.filter(
         id__gte=8687
-    ).filter(
-        Q(fecha=today) | Q(status__isnull=True) | Q(status='')
     ).order_by('-created_at')
 
     return render(request, 'plantaE/salidasFruta_list2.html', {'registros': salidas})
