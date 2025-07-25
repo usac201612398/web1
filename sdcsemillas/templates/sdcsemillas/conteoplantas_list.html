@@ -54,7 +54,11 @@
 <body>
 <div class="container py-3">
 
-    
+    <!-- Título -->
+    <div class="page-header-box">
+        <h1>Conteo de Plantas</h1>
+    </div>
+
     <!-- Botones -->
     <div class="d-flex justify-content-between flex-wrap mb-3">
         <a href="{% url 'conteoplantas_create' %}" class="btn btn-outline-success mb-2">
@@ -70,7 +74,7 @@
         <table id="myTable" class="table table-striped table-bordered table-hover">
             <thead class="table-custom-header">
                 <tr>
-                    <th>Id</th>
+                    <th>ID</th>
                     <th>Apodo Variedad</th>
                     <th>Ubicación</th>
                     <th>Estructura</th>
@@ -152,7 +156,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-<script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
+<script type="text/javascript" src="{% static 'lib/cockies.js' %}"></script>
 
 <script>
     $(document).ready(function () {
@@ -166,5 +170,3 @@
 </script>
 </body>
 </html>
-
-
