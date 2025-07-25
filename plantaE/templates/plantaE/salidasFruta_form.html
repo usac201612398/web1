@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Registro y actualización</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -26,17 +25,6 @@
             color: #333;
         }
 
-        .btn-primary {
-            background-color: #007bff;
-            border: none;
-            font-size: 16px;
-            padding: 10px 20px;
-        }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
-
         .form-group {
             margin-bottom: 20px;
         }
@@ -49,24 +37,28 @@
             border-radius: 4px;
             padding: 12px 15px;
             font-size: 14px;
-            width: 100%;
-        }
-
-        .form-control:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
         }
 
         .button-row {
             display: flex;
             justify-content: center;
             gap: 20px;
-            margin-top: 20px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            padding: 10px 20px;
         }
 
         .btn-secondary {
             background-color: #6c757d;
             border: none;
+            padding: 10px 20px;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
         }
 
         .btn-secondary:hover {
@@ -75,6 +67,7 @@
     </style>
 </head>
 <body>
+
 <div class="container">
     <h1>{{ form.instance.pk|yesno:"Editar Registro,Crear Registro" }}</h1>
 
@@ -82,55 +75,55 @@
         {% csrf_token %}
 
         {% if form.errors %}
-        <div class="alert alert-danger">
-            <ul>
-                {% for field in form %}
-                    {% for error in field.errors %}
-                        <li>{{ error }}</li>
+            <div class="alert alert-danger">
+                <ul>
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
                     {% endfor %}
-                {% endfor %}
-            </ul>
-        </div>
+                </ul>
+            </div>
         {% endif %}
 
         <div class="form-group">
-            <label for="correo" class="form-label">Cuenta</label>
-            {{ form.correo|add_class:"form-control" }}
+            <label class="form-label">Cuenta</label>
+            {{ form.correo }}
         </div>
 
         <div class="form-group">
-            <label for="fecha" class="form-label">Fecha</label>
-            {{ form.fecha|add_class:"form-control" }}
+            <label class="form-label">Fecha</label>
+            {{ form.fecha }}
         </div>
 
         <div class="form-group">
-            <label for="finca" class="form-label">Finca</label>
-            {{ form.finca|add_class:"form-control" }}
+            <label class="form-label">Finca</label>
+            {{ form.finca }}
         </div>
 
         <div class="form-group">
-            <label for="encargado" class="form-label">Encargado</label>
-            {{ form.encargado|add_class:"form-control" }}
+            <label class="form-label">Encargado</label>
+            {{ form.encargado }}
         </div>
 
         <div class="form-group">
-            <label for="viaje" class="form-label">Viaje</label>
-            {{ form.viaje|add_class:"form-control" }}
+            <label class="form-label">Viaje</label>
+            {{ form.viaje }}
         </div>
 
         <div class="form-group">
-            <label for="cajas" class="form-label">Cajas</label>
-            {{ form.cajas|add_class:"form-control" }}
+            <label class="form-label">Cajas</label>
+            {{ form.cajas }}
         </div>
 
         <div class="form-group">
-            <label for="cultivo" class="form-label">Cultivo</label>
-            {{ form.cultivo|add_class:"form-control" }}
+            <label class="form-label">Cultivo</label>
+            {{ form.cultivo }}
         </div>
 
         <div class="form-group">
-            <label for="variedad" class="form-label">Variedad</label>
-            {{ form.variedad|add_class:"form-control" }}
+            <label class="form-label">Variedad</label>
+            {{ form.variedad }}
         </div>
 
         <div class="button-row">
@@ -141,23 +134,21 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         function authUsuario() {
             $.ajax({
                 url: '{% url "obtener_nombre_usuario" %}',
-                data: {
-                    'category_id': "Consulta"
-                },
-                success: function(data) {
-                    const user = data.username;
-                    if (user) {
-                        loadProducts(user);
+                data: {'category_id': "Consulta"},
+                success: function (data) {
+                    if (data.username) {
+                        loadProducts(data.username);
                     }
                     $('#id_fecha').val(data.fecha);
                 },
-                error: function(xhr, status, error) {
-                    console.error('Error:', error);
+                error: function (xhr) {
+                    console.error('Error:', xhr);
                 }
             });
         }
@@ -165,28 +156,26 @@
         function loadProducts(categoryId) {
             $.ajax({
                 url: '{% url "load_dataUsuario" %}',
-                data: {
-                    'category_id': categoryId
-                },
-                success: function(data) {
+                data: {'category_id': categoryId},
+                success: function (data) {
                     $('#id_finca').empty();
                     $('#id_encargado').empty();
                     $('#id_correo').empty();
                     $('#id_cultivo').empty().append($('<option>').val('').text(''));
 
-                    $.each(data.datos, function(index, item) {
+                    $.each(data.datos, function (index, item) {
                         $('#id_finca').append($('<option>').val(item.finca).text(item.finca));
                         $('#id_encargado').append($('<option>').val(item.encargado).text(item.encargado));
                     });
 
                     $('#id_correo').append($('<option>').val(data.correo).text(data.correo));
 
-                    $.each(data.adicionales, function(index, item) {
+                    $.each(data.adicionales, function (index, item) {
                         $('#id_cultivo').append($('<option>').val(item.cultivo).text(item.cultivo));
                     });
                 },
-                error: function(xhr, status, error) {
-                    console.error('Error:', error);
+                error: function (xhr) {
+                    console.error('Error:', xhr);
                 }
             });
         }
@@ -198,25 +187,26 @@
                     'category_id': categoryId,
                     'finca': $('#id_finca').val()
                 },
-                success: function(data) {
+                success: function (data) {
                     $('#id_variedad').empty().append($('<option>').val('').text(''));
-                    $.each(data.datos, function(index, item) {
+                    $.each(data.datos, function (index, item) {
                         $('#id_variedad').append($('<option>').val(item.variedad).text(item.variedad));
                     });
                 },
-                error: function(xhr, status, error) {
-                    console.error('Error:', error);
+                error: function (xhr) {
+                    console.error('Error:', xhr);
                 }
             });
         }
 
-        $('#id_cultivo').change(function() {
-            const cultivo = $(this).val();
-            loadProducts2(cultivo);
+        $('#id_cultivo').change(function () {
+            loadProducts2($(this).val());
         });
 
         authUsuario();
     });
 </script>
+
 </body>
 </html>
+
