@@ -135,77 +135,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<script>
-    $(document).ready(function () {
-        function authUsuario() {
-            $.ajax({
-                url: '{% url "obtener_nombre_usuario" %}',
-                data: {'category_id': "Consulta"},
-                success: function (data) {
-                    if (data.username) {
-                        loadProducts(data.username);
-                    }
-                    $('#id_fecha').val(data.fecha);
-                },
-                error: function (xhr) {
-                    console.error('Error:', xhr);
-                }
-            });
-        }
 
-        function loadProducts(categoryId) {
-            $.ajax({
-                url: '{% url "load_dataUsuario" %}',
-                data: {'category_id': categoryId},
-                success: function (data) {
-                    $('#id_finca').empty();
-                    $('#id_encargado').empty();
-                    $('#id_correo').empty();
-                    $('#id_cultivo').empty().append($('<option>').val('').text(''));
-
-                    $.each(data.datos, function (index, item) {
-                        $('#id_finca').append($('<option>').val(item.finca).text(item.finca));
-                        $('#id_encargado').append($('<option>').val(item.encargado).text(item.encargado));
-                    });
-
-                    $('#id_correo').append($('<option>').val(data.correo).text(data.correo));
-
-                    $.each(data.adicionales, function (index, item) {
-                        $('#id_cultivo').append($('<option>').val(item.cultivo).text(item.cultivo));
-                    });
-                },
-                error: function (xhr) {
-                    console.error('Error:', xhr);
-                }
-            });
-        }
-
-        function loadProducts2(categoryId) {
-            $.ajax({
-                url: '{% url "load_dataUsuario3" %}',
-                data: {
-                    'category_id': categoryId,
-                    'finca': $('#id_finca').val()
-                },
-                success: function (data) {
-                    $('#id_variedad').empty().append($('<option>').val('').text(''));
-                    $.each(data.datos, function (index, item) {
-                        $('#id_variedad').append($('<option>').val(item.variedad).text(item.variedad));
-                    });
-                },
-                error: function (xhr) {
-                    console.error('Error:', xhr);
-                }
-            });
-        }
-
-        $('#id_cultivo').change(function () {
-            loadProducts2($(this).val());
-        });
-
-        authUsuario();
-    });
-</script>
 <script>
     $(document).ready(function () {
         $('#id_encargado').change(function () {
