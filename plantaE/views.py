@@ -819,6 +819,10 @@ def acumFruta_detail(request, pk):
     salidas = get_object_or_404(AcumFruta, pk=pk)
     return render(request, 'plantaE/AcumFrutaDia_detail.html', {'registros': salidas})
 
+def acumFruta_detail2(request, pk):
+    salidas = get_object_or_404(AcumFruta, pk=pk)
+    return render(request, 'plantaE/AcumFrutaDia_detail2.html', {'registros': salidas})
+
 def salidasFruta_detail2(request, pk):
     salidas = get_object_or_404(salidasFruta, pk=pk)
     return render(request, 'plantaE/salidasFruta_detail2.html', {'registros': salidas})
@@ -837,7 +841,7 @@ def  acumFruta_create(request):
              # Imprimir errores para depuración
             return JsonResponse({'errores': form.errors}, status=400)
     else:
-        
+
         hoy = datetime.date.today()
         #dia_semana = calendar.day_name[hoy.weekday()]  # e.g., 'Monday'
         
@@ -875,6 +879,7 @@ def acumFruta_delete(request, pk):
             cultivo=salidas.cultivo,
             variedad=salidas.variedad,
             viaje=salidas.viaje,
+            orden = salidas.orden,
             correo = salidas.correo,
             status__isnull=True  # Solo los abiertos
         ).update(status='Anulado')
@@ -883,6 +888,32 @@ def acumFruta_delete(request, pk):
         return redirect('acumFruta_list')
     return render(request, 'plantaE/acumFruta_confirm_delete.html', {'registros': salidas})
 
+
+def acumFruta_delete2(request, pk):
+
+    salidas = get_object_or_404(AcumFruta, pk=pk)
+
+    if salidas.recepcion is not None:
+        messages.error(request, "No se puede anular este viaje porque ya tiene una recepción asignada.")
+        return redirect('acumFruta_list2')
+    
+    if request.method == 'POST':
+        salidas.status = 'Anulado'
+        salidas.save()
+        salidasFruta.objects.filter(
+            fecha=salidas.fecha,
+            finca=salidas.finca,
+            cultivo=salidas.cultivo,
+            variedad=salidas.variedad,
+            viaje=salidas.viaje,
+            correo = salidas.correo,
+            orden = salidas.orden,
+            status__isnull=True  # Solo los abiertos
+        ).update(status='Anulado')
+        
+        messages.success(request, "Registro anulado correctamente.")
+        return redirect('acumFruta_list2')
+    return render(request, 'plantaE/acumFruta_confirm_delete2.html', {'registros': salidas})
 def procesarrecepcion(request):
 
     data = json.loads(request.body)

@@ -41,7 +41,7 @@
                         <tr><td>Recepcion:</td><td>{{ registros.recepcion }} </td></tr>
                         <tr><td>#EnvioFruta:</td><td>{{ registros.nsalidafruta }} </td></tr>
                         <tr><td>Modificado:</td><td>{{ registros.updated_at }} </td></tr>  
-                        <tr><td></td><td><a href="{% url 'acumFruta_delete' registros.pk %}">Anular</a></td></tr> 
+                        <tr><td></td><td><a href="{% url 'acumFruta_delete2' registros.pk %}">Anular</a></td></tr> 
                     </tbody>
                     </table>
                 </div>
@@ -50,13 +50,7 @@
     </div>
 
 
-    {% if user.email == 'cosecha.rio@popoyan.com.gt' %}
-    
-        <a href="{% url 'acumFruta_list' %}">Regresar a panel</a>
-    {% else %}
-        <a href="{% url 'acumFruta_listValle' %}">Regresar a panel</a>
-        
-    {% endif %}
+    <a href="{% url 'acumFruta_list2' %}">Regresar a panel</a>
 
     
     
