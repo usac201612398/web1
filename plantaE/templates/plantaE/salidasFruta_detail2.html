@@ -27,11 +27,16 @@
                     
                     <tbody>
                         <tr><td>Key:</td><td>{{ registros.id }} </td></tr>
+                        <tr><td>Fecha:</td><td>{{ registros.fecha }} </td></tr> 
                         <tr><td>Finca:</td><td>{{ registros.finca }} </td></tr> 
                         <tr><td>Encargado:</td><td>{{ registros.encargado }} </td></tr> 
+                        <tr><td>Correo:</td><td>{{ registros.correo }} </td></tr> 
                         <tr><td>Viaje:</td><td>{{ registros.viaje }} </td></tr> 
                         <tr><td>Cultivo:</td><td>{{ registros.cultivo }} </td></tr> 
+                        <tr><td>Orden:</td><td>{{ registros.cajas }} </td></tr>
                         <tr><td>Cajas:</td><td>{{ registros.cajas }} </td></tr> 
+                        <tr><td>Libras:</td><td>{{ registros.libras }} </td></tr>
+                        <tr><td>Recepcion:</td><td>{{ registros.recepcion }} </td></tr>  
                         <tr><td>Creado:</td><td>{{ registros.created_at }} </td></tr> 
                         <tr><td>Modificado:</td><td>{{ registros.updated_at }} </td></tr>  
                         <tr><td></td><td><a href="{% url 'salidasFruta_delete2' registros.pk %}">Anular</a></td></tr> 
