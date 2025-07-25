@@ -88,7 +88,7 @@
                         <tbody>
                             {% for registro in registros %}
                             <tr>
-                                <td><a href="{% url 'acumFruta_detail' registro.pk %}">{{ registro.id }}</a></td>
+                                <td><a href="{% url 'acumFruta_detail2' registro.pk %}">{{ registro.id }}</a></td>
                                 <td>{{ registro.fecha }}</td>
                                 <td>{{ registro.finca }}</td>
                                 <td>{{ registro.encargado }}</td>
@@ -100,7 +100,7 @@
                                 <td>{{ registro.cajas }}</td>
                                 <td class="number-cell" data-value="{{ registro.libras }}">{{ registro.libras }}</td>
                                 <td><a href="{% url 'acumFruta_update' registro.pk %}"><i class="fas fa-edit"></i> Editar</a></td>
-                                <td><a href="{% url 'acumFruta_delete' registro.pk %}"><i class="fas fa-trash-alt"></i> Eliminar</a></td>
+                                <td><a href="{% url 'acumFruta_delete2' registro.pk %}"><i class="fas fa-trash-alt"></i> Eliminar</a></td>
                             </tr>
                             {% endfor %}
                         </tbody>
