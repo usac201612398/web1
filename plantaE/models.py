@@ -76,6 +76,7 @@ class AcumFruta(models.Model):
     variedad = models.CharField(max_length=40,blank=True,null=True)
     cajas = models.IntegerField(blank=True, null=True)
     correo = models.CharField(max_length=75, blank=True,null=True)
+    encargado = models.CharField(max_length=30,blank=True, null=True)
     estructura=models.CharField(max_length=40,blank=True,null=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
@@ -118,6 +119,7 @@ class AcumFrutaaux(models.Model):
     viaje = models.CharField(max_length=30,null=True,blank=True)
     nsalidafruta = models.BigIntegerField(blank=True, null=True)
     boleta = models.BigIntegerField(blank=True, null=True)
+    encargado = models.CharField(max_length=30,blank=True, null=True)
 
     def __str__(self):
         return (str(self.id) + " | " + str(self.fecha) + " | " + str(self.finca)+ " | " + str(self.cultivo) + " | " + str(self.variedad)+ " | " + str(self.estructura)+ " | " + str(self.viaje))

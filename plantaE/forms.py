@@ -72,7 +72,7 @@ class pesosForm(forms.ModelForm):
         fields = ['recepcion','fecha','llave',  'finca', 'cultivo','tarimas','cajas','libras']
 
 class acumFrutaForm(forms.ModelForm):
-    
+
     op_viajes = [('','---------'),('Viaje 1','Viaje 1'),('Viaje 2','Viaje 2'),('Viaje 3', 'Viaje 3'),('Viaje 4','Viaje 4'),('Viaje 5','Viaje 5'),('Viaje 6','Viaje 6'),('Viaje 7','Viaje 7'),('Viaje 8','Viaje 8')]
     viaje = forms.ChoiceField(choices=op_viajes,widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de texto
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
@@ -83,6 +83,7 @@ class acumFrutaForm(forms.ModelForm):
     cultivo = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  # Campo de texto
     variedad = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  # Campo de texto
     estructura = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  # Campo de texto
+    encargado = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de texto
     
     class Meta:
     
@@ -92,6 +93,11 @@ class acumFrutaForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        # Valores únicos de cuenta
+        cuentas = usuariosAppFruta.objects.order_by('encargado').values_list('encargado', flat=True).distinct()
+        self.fields['encargado'].widget = forms.Select(choices=[('', '---------')] + [(c, c) for c in cuentas])
+        self.fields['encargado'].widget.attrs.update({'class': 'form-control'})
+        
         # Valores únicos de cuenta
         estructuras = detallesEstructuras.objects.order_by('estructura').values_list('estructura', flat=True).distinct()
         self.fields['estructura'].widget = forms.Select(choices=[('', '---------')] + [(c, c) for c in estructuras])
