@@ -252,11 +252,13 @@ def article_list(request):
     return render(request, 'plantaE/salidasFruta_list.html', {'registros': salidas})
 
 def salidasFruta_list2(request):
-
     today = timezone.localtime(timezone.now()).date()
-    salidas = salidasFruta.objects.filter(fecha=today, status__isnull=True)
-    salidas = salidas.order_by('-created_at')
-    
+
+    salidas = salidasFruta.objects.filter(
+        Q(fecha=today) | Q(status__isnull=True) | Q(status=''),
+        id__gte=8687
+    ).order_by('-created_at')
+
     return render(request, 'plantaE/salidasFruta_list2.html', {'registros': salidas})
 
 def pesos_delete(request, pk):
