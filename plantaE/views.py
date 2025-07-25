@@ -251,6 +251,13 @@ def article_list(request):
     
     return render(request, 'plantaE/salidasFruta_list.html', {'registros': salidas})
 
+def salidasFruta_list2(request):
+
+    today = timezone.localtime(timezone.now()).date()
+    salidas = salidasFruta.objects.filter(fecha=today, status__isnull=True)
+    salidas = salidas.order_by('-created_at')
+    
+    return render(request, 'plantaE/salidasFruta_list2.html', {'registros': salidas})
 
 def pesos_delete(request, pk):
     salidas = get_object_or_404(Actpeso, pk=pk)
@@ -723,6 +730,13 @@ def acumFruta_list(request):
     
     
     return render(request, 'plantaE/AcumFrutaDia_list.html', {'registros': salidas})
+
+def acumFruta_list2(request):
+    today = timezone.localtime(timezone.now()).date()
+    salidas = AcumFruta.objects.filter(fecha=today, status__isnull=True)
+    salidas = salidas.order_by('-created_at')
+    
+    return render(request, 'plantaE/AcumFrutaDia_list2.html', {'registros': salidas})
 
 def acumFruta_detail(request, pk):
     salidas = get_object_or_404(AcumFruta, pk=pk)
