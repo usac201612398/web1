@@ -24,31 +24,30 @@
             font-family: Arial, sans-serif;
         }
 
-        /* Botonera superior */
         .half {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-bottom: 20px;
+        display: flex;
+        height: 100%;
+        grid-template-columns:  repeat(auto-fit, minmax(min-content, max-content)); /* Divide cada mitad en dos columnas iguales */
+        gap: 5px; /* Espacio entre columnas */
+        text-align: center;
         }
 
-        .half .box {
+        .box {
             background-color: #f0f0f0;
             border: 1px solid #ddd;
-            padding: 10px 20px;
-            flex: 1;
-            text-align: center;
+            padding: 10px;
+            flex: auto; 
+            height: 100%;    
         }
-
         td {
             padding: 0;
         }
-
         td input {
             width: 100%;
             border: none;
             background: transparent;
         }
+
     </style>
 </head>
 
