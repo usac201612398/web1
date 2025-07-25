@@ -727,8 +727,9 @@ def article_delete(request, pk):
 
 def article_delete2(request, pk):
     salidas = get_object_or_404(salidasFruta, pk=pk)
-    recepcion = Recepciones.objects.filter(recepcion=salidas.recepcion)
-    if recepcion.exists():
+    recepcion = Recepciones.objects.filter(recepcion=salidas.recepcion) if salidas.recepcion else None
+    if recepcion and recepcion.exists():
+
         return render(request, 'plantaE/salidasFruta_confirm_delete2.html', {
             'registros': salidas,
             'alert_message': "No se puede anular este viaje porque ya tiene una recepción asignada. Anule la recepción primero.",
