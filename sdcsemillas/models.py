@@ -71,8 +71,6 @@ class conteoplantas(models.Model):
     #op_status = [('Pendiente','-'),('En proceso','En proceso'),('Cerrado','Cerrado')]
     id = models.BigAutoField(primary_key=True)
     codigo_lote = models.BigIntegerField(blank=True, null=True)
-    operario_name = models.CharField(max_length= 50, blank = True, null =  True)
-    codigo_empleado = models.CharField(max_length=75, blank=True)
     supervisor_name = models.CharField(max_length= 50, blank = True, null =  True)
     ubicacion_lote = models.CharField(max_length= 50, blank = True, null =  True)
     estructura = models.CharField(max_length= 50, blank = True, null =  True)
