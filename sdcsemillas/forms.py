@@ -345,12 +345,12 @@ class conteofloresForm(forms.ModelForm):
     op_semana = [('','-'),(1,'1'),(2,'2'),(3,'3'),(4,'4'),(5,'5'),(6,'6')]
 
     codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control','readonly': 'readonly'}))
-    operario_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
-    codigo_empleado = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
-    supervisor_name = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
-    ubicacion_lote = forms.ChoiceField(choices=op_ubicacion,widget=forms.TextInput(attrs={'class': 'form-control'})) 
-    apodo_variedad = forms.ChoiceField(widget=forms.TextInput(attrs={'class': 'form-control'}))
-    tipo_cultivo = forms.ChoiceField(choices=op_cultivo,widget=forms.Select(attrs={'class': 'form-control'})) 
+    operario_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    codigo_empleado = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    supervisor_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    ubicacion_lote = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'})) 
+    apodo_variedad = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    tipo_cultivo = forms.CharField(forms.TextInput(attrs={'class': 'form-control'})) 
     diasemana = forms.ChoiceField(choices=op_dias,widget=forms.Select(attrs={'class': 'form-control'}))
     nsemana = forms.ChoiceField(choices=op_semana,widget=forms.Select(attrs={'class': 'form-control'}))
     
@@ -363,7 +363,7 @@ class conteofloresForm(forms.ModelForm):
     boton_pequeño=forms.ChoiceField(choices=op_sel,widget=forms.Select(attrs={'class': 'form-control'}))
     
     fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','type': 'date'}))
-    estructura = forms.ChoiceField(choices=op_estructura, widget=forms.TextInput(attrs={'class': 'form-control'}))  
+    estructura = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
     status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'form-control'}))
     observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
 

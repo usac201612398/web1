@@ -336,7 +336,7 @@
 <script>
 function startScanner() {
     const html5QrCode = new Html5Qrcode("reader");
-    const qrConfig = { fps: 10, qrbox: 250 };
+    const qrConfig = { fps: 10, qrbox: { width: 125, height: 125 } };
 
     html5QrCode.start(
         { facingMode: "environment" },
