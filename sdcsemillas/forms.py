@@ -104,7 +104,7 @@ class conteoplantasForm(forms.ModelForm):
     ubicacion_lote = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'})) 
     apodo_variedad = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     tipo_cultivo = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'})) 
-    codigo_planta = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
+    #codigo_planta = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
     codigo_madre = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'})) 
     plantas_activas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
     plantas_faltantes = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
@@ -120,7 +120,7 @@ class conteoplantasForm(forms.ModelForm):
     class Meta:
     
         model = conteoplantas
-        fields = ['codigo_lote','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','codigo_planta','codigo_madre','plantas_activas','plantas_faltantes','fecha','camas_completas','camas_incompletas','cocosxcamaincompleta', 'estructura', 'status','evento','observaciones']
+        fields = ['codigo_lote','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','codigo_madre','plantas_activas','plantas_faltantes','fecha','camas_completas','camas_incompletas','cocosxcamaincompleta', 'estructura', 'status','evento','observaciones']
 
 class conteosemillasForm(forms.ModelForm):
 
@@ -353,9 +353,8 @@ class conteofloresForm(forms.ModelForm):
     nsemana = forms.ChoiceField(choices=op_semana,widget=forms.Select(attrs={'class': 'form-control'}))
     
     flores_abiertas=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
-    flores_antenas=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    flores_anteras=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     flores_polinizadas=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
-    flores_enmasculadas=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     flores_sinpistilo=forms.ChoiceField(choices=op_sel,widget=forms.Select(attrs={'class': 'form-control'}))
     flores_viejas=forms.ChoiceField(choices=op_sel,widget=forms.Select(attrs={'class': 'form-control'}))
     boton_pequeño=forms.ChoiceField(choices=op_sel,widget=forms.Select(attrs={'class': 'form-control'}))
@@ -368,7 +367,7 @@ class conteofloresForm(forms.ModelForm):
     class Meta:
     
         model = floresabiertas
-        fields = ['codigo_lote','codigo_empleado','operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','diasemana','nsemana','flores_abiertas','flores_antenas','flores_polinizadas','flores_enmasculadas','flores_sinpistilo','flores_viejas','boton_pequeño','fecha','estructura','status','observaciones']
+        fields = ['codigo_lote','codigo_empleado','operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','diasemana','nsemana','flores_abiertas','flores_anteras','flores_polinizadas','flores_sinpistilo','flores_viejas','boton_pequeño','fecha','estructura','status','observaciones']
 
 class controlcosechaForm(forms.ModelForm):
 

@@ -77,7 +77,6 @@ class conteoplantas(models.Model):
     apodo_variedad = models.CharField(max_length= 50, blank = True, null =  True)
     tipo_cultivo = models.CharField(max_length= 20, blank = True, null =  True)
     codigo_madre = models.CharField(max_length= 30, blank = True, null =  True)
-    codigo_planta = models.CharField(max_length= 30, blank = True, null =  True)
     plantas_activas= models.IntegerField(blank = True, null = True)
     plantas_faltantes = models.IntegerField(blank = True, null = True)
     fecha = models.DateField(blank=True, null=True)
@@ -247,9 +246,8 @@ class floresabiertas(models.Model):
     tipo_cultivo = models.CharField(max_length= 20, blank = True, null =  True)
     nsemana = models.IntegerField(blank = True, null = True)
     flores_abiertas = models.IntegerField(blank = True, null = True)
-    flores_antenas = models.IntegerField(blank = True, null = True) #Index por caja
+    flores_anteras = models.IntegerField(blank = True, null = True) #Index por caja
     flores_polinizadas = models.IntegerField(blank = True, null = True)
-    flores_enmasculadas = models.IntegerField(blank = True, null = True) #Index por caja
     flores_sinpistilo =models.CharField(max_length= 20, blank = True, null =  True)
     flores_viejas = models.CharField(max_length= 20, blank = True, null =  True)
     boton_pequeño = models.CharField(max_length= 20, blank = True, null =  True)
