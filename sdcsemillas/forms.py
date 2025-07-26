@@ -242,7 +242,7 @@ class etapasdeloteForm(forms.ModelForm):
     supervisor_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     ubicacion_lote = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'})) 
     apodo_variedad = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
-    tipo_cultivo = forms.CharField(widget=forms.Select(attrs={'class': 'form-control','readonly': 'readonly'})) 
+    tipo_cultivo = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'})) 
     codigo_madre = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'})) 
     codigo_padre = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'})) 
     fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','type': 'date'}))
