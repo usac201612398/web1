@@ -919,7 +919,7 @@ def acumFruta_delete2(request, pk):
     if tiene_recepcion:
         return render(request, 'plantaE/acumFruta_confirm_delete2.html', {
             'alert_message': "No se puede anular este viaje porque ya tiene una recepción asignada. Anule la recepción primero.",
-            'redirect_url': reverse('acumFrutaDia_list2')
+            'redirect_url': reverse('acumFruta_list2')
         })
     
     if request.method == 'POST':
@@ -938,7 +938,7 @@ def acumFruta_delete2(request, pk):
         
         return render(request, 'plantaE/acumFruta_confirm_delete2.html', {
             'alert_message': "El registro fue anulado correctamente.",
-            'redirect_url': reverse('acumFrutaDia_list2')
+            'redirect_url': reverse('acumFruta_list2')
         })
     
     return render(request, 'plantaE/acumFruta_confirm_delete2.html', {'registros': salidas})
