@@ -869,10 +869,20 @@ def acumFruta_delete(request, pk):
 
     salidas = get_object_or_404(AcumFruta, pk=pk)
 
-    if salidas.recepcion is not None:
-        messages.error(request, "No se puede anular este viaje porque ya tiene una recepción asignada.")
-        return redirect('acumFruta_list')
     
+    # Verificamos si tiene una recepción activa
+    tiene_recepcion = (
+        salidas.recepcion and
+        Recepciones.objects.filter(recepcion=salidas.recepcion).exists()
+    )
+
+    # Si ya tiene recepción, mostrar alerta y redireccionar
+    if tiene_recepcion:
+        return render(request, 'plantaE/acumFruta_confirm_delete2.html', {
+            'alert_message': "No se puede anular este viaje porque ya tiene una recepción asignada. Anule la recepción primero.",
+            'redirect_url': reverse('acumFrutaDia_list2')
+        })
+
     if request.method == 'POST':
         salidas.status = 'Anulado'
         salidas.save()
@@ -887,9 +897,12 @@ def acumFruta_delete(request, pk):
             status__isnull=True  # Solo los abiertos
         ).update(status='Anulado')
         
-        messages.success(request, "Registro anulado correctamente.")
-        return redirect('acumFruta_list')
-    return render(request, 'plantaE/acumFruta_confirm_delete.html', {'registros': salidas})
+        return render(request, 'plantaE/acumFruta_confirm_delete2.html', {
+            'alert_message': "El registro fue anulado correctamente.",
+            'redirect_url': reverse('acumFrutaDia_list2')
+        })
+
+    return render(request, 'plantaE/acumFruta_confirm_delete2.html', {'registros': salidas})
 
 
 def acumFruta_delete2(request, pk):
