@@ -355,7 +355,7 @@ def conteofrutosplan_update(request, pk):
             form.save()
             return redirect('conteofrutosplan_list')
     else:
-        form = conteofrutosForm(instance=salidas)
+        form = conteofrutosplanillaForm(instance=salidas)
     return render(request, 'sdcsemillas/conteofrutosplan_form.html', {'form': form,'modo':'actualizar'})
 
 def conteofrutosplan_delete(request, pk):
