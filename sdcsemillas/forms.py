@@ -101,7 +101,7 @@ class conteoplantasForm(forms.ModelForm):
 
     codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     supervisor_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
-    ubicacion_lote = forms.CharField(choices=op_ubicacion,widget=forms.TextInput(attrs={'class': 'form-control'})) 
+    ubicacion_lote = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'})) 
     apodo_variedad = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     tipo_cultivo = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'})) 
     codigo_planta = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
