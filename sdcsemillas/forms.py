@@ -337,7 +337,7 @@ class conteofloresForm(forms.ModelForm):
     op_modulo = [('','-'),('Modulo 1','Modulo 1'),('Modulo 2','Modulo 2'),('Modulo 3', 'Modulo 3'),('Modulo 4','Modulo 4'),('Modulo 5','Modulo 5'),('Modulo 6', 'Modulo 6'),('Modulo 7','Modulo 7'),('Modulo 8','Modulo 8'),('Modulo 9', 'Modulo 9'),('Modulo 10','Modulo 10'),('Modulo 11','Modulo 11')]
     op_invernadero = [('','-'),('Invernadero 1','Invernadero 1'),('Invernadero 2','Invernadero 2'),('Invernadero 3', 'Invernadero 3'),('Invernadero 4','Invernadero 4'),('Invernadero 5','Invernadero 5'),('Invernadero 6', 'Invernadero 6'),('Invernadero 7','Invernadero 7'),('Invernadero 8','Invernadero 8'),('Invernadero 9', 'Invernadero 9'),('Invernadero 10','Invernadero 10'),('Invernadero 11','Invernadero 11')]
     op_malla = [('','-'),('Casa Malla','Casa Malla')]
-    op_cultivo = [('','-'),('Chile','Chile'),('Tomtate','Tomate')]
+    op_cultivo = [('','-'),('Chile','Chile'),('Tomate','Tomate')]
     op_status = [('','-'),('Inicio','Inicio'),('Fin','Fin')]
     op_dias = [('','-'),('Lunes','Lunes'),('Martes','Martes'),('Miércoles','Miércoles'),('Jueves','Jueves'),('Viernes','Viernes'),('Sábado','Sábado'),('Domingo','Domingo')]
     op_estructura = op_invernadero + op_modulo + op_malla
@@ -350,7 +350,7 @@ class conteofloresForm(forms.ModelForm):
     supervisor_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     ubicacion_lote = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'})) 
     apodo_variedad = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
-    tipo_cultivo = forms.CharField(forms.TextInput(attrs={'class': 'form-control'})) 
+    tipo_cultivo = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'})) 
     diasemana = forms.ChoiceField(choices=op_dias,widget=forms.Select(attrs={'class': 'form-control'}))
     nsemana = forms.ChoiceField(choices=op_semana,widget=forms.Select(attrs={'class': 'form-control'}))
     
