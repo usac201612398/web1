@@ -445,7 +445,7 @@ class conteofloresForm(forms.ModelForm):
         self.fields['flores_abiertas'].required = False
         self.fields['flores_anteras'].required = False
         self.fields['flores_polinizadas'].required = False
-        self.fields['flores viejas'].required = False
+        self.fields['flores_viejas'].required = False
         self.fields['boton_pequeño'].required = False
         self.fields['observaciones'].required = False
 
