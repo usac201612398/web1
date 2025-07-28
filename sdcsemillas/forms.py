@@ -174,6 +174,8 @@ class conteosemillasForm(forms.ModelForm):
         self.fields['semillasxfruto'].required = False
         self.fields['prom_semillasxfruto'].required = False
         self.fields['observaciones'].required = False
+        self.fields['codigo_empleado'].required = False
+        self.fields['operario_name'].required = False
 
 class conteofrutosForm(forms.ModelForm):
 
@@ -215,6 +217,8 @@ class conteofrutosForm(forms.ModelForm):
         self.fields['prom_floresabiertas'].required = False
         self.fields['prom_polinizados'].required = False
         self.fields['observaciones'].required = False
+        self.fields['codigo_empleado'].required = False
+        self.fields['operario_name'].required = False
 
 class conteofrutosplanillaForm(forms.ModelForm):
 
@@ -264,6 +268,8 @@ class conteofrutosplanillaForm(forms.ModelForm):
         self.fields['prom_area'].required = False
         self.fields['prom_general'].required = False
         self.fields['observaciones'].required = False
+        self.fields['codigo_empleado'].required = False
+        self.fields['operario_name'].required = False
 
 class etapasdeloteForm(forms.ModelForm):
 
@@ -342,6 +348,8 @@ class ccalidadpolenForm(forms.ModelForm):
         self.fields['consistencia'].required = False
         self.fields['agentesexternos'].required = False
         self.fields['observaciones'].required = False
+        self.fields['codigo_empleado'].required = False
+        self.fields['operario_name'].required = False
 
 class indexpolinizacionForm(forms.ModelForm):
 
@@ -397,6 +405,8 @@ class indexpolinizacionForm(forms.ModelForm):
         self.fields['cantidad_index'].required = False
         self.fields['cantidad_camas'].required = False
         self.fields['observaciones'].required = False
+        self.fields['codigo_empleado'].required = False
+        self.fields['operario_name'].required = False
 
 class conteofloresForm(forms.ModelForm):
 
@@ -420,7 +430,6 @@ class conteofloresForm(forms.ModelForm):
     tipo_cultivo = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'})) 
     diasemana = forms.ChoiceField(choices=op_dias,widget=forms.Select(attrs={'class': 'form-control'}))
     nsemana = forms.ChoiceField(choices=op_semana,widget=forms.Select(attrs={'class': 'form-control'}))
-    
     flores_abiertas=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     flores_anteras=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     flores_polinizadas=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
@@ -448,6 +457,8 @@ class conteofloresForm(forms.ModelForm):
         self.fields['flores_viejas'].required = False
         self.fields['boton_pequeño'].required = False
         self.fields['observaciones'].required = False
+        self.fields['codigo_empleado'].required = False
+        self.fields['operario_name'].required = False
 
 class controlcosechaForm(forms.ModelForm):
 
@@ -497,6 +508,8 @@ class controlcosechaForm(forms.ModelForm):
         self.fields['llenado_caja'].required = False
         self.fields['punto_maduracion'].required = False
         self.fields['observaciones'].required = False
+        self.fields['codigo_empleado'].required = False
+        self.fields['operario_name'].required = False
 
 class operariosForm(forms.ModelForm):
 
