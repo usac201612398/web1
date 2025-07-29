@@ -146,11 +146,21 @@ $('.envio3').on('click', function () {
         for (let j = 0, col; col = row.cells[j]; j++) {
             fila.push(col.innerText.trim());
         }
+
+        // Validar que la columna de cajas (índice 5) no esté vacía
+        if (!fila[5]) {
+            continue; // Saltar esta fila si el campo Cajas está vacío
+        }
+
         const lugar = document.getElementById('Lug');
         fila.push(lugar.options[lugar.selectedIndex].text);
+
+        const viaje = document.getElementById('Via');
         fila.push(viaje.options[viaje.selectedIndex].text);
+
         fila.push(fecha);
         fila.push(correo);
+
         datos.push(fila);
     }
 
