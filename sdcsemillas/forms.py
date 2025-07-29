@@ -154,7 +154,7 @@ class conteosemillasForm(forms.ModelForm):
     tipo_cultivo = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'})) 
     cantidad_frutos = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
     semillasxfruto= forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
-    prom_semillasxfruto = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
+    prom_semillasxfruto = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
     fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','type': 'date'}))
     estructura = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))  
     status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'form-control'}))
