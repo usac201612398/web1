@@ -161,7 +161,8 @@ $('.envio3').on('click', function () {
         headers: { 'X-CSRFToken': csrftoken },
         success: function (data) {
             alert("Datos guardados correctamente.");
-            window.location.replace("{% url 'salidasFrutaValle' %}");
+            window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/salidasFrutaValle');
+
         },
         error: function (xhr, status, error) {
             console.error('Error:', error);
