@@ -1,279 +1,241 @@
 <!DOCTYPE html>
-<html>
-{% load static %}     
+<html lang="es">
+{% load static %}
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous">   
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <meta charset="UTF-8">
     <title>AcumFruta</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css"/>
+
     <style>
-        h1 {
-            margin: 15px;
-            font-family: Arial, sans-serif;
+        .table-custom-header th {
+            background: linear-gradient(to right, #6c757d, #495057);
+            color: white;
+            font-weight: 600;
+            text-align: center;
+            white-space: nowrap;
         }
 
-        a {
-            margin: 20px;
-            font-family: Arial, sans-serif;
+        @media (max-width: 768px) {
+            .table td, .table th {
+                font-size: 13px;
+            }
+
+            .btn {
+                font-size: 13px;
+            }
         }
 
-        .half {
-        display: flex;
-        height: 100%;
-        grid-template-columns:  repeat(auto-fit, minmax(min-content, max-content)); /* Divide cada mitad en dos columnas iguales */
-        gap: 5px; /* Espacio entre columnas */
-        text-align: center;
+        .card-text strong {
+            display: inline-block;
+            width: 100px;
         }
-
-        .box {
-            background-color: #f0f0f0;
-            border: 1px solid #ddd;
-            padding: 10px;
-            flex: auto; 
-            height: 100%;    
-        }
-        td {
-            padding: 0;
-        }
-
-        td input {
-            width: 100%;
-            border: none;
-            background: transparent;
-        }
-
     </style>
 </head>
 <body>
-    <h1 class="roboto">Panel</h1>
+<div class="container py-3">
 
-    <div class = "container">
-        <div class="half">
+    <h1 class="mb-4">Panel de Fruta</h1>
 
-            <div class="box">
-                <form>
-                    <div><label for="fecha">Fecha:</label></div>
-                    <div>
-                        <input class="input" id="date" type="date" value={{fecha}}>
-                    </div>
-                </form>      
-            </div>
+    <!-- Filtros -->
+    <div class="row mb-3">
+        <div class="col-md-4 mb-2">
+            <label for="date" class="form-label">Fecha:</label>
+            <input class="form-control" id="date" type="date" value="{{fecha}}">
+        </div>
+        <div class="col-md-4 mb-2">
+            <label for="Cul" class="form-label">Cultivo:</label>
+            <select id="Cul" class="form-select"></select>
+        </div>
+        <div class="col-md-4 mb-2">
+            <label for="correo" class="form-label">Usuario:</label>
+            <input class="form-control" id="correo" type="text" value="{{usuario}}" readonly>
+        </div>
+    </div>
 
-            <div class="box">
-                <div><label for="cultivo">Cultivo:</label></div>
-                <div class="select"> 
-                    <select name="Cultivo" id="Cul">
-                    </select>
+    <!-- Botón consultar -->
+    <div class="mb-3 text-end">
+        <button id="consultar" class="btn btn-primary">
+            <i class="fas fa-search"></i> Consultar
+        </button>
+    </div>
+
+    <!-- Tabla escritorio -->
+    <div class="table-responsive d-none d-md-block">
+        <table class="table table-striped table-bordered" id="myTable" style="min-width: 1100px;">
+            <thead class="table-custom-header">
+                <tr>
+                    <th>Llave</th>
+                    <th>Fecha</th>
+                    <th>Finca</th>
+                    <th>Viaje</th>
+                    <th>Cajas</th>
+                    <th>Libras</th>
+                    <th>Orden</th>
+                    <th>Cultivo</th>
+                    <th>Estructura</th>
+                    <th>Variedad</th>
+                    <th>Anular</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for registro in registros %}
+                <tr>
+                    <td><a href="{% url 'acumFruta_detail' registro.pk %}">{{ registro.id }}</a></td>
+                    <td>{{ registro.fecha }}</td>
+                    <td>{{ registro.finca }}</td>
+                    <td>{{ registro.viaje }}</td>
+                    <td>{{ registro.cajas }}</td>
+                    <td class="number-cell" data-value="{{ registro.libras }}">{{ registro.libras }}</td>
+                    <td>{{ registro.orden }}</td>
+                    <td>{{ registro.cultivo }}</td>
+                    <td>{{ registro.estructura }}</td>
+                    <td>{{ registro.variedad }}</td>
+                    <td class="text-center">
+                        <a href="{% url 'acumFruta_delete' registro.pk %}" class="text-danger">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Cards para móviles -->
+    <div class="d-block d-md-none">
+        {% for registro in registros %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Registro #{{ registro.id }}</h5>
+                <p class="card-text">
+                    <strong>Fecha:</strong> {{ registro.fecha }}<br>
+                    <strong>Finca:</strong> {{ registro.finca }}<br>
+                    <strong>Viaje:</strong> {{ registro.viaje }}<br>
+                    <strong>Cajas:</strong> {{ registro.cajas }}<br>
+                    <strong>Libras:</strong> {{ registro.libras }}<br>
+                    <strong>Orden:</strong> {{ registro.orden }}<br>
+                    <strong>Cultivo:</strong> {{ registro.cultivo }}<br>
+                    <strong>Estructura:</strong> {{ registro.estructura }}<br>
+                    <strong>Variedad:</strong> {{ registro.variedad }}
+                </p>
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'acumFruta_detail' registro.pk %}" class="btn btn-sm btn-outline-primary">Ver</a>
+                    <a href="{% url 'acumFruta_delete' registro.pk %}" class="btn btn-sm btn-outline-danger">Anular</a>
                 </div>
             </div>
-
-            <div class="box">
-                <form>
-                    <div><label for="correo">Usuario:</label></div>
-                    <div>
-                        <input class="input" id="correo" type="text" value={{usuario}} readonly>
-                    </div>
-                </form>      
-            </div>    
         </div>
-    </div>
-    <br>
-
-    <div class="container">
-        <button id="consultar">Consultar</button>
+        {% endfor %}
     </div>
 
-    <div class="container">
-        <div class="columns">
-            <div class="column is-12">
-            <div class="table-container">
-                <table class="table is-striped is-hoverable is is-fullwidth" id="myTable">
-                <thead id = "enc1">
-                    <tr class="header">
-                    <th >Llave</th>
-                    <th >Fecha</th>
-                    <th >Finca</th>
-                    <th >Viaje</th>
-                    <th >Cajas</th>
-                    <th >Libras</th>
-                    <th >Orden</th>
-                    <th >Cultivo</th>
-                    <th >Estructura</th>
-                    <th >Variedad</th>
-                    <th >Anular</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {%for registro in registros %} 
-                <tr> 
-                    <td> <a href="{% url 'acumFruta_detail' registro.pk %}">{{ registro.id }}</a></td>
-                    <td>{{registro.fecha}}</td>
-                    <td>{{registro.finca}}</td>
-                    <td>{{registro.viaje}}</td>
-                    <td>{{registro.cajas}}</td>
-                    
-                    <td class="number-cell" data-value="{{ registro.libras }}">{{ registro.libras }}</td>
-                    <td>{{registro.orden}}</td>
-                    <td>{{registro.cultivo}}</td>
-                    <td>{{registro.estructura}}</td>
-                    <td>{{registro.variedad}}</td>
-                    <th ><a href="{% url 'acumFruta_delete' registro.pk %}"><i class="fas fa-trash-alt"></i>Anular</a></th>
-                    </tr> 
-                        
-                {% endfor %}
-                </tbody>
-                </table>
-            </div>
-            </div>
-        </div>
-        </div>
-        <a href="{% url 'salidasFruta_list' %}">Regresar</a>
-</body>
-<script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
+    <!-- Botón regresar -->
+    <div class="text-center mt-4">
+        <a href="{% url 'salidasFruta_list' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Regresar
+        </a>
+    </div>
+
+</div>
+
+<!-- JS -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static '/lib/cockies.js' %}"></script>
+
 <script>
-
-document.getElementById('consultar').addEventListener('click', function() {
-    const opcionSeleccionada1 = document.getElementById('Cul').value;
-    const opcionSeleccionada2 = document.getElementById('date').value;
-    console.log(opcionSeleccionada1);
-    console.log(opcionSeleccionada2);
-
-    const tbody = document.querySelector('#myTable tbody');
-
-    // Limpiar la tabla antes de agregar nuevos datos
-    tbody.innerHTML = '';
-
-    // Asegúrate de que `urlConsulta` esté correctamente configurada
-    const urlConsulta = "{% url 'acumFruta_consulta' %}"; // O usa alguna URL estática si lo prefieres
-
-    fetch(urlConsulta, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-CSRFToken': getCookie('csrftoken')  // Asegúrate de incluir CSRF token
-        },
-        body: new URLSearchParams({
-            'opcion1': opcionSeleccionada1,
-            'opcion2': opcionSeleccionada2
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-
-        const urls = {
-            detailUrl: "{% url 'acumFruta_detail' 0 %}",
-            updateUrl: "{% url 'acumFruta_update' 0 %}",
-            deleteUrl: "{% url 'acumFruta_delete' 0 %}"
-        };
-
-        // Verificar si hay datos en data.datos
-        if (Array.isArray(data.datos) && data.datos.length > 0) {
-            data.datos.forEach(item => {
-                const fila = document.createElement('tr');
-                const editUrl = urls.updateUrl.replace('0', item.id);  // Reemplaza el 0 por el valor correcto
-                const deleteUrl = urls.deleteUrl.replace('0', item.id);  // Lo mismo para eliminar
-                const detailUrl = urls.detailUrl.replace('0', item.id);  // Lo mismo para detalles
-
-                fila.innerHTML = `
-                    <td><a href="${detailUrl}">${item.id}</a></td>
-                    <td>${item.fecha}</td>
-                    <td>${item.finca}</td>
-                    <td>${item.viaje}</td>
-                    <td>${item.total_cajas}</td>
-                    <td>${Math.round(item.total_libras)}</td>
-                    <td>${item.orden}</td>
-                    <td>${item.cultivo}</td>
-                    <td>${item.estructura}</td>
-                    <td>${item.variedad}</td>
-                    <td><a href="${deleteUrl}"><i class="fas fa-trash-alt"></i>Eliminar</a></td>
-                `;
-                
-                tbody.appendChild(fila);
-            });
-        } else {
-            console.log("No se encontraron datos.");
-        }
-
-        // Verificar si resumen no está vacío
-        if (data.resumen && Array.isArray(data.resumen) && data.resumen.length > 0) {
-            alert("Total de cajas: " + data.resumen[0].total_cajas + " y total de libras: " + Math.round(data.resumen[0].total_libras) + " del día: " + data.resumen[0].fecha);
-        }
-    })
-    .catch(error => {
-        console.error('Error al hacer la consulta:', error);
-    });
-});
-
-// Función para obtener el valor del CSRF token
-function getCookie(name) {
-    const cookieValue = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-    return cookieValue ? cookieValue[2] : null;
-}
-
-
-$(document).ready(function() {
-        // Función para cargar productos basados en la categoría seleccionada
-    
-    function authUsuario() {
-        $.ajax({
-            url: '{% url "obtener_nombre_usuario" %}',  // URL para la vista AJAX
-            data: {
-                'category_id': "Consulta"  // Envia el ID de la categoría como parámetro
-            },
-            success: function(data) {
-                // Limpia las opciones actuales del campo 'name'
-                var initialCategoryId =data.username;  // Obtiene el valor inicial del campo 'category'
-                $('#date').val(data.fecha);
-                $('#correo').val(data.username);
-                if (initialCategoryId) {
-                    console.log(initialCategoryId);
-                }
-                console.log(data)
-
-                $('#Cul').html('');
-                $('#Cul').append(
-                    $('<option>').text('').attr('value','')
-                );
-
-                $.each(data.adicionales, function(index, product) {
-                    $('#Cul').append(
-                        $('<option>').text(product.cultivo.toString()).attr('value', product.cultivo.toString())
-                    );
-                });
-            
-            },
-            error: function(xhr, status, error) {
-                console.error('Error:', error);  // Maneja errores de la solicitud
+    $(document).ready(function () {
+        $('#myTable').DataTable({
+            responsive: true,
+            autoWidth: false,
+            language: {
+                url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
             }
         });
-    }
-    
-    authUsuario();
-    // Llama a la función de carga de productos al cargar la página
-        
-});
+        formatCells('myTable');
+        authUsuario();
+    });
 
-</script>
-
-<script>
-    // Función para formatear los números en ambas tablas
-    const formatCells = (tableId) => {
+    function formatCells(tableId) {
         const cells = document.querySelectorAll(`#${tableId} td.number-cell`);
         cells.forEach(cell => {
             const value = Number(cell.getAttribute('data-value'));
             if (!isNaN(value)) {
-                // Usa toLocaleString para formatear correctamente
-                cell.textContent = value.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                cell.textContent = value.toLocaleString('es-ES');
             }
         });
-    };
+    }
 
-    // Llama a la función para ambas tablas
-    document.addEventListener('DOMContentLoaded', () => {
-        formatCells('myTable');
+    function getCookie(name) {
+        const cookieValue = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+        return cookieValue ? cookieValue[2] : null;
+    }
+
+    function authUsuario() {
+        $.ajax({
+            url: '{% url "obtener_nombre_usuario" %}',
+            data: { 'category_id': "Consulta" },
+            success: function(data) {
+                $('#date').val(data.fecha);
+                $('#correo').val(data.username);
+                $('#Cul').html('<option value=""></option>');
+                $.each(data.adicionales, function(index, product) {
+                    $('#Cul').append(`<option value="${product.cultivo}">${product.cultivo}</option>`);
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+
+    $('#consultar').on('click', function () {
+        const opcion1 = $('#Cul').val();
+        const opcion2 = $('#date').val();
+        const tbody = $('#myTable tbody');
+
+        tbody.html('');
+        fetch("{% url 'acumFruta_consulta' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: new URLSearchParams({ 'opcion1': opcion1, 'opcion2': opcion2 })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.datos?.length) {
+                data.datos.forEach(item => {
+                    tbody.append(`
+                        <tr>
+                            <td><a href="/acumFruta/${item.id}/detail/">${item.id}</a></td>
+                            <td>${item.fecha}</td>
+                            <td>${item.finca}</td>
+                            <td>${item.viaje}</td>
+                            <td>${item.total_cajas}</td>
+                            <td class="number-cell" data-value="${item.total_libras}">${item.total_libras}</td>
+                            <td>${item.orden}</td>
+                            <td>${item.cultivo}</td>
+                            <td>${item.estructura}</td>
+                            <td>${item.variedad}</td>
+                            <td><a href="/acumFruta/${item.id}/delete/"><i class="fas fa-trash-alt"></i></a></td>
+                        </tr>
+                    `);
+                });
+                formatCells('myTable');
+            }
+
+            if (data.resumen?.length) {
+                alert(`Total de cajas: ${data.resumen[0].total_cajas}, libras: ${Math.round(data.resumen[0].total_libras)} del día: ${data.resumen[0].fecha}`);
+            }
+        })
+        .catch(error => console.error('Error al consultar:', error));
     });
 </script>
+</body>
 </html>
