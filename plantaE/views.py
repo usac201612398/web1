@@ -2896,7 +2896,7 @@ def dashboard_tecnicos(request):
     ).order_by('anio', 'semana')
 
     # Ejes para la gráfica
-    fechas = [f"Semana {d['semana']} - {d['anio']}" for d in datos]
+    fechas = [datetime.fromisocalendar(d['anio'], d['semana'], 1).isoformat() for d in datos]
     kilos = [round(d['libras_totales'] / 2.20462, 2) for d in datos]
     derivadas = [0] + [kilos[i] - kilos[i - 1] for i in range(1, len(kilos))]
 

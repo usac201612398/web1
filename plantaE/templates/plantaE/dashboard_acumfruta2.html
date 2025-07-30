@@ -113,16 +113,24 @@
         options: {
             responsive: true,
             scales: {
+                
                 x: {
-                    x: {
-                        type: 'category',
-                        ticks: {
-                            autoSkip: true,
-                            maxRotation: 45,
-                            maxTicksLimit: 12
-                        }
+                    type: 'time',
+                    time: {
+                        unit: 'month',  // Mostrar solo el nombre del mes en el eje X
+                        tooltipFormat: "'Semana' ww 'de' yyyy",  // Muestra la semana en el tooltip
+                    },
+                    title: {
+                        display: true,
+                        text: 'Mes'
+                    },
+                    ticks: {
+                        autoSkip: true,
+                        maxTicksLimit: 10,
+                        maxRotation: 0
                     }
                 }
+                
             }
         }
     });
@@ -144,11 +152,19 @@
             responsive: true,
             scales: {
                 x: {
-                    type: 'category',
+                    type: 'time',
+                    time: {
+                        unit: 'month',  // Mostrar solo el nombre del mes en el eje X
+                        tooltipFormat: "'Semana' ww 'de' yyyy",  // Muestra la semana en el tooltip
+                    },
+                    title: {
+                        display: true,
+                        text: 'Mes'
+                    },
                     ticks: {
                         autoSkip: true,
-                        maxRotation: 45,
-                        maxTicksLimit: 12
+                        maxTicksLimit: 10,
+                        maxRotation: 0
                     }
                 }
             }
