@@ -2921,7 +2921,6 @@ def dashboard_tecnicos(request):
     return render(request, 'plantaE/dashboard_acumfruta2.html', context)
 
 
-
 def get_ordenes_por_finca(request):
     finca = request.POST.get('finca')
     if finca:
@@ -2933,6 +2932,17 @@ def get_ordenes_por_finca(request):
         return JsonResponse({'ordenes': list(ordenes)})
     return JsonResponse({'ordenes': []})
 
+def get_ordenes_por_finca2(request):
+    finca = request.POST.get('finca')
+    nombre_usuario = request.user.username
+    if finca:
+        ordenes = AcumFruta.objects.filter(finca=finca,correo=nombre_usuario)\
+            .exclude(orden__isnull=True)\
+            .exclude(orden='')\
+            .values_list('orden', flat=True)\
+            .distinct()
+        return JsonResponse({'ordenes': list(ordenes)})
+    return JsonResponse({'ordenes': []})
 
 def get_estructuras_por_orden(request):
     orden = request.POST.get('orden')
@@ -2943,6 +2953,23 @@ def get_estructuras_por_orden(request):
             .values_list('estructura', flat=True)\
             .distinct()
         cultivos = AcumFruta.objects.filter(orden=orden)\
+            .exclude(cultivo__isnull=True)\
+            .exclude(cultivo='')\
+            .values_list('cultivo', flat=True)\
+            .distinct()
+        return JsonResponse({'estructuras': list(estructuras), 'cultivos':list(cultivos)})
+    return JsonResponse({'estructuras': []})
+
+def get_estructuras_por_orden2(request):
+    orden = request.POST.get('orden')
+    nombre_usuario = request.user.username
+    if orden:
+        estructuras = AcumFruta.objects.filter(orden=orden,correo=nombre_usuario)\
+            .exclude(estructura__isnull=True)\
+            .exclude(estructura='')\
+            .values_list('estructura', flat=True)\
+            .distinct()
+        cultivos = AcumFruta.objects.filter(orden=orden, correo = nombre_usuario)\
             .exclude(cultivo__isnull=True)\
             .exclude(cultivo='')\
             .values_list('cultivo', flat=True)\
@@ -2962,7 +2989,18 @@ def get_variedades_por_estructura(request):
         return JsonResponse({'variedad': list(variedades)})
     return JsonResponse({'variedad': []})
 
-
+def get_variedades_por_estructura2(request):
+    estructura = request.POST.get('estructura')
+    nombre_usuario = request.user.username
+    orden = request.POST.get('orden')
+    if estructura:
+        variedades = AcumFruta.objects.filter(estructura=estructura,correo=nombre_usuario).filter(orden=orden)\
+            .exclude(variedad__isnull=True)\
+            .exclude(variedad='')\
+            .values_list('variedad', flat=True)\
+            .distinct()
+        return JsonResponse({'variedad': list(variedades)})
+    return JsonResponse({'variedad': []})
 
 def formar_clave(finca, cultivo):
     return (finca.strip().upper(), cultivo.strip().upper())

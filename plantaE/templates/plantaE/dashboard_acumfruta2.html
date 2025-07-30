@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const finca = fincaSelect.value;
         ordenSelect.innerHTML = '<option value="">Cargando...</option>';
         console.log(finca);
-        fetch('{% url "api_ordenes_por_finca" %}', {
+        fetch('{% url "api_ordenes_por_finca2" %}', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const orden = ordenSelect.value;
         estructuraSelect.innerHTML = '<option value="">Cargando...</option>';
         console.log(orden);
-        fetch('{% url "api_estructuras_por_orden" %}', {
+        fetch('{% url "api_estructuras_por_orden2" %}', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -271,7 +271,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         variedadSelect.innerHTML = '<option value="">Cargando...</option>';
         
-        fetch('{% url "api_variedades_por_estructura" %}', {
+        fetch('{% url "api_variedades_por_estructura2" %}', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
