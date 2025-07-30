@@ -250,7 +250,7 @@
         success: function (data) {
           $('#date').val(data.fecha);
           $('#correo').val(data.username);
-          $('#Cul').html('<option value=""></option>');
+          $('#Cul').html('<option value="">Seleccionar cultivo</option>');
           $.each(data.adicionales, function (index, product) {
             $('#Cul').append(
               `<option value="${product.cultivo}">${product.cultivo}</option>`
