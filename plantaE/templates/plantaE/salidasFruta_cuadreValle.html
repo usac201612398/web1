@@ -42,10 +42,14 @@
   <section class="section">
     <div class="container">
       <!-- HEADER -->
-      <div class="panel-header">
-        <h1 class="title is-3">Panel de Control</h1>
-        <p class="is-small-text">Consulta de salidas de fruta</p>
-      </div>
+        <section class="hero is-success is-small mb-5">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+            <h1 class="title is-3 has-text-white">Panel de Control</h1>
+            <p class="subtitle is-6 has-text-white-ter">Consulta de salidas de fruta</p>
+            </div>
+        </div>
+        </section>
 
       <!-- FILTROS -->
       <div class="filters box">
@@ -68,7 +72,7 @@
               <input class="input" id="correo" type="text" value="{{ usuario }}" readonly>
             </div>
             <div class="column is-2 is-flex is-align-items-end">
-              <button type="button" id="consultar" class="button is-link is-fullwidth">
+              <button type="button" id="consultar" class="button is-success is-fullwidth">
                 <span class="icon"><i class="fas fa-search"></i></span>
                 <span>Consultar</span>
               </button>
@@ -144,7 +148,7 @@
       </div>
 
     <div class="has-text-centered mt-6">
-        <a href="{% url 'salidasFruta_listValle' %}" class="button is-light is-medium is-rounded">
+        <a href="{% url 'salidasFruta_listValle' %}" class="button is-success is-medium is-rounded">
             <span class="icon">
             <i class="fas fa-home"></i>
             </span>
