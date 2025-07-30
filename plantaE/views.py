@@ -2880,7 +2880,7 @@ def dashboard_tecnicos(request):
     }
     nombre_usuario = request.user.username
     # Query base
-    qs = AcumFruta.objects.exclude(finca="CIP",correo=nombre_usuario).exclude(libras__isnull=True)
+    qs = AcumFruta.objects.filter(correo=nombre_usuario).exclude(finca="CIP").exclude(libras__isnull=True)
 
     # Aplicar filtros
     for campo, valor in filtros_get.items():
@@ -2903,11 +2903,11 @@ def dashboard_tecnicos(request):
 
     # Filtros disponibles
     filtros_completos = [
-        ('Finca', 'finca', AcumFruta.objects.exclude(finca__isnull=True).exclude(finca='').values_list('finca', flat=True).distinct()),
-        ('Orden', 'orden', AcumFruta.objects.exclude(orden__isnull=True).exclude(orden='').values_list('orden', flat=True).distinct()),
-        ('Variedad', 'variedad', AcumFruta.objects.exclude(variedad__isnull=True).exclude(variedad='').values_list('variedad', flat=True).distinct()),
-        ('Cultivo', 'cultivo', AcumFruta.objects.exclude(cultivo__isnull=True).exclude(cultivo='').values_list('cultivo', flat=True).distinct()),
-        ('Estructura', 'estructura', AcumFruta.objects.exclude(estructura__isnull=True).exclude(estructura='').values_list('estructura', flat=True).distinct()),
+        ('Finca', 'finca', AcumFruta.objects.filter(correo=nombre_usuario).exclude(finca__isnull=True).exclude(finca='').values_list('finca', flat=True).distinct()),
+        ('Orden', 'orden', AcumFruta.objects.filter(correo=nombre_usuario).exclude(orden__isnull=True).exclude(orden='').values_list('orden', flat=True).distinct()),
+        ('Variedad', 'variedad', AcumFruta.objects.filter(correo=nombre_usuario).exclude(variedad__isnull=True).exclude(variedad='').values_list('variedad', flat=True).distinct()),
+        ('Cultivo', 'cultivo', AcumFruta.objects.filter(correo=nombre_usuario).exclude(cultivo__isnull=True).exclude(cultivo='').values_list('cultivo', flat=True).distinct()),
+        ('Estructura', 'estructura', AcumFruta.objects.filter(correo=nombre_usuario).exclude(estructura__isnull=True).exclude(estructura='').values_list('estructura', flat=True).distinct()),
     ]
 
     context = {
