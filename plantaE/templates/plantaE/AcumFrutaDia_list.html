@@ -55,34 +55,36 @@
 <body>
 <div class="container py-4">
 
-  <!-- Encabezado -->
-  <div class="mb-4 text-center">
-    <h1 class="section-title">Consulta Acumulado de Fruta</h1>
-    <p class="text-muted">Visualiza las salidas por cultivo, finca y estructura</p>
+  <!-- Encabezado tipo Hero -->
+<section class="hero is-success is-small mb-5" style="background-color: #198754;">
+  <div class="hero-body">
+    <div class="container has-text-centered">
+      <h1 class="title is-3 has-text-white">Panel Acumulado de Fruta</h1>
+      <p class="subtitle is-6 has-text-white-ter">Consulta detallada por estructura</p>
+    </div>
   </div>
+</section>
 
-  <!-- Filtros -->
-  <div class="row mb-3">
-    <div class="col-md-4">
-      <label for="date" class="form-label">Fecha:</label>
-      <input class="form-control" id="date" type="date" value="{{fecha}}">
+  <!-- Filtros tipo dashboard -->
+    <div class="row align-items-end mb-4">
+    <div class="col-md-3">
+        <label for="date" class="form-label">Fecha:</label>
+        <input class="form-control" id="date" type="date" value="{{fecha}}">
+    </div>
+    <div class="col-md-3">
+        <label for="Cul" class="form-label">Cultivo:</label>
+        <select id="Cul" class="form-select"></select>
     </div>
     <div class="col-md-4">
-      <label for="Cul" class="form-label">Cultivo:</label>
-      <select id="Cul" class="form-select"></select>
+        <label for="correo" class="form-label">Usuario:</label>
+        <input class="form-control" id="correo" type="text" value="{{usuario}}" readonly>
     </div>
-    <div class="col-md-4">
-      <label for="correo" class="form-label">Usuario:</label>
-      <input class="form-control" id="correo" type="text" value="{{usuario}}" readonly>
+    <div class="col-md-2 d-grid">
+        <button id="consultar" class="btn btn-success">
+        <i class="fas fa-search"></i> Consultar
+        </button>
     </div>
-  </div>
-
-  <!-- Botón Consultar -->
-  <div class="text-end mb-4">
-    <button id="consultar" class="btn btn-green">
-      <i class="fas fa-search"></i> Consultar
-    </button>
-  </div>
+    </div>
 
   <!-- Tabla Escritorio -->
   <div class="table-responsive d-none d-md-block">
@@ -152,12 +154,12 @@
     {% endfor %}
   </div>
 
-  <!-- Botón Regresar -->
-  <div class="text-center mt-4">
-    <a href="{% url 'salidasFruta_list' %}" class="btn btn-secondary">
-      <i class="fas fa-arrow-left"></i> Regresar
-    </a>
-  </div>
+  <!-- Botón Ir al Home -->
+<div class="text-center mt-5">
+  <a href="{% url 'salidasFruta_list' %}" class="btn btn-success btn-lg rounded-pill">
+    <i class="fas fa-home me-2"></i> Ir al Panel Principal
+  </a>
+</div>
 
 </div>
 
