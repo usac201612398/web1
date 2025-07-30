@@ -2,17 +2,30 @@
 <html lang="es">
 {% load static %}
 <head>
-  <meta charset="UTF-8">
-  <title>Acumulado - Fruta</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <title>Panel Acumulado - Fruta</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css"/>
+  <!-- Bulma CSS -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+  />
+  <!-- FontAwesome para íconos -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+
+  <!-- DataTables CSS -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css"
+  />
 
   <style>
-    .table-custom-header th {
+    /* Estilo para cabecera de la tabla */
+    thead th {
       background: linear-gradient(to right, #6c757d, #495057);
       color: white;
       font-weight: 600;
@@ -20,248 +33,271 @@
       white-space: nowrap;
     }
 
-    .section-title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-      color: #343a40;
+    /* Alinear números a la derecha */
+    td.number-cell {
+      text-align: right;
     }
 
+    /* Adaptación responsive de fuente */
     @media (max-width: 768px) {
-      .table td, .table th {
+      td,
+      th {
         font-size: 13px;
       }
-      .btn {
+      .button {
         font-size: 13px;
       }
-    }
-
-    .card-text strong {
-      display: inline-block;
-      width: 100px;
-    }
-
-    .btn-green {
-      background-color: #198754;
-      color: white;
-    }
-
-    .btn-green:hover {
-      background-color: #157347;
-      color: white;
     }
   </style>
 </head>
 <body>
-<div class="container py-4">
+  <!-- Encabezado verde tipo hero -->
+  <section class="hero is-success is-small mb-5">
+    <div class="hero-body has-text-centered">
+      <p class="title is-3 has-text-white">Panel Acumulado de Fruta</p>
+      <p class="subtitle is-6 has-text-white-ter">
+        Consulta detallada por estructura
+      </p>
+    </div>
+  </section>
 
-<!-- Encabezado tipo Hero centrado -->
-<section class="hero is-small mb-5" style="background-color: #f1f3f4;">
-  <div class="hero-body">
+  <section class="section">
     <div class="container">
-      <div class="has-text-centered">
-        <h1 class="title is-3 has-text-dark mb-2">Panel Acumulado de Fruta</h1>
-        <p class="subtitle is-6 has-text-grey">Consulta detallada por estructura</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-  <!-- Filtros tipo dashboard -->
-    <div class="row align-items-end mb-4">
-    <div class="col-md-3">
-        <label for="date" class="form-label">Fecha:</label>
-        <input class="form-control" id="date" type="date" value="{{fecha}}">
-    </div>
-    <div class="col-md-3">
-        <label for="Cul" class="form-label">Cultivo:</label>
-        <select id="Cul" class="form-select"></select>
-    </div>
-    <div class="col-md-4">
-        <label for="correo" class="form-label">Usuario:</label>
-        <input class="form-control" id="correo" type="text" value="{{usuario}}" readonly>
-    </div>
-    <div class="col-md-2 d-grid">
-        <button id="consultar" class="btn btn-success">
-        <i class="fas fa-search"></i> Consultar
-        </button>
-    </div>
-    </div>
-
-  <!-- Tabla Escritorio -->
-  <div class="table-responsive d-none d-md-block">
-    <table class="table table-striped table-bordered" id="myTable">
-      <thead class="table-custom-header">
-        <tr>
-          <th>Llave</th>
-          <th>Fecha</th>
-          <th>Finca</th>
-          <th>Viaje</th>
-          <th>Cajas</th>
-          <th>Libras</th>
-          <th>Orden</th>
-          <th>Cultivo</th>
-          <th>Estructura</th>
-          <th>Variedad</th>
-          <th>Anular</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for registro in registros %}
-        <tr>
-          <td><a href="{% url 'acumFruta_detail' registro.pk %}">{{ registro.id }}</a></td>
-          <td>{{ registro.fecha }}</td>
-          <td>{{ registro.finca }}</td>
-          <td>{{ registro.viaje }}</td>
-          <td>{{ registro.cajas }}</td>
-          <td class="number-cell" data-value="{{ registro.libras }}">{{ registro.libras }}</td>
-          <td>{{ registro.orden }}</td>
-          <td>{{ registro.cultivo }}</td>
-          <td>{{ registro.estructura }}</td>
-          <td>{{ registro.variedad }}</td>
-          <td class="text-center">
-            <a href="{% url 'acumFruta_delete' registro.pk %}" class="text-danger">
-              <i class="fas fa-trash-alt"></i>
-            </a>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Cards móviles -->
-  <div class="d-block d-md-none">
-    {% for registro in registros %}
-    <div class="card mb-3">
-      <div class="card-body">
-        <h5 class="card-title">Registro #{{ registro.id }}</h5>
-        <p class="card-text">
-          <strong>Fecha:</strong> {{ registro.fecha }}<br>
-          <strong>Finca:</strong> {{ registro.finca }}<br>
-          <strong>Viaje:</strong> {{ registro.viaje }}<br>
-          <strong>Cajas:</strong> {{ registro.cajas }}<br>
-          <strong>Libras:</strong> {{ registro.libras }}<br>
-          <strong>Orden:</strong> {{ registro.orden }}<br>
-          <strong>Cultivo:</strong> {{ registro.cultivo }}<br>
-          <strong>Estructura:</strong> {{ registro.estructura }}<br>
-          <strong>Variedad:</strong> {{ registro.variedad }}
-        </p>
-        <div class="d-flex justify-content-between">
-          <a href="{% url 'acumFruta_detail' registro.pk %}" class="btn btn-sm btn-outline-primary">Ver</a>
-          <a href="{% url 'acumFruta_delete' registro.pk %}" class="btn btn-sm btn-outline-danger">Anular</a>
+      <!-- Filtros con Bulma columns -->
+      <div class="box mb-5">
+        <div class="columns is-variable is-4 is-multiline is-vcentered">
+          <div class="column is-3">
+            <label class="label" for="date">Fecha</label>
+            <input
+              id="date"
+              class="input"
+              type="date"
+              value="{{ fecha }}"
+              name="date"
+            />
+          </div>
+          <div class="column is-4">
+            <label class="label" for="Cul">Cultivo</label>
+            <div class="select is-fullwidth">
+              <select id="Cul" name="cultivo"></select>
+            </div>
+          </div>
+          <div class="column is-3">
+            <label class="label" for="correo">Usuario</label>
+            <input
+              id="correo"
+              class="input"
+              type="text"
+              value="{{ usuario }}"
+              readonly
+              name="usuario"
+            />
+          </div>
+          <div class="column is-2">
+            <button
+              id="consultar"
+              class="button is-success is-fullwidth mt-5"
+              type="button"
+            >
+              <span class="icon">
+                <i class="fas fa-search"></i>
+              </span>
+              <span>Consultar</span>
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-    {% endfor %}
-  </div>
 
-  <!-- Botón Ir al Home -->
-<div class="text-center mt-5">
-  <a href="{% url 'salidasFruta_listValle' %}" class="btn btn-success btn-lg rounded-pill">
-    <i class="fas fa-home me-2"></i> Ir al Home
-  </a>
-</div>
-
-</div>
-
-<!-- Scripts -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="{% static '/lib/cockies.js' %}"></script>
-
-<script>
-  $(document).ready(function () {
-    $('#myTable').DataTable({
-      responsive: true,
-      autoWidth: false,
-      language: {
-        url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
-      }
-    });
-    formatCells('myTable');
-    authUsuario();
-  });
-
-  function formatCells(tableId) {
-    const cells = document.querySelectorAll(`#${tableId} td.number-cell`);
-    cells.forEach(cell => {
-      const value = Number(cell.getAttribute('data-value'));
-      if (!isNaN(value)) {
-        cell.textContent = value.toLocaleString('es-ES');
-      }
-    });
-  }
-
-  function getCookie(name) {
-    const cookieValue = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-    return cookieValue ? cookieValue[2] : null;
-  }
-
-  function authUsuario() {
-    $.ajax({
-      url: '{% url "obtener_nombre_usuario" %}',
-      data: { 'category_id': "Consulta" },
-      success: function(data) {
-        $('#date').val(data.fecha);
-        $('#correo').val(data.username);
-        $('#Cul').html('<option value=""></option>');
-        $.each(data.adicionales, function(index, product) {
-          $('#Cul').append(`<option value="${product.cultivo}">${product.cultivo}</option>`);
-        });
-      },
-      error: function(xhr, status, error) {
-        console.error('Error:', error);
-      }
-    });
-  }
-
-  $('#consultar').on('click', function () {
-    const opcion1 = $('#Cul').val();
-    const opcion2 = $('#date').val();
-    const tbody = $('#myTable tbody');
-
-    tbody.html('');
-    fetch("{% url 'acumFruta_consulta' %}", {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'X-CSRFToken': getCookie('csrftoken')
-      },
-      body: new URLSearchParams({ 'opcion1': opcion1, 'opcion2': opcion2 })
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.datos?.length) {
-        data.datos.forEach(item => {
-          tbody.append(`
+      <!-- Tabla para escritorio -->
+      <div class="table-container is-hidden-touch">
+        <table class="table is-striped is-fullwidth" id="myTable">
+          <thead>
             <tr>
-              <td><a href="/acumFruta/${item.id}/detail/">${item.id}</a></td>
-              <td>${item.fecha}</td>
-              <td>${item.finca}</td>
-              <td>${item.viaje}</td>
-              <td>${item.total_cajas}</td>
-              <td class="number-cell" data-value="${item.total_libras}">${item.total_libras}</td>
-              <td>${item.orden}</td>
-              <td>${item.cultivo}</td>
-              <td>${item.estructura}</td>
-              <td>${item.variedad}</td>
-              <td><a href="/acumFruta/${item.id}/delete/"><i class="fas fa-trash-alt text-danger"></i></a></td>
+              <th>Llave</th>
+              <th>Fecha</th>
+              <th>Finca</th>
+              <th>Viaje</th>
+              <th>Cajas</th>
+              <th>Libras</th>
+              <th>Orden</th>
+              <th>Cultivo</th>
+              <th>Estructura</th>
+              <th>Variedad</th>
+              <th>Anular</th>
             </tr>
-          `);
-        });
-        formatCells('myTable');
-      }
+          </thead>
+          <tbody>
+            {% for registro in registros %}
+            <tr>
+              <td><a href="{% url 'acumFruta_detail' registro.pk %}">{{ registro.id }}</a></td>
+              <td>{{ registro.fecha }}</td>
+              <td>{{ registro.finca }}</td>
+              <td>{{ registro.viaje }}</td>
+              <td>{{ registro.cajas }}</td>
+              <td class="number-cell" data-value="{{ registro.libras }}">{{ registro.libras }}</td>
+              <td>{{ registro.orden }}</td>
+              <td>{{ registro.cultivo }}</td>
+              <td>{{ registro.estructura }}</td>
+              <td>{{ registro.variedad }}</td>
+              <td class="has-text-centered">
+                <a href="{% url 'acumFruta_delete' registro.pk %}" class="has-text-danger">
+                  <i class="fas fa-trash-alt"></i>
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
 
-      if (data.resumen?.length) {
-        alert(`Total de cajas: ${data.resumen[0].total_cajas}, libras: ${Math.round(data.resumen[0].total_libras)} del día: ${data.resumen[0].fecha}`);
-      }
-    })
-    .catch(error => console.error('Error al consultar:', error));
-  });
-</script>
+      <!-- Cards para móviles -->
+      <div class="is-hidden-desktop">
+        {% for registro in registros %}
+        <div class="card mb-4">
+          <div class="card-content">
+            <p class="title is-6">Registro #{{ registro.id }}</p>
+            <p><strong>Fecha:</strong> {{ registro.fecha }}</p>
+            <p><strong>Finca:</strong> {{ registro.finca }}</p>
+            <p><strong>Viaje:</strong> {{ registro.viaje }}</p>
+            <p><strong>Cajas:</strong> {{ registro.cajas }}</p>
+            <p><strong>Libras:</strong> {{ registro.libras }}</p>
+            <p><strong>Orden:</strong> {{ registro.orden }}</p>
+            <p><strong>Cultivo:</strong> {{ registro.cultivo }}</p>
+            <p><strong>Estructura:</strong> {{ registro.estructura }}</p>
+            <p><strong>Variedad:</strong> {{ registro.variedad }}</p>
+            <div class="buttons is-justify-content-space-between mt-3">
+              <a
+                href="{% url 'acumFruta_detail' registro.pk %}"
+                class="button is-small is-info is-light"
+                >Ver</a
+              >
+              <a
+                href="{% url 'acumFruta_delete' registro.pk %}"
+                class="button is-small is-danger is-light"
+                >Anular</a
+              >
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Botón para ir al Home -->
+      <div class="has-text-centered mt-6">
+        <a
+          href="{% url 'salidasFruta_listValle' %}"
+          class="button is-success is-medium is-rounded"
+        >
+          <span class="icon">
+            <i class="fas fa-home"></i>
+          </span>
+          <span>Ir al Home</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- jQuery y DataTables JS -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="{% static '/lib/cockies.js' %}"></script>
+  <script
+    src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"
+  ></script>
+
+  <script>
+    // Al cargar
+    $(document).ready(function () {
+      // Inicializar DataTables
+      $('#myTable').DataTable({
+        responsive: true,
+        autoWidth: false,
+        language: {
+          url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json',
+        },
+      });
+      formatCells('myTable');
+      authUsuario();
+    });
+
+    // Formatear celdas numéricas con separador de miles
+    function formatCells(tableId) {
+      const cells = document.querySelectorAll(`#${tableId} td.number-cell`);
+      cells.forEach((cell) => {
+        const value = Number(cell.getAttribute('data-value'));
+        if (!isNaN(value)) {
+          cell.textContent = value.toLocaleString('es-ES');
+        }
+      });
+    }
+
+    // Obtener cookie para csrf token
+    function getCookie(name) {
+      const cookieValue = document.cookie.match(
+        '(^|;) ?' + name + '=([^;]*)(;|$)'
+      );
+      return cookieValue ? cookieValue[2] : null;
+    }
+
+    // AJAX para obtener usuario y cultivos
+    function authUsuario() {
+      $.ajax({
+        url: '{% url "obtener_nombre_usuario" %}',
+        data: { category_id: 'Consulta' },
+        success: function (data) {
+          $('#date').val(data.fecha);
+          $('#correo').val(data.username);
+          $('#Cul').html('<option value=""></option>');
+          $.each(data.adicionales, function (index, product) {
+            $('#Cul').append(
+              `<option value="${product.cultivo}">${product.cultivo}</option>`
+            );
+          });
+        },
+        error: function (xhr, status, error) {
+          console.error('Error:', error);
+        },
+      });
+    }
+
+    // Evento click botón Consultar
+    $('#consultar').on('click', function () {
+      const opcion1 = $('#Cul').val();
+      const opcion2 = $('#date').val();
+      const tbody = $('#myTable tbody');
+
+      tbody.html('');
+      fetch('{% url "acumFruta_consulta" %}', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: JSON.stringify({ opcion1: opcion1, opcion2: opcion2 }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          data.forEach((registro) => {
+            tbody.append(`
+              <tr>
+                <td><a href="/detalle/${registro.id}">${registro.id}</a></td>
+                <td>${registro.fecha}</td>
+                <td>${registro.finca}</td>
+                <td>${registro.viaje}</td>
+                <td>${registro.cajas}</td>
+                <td class="number-cell" data-value="${registro.libras}">${registro.libras}</td>
+                <td>${registro.orden}</td>
+                <td>${registro.cultivo}</td>
+                <td>${registro.estructura}</td>
+                <td>${registro.variedad}</td>
+                <td class="has-text-centered"><a href="/anular/${registro.id}" class="has-text-danger"><i class="fas fa-trash-alt"></i></a></td>
+              </tr>
+            `);
+          });
+          formatCells('myTable');
+        })
+        .catch((error) => console.error('Error:', error));
+    });
+  </script>
 </body>
 </html>
 
