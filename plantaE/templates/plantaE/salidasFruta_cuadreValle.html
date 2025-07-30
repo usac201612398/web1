@@ -36,6 +36,13 @@
       font-size: 0.9rem;
       color: #777;
     }
+    .table-custom-header th {
+    background: linear-gradient(to right, #6c757d, #495057);
+    color: white;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+    }
   </style>
 </head>
 <body>
@@ -87,7 +94,7 @@
           <h2 class="title is-5">Detalle por variedad</h2>
           <div class="table-container">
             <table class="table is-striped is-fullwidth is-hoverable" id="myTable">
-              <thead>
+              <thead class="table-custom-header">
                 <tr>
                   <th>Fecha</th>
                   <th>Finca</th>
@@ -119,7 +126,7 @@
         <div class="box">
           <h2 class="title is-5">Resumen general</h2>
           <div class="table-container">
-            <table class="table is-striped is-fullwidth is-hoverable" id="myTable2">
+            <table class="table-custom-header is-striped is-fullwidth is-hoverable" id="myTable2">
               <thead>
                 <tr>
                   <th>Fecha</th>
