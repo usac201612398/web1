@@ -53,17 +53,20 @@
   </style>
 </head>
 <body>
-<div class="container py-4">
 
-  <!-- Encabezado tipo Hero -->
-<section class="hero is-success is-small mb-5" style="background-color: #198754;">
+    <!-- Encabezado tipo Hero centrado -->
+<section class="hero is-small mb-5" style="background-color: #f1f3f4;">
   <div class="hero-body">
-    <div class="container has-text-centered">
-      <h1 class="title is-3 has-text-white">Panel Acumulado de Fruta</h1>
-      <p class="subtitle is-6 has-text-white-ter">Consulta detallada por estructura</p>
+    <div class="container">
+      <div class="has-text-centered">
+        <h1 class="title is-3 has-text-dark mb-2">Panel Acumulado de Fruta</h1>
+        <p class="subtitle is-6 has-text-grey">Consulta detallada por estructura</p>
+      </div>
     </div>
   </div>
 </section>
+
+
 
   <!-- Filtros tipo dashboard -->
     <div class="row align-items-end mb-4">
@@ -157,7 +160,7 @@
   <!-- Botón Ir al Home -->
 <div class="text-center mt-5">
   <a href="{% url 'salidasFruta_list' %}" class="btn btn-success btn-lg rounded-pill">
-    <i class="fas fa-home me-2"></i> Ir al Panel Principal
+    <i class="fas fa-home me-2"></i> Ir al Home
   </a>
 </div>
 
