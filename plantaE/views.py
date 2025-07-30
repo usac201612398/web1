@@ -2920,7 +2920,6 @@ def dashboard_tecnicos(request):
 
     return render(request, 'plantaE/dashboard_acumfruta2.html', context)
 
-
 def get_ordenes_por_finca(request):
     finca = request.POST.get('finca')
     if finca:

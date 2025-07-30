@@ -114,15 +114,13 @@
             responsive: true,
             scales: {
                 x: {
-                    type: 'time',
-                    time: {
-                        unit: 'week',
-                        tooltipFormat: "'Semana' w, yyyy"
-                    },
-                    ticks: {
-                        autoSkip: true,
-                        maxTicksLimit: 10,
-                        maxRotation: 45
+                    x: {
+                        type: 'category',
+                        ticks: {
+                            autoSkip: true,
+                            maxRotation: 45,
+                            maxTicksLimit: 12
+                        }
                     }
                 }
             }
@@ -146,15 +144,11 @@
             responsive: true,
             scales: {
                 x: {
-                    type: 'time',
-                    time: {
-                        unit: 'week',
-                        tooltipFormat: "'Semana' w, yyyy"
-                    },
+                    type: 'category',
                     ticks: {
                         autoSkip: true,
-                        maxTicksLimit: 10,
-                        maxRotation: 45
+                        maxRotation: 45,
+                        maxTicksLimit: 12
                     }
                 }
             }
