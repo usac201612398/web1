@@ -26,7 +26,7 @@
     /* Encabezado tabla */
     thead th {
       background: linear-gradient(to right, #6c757d, #495057);
-      color: white;
+      color: white !important;
       font-weight: 600;
       text-align: center;
       white-space: nowrap;
@@ -60,16 +60,17 @@
   </style>
 </head>
 <body>
-  <!-- Header -->
-  <section class="hero is-success is-small mb-5">
-    <div class="hero-body has-text-centered">
-      <p class="title is-3 has-text-white">Panel Acumulado de Fruta</p>
-    </div>
-  </section>
+  
 
   <!-- Formulario filtros -->
   <section class="section">
     <div class="container">
+        <!-- Header -->
+  <section class="hero is-success is-small mb-5">
+    <div class="hero-body has-text-centered">
+      <p class="title is-3 has-text-white">Panel Acumulado de Fruta</p>
+    </div>
+  </section> 
       <div class="columns is-vcentered is-variable is-4">
         <div class="column is-3">
           <label for="date">Fecha:</label>
@@ -171,7 +172,7 @@
           <span class="icon">
             <i class="fas fa-arrow-left"></i>
           </span>
-          <span>Regresar</span>
+          <span>Ir al Home</span>
         </a>
       </div>
     </div>
