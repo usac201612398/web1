@@ -2869,6 +2869,11 @@ def dashboard_acumfruta(request):
 
     return render(request, 'plantaE/dashboard_acumfruta.html', context)
 
+def get_date_from_week(anio, semana):
+    first_day = datetime.datetime(anio, 1, 4)  # El 4 de enero siempre está en la semana 1
+    start_of_week = first_day - datetime.timedelta(days=first_day.weekday())
+    return (start_of_week + datetime.timedelta(weeks=semana - 1)).date()
+
 def dashboard_tecnicos(request):
     # Filtros desde GET
     filtros_get = {
@@ -2896,7 +2901,7 @@ def dashboard_tecnicos(request):
     ).order_by('anio', 'semana')
 
     # Ejes para la gráfica
-    fechas = [datetime.fromisocalendar(d['anio'], d['semana'], 1).isoformat() for d in datos]
+    fechas = [get_date_from_week(d['anio'], d['semana']).isoformat() for d in datos]
     kilos = [round(d['libras_totales'] / 2.20462, 2) for d in datos]
     derivadas = [0] + [kilos[i] - kilos[i - 1] for i in range(1, len(kilos))]
 
