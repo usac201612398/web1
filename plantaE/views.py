@@ -2500,6 +2500,91 @@ def reporte_tabla_pivote(request):
         'request': request
     })
 
+def reporte_tabla_pivote2(request):
+
+    filtros_get = {
+        'finca': request.GET.get('finca'),
+        'orden': request.GET.get('orden'),
+        'estructura': request.GET.get('estructura'),
+        'variedad': request.GET.get('variedad'),
+        'cultivo': request.GET.get('cultivo'),
+    }
+
+    nombre_usuario = request.user.username
+
+    qs = AcumFruta.objects.filter(correo=nombre_usuario).exclude(finca="CIP").exclude(libras__isnull=True)
+
+    for campo, valor in filtros_get.items():
+        if valor:
+            qs = qs.filter(**{campo: valor})
+
+    data = qs.values('fecha', 'finca', 'orden', 'estructura').annotate(
+        total_libras=Sum('libras')
+    )
+
+    if data:
+        df = pd.DataFrame(data)
+        df['fecha'] = pd.to_datetime(df['fecha'])
+        df['semana'] = df['fecha'].dt.strftime('%Y-W%V')
+        df['kg'] = df['total_libras'] / 2.20462  # convertir a kilogramos
+
+        # Crear tabla pivote: kilos por semana
+        pivot = pd.pivot_table(
+            df,
+            values='kg',
+            index=['finca', 'orden', 'estructura'],
+            columns='semana',
+            aggfunc='sum',
+            fill_value=0
+        ).round(2)
+
+        # Obtener áreas por finca-orden-estructura
+        areas_qs = detallesEstructuras.objects.values('finca', 'orden', 'estructura').annotate(
+            area_total=Sum('area')
+        )
+        df_areas = pd.DataFrame(list(areas_qs))
+
+        # Unir pivot con áreas
+        pivot = pivot.reset_index()
+        df_merge = pd.merge(pivot, df_areas, on=['finca', 'orden', 'estructura'], how='left')
+
+        # Calcular rendimiento (kg/m²) por semana
+        semanas = [col for col in df_merge.columns if col.startswith('20')]
+        for semana in semanas:
+            df_merge[semana] = df_merge[semana] / df_merge['area_total']
+         
+        df_merge[semanas] = df_merge[semanas].round(2)
+
+        # Agregar columna total kilos por fila (sumar las semanas en kg)
+        # Para total kilos, sumamos las semanas en el pivot original
+        df_merge['total_kilos'] = pivot[semanas].sum(axis=1).round(2)
+
+        # Agregar columna total kg/m² (sumar las semanas ya divididas por área)
+        df_merge['total_kg_m2'] = df_merge[semanas].sum(axis=1).round(2)
+        # Convertir resultado final a tabla HTML
+        tabla_html = df_merge.to_html(
+            classes='table table-striped table-bordered table-sm table-hover',
+            index=False,
+            table_id='tabla-pivote'
+        )
+    else:
+        tabla_html = "<p>No hay datos para los filtros aplicados.</p>"
+
+    # Filtros disponibles
+    filtros_completos = [
+        ('Finca', 'finca', AcumFruta.objects.filter(correo=nombre_usuario).exclude(finca__isnull=True).exclude(finca='').values_list('finca', flat=True).distinct()),
+        ('Orden', 'orden', AcumFruta.objects.filter(correo=nombre_usuario).exclude(orden__isnull=True).exclude(orden='').values_list('orden', flat=True).distinct()),
+        ('Variedad', 'variedad', AcumFruta.objects.filter(correo=nombre_usuario).exclude(variedad__isnull=True).exclude(variedad='').values_list('variedad', flat=True).distinct()),
+        ('Cultivo', 'cultivo', AcumFruta.objects.filter(correo=nombre_usuario).exclude(cultivo__isnull=True).exclude(cultivo='').values_list('cultivo', flat=True).distinct()),
+        ('Estructura', 'estructura', AcumFruta.objects.filter(correo=nombre_usuario).exclude(estructura__isnull=True).exclude(estructura='').values_list('estructura', flat=True).distinct()),
+    ]
+
+    return render(request, 'plantaE/reporte_tabla_pivote2.html', {
+        'tabla_html': tabla_html,
+        'filtros_completos': filtros_completos,
+        'request': request
+    })
+
 def procesarinvprodcontenv2(request):
     data = json.loads(request.body)
     mensaje = data['array']

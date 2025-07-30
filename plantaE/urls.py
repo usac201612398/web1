@@ -124,6 +124,7 @@ urlpatterns = [
     path('api/estructuras2/', views.get_estructuras_por_orden2, name='api_estructuras_por_orden2'),
     path('api/variedad2/', views.get_variedades_por_estructura2, name='api_variedades_por_estructura2'),
     
+    path('reporte-pivote/tecnicos', views.reporte_tabla_pivote2, name='reporte_tabla_pivote2'),
     path('reporte-pivote/', views.reporte_tabla_pivote, name='reporte_tabla_pivote'),
 
     path("itemsenvios",views.itemsenvios_list,name='itemsenvios_list'),
