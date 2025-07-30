@@ -2,235 +2,245 @@
 <html lang="es">
 {% load static %}
 <head>
-    <meta charset="UTF-8">
-    <title>totalFruta</title>
+  <meta charset="UTF-8">
+  <title>Panel - totalFruta</title>
 
-    <!-- ICONOS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+  <!-- Bulma CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- SOLO usa Bulma (si prefieres Bootstrap, quita Bulma y usa clases de Bootstrap) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-
-        h1 {
-            margin-bottom: 20px;
-        }
-
-        .half {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .box {
-            flex: 1 1 30%;
-        }
-
-        input, select {
-            width: 100%;
-        }
-
-        table td input {
-            border: none;
-            background: transparent;
-        }
-
-        .btn-consultar {
-            margin-top: 20px;
-        }
-
-        .back-link {
-            margin: 30px 0;
-            display: inline-block;
-        }
-    </style>
+  <style>
+    body {
+      background-color: #f9f9f9;
+    }
+    .panel-header {
+      margin-bottom: 1.5rem;
+    }
+    .filters {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .data-section {
+      margin-top: 2rem;
+    }
+    .box {
+      border-radius: 6px;
+    }
+    .back-link {
+      margin-top: 2rem;
+      display: inline-block;
+    }
+    .is-small-text {
+      font-size: 0.9rem;
+      color: #777;
+    }
+  </style>
 </head>
-
 <body>
-    <main class="container">
-        <h1 class="title is-4">Panel</h1>
+  <section class="section">
+    <div class="container">
+      <!-- HEADER -->
+      <div class="panel-header">
+        <h1 class="title is-3">Panel de Control</h1>
+        <p class="is-small-text">Consulta de salidas de fruta</p>
+      </div>
 
-        <section class="half">
-            <div class="box">
-                <label for="date">Fecha:</label>
-                <input class="input" id="date" type="date" value="{{ fecha }}">
+      <!-- FILTROS -->
+      <div class="filters box">
+        <form id="filtros">
+          <div class="columns is-variable is-4">
+            <div class="column is-3">
+              <label class="label" for="date">Fecha</label>
+              <input class="input" id="date" type="date" value="{{ fecha }}">
             </div>
-
-            <div class="box">
-                <label for="Cul">Cultivo:</label>
-                <div class="select is-fullwidth">
-                    <select id="Cul" name="Cultivo"></select>
-                </div>
+            <div class="column is-4">
+              <label class="label" for="Cul">Cultivo</label>
+              <div class="select is-fullwidth">
+                <select id="Cul" name="Cultivo">
+                  <option value="">Seleccionar cultivo</option>
+                </select>
+              </div>
             </div>
-
-            <div class="box">
-                <label for="correo">Usuario:</label>
-                <input class="input" id="correo" type="text" value="{{ usuario }}" readonly>
+            <div class="column is-3">
+              <label class="label" for="correo">Usuario</label>
+              <input class="input" id="correo" type="text" value="{{ usuario }}" readonly>
             </div>
-        </section>
-
-        <section>
-            <button class="button is-primary btn-consultar" id="consultar">Consultar</button>
-        </section>
-
-        <section class="mt-4">
-            <h2 class="subtitle is-5">Detalle por variedad</h2>
-            <div class="table-container">
-                <table class="table is-striped is-hoverable is-fullwidth" id="myTable">
-                    <thead>
-                        <tr>
-                            <th>Fecha</th>
-                            <th>Finca</th>
-                            <th>Cultivo</th>
-                            <th>Variedad</th>
-                            <th>Cajas</th>
-                            <th>Libras</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for registro in registros %}
-                        <tr>
-                            <td>{{ registro.fecha }}</td>
-                            <td>{{ registro.finca }}</td>
-                            <td>{{ registro.cultivo }}</td>
-                            <td>{{ registro.variedad }}</td>
-                            <td>{{ registro.total_cajas }}</td>
-                            <td class="number-cell" data-value="{{ registro.total_libras }}">{{ registro.total_libras }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+            <div class="column is-2 is-flex is-align-items-end">
+              <button type="button" id="consultar" class="button is-link is-fullwidth">
+                <span class="icon"><i class="fas fa-search"></i></span>
+                <span>Consultar</span>
+              </button>
             </div>
-        </section>
+          </div>
+        </form>
+      </div>
 
-        <section class="mt-5">
-            <h2 class="subtitle is-5">Resumen</h2>
-            <div class="table-container">
-                <table class="table is-striped is-hoverable is-fullwidth" id="myTable2">
-                    <thead>
-                        <tr>
-                            <th>Fecha</th>
-                            <th>Finca</th>
-                            <th>Cultivo</th>
-                            <th>Variedad</th>
-                            <th>Cajas</th>
-                            <th>Libras</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for registro in registros2 %}
-                        <tr>
-                            <td>{{ registro.fecha }}</td>
-                            <td>{{ registro.finca }}</td>
-                            <td>{{ registro.cultivo }}</td>
-                            <td>-</td>
-                            <td>{{ registro.total_cajas }}</td>
-                            <td class="number-cell" data-value="{{ registro.total_libras }}">{{ registro.total_libras }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </section>
+      <!-- TABLA 1 -->
+      <div class="data-section">
+        <div class="box">
+          <h2 class="title is-5">Detalle por variedad</h2>
+          <div class="table-container">
+            <table class="table is-striped is-fullwidth is-hoverable" id="myTable">
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Finca</th>
+                  <th>Cultivo</th>
+                  <th>Variedad</th>
+                  <th>Cajas</th>
+                  <th>Libras</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for registro in registros %}
+                <tr>
+                  <td>{{ registro.fecha }}</td>
+                  <td>{{ registro.finca }}</td>
+                  <td>{{ registro.cultivo }}</td>
+                  <td>{{ registro.variedad }}</td>
+                  <td>{{ registro.total_cajas }}</td>
+                  <td class="number-cell" data-value="{{ registro.total_libras }}">{{ registro.total_libras }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
 
-        <a class="back-link" href="{% url 'salidasFruta_listValle' %}">← Regresar a panel</a>
-    </main>
+      <!-- TABLA 2 -->
+      <div class="data-section">
+        <div class="box">
+          <h2 class="title is-5">Resumen general</h2>
+          <div class="table-container">
+            <table class="table is-striped is-fullwidth is-hoverable" id="myTable2">
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Finca</th>
+                  <th>Cultivo</th>
+                  <th>Variedad</th>
+                  <th>Cajas</th>
+                  <th>Libras</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for registro in registros2 %}
+                <tr>
+                  <td>{{ registro.fecha }}</td>
+                  <td>{{ registro.finca }}</td>
+                  <td>{{ registro.cultivo }}</td>
+                  <td>-</td>
+                  <td>{{ registro.total_cajas }}</td>
+                  <td class="number-cell" data-value="{{ registro.total_libras }}">{{ registro.total_libras }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
 
-    <!-- Scripts -->
-    <script src="{% static '/lib/cockies.js' %}"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <!-- REGRESAR -->
+      <a class="back-link" href="{% url 'salidasFruta_listValle' %}">
+        ← Regresar al panel principal
+      </a>
+    </div>
+  </section>
 
-    <script>
-        document.getElementById('consultar').addEventListener('click', function () {
-            const cultivo = document.getElementById('Cul').value;
-            const fecha = document.getElementById('date').value;
-            const tbody = document.querySelector('#myTable tbody');
-            const tbody2 = document.querySelector('#myTable2 tbody');
+  <!-- SCRIPTS -->
+  <script src="{% static '/lib/cockies.js' %}"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-            tbody.innerHTML = '';
-            tbody2.innerHTML = '';
+  <script>
+    // CONSULTAR
+    document.getElementById('consultar').addEventListener('click', function () {
+      const cultivo = document.getElementById('Cul').value;
+      const fecha = document.getElementById('date').value;
+      const tbody = document.querySelector('#myTable tbody');
+      const tbody2 = document.querySelector('#myTable2 tbody');
 
-            fetch('{% url "salidasFruta_cuadreValle" %}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-CSRFToken': getCookie('csrftoken')
-                },
-                body: new URLSearchParams({
-                    'opcion1': cultivo,
-                    'opcion2': fecha
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                data.datos.forEach(item => {
-                    const row = `<tr>
-                        <td>${item.fecha}</td>
-                        <td>${item.finca}</td>
-                        <td>${item.cultivo}</td>
-                        <td>${item.variedad}</td>
-                        <td>${item.total_cajas}</td>
-                        <td>${Math.round(item.total_libras)}</td>
-                    </tr>`;
-                    tbody.insertAdjacentHTML('beforeend', row);
-                });
+      tbody.innerHTML = '';
+      tbody2.innerHTML = '';
 
-                data.resumen.forEach(item => {
-                    const row = `<tr>
-                        <td>${item.fecha}</td>
-                        <td>${item.finca}</td>
-                        <td>${item.cultivo}</td>
-                        <td>-</td>
-                        <td>${item.total_cajas}</td>
-                        <td>${Math.round(item.total_libras)}</td>
-                    </tr>`;
-                    tbody2.insertAdjacentHTML('beforeend', row);
-                });
+      fetch('{% url "salidasFruta_cuadreValle" %}', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: new URLSearchParams({
+          'opcion1': cultivo,
+          'opcion2': fecha
+        })
+      })
+        .then(response => response.json())
+        .then(data => {
+          data.datos.forEach(item => {
+            const row = `<tr>
+              <td>${item.fecha}</td>
+              <td>${item.finca}</td>
+              <td>${item.cultivo}</td>
+              <td>${item.variedad}</td>
+              <td>${item.total_cajas}</td>
+              <td>${Math.round(item.total_libras)}</td>
+            </tr>`;
+            tbody.insertAdjacentHTML('beforeend', row);
+          });
 
-                formatCells('myTable');
-                formatCells('myTable2');
-            });
+          data.resumen.forEach(item => {
+            const row = `<tr>
+              <td>${item.fecha}</td>
+              <td>${item.finca}</td>
+              <td>${item.cultivo}</td>
+              <td>-</td>
+              <td>${item.total_cajas}</td>
+              <td>${Math.round(item.total_libras)}</td>
+            </tr>`;
+            tbody2.insertAdjacentHTML('beforeend', row);
+          });
+
+          formatCells('myTable');
+          formatCells('myTable2');
         });
+    });
 
-        // Carga inicial de datos de usuario
-        $(document).ready(function () {
-            $.ajax({
-                url: '{% url "obtener_nombre_usuario" %}',
-                data: { 'category_id': 'Consulta' },
-                success: function (data) {
-                    $('#date').val(data.fecha);
-                    $('#correo').val(data.username);
-                    $('#Cul').html('<option value="">Seleccionar</option>');
-
-                    data.adicionales.forEach(item => {
-                        $('#Cul').append(`<option value="${item.cultivo}">${item.cultivo}</option>`);
-                    });
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error al cargar datos de usuario:', error);
-                }
-            });
-        });
-
-        function formatCells(tableId) {
-            const cells = document.querySelectorAll(`#${tableId} td.number-cell`);
-            cells.forEach(cell => {
-                const value = Number(cell.getAttribute('data-value'));
-                if (!isNaN(value)) {
-                    cell.textContent = value.toLocaleString('es-ES');
-                }
-            });
+    // CARGA INICIAL
+    $(document).ready(function () {
+      $.ajax({
+        url: '{% url "obtener_nombre_usuario" %}',
+        data: { 'category_id': 'Consulta' },
+        success: function (data) {
+          $('#date').val(data.fecha);
+          $('#correo').val(data.username);
+          $('#Cul').html('<option value="">Seleccionar cultivo</option>');
+          data.adicionales.forEach(item => {
+            $('#Cul').append(`<option value="${item.cultivo}">${item.cultivo}</option>`);
+          });
+        },
+        error: function (xhr, status, error) {
+          console.error('Error al cargar usuario:', error);
         }
+      });
+    });
 
-        document.addEventListener('DOMContentLoaded', () => {
-            formatCells('myTable');
-            formatCells('myTable2');
-        });
-    </script>
+    // FORMATEO DE NÚMEROS
+    function formatCells(tableId) {
+      const cells = document.querySelectorAll(`#${tableId} td.number-cell`);
+      cells.forEach(cell => {
+        const value = Number(cell.getAttribute('data-value'));
+        if (!isNaN(value)) {
+          cell.textContent = value.toLocaleString('es-ES');
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      formatCells('myTable');
+      formatCells('myTable2');
+    });
+  </script>
 </body>
 </html>
