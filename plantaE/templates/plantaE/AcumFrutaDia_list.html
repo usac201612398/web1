@@ -83,9 +83,11 @@
         <input class="form-control" id="correo" type="text" value="{{usuario}}" readonly>
     </div>
     <div class="col-md-2 d-grid">
-        <button id="consultar" class="btn btn-success">
-        <i class="fas fa-search"></i> Consultar
+        <button type="button" id="consultar" class="button is-success is-fullwidth">
+            <span class="icon"><i class="fas fa-search"></i></span>
+            <span>Consultar</span>
         </button>
+        
     </div>
     </div>
 
@@ -158,11 +160,14 @@
   </div>
 
   <!-- Botón Ir al Home -->
-<div class="text-center mt-5">
-  <a href="{% url 'salidasFruta_list' %}" class="btn btn-success btn-lg rounded-pill">
-    <i class="fas fa-home me-2"></i> Ir al Panel Principal
-  </a>
-</div>
+<div class="has-text-centered mt-6">
+        <a href="{% url 'salidasFruta_listValle' %}" class="button is-success is-medium is-rounded">
+            <span class="icon">
+            <i class="fas fa-home"></i>
+            </span>
+            <span>Ir al Home</span>
+        </a>
+    </div>
 
 </div>
 
