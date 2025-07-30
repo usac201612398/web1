@@ -114,6 +114,7 @@ urlpatterns = [
     path('generate_packing_list_pdf/', views.generate_packing_list_pdf, name='generate_packing_list_pdf'),
     path('escanearbarras/', views.escanearbarras, name='escanearbarras'),
     path('dashboard/', views.dashboard_acumfruta, name='dashboard_acumfruta'),
+    path('dashboard/tecnicos', views.dashboard_tecnicos, name='dashboard_acumfruta2'),
     path('api/ordenes/', views.get_ordenes_por_finca, name='api_ordenes_por_finca'),
     path('api/estructuras/', views.get_estructuras_por_orden, name='api_estructuras_por_orden'),
     path('api/variedad/', views.get_variedades_por_estructura, name='api_variedades_por_estructura'),

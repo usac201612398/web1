@@ -1,0 +1,312 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard AcumFruta</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="container mt-4">
+    <h2 class="mb-4">Dashboard de Producción - Fruta Recibida SDC</h2>
+
+    <!-- Filtros -->
+    <form method="get" class="row g-3 mb-4">
+        <!-- Finca -->
+        <div class="col-md-2">
+            <label class="form-label">Finca</label>
+            <select name="finca" id="finca-select" class="form-select">
+                <option value="">Todas</option>
+                {% for finca in filtros_completos.0.2 %}
+                    <option value="{{ finca }}" {% if request.GET.finca == finca %}selected{% endif %}>{{ finca }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Orden (dependiente de finca) -->
+        <div class="col-md-2">
+            <label class="form-label">Orden</label>
+            <select name="orden" id="orden-select" class="form-select">
+                <option value="">Todas</option>
+                {% for orden in filtros_completos.1.2 %}
+                    <option value="{{ orden }}" {% if request.GET.orden == orden %}selected{% endif %}>{{ orden }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Estructura (dependiente de orden) -->
+        <div class="col-md-2">
+            <label class="form-label">Estructura</label>
+            <select name="estructura" id="estructura-select" class="form-select">
+                <option value="">Todas</option>
+                {% for estructura in filtros_completos.4.2 %}
+                    <option value="{{ estructura }}" {% if request.GET.estructura == estructura %}selected{% endif %}>{{ estructura }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Variedad (dependiente de orden) -->
+        <div class="col-md-2">
+            <label class="form-label">Variedad</label>
+            <select name="variedad" id="variedad-select" class="form-select">
+                <option value="">Todas</option>
+                {% for variedad in filtros_completos.2.2 %}
+                    <option value="{{ variedad }}" {% if request.GET.variedad == variedad %}selected{% endif %}>{{ variedad }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Cultivo (dependiente de variedad) -->
+        <div class="col-md-2">
+            <label class="form-label">Cultivo</label>
+            <select name="cultivo" id="cultivo-select" class="form-select">
+                <option value="">Todos</option>
+                {% for cultivo in filtros_completos.3.2 %}
+                    <option value="{{ cultivo }}" {% if request.GET.cultivo == cultivo %}selected{% endif %}>{{ cultivo }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">Aplicar filtros</button>
+        </div>
+    </form>
+
+    <!-- Gráfica de producción -->
+    <div class="card mb-4">
+        <div class="card-header">Producción semanal (kilos)</div>
+        <div class="card-body">
+            <canvas id="graficoProduccion"></canvas>
+        </div>
+    </div>
+
+    <!-- Gráfica de derivada -->
+    <div class="card mb-4">
+        <div class="card-header">Variación semanal (derivada)</div>
+        <div class="card-body">
+            <canvas id="graficoDerivada"></canvas>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+
+<script>
+    const fechas = JSON.parse('{{ fechas_json|escapejs }}');
+    const libras = JSON.parse('{{ libras_json|escapejs }}');
+    const derivadas = JSON.parse('{{ derivadas_json|escapejs }}');
+
+    new Chart(document.getElementById('graficoProduccion'), {
+        type: 'line',
+        data: {
+            labels: fechas,
+            datasets: [{
+                label: 'Producción (kilos)',
+                data: libras,
+                borderColor: 'green',
+                backgroundColor: 'rgba(0,128,0,0.2)',
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'week',
+                        tooltipFormat: "'Semana' w, yyyy"
+                    },
+                    ticks: {
+                        autoSkip: true,
+                        maxTicksLimit: 10,
+                        maxRotation: 45
+                    }
+                }
+            }
+        }
+    });
+
+    new Chart(document.getElementById('graficoDerivada'), {
+        type: 'line',
+        data: {
+            labels: fechas,
+            datasets: [{
+                label: 'Variación semanal',
+                data: derivadas,
+                borderColor: 'red',
+                backgroundColor: 'rgba(255,0,0,0.2)',
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'week',
+                        tooltipFormat: "'Semana' w, yyyy"
+                    },
+                    ticks: {
+                        autoSkip: true,
+                        maxTicksLimit: 10,
+                        maxRotation: 45
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    const fincaSelect = document.getElementById('finca-select');
+    const ordenSelect = document.getElementById('orden-select');
+    const estructuraSelect = document.getElementById('estructura-select');
+    const variedadSelect = document.getElementById('variedad-select');
+    const cultivoSelect = document.getElementById('cultivo-select');
+    
+    
+    fincaSelect.addEventListener('change', function () {
+        const finca = fincaSelect.value;
+        ordenSelect.innerHTML = '<option value="">Cargando...</option>';
+        console.log(finca);
+        fetch('{% url "api_ordenes_por_finca" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: new URLSearchParams({
+                'finca': finca
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+            ordenSelect.innerHTML = '<option value="">Todas</option>';
+            data.ordenes.forEach(orden => {
+                const option = document.createElement('option');
+                option.value = orden;
+                option.textContent = orden;
+                ordenSelect.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error('Error cargando ordenes:', error);
+            ordenSelect.innerHTML = '<option value="">Error</option>';
+        });
+    });
+    
+    ordenSelect.addEventListener('change', function () {
+        const orden = ordenSelect.value;
+        estructuraSelect.innerHTML = '<option value="">Cargando...</option>';
+        console.log(orden);
+        fetch('{% url "api_estructuras_por_orden" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: new URLSearchParams({
+                'orden': orden
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+            estructuraSelect.innerHTML = '<option value="">Todas</option>';
+            data.estructuras.forEach(estructuras => {
+                const option = document.createElement('option');
+                option.value = estructuras;
+                option.textContent = estructuras;
+                estructuraSelect.appendChild(option);
+            });
+            cultivoSelect.innerHTML = '<option value="">Todas</option>';
+            data.cultivos.forEach(cultivos => {
+                const option = document.createElement('option');
+                option.value = cultivos;
+                option.textContent = cultivos;
+                cultivoSelect.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error('Error cargando ordenes:', error);
+            estructuraSelect.innerHTML = '<option value="">Error</option>';
+        });
+    });
+
+    estructuraSelect.addEventListener('change', function () {
+        const orden = ordenSelect.value;
+        const estructura = estructuraSelect.value;
+
+        variedadSelect.innerHTML = '<option value="">Cargando...</option>';
+        
+        fetch('{% url "api_variedades_por_estructura" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: new URLSearchParams({
+                'orden': orden,
+                'estructura': estructura
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+            variedadSelect.innerHTML = '<option value="">Todas</option>';
+            data.variedad.forEach(variedad => {
+                const option = document.createElement('option');
+                option.value = variedad;
+                option.textContent = variedad;
+                variedadSelect.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error('Error cargando ordenes:', error);
+            variedadSelect.innerHTML = '<option value="">Error</option>';
+        });
+    });
+    
+});
+</script>
+
+</body>
+</html>
+

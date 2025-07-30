@@ -2826,6 +2826,7 @@ def inventariogeneral_list(request):
 
 
 def dashboard_acumfruta(request):
+
     # Filtros desde GET
     filtros_get = {
         'finca': request.GET.get('finca'),
@@ -2834,7 +2835,7 @@ def dashboard_acumfruta(request):
         'cultivo': request.GET.get('cultivo'),
         'estructura': request.GET.get('estructura'),
     }
-
+    
     # Query base
     qs = AcumFruta.objects.exclude(finca="CIP").exclude(libras__isnull=True)
 
@@ -2867,6 +2868,58 @@ def dashboard_acumfruta(request):
     }
 
     return render(request, 'plantaE/dashboard_acumfruta.html', context)
+
+def dashboard_tecnicos(request):
+    # Filtros desde GET
+    filtros_get = {
+        'finca': request.GET.get('finca'),
+        'orden': request.GET.get('orden'),
+        'variedad': request.GET.get('variedad'),
+        'cultivo': request.GET.get('cultivo'),
+        'estructura': request.GET.get('estructura'),
+    }
+    nombre_usuario = request.user.username
+    # Query base
+    qs = AcumFruta.objects.exclude(finca="CIP",correo=nombre_usuario).exclude(libras__isnull=True)
+
+    # Aplicar filtros
+    for campo, valor in filtros_get.items():
+        if valor:
+            qs = qs.filter(**{campo: valor})
+
+    # Agrupación por semana
+    datos = qs.annotate(
+        semana=ExtractWeek('fecha'),
+        anio=ExtractYear('fecha')
+    ).values('anio', 'semana').annotate(
+        libras_totales=Sum('libras')
+    ).order_by('anio', 'semana')
+
+    # Ejes para la gráfica
+    fechas = [f"Semana {d['semana']} - {d['anio']}" for d in datos]
+    kilos = [round(d['libras_totales'] / 2.20462, 2) for d in datos]
+    derivadas = [0] + [kilos[i] - kilos[i - 1] for i in range(1, len(kilos))]
+
+
+    # Filtros disponibles
+    filtros_completos = [
+        ('Finca', 'finca', AcumFruta.objects.exclude(finca__isnull=True).exclude(finca='').values_list('finca', flat=True).distinct()),
+        ('Orden', 'orden', AcumFruta.objects.exclude(orden__isnull=True).exclude(orden='').values_list('orden', flat=True).distinct()),
+        ('Variedad', 'variedad', AcumFruta.objects.exclude(variedad__isnull=True).exclude(variedad='').values_list('variedad', flat=True).distinct()),
+        ('Cultivo', 'cultivo', AcumFruta.objects.exclude(cultivo__isnull=True).exclude(cultivo='').values_list('cultivo', flat=True).distinct()),
+        ('Estructura', 'estructura', AcumFruta.objects.exclude(estructura__isnull=True).exclude(estructura='').values_list('estructura', flat=True).distinct()),
+    ]
+
+    context = {
+        'filtros_completos': filtros_completos,
+        'fechas_json': json.dumps(fechas),
+        'libras_json': json.dumps(kilos),
+        'derivadas_json': json.dumps(derivadas),
+        'request': request,
+    }
+
+    return render(request, 'plantaE/dashboard_acumfruta2.html', context)
+
 
 
 def get_ordenes_por_finca(request):
