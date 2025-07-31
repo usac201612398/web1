@@ -2,225 +2,197 @@
 <html>
 {% load static %}     
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous">   
+  <meta charset="UTF-8">
+  <title>Entradas-Diarias-CFrio</title>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
-    <title>Entradas-Diarias-CFrio</title>
-    <style>
-        h1 {
-            margin: 15px;
-            font-family: Arial, sans-serif;
-        }
+  <!-- Estilos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">   
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 
-        a {
-            margin: 20px;
-            font-family: Arial, sans-serif;
-        }
+  <style>
+    h1 {
+        margin: 15px;
+        font-family: Arial, sans-serif;
+    }
 
-        .half {
+    .half {
         display: flex;
-        height: 100%;
-        grid-template-columns:  repeat(auto-fit, minmax(min-content, max-content)); /* Divide cada mitad en dos columnas iguales */
-        gap: 5px; /* Espacio entre columnas */
+        gap: 10px;
         text-align: center;
-        }
+    }
 
-        .box {
-            background-color: #f0f0f0;
-            border: 1px solid #ddd;
-            padding: 10px;
-            flex: auto; 
-            height: 100%;    
-        }
-        td {
-            padding: 0;
-        }
+    .box {
+        background-color: #f0f0f0;
+        border: 1px solid #ddd;
+        padding: 10px;
+        flex: 1; 
+    }
 
-        td input {
-            width: 100%;
-            border: none;
-            background: transparent;
-        }
+    td {
+        padding: 0;
+    }
 
-    </style>
+    td input {
+        width: 100%;
+        border: none;
+        background: transparent;
+    }
+
+    #consultar {
+        margin: 10px 0;
+    }
+
+    .number-cell {
+        text-align: right;
+        padding-right: 8px;
+    }
+  </style>
 </head>
+
 <body>
-    <h1 class="roboto">Panel</h1>
+  <h1 class="roboto">Panel</h1>
 
-    <div class = "container">
-        <div class="half">
-
-            <div class="box">
-                <form>
-                    <div><label for="fecha">Fecha:</label></div>
-                    <div>
-                        <input class="input" id="date" type="date" value={{fecha}}>
-                    </div>
-                </form>      
-            </div>
-
-            <div class="box">
-                <form>
-                    <div><label for="correo">Usuario:</label></div>
-                    <div>
-                        <input class="input" id="correo" type="text" value={{usuario}} readonly>
-                    </div>
-                </form>      
-            </div>    
-        </div>
+  <div class="container">
+    <div class="half">
+      <div class="box">
+        <form>
+          <label for="fecha">Fecha:</label>
+          <input class="input" id="date" type="date" value="{{ fecha }}">
+        </form>
+      </div>
+      <div class="box">
+        <form>
+          <label for="correo">Usuario:</label>
+          <input class="input" id="correo" type="text" value="{{ usuario }}" readonly>
+        </form>
+      </div>
     </div>
-    <br>
 
-    <div class="container">
-        <button id="consultar">Consultar</button>
+    <button id="consultar" class="button is-success is-light"><i class="fas fa-search"></i> Consultar</button>
+
+    <div class="table-container mt-3">
+      <table class="table is-striped is-hoverable is-fullwidth" id="myTable">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Proveedor</th>
+            <th>Cultivo</th>
+            <th>ItemSAPCode</th>
+            <th>ItemSAPName</th>
+            <th>Categoria</th>
+            <th>Tarimas</th>
+            <th>Cajas</th>
+            <th>Libras</th>
+            <th>Merma</th>
+            <th>%Merma</th>
+            <th>pesoxcajaprom</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for registro in datos %} 
+          <tr> 
+            <td>{{ registro.fecha }}</td>
+            <td>{{ registro.proveedor }}</td>
+            <td>{{ registro.cultivo }}</td>
+            <td>{{ registro.itemsapcode }}</td>
+            <td>{{ registro.itemsapname }}</td>
+            <td>{{ registro.categoria }}</td>
+            <td class="number-cell" data-value="{{ registro.total_tarimas }}">{{ registro.total_tarimas }}</td>
+            <td class="number-cell" data-value="{{ registro.total_cajas }}">{{ registro.total_cajas }}</td>
+            <td class="number-cell" data-value="{{ registro.total_libras }}">{{ registro.total_libras }}</td>
+            <td class="number-cell" data-value="{{ registro.total_merma }}">{{ registro.total_merma }}</td>
+            <td class="number-cell" data-value="{{ registro.porcen_merma }}">{{ registro.porcen_merma }}</td>
+            <td class="number-cell" data-value="{{ registro.pesoxcajaprom }}">{{ registro.pesoxcajaprom }}</td>
+          </tr> 
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-    <br>
-        <div class="container">
-            <div class="columns">
-                <div class="column is-12">
-                <div class="table-container">
-                    <table class="table is-striped is-hoverable is is-fullwidth" id="myTable">
-                    <thead id = "enc1">
-                        <tr class="header">
-                            <th >Fecha</th>
-                            <th >Proveedor</th>
-                            <th >Cultivo</th>
-                            <th >ItemSAPCode</th>
-                            <th >ItemSAPName</th>
-                            <th >Categoria</th>
-                            <th >Tarimas</th>
-                            <th >Cajas</th>
-                            <th >Libras</th>
-                            <th >Merma</th>
-                            <th >%Merma</th>
-                            <th >pesoxcajaprom</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {%for registro in datos %} 
-                    
-                    <tr> 
-                     
-                        <td>{{registro.fecha}}</td>
-                        <td>{{registro.proveedor}}</td>
-                        <td>{{registro.cultivo}}</td>
-                        <td>{{registro.itemsapcode}}</td>
-                        <td>{{registro.itemsapname}}</td>
-                        <td>{{registro.categoria}}</td>
-                        <td class="number-cell" data-value="{{ registro.total_tarimas }}">{{ registro.total_tarimas }}</td>
-                        
-                        <td class="number-cell" data-value="{{ registro.total_cajas }}">{{ registro.total_cajas }}</td>
-                        <td class="number-cell" data-value="{{ registro.total_libras }}">{{ registro.total_libras }}</td>
-                        <td class="number-cell" data-value="{{ registro.total_merma }}">{{ registro.total_merma }}</td>
-                        <td class="number-cell" data-value="{{ registro.porcen_merma }}">{{ registro.porcen_merma }}</td>
-                        <td class="number-cell" data-value="{{ registro.pesoxcajaprom }}">{{ registro.pesoxcajaprom }}</td>
-                    </tr> 
-                            
-                    {% endfor %}
-                    </tbody>
-                    </table>
-                </div>
-                </div>
-            </div>
-            </div>
+  </div>
 
-</body>
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
 
-<script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-
-<script>
-
-    $(document).ready(function() {
-        $('#myTable').DataTable();
+  <script>
+    $(document).ready(function () {
+      $('#myTable').DataTable();
     });
 
-</script>
-
-
-<script>
-    // Función para formatear los números en ambas tablas
+    // Formatear celdas numéricas a 2 decimales
     const formatCells = (tableId) => {
-        const cells = document.querySelectorAll(`#${tableId} td.number-cell`);
-        cells.forEach(cell => {
-            const value = Number(cell.getAttribute('data-value'));
-            if (!isNaN(value)) {
-                // Usa toLocaleString para formatear correctamente
-                cell.textContent = value.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-            }
-        });
+      const cells = document.querySelectorAll(`#${tableId} td.number-cell`);
+      cells.forEach(cell => {
+        const value = parseFloat(cell.getAttribute('data-value'));
+        if (!isNaN(value)) {
+          cell.textContent = value.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+      });
     };
 
-    // Llama a la función para ambas tablas
     document.addEventListener('DOMContentLoaded', () => {
-        formatCells('myTable');
+      formatCells('myTable');
     });
-</script>
-<script>
 
-document.getElementById('consultar').addEventListener('click', function() {
-    const opcionSeleccionada2 = document.getElementById('date').value;
+    document.getElementById('consultar').addEventListener('click', function () {
+      const opcionSeleccionada2 = document.getElementById('date').value;
+      const tbody = document.querySelector('#myTable tbody');
+      tbody.innerHTML = '';
 
-    const tbody = document.querySelector('#myTable tbody');
-    // Limpiar la tabla antes de agregar nuevos datos
-    tbody.innerHTML = '';
-
-    fetch('{% url "reporte_inventario" %}', { // Asegúrate de poner la URL correcta
+      fetch('{% url "reporte_inventario" %}', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-CSRFToken': getCookie('csrftoken')  // Asegúrate de incluir CSRF token
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': getCookie('csrftoken')
         },
-        body: new URLSearchParams({
-            'opcion2': opcionSeleccionada2
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data)
+        body: new URLSearchParams({ 'opcion2': opcionSeleccionada2 })
+      })
+      .then(response => response.json())
+      .then(data => {
         data.datos.forEach(item => {
-            const fila = document.createElement('tr');
-            fila.innerHTML = `<td>${item.fecha}</td><td>${item.proveedor}</td><td>${item.cultivo}</td><td>${item.itemsapcode}</td><td>${item.itemsapname}</td><td>${item.categoria}</td><td>${item.total_tarimas}</td><td>${item.total_cajas}</td><td>${item.total_libras}</td><td>${item.total_merma}</td><td>${item.porcen_merma}</td><td>${item.pesoxcajaprom}</td>`;
-            
-            tbody.appendChild(fila);
-
+          const fila = document.createElement('tr');
+          fila.innerHTML = `
+            <td>${item.fecha}</td>
+            <td>${item.proveedor}</td>
+            <td>${item.cultivo}</td>
+            <td>${item.itemsapcode}</td>
+            <td>${item.itemsapname}</td>
+            <td>${item.categoria}</td>
+            <td class="number-cell" data-value="${item.total_tarimas}"></td>
+            <td class="number-cell" data-value="${item.total_cajas}"></td>
+            <td class="number-cell" data-value="${item.total_libras}"></td>
+            <td class="number-cell" data-value="${item.total_merma}"></td>
+            <td class="number-cell" data-value="${item.porcen_merma}"></td>
+            <td class="number-cell" data-value="${item.pesoxcajaprom}"></td>
+          `;
+          tbody.appendChild(fila);
         });
 
+        formatCells('myTable');
+      });
     });
-});
 
-$(document).ready(function() {
-        // Función para cargar productos basados en la categoría seleccionada
-    function authUsuario() {
+    // Auto cargar fecha y usuario
+    $(document).ready(function () {
+      function authUsuario() {
         $.ajax({
-            url: '{% url "obtener_nombre_usuario" %}',  // URL para la vista AJAX
-            data: {
-                'category_id': "Consulta"  // Envia el ID de la categoría como parámetro
-            },
-            success: function(data) {
-                // Limpia las opciones actuales del campo 'name'
-                var initialCategoryId =data.username;  // Obtiene el valor inicial del campo 'category'
-                $('#date').val(data.fecha);
-                $('#correo').val(data.username);
-                if (initialCategoryId) {
-                    console.log(initialCategoryId);
-                }
-            
-            },
-            error: function(xhr, status, error) {
-                console.error('Error:', error);  // Maneja errores de la solicitud
-            }
+          url: '{% url "obtener_nombre_usuario" %}',
+          data: { 'category_id': "Consulta" },
+          success: function (data) {
+            $('#date').val(data.fecha);
+            $('#correo').val(data.username);
+          },
+          error: function (xhr, status, error) {
+            console.error('Error:', error);
+          }
         });
-    }
-    
-    authUsuario();
-    // Llama a la función de carga de productos al cargar la página
-        
-});
+      }
 
-</script>
+      authUsuario();
+    });
+  </script>
+</body>
 </html>
