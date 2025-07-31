@@ -98,7 +98,7 @@
 
       <!-- BOTÓN CONSULTAR OPCIONAL -->
       <div class="mb-1">
-        <a href="{% url 'inventarioProd_packinglist' %}" class="button is-link">
+        <a href="{% url 'inventarioProd_packinglist' %}" class="button is-success">
           <span class="icon"><i class="fas fa-search"></i></span>
           <span>Consulta OV</span>
         </a>
@@ -182,8 +182,26 @@ $(document).on('click', '.eliminar', function() {
 <script>
 
     $(document).ready(function() {
-        $('#myTable').DataTable();
+        $('#myTable').DataTable({
+            pageLength: 20,  // Cuántas filas se muestran por defecto
+            lengthMenu: [5, 10,20, 25, 50, 100], // Opciones de entradas
+            language: {
+            lengthMenu: "Mostrar _MENU_ entradas",
+            zeroRecords: "No se encontraron resultados",
+            info: "Mostrando _START_ a _END_ de _TOTAL_ entradas",
+            infoEmpty: "Mostrando 0 a 0 de 0 entradas",
+            infoFiltered: "(filtrado de _MAX_ entradas totales)",
+            search: "Buscar:",
+            paginate: {
+                first: "Primero",
+                last: "Último",
+                next: "Siguiente",
+                previous: "Anterior"
+            },
+            }
+        });
     });
+
 
 </script>
 
