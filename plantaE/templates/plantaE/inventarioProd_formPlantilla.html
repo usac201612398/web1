@@ -53,73 +53,102 @@
 </head>
 
 <body>
-    <h1 class="roboto">Panel</h1>
-    <br>
+    
     <div class = "container">
         <div class="half">
 
-            <div class="box">
-                <form>
-                    <div><label for="fecha">Fecha:</label></div>
-                    <div>
-                        <input class="input" id="date" type="date">
-                    </div>
-                </form>      
-            </div>
+            <section class="section">
+  <div class="container">
+    <!-- Título del panel -->
+    <section class="hero is-info is-small mb-5">
+      <div class="hero-body has-text-centered">
+        <p class="title is-4 has-text-white">Inventario Fruta - Panel de Consulta</p>
+      </div>
+    </section>
 
-            <div class="box">
-                <div><label for="prov">Proveedor:</label></div>
-                <div class="select"> 
-                    <select name="Proveedor" id="Pro">
-                        <option value="">-</option>
-                        <option value="SDC">SDC</option>
-                        <option value="INVERNADEROS TECNOLOGICOS S.A">INVERNADEROS TECNOLOGICOS S.A</option>
-                        <option value="PRODUCTOS DEL VALLE, S.A.">PRODUCTOS DEL VALLE, S.A.</option>
-                        <option value="HORTEX, S.A.">HORTEX, S.A.</option>
-                        <option value="DANIEL ESTUARDO GALICIA CARRERA">DANIEL ESTUARDO GALICIA CARRERA</option>
-                        <option value="INVERSIONES LA PASTORIA, S.A.">INVERSIONES LA PASTORIA, S.A.</option>
-                    </select>
-                </div>
-            </div>
+    <!-- Filtros en tarjetas -->
+    <div class="columns is-multiline is-variable is-5">
+      <!-- Fecha -->
+      <div class="column is-3">
+        <div class="box">
+          <label class="label" for="date">Fecha</label>
+          <input class="input" id="date" type="date">
+        </div>
+      </div>
 
-            <div class="box">
-                <div><label for="cultivo">Cultivo:</label></div>
-                <div class="select"> 
-                    <select name="Cultivo" id="Cul">
-                        <option value="">-</option>
-                        <option value="BLOCKY ORGANICO">BLOCKY ORGANICO</option>
-                        <option value="BLOCKY">BLOCKY</option>
-                        <option value="CHERRY">CHERRY</option>
-                        <option value="GRAPE">GRAPE</option>
-                        <option value="MEDLEY">MEDLEY</option>
-                        <option value="GRAPE ORGANICO">GRAPE ORGANICO</option>
-                    </select>
-                </div>
-            </div>
+      <!-- Proveedor -->
+      <div class="column is-3">
+        <div class="box">
+          <label class="label" for="Pro">Proveedor</label>
+          <div class="select is-fullwidth">
+            <select name="Proveedor" id="Pro">
+              <option value="">Seleccionar</option>
+              <option value="SDC">SDC</option>
+              <option value="INVERNADEROS TECNOLOGICOS S.A">INVERNADEROS TECNOLOGICOS S.A</option>
+              <option value="PRODUCTOS DEL VALLE, S.A.">PRODUCTOS DEL VALLE, S.A.</option>
+              <option value="HORTEX, S.A.">HORTEX, S.A.</option>
+              <option value="DANIEL ESTUARDO GALICIA CARRERA">DANIEL ESTUARDO GALICIA CARRERA</option>
+              <option value="INVERSIONES LA PASTORIA, S.A.">INVERSIONES LA PASTORIA, S.A.</option>
+            </select>
+          </div>
+        </div>
+      </div>
 
-            <div class="box">
-                <div><label for="categoria">Categoria:</label></div>
-                
-                <div class="select"> 
-                    <select name="Categoria" id="Cat">
-                        <option value="">-</option>
-                        <option value="Exportación">Exportación</option>
-                        <option value="Carreta">Carreta</option>
-                        <option value="Cenma">Cenma</option>
-                        <option value="Devolución">Devolución</option>
-                    </select>
-                </div>
-            </div>
-            
+      <!-- Cultivo -->
+      <div class="column is-3">
+        <div class="box">
+          <label class="label" for="Cul">Cultivo</label>
+          <div class="select is-fullwidth">
+            <select name="Cultivo" id="Cul">
+              <option value="">Seleccionar</option>
+              <option value="BLOCKY ORGANICO">BLOCKY ORGANICO</option>
+              <option value="BLOCKY">BLOCKY</option>
+              <option value="CHERRY">CHERRY</option>
+              <option value="GRAPE">GRAPE</option>
+              <option value="MEDLEY">MEDLEY</option>
+              <option value="GRAPE ORGANICO">GRAPE ORGANICO</option>
+            </select>
+          </div>
+        </div>
+      </div>
 
-            <div class="box">
-                <form>
-                    <div><label for="correo">Usuario:</label></div>
-                    <div>
-                        <input class="input" id="correo" type="text" value={{usuario}} readonly>
-                    </div>
-                </form>      
-            </div>    
+      <!-- Categoría -->
+      <div class="column is-3">
+        <div class="box">
+          <label class="label" for="Cat">Categoría</label>
+          <div class="select is-fullwidth">
+            <select name="Categoria" id="Cat">
+              <option value="">Seleccionar</option>
+              <option value="Exportación">Exportación</option>
+              <option value="Carreta">Carreta</option>
+              <option value="Cenma">Cenma</option>
+              <option value="Devolución">Devolución</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Usuario -->
+      <div class="column is-3">
+        <div class="box">
+          <label class="label" for="correo">Usuario</label>
+          <input class="input" id="correo" type="text" value="{{ usuario }}" readonly>
+        </div>
+      </div>
+
+      <!-- Botón Consultar -->
+      <div class="column is-3">
+        <div class="box has-text-centered">
+          <button id="consultar" class="button is-info is-fullwidth is-rounded">
+            <span class="icon"><i class="fas fa-search"></i></span>
+            <span>Consultar</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+    
         </div>
     </div>
 
