@@ -13,7 +13,7 @@
   <style>
     thead th {
       background: linear-gradient(to right, #6c757d, #495057);
-      color: white;
+      color: white !important;
       text-align: center;
       white-space: nowrap;
     }
@@ -51,16 +51,18 @@
   </style>
 </head>
 <body>
-  <!-- Header -->
+  
+
+  <!-- Tarjetas de navegación -->
+  <section class="section">
+    <div class="container">
+    <!-- Header -->
   <section class="hero is-primary is-small">
     <div class="hero-body has-text-centered">
       <h1 class="title is-3">Panel de Inventario Producto Terminado</h1>
     </div>
   </section>
 
-  <!-- Tarjetas de navegación -->
-  <section class="section">
-    <div class="container">
       <div class="columns is-multiline is-variable is-4">
         <div class="column is-one-third">
           <a href="{% url 'reporte_inventario' %}" class="card-link">
@@ -147,3 +149,4 @@
   </script>
 </body>
 </html>
+    
