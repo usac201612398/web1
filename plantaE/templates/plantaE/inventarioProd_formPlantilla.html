@@ -194,7 +194,12 @@ document.getElementById('consultar').addEventListener('click', function() {
         console.log(data)
         data.datos.forEach(item => {
             const fila = document.createElement('tr');
-            fila.innerHTML = `<td>${item.itemsapcode}</td><td>${item.itemsapname}</td><td><div contenteditable="true" class="editable-cell"></div></td><td><div contenteditable="true" class="editable-cell"></div></td><td><button class="eliminar"><i class="fas fa-trash-alt"></i></button></td>`;
+            fila.innerHTML = `<td>${item.itemsapcode}</td><td>${item.itemsapname}</td><td><div contenteditable="true" class="editable-cell"></div></td><td><div contenteditable="true" class="editable-cell"></div></td><td class="has-text-centered">
+  <button class="button is-small is-danger is-light eliminar" title="Eliminar fila">
+    <span class="icon is-small"><i class="fas fa-trash-alt"></i></span>
+  </button>
+</td>
+`;
             tbody.appendChild(fila);
         });
     });
