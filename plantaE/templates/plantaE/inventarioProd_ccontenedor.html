@@ -1,321 +1,170 @@
 <!DOCTYPE html>
-<html>
-{% load static %} 
+<html lang="es">
+{% load static %}
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous">   
+  <meta charset="UTF-8" />
+  <title>Panel - Carga Contenedores</title>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
-    <title>Carga Contenedores</title>
-    <style>
+  <!-- Estilos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-          .inputs-row {
-        display: flex;
-        flex-wrap: nwrap; /* Para que se acomoden bien en pantallas más pequeñas */
-            }
-            
-                h1 {
-                    margin: 15px;
-                    font-family: Arial, sans-serif;
-                }
-
-                a {
-                    margin: 20px;
-                    font-family: Arial, sans-serif;
-                }
-            /* Estilos generales para el botón input */
-        .envio3 {
-            background-color: #4CAF50;  /* Color de fondo verde */
-            color: white;  /* Texto blanco */
-            font-size: 16px;  /* Tamaño de fuente */
-            padding: 12px 24px;  /* Espaciado alrededor del texto */
-            border: none;  /* Sin borde */
-            border-radius: 25px;  /* Bordes redondeados */
-            cursor: pointer;  /* Aparece como cursor de mano */
-            transition: all 0.3s ease;  /* Transición suave para los efectos */
-            display: inline-flex;
-            align-items: center;  /* Alineación vertical del texto e ícono */
-            text-align: center; /* Centrar el texto en el input */
-        }
-
-        /* Efecto hover */
-        .envio3:hover {
-            background-color: #45a049;  /* Fondo verde más oscuro al pasar el mouse */
-            transform: scale(1.05);  /* Ligeramente más grande */
-        }
-
-        /* Efecto de enfoque (cuando se hace clic en el botón) */
-        .envio3:focus {
-            outline: none;  /* Quitar el borde por defecto al hacer clic */
-            box-shadow: 0 0 8px rgba(0, 128, 0, 0.5);  /* Sombra verde */
-        }
-
-        /* Si usas un ícono en el botón */
-        .envio3 i {
-            margin-right: 8px;  /* Separación entre el ícono y el texto */
-        }
-
-                /* Estilo general para los checkboxes dentro de la tabla */
-        table .seleccionar {
-            width: 20px;  /* Tamaño más pequeño y proporcional */
-            height: 20px;
-            border-radius: 4px;  /* Bordes redondeados */
-            border: 2px solid #ddd;  /* Borde sutil */
-            transition: background-color 0.3s ease, border-color 0.3s ease;
-            background-color: #fff;  /* Fondo blanco */
-            cursor: pointer;  /* Cursor tipo puntero para indicar que es clickeable */
-        }
-
-        /* Estilo cuando el checkbox está marcado */
-        table .seleccionar:checked {
-            background-color: #4CAF50;  /* Fondo verde cuando está marcado */
-            border-color: #4CAF50;  /* Cambio de borde a verde */
-        }
-
-        /* Estilo cuando el checkbox está en foco */
-        table .seleccionar:focus {
-            outline: none;  /* Elimina el borde azul por defecto */
-            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);  /* Agrega sombra verde suave cuando tiene foco */
-        }
-
-        /* Para dar una apariencia personalizada de la casilla */
-        table .seleccionar {
-            -webkit-appearance: none;  /* Elimina el estilo por defecto en Webkit (Chrome, Safari) */
-            -moz-appearance: none;  /* Elimina el estilo por defecto en Firefox */
-            appearance: none;  /* Elimina el estilo por defecto en todos los navegadores */
-            border-radius: 5px;  /* Bordes más redondeados */
-            background-color: #fff;  /* Fondo blanco */
-            width: 18px;
-            height: 18px;
-            border: 2px solid #bbb;  /* Borde gris claro */
-            display: inline-block;  /* Hace que el checkbox se vea como un cuadro */
-            position: relative;
-        }
-
-        /* Estilo cuando el checkbox está marcado con una paloma (check) */
-        table .seleccionar:checked::before {
-            content: '';  /* No necesita texto, solo la marca */
-            position: absolute;
-            top: 4px;
-            left: 4px;
-            width: 8px;
-            height: 8px;
-            background-color: white;
-            border-radius: 2px;
-            border: solid 2px #fff;
-            transform: rotate(45deg);  /* Rota para formar una "X" */
-        }
-
-                /* Estilo para el contenedor del select */
-        #Conten {
-            font-size: 16px;  /* Aumentamos el tamaño de fuente para mejor legibilidad */
-            padding: 8px 12px;  /* Espaciado interno para un mejor clic */
-            width: 100%;  /* Asegura que el select ocupe todo el ancho disponible */
-            border: 2px solid #ddd;  /* Borde sutil de color gris */
-            border-radius: 5px;  /* Bordes redondeados */
-            background-color: #fff;  /* Fondo blanco */
-            transition: all 0.3s ease;  /* Transición suave para cambios de estado */
-            appearance: none;  /* Eliminar el estilo predeterminado en algunos navegadores */
-        }
-
-        /* Cambiar color de fondo y borde cuando el select está enfocado */
-        #Conten:focus {
-            border-color: #4CAF50;  /* Cambiar el borde a verde cuando se hace foco */
-            box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);  /* Sombra verde suave */
-            outline: none;  /* Eliminar borde de enfoque predeterminado */
-        }
-
-        /* Flecha personalizada para el select */
-        #Conten::-ms-expand {
-            display: none;  /* Eliminar la flecha por defecto en IE/Edge */
-        }
-
-        #Conten {
-            background-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%2210%22 viewBox=%220 0 10 10%22%3E%3Cpath fill=%22none%22 stroke=%22#333%22 stroke-width=%22.8%22 d=%22M1 3l4 4 4-4%22/%3E%3C/svg%3E');
-            background-position: right 10px center;
-            background-repeat: no-repeat;
-            padding-right: 30px;  /* Asegura que el contenido no se cubra con la flecha */
-        }
-
-        /* Mejorar la apariencia del dropdown cuando está abierto */
-        #Conten:active, #Conten:focus {
-            background-color: #f5f5f5;  /* Fondo ligeramente gris cuando se abre */
-            border-color: #4CAF50;  /* Bordes verdes */
-        }
-
-        /* Estilo para la lista de opciones dentro del select */
-        #Conten option {
-            padding: 10px;
-            font-size: 14px;
-            color: #333;  /* Color de texto */
-            background-color: #fff;  /* Fondo blanco */
-            transition: background-color 0.3s ease;  /* Transición suave al cambiar el fondo */
-        }
-
-        /* Resaltar la opción seleccionada */
-        #Conten option:checked {
-            background-color: #4CAF50;  /* Fondo verde para opción seleccionada */
-            color: white;  /* Texto blanco cuando se selecciona */
-        }
-
-        /* Estilo para el select cuando no tiene valor */
-        #Conten option:first-child {
-            color: #888;  /* Color gris claro para la opción predeterminada */
-        }
-        .half {
-        display: flex;
-        height: 100%;
-        grid-template-columns:  repeat(auto-fit, minmax(min-content, max-content)); /* Divide cada mitad en dos columnas iguales */
-        gap: 5px; /* Espacio entre columnas */
-        text-align: center;
-        }
-
-        .box {
-            background-color: #f0f0f0;
-            border: 1px solid #ddd;
-            padding: 10px;
-            flex: auto; 
-            height: 100%;    
-        }
-
-        /* Estilo para el input de tipo fecha */
-input[type="date"] {
-    width: 100%;  /* Asegura que el input ocupe todo el ancho disponible dentro de su contenedor */
-    max-width: 250px;  /* Limita el ancho máximo del campo de fecha */
-    padding: 10px;  /* Ajusta el espacio dentro del input */
-    font-size: 14px;  /* Ajusta el tamaño de la fuente */
-    text-align: center;  /* Alinea el texto de la fecha al centro */
-    border: 1px solid #ddd;  /* Borde sutil */
-    border-radius: 5px;  /* Bordes redondeados */
-    background-color: #fff;  /* Fondo blanco */
-    transition: all 0.3s ease;  /* Transición suave para el enfoque */
-}
-
-input[type="date"]:focus {
-    border-color: #4CAF50;  /* Cambia el borde a verde cuando está en foco */
-    box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);  /* Agrega una sombra suave cuando está enfocado */
-    outline: none;  /* Elimina el borde de enfoque predeterminado */
-}
-
-        /* Estilo general para el campo de fecha */
-#date {
-    width: 100%;  /* Asegura que ocupe el ancho completo del contenedor */
-    padding: 10px 12px;  /* Espaciado interno */
-    font-size: 16px;  /* Tamaño de fuente */
-    border: 1px solid #ddd;  /* Borde suave */
-    border-radius: 5px;  /* Bordes redondeados */
-    background-color: #fff;  /* Fondo blanco */
-    transition: all 0.3s ease;  /* Transición suave para el enfoque */
-    -webkit-appearance: none;  /* Elimina el estilo predeterminado en Webkit (Chrome, Safari) */
-    -moz-appearance: none;  /* Elimina el estilo predeterminado en Firefox */
-    appearance: none;  /* Elimina el estilo predeterminado en todos los navegadores */
-}
-
-/* Cambio de estilo cuando el campo tiene foco (cuando está seleccionado) */
-#date:focus {
-    border-color: #4CAF50;  /* Borde verde cuando se hace foco */
-    box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);  /* Sombra verde suave */
-    outline: none;  /* Eliminar el borde azul predeterminado */
-}
-
-/* Opcional: Personalización del ícono de calendario */
-#date::-webkit-calendar-picker-indicator {
-    background-image: url('https://upload.wikimedia.org/wikipedia/commons/3/3b/Calendar_icon_%28web%29.svg');
-    background-size: 18px;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-    </style>
+  <style>
+    body {
+      background-color: #f9f9f9;
+    }
+    .table-custom-header th {
+      background: linear-gradient(to right, #6c757d, #495057);
+      color: white !important;
+      font-weight: bold;
+      text-align: center;
+    }
+    .is-stretch {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .is-stretch > .field {
+      flex: 1;
+      min-width: 180px;
+    }
+    .content-controls {
+      margin-top: 2rem;
+    }
+    .mb-1 {
+      margin-bottom: 1rem;
+    }
+    .seleccionar {
+      width: 18px;
+      height: 18px;
+      border: 2px solid #bbb;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .seleccionar:checked {
+      background-color: #4CAF50;
+      border-color: #4CAF50;
+    }
+    .eliminar {
+      background: none;
+      border: none;
+      color: red;
+      cursor: pointer;
+    }
+    .editable-cell {
+      background-color: #fff;
+      border: 1px solid #ccc;
+      padding: 4px;
+      text-align: center;
+    }
+  </style>
 </head>
+
 <body>
-    <h1 class="roboto">Panel</h1>
-    <br>
-    <div class = "container"> 
-        <div class="half">
-
-            <div class="box">
-                <a href="{% url 'inventarioProd_packinglist' %}">Consulta OV</a> 
-            </div>
-        </div>   
-    </div>
-    <div class = "container"> 
-        <div class="half">
-            <div class="box">
-                <form>
-                    <div><label for="contenedor">Contenedor:</label></div>
-                    <div class="select"> 
-                        <select name="contenedor" id="Conten">
-                        </select>
-                    </div>
-                </form>      
-            </div>
-            <div class="box">
-                <form>
-                    <div><label for="fecha">Fecha - Produccion:</label></div>
-                    <div>
-                        <input class="input" id="date" type="date" value={{fecha}}>
-                    </div>
-                </form>      
-            </div>
-        </div>
-    </div>
-
+  <section class="section">
     <div class="container">
-        <div class="columns">
-            <div class="column is-12">
-            <div class="table-container">
-                <table class="table is-striped is-hoverable is is-fullwidth" id="myTable">
-                <thead id = "enc1">
-                    <tr class="header">
-                    <th >Proveedor</th>
-                    <th >Cultivo</th>
-                    <th >itemSAPCode</th>
-                    <th >itemSAPName</th>
-                    <th >Cajas</th>
-                    <th >Libras</th>
-                    <th >Seleccionar</th>
-                    <th >Eliminar</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {%for registro in registros %} 
-                <tr> 
-                    <td>{{registro.proveedor}}</td>
-                    <td>{{registro.cultivo}}</td>
-                    <td>{{registro.itemsapcode}}</td>
-                    <td>{{registro.itemsapname}}</td>
-                    <td><div contenteditable="true" class="editable-cell">{{registro.cajas_restantes}}</div></td>
-                    <td><div>{{registro.libras_restantes}}</div></td>
-                    <td><input type="checkbox" class="seleccionar"></td>
-                   <td><button class="eliminar"><i class="fas fa-trash-alt"></i></button></td>
-                    </tr> 
-                        
-                {% endfor %}
-                </tbody>
-                <tr id="totalRow">
-                    <td colspan="7" style="text-align: right; font-weight: bold;">Total:</td>
-                    <td id="totalCajas">0</td>
-                    <td colspan="3"></td> <!-- Espacio para las otras columnas -->
-                </tr>
-                </table>
-            </div>
-            </div>
+
+      <!-- HEADER -->
+      <section class="hero is-success is-small mb-5">
+        <div class="hero-body">
+          <div class="container has-text-centered">
+            <h1 class="title is-3 has-text-white">Panel de Control</h1>
+            <p class="subtitle is-6 has-text-white-ter">Gestión de carga de contenedores</p>
+          </div>
         </div>
-        </div>
-        <br>
-        <div class = "container"> 
-            <div class="half">
-                <div class="box">
-                    <form>
-                        <div>
-                            <input type="button" value="Enviar" class="envio3">
-                        </div>
-                    </form>      
-                </div>
+      </section>
+
+      <!-- FILTROS -->
+      <div class="filters">
+        <form id="formulario-contenedor">
+          <div class="is-stretch">
+            <div class="field">
+              <label class="label" for="Conten">Contenedor</label>
+              <div class="select is-fullwidth">
+                <select id="Conten" name="contenedor">
+                  <option value="">Seleccionar contenedor</option>
+                  <!-- Opciones se cargan dinámicamente -->
+                </select>
+              </div>
             </div>
+
+            <div class="field">
+              <label class="label" for="date">Fecha - Producción</label>
+              <input class="input" id="date" type="date" value="{{ fecha }}">
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- BOTÓN CONSULTAR OPCIONAL -->
+      <div class="mb-1">
+        <a href="{% url 'inventarioProd_packinglist' %}" class="button is-link">
+          <span class="icon"><i class="fas fa-search"></i></span>
+          <span>Consulta OV</span>
+        </a>
+      </div>
+
+      <!-- TABLA -->
+      <div class="box">
+        <div class="table-container">
+          <table class="table is-striped is-hoverable is-fullwidth" id="myTable">
+            <thead class="table-custom-header">
+              <tr>
+                <th>Proveedor</th>
+                <th>Cultivo</th>
+                <th>ItemCode</th>
+                <th>ItemName</th>
+                <th>Cajas</th>
+                <th>Libras</th>
+                <th>Seleccionar</th>
+                <th>Eliminar</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for registro in registros %}
+              <tr>
+                <td>{{ registro.proveedor }}</td>
+                <td>{{ registro.cultivo }}</td>
+                <td>{{ registro.itemsapcode }}</td>
+                <td>{{ registro.itemsapname }}</td>
+                <td><div contenteditable="true" class="editable-cell">{{ registro.cajas_restantes }}</div></td>
+                <td>{{ registro.libras_restantes }}</td>
+                <td><input type="checkbox" class="seleccionar"></td>
+                <td><button class="eliminar"><i class="fas fa-trash-alt"></i></button></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="6" class="has-text-right"><strong>Total:</strong></td>
+                <td id="totalCajas">0</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
         </div>
+      </div>
+
+      <!-- BOTONES FINALES -->
+      <div class="columns content-controls">
+        <div class="column is-6">
+          <a href="{% url 'salidasFruta_listValle' %}" class="button is-success is-fullwidth">
+            <span class="icon"><i class="fas fa-home"></i></span>
+            <span>Ir al Home</span>
+          </a>
+        </div>
+        <div class="column is-6 has-text-right">
+          <button type="button" class="button is-success is-fullwidth envio3">
+            <span class="icon"><i class="fas fa-paper-plane"></i></span>
+            <span>Enviar</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </section>
 </body>
+
 <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
