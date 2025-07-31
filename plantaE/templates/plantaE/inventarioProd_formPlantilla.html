@@ -19,9 +19,6 @@
       font-weight: bold;
       text-align: center;
     }
-    .content-controls {
-      margin-top: 2rem;
-    }
     .is-stretch {
       display: flex;
       flex-wrap: wrap;
@@ -31,12 +28,19 @@
       flex: 1;
       min-width: 180px;
     }
+    .content-controls {
+      margin-top: 2rem;
+    }
+    .mb-1 {
+      margin-bottom: 1rem;
+    }
   </style>
 </head>
 
 <body>
   <section class="section">
     <div class="container">
+
       <!-- HEADER -->
       <section class="hero is-success is-small mb-5">
         <div class="hero-body">
@@ -103,15 +107,16 @@
               <label class="label" for="correo">Usuario</label>
               <input class="input" type="text" id="correo" value="{{ usuario }}" readonly>
             </div>
-
-            <div class="field is-flex is-align-items-end">
-              <button id="consultar" type="button" class="button is-success">
-                <span class="icon"><i class="fas fa-search"></i></span>
-                <span>Consultar</span>
-              </button>
-            </div>
           </div>
         </form>
+      </div>
+
+      <!-- BOTÓN CONSULTAR ARRIBA DE LA TABLA -->
+      <div class="mb-1">
+        <button id="consultar" type="button" class="button is-success">
+          <span class="icon"><i class="fas fa-search"></i></span>
+          <span>Consultar</span>
+        </button>
       </div>
 
       <!-- TABLA -->
@@ -132,7 +137,7 @@
         </div>
       </div>
 
-      <!-- CONTROLES -->
+      <!-- BOTONES FINALES -->
       <div class="columns content-controls">
         <div class="column is-6 has-text-centered">
           <a href="{% url 'salidasFruta_listValle' %}" class="button is-success is-medium is-rounded">
@@ -147,8 +152,10 @@
           </button>
         </div>
       </div>
+
     </div>
   </section>
+
 <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
