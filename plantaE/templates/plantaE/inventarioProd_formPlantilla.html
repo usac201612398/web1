@@ -1,341 +1,375 @@
 <!DOCTYPE html>
-<html>
-{% load static %}    
+<html lang="es">
+{% load static %}
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous">   
+  <meta charset="UTF-8" />
+  <title>Panel - inventarioFruta</title>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
-    <title>inventarioFruta</title>
-    <style>
+  <!-- Bulma CSS -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
 
-        .inputs-row {
-        display: flex;
-        flex-wrap: nwrap; /* Para que se acomoden bien en pantallas más pequeñas */
-        }
-
-    
-        h1 {
-            margin: 15px;
-            font-family: Arial, sans-serif;
-        }
-
-        a {
-            margin: 20px;
-            font-family: Arial, sans-serif;
-        }
-
-        .half {
-        display: flex;
-        height: 100%;
-        grid-template-columns:  repeat(auto-fit, minmax(min-content, max-content)); /* Divide cada mitad en dos columnas iguales */
-        gap: 5px; /* Espacio entre columnas */
-        text-align: center;
-        }
-
-        .box {
-            background-color: #f0f0f0;
-            border: 1px solid #ddd;
-            padding: 10px;
-            flex: auto; 
-            height: 100%;    
-        }
-        td {
-            padding: 0;
-        }
-        td input {
-            width: 100%;
-            border: none;
-            background: transparent;
-        }
-
-    </style>
+  <style>
+    body {
+      background-color: #f9f9f9;
+    }
+    .panel-header {
+      margin-bottom: 1.5rem;
+    }
+    .filters {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    .data-section {
+      margin-top: 2rem;
+    }
+    .box {
+      border-radius: 6px;
+    }
+    .table-custom-header th {
+      background: linear-gradient(to right, #6c757d, #495057);
+      color: white !important;
+      font-weight: 600;
+      text-align: center;
+      white-space: nowrap;
+    }
+    /* Editable cells styling */
+    .editable-cell {
+      min-height: 1.8em;
+      padding: 0.3em;
+      border-radius: 4px;
+      border: 1px solid transparent;
+      transition: border-color 0.2s ease;
+      cursor: text;
+      background-color: #fff;
+    }
+    .editable-cell:focus {
+      outline: none;
+      border-color: #48c774; /* Bulma green */
+      background-color: #f0fff4;
+    }
+    /* Button style for delete */
+    .button.delete-btn {
+      background-color: #ff3860;
+      color: white;
+      border: none;
+      padding: 0.4em 0.6em;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .button.delete-btn:hover {
+      background-color: #ff1f4b;
+    }
+    /* Full width select */
+    .select.is-fullwidth select {
+      width: 100%;
+    }
+  </style>
 </head>
 
 <body>
-    <h1 class="roboto">Panel</h1>
-    <br>
-    <div class = "container">
-        <div class="half">
-
-            <div class="box">
-                <form>
-                    <div><label for="fecha">Fecha:</label></div>
-                    <div>
-                        <input class="input" id="date" type="date">
-                    </div>
-                </form>      
-            </div>
-
-            <div class="box">
-                <div><label for="prov">Proveedor:</label></div>
-                <div class="select"> 
-                    <select name="Proveedor" id="Pro">
-                        <option value="">-</option>
-                        <option value="SDC">SDC</option>
-                        <option value="INVERNADEROS TECNOLOGICOS S.A">INVERNADEROS TECNOLOGICOS S.A</option>
-                        <option value="PRODUCTOS DEL VALLE, S.A.">PRODUCTOS DEL VALLE, S.A.</option>
-                        <option value="HORTEX, S.A.">HORTEX, S.A.</option>
-                        <option value="DANIEL ESTUARDO GALICIA CARRERA">DANIEL ESTUARDO GALICIA CARRERA</option>
-                        <option value="INVERSIONES LA PASTORIA, S.A.">INVERSIONES LA PASTORIA, S.A.</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="box">
-                <div><label for="cultivo">Cultivo:</label></div>
-                <div class="select"> 
-                    <select name="Cultivo" id="Cul">
-                        <option value="">-</option>
-                        <option value="BLOCKY ORGANICO">BLOCKY ORGANICO</option>
-                        <option value="BLOCKY">BLOCKY</option>
-                        <option value="CHERRY">CHERRY</option>
-                        <option value="GRAPE">GRAPE</option>
-                        <option value="MEDLEY">MEDLEY</option>
-                        <option value="GRAPE ORGANICO">GRAPE ORGANICO</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="box">
-                <div><label for="categoria">Categoria:</label></div>
-                
-                <div class="select"> 
-                    <select name="Categoria" id="Cat">
-                        <option value="">-</option>
-                        <option value="Exportación">Exportación</option>
-                        <option value="Carreta">Carreta</option>
-                        <option value="Cenma">Cenma</option>
-                        <option value="Devolución">Devolución</option>
-                    </select>
-                </div>
-            </div>
-            
-
-            <div class="box">
-                <form>
-                    <div><label for="correo">Usuario:</label></div>
-                    <div>
-                        <input class="input" id="correo" type="text" value={{usuario}} readonly>
-                    </div>
-                </form>      
-            </div>    
-        </div>
-    </div>
-
+  <section class="section">
     <div class="container">
-        <button id="consultar">Consultar</button>
+      <!-- HEADER -->
+      <section class="hero is-success is-small mb-5">
+        <div class="hero-body">
+          <div class="container has-text-centered">
+            <h1 class="title is-3 has-text-white">Panel de Control</h1>
+            <p class="subtitle is-6 has-text-white-ter">
+              Consulta y gestión de inventario de fruta
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- FILTROS -->
+      <div class="filters box">
+        <form id="filtros">
+          <div class="columns is-variable is-4 is-multiline">
+            <div class="column is-3">
+              <label class="label" for="date">Fecha</label>
+              <input
+                class="input"
+                id="date"
+                type="date"
+                value="{{ fecha }}"
+                autocomplete="off"
+              />
+            </div>
+            <div class="column is-3">
+              <label class="label" for="Pro">Proveedor</label>
+              <div class="select is-fullwidth">
+                <select id="Pro" name="Proveedor">
+                  <option value="">-</option>
+                  <option value="SDC">SDC</option>
+                  <option value="INVERNADEROS TECNOLOGICOS S.A">
+                    INVERNADEROS TECNOLOGICOS S.A
+                  </option>
+                  <option value="PRODUCTOS DEL VALLE, S.A.">
+                    PRODUCTOS DEL VALLE, S.A.
+                  </option>
+                  <option value="HORTEX, S.A.">HORTEX, S.A.</option>
+                  <option value="DANIEL ESTUARDO GALICIA CARRERA">
+                    DANIEL ESTUARDO GALICIA CARRERA
+                  </option>
+                  <option value="INVERSIONES LA PASTORIA, S.A.">
+                    INVERSIONES LA PASTORIA, S.A.
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="column is-3">
+              <label class="label" for="Cul">Cultivo</label>
+              <div class="select is-fullwidth">
+                <select id="Cul" name="Cultivo">
+                  <option value="">Seleccionar cultivo</option>
+                  <option value="BLOCKY ORGANICO">BLOCKY ORGANICO</option>
+                  <option value="BLOCKY">BLOCKY</option>
+                  <option value="CHERRY">CHERRY</option>
+                  <option value="GRAPE">GRAPE</option>
+                  <option value="MEDLEY">MEDLEY</option>
+                  <option value="GRAPE ORGANICO">GRAPE ORGANICO</option>
+                </select>
+              </div>
+            </div>
+            <div class="column is-3">
+              <label class="label" for="Cat">Categoría</label>
+              <div class="select is-fullwidth">
+                <select id="Cat" name="Categoria">
+                  <option value="">-</option>
+                  <option value="Exportación">Exportación</option>
+                  <option value="Carreta">Carreta</option>
+                  <option value="Cenma">Cenma</option>
+                  <option value="Devolución">Devolución</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="column is-4">
+              <label class="label" for="correo">Usuario</label>
+              <input
+                class="input"
+                id="correo"
+                type="text"
+                value="{{ usuario }}"
+                readonly
+                autocomplete="off"
+              />
+            </div>
+            <div class="column is-2 is-flex is-align-items-end">
+              <button
+                type="button"
+                id="consultar"
+                class="button is-success is-fullwidth"
+              >
+                <span class="icon"><i class="fas fa-search"></i></span>
+                <span>Consultar</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- TABLA DE RESULTADOS -->
+      <div class="data-section">
+        <div class="box">
+          <h2 class="title is-5">Detalle de Productos</h2>
+          <div class="table-container">
+            <table
+              class="table is-striped is-hoverable is-fullwidth"
+              id="myTable"
+            >
+              <thead class="table-custom-header">
+                <tr>
+                  <th>ItemCode</th>
+                  <th>ItemName</th>
+                  <th>Cajas</th>
+                  <th>Libras</th>
+                  <th>Eliminar</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOTÓN ENVIAR -->
+      <div class="data-section">
+        <div class="box has-text-right">
+          <button class="button is-primary envio3">
+            <span class="icon"><i class="fas fa-paper-plane"></i></span>
+            <span>Enviar</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- LINK HOME -->
+      <div class="has-text-centered mt-6">
+        <a
+          href="{% url 'salidasFruta_listValle' %}"
+          class="button is-success is-medium is-rounded"
+        >
+          <span class="icon"><i class="fas fa-home"></i></span>
+          <span>Ir al Home</span>
+        </a>
+      </div>
     </div>
-    
-    <div class="container">
-        <div class="columns">
-            <div class="column is-12">
-            <div class="table-container">
-                <table class="table is-striped is-hoverable is is-fullwidth" id="myTable">
-                <thead id = "enc1">
-                    <tr class="header">
-                    <th >ItemCode</th>
-                    <th >ItemName</th>
-                    <th >Cajas</th>
-                    <th >Libras</th>
-                    <th >Eliminar</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-                </table>
-            </div>
-            </div>
-        </div>
-        </div>
-        <br>
-        <div class = "container"> 
-            <div class="half">
-                <div class="box">
-                    <form>
-                        <div>
-                            <input type="button" value="Enviar" class="envio3">
-                        </div>
-                    </form>      
-                </div>
-            </div>
-        </div>
+  </section>
 
-</body>
-<script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  <!-- SCRIPTS -->
+  <script src="{% static '/lib/cockies.js' %}"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css"
+  />
+  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
-<script>
-
-    $(document).ready(function() {
-        $('#myTable').DataTable();
+  <script>
+    $(document).ready(function () {
+      // Inicializa DataTable sin paginación y sin buscar, para editar filas directamente
+      $('#myTable').DataTable({
+        paging: false,
+        searching: false,
+        info: false,
+        ordering: false,
+        columnDefs: [
+          { orderable: false, targets: [2, 3, 4] },
+        ],
+      });
     });
 
-</script>
-<script>
+    // Evento Consultar
+    document.getElementById('consultar').addEventListener('click', function () {
+      const cultivo = document.getElementById('Cul').value;
+      const categoria = document.getElementById('Cat').value;
+      const tbody = document.querySelector('#myTable tbody');
 
-document.getElementById('consultar').addEventListener('click', function() {
-    const opcionSeleccionada1 = document.getElementById('Cul').value;
-    const opcionSeleccionada2 = document.getElementById('Cat').value;
-    console.log(opcionSeleccionada1);
-    console.log(opcionSeleccionada2);
-    const tbody = document.querySelector('#myTable tbody');
+      tbody.innerHTML = '';
 
-    // Limpiar la tabla antes de agregar nuevos datos
-    tbody.innerHTML = '';
-
-    fetch('{% url "inventarioProd_create" %}', { // Asegúrate de poner la URL correcta
+      fetch('{% url "inventarioProd_create" %}', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-CSRFToken': getCookie('csrftoken')  // Asegúrate de incluir CSRF token
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': getCookie('csrftoken'),
         },
         body: new URLSearchParams({
-            'opcion1': opcionSeleccionada1,
-            'opcion2': opcionSeleccionada2
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data)
-        data.datos.forEach(item => {
+          opcion1: cultivo,
+          opcion2: categoria,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          data.datos.forEach((item) => {
             const fila = document.createElement('tr');
-            fila.innerHTML = `<td>${item.itemsapcode}</td><td>${item.itemsapname}</td><td><div contenteditable="true" class="editable-cell"></div></td><td><div contenteditable="true" class="editable-cell"></div></td><td><button class="eliminar"><i class="fas fa-trash-alt"></i></button></td>`;
+
+            fila.innerHTML = `
+              <td>${item.itemsapcode}</td>
+              <td>${item.itemsapname}</td>
+              <td><div contenteditable="true" class="editable-cell"></div></td>
+              <td><div contenteditable="true" class="editable-cell"></div></td>
+              <td><button class="button delete-btn" title="Eliminar"><i class="fas fa-trash-alt"></i></button></td>
+            `;
             tbody.appendChild(fila);
+          });
         });
     });
-});
 
-$('.envio3').on('click', function() {
-    var resume_table = document.getElementById("myTable");
-    var fecha = document.getElementById('date').value;
-    var correo = document.getElementById('correo').value;
-    var datos = []
-    var elem = 0
-    for (var i = 1, row; row = resume_table.rows[i]; i++) {
-        if (row.style.display !== "none") {
-            //alert(cell[i].innerText);
-            filas = []
-            for (var j = 0, col; col = row.cells[j]; j++) {
-                //alert(col[j].innerText);
-                if (j === 3 || j ===2) {
-                    if(col.innerText === ''){
-                        elem = null
-                    }
-                    else{
-                        elem = parseFloat(col.innerText);    
-                    }   
-                    filas.push(elem);
-                }
-                else {
-                    filas.push(col.innerText);
-                }
+    // Eliminar fila
+    $(document).on('click', '.delete-btn', function () {
+      $(this).closest('tr').remove();
+    });
+
+    // Enviar datos
+    $('.envio3').on('click', function () {
+      const tabla = document.getElementById('myTable');
+      const fecha = document.getElementById('date').value;
+      const correo = document.getElementById('correo').value;
+      const provSelect = document.getElementById('Pro');
+      const cultSelect = document.getElementById('Cul');
+      const catSelect = document.getElementById('Cat');
+
+      let datos = [];
+
+      for (let i = 1; i < tabla.rows.length; i++) {
+        const row = tabla.rows[i];
+
+        if (row.style.display !== 'none') {
+          let filaDatos = [];
+
+          // ItemCode y ItemName (col 0 y 1)
+          filaDatos.push(row.cells[0].innerText.trim());
+          filaDatos.push(row.cells[1].innerText.trim());
+
+          // Cajas y Libras (contenteditable divs in col 2 and 3)
+          for (let j = 2; j <= 3; j++) {
+            const div = row.cells[j].querySelector('div.editable-cell');
+            let val = div ? div.innerText.trim() : '';
+
+            // Validar que val sea número
+            if (!val || isNaN(val)) {
+              alert('Por favor ingresa un número válido en Cajas y Libras');
+              return;
             }
-                var prov = document.getElementById('Pro'),
-                    value_prov = prov.value,
-                    text_prov = prov.options[prov.selectedIndex].innerText;
-                    filas.push(text_prov);
-                var cult = document.getElementById('Cul'),
-                    value_cult = cult.value,
-                    text_cult = cult.options[cult.selectedIndex].innerText;
-                    filas.push(text_cult);
-                var cat = document.getElementById('Cat'),
-                    value_cat = cat.value,
-                    text_cat = cat.options[cat.selectedIndex].innerText;
-                    filas.push(text_cat);
-                filas.push(fecha);
-                filas.push(correo);
-            datos.push(filas);
+            filaDatos.push(val);
+          }
+
+          datos.push(filaDatos);
         }
-    }
-    console.log(datos);
-    $.ajax({
-            
-            url: '{% url "inventarioProd_grabar" %}',  // URL para la vista AJAX
-            type: 'POST',
-            dataType: "json",
-            data:  JSON.stringify({'array':datos}),
-            contentType: 'application/json',
-            headers: {'X-CSRFToken': csrftoken}, 
-            
-            success: function(data) {
-                // Limpia las opciones actuales del campo 'name'
-                alert(data.msm)
-                console.log(data)
-                // Recorre los productos recibidos y añade opciones al campo 'name'
-                
-            },
-            error: function(xhr, status, error) {
-                console.error('Error:', error);  // Maneja errores de la solicitud
-            }
+      }
+
+      const dataToSend = {
+        fecha: fecha,
+        proveedor: provSelect.value,
+        cultivo: cultSelect.value,
+        categoria: catSelect.value,
+        usuario: correo,
+        datos: datos,
+      };
+
+      fetch('{% url "inventarioProd_create_save" %}', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: JSON.stringify(dataToSend),
+      })
+        .then((res) => res.json())
+        .then((respuesta) => {
+          if (respuesta.status === 'success') {
+            alert('Datos guardados exitosamente');
+          } else {
+            alert('Error al guardar datos');
+          }
         });
-    
-        //window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/inventarioProd')
+    });
 
-    
-  });
-
-const eliminarBotones = document.querySelectorAll('.eliminar');
-
-$(document).on('click', '.eliminar', function() {
-    $(this).closest('tr').remove();
-});
-
-$(document).ready(function() {
-        // Función para cargar productos basados en la categoría seleccionada
-    function authUsuario() {
-        $.ajax({
-            url: '{% url "obtener_nombre_usuario" %}',  // URL para la vista AJAX
-            data: {
-                'category_id': "Consulta"  // Envia el ID de la categoría como parámetro
-            },
-            success: function(data) {
-                // Limpia las opciones actuales del campo 'name'
-                var initialCategoryId =data.username;  // Obtiene el valor inicial del campo 'category'
-                $('#date').val(data.fecha);
-                $('#correo').val(data.username);
-                if (initialCategoryId) {
-                    console.log(initialCategoryId);
-                    loadProducts(initialCategoryId);
-                }
-            
-            },
-            error: function(xhr, status, error) {
-                console.error('Error:', error);  // Maneja errores de la solicitud
-            }
-        });
+    // Función para obtener cookie csrftoken
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === name + '=') {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
     }
-    function loadProducts(categoryId) {
-        $.ajax({
-            url: '{% url "load_dataUsuario" %}',  // URL para la vista AJAX
-            data: {
-                'category_id': categoryId  // Envia el ID de la categoría como parámetro
-            },
-            success: function(data) {
-                // Limpia las opciones actuales del campo 'name'
-                console.log(data);
-
-                // Recorre los productos recibidos y añade opciones al campo 'name'
-                $.each(data.datos, function(index, product) {
-                    $('#Lug').append(
-                        $('<option>').text(product.finca.toString()).attr('value', product.finca.toString())
-                            
-                    );
-                    
-                });
-
-            },
-            error: function(xhr, status, error) {
-                console.error('Error:', error);  // Maneja errores de la solicitud
-            }
-        });
-    }
-    
-    authUsuario();
-    // Llama a la función de carga de productos al cargar la página
-        
-});
-
-</script>
+  </script>
+</body>
+</html>
