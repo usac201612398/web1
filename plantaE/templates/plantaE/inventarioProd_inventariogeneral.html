@@ -53,8 +53,6 @@
 </head>
 <body>
 
-  <h1>Panel de Inventario</h1>
-
   <div class="container">
     <div class="table-container">
       <table class="table is-striped is-hoverable is-fullwidth" id="myTable">
@@ -84,14 +82,16 @@
 
   <br>
   <!-- BOTONES FINALES -->
-    <div class="columns content-controls">
-    <div class="column is-6">
-        <a href="{% url 'salidasFruta_listValle' %}" class="button is-success is-medium is-fullwidth">
+<div class="container mt-5">
+  <div class="columns is-centered">
+    <div class="column is-narrow">
+      <a href="{% url 'salidasFruta_listValle' %}" class="button is-success is-medium" style="min-width: 200px;">
         <span class="icon"><i class="fas fa-home"></i></span>
         <span>Ir al Home</span>
-        </a>
+      </a>
     </div>
-    </div>
+  </div>
+</div>
 
 </body>
 
@@ -103,8 +103,25 @@
 
 <script>
 
-    $(document).ready(function() {
-        $('#myTable').DataTable();
+   $(document).ready(function() {
+        $('#myTable').DataTable({
+            pageLength: 20,  // Cuántas filas se muestran por defecto
+            lengthMenu: [5, 10,20, 25, 50, 100], // Opciones de entradas
+            language: {
+            lengthMenu: "Mostrar _MENU_ entradas",
+            zeroRecords: "No se encontraron resultados",
+            info: "Mostrando _START_ a _END_ de _TOTAL_ entradas",
+            infoEmpty: "Mostrando 0 a 0 de 0 entradas",
+            infoFiltered: "(filtrado de _MAX_ entradas totales)",
+            search: "Buscar:",
+            paginate: {
+                first: "Primero",
+                last: "Último",
+                next: "Siguiente",
+                previous: "Anterior"
+            },
+            }
+        });
     });
 
 </script>
