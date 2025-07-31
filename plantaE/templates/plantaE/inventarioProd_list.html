@@ -52,46 +52,64 @@
 </head>
 <body>
   
+<!-- Sección de tarjetas -->
+<section class="section">
+  <div class="container">
+    <div class="columns is-multiline is-variable is-5">
 
-  <!-- Tarjetas de navegación -->
-  <section class="section">
-    <div class="container">
-  
-  <br>
-      <div class="columns is-multiline is-variable is-4">
-        <div class="column is-one-third">
-          <a href="{% url 'reporte_inventario' %}" class="card-link">
-            <span class="icon"><i class="fas fa-chart-line"></i></span><br>
-            Acumulado Diario
-          </a>
-        </div>
-        <div class="column is-one-third">
-          <a href="{% url 'inventarioProd_contenlistv2' %}" class="card-link">
-            <span class="icon"><i class="fas fa-box-open"></i></span><br>
-            Carga Contenedor
-          </a>
-        </div>
-        <div class="column is-one-third">
-          <a href="{% url 'inventarioProd_inventariogeneral' %}" class="card-link">
-            <span class="icon"><i class="fas fa-warehouse"></i></span><br>
-            Inventario General
-          </a>
-        </div>
+      <!-- Tarjeta 1 -->
+      <div class="column is-one-third">
+        <a href="{% url 'reporte_inventario' %}" class="box has-text-centered is-clickable dashboard-card">
+          <span class="icon is-large has-text-primary mb-2">
+            <i class="fas fa-chart-line fa-2x"></i>
+          </span>
+          <p class="title is-6 mb-0">Acumulado Diario</p>
+        </a>
       </div>
 
-        <div class="level mb-4">
-            <div class="level-left">
-                <a href="{% url 'inventarioProd_create' %}" class="button is-primary is-rounded">
-                <span class="icon"><i class="fas fa-plus"></i></span>
-                <span>Agregar Registro</span>
-                </a>
-            </div>
-        </div>
+      <!-- Tarjeta 2 -->
+      <div class="column is-one-third">
+        <a href="{% url 'inventarioProd_contenlistv2' %}" class="box has-text-centered is-clickable dashboard-card">
+          <span class="icon is-large has-text-warning mb-2">
+            <i class="fas fa-box-open fa-2x"></i>
+          </span>
+          <p class="title is-6 mb-0">Carga Contenedor</p>
+        </a>
+      </div>
+
+      <!-- Tarjeta 3 -->
+      <div class="column is-one-third">
+        <a href="{% url 'inventarioProd_inventariogeneral' %}" class="box has-text-centered is-clickable dashboard-card">
+          <span class="icon is-large has-text-info mb-2">
+            <i class="fas fa-warehouse fa-2x"></i>
+          </span>
+          <p class="title is-6 mb-0">Inventario General</p>
+        </a>
+      </div>
+
     </div>
-  </section>
+  </div>
+</section>
+
+
+<section class="section pt-0 pb-0">
+  <div class="container">
+    <div class="level">
+      <div class="level-left">
+        <h2 class="title is-5">Inventario Registrado</h2>
+      </div>
+      <div class="level-right">
+        <a href="{% url 'inventarioProd_create' %}" class="button is-success is-rounded">
+          <span class="icon"><i class="fas fa-plus"></i></span>
+          <span>Agregar</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
 
   <!-- Tabla -->
-  <section class="section pt-0">
+  <section class="section pt-3">
     <div class="container">
       <div class="table-container">
         <table class="table is-striped is-hoverable is-fullwidth" id="myTable">
