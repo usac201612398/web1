@@ -5,73 +5,31 @@
   <meta charset="UTF-8" />
   <title>Panel - inventarioFruta</title>
 
-  <!-- Bulma CSS -->
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css"
-  />
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-  />
+  <!-- Estilos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     body {
       background-color: #f9f9f9;
     }
-    .panel-header {
-      margin-bottom: 1.5rem;
-    }
-    .filters {
-      background: white;
-      padding: 1.5rem;
-      border-radius: 6px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-    .data-section {
-      margin-top: 2rem;
-    }
-    .box {
-      border-radius: 6px;
-    }
     .table-custom-header th {
       background: linear-gradient(to right, #6c757d, #495057);
-      color: white !important;
-      font-weight: 600;
-      text-align: center;
-      white-space: nowrap;
-    }
-    /* Editable cells styling */
-    [contenteditable] {
-      min-height: 1.8em;
-      padding: 0.3em;
-      border-radius: 4px;
-      border: 1px solid transparent;
-      transition: border-color 0.2s ease;
-      cursor: text;
-      background-color: #fff;
-    }
-    [contenteditable]:focus {
-      outline: none;
-      border-color: #48c774; /* Bulma green */
-      background-color: #f0fff4;
-    }
-    /* Button style for delete */
-    .button.delete-btn {
-      background-color: #ff3860;
       color: white;
-      border: none;
-      padding: 0.4em 0.6em;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
+      font-weight: bold;
+      text-align: center;
     }
-    .button.delete-btn:hover {
-      background-color: #ff1f4b;
+    .content-controls {
+      margin-top: 2rem;
     }
-    /* Full width select */
-    .select.is-fullwidth select {
-      width: 100%;
+    .is-stretch {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .is-stretch > .field {
+      flex: 1;
+      min-width: 180px;
     }
   </style>
 </head>
@@ -84,54 +42,40 @@
         <div class="hero-body">
           <div class="container has-text-centered">
             <h1 class="title is-3 has-text-white">Panel de Control</h1>
-            <p class="subtitle is-6 has-text-white-ter">
-              Consulta y gestión de inventario de fruta
-            </p>
+            <p class="subtitle is-6 has-text-white-ter">Consulta y gestión de inventario de fruta</p>
           </div>
         </div>
       </section>
 
       <!-- FILTROS -->
-      <div class="filters box">
+      <div class="box">
         <form id="filtros">
-          <div class="columns is-variable is-4 is-multiline">
-            <div class="column is-3">
+          <div class="is-stretch">
+            <div class="field">
               <label class="label" for="date">Fecha</label>
-              <input
-                class="input"
-                id="date"
-                type="date"
-                value="{{ fecha }}"
-                autocomplete="off"
-              />
+              <input class="input" type="date" id="date" value="{{ fecha }}">
             </div>
-            <div class="column is-3">
+
+            <div class="field">
               <label class="label" for="Pro">Proveedor</label>
               <div class="select is-fullwidth">
-                <select id="Pro" name="Proveedor">
-                  <option value="">-</option>
+                <select id="Pro">
+                  <option value="">Seleccionar</option>
                   <option value="SDC">SDC</option>
-                  <option value="INVERNADEROS TECNOLOGICOS S.A">
-                    INVERNADEROS TECNOLOGICOS S.A
-                  </option>
-                  <option value="PRODUCTOS DEL VALLE, S.A.">
-                    PRODUCTOS DEL VALLE, S.A.
-                  </option>
+                  <option value="INVERNADEROS TECNOLOGICOS S.A">INVERNADEROS TECNOLOGICOS S.A</option>
+                  <option value="PRODUCTOS DEL VALLE, S.A.">PRODUCTOS DEL VALLE, S.A.</option>
                   <option value="HORTEX, S.A.">HORTEX, S.A.</option>
-                  <option value="DANIEL ESTUARDO GALICIA CARRERA">
-                    DANIEL ESTUARDO GALICIA CARRERA
-                  </option>
-                  <option value="INVERSIONES LA PASTORIA, S.A.">
-                    INVERSIONES LA PASTORIA, S.A.
-                  </option>
+                  <option value="DANIEL ESTUARDO GALICIA CARRERA">DANIEL ESTUARDO GALICIA CARRERA</option>
+                  <option value="INVERSIONES LA PASTORIA, S.A.">INVERSIONES LA PASTORIA, S.A.</option>
                 </select>
               </div>
             </div>
-            <div class="column is-3">
+
+            <div class="field">
               <label class="label" for="Cul">Cultivo</label>
               <div class="select is-fullwidth">
-                <select id="Cul" name="Cultivo">
-                  <option value="">Seleccionar cultivo</option>
+                <select id="Cul">
+                  <option value="">Seleccionar</option>
                   <option value="BLOCKY ORGANICO">BLOCKY ORGANICO</option>
                   <option value="BLOCKY">BLOCKY</option>
                   <option value="CHERRY">CHERRY</option>
@@ -141,11 +85,12 @@
                 </select>
               </div>
             </div>
-            <div class="column is-3">
+
+            <div class="field">
               <label class="label" for="Cat">Categoría</label>
               <div class="select is-fullwidth">
-                <select id="Cat" name="Categoria">
-                  <option value="">-</option>
+                <select id="Cat">
+                  <option value="">Seleccionar</option>
                   <option value="Exportación">Exportación</option>
                   <option value="Carreta">Carreta</option>
                   <option value="Cenma">Cenma</option>
@@ -154,23 +99,13 @@
               </div>
             </div>
 
-            <div class="column is-4">
+            <div class="field">
               <label class="label" for="correo">Usuario</label>
-              <input
-                class="input"
-                id="correo"
-                type="text"
-                value="{{ usuario }}"
-                readonly
-                autocomplete="off"
-              />
+              <input class="input" type="text" id="correo" value="{{ usuario }}" readonly>
             </div>
-            <div class="column is-2 is-flex is-align-items-end">
-              <button
-                type="button"
-                id="consultar"
-                class="button is-success is-fullwidth"
-              >
+
+            <div class="field is-flex is-align-items-end">
+              <button id="consultar" type="button" class="button is-success">
                 <span class="icon"><i class="fas fa-search"></i></span>
                 <span>Consultar</span>
               </button>
@@ -179,49 +114,38 @@
         </form>
       </div>
 
-      <!-- TABLA DE RESULTADOS -->
-      <div class="data-section">
-        <div class="box">
-          <h2 class="title is-5">Detalle de Productos</h2>
-          <div class="table-container">
-            <table
-              class="table is-striped is-hoverable is-fullwidth"
-              id="myTable"
-            >
-              <thead class="table-custom-header">
-                <tr>
-                  <th>ItemCode</th>
-                  <th>ItemName</th>
-                  <th>Cajas</th>
-                  <th>Libras</th>
-                  <th>Eliminar</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-          </div>
+      <!-- TABLA -->
+      <div class="box">
+        <div class="table-container">
+          <table class="table is-striped is-hoverable is-fullwidth" id="myTable">
+            <thead class="table-custom-header">
+              <tr>
+                <th>ItemCode</th>
+                <th>ItemName</th>
+                <th>Cajas</th>
+                <th>Libras</th>
+                <th>Eliminar</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
         </div>
       </div>
 
-      <!-- BOTÓN ENVIAR -->
-      <div class="data-section">
-        <div class="box has-text-right">
-          <button class="button is-primary envio3">
+      <!-- CONTROLES -->
+      <div class="columns content-controls">
+        <div class="column is-6 has-text-centered">
+          <a href="{% url 'salidasFruta_listValle' %}" class="button is-success is-medium is-rounded">
+            <span class="icon"><i class="fas fa-home"></i></span>
+            <span>Ir al Home</span>
+          </a>
+        </div>
+        <div class="column is-6 has-text-right">
+          <button type="button" class="button is-primary envio3">
             <span class="icon"><i class="fas fa-paper-plane"></i></span>
             <span>Enviar</span>
           </button>
         </div>
-      </div>
-
-      <!-- LINK HOME -->
-      <div class="has-text-centered mt-6">
-        <a
-          href="{% url 'salidasFruta_listValle' %}"
-          class="button is-success is-medium is-rounded"
-        >
-          <span class="icon"><i class="fas fa-home"></i></span>
-          <span>Ir al Home</span>
-        </a>
       </div>
     </div>
   </section>
