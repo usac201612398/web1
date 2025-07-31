@@ -1,235 +1,228 @@
 <!DOCTYPE html>
-<html>
-{% load static %}     
+<html lang="es">
+{% load static %}
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous">   
+  <meta charset="UTF-8" />
+  <title>Panel - Entradas Diarias CFrio</title>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
-    <title>Entradas-Diarias-CFrio</title>
-    <style>
-        h1 {
-            margin: 15px;
-            font-family: Arial, sans-serif;
-        }
+  <!-- Estilos externos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 
-        a {
-            margin: 20px;
-            font-family: Arial, sans-serif;
-        }
-
-        .half {
-        display: flex;
-        height: 100%;
-        grid-template-columns:  repeat(auto-fit, minmax(min-content, max-content)); /* Divide cada mitad en dos columnas iguales */
-        gap: 5px; /* Espacio entre columnas */
-        text-align: center;
-        }
-
-        .box {
-            background-color: #f0f0f0;
-            border: 1px solid #ddd;
-            padding: 10px;
-            flex: auto; 
-            height: 100%;    
-        }
-        td {
-            padding: 0;
-        }
-
-        td input {
-            width: 100%;
-            border: none;
-            background: transparent;
-        }
-
-    </style>
+  <style>
+    body {
+      background-color: #f9f9f9;
+    }
+    .table-custom-header th {
+      background: linear-gradient(to right, #6c757d, #495057);
+      color: white !important;
+      font-weight: bold;
+      text-align: center;
+    }
+    .is-stretch {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .is-stretch > .field {
+      flex: 1;
+      min-width: 180px;
+    }
+    .content-controls {
+      margin-top: 2rem;
+    }
+    .mb-1 {
+      margin-bottom: 1rem;
+    }
+    td input {
+      width: 100%;
+      border: none;
+      background: transparent;
+    }
+    td.number-cell {
+      text-align: right;
+    }
+  </style>
 </head>
+
 <body>
-    <h1 class="roboto">Panel</h1>
-
-    <div class = "container">
-        <div class="half">
-
-            <div class="box">
-                <form>
-                    <div><label for="fecha">Fecha:</label></div>
-                    <div>
-                        <input class="input" id="date" type="date" value={{fecha}}>
-                    </div>
-                </form>      
-            </div>
-
-            <div class="box">
-                <form>
-                    <div><label for="correo">Usuario:</label></div>
-                    <div>
-                        <input class="input" id="correo" type="text" value={{usuario}} readonly>
-                    </div>
-                </form>      
-            </div>    
-        </div>
-    </div>
-    <br>
-
+  <section class="section">
     <div class="container">
-        <button id="consultar">Consultar</button>
+
+      <!-- ENCABEZADO -->
+      <section class="hero is-success is-small mb-5">
+        <div class="hero-body">
+          <div class="container has-text-centered">
+            <h1 class="title is-3 has-text-white">Panel de Entradas Diarias</h1>
+            <p class="subtitle is-6 has-text-white-ter">Control de inventario en frío</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- FILTROS -->
+      <form id="filtros">
+        <div class="is-stretch">
+          <div class="field">
+            <label class="label">Fecha</label>
+            <input class="input" id="date" type="date" value="{{ fecha }}">
+          </div>
+
+          <div class="field">
+            <label class="label">Usuario</label>
+            <input class="input" id="correo" type="text" value="{{ usuario }}" readonly>
+          </div>
+        </div>
+      </form>
+
+      <!-- BOTÓN CONSULTAR -->
+      <div class="mb-1">
+        <button id="consultar" type="button" class="button is-success">
+          <span class="icon"><i class="fas fa-search"></i></span>
+          <span>Consultar</span>
+        </button>
+      </div>
+
+      <!-- TABLA DE DATOS -->
+      <div class="box">
+        <div class="table-container">
+          <table class="table is-striped is-hoverable is-fullwidth" id="myTable">
+            <thead class="table-custom-header">
+              <tr>
+                <th>Fecha</th>
+                <th>Proveedor</th>
+                <th>Cultivo</th>
+                <th>ItemSAPCode</th>
+                <th>ItemSAPName</th>
+                <th>Categoría</th>
+                <th>Tarimas</th>
+                <th>Cajas</th>
+                <th>Libras</th>
+                <th>Merma</th>
+                <th>%Merma</th>
+                <th>Peso x Caja Prom.</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for registro in datos %}
+              <tr>
+                <td>{{ registro.fecha }}</td>
+                <td>{{ registro.proveedor }}</td>
+                <td>{{ registro.cultivo }}</td>
+                <td>{{ registro.itemsapcode }}</td>
+                <td>{{ registro.itemsapname }}</td>
+                <td>{{ registro.categoria }}</td>
+                <td class="number-cell" data-value="{{ registro.total_tarimas }}">{{ registro.total_tarimas }}</td>
+                <td class="number-cell" data-value="{{ registro.total_cajas }}">{{ registro.total_cajas }}</td>
+                <td class="number-cell" data-value="{{ registro.total_libras }}">{{ registro.total_libras }}</td>
+                <td class="number-cell" data-value="{{ registro.total_merma }}">{{ registro.total_merma }}</td>
+                <td class="number-cell" data-value="{{ registro.porcen_merma }}">{{ registro.porcen_merma }}</td>
+                <td class="number-cell" data-value="{{ registro.pesoxcajaprom }}">{{ registro.pesoxcajaprom }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
-    <br>
-        <div class="container">
-            <div class="columns">
-                <div class="column is-12">
-                <div class="table-container">
-                    <table class="table is-striped is-hoverable is is-fullwidth" id="myTable">
-                    <thead id = "enc1">
-                        <tr class="header">
-                            <th >Fecha</th>
-                            <th >Proveedor</th>
-                            <th >Cultivo</th>
-                            <th >ItemSAPCode</th>
-                            <th >ItemSAPName</th>
-                            <th >Categoria</th>
-                            <th >Tarimas</th>
-                            <th >Cajas</th>
-                            <th >Libras</th>
-                            <th >Merma</th>
-                            <th >%Merma</th>
-                            <th >pesoxcajaprom</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {%for registro in datos %} 
-                    
-                    <tr> 
-                     
-                        <td>{{registro.fecha}}</td>
-                        <td>{{registro.proveedor}}</td>
-                        <td>{{registro.cultivo}}</td>
-                        <td>{{registro.itemsapcode}}</td>
-                        <td>{{registro.itemsapname}}</td>
-                        <td>{{registro.categoria}}</td>
-                        <td class="number-cell" data-value="{{ registro.total_tarimas }}">{{ registro.total_tarimas }}</td>
-                        
-                        <td class="number-cell" data-value="{{ registro.total_cajas }}">{{ registro.total_cajas }}</td>
-                        <td class="number-cell" data-value="{{ registro.total_libras }}">{{ registro.total_libras }}</td>
-                        <td class="number-cell" data-value="{{ registro.total_merma }}">{{ registro.total_merma }}</td>
-                        <td class="number-cell" data-value="{{ registro.porcen_merma }}">{{ registro.porcen_merma }}</td>
-                        <td class="number-cell" data-value="{{ registro.pesoxcajaprom }}">{{ registro.pesoxcajaprom }}</td>
-                    </tr> 
-                            
-                    {% endfor %}
-                    </tbody>
-                    </table>
-                </div>
-                </div>
-            </div>
-            </div>
+  </section>
 
-</body>
+  <!-- SCRIPTS -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="{% static '/lib/cockies.js' %}"></script>
+  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
-<script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-
-<script>
-    // Función para formatear los números en ambas tablas
+  <script>
     const formatCells = (tableId) => {
-        const cells = document.querySelectorAll(`#${tableId} td.number-cell`);
-        cells.forEach(cell => {
-            const value = Number(cell.getAttribute('data-value'));
-            if (!isNaN(value)) {
-                // Usa toLocaleString para formatear correctamente
-                cell.textContent = value.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-            }
-        });
+      const cells = document.querySelectorAll(`#${tableId} td.number-cell`);
+      cells.forEach(cell => {
+        const value = Number(cell.getAttribute('data-value'));
+        if (!isNaN(value)) {
+          cell.textContent = value.toLocaleString('es-ES', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+          });
+        }
+      });
     };
 
-    // Llama a la función para ambas tablas
     document.addEventListener('DOMContentLoaded', () => {
-        formatCells('myTable');
-    });
-</script>
-<script>
+      formatCells('myTable');
 
-document.getElementById('consultar').addEventListener('click', function() {
-    const opcionSeleccionada2 = document.getElementById('date').value;
-
-    const tbody = document.querySelector('#myTable tbody');
-    // Limpiar la tabla antes de agregar nuevos datos
-    tbody.innerHTML = '';
-
-    fetch('{% url "reporte_inventario" %}', { // Asegúrate de poner la URL correcta
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-CSRFToken': getCookie('csrftoken')  // Asegúrate de incluir CSRF token
-        },
-        body: new URLSearchParams({
-            'opcion2': opcionSeleccionada2
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data)
-        data.datos.forEach(item => {
-            const fila = document.createElement('tr');
-            fila.innerHTML = `<td>${item.fecha}</td><td>${item.proveedor}</td><td>${item.cultivo}</td><td>${item.itemsapcode}</td><td>${item.itemsapname}</td><td>${item.categoria}</td><td>${item.total_tarimas}</td><td>${item.total_cajas}</td><td>${item.total_libras}</td><td>${item.total_merma}</td><td>${item.porcen_merma}</td><td>${item.pesoxcajaprom}</td>`;
-            
-            tbody.appendChild(fila);
-
-        });
-
-    });
-});
-
-$(document).ready(function() {
-        // Función para cargar productos basados en la categoría seleccionada
-    $('#myTable').DataTable({
-        pageLength: 20,  // Cuántas filas se muestran por defecto
-        lengthMenu: [5, 10,20, 25, 50, 100], // Opciones de entradas
+      $('#myTable').DataTable({
+        pageLength: 20,
+        lengthMenu: [5, 10, 20, 25, 50, 100],
         language: {
-        lengthMenu: "Mostrar _MENU_ entradas",
-        zeroRecords: "No se encontraron resultados",
-        info: "Mostrando _START_ a _END_ de _TOTAL_ entradas",
-        infoEmpty: "Mostrando 0 a 0 de 0 entradas",
-        infoFiltered: "(filtrado de _MAX_ entradas totales)",
-        search: "Buscar:",
-        paginate: {
+          lengthMenu: "Mostrar _MENU_ entradas",
+          zeroRecords: "No se encontraron resultados",
+          info: "Mostrando _START_ a _END_ de _TOTAL_ entradas",
+          infoEmpty: "Mostrando 0 a 0 de 0 entradas",
+          infoFiltered: "(filtrado de _MAX_ entradas totales)",
+          search: "Buscar:",
+          paginate: {
             first: "Primero",
             last: "Último",
             next: "Siguiente",
             previous: "Anterior"
-        },
+          }
         }
-    });
-    function authUsuario() {
-        $.ajax({
-            url: '{% url "obtener_nombre_usuario" %}',  // URL para la vista AJAX
-            data: {
-                'category_id': "Consulta"  // Envia el ID de la categoría como parámetro
-            },
-            success: function(data) {
-                // Limpia las opciones actuales del campo 'name'
-                var initialCategoryId =data.username;  // Obtiene el valor inicial del campo 'category'
-                $('#date').val(data.fecha);
-                $('#correo').val(data.encargado);
-                if (initialCategoryId) {
-                    console.log(initialCategoryId);
-                }
-            
-            },
-            error: function(xhr, status, error) {
-                console.error('Error:', error);  // Maneja errores de la solicitud
-            }
-        });
-    }
-    
-    authUsuario();
-    // Llama a la función de carga de productos al cargar la página
-        
-});
+      });
 
-</script>
+      authUsuario();
+    });
+
+    function authUsuario() {
+      $.ajax({
+        url: '{% url "obtener_nombre_usuario" %}',
+        data: { 'category_id': "Consulta" },
+        success: function (data) {
+          $('#date').val(data.fecha);
+          $('#correo').val(data.encargado);
+        },
+        error: function (xhr, status, error) {
+          console.error('Error:', error);
+        }
+      });
+    }
+
+    document.getElementById('consultar').addEventListener('click', function () {
+      const fecha = document.getElementById('date').value;
+      const tbody = document.querySelector('#myTable tbody');
+      tbody.innerHTML = '';
+
+      fetch('{% url "reporte_inventario" %}', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: new URLSearchParams({ 'opcion2': fecha })
+      })
+        .then(response => response.json())
+        .then(data => {
+          data.datos.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${item.fecha}</td>
+              <td>${item.proveedor}</td>
+              <td>${item.cultivo}</td>
+              <td>${item.itemsapcode}</td>
+              <td>${item.itemsapname}</td>
+              <td>${item.categoria}</td>
+              <td class="number-cell" data-value="${item.total_tarimas}">${item.total_tarimas}</td>
+              <td class="number-cell" data-value="${item.total_cajas}">${item.total_cajas}</td>
+              <td class="number-cell" data-value="${item.total_libras}">${item.total_libras}</td>
+              <td class="number-cell" data-value="${item.total_merma}">${item.total_merma}</td>
+              <td class="number-cell" data-value="${item.porcen_merma}">${item.porcen_merma}</td>
+              <td class="number-cell" data-value="${item.pesoxcajaprom}">${item.pesoxcajaprom}</td>
+            `;
+            tbody.appendChild(row);
+          });
+          formatCells('myTable');
+        });
+    });
+  </script>
+</body>
 </html>
