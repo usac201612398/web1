@@ -42,7 +42,7 @@
       white-space: nowrap;
     }
     /* Editable cells styling */
-    .editable-cell {
+    [contenteditable] {
       min-height: 1.8em;
       padding: 0.3em;
       border-radius: 4px;
@@ -51,7 +51,7 @@
       cursor: text;
       background-color: #fff;
     }
-    .editable-cell:focus {
+    [contenteditable]:focus {
       outline: none;
       border-color: #48c774; /* Bulma green */
       background-color: #f0fff4;
@@ -225,151 +225,182 @@
       </div>
     </div>
   </section>
+<script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
-  <!-- SCRIPTS -->
-  <script src="{% static '/lib/cockies.js' %}"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <link
-    rel="stylesheet"
-    href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css"
-  />
-  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script>
 
-  <script>
-    $(document).ready(function () {
-      // Inicializa DataTable sin paginación y sin buscar, para editar filas directamente
-      $('#myTable').DataTable({
-        paging: false,
-        searching: false,
-        info: false,
-        ordering: false,
-        columnDefs: [
-          { orderable: false, targets: [2, 3, 4] },
-        ],
-      });
+    $(document).ready(function() {
+        $('#myTable').DataTable();
     });
 
-    // Evento Consultar
-    document.getElementById('consultar').addEventListener('click', function () {
-      const cultivo = document.getElementById('Cul').value;
-      const categoria = document.getElementById('Cat').value;
-      const tbody = document.querySelector('#myTable tbody');
+</script>
+<script>
 
-      tbody.innerHTML = '';
+document.getElementById('consultar').addEventListener('click', function() {
+    const opcionSeleccionada1 = document.getElementById('Cul').value;
+    const opcionSeleccionada2 = document.getElementById('Cat').value;
+    console.log(opcionSeleccionada1);
+    console.log(opcionSeleccionada2);
+    const tbody = document.querySelector('#myTable tbody');
 
-      fetch('{% url "inventarioProd_create" %}', {
+    // Limpiar la tabla antes de agregar nuevos datos
+    tbody.innerHTML = '';
+
+    fetch('{% url "inventarioProd_create" %}', { // Asegúrate de poner la URL correcta
         method: 'POST',
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': getCookie('csrftoken')  // Asegúrate de incluir CSRF token
         },
         body: new URLSearchParams({
-          opcion1: cultivo,
-          opcion2: categoria,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          data.datos.forEach((item) => {
+            'opcion1': opcionSeleccionada1,
+            'opcion2': opcionSeleccionada2
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data)
+        data.datos.forEach(item => {
             const fila = document.createElement('tr');
-
-            fila.innerHTML = `
-              <td>${item.itemsapcode}</td>
-              <td>${item.itemsapname}</td>
-              <td><div contenteditable="true" class="editable-cell"></div></td>
-              <td><div contenteditable="true" class="editable-cell"></div></td>
-              <td><button class="button delete-btn" title="Eliminar"><i class="fas fa-trash-alt"></i></button></td>
-            `;
+            fila.innerHTML = `<td>${item.itemsapcode}</td><td>${item.itemsapname}</td><td><div contenteditable="true" class="editable-cell"></div></td><td><div contenteditable="true" class="editable-cell"></div></td><td><button class="eliminar"><i class="fas fa-trash-alt"></i></button></td>`;
             tbody.appendChild(fila);
-          });
         });
     });
+});
 
-    // Eliminar fila
-    $(document).on('click', '.delete-btn', function () {
-      $(this).closest('tr').remove();
-    });
-
-    // Enviar datos
-    $('.envio3').on('click', function () {
-      const tabla = document.getElementById('myTable');
-      const fecha = document.getElementById('date').value;
-      const correo = document.getElementById('correo').value;
-      const provSelect = document.getElementById('Pro');
-      const cultSelect = document.getElementById('Cul');
-      const catSelect = document.getElementById('Cat');
-
-      let datos = [];
-
-      for (let i = 1; i < tabla.rows.length; i++) {
-        const row = tabla.rows[i];
-
-        if (row.style.display !== 'none') {
-          let filaDatos = [];
-
-          // ItemCode y ItemName (col 0 y 1)
-          filaDatos.push(row.cells[0].innerText.trim());
-          filaDatos.push(row.cells[1].innerText.trim());
-
-          // Cajas y Libras (contenteditable divs in col 2 and 3)
-          for (let j = 2; j <= 3; j++) {
-            const div = row.cells[j].querySelector('div.editable-cell');
-            let val = div ? div.innerText.trim() : '';
-
-            // Validar que val sea número
-            if (!val || isNaN(val)) {
-              alert('Por favor ingresa un número válido en Cajas y Libras');
-              return;
+$('.envio3').on('click', function() {
+    var resume_table = document.getElementById("myTable");
+    var fecha = document.getElementById('date').value;
+    var correo = document.getElementById('correo').value;
+    var datos = []
+    var elem = 0
+    for (var i = 1, row; row = resume_table.rows[i]; i++) {
+        if (row.style.display !== "none") {
+            //alert(cell[i].innerText);
+            filas = []
+            for (var j = 0, col; col = row.cells[j]; j++) {
+                //alert(col[j].innerText);
+                if (j === 3 || j ===2) {
+                    if(col.innerText === ''){
+                        elem = null
+                    }
+                    else{
+                        elem = parseFloat(col.innerText);    
+                    }   
+                    filas.push(elem);
+                }
+                else {
+                    filas.push(col.innerText);
+                }
             }
-            filaDatos.push(val);
-          }
-
-          datos.push(filaDatos);
+                var prov = document.getElementById('Pro'),
+                    value_prov = prov.value,
+                    text_prov = prov.options[prov.selectedIndex].innerText;
+                    filas.push(text_prov);
+                var cult = document.getElementById('Cul'),
+                    value_cult = cult.value,
+                    text_cult = cult.options[cult.selectedIndex].innerText;
+                    filas.push(text_cult);
+                var cat = document.getElementById('Cat'),
+                    value_cat = cat.value,
+                    text_cat = cat.options[cat.selectedIndex].innerText;
+                    filas.push(text_cat);
+                filas.push(fecha);
+                filas.push(correo);
+            datos.push(filas);
         }
-      }
-
-      const dataToSend = {
-        fecha: fecha,
-        proveedor: provSelect.value,
-        cultivo: cultSelect.value,
-        categoria: catSelect.value,
-        usuario: correo,
-        datos: datos,
-      };
-
-      fetch('{% url "inventarioProd_create_save" %}', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': getCookie('csrftoken'),
-        },
-        body: JSON.stringify(dataToSend),
-      })
-        .then((res) => res.json())
-        .then((respuesta) => {
-          if (respuesta.status === 'success') {
-            alert('Datos guardados exitosamente');
-          } else {
-            alert('Error al guardar datos');
-          }
-        });
-    });
-
-    // Función para obtener cookie csrftoken
-    function getCookie(name) {
-      let cookieValue = null;
-      if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-          const cookie = cookies[i].trim();
-          if (cookie.substring(0, name.length + 1) === name + '=') {
-            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-            break;
-          }
-        }
-      }
-      return cookieValue;
     }
-  </script>
+    console.log(datos);
+    $.ajax({
+            
+            url: '{% url "inventarioProd_grabar" %}',  // URL para la vista AJAX
+            type: 'POST',
+            dataType: "json",
+            data:  JSON.stringify({'array':datos}),
+            contentType: 'application/json',
+            headers: {'X-CSRFToken': csrftoken}, 
+            
+            success: function(data) {
+                // Limpia las opciones actuales del campo 'name'
+                alert(data.msm)
+                console.log(data)
+                // Recorre los productos recibidos y añade opciones al campo 'name'
+                
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);  // Maneja errores de la solicitud
+            }
+        });
+    
+        //window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/inventarioProd')
+
+    
+  });
+
+const eliminarBotones = document.querySelectorAll('.eliminar');
+
+$(document).on('click', '.eliminar', function() {
+    $(this).closest('tr').remove();
+});
+
+$(document).ready(function() {
+        // Función para cargar productos basados en la categoría seleccionada
+    function authUsuario() {
+        $.ajax({
+            url: '{% url "obtener_nombre_usuario" %}',  // URL para la vista AJAX
+            data: {
+                'category_id': "Consulta"  // Envia el ID de la categoría como parámetro
+            },
+            success: function(data) {
+                // Limpia las opciones actuales del campo 'name'
+                var initialCategoryId =data.username;  // Obtiene el valor inicial del campo 'category'
+                $('#date').val(data.fecha);
+                $('#correo').val(data.username);
+                if (initialCategoryId) {
+                    console.log(initialCategoryId);
+                    loadProducts(initialCategoryId);
+                }
+            
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);  // Maneja errores de la solicitud
+            }
+        });
+    }
+    function loadProducts(categoryId) {
+        $.ajax({
+            url: '{% url "load_dataUsuario" %}',  // URL para la vista AJAX
+            data: {
+                'category_id': categoryId  // Envia el ID de la categoría como parámetro
+            },
+            success: function(data) {
+                // Limpia las opciones actuales del campo 'name'
+                console.log(data);
+
+                // Recorre los productos recibidos y añade opciones al campo 'name'
+                $.each(data.datos, function(index, product) {
+                    $('#Lug').append(
+                        $('<option>').text(product.finca.toString()).attr('value', product.finca.toString())
+                            
+                    );
+                    
+                });
+
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);  // Maneja errores de la solicitud
+            }
+        });
+    }
+    
+    authUsuario();
+    // Llama a la función de carga de productos al cargar la página
+        
+});
+
+</script>
 </body>
 </html>
