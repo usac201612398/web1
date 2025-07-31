@@ -310,7 +310,7 @@ $(document).ready(function() {
                 // Limpia las opciones actuales del campo 'name'
                 var initialCategoryId =data.username;  // Obtiene el valor inicial del campo 'category'
                 $('#date').val(data.fecha);
-                $('#correo').val(data.username);
+                $('#correo').val(data.encargado);
                 if (initialCategoryId) {
                     console.log(initialCategoryId);
                     loadProducts(initialCategoryId);
