@@ -526,3 +526,11 @@ class operariosForm(forms.ModelForm):
     
         model = operariosApp
         fields = ['codigo_empleado','codigoevo','nombre_operario', 'supervisor','status','codigo_lote']
+
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+        
+        self.fields['codigoevo'].required = False
+        self.fields['supervisor'].required = False
+        self.fields['codigo_lote'].required = False
