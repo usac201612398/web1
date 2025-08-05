@@ -177,7 +177,7 @@ class ccalidadForm(forms.ModelForm):
     registro = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
     porcentaje= forms.DecimalField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
-    llave = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    llave = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'form-control'}))
     causarechazo = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'form-control'}))
 
     observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -192,22 +192,22 @@ class ccalidadForm(forms.ModelForm):
         self.fields['observaciones'].required = False
         self.fields['registro'].required = False
 
-        # Si estamos editando
+        # -- CAUSAS DE RECHAZO --
+        causas = causasRechazo.objects.all()
+        opciones_causas = [(c.causa, c.causa) for c in causas]
+
+        self.fields['causarechazo'].choices = opciones_causas
+
+        # Modo edición
         if self.instance and self.instance.pk:
-            # -- CAUSAS DE RECHAZO --
-            causas = causasRechazo.objects.all()
-            opciones = [(c.causa, c.causa) for c in causas]
-
-            if self.instance.causarechazo and (self.instance.causarechazo, self.instance.causarechazo) not in opciones:
-                opciones.insert(0, (self.instance.causarechazo, self.instance.causarechazo))
-
-            self.fields['causarechazo'].choices = opciones
-
-            # -- LLAVE --
+            # Añadir la causa actual si no está
+            if self.instance.causarechazo and (self.instance.causarechazo, self.instance.causarechazo) not in opciones_causas:
+                self.fields['causarechazo'].choices.insert(0, (self.instance.causarechazo, self.instance.causarechazo))
+            
             self.fields['llave'].choices = [(self.instance.llave, self.instance.llave)]
-        
+
         else:
-            # En modo creación: obtener del POST los valores seleccionados por el usuario
+            # Modo creación
             data = kwargs.get('data')
             llave_valor = data.get('llave') if data else None
             causa_valor = data.get('causarechazo') if data else None
@@ -217,10 +217,9 @@ class ccalidadForm(forms.ModelForm):
             else:
                 self.fields['llave'].choices = []
 
-            if causa_valor:
-                self.fields['causarechazo'].choices = [(causa_valor, causa_valor)]
-            else:
-                self.fields['causarechazo'].choices = []
+            if causa_valor and (causa_valor, causa_valor) not in self.fields['causarechazo'].choices:
+                self.fields['causarechazo'].choices.insert(0, (causa_valor, causa_valor))
+
 
 
 
