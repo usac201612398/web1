@@ -177,8 +177,8 @@ class ccalidadForm(forms.ModelForm):
     registro = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
     porcentaje= forms.DecimalField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
-    llave = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'form-control'}))
-    causarechazo = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    llave = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    causarechazo = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'form-control'}))
 
     observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
    
