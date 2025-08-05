@@ -35,18 +35,32 @@
             <h1 class="m-0">Reporte de Lote</h1>
         </div>
 
-        <!-- Card de detalle -->
+        <!-- Card con detalles -->
         <div class="card shadow-sm mb-4">
             <div class="card-body">
                 <table class="table table-borderless">
                     <tbody>
                         <tr><td class="detail-label">Registro:</td><td>{{ registros.id }}</td></tr>
+                        <tr><td class="detail-label">Lote:</td><td>{{ registros.lote_code }}</td></tr>
                         <tr><td class="detail-label">Código Variedad:</td><td>{{ registros.variedad_code }}</td></tr>
-                        <tr><td class="detail-label">Apodo Variedad:</td><td>{{ registros.apodo_variedad }}</td></tr>
+                        <tr><td class="detail-label">Nombre Variedad:</td><td>{{ registros.apodo_variedad }}</td></tr>
+                        <tr><td class="detail-label">Tipo:</td><td>{{ registros.tipo }}</td></tr>
+                        <tr><td class="detail-label">Género:</td><td>{{ registros.genero }}</td></tr>
                         <tr><td class="detail-label">Cultivo:</td><td>{{ registros.cultivo }}</td></tr>
-                        <tr><td class="detail-label">Código | Padre:</td><td>{{ registros.cod_padre }}</td></tr>
-                        <tr><td class="detail-label">Código | Madre:</td><td>{{ registros.cod_madre }}</td></tr>
+                        <tr><td class="detail-label">Ubicación:</td><td>{{ registros.ubicación }}</td></tr>
+                        <tr><td class="detail-label">Estructura:</td><td>{{ registros.estructura }}</td></tr>
+                        <tr><td class="detail-label">Plantas | Padre:</td><td>{{ registros.plantas_padre }}</td></tr>
+                        <tr><td class="detail-label">Plantas | Madre:</td><td>{{ registros.plantas_madre }}</td></tr>
+                        <tr><td class="detail-label">Harvest Code:</td><td>{{ registros.harvest_code }}</td></tr>
                         <tr><td class="detail-label">Status:</td><td>{{ registros.status }}</td></tr>
+                        <tr><td class="detail-label">Fecha Siembra Madre:</td><td>{{ registros.siembra_madre }}</td></tr>
+                        <tr><td class="detail-label">Método de Producción:</td><td>{{ registros.metodo_prod }}</td></tr>
+                        <tr><td class="detail-label">Shipment Hub:</td><td>{{ registros.shipment_hub }}</td></tr>
+                        <tr><td class="detail-label">Target Nb plantas - Padre:</td><td>{{ registros.as_per_SDCMale }}</td></tr>
+                        <tr><td class="detail-label">Target Nb plantas - Madre:</td><td>{{ registros.as_per_SDCFemale }}</td></tr>
+                        <tr><td class="detail-label">Target:</td><td>{{ registros.target }}</td></tr>
+                        <tr><td class="detail-label">Surface:</td><td>{{ registros.surface }}</td></tr>
+                        <tr><td class="detail-label">Observaciones:</td><td>{{ registros.observaciones }}</td></tr>
                         <tr><td class="detail-label">Creado:</td><td>{{ registros.created }}</td></tr>
                         <tr><td class="detail-label">Modificado:</td><td>{{ registros.updated_at }}</td></tr>
                     </tbody>
