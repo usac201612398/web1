@@ -1808,7 +1808,7 @@ def ccalidad_create(request):
             return JsonResponse({'errores': form.errors}, status=400)
     else:
         form = ccalidadForm()
-    return render(request, 'plantaE/ccalidad_form.html', {'form': form})
+    return render(request, 'plantaE/ccalidad_form.html', {'form': form,'modo':'crear'})
 
 def ccalidad_update(request, pk):
     salidas = get_object_or_404(Ccalidad, pk=pk)
@@ -1820,7 +1820,7 @@ def ccalidad_update(request, pk):
     else:
         form = ccalidadForm(instance=salidas)
         
-    return render(request, 'plantaE/ccalidad_form_edit.html', {'form': form})
+    return render(request, 'plantaE/ccalidad_form_edit.html', {'form': form,'modo':'actualizar'})
 
 def ccalidad_update_aux(request):
     pk = request.GET.get('pk')
