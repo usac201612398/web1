@@ -18,8 +18,9 @@ def sdcsemillashomepage(request):
 def consulta_list(request):
     return render(request,'sdcsemillas/monitorear.html')
 
-def reporte_lote(request):
-    return render(request,'sdcsemillas/monitorear_detalles.html')
+def reporte_lote(request,lote_id):
+
+    return render(request,'sdcsemillas/monitorear_detalles.html', {'lote': lote_id})
 
 
 def exportar_excel_generico(request, nombre_modelo):
