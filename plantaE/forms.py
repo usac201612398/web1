@@ -192,35 +192,25 @@ class ccalidadForm(forms.ModelForm):
         self.fields['observaciones'].required = False
         self.fields['registro'].required = False
 
-        # Si estamos editando
+        from .models import causasRechazo  # Asegúrate de importar
+
+        causas = causasRechazo.objects.all()
+        self.fields['causarechazo'].choices = [(c.causa, c.causa) for c in causas]
+
+        # Suponiendo que la lista de llaves válidas la defines tú desde algún lugar
+        # Aquí tienes que poner todas las llaves válidas desde el modelo, por ejemplo:
+        from .models import Recepcion  # Suponiendo que allí están las llaves válidas
+
+        llaves_validas = Recepcion.objects.values_list('llave', flat=True).distinct()
+        self.fields['llave'].choices = [(l, l) for l in llaves_validas]
+
+        # En modo edición: incluir valores actuales si no están en la lista
         if self.instance and self.instance.pk:
-            # -- CAUSAS DE RECHAZO --
-            causas = causasRechazo.objects.all()
-            opciones = [(c.causa, c.causa) for c in causas]
+            if self.instance.causarechazo and (self.instance.causarechazo, self.instance.causarechazo) not in self.fields['causarechazo'].choices:
+                self.fields['causarechazo'].choices.insert(0, (self.instance.causarechazo, self.instance.causarechazo))
+            if self.instance.llave and (self.instance.llave, self.instance.llave) not in self.fields['llave'].choices:
+                self.fields['llave'].choices.insert(0, (self.instance.llave, self.instance.llave))
 
-            if self.instance.causarechazo and (self.instance.causarechazo, self.instance.causarechazo) not in opciones:
-                opciones.insert(0, (self.instance.causarechazo, self.instance.causarechazo))
-
-            self.fields['causarechazo'].choices = opciones
-
-            # -- LLAVE --
-            self.fields['llave'].choices = [(self.instance.llave, self.instance.llave)]
-        
-        else:
-            # En modo creación: obtener del POST los valores seleccionados por el usuario
-            data = kwargs.get('data')
-            llave_valor = data.get('llave') if data else None
-            causa_valor = data.get('causarechazo') if data else None
-
-            if llave_valor:
-                self.fields['llave'].choices = [(llave_valor, llave_valor)]
-            else:
-                self.fields['llave'].choices = []
-
-            if causa_valor:
-                self.fields['causarechazo'].choices = [(causa_valor, causa_valor)]
-            else:
-                self.fields['causarechazo'].choices = []
 
 
 
