@@ -15,6 +15,13 @@ from django.http import HttpResponse
 def sdcsemillashomepage(request):
     return render(request,'sdcsemillas/sdcsemillas_home.html')
 
+def consulta_list(request):
+    return render(request,'sdcsemillas/monitorear.html')
+
+def reporte_lote(request):
+    return render(request,'sdcsemillas/monitorear_detalles.html')
+
+
 def exportar_excel_generico(request, nombre_modelo):
     # Obtiene el modelo desde el nombre
     try:
