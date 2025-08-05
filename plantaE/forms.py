@@ -194,36 +194,34 @@ class ccalidadForm(forms.ModelForm):
 
         # Si estamos editando
         if self.instance and self.instance.pk:
-            # LLENAR CAUSAS DE RECHAZO
+            # -- CAUSAS DE RECHAZO --
             causas = causasRechazo.objects.all()
             opciones = [(c.causa, c.causa) for c in causas]
+
             if self.instance.causarechazo and (self.instance.causarechazo, self.instance.causarechazo) not in opciones:
                 opciones.insert(0, (self.instance.causarechazo, self.instance.causarechazo))
+
             self.fields['causarechazo'].choices = opciones
 
-            # LLAVE
+            # -- LLAVE --
             self.fields['llave'].choices = [(self.instance.llave, self.instance.llave)]
-
+        
         else:
-            # Modo creación: tratar de obtener los datos del POST si existen
+            # En modo creación: obtener del POST los valores seleccionados por el usuario
             data = kwargs.get('data')
-            if data:
-                llave_valor = data.get('llave')
-                causa_valor = data.get('causarechazo')
+            llave_valor = data.get('llave') if data else None
+            causa_valor = data.get('causarechazo') if data else None
 
-                # Llenar con los valores necesarios para que pase la validación
-                if llave_valor:
-                    self.fields['llave'].choices = [(llave_valor, llave_valor)]
-                else:
-                    self.fields['llave'].choices = []
-
-                if causa_valor:
-                    self.fields['causarechazo'].choices = [(causa_valor, causa_valor)]
-                else:
-                    self.fields['causarechazo'].choices = []
+            if llave_valor:
+                self.fields['llave'].choices = [(llave_valor, llave_valor)]
             else:
                 self.fields['llave'].choices = []
+
+            if causa_valor:
+                self.fields['causarechazo'].choices = [(causa_valor, causa_valor)]
+            else:
                 self.fields['causarechazo'].choices = []
+
 
 
 class inventarioFrutaForm(forms.ModelForm):
