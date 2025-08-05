@@ -10,7 +10,7 @@ class lotesForm(forms.ModelForm):
     op_modulo = [('', '-')] + [(f'Modulo {i}', f'Modulo {i}') for i in range(1, 12)]
     op_invernadero = [('', '-')] + [(f'Invernadero {i}', f'Invernadero {i}') for i in range(1, 12)]
     op_malla = [('', '-'), ('Casa Malla', 'Casa Malla')]
-    op_genero = [('', '-'), ('Padre', 'Madre')]
+    op_genero = [('', '-'), ('Madre', 'Madre'), ('Padre', 'Padre')]
     op_estructura = op_invernadero + op_modulo + op_malla
     op_cultivo = [('', '-'), ('Chile', 'Chile'), ('Tomate', 'Tomate')]
     op_status = [('', '-'), ('En proceso', 'En proceso'), ('Finalizado', 'Finalizado'), ('Anulado', 'Anulado')]
