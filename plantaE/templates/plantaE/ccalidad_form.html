@@ -231,14 +231,7 @@
 
             
 
-                    // -- Llenar select 'causarechazo' --
-                    $('#id_causarechazo').html('');
-                    $('#id_causarechazo').append($('<option>').text('').attr('value', ''));
-                    $.each(opcionesCausa, function(index, obj) {
-                        const causa = obj.causa.toString();
-                        const opcion = $('<option>').text(causa).attr('value', causa);
-                        $('#id_causarechazo').append(opcion);
-                    });
+                    
 
                     // Fecha (si la quieres autollenar también)
                     $('#id_fecha').val(data.fecha);

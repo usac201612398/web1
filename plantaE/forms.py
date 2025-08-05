@@ -187,13 +187,13 @@ class ccalidadForm(forms.ModelForm):
     
         model = Ccalidad
         fields = ['registro','fecha','porcentaje',  'llave', 'causarechazo','observaciones']
-    
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['observaciones'].required = False
         self.fields['registro'].required = False
 
-        # === LLAVES: cargarlas directamente sin depender de AJAX ===
+        # === LLAVES (cargadas desde backend sin AJAX) ===
         suma_por_llave = Ccalidad.objects.values('llave').annotate(suma=Sum('porcentaje'))
         suma_dict = {item['llave']: item['suma'] for item in suma_por_llave}
 
@@ -213,19 +213,25 @@ class ccalidadForm(forms.ModelForm):
         datos_modificados = [
             clave for clave in datos_modificados if suma_dict.get(clave, 0) < 1
         ]
-
         self.fields['llave'].choices = [('', '---------')] + [(clave, clave) for clave in datos_modificados]
 
-        # === CAUSA DE RECHAZO ===
+        # === CAUSAS DE RECHAZO (también desde backend sin AJAX) ===
+        causas = causasRechazo.objects.all()
+        opciones_causa = [(c.causa, c.causa) for c in causas]
+
+        # Si estamos editando y la causa no está en la lista, la agregamos
         if self.instance and self.instance.pk:
-            causas = causasRechazo.objects.all()
-            opciones = [(c.causa, c.causa) for c in causas]
-            if self.instance.causarechazo and (self.instance.causarechazo, self.instance.causarechazo) not in opciones:
-                opciones.insert(0, (self.instance.causarechazo, self.instance.causarechazo))
-            self.fields['causarechazo'].choices = opciones
+            if self.instance.causarechazo and (self.instance.causarechazo, self.instance.causarechazo) not in opciones_causa:
+                opciones_causa.insert(0, (self.instance.causarechazo, self.instance.causarechazo))
         else:
-            # Solo deja vacío, JavaScript lo llenará
-            self.fields['causarechazo'].choices = []
+            # Si estamos en creación, también incluir el valor del POST si viene
+            data = kwargs.get('data')
+            causa_valor = data.get('causarechazo') if data else None
+            if causa_valor and (causa_valor, causa_valor) not in opciones_causa:
+                opciones_causa.insert(0, (causa_valor, causa_valor))
+
+        self.fields['causarechazo'].choices = [('', '---------')] + opciones_causa
+
 
 
 
