@@ -2,6 +2,7 @@ from django import forms
 from .models import Actpeso,usuariosAppFruta,detallerec, detallesEstructuras, causasRechazo,paramenvlocales,Boletas,salidacontenedores,salidasFruta, productoTerm,contenedores, Recepciones, Ccalidad, inventarioProdTerm,AcumFruta, enviosFrutaPlantilla
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Fieldset, Div
+from django.db.models import Sum
 
 class salidasFrutaForm(forms.ModelForm):
 
