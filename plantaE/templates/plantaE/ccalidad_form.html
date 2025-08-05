@@ -229,13 +229,7 @@
                     let opcionesLlave = data.datos_filtrados;
                     let opcionesCausa = data.causa;
 
-                    // -- Llenar select 'llave' --
-                    $('#id_llave').html('');
-                    $('#id_llave').append($('<option>').text('').attr('value', ''));
-                    $.each(opcionesLlave, function(index, valor) {
-                        const opcion = $('<option>').text(valor).attr('value', valor);
-                        $('#id_llave').append(opcion);
-                    });
+            
 
                     // -- Llenar select 'causarechazo' --
                     $('#id_causarechazo').html('');

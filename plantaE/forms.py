@@ -1,5 +1,5 @@
 from django import forms
-from .models import Actpeso,usuariosAppFruta, detallesEstructuras, causasRechazo,paramenvlocales,Boletas,salidacontenedores,salidasFruta, productoTerm,contenedores, Recepciones, Ccalidad, inventarioProdTerm,AcumFruta, enviosFrutaPlantilla
+from .models import Actpeso,usuariosAppFruta,detallerec, detallesEstructuras, causasRechazo,paramenvlocales,Boletas,salidacontenedores,salidasFruta, productoTerm,contenedores, Recepciones, Ccalidad, inventarioProdTerm,AcumFruta, enviosFrutaPlantilla
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Fieldset, Div
 
@@ -192,34 +192,39 @@ class ccalidadForm(forms.ModelForm):
         self.fields['observaciones'].required = False
         self.fields['registro'].required = False
 
-        # -- CAUSAS DE RECHAZO --
-        causas = causasRechazo.objects.all()
-        opciones_causas = [(c.causa, c.causa) for c in causas]
+        # === LLAVES: cargarlas directamente sin depender de AJAX ===
+        suma_por_llave = Ccalidad.objects.values('llave').annotate(suma=Sum('porcentaje'))
+        suma_dict = {item['llave']: item['suma'] for item in suma_por_llave}
 
-        self.fields['causarechazo'].choices = opciones_causas
+        datos = detallerec.objects.filter(recepcion__gte=2875)
+        datos_modificados = []
 
-        # Modo edición
-        if self.instance and self.instance.pk:
-            # Añadir la causa actual si no está
-            if self.instance.causarechazo and (self.instance.causarechazo, self.instance.causarechazo) not in opciones_causas:
-                self.fields['causarechazo'].choices.insert(0, (self.instance.causarechazo, self.instance.causarechazo))
-            
-            self.fields['llave'].choices = [(self.instance.llave, self.instance.llave)]
-
-        else:
-            # Modo creación
-            data = kwargs.get('data')
-            llave_valor = data.get('llave') if data else None
-            causa_valor = data.get('causarechazo') if data else None
-
-            if llave_valor:
-                self.fields['llave'].choices = [(llave_valor, llave_valor)]
+        for item in datos:
+            fecha = item.fechasalidafruta
+            semana = fecha.isocalendar()[1] if fecha else ''
+            if item.finca == "Productor":
+                clave = f"{semana} | {item.llave} | {item.cultivo}"
             else:
-                self.fields['llave'].choices = []
+                clave = f"{semana} | {item.finca} | {item.cultivo}"
+            datos_modificados.append(clave)
 
-            if causa_valor and (causa_valor, causa_valor) not in self.fields['causarechazo'].choices:
-                self.fields['causarechazo'].choices.insert(0, (causa_valor, causa_valor))
+        datos_modificados = list(set(datos_modificados))
+        datos_modificados = [
+            clave for clave in datos_modificados if suma_dict.get(clave, 0) < 1
+        ]
 
+        self.fields['llave'].choices = [('', '---------')] + [(clave, clave) for clave in datos_modificados]
+
+        # === CAUSA DE RECHAZO ===
+        if self.instance and self.instance.pk:
+            causas = causasRechazo.objects.all()
+            opciones = [(c.causa, c.causa) for c in causas]
+            if self.instance.causarechazo and (self.instance.causarechazo, self.instance.causarechazo) not in opciones:
+                opciones.insert(0, (self.instance.causarechazo, self.instance.causarechazo))
+            self.fields['causarechazo'].choices = opciones
+        else:
+            # Solo deja vacío, JavaScript lo llenará
+            self.fields['causarechazo'].choices = []
 
 
 
