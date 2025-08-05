@@ -191,24 +191,40 @@ class ccalidadForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['observaciones'].required = False
         self.fields['registro'].required = False
+
         # Si estamos editando
         if self.instance and self.instance.pk:
-            # -- CAUSAS DE RECHAZO --
+            # LLENAR CAUSAS DE RECHAZO
             causas = causasRechazo.objects.all()
             opciones = [(c.causa, c.causa) for c in causas]
-
-            # Si la causa del registro no está en la lista, la añadimos para no perderla
             if self.instance.causarechazo and (self.instance.causarechazo, self.instance.causarechazo) not in opciones:
                 opciones.insert(0, (self.instance.causarechazo, self.instance.causarechazo))
-
             self.fields['causarechazo'].choices = opciones
 
-            # -- LLAVE --
+            # LLAVE
             self.fields['llave'].choices = [(self.instance.llave, self.instance.llave)]
+
         else:
-            # En modo creación: dejar choices vacíos (los llena JavaScript)
-            self.fields['llave'].choices = []
-            self.fields['causarechazo'].choices = []
+            # Modo creación: tratar de obtener los datos del POST si existen
+            data = kwargs.get('data')
+            if data:
+                llave_valor = data.get('llave')
+                causa_valor = data.get('causarechazo')
+
+                # Llenar con los valores necesarios para que pase la validación
+                if llave_valor:
+                    self.fields['llave'].choices = [(llave_valor, llave_valor)]
+                else:
+                    self.fields['llave'].choices = []
+
+                if causa_valor:
+                    self.fields['causarechazo'].choices = [(causa_valor, causa_valor)]
+                else:
+                    self.fields['causarechazo'].choices = []
+            else:
+                self.fields['llave'].choices = []
+                self.fields['causarechazo'].choices = []
+
 
 class inventarioFrutaForm(forms.ModelForm):
 
