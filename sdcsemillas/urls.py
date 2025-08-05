@@ -15,7 +15,7 @@ urlpatterns = [
     path('lotes/<int:pk>/edit/', views.lotes_update, name='lotes_update'),
     path('lotes/<int:pk>/delete/', views.lotes_delete, name='lotes_delete'),
 
-    path("monitorear",views.consulta_list,name='consulta_list'),
+    path("monitorear",views.consulta_list,name='consultas_list'),
     path('reporte-lote/<int:lote_id>/', views.reporte_lote, name='reporte_lote'),
 
     path("variedades",views.variedades_list,name='variedades_list'),
