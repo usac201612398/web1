@@ -10,6 +10,7 @@ class lotesForm(forms.ModelForm):
     op_modulo = [('', '-')] + [(f'Modulo {i}', f'Modulo {i}') for i in range(1, 12)]
     op_invernadero = [('', '-')] + [(f'Invernadero {i}', f'Invernadero {i}') for i in range(1, 12)]
     op_malla = [('', '-'), ('Casa Malla', 'Casa Malla')]
+    op_genero = [('', '-'), ('Padre', 'Madre')]
     op_estructura = op_invernadero + op_modulo + op_malla
     op_cultivo = [('', '-'), ('Chile', 'Chile'), ('Tomate', 'Tomate')]
     op_status = [('', '-'), ('En proceso', 'En proceso'), ('Finalizado', 'Finalizado'), ('Anulado', 'Anulado')]
@@ -26,7 +27,7 @@ class lotesForm(forms.ModelForm):
         choices=[],
         widget=forms.Select(attrs={'class': 'form-control', 'id': 'id_variedad_code'})
     )
-
+    genero = forms.ChoiceField(choices=op_genero, widget=forms.Select(attrs={'class': 'form-control'}))
     cultivo = forms.ChoiceField(choices=op_cultivo, widget=forms.Select(attrs={'class': 'form-control'}))
     ubicación = forms.ChoiceField(choices=op_ubicacion, widget=forms.Select(attrs={'class': 'form-control'}))
     estructura = forms.ChoiceField(choices=op_estructura, widget=forms.Select(attrs={'class': 'form-control'}))
@@ -56,7 +57,7 @@ class lotesForm(forms.ModelForm):
     class Meta:
         model = lotes
         fields = [
-            'lote_code', 'variedad_code', 'apodo_variedad', 'cultivo',
+            'lote_code', 'genero','variedad_code', 'apodo_variedad', 'cultivo',
             'ubicación', 'estructura', 'plantas_padre', 'plantas_madre',
             'harvest_code', 'status', 'siembra_madre', 'metodo_prod',
             'target', 'surface', 'observaciones','shipment_hub','tipo','as_per_SDCMale','as_per_SDCFemale'
