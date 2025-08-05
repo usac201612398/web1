@@ -19,7 +19,7 @@ def consulta_list(request):
     return render(request,'sdcsemillas/monitorear.html')
 
 def reporte_lote(request,lote_id):
-    salidas = get_object_or_404(lotes, lote_code=int(lote_id))
+    salidas = get_object_or_404(lotes, id=int(lote_id))
     return render(request,'sdcsemillas/monitorear_detalles.html', {'registros': salidas})
 
 
