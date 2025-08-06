@@ -87,8 +87,9 @@ class conteoplantas(models.Model):
     observaciones = models.CharField(max_length= 75, blank = True, null =  True)
     created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
-    evento = models.TextField(max_length= 30, blank = True, null =  True) #AL TRANSPLANTE, POLINIZADO Y COSECHA
-    status = models.TextField(max_length= 30, blank = True, null =  True)
+    evento = models.CharField(max_length= 30, blank = True, null =  True) #AL TRANSPLANTE, POLINIZADO Y COSECHA
+    status = models.CharField(max_length= 30, blank = True, null =  True)
+    genero = models.CharField(max_length= 50, blank = True, null =  True)
 
 #Conteo de semillas 
 class conteosemillas(models.Model):
@@ -109,9 +110,10 @@ class conteosemillas(models.Model):
     nsemana = models.IntegerField(blank = True, null = True)
     created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
-    clasificacion = models.TextField(max_length= 75, blank = True, null =  True) #FRUTO MADURO / FRUTO VERDE
+    clasificacion = models.CharField(max_length= 75, blank = True, null =  True) #FRUTO MADURO / FRUTO VERDE
     observaciones = models.CharField(max_length= 75, blank = True, null =  True)
-    status = models.TextField(max_length= 30, blank = True, null =  True)
+    status = models.CharField(max_length= 30, blank = True, null =  True)
+    genero = models.CharField(max_length= 50, blank = True, null =  True)
 
 #Conteo de frutos planilla
 class conteofrutosplanilla(models.Model):
@@ -137,7 +139,8 @@ class conteofrutosplanilla(models.Model):
     created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     observaciones = models.CharField(max_length= 75, blank = True, null =  True)
-    status = models.TextField(max_length= 30, blank = True, null =  True)
+    status = models.CharField(max_length= 30, blank = True, null =  True)
+    genero = models.CharField(max_length= 50, blank = True, null =  True)
 
 #Conteo de frutos general
 class conteofrutos(models.Model):
@@ -158,8 +161,9 @@ class conteofrutos(models.Model):
     created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     observaciones = models.CharField(max_length= 75, blank = True, null =  True)
-    evento = models.TextField(max_length= 30, blank = True, null =  True) #AUTOPOLINIZADO, POST-POLINIZADO, GENERAL
-    status = models.TextField(max_length= 30, blank = True, null =  True)
+    evento = models.CharField(max_length= 30, blank = True, null =  True) #AUTOPOLINIZADO, POST-POLINIZADO, GENERAL
+    status = models.CharField(max_length= 30, blank = True, null =  True)
+    genero = models.CharField(max_length= 50, blank = True, null =  True)
 
 #Cosecha y polinización por lote proyecto-semillas
 class etapasdelote(models.Model):
@@ -181,6 +185,7 @@ class etapasdelote(models.Model):
     observaciones = models.CharField(max_length= 75, blank = True, null =  True)
     evento = models.CharField(max_length= 75, blank = True, null =  True) #Cosecha y polinización
     estructura = models.CharField(max_length= 50, blank = True, null =  True)
+    genero = models.CharField(max_length= 50, blank = True, null =  True)
 
 #Revisión de polen
 class ccalidadpolen(models.Model):
@@ -202,6 +207,7 @@ class ccalidadpolen(models.Model):
     observaciones = models.CharField(max_length= 75, blank = True, null =  True)
     estructura = models.CharField(max_length= 50, blank = True, null =  True)
     status = models.CharField(max_length= 30, blank = True, null =  True)
+    genero = models.CharField(max_length= 50, blank = True, null =  True)
     
 #Registro de index de polinización
 class indexpolinizacion(models.Model):
@@ -231,6 +237,7 @@ class indexpolinizacion(models.Model):
     observaciones = models.CharField(max_length= 75, blank = True, null =  True)
     status = models.CharField(max_length= 30, blank = True, null =  True)
     estructura = models.CharField(max_length= 50, blank = True, null =  True)
+    genero = models.CharField(max_length= 50, blank = True, null =  True)
 
 #Control de flores abiertas
 class floresabiertas(models.Model):
@@ -257,6 +264,7 @@ class floresabiertas(models.Model):
     observaciones = models.CharField(max_length= 75, blank = True, null =  True)
     status = models.CharField(max_length= 30, blank = True, null =  True) 
     estructura = models.CharField(max_length= 50, blank = True, null =  True)
+    genero = models.CharField(max_length= 50, blank = True, null =  True)
 
 #Control de cosecha tomate y chile 
 class controlcosecha(models.Model):
@@ -282,3 +290,4 @@ class controlcosecha(models.Model):
     observaciones = models.CharField(max_length= 75, blank = True, null =  True)
     status = models.CharField(max_length= 30, blank = True, null =  True)
     estructura = models.CharField(max_length= 50, blank = True, null =  True)
+    genero = models.CharField(max_length= 50, blank = True, null =  True)
