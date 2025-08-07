@@ -233,7 +233,7 @@ def load_dataUsuario3(request):
 
 def pesos_list(request):
     today = timezone.now().date()
-    salidas = Actpeso.objects.filter(fecha=today)
+    salidas = Actpeso.objects.filter(fecha=today).exclude(status='Anulado')
     salidas = salidas.order_by('created')
     
     return render(request, 'plantaE/pesos_list.html', {'registros': salidas})
