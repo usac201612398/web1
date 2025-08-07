@@ -289,10 +289,8 @@
 
           registros.forEach((registro) => {
             // Sumar las cajas y libras para los totales
-            const libras = parseFloat(registro.total_libras.replace(',', '.')) || 0;  // Asegurarse de que sea un número válido
-
-            // Realizar lo mismo con las cajas
             const cajas = parseFloat(registro.total_cajas) || 0;
+            const libras = parseFloat(registro.total_libras) || 0;
             totalCajas += cajas;
             totalLibras += libras;
 
