@@ -268,7 +268,7 @@
       const opcion1 = $('#Cul').val();
       const opcion2 = $('#date').val();
       const tbody = $('#myTable tbody');
-
+      console.log("Hola")
       tbody.html('');
       fetch('{% url "acumFruta_consulta" %}', {
         method: 'POST',
