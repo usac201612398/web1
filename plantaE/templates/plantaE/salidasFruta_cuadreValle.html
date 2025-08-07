@@ -179,7 +179,7 @@
 
       tbody.innerHTML = '';
       tbody2.innerHTML = '';
-
+      console.log("Hola")
       fetch('{% url "salidasFruta_cuadreValle" %}', {
         method: 'POST',
         headers: {
@@ -193,7 +193,29 @@
       })
         .then(response => response.json())
         .then(data => {
-          console.log(datos)
+          data.datos.forEach(item => {
+            const row = `<tr>
+              <td>${item.fecha}</td>
+              <td>${item.finca}</td>
+              <td>${item.cultivo}</td>
+              <td>${item.variedad}</td>
+              <td>${item.total_cajas}</td>
+              <td>${Math.round(item.total_libras)}</td>
+            </tr>`;
+            tbody.insertAdjacentHTML('beforeend', row);
+          });
+
+          data.resumen.forEach(item => {
+            const row = `<tr>
+              <td>${item.fecha}</td>
+              <td>${item.finca}</td>
+              <td>${item.cultivo}</td>
+              <td>-</td>
+              <td>${item.total_cajas}</td>
+              <td>${Math.round(item.total_libras)}</td>
+            </tr>`;
+            tbody2.insertAdjacentHTML('beforeend', row);
+          });
 
           formatCells('myTable');
           formatCells('myTable2');
