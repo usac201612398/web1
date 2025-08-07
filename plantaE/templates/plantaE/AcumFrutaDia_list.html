@@ -97,7 +97,7 @@
               name="usuario"
             />
           </div>
-          <div class="column is-2 is-offset-4">
+          <div class="column is-2 is-offset-3"> <!-- Usamos is-offset-3 para centrar el botón -->
             <button
               id="consultar"
               class="button is-success is-fullwidth mt-5"
@@ -263,84 +263,84 @@
       });
     }
 
-    // Evento click botón Consultar
-    $('#consultar').on('click', function () {
-      const opcion1 = $('#Cul').val();
-      const opcion2 = $('#date').val();
-      const tbody = $('#myTable tbody');
-      
-      tbody.html('');
-      fetch('{% url "acumFruta_consulta" %}', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': getCookie('csrftoken'),
-        },
-        body: JSON.stringify({ opcion1: opcion1, opcion2: opcion2 }),
+      // Evento click botón Consultar
+  $('#consultar').on('click', function () {
+    const opcion1 = $('#Cul').val();
+    const opcion2 = $('#date').val();
+    const tbody = $('#myTable tbody');
+    
+    tbody.html(''); // Limpiar la tabla antes de llenarla con nuevos datos
+    fetch('{% url "acumFruta_consulta" %}', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken'),
+      },
+      body: JSON.stringify({ opcion1: opcion1, opcion2: opcion2 }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+
+        // Verificar si el arreglo 'data.datos' está vacío
+        if (!Array.isArray(data.datos) || data.datos.length === 0) {
+          alert('No hay datos para esta fecha.'); // Mostrar mensaje si no hay datos
+          return; // Terminar la ejecución si no hay datos
+        }
+
+        let totalCajas = 0;
+        let totalLibras = 0;
+
+        // Asegurarse de que `data.datos` es un array
+        let registros = Array.isArray(data.datos) ? data.datos : [data.datos];
+
+        registros.forEach((registro) => {
+          // Sumar las cajas y libras para los totales
+          const cajas = parseFloat(registro.total_cajas) || 0;
+          const libras = parseFloat(registro.total_libras) || 0;
+          totalCajas += cajas;
+          totalLibras += libras;
+
+          // Agregar cada fila a la tabla
+          tbody.append(`
+            <tr>
+              <td><a href="/detalle/${registro.id}">${registro.id}</a></td>
+              <td>${registro.fecha}</td>
+              <td>${registro.finca}</td>
+              <td>${registro.viaje}</td>
+              <td>${registro.total_cajas}</td>
+              <td class="number-cell" data-value="${registro.total_libras}">${registro.total_libras}</td>
+              <td>${registro.orden}</td>
+              <td>${registro.cultivo}</td>
+              <td>${registro.estructura}</td>
+              <td>${registro.variedad}</td>
+              <td class="has-text-centered"><a href="/anular/${registro.id}" class="has-text-danger"><i class="fas fa-trash-alt"></i></a></td>
+            </tr>
+          `);
+        });
+
+        // Agregar la fila de totales al final de la tabla
+        tbody.append(`
+          <tr>
+            <td colspan="4"><strong>Total</strong></td>
+            <td><strong>${totalCajas}</strong></td>
+            <td class="number-cell"><strong>${Math.round(totalLibras)}</strong></td> <!-- Usar totalLibras calculado -->
+            <td colspan="4"></td>
+            <td></td>
+          </tr>
+        `);
+
+        formatCells('myTable'); // Formatear los valores de libras y cajas
+
+        // Mostrar el resumen
+        if (data.resumen && Array.isArray(data.resumen) && data.resumen.length > 0) {
+          alert(`Total de cajas: ${data.resumen[0].total_cajas} y total de libras: ${Math.round(totalLibras)} del día: ${data.resumen[0].fecha}`);
+        }
       })
-        .then((response) => response.json())
-        .then((data) => {
-          if (!Array.isArray(data.datos) || data.datos.length === 0) {
-            alert('No hay datos para esta fecha.'); // Mostrar mensaje si no hay datos
-            return; // Terminar la ejecución si no hay datos
-          }
-          else {
-            let totalCajas = 0;
-            let totalLibras = 0;
-            
-            // Asegurarse de que `data.datos` es un array
-            let registros = Array.isArray(data.datos) ? data.datos : [data.datos];
-
-            registros.forEach((registro) => {
-              // Sumar las cajas y libras para los totales
-              const cajas = parseFloat(registro.total_cajas) || 0;
-              const libras = parseFloat(registro.total_libras) || 0;
-              totalCajas += cajas;
-              totalLibras += libras;
-
-              // Agregar cada fila a la tabla
-              tbody.append(`
-                <tr>
-                  <td><a href="/detalle/${registro.id}">${registro.id}</a></td>
-                  <td>${registro.fecha}</td>
-                  <td>${registro.finca}</td>
-                  <td>${registro.viaje}</td>
-                  <td>${registro.total_cajas}</td>
-                  <td class="number-cell" data-value="${registro.total_libras}">${registro.total_libras}</td>
-                  <td>${registro.orden}</td>
-                  <td>${registro.cultivo}</td>
-                  <td>${registro.estructura}</td>
-                  <td>${registro.variedad}</td>
-                  <td class="has-text-centered"><a href="/anular/${registro.id}" class="has-text-danger"><i class="fas fa-trash-alt"></i></a></td>
-                </tr>
-              `);
-            });
-
-            tbody.append(`
-              <tr>
-                <td colspan="4"><strong>Total</strong></td>
-                <td><strong>${totalCajas}</strong></td>
-                <td class="number-cell"><strong>${Math.round(totalLibras)}</strong></td> <!-- Usar totalLibras calculado -->
-                <td colspan="4"></td>
-                <td></td>
-              </tr>
-            `);
-
-            formatCells('myTable'); // Formatear los valores de libras y cajas
-
-            if (data.resumen && Array.isArray(data.resumen) && data.resumen.length > 0) {
-              alert(
-                `Total de cajas: ${data.resumen[0].total_cajas} y total de libras: ${Math.round(
-                  data.resumen[0].total_libras
-                )} del día: ${data.resumen[0].fecha}`
-              );
-            }
-          }
-        })
-        .catch((error) => console.error('Error:', error));
+      .catch((error) => console.error('Error:', error));
+  });
 
 
-    });
+
   </script>
 </body>
 </html>
