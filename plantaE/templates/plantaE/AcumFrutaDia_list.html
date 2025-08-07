@@ -97,7 +97,7 @@
               name="usuario"
             />
           </div>
-          <div class="column is-2">
+          <div class="column is-2 is-offset-4">
             <button
               id="consultar"
               class="button is-success is-fullwidth mt-5"
@@ -316,15 +316,12 @@
               `);
             });
 
-            // Agregar la fila de totales al final de la tabla
             tbody.append(`
               <tr>
                 <td colspan="4"><strong>Total</strong></td>
                 <td><strong>${totalCajas}</strong></td>
-                <td class="number-cell"><strong>${Math.round(
-                  data.resumen[0].total_libras
-                )} </strong></td> <!-- Redondear a 2 decimales -->
-                <td colspan="4"></td> <!-- Colspan para ajustar el diseño -->
+                <td class="number-cell"><strong>${Math.round(totalLibras)}</strong></td> <!-- Usar totalLibras calculado -->
+                <td colspan="4"></td>
                 <td></td>
               </tr>
             `);
