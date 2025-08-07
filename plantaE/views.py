@@ -1982,8 +1982,6 @@ def acumFruta_consulta(request):
         return JsonResponse({'datos': registros_finales, 'opcion1': opcion1, 'opcion2': opcion2, 'resumen': registros_finales2, 'correo': nombre_usuario}, safe=False)
     return render(request, 'plantaE/AcumFrutaDia_list.html')
 
-
-
 def acumFruta_consultaValle(request):
     if request.method == 'POST':
         try:
