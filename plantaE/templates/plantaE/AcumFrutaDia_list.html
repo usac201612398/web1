@@ -280,12 +280,19 @@
       })
         .then((response) => response.json())
         .then((data) => {
-        
+
+          let totalCajas = 0;
+          let totalLibras = 0;
+          
           // Asegurarse de que `data.datos` es un array
           let registros = Array.isArray(data.datos) ? data.datos : [data.datos];
 
-          // Ahora puedes recorrer `registros` sin problema
           registros.forEach((registro) => {
+            // Sumar las cajas y libras para los totales
+            totalCajas += registro.total_cajas;
+            totalLibras += registro.total_libras;
+
+            // Agregar cada fila a la tabla
             tbody.append(`
               <tr>
                 <td><a href="/detalle/${registro.id}">${registro.id}</a></td>
@@ -303,9 +310,21 @@
             `);
           });
 
-          formatCells('myTable');
+          // Agregar la fila de totales al final de la tabla
+          tbody.append(`
+            <tr>
+              <td colspan="4"><strong>Total</strong></td>
+              <td><strong>${totalCajas}</strong></td>
+              <td class="number-cell"><strong>${totalLibras.toLocaleString('es-ES')}</strong></td>
+              <td colspan="4"></td> <!-- Colspan para ajustar el diseño -->
+              <td></td>
+            </tr>
+          `);
+
+          formatCells('myTable'); // Formatear los valores de libras y cajas
         })
         .catch((error) => console.error('Error:', error));
+
 
     });
   </script>
