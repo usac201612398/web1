@@ -291,8 +291,8 @@
             // Sumar las cajas y libras para los totales
             const cajas = parseFloat(registro.total_cajas) || 0;
             const libras = parseFloat(registro.total_libras) || 0;
-            totalCajas += registro.total_cajas;
-            totalLibras += registro.total_libras;
+            totalCajas += cajas;
+            totalLibras += libras;
 
             // Agregar cada fila a la tabla
             tbody.append(`
@@ -311,7 +311,7 @@
               </tr>
             `);
           });
-
+ 
           // Agregar la fila de totales al final de la tabla
           tbody.append(`
             <tr>
