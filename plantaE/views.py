@@ -1068,7 +1068,7 @@ def recepcionesFruta_delete(request, pk):
         )
         salidasFruta.objects.filter(recepcion=salidas.recepcion).exclude(status='Anulado').update(
             libras=None,
-            recepcion=None
+            recepcion=None,
             status=None
         )
 
