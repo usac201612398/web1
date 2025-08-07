@@ -437,7 +437,7 @@ def cuadrar_RioDia(request):
     return render(request, 'plantaE/salidasFruta_cuadre.html', {'registros': registros_finales, 'registros2': registros_finales2})
 
 def cuadrar_ValleDia(request):
-
+    
     today = timezone.now().date()
     nombre_usuario = request.user.username
     
@@ -513,7 +513,7 @@ def cuadrar_ValleDia(request):
         return JsonResponse({'datos': list(registros_finales),'opcion1':opcion1,'opcion2':opcion2,'resumen':registros_finales2}, safe=False)
 
     return render(request, 'plantaE/salidasFruta_cuadreValle.html', {'registros': registros_finales, 'registros2': registros_finales2})
-
+    
 def guardar_plantillaValle(request):
     data = json.loads(request.body)
     mensaje = data['array']
