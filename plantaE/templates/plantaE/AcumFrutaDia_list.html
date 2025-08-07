@@ -280,8 +280,7 @@
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data); // Verificar toda la estructura de `data`
-
+        
           // Asegurarse de que `data.datos` es un array
           let registros = Array.isArray(data.datos) ? data.datos : [data.datos];
 
