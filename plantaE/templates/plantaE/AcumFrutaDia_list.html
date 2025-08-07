@@ -317,7 +317,9 @@
             <tr>
               <td colspan="4"><strong>Total</strong></td>
               <td><strong>${totalCajas}</strong></td>
-              <td class="number-cell"><strong>${totalLibras.toFixed(2)}</strong></td> <!-- Redondear a 2 decimales -->
+              <td class="number-cell"><strong>${Math.round(
+                data.resumen[0].total_libras
+              )} </strong></td> <!-- Redondear a 2 decimales -->
               <td colspan="4"></td> <!-- Colspan para ajustar el diseño -->
               <td></td>
             </tr>
