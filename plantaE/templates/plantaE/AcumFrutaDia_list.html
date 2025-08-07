@@ -289,6 +289,8 @@
 
           registros.forEach((registro) => {
             // Sumar las cajas y libras para los totales
+            const cajas = parseFloat(registro.total_cajas) || 0;
+            const libras = parseFloat(registro.total_libras) || 0;
             totalCajas += registro.total_cajas;
             totalLibras += registro.total_libras;
 
@@ -315,7 +317,7 @@
             <tr>
               <td colspan="4"><strong>Total</strong></td>
               <td><strong>${totalCajas}</strong></td>
-              <td class="number-cell"><strong>${totalLibras.toLocaleString('es-ES')}</strong></td>
+              <td class="number-cell"><strong>${totalLibras.toFixed(2)}</strong></td> <!-- Redondear a 2 decimales -->
               <td colspan="4"></td> <!-- Colspan para ajustar el diseño -->
               <td></td>
             </tr>
