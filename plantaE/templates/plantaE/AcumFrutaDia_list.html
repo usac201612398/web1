@@ -289,10 +289,12 @@
 
           registros.forEach((registro) => {
             // Sumar las cajas y libras para los totales
+            const libras = parseFloat(registro.total_libras.replace(',', '.')) || 0;  // Asegurarse de que sea un número válido
+
+            // Realizar lo mismo con las cajas
             const cajas = parseFloat(registro.total_cajas) || 0;
-            const librasNumber = parseFloat(registro.total_libras.replace(',', '.')); 
             totalCajas += cajas;
-            totalLibras += librasNumber;
+            totalLibras += libras;
 
             // Agregar cada fila a la tabla
             tbody.append(`
@@ -311,7 +313,7 @@
               </tr>
             `);
           });
- 
+
           // Agregar la fila de totales al final de la tabla
           tbody.append(`
             <tr>
