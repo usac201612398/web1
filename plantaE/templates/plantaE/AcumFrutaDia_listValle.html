@@ -18,6 +18,7 @@
   />
 
   <style>
+    
     /* Encabezado tabla */
     thead th {
       background: linear-gradient(to right, #6c757d, #495057);
@@ -32,7 +33,7 @@
       text-align: right;
     }
 
-    /* Estilo de celdas de entrada */
+    /* Eliminar padding en celdas de input y hacer input full width */
     td {
       padding: 0 !important;
     }
@@ -42,56 +43,31 @@
       background: transparent;
     }
 
-    /* Estilo para el botón de regresar */
+    /* Para el link "Regresar" estilo botón */
     .button-regresar {
       margin-top: 1.5rem;
     }
 
-    /* Ajustes de margen en labels */
+    /* Ajuste de márgenes en labels */
     label {
       font-weight: 600;
       margin-bottom: 0.25rem;
     }
-
-    /* Estilo para el encabezado del hero */
-    .hero.is-success {
-      background-color: #48c78e;
-    }
-
-    .hero-body p.title, .hero-body p.subtitle {
-      color: white;
-    }
-
-    /* Estilo de la tabla para escritorio */
-    .table-container {
-      margin-top: 2rem;
-    }
-
-    /* Estilo para dispositivos móviles */
-    @media (max-width: 768px) {
-      td,
-      th {
-        font-size: 13px;
-      }
-      .button {
-        font-size: 13px;
-      }
-    }
   </style>
 </head>
 <body>
+  
 
-  <!-- Formulario de filtros -->
+  <!-- Formulario filtros -->
   <section class="section">
     <div class="container">
-      <!-- Header -->
-      <section class="hero is-success is-small mb-5">
-        <div class="hero-body has-text-centered">
-          <p class="title is-3 has-text-white">Panel Acumulado de Fruta</p>
-        </div>
-      </section> 
-
-      <div class="box mb-5">
+        <!-- Header -->
+        <section class="hero is-success is-small mb-5">
+            <div class="hero-body has-text-centered">
+            <p class="title is-3 has-text-white">Panel Acumulado de Fruta</p>
+            </div>
+        </section> 
+    <div class="box mb-5">
         <div class="columns is-variable is-4 is-multiline is-vcentered">
           <div class="column is-3">
             <label class="label" for="date">Fecha</label>
@@ -105,11 +81,11 @@
           </div>
           <div class="column is-4">
             <label class="label" for="Cul">Cultivo</label>
-            <div class="select is-fullwidth">
-              <select id="Cul" name="Cultivo">
-                <option value="">Seleccionar cultivo</option>
-              </select>
-            </div>
+              <div class="select is-fullwidth">
+                <select id="Cul" name="Cultivo">
+                  <option value="">Seleccionar cultivo</option>
+                </select>
+              </div>
           </div>
           <div class="column is-3">
             <label class="label" for="correo">Usuario</label>
@@ -136,8 +112,10 @@
           </div>
         </div>
       </div>
+  
 
-      <!-- Tabla -->
+  <!-- Tabla -->
+    <div class="container">
       <div class="table-container">
         <table class="table is-striped is-hoverable is-fullwidth" id="myTable">
           <thead>
@@ -183,8 +161,8 @@
         </table>
       </div>
 
-      <!-- Botón Regresar -->
-      <div class="has-text-centered mt-6">
+      <!-- Link regresar como botón -->
+       <div class="has-text-centered mt-6">
         <a href="{% url 'salidasFruta_listValle' %}" class="button is-success is-medium is-rounded">
           <span class="icon">
             <i class="fas fa-home"></i>
@@ -199,7 +177,6 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
   <script>
-    // Función al hacer click en el botón consultar
     document.getElementById('consultar').addEventListener('click', function () {
       const opcionSeleccionada1 = document.getElementById('Cul').value;
       const opcionSeleccionada2 = document.getElementById('date').value;
@@ -249,23 +226,83 @@
                 <td><a href="${deleteUrl}" class="has-text-danger"><i class="fas fa-trash-alt"></i></a></td>
               `;
               tbody.appendChild(fila);
+              
+
             });
+            tbody.insertAdjacentHTML('beforeend', `
+                <tr>
+                  <td colspan="4"><strong>Total</strong></td>
+                  <td><strong>${data.resumen[0].total_cajas}</strong></td>
+                  <td class="number-cell"><strong>${Math.round(data.resumen[0].total_libras)}</strong></td>
+                  <td colspan="4"></td>
+                  <td></td>
+                </tr>
+              `);
           } else {
-            tbody.innerHTML = '<tr><td colspan="11" class="has-text-centered">No se encontraron datos.</td></tr>';
+            console.log('No se encontraron datos.');
+          }
+
+          if (data.resumen && Array.isArray(data.resumen) && data.resumen.length > 0) {
+            alert(
+              `Total de cajas: ${data.resumen[0].total_cajas} y total de libras: ${Math.round(
+                data.resumen[0].total_libras
+              )} del día: ${data.resumen[0].fecha}`
+            );
           }
         })
         .catch((error) => {
-          console.error('Error:', error);
+          console.error('Error al hacer la consulta:', error);
         });
     });
 
+    // Obtener cookie csrf
     function getCookie(name) {
-      const cookieValue = document.cookie
-        .split('; ')
-        .find(row => row.startsWith(name + '='))
-        ?.split('=')[1];
-      return cookieValue || '';
+      const cookieValue = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+      return cookieValue ? cookieValue[2] : null;
     }
+
+    $(document).ready(function () {
+      // Función para cargar cultivos y usuario
+      function authUsuario() {
+        $.ajax({
+          url: '{% url "obtener_nombre_usuario" %}',
+          data: { category_id: 'Consulta' },
+          success: function (data) {
+            $('#date').val(data.fecha);
+            $('#correo').val(data.username);
+
+            $('#Cul').html('<option value=""></option>');
+            $('#Cul').html('<option value="">Seleccionar cultivo</option>');
+            $.each(data.adicionales, function (index, product) {
+              $('#Cul').append(
+                $('<option>').text(product.cultivo.toString()).attr('value', product.cultivo.toString())
+              );
+            });
+          },
+          error: function (xhr, status, error) {
+            console.error('Error:', error);
+          },
+        });
+      }
+
+      authUsuario();
+
+      // Formatear números en tabla
+      const formatCells = (tableId) => {
+        const cells = document.querySelectorAll(`#${tableId} td.number-cell`);
+        cells.forEach((cell) => {
+          const value = Number(cell.getAttribute('data-value'));
+          if (!isNaN(value)) {
+            cell.textContent = value.toLocaleString('es-ES', {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            });
+          }
+        });
+      };
+
+      formatCells('myTable');
+    });
   </script>
 </body>
 </html>
