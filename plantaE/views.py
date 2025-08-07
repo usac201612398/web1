@@ -1933,53 +1933,56 @@ def inventarioProd_detail(request, pk):
     salidas = get_object_or_404(inventarioProdTerm, pk=pk)
     return render(request, 'plantaE/inventarioProd_detail.html', {'registros': salidas})
 
+
 def acumFruta_consulta(request):
-
     if request.method == 'POST':
-        opcion1 = request.POST.get('opcion1')
-        opcion2 = request.POST.get('opcion2')
+        # Leer los datos JSON del cuerpo de la solicitud
+        data = json.loads(request.body)
+        opcion1 = data.get('opcion1')
+        opcion2 = data.get('opcion2')
         nombre_usuario = request.user.username
-        # Filtra tus datos según la opción seleccionada
-        datos = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario,libras__isnull=False).exclude(status = "Anulado")  
-        # Obtener todos los registros para el usuario y la fecha
-        registros = AcumFruta.objects.filter(cultivo=opcion1,fecha=opcion2,correo=nombre_usuario,libras__isnull=False).exclude(status = "Anulado") 
-        df = pd.DataFrame(list(datos.values()),columns=['id','fecha','finca','viaje','orden','cultivo','variedad','cajas','libras','estructura'])
 
-        df_agrupado = df.groupby(['orden','estructura','variedad'], as_index=False).agg(
+        # Filtra tus datos según la opción seleccionada
+        datos = AcumFruta.objects.filter(cultivo=opcion1, fecha=opcion2, correo=nombre_usuario, libras__isnull=False).exclude(status="Anulado")
+
+        df = pd.DataFrame(list(datos.values()), columns=['id', 'fecha', 'finca', 'viaje', 'orden', 'cultivo', 'variedad', 'cajas', 'libras', 'estructura'])
+
+        df_agrupado = df.groupby(['orden', 'estructura', 'variedad'], as_index=False).agg(
             total_cajas=('cajas', 'sum'),
-            cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
             total_libras=('libras', 'sum'),
+            cultivo=('cultivo', 'first'),
             id=('id', 'first'),
-            fecha =('fecha', 'first'),
-            finca =('finca', 'first'),
-            viaje =('viaje', 'first'),
-            orden =('orden', 'first'),
-            variedad =('variedad', 'first'),
-            estructura =('estructura', 'first')
+            fecha=('fecha', 'first'),
+            finca=('finca', 'first'),
+            viaje=('viaje', 'first'),
+            orden=('orden', 'first'),
+            variedad=('variedad', 'first'),
+            estructura=('estructura', 'first')
         )
+
         df_agrupado = df_agrupado.sort_values(by=['viaje', 'orden'])
 
         registros_finales = df_agrupado.to_dict(orient='records')
-        # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
-        df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','viaje','cultivo','cajas','libras'])
 
-        # Agrupar por 'variedad' y sumar las 'cajas'
-        df_agrupado = df.groupby('cultivo', as_index=False).agg(
+        # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
+        df_resumen = pd.DataFrame(list(datos.values()), columns=['fecha', 'finca', 'viaje', 'cultivo', 'cajas', 'libras'])
+
+        # Agrupar por 'cultivo' y sumar las 'cajas' y 'libras'
+        df_resumen_agrupado = df_resumen.groupby('cultivo', as_index=False).agg(
             total_cajas=('cajas', 'sum'),
             total_libras=('libras', 'sum'),
             viaje=('viaje', 'first'),
-            cultivo=('cultivo', 'first'),  # Conservar el primer correo asociado
+            cultivo=('cultivo', 'first'),
             fecha=('fecha', 'first'),
-            finca =('finca', 'first')
+            finca=('finca', 'first')
         )
 
-        registros_finales2 = df_agrupado.to_dict(orient='records')
-        return JsonResponse({'datos': registros_finales,'opcion1':opcion1,'opcion2':opcion2,'resumen':registros_finales2,'correo':nombre_usuario}, safe=False)
+        registros_finales2 = df_resumen_agrupado.to_dict(orient='records')
+
+        return JsonResponse({'datos': registros_finales, 'opcion1': opcion1, 'opcion2': opcion2, 'resumen': registros_finales2, 'correo': nombre_usuario}, safe=False)
     return render(request, 'plantaE/AcumFrutaDia_list.html')
 
-from django.http import JsonResponse
-import pandas as pd
-from django.shortcuts import render
+
 
 def acumFruta_consultaValle(request):
     if request.method == 'POST':
