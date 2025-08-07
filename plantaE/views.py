@@ -1974,7 +1974,7 @@ def acumFruta_consulta(request):
         )
 
         registros_finales2 = df_agrupado.to_dict(orient='records')
-        return JsonResponse({'datos': registros_finales,'opcion1':opcion1,'opcion2':opcion2,'resumen':registros_finales2}, safe=False)
+        return JsonResponse({'datos': registros_finales,'opcion1':opcion1,'opcion2':opcion2,'resumen':registros_finales2,'correo':nombre_usuario}, safe=False)
     return render(request, 'plantaE/AcumFrutaDia_list.html')
 
 from django.http import JsonResponse
