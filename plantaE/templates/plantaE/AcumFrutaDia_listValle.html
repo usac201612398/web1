@@ -205,28 +205,8 @@
               deleteUrl: "{% url 'acumFruta_delete' 0 %}",
               detailUrl: "{% url 'acumFruta_detail' 0 %}",
             };
-
-            data.datos.forEach((item) => {
-              const fila = document.createElement('tr');
-              const editUrl = urls.updateUrl.replace('0', item.id);
-              const deleteUrl = urls.deleteUrl.replace('0', item.id);
-              const detailUrl = urls.detailUrl.replace('0', item.id);
-
-              fila.innerHTML = `
-                <td><a href="${detailUrl}">${item.id}</a></td>
-                <td>${item.fecha}</td>
-                <td>${item.finca}</td>
-                <td>${item.viaje}</td>
-                <td>${item.total_cajas}</td>
-                <td class="number-cell" data-value="${item.total_libras}">${Math.round(item.total_libras)}</td>
-                <td>${item.orden}</td>
-                <td>${item.cultivo}</td>
-                <td>${item.estructura}</td>
-                <td>${item.variedad}</td>
-                <td><a href="${deleteUrl}" class="has-text-danger"><i class="fas fa-trash-alt"></i> Anular</a></td>
-              `;
-              tbody.appendChild(fila);
-            });
+            console.log(data)
+            
           } else {
             console.log('No se encontraron datos.');
           }
