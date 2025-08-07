@@ -324,6 +324,14 @@
           `);
 
           formatCells('myTable'); // Formatear los valores de libras y cajas
+
+          if (data.resumen && Array.isArray(data.resumen) && data.resumen.length > 0) {
+            alert(
+              `Total de cajas: ${data.resumen[0].total_cajas} y total de libras: ${Math.round(
+                data.resumen[0].total_libras
+              )} del día: ${data.resumen[0].fecha}`
+            );
+          }
         })
         .catch((error) => console.error('Error:', error));
 

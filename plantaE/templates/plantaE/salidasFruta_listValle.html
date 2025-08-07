@@ -42,24 +42,27 @@
 <div class="container py-3">
 
     <div class="d-flex flex-wrap gap-2 mb-4 justify-content-between">
+        
         <a href="{% url 'salidasFruta_create_plantillaValle' %}" class="btn btn-success flex-fill text-center">
             <i class="fas fa-plus"></i> Agregar viaje
         </a>
+
         <a href="{% url 'acumFruta_listValle' %}" class="btn btn-success flex-fill text-center">
             <i class="fas fa-table"></i> Detalle - Estructura
         </a>
+
         <a href="{% url 'salidasFruta_cuadreValle' %}" class="btn btn-success flex-fill text-center">
             <i class="fas fa-list"></i> Resumen - Viajes
         </a>
-        <a href="{% url 'acumFruta_consultaValle' %}" class="btn btn-success flex-fill text-center">
-            <i class="fas fa-calendar-day"></i> Resumen - Diario
-        </a>
+ 
         <a href="{% url 'dashboard_acumfruta2' %}" class="btn btn-success flex-fill text-center">
             <i class="fas fa-chart-line"></i> Gráfica kg
         </a>
+
         <a href="{% url 'reporte_tabla_pivote2' %}" class="btn btn-success flex-fill text-center">
             <i class="fas fa-calendar-week"></i> Reporte Semanal
         </a>
+
     </div>
 
     <!-- Tabla para escritorio -->
