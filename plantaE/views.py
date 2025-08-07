@@ -1069,6 +1069,7 @@ def recepcionesFruta_delete(request, pk):
         salidasFruta.objects.filter(recepcion=salidas.recepcion).exclude(status='Anulado').update(
             libras=None,
             recepcion=None
+            status=None
         )
 
         return render(request, 'plantaE/recepciones_confirm_delete.html', {
@@ -1765,6 +1766,7 @@ def boletas_delete(request, pk):
 
 def recepciones_detail(request, pk):
     salidas = get_object_or_404(detallerec, pk=pk)
+
     return render(request, 'plantaE/recepciones_detail.html', {'registros': salidas})
 
 def recepciones_update(request, pk):
