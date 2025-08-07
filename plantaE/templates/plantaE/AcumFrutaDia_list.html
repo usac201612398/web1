@@ -280,23 +280,7 @@
       })
         .then((response) => response.json())
         .then((data) => {
-          data.forEach((registro) => {
-            tbody.append(`
-              <tr>
-                <td><a href="/detalle/${registro.id}">${registro.id}</a></td>
-                <td>${registro.fecha}</td>
-                <td>${registro.finca}</td>
-                <td>${registro.viaje}</td>
-                <td>${registro.cajas}</td>
-                <td class="number-cell" data-value="${registro.libras}">${registro.libras}</td>
-                <td>${registro.orden}</td>
-                <td>${registro.cultivo}</td>
-                <td>${registro.estructura}</td>
-                <td>${registro.variedad}</td>
-                <td class="has-text-centered"><a href="/anular/${registro.id}" class="has-text-danger"><i class="fas fa-trash-alt"></i></a></td>
-              </tr>
-            `);
-          });
+          console.log(data)
           formatCells('myTable');
         })
         .catch((error) => console.error('Error:', error));
