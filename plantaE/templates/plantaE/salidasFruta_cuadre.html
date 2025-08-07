@@ -172,7 +172,7 @@ document.getElementById('consultar').addEventListener('click', function() {
     // Limpiar la tabla antes de agregar nuevos datos
     tbody.innerHTML = '';
     tbody2.innerHTML = '';
-
+    console.log("Hola")
     fetch('{% url "salidasFruta_cuadre" %}', { // Asegúrate de poner la URL correcta
         method: 'POST',
         headers: {
