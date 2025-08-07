@@ -479,7 +479,7 @@ def cuadrar_ValleDia(request):
         opcion1 = request.POST.get('opcion1')
         opcion2 = request.POST.get('opcion2')
          # Obtener todos los registros para el usuario y la fecha
-        registros = salidasFruta.objects.filter(fecha=opcion2,cultivo=opcion1,correo=nombre_usuario,libras__isnull=False).exclude('Anulado')
+        registros = salidasFruta.objects.filter(fecha=opcion2,cultivo=opcion1,correo=nombre_usuario,libras__isnull=False).exclude(status='Anulado')
 
     # Crear un DataFrame a partir de los registros, incluyendo todas las columnas
         df = pd.DataFrame(list(registros.values()),columns=['fecha','finca','cultivo','variedad','cajas','libras','created_at'])
@@ -822,7 +822,7 @@ def article_deleteValle(request, pk):
 def acumFruta_list(request):
     today = timezone.localtime(timezone.now()).date()
     nombre_usuario = request.user.username
-    salidas = AcumFruta.objects.filter(fecha=today,correo=nombre_usuario, status__isnull=True)
+    salidas = AcumFruta.objects.filter(fecha=today,correo=nombre_usuario).exclude(status="Anulado")
     
     salidas = salidas.order_by('-created_at')
     
