@@ -226,12 +226,12 @@
                 <td><a href="${deleteUrl}" class="has-text-danger"><i class="fas fa-trash-alt"></i> Anular</a></td>
               `;
               tbody.appendChild(fila);
-              tbody.append(`
+              tbody.insertAdjacentHTML('beforeend', `
                 <tr>
                   <td colspan="4"><strong>Total</strong></td>
                   <td><strong>${data.resumen[0].total_cajas}</strong></td>
-                  <td class="number-cell"><strong>${Math.round(data.resumen[0].total_libras)}</strong></td> <!-- Redondear a 2 decimales -->
-                  <td colspan="4"></td> <!-- Colspan para ajustar el diseño -->
+                  <td class="number-cell"><strong>${Math.round(data.resumen[0].total_libras)}</strong></td>
+                  <td colspan="4"></td>
                   <td></td>
                 </tr>
               `);
