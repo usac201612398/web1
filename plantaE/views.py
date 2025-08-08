@@ -3319,6 +3319,7 @@ def poraprovechamientos(request):
     tabla_html = df.to_html(classes="table table-striped", index=False)
 
     return render(request, 'plantaE/salidasFruta_aprovechamientos.html', {
+        'registros': resultado,
         'tabla_html': tabla_html,
         'registros_json': registros_json,
     })
