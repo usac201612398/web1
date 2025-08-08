@@ -188,7 +188,7 @@
           $('#correo').val(data.username);
           $('#Prov').html('<option value="">Seleccionar proveedor</option>');
           data.proveedor.forEach(item => {
-            $('#Prov').append(`<option value="${item.proveedor}">${item.proveedor}</option>`);
+            $('#Prov').append(`<option value="${item.finca}">${item.finca}</option>`);
           });
           
         },
