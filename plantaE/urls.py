@@ -45,6 +45,7 @@ urlpatterns = [
     path('salidasFruta/<int:pk>/delete/', views.article_delete, name='salidasFruta_delete'),
     path('salidasFruta2/<int:pk>/delete/', views.article_delete2, name='salidasFruta_delete2'),
     path('salidasFruta/<int:pk>/delete/Valle', views.article_deleteValle, name='salidasFruta_deleteValle'),
+    path('salidasFruta/consultaaprovechamientos', views.poraprovechamientos, name='salidasFruta_aprovechamietos'),
 
     path("acumFrutaView",views.acumFruta_list2,name='acumFruta_list2'),
     path("acumFruta",views.acumFruta_list,name='acumFruta_list'),

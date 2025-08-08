@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+{% load static %}
+<head>
+  <meta charset="UTF-8">
+  <title>Panel - totalFruta</title>
+
+  <!-- Bulma CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    body {
+      background-color: #f9f9f9;
+    }
+    .panel-header {
+      margin-bottom: 1.5rem;
+    }
+    .filters {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .data-section {
+      margin-top: 2rem;
+    }
+    .box {
+      border-radius: 6px;
+    }
+    .back-link {
+      margin-top: 2rem;
+      display: inline-block;
+    }
+    .is-small-text {
+      font-size: 0.9rem;
+      color: #777;
+    }
+    .table-custom-header th {
+    background: linear-gradient(to right, #6c757d, #495057);
+    color: white !important;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <section class="section">
+    <div class="container">
+      <!-- HEADER -->
+        <section class="hero is-success is-small mb-5">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+            <h1 class="title is-3 has-text-white">Panel de Control</h1>
+            <p class="subtitle is-6 has-text-white-ter">Consulta de salidas de fruta</p>
+            </div>
+        </div>
+        </section>
+
+      <!-- FILTROS -->
+      <div class="filters box">
+        <form id="filtros">
+          <div class="columns is-variable is-4">
+            <div class="column is-3">
+              <label class="label" for="date">Fecha</label>
+              <input class="input" id="date" type="date" value="{{ fecha }}">
+            </div>
+            <div class="column is-4">
+              <label class="label" for="Cul">Cultivo</label>
+              <div class="select is-fullwidth">
+                <select id="Cul" name="Cultivo">
+                  <option value="">Seleccionar cultivo</option>
+                </select>
+              </div>
+            </div>
+            <div class="column is-3">
+              <label class="label" for="correo">Usuario</label>
+              <input class="input" id="correo" type="text" value="{{ usuario }}" readonly>
+            </div>
+            <div class="column is-2 is-flex is-align-items-end">
+              <button type="button" id="consultar" class="button is-success is-fullwidth">
+                <span class="icon"><i class="fas fa-search"></i></span>
+                <span>Consultar</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- TABLA 1 -->
+      <div class="data-section">
+        <div class="box">
+          <h2 class="title is-5">Detalle por variedad</h2>
+          <div class="table-container">
+            <table class="table is-striped is-fullwidth is-hoverable" id="myTable">
+              <thead class="table-custom-header">
+                <tr>
+                  <th>Fecha</th>
+                  <th>Finca</th>
+                  <th>Cultivo</th>
+                  <th>Orden</th>
+                  <th>Estructura</th>
+                  <th>Variedad</th>
+                  <th>Libras</th>
+                  <th>Aprovechamiento</th>
+                  <th>Mediano</th>
+                  <th>Devolución</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for registro in registros %}
+                <tr>
+                  <td>{{ registro.fecha }}</td>
+                  <td>{{ registro.finca }}</td>
+                  <td>{{ registro.cultivo }}</td>
+                  <td>{{ registro.orden }}</td>
+                  <td>{{ registro.estructura }}</td>
+                  <td>{{ registro.variedad }}</td>
+                  <td class="number-cell" data-value="{{ registro.total_libras }}">{{ registro.total_libras }}</td>
+                  <td class="number-cell" data-value="{{ registro.porcentaje_aprovechamiento }}">{{ registro.porcentaje_aprovechamiento }}</td>
+                  <td class="number-cell" data-value="{{ registro.porcentaje_devolucion }}">{{ registro.total_porcentaje_mediano }}</td>
+                  <td class="number-cell" data-value="{{ registro.porcentaje_mediano }}">{{ registro.total_devolución }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    <div class="has-text-centered mt-6">
+        <a href="{% url 'salidasFruta_listValle' %}" class="button is-success is-medium is-rounded">
+            <span class="icon">
+            <i class="fas fa-home"></i>
+            </span>
+            <span>Ir al Home</span>
+        </a>
+    </div>
+    </div>
+  </section>
+
+  <!-- SCRIPTS -->
+  <script src="{% static '/lib/cockies.js' %}"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <script>
+    // CONSULTAR
+    // CARGA INICIAL
+    $(document).ready(function () {
+      $.ajax({
+        url: '{% url "obtener_nombre_usuario" %}',
+        data: { 'category_id': 'Consulta' },
+        success: function (data) {
+          $('#date').val(data.fecha);
+          $('#correo').val(data.username);
+          $('#Cul').html('<option value="">Seleccionar cultivo</option>');
+          data.adicionales.forEach(item => {
+            $('#Cul').append(`<option value="${item.cultivo}">${item.cultivo}</option>`);
+          });
+        },
+        error: function (xhr, status, error) {
+          console.error('Error al cargar usuario:', error);
+        }
+      });
+    });
+
+    // FORMATEO DE NÚMEROS
+    function formatCells(tableId) {
+      const cells = document.querySelectorAll(`#${tableId} td.number-cell`);
+      cells.forEach(cell => {
+        const value = Number(cell.getAttribute('data-value'));
+        if (!isNaN(value)) {
+          cell.textContent = value.toLocaleString('es-ES');
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      formatCells('myTable');
+    });
+  </script>
+</body>
+</html>
