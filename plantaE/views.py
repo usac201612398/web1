@@ -230,6 +230,19 @@ def load_dataUsuario3(request):
     #variedad = cultivoxFinca.objects.filter(cultivo=list(cultivo)[0]['cultivo']).values('variedad')
     return JsonResponse({'datos': list(variedad),'cultivo': list(cultivo),'semana':semana_año_list})
 
+def load_dataUsuario5(request):
+
+    nombre_usuario = request.user.username
+    proveedor = Boletas.objects.values('proveedor').distinct('proveedor')
+    
+    return JsonResponse({'username':nombre_usuario,'proveedor': list(proveedor)})
+
+def load_dataUsuario6(request):
+
+    opcion1 = request.GET.get('proveedor')
+    cultivo = Boletas.objects.filter(proveedor=opcion1).values('cultivo').distinct('cultivo')
+    
+    return JsonResponse({'cultivo': list(cultivo)})
 
 def pesos_list(request):
     today = timezone.now().date()

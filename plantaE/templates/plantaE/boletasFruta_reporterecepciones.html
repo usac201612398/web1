@@ -62,9 +62,13 @@
       <div class="filters box">
         <form id="filtros">
           <div class="columns is-variable is-4">
-            <div class="column is-3">
-              <label class="label" for="date">Fecha</label>
-              <input class="input" id="date" type="date" value="{{ fecha }}">
+            <div class="column is-4">
+              <label class="label" for="Pro">Proveedor</label>
+              <div class="select is-fullwidth">
+                <select id="Pro" name="Proveedor">
+                  <option value="">Seleccionar proveedor</option>
+                </select>
+              </div>
             </div>
             <div class="column is-4">
               <label class="label" for="Cul">Cultivo</label>
@@ -121,38 +125,6 @@
         </div>
       </div>
 
-      <!-- TABLA 2 -->
-      <div class="data-section">
-        <div class="box">
-          <h2 class="title is-5">Resumen general</h2>
-          <div class="table-container">
-            <table class="table is-striped is-fullwidth is-hoverable" id="myTable2">
-              <thead class="table-custom-header">
-                <tr>
-                  <th>Fecha</th>
-                  <th>Finca</th>
-                  <th>Cultivo</th>
-                  <th>Variedad</th>
-                  <th>Cajas</th>
-                  <th>Libras</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for registro in registros2 %}
-                <tr>
-                  <td>{{ registro.fecha }}</td>
-                  <td>{{ registro.finca }}</td>
-                  <td>{{ registro.cultivo }}</td>
-                  <td>-</td>
-                  <td>{{ registro.total_cajas }}</td>
-                  <td class="number-cell" data-value="{{ registro.total_libras }}">{{ registro.total_libras }}</td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
 
     <div class="has-text-centered mt-6">
         <a href="{% url 'salidasFruta_listValle' %}" class="button is-success is-medium is-rounded">
@@ -205,35 +177,22 @@
             tbody.insertAdjacentHTML('beforeend', row);
           });
 
-          data.resumen.forEach(item => {
-            const row = `<tr>
-              <td>${item.fecha}</td>
-              <td>${item.finca}</td>
-              <td>${item.cultivo}</td>
-              <td>-</td>
-              <td>${item.total_cajas}</td>
-              <td>${Math.round(item.total_libras)}</td>
-            </tr>`;
-            tbody2.insertAdjacentHTML('beforeend', row);
-          });
-
           formatCells('myTable');
-          formatCells('myTable2');
         });
     });
 
     // CARGA INICIAL
     $(document).ready(function () {
       $.ajax({
-        url: '{% url "obtener_nombre_usuario" %}',
+        url: '{% url "load_dataUsuario5" %}',
         data: { 'category_id': 'Consulta' },
         success: function (data) {
-          $('#date').val(data.fecha);
           $('#correo').val(data.username);
-          $('#Cul').html('<option value="">Seleccionar cultivo</option>');
-          data.adicionales.forEach(item => {
-            $('#Cul').append(`<option value="${item.cultivo}">${item.cultivo}</option>`);
+          $('#Prov').html('<option value="">Seleccionar proveedor</option>');
+          data.proveedor.forEach(item => {
+            $('#Prov').append(`<option value="${item.proveedor}">${item.proveedor}</option>`);
           });
+          
         },
         error: function (xhr, status, error) {
           console.error('Error al cargar usuario:', error);
@@ -251,10 +210,41 @@
         }
       });
     }
+    
+    $('#Prov').change(function() {
+        var categoryId = $(this).val();  // Obtiene el ID de la categoría seleccionada
+        loadProducts(categoryId);  // Llama a la función para cargar productos
+    });
 
+    function loadProducts(categoryId) {
+        $.ajax({
+            url: '{% url "load_dataUsuario6" %}',  // URL para la vista AJAX
+            data: {
+                'proveedor':categoryId
+            },
+            success: function(data) {
+                // Limpia las opciones actuales del campo 'name'
+                console.log(data);
+            
+                $('#Cul').html('');
+                $('#Cul').html('<option value="">Seleccionar cultivo</option>');
+                // Recorre los productos recibidos y añade opciones al campo 'name'
+                $.each(data.cultivo, function(index, product) {
+                    data.adicionales.forEach(item => {
+                      $('#Cul').append(`<option value="${item.cultivo}">${item.cultivo}</option>`);
+                    });
+                });
+
+
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);  // Maneja errores de la solicitud
+            }
+        });
+    }
     document.addEventListener('DOMContentLoaded', () => {
       formatCells('myTable');
-      formatCells('myTable2');
+      
     });
   </script>
 </body>
