@@ -66,50 +66,52 @@
             </div>
         </section>
       <!-- Filtros con Bulma columns -->
-      <div class="box mb-5">
-        <div class="columns is-variable is-4 is-multiline is-vcentered">
-          <div class="column is-3">
-            <label class="label" for="date">Fecha</label>
-            <input
-              id="date"
-              class="input"
-              type="date"
-              value="{{ fecha }}"
-              name="date"
-            />
+      <div class="filters box">
+        <form id="filtros">
+          <div class="columns is-variable is-4">
+            <div class="column is-3">
+              <label class="label" for="date">Fecha</label>
+              <input
+                id="date"
+                class="input"
+                type="date"
+                value="{{ fecha }}"
+                name="date"
+              />
+            </div>
+            <div class="column is-4">
+              <label class="label" for="Cul">Cultivo</label>
+                <div class="select is-fullwidth">
+                  <select id="Cul" name="Cultivo">
+                    <option value="">Seleccionar cultivo</option>
+                  </select>
+                </div>
+            </div>
+            <div class="column is-3">
+              <label class="label" for="correo">Usuario</label>
+              <input
+                id="correo"
+                class="input"
+                type="text"
+                value="{{ usuario }}"
+                readonly
+                name="usuario"
+              />
+            </div>
+            <div class="column is-2 is-flex is-align-items-end"> <!-- Usamos is-offset-3 para centrar el botón -->
+              <button
+                id="consultar"
+                class="button is-success is-fullwidth"
+                type="button"
+              >
+                <span class="icon">
+                  <i class="fas fa-search"></i>
+                </span>
+                <span>Consultar</span>
+              </button>
+            </div>
           </div>
-          <div class="column is-4">
-            <label class="label" for="Cul">Cultivo</label>
-              <div class="select is-fullwidth">
-                <select id="Cul" name="Cultivo">
-                  <option value="">Seleccionar cultivo</option>
-                </select>
-              </div>
-          </div>
-          <div class="column is-3">
-            <label class="label" for="correo">Usuario</label>
-            <input
-              id="correo"
-              class="input"
-              type="text"
-              value="{{ usuario }}"
-              readonly
-              name="usuario"
-            />
-          </div>
-          <div class="column is-2"> <!-- Usamos is-offset-3 para centrar el botón -->
-            <button
-              id="consultar"
-              class="button is-success is-fullwidth mt-5"
-              type="button"
-            >
-              <span class="icon">
-                <i class="fas fa-search"></i>
-              </span>
-              <span>Consultar</span>
-            </button>
-          </div>
-        </div>
+        </form>
       </div>
 
       <!-- Tabla para escritorio -->
