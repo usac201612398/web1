@@ -3233,12 +3233,12 @@ def poraprovechamientos(request):
     anio_actual = hoy.year
     nombre_usuario=request.user.username
     # Obtener fecha máxima en detallerecaux
-    fecha_max = AcumFruta.objects.filter(correo=obtener_nombre_usuario).aggregate(max_fecha=Max('fechasalidafruta'))['max_fecha']
+    fecha_max = AcumFruta.objects.filter(correo=nombre_usuario).aggregate(max_fecha=Max('fechasalidafruta'))['max_fecha']
     if not fecha_max:
         fecha_max = hoy  # fallback si no hay registros
 
     # Filtrar las libras totales por variedad desde AcumFruta
-    acumfrutadatos = AcumFruta.objects.filter(correo=obtener_nombre_usuario).filter(
+    acumfrutadatos = AcumFruta.objects.filter(correo=nombre_usuario).filter(
         fecha__lte=fecha_max
     ).annotate(
         semana=ExtractWeek('fecha'),
@@ -3259,7 +3259,7 @@ def poraprovechamientos(request):
     ).filter(
         semana=semana_actual,
         anio=anio_actual
-    ).filter(correo=obtener_nombre_usuario)
+    ).filter(correo=nombre_usuario)
 
     boleta_ids = detalles.values_list('boleta', flat=True).distinct()
     boletas = Boletas.objects.filter(boleta__in=boleta_ids)
