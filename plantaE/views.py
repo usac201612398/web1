@@ -3232,7 +3232,7 @@ def poraprovechamientos(request):
     anio_actual = hoy.year
     nombre_usuario= request.user.username
     # 1. Obtener fecha máxima en detallerecaux
-    fecha_max = detallerecaux.objects.filter(correo=nombre_usuario).aggregate(max_fecha=Max('fechasalidafruta'))['max_fecha']
+    fecha_max = detallerec.objects.filter(correo=nombre_usuario).aggregate(max_fecha=Max('fechasalidafruta'))['max_fecha']
     if not fecha_max:
         fecha_max = hoy  # fallback si no hay registros
 
