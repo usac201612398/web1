@@ -3288,15 +3288,17 @@ def poraprovechamientos(request):
 
     # Calcular los porcentajes de calidad
     resultado = []
-    for (finca, cultivo, orden, estructura, variedad), datos in agrupados.items():
+    for clave, datos in agrupados.items():
+        recepcion_libras = recepciones_dict.get(clave, 0)
         total_distribuido = datos['total'] or 0
-        recepcion_libras = recepciones_dict.get((finca, cultivo, orden, estructura, variedad), 0)
-        pendiente = recepcion_libras - total_distribuido
-        if pendiente < 0:
-            pendiente = 0
-        porcentaje_pendiente = round(pendiente * 100 / recepcion_libras, 2) if recepcion_libras else 0
 
-        # Calcular porcentaje de devolución
+        # Saltar si aún no se ha distribuido completamente
+        if total_distribuido < recepcion_libras:
+            continue
+
+        finca, cultivo, orden, estructura, variedad = clave
+
+        porcentaje_pendiente = round((recepcion_libras - total_distribuido) * 100 / recepcion_libras, 2) if recepcion_libras else 0
         porcentaje_devolucion = round(datos['devolución'] * 100 / recepcion_libras, 2) if recepcion_libras else 0
 
         resultado.append({
