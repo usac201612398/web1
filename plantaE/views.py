@@ -3277,11 +3277,11 @@ def poraprovechamientos(request):
         calidad = (boleta.calidad or '').strip().lower()
         libras = detalle.libras or 0
 
-        if 'Aprovechamiento' in calidad:
+        if 'aprovechamiento' in calidad:
             agrupados[clave]['aprovechamiento'] += libras
-        elif 'Devolución' in calidad:
+        elif 'devolución' in calidad:
             agrupados[clave]['devolución'] += libras
-        elif 'Mediano' in calidad:
+        elif 'mediano' in calidad:
             agrupados[clave]['mediano'] += libras
 
         agrupados[clave]['total'] += libras
