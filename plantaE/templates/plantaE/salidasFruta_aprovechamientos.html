@@ -85,10 +85,10 @@
                   <td>{{ registro.orden }}</td>
                   <td>{{ registro.estructura }}</td>
                   <td>{{ registro.variedad }}</td>
-                  <td class="number-cell" data-value="{{ registro.libras_recibidas }}">{{ registro.libras }}</td>
-                  <td class="number-cell" data-value="{{ registro.porcentaje_aprovechamiento }}">{{ registro.aprovechamiento }}%</td>
-                  <td class="number-cell" data-value="{{ registro.porcentaje_mediano }}">{{ registro.mediano }}%</td>
-                  <td class="number-cell" data-value="{{ registro.porcentaje_devolucion }}">{{ registro.devolucion }}%</td>
+                  <td class="number-cell" data-value="{{ registro.libras }}">{{ registro.libras }}</td>
+                  <td class="number-cell" data-value="{{ aprovechamiento }}">{{ registro.aprovechamiento }}%</td>
+                  <td class="number-cell" data-value="{{ mediano }}">{{ registro.mediano }}%</td>
+                  <td class="number-cell" data-value="{{ devolucion }}">{{ registro.devolucion }}%</td>
                 </tr>
                 {% endfor %}
               </tbody>
