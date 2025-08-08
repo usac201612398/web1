@@ -233,7 +233,7 @@ def load_dataUsuario3(request):
 def load_dataUsuario5(request):
 
     nombre_usuario = request.user.username
-    proveedor = Boletas.objects.values('proveedor').distinct('proveedor')
+    proveedor = Boletas.objects.values('finca').distinct('proveedor')
     
     return JsonResponse({'username':nombre_usuario,'proveedor': list(proveedor)})
 
