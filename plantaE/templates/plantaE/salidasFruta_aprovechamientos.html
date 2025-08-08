@@ -58,36 +58,6 @@
         </div>
         </section>
 
-      <!-- FILTROS -->
-      <div class="filters box">
-        <form id="filtros">
-          <div class="columns is-variable is-4">
-            <div class="column is-3">
-              <label class="label" for="date">Fecha</label>
-              <input class="input" id="date" type="date" value="{{ fecha }}">
-            </div>
-            <div class="column is-4">
-              <label class="label" for="Cul">Cultivo</label>
-              <div class="select is-fullwidth">
-                <select id="Cul" name="Cultivo">
-                  <option value="">Seleccionar cultivo</option>
-                </select>
-              </div>
-            </div>
-            <div class="column is-3">
-              <label class="label" for="correo">Usuario</label>
-              <input class="input" id="correo" type="text" value="{{ usuario }}" readonly>
-            </div>
-            <div class="column is-2 is-flex is-align-items-end">
-              <button type="button" id="consultar" class="button is-success is-fullwidth">
-                <span class="icon"><i class="fas fa-search"></i></span>
-                <span>Consultar</span>
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
-
       <!-- TABLA 1 -->
       <div class="data-section">
         <div class="box">
@@ -96,7 +66,6 @@
             <table class="table is-striped is-fullwidth is-hoverable" id="myTable">
               <thead class="table-custom-header">
                 <tr>
-                  <th>Fecha</th>
                   <th>Finca</th>
                   <th>Cultivo</th>
                   <th>Orden</th>
@@ -111,8 +80,7 @@
               <tbody>
                 {% for registro in registros %}
                 <tr>
-                  <td>{{ registro.fecha }}</td>
-                  <td>{{ registro.finca }}</td>
+                  <td>{{ registro.proveedor }}</td>
                   <td>{{ registro.cultivo }}</td>
                   <td>{{ registro.orden }}</td>
                   <td>{{ registro.estructura }}</td>
