@@ -186,6 +186,7 @@
         data: { 'category_id': 'Consulta' },
         success: function (data) {
           $('#correo').val(data.username);
+          $('#Prov').html('');
           $('#Prov').html('<option value="">Seleccionar proveedor</option>');
           data.proveedor.forEach(item => {
             $('#Prov').append(`<option value="${item.finca}">${item.finca}</option>`);
@@ -223,15 +224,16 @@
             success: function(data) {
                 // Limpia las opciones actuales del campo 'name'
                 console.log(data);
-            
+                
                 $('#Cul').html('');
                 $('#Cul').html('<option value="">Seleccionar cultivo</option>');
                 // Recorre los productos recibidos y añade opciones al campo 'name'
-                $.each(data.cultivo, function(index, product) {
-                    data.adicionales.forEach(item => {
-                      $('#Cul').append(`<option value="${item.cultivo}">${item.cultivo}</option>`);
-                    });
+                $('#Prov').html('<option value="">Seleccionar proveedor</option>');
+                
+                data.cultivo.forEach(item => {
+                  $('#Cul').append(`<option value="${item.cultivo}">${item.cultivo}</option>`);
                 });
+                
 
 
             },
