@@ -3119,8 +3119,8 @@ def get_variedades_por_estructura2(request):
         return JsonResponse({'variedad': list(variedades)})
     return JsonResponse({'variedad': []})
 
-def formar_clave(finca, cultivo):
-    return (finca.strip().upper(), cultivo.strip().upper())
+def formar_clave(finca, cultivo,orden,estructura,variedad):
+    return (finca.strip().upper(), cultivo.strip().upper(),orden.strip().upper(),estructura.strip().upper(),variedad.strip().upper())
 
 
 def aprovechamientos(request):
