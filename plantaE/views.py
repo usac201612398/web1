@@ -3225,19 +3225,20 @@ def aprovechamientos(request):
         'registros_json': registros_json,
         'detalle_debug': detalle_debug_json
     })
+from collections import defaultdict
 
 def poraprovechamientos(request):
     hoy = timezone.now().date()
     semana_actual = hoy.isocalendar()[1]
     anio_actual = hoy.year
-    nombre_usuario= request.user.username
-    # 1. Obtener fecha máxima en detallerecaux
-    fecha_max = AcumFruta.objects.filter(correo=nombre_usuario).aggregate(max_fecha=Max('fecha'))['max_fecha']
+
+    # Obtener fecha máxima en detallerecaux
+    fecha_max = detallerecaux.objects.aggregate(max_fecha=Max('fechasalidafruta'))['max_fecha']
     if not fecha_max:
         fecha_max = hoy  # fallback si no hay registros
 
-    # 2. Filtrar recepciones hasta esa fecha, semana actual
-    acumfrutadatos = AcumFruta.objects.filter(correo=nombre_usuario).filter(
+    # Filtrar las libras totales por variedad desde AcumFruta
+    acumfrutadatos = AcumFruta.objects.filter(
         fecha__lte=fecha_max
     ).annotate(
         semana=ExtractWeek('fecha'),
@@ -3247,33 +3248,32 @@ def poraprovechamientos(request):
         anio=anio_actual
     ).values('finca', 'cultivo', 'orden', 'estructura', 'variedad').annotate(total_libras=Sum('libras')).order_by()
 
-    # Crear dict con claves consistentes
     recepciones_dict = {
         formar_clave(r['finca'], r['cultivo'], r['orden'], r['estructura'], r['variedad']): r['total_libras'] for r in acumfrutadatos
     }
 
-    # 3. Filtrar distribuciones por semana actual
+    # Filtrar distribuciones desde AcumFrutaaux
     detalles = AcumFrutaaux.objects.annotate(
         semana=ExtractWeek('fecha'),
         anio=ExtractYear('fecha')
     ).filter(
         semana=semana_actual,
         anio=anio_actual
-    ).filter(correo=nombre_usuario)
+    )
 
     boleta_ids = detalles.values_list('boleta', flat=True).distinct()
     boletas = Boletas.objects.filter(boleta__in=boleta_ids)
     boletas_dict = {b.boleta: b for b in boletas}
 
+    # Agrupar las libras por boleta
     agrupados = defaultdict(lambda: {'aprovechamiento': 0, 'devolución': 0, 'mediano': 0, 'total': 0})
-    detalle_debug = []
 
     for detalle in detalles:
         boleta = boletas_dict.get(detalle.boleta)
         if not boleta:
             continue
         
-        clave = formar_clave(detalle.finca, detalle.cultivo,detalle.orden,detalle.estructura,detalle.variedad)
+        clave = formar_clave(detalle.finca, detalle.cultivo, detalle.orden, detalle.estructura, detalle.variedad)
         calidad = (boleta.calidad or '').strip().lower()
         libras = detalle.libras or 0
 
@@ -3286,15 +3286,18 @@ def poraprovechamientos(request):
 
         agrupados[clave]['total'] += libras
 
-    # 4. Calcular resultados finales
+    # Calcular los porcentajes de calidad
     resultado = []
-    for (finca, cultivo, orden, estructura,variedad), datos in agrupados.items():
+    for (finca, cultivo, orden, estructura, variedad), datos in agrupados.items():
         total_distribuido = datos['total'] or 0
-        recepcion_libras = recepciones_dict.get((finca, cultivo,orden,estructura,variedad), 0)
+        recepcion_libras = recepciones_dict.get((finca, cultivo, orden, estructura, variedad), 0)
         pendiente = recepcion_libras - total_distribuido
         if pendiente < 0:
             pendiente = 0
         porcentaje_pendiente = round(pendiente * 100 / recepcion_libras, 2) if recepcion_libras else 0
+
+        # Calcular porcentaje de devolución
+        porcentaje_devolucion = round(datos['devolución'] * 100 / recepcion_libras, 2) if recepcion_libras else 0
 
         resultado.append({
             'proveedor': finca,
@@ -3302,21 +3305,22 @@ def poraprovechamientos(request):
             'orden': orden,
             'estructura': estructura,
             'variedad': variedad,
-            'porcentaje_aprovechamiento': round(datos['aprovechamiento'] * 100 / total_distribuido, 2) if total_distribuido else 0,
-            'porcentaje_devolucion': round(datos['devolución'] * 100 / total_distribuido, 2) if total_distribuido else 0,
-            'porcentaje_mediano': round(datos['mediano'] * 100 / total_distribuido, 2) if total_distribuido else 0,
+            'libras': round(recepcion_libras, 2),
+            'aprovechamiento': round(datos['aprovechamiento'] * 100 / total_distribuido, 2) if total_distribuido else 0,
+            'mediano': round(datos['mediano'] * 100 / total_distribuido, 2) if total_distribuido else 0,
+            'devolucion': porcentaje_devolucion,
             'porcentaje_pendiente': porcentaje_pendiente,
-            'libras_recibidas': round(recepcion_libras, 2),
-            'libras_cargadas': round(total_distribuido, 2),
         })
 
     registros_json = json.dumps(resultado, default=str)
-    detalle_debug_json = json.dumps(detalle_debug, default=str)
+
+    # Convertir los resultados en una tabla HTML
+    df = pd.DataFrame(resultado)
+    tabla_html = df.to_html(classes="table table-striped", index=False)
 
     return render(request, 'plantaE/salidasFruta_aprovechamientos.html', {
-        'registros': resultado,
+        'tabla_html': tabla_html,
         'registros_json': registros_json,
-        'detalle_debug': detalle_debug_json
     })
 
 
