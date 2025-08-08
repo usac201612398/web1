@@ -3230,14 +3230,14 @@ def poraprovechamientos(request):
     hoy = timezone.now().date()
     semana_actual = hoy.isocalendar()[1]
     anio_actual = hoy.year
-
+    nombre_usuario= request.user.username
     # 1. Obtener fecha máxima en detallerecaux
-    fecha_max = detallerecaux.objects.aggregate(max_fecha=Max('fechasalidafruta'))['max_fecha']
+    fecha_max = detallerecaux.objects.filter(correo=nombre_usuario).aggregate(max_fecha=Max('fechasalidafruta'))['max_fecha']
     if not fecha_max:
         fecha_max = hoy  # fallback si no hay registros
 
     # 2. Filtrar recepciones hasta esa fecha, semana actual
-    acumfrutadatos = AcumFruta.objects.filter(
+    acumfrutadatos = AcumFruta.objects.filter(correo=nombre_usuario).filter(
         fecha__lte=fecha_max
     ).annotate(
         semana=ExtractWeek('fecha'),
@@ -3259,7 +3259,7 @@ def poraprovechamientos(request):
     ).filter(
         semana=semana_actual,
         anio=anio_actual
-    )
+    ).filter(correo=nombre_usuario)
 
     boleta_ids = detalles.values_list('boleta', flat=True).distinct()
     boletas = Boletas.objects.filter(boleta__in=boleta_ids)
