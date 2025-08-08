@@ -240,7 +240,7 @@ def load_dataUsuario5(request):
 def load_dataUsuario6(request):
 
     opcion1 = request.GET.get('proveedor')
-    cultivo = Boletas.objects.filter(proveedor=opcion1).values('cultivo').distinct('cultivo')
+    cultivo = Boletas.objects.filter(finca=opcion1).values('cultivo').distinct('cultivo')
     
     return JsonResponse({'cultivo': list(cultivo)})
 
