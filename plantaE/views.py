@@ -3295,7 +3295,23 @@ def boletas_reporterecepcion(request):
                 .order_by('-recepcion')[:10]
             )
 
-            return JsonResponse({'datos': list(recepciones_raw)}, safe=False)
+            recepciones_dict = {
+                formar_clave3(
+                    r['recepcion'],
+                    obtener_proveedor_desde_finca_llave(r['finca'], r['llave']),
+                    r['cultivo'],
+                    r['fecha']
+                ): r['total_libras']
+                for r in recepciones_raw
+            }
+
+            detalles = (
+                detallerecaux.objects
+                .filter(status="En proceso", recepcion__in=[r['recepcion'] for r in recepciones_raw])
+            )
+
+
+            return JsonResponse({'datos': detalles}, safe=False)
 
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
