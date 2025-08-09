@@ -151,7 +151,7 @@
       const tbody = document.querySelector('#myTable tbody');
 
       tbody.innerHTML = '';
-      tbody2.innerHTML = '';
+      
       console.log("Hola")
       fetch('{% url "boletasFruta_reporterecepcion" %}', {
         method: 'POST',
