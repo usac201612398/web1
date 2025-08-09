@@ -344,13 +344,13 @@ def inventarioProd_grabarplantilla(request):
     
     for i in mensaje:
         pesostd = productoTerm.objects.filter(itemsapcode=i[0]).first()
-        productor_ = productores.objects.filter(productor=i[5]).first()
+        productor_ = productores.objects.filter(productor=i[4]).first()
 
         if not pesostd:
             return JsonResponse({'error': f"No se encontró producto estándar para código: {i[0]}"}, status=400)
 
         if not productor_:
-            return JsonResponse({'error': f"No se encontró productor para: {i[5]}"}, status=400)
+            return JsonResponse({'error': f"No se encontró productor para: {i[4]}"}, status=400)
 
         try:
             pesotarima = 57
@@ -371,13 +371,13 @@ def inventarioProd_grabarplantilla(request):
                 orden = ordenemp
 
             inventarioProdTerm.objects.create(
-                fecha=i[8],
-                proveedor=i[5],
-                cultivo=i[6],
+                fecha=i[7],
+                proveedor=i[4],
+                cultivo=i[5],
                 itemsapcode=i[0],
                 itemsapname=i[1],
                 cajas=i[2],
-                categoria=i[7],
+                categoria=i[6],
                 libras=i[3],
                 lbsintara=pesosintara,
                 pesostd=pesoestandar,
@@ -395,7 +395,7 @@ def inventarioProd_grabarplantilla(request):
     return JsonResponse({
         'mensaje': mensaje,
         'msm': f"Listo, se tiene una merma de: {round(pormerma, 2)}%"
-    })
+    })  
 
 def cuadrar_RioDia(request):
     today = timezone.now().date()
