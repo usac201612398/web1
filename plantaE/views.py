@@ -3317,7 +3317,7 @@ def boletas_reporterecepcion(request):
             # Paso 1: Obtener detalles de esas recepciones
             detalles = (
                 detallerecaux.objects
-                .filter(status="Cerrado", recepcion__in=recepciones_dict.keys())
+                .filter(recepcion__in=recepciones_dict.keys())
             )
 
             # Paso 2: Obtener boletas únicas y cargarlas
