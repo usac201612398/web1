@@ -160,12 +160,14 @@
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
 <script>
+let dataTable;  // Declaración global
 
-    $(document).ready(function() {
-        $('#myTable').DataTable({
-            pageLength: 20,  // Cuántas filas se muestran por defecto
-            lengthMenu: [5, 10,20, 25, 50, 100], // Opciones de entradas
-            language: {
+$(document).ready(function() {
+    // Inicializa la tabla una sola vez
+    dataTable = $('#myTable').DataTable({
+        pageLength: 20,
+        lengthMenu: [5, 10, 20, 25, 50, 100],
+        language: {
             lengthMenu: "Mostrar _MENU_ entradas",
             zeroRecords: "No se encontraron resultados",
             info: "Mostrando _START_ a _END_ de _TOTAL_ entradas",
@@ -178,181 +180,138 @@
                 next: "Siguiente",
                 previous: "Anterior"
             },
-            }
-        });
-    });
-
-
-</script>
-<script>
-
-document.getElementById('consultar').addEventListener('click', function() {
-    const opcionSeleccionada1 = document.getElementById('Cul').value;
-    const opcionSeleccionada2 = document.getElementById('Cat').value;
-    console.log(opcionSeleccionada1);
-    console.log(opcionSeleccionada2);
-    const tbody = document.querySelector('#myTable tbody');
-
-    // Limpiar la tabla antes de agregar nuevos datos
-    tbody.innerHTML = '';
-
-    fetch('{% url "inventarioProd_create" %}', { // Asegúrate de poner la URL correcta
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-CSRFToken': getCookie('csrftoken')  // Asegúrate de incluir CSRF token
-        },
-        body: new URLSearchParams({
-            'opcion1': opcionSeleccionada1,
-            'opcion2': opcionSeleccionada2
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data)
-        data.datos.forEach(item => {
-            const fila = document.createElement('tr');
-            fila.innerHTML = `<td>${item.itemsapcode}</td><td>${item.itemsapname}</td><td><div contenteditable="true" class="editable-cell"></div></td><td><div contenteditable="true" class="editable-cell"></div></td><td class="has-text-centered">
-  <button class="button is-small is-danger is-light eliminar" title="Eliminar fila">
-    <span class="icon is-small"><i class="fas fa-trash-alt"></i></span>
-  </button>
-</td>
-`;
-            tbody.appendChild(fila);
-        });
-    });
-});
-
-$('.envio3').on('click', function() {
-    var resume_table = document.getElementById("myTable");
-    var fecha = document.getElementById('date').value;
-    var correo = document.getElementById('correo').value;
-    var datos = []
-    var elem = 0
-    for (var i = 1, row; row = resume_table.rows[i]; i++) {
-        if (row.style.display !== "none") {
-            //alert(cell[i].innerText);
-            filas = []
-            for (var j = 0, col; col = row.cells[j]; j++) {
-                //alert(col[j].innerText);
-                if (j === 3 || j ===2) {
-                    if(col.innerText === ''){
-                        elem = null
-                    }
-                    else{
-                        elem = parseFloat(col.innerText);    
-                    }   
-                    filas.push(elem);
-                }
-                else {
-                    filas.push(col.innerText);
-                }
-            }
-                var prov = document.getElementById('Pro'),
-                    value_prov = prov.value,
-                    text_prov = prov.options[prov.selectedIndex].innerText;
-                    filas.push(text_prov);
-                var cult = document.getElementById('Cul'),
-                    value_cult = cult.value,
-                    text_cult = cult.options[cult.selectedIndex].innerText;
-                    filas.push(text_cult);
-                var cat = document.getElementById('Cat'),
-                    value_cat = cat.value,
-                    text_cat = cat.options[cat.selectedIndex].innerText;
-                    filas.push(text_cat);
-                filas.push(fecha);
-                filas.push(correo);
-            datos.push(filas);
         }
-    }
-    console.log(datos);
-    $.ajax({
-            
-            url: '{% url "inventarioProd_grabar" %}',  // URL para la vista AJAX
+    });
+
+    // Consultar y cargar datos a la tabla
+    document.getElementById('consultar').addEventListener('click', function() {
+        const opcionSeleccionada1 = document.getElementById('Cul').value;
+        const opcionSeleccionada2 = document.getElementById('Cat').value;
+        console.log(opcionSeleccionada1);
+        console.log(opcionSeleccionada2);
+
+        fetch('{% url "inventarioProd_create" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: new URLSearchParams({
+                'opcion1': opcionSeleccionada1,
+                'opcion2': opcionSeleccionada2
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+
+            // Mapeamos los datos para el DataTable
+            const rows = data.datos.map(item => {
+                return [
+                    item.itemsapcode,
+                    item.itemsapname,
+                    '<div contenteditable="true" class="editable-cell"></div>',
+                    '<div contenteditable="true" class="editable-cell"></div>',
+                    `<button class="button is-small is-danger is-light eliminar" title="Eliminar fila">
+                        <span class="icon is-small"><i class="fas fa-trash-alt"></i></span>
+                    </button>`
+                ];
+            });
+
+            // Limpia y carga los nuevos datos
+            dataTable.clear().rows.add(rows).draw();
+        });
+    });
+
+    // Eliminar fila (delegated event)
+    $(document).on('click', '.eliminar', function() {
+        dataTable.row($(this).closest('tr')).remove().draw();
+    });
+
+    // ENVÍO de datos
+    $('.envio3').on('click', function() {
+        const fecha = document.getElementById('date').value;
+        const correo = document.getElementById('correo').value;
+        let datos = [];
+
+        dataTable.rows().every(function(rowIdx, tableLoop, rowLoop) {
+            const row = this.node();
+            const cells = $(row).find('td');
+
+            const itemCode = cells.eq(0).text();
+            const itemName = cells.eq(1).text();
+            const cajas = parseFloat(cells.eq(2).text()) || null;
+            const libras = parseFloat(cells.eq(3).text()) || null;
+
+            const prov = document.getElementById('Pro');
+            const text_prov = prov.options[prov.selectedIndex].innerText;
+
+            const cult = document.getElementById('Cul');
+            const text_cult = cult.options[cult.selectedIndex].innerText;
+
+            const cat = document.getElementById('Cat');
+            const text_cat = cat.options[cat.selectedIndex].innerText;
+
+            const fila = [itemCode, itemName, cajas, libras, text_prov, text_cult, text_cat, fecha, correo];
+            datos.push(fila);
+        });
+
+        console.log(datos);
+
+        $.ajax({
+            url: '{% url "inventarioProd_grabar" %}',
             type: 'POST',
             dataType: "json",
-            data:  JSON.stringify({'array':datos}),
+            data: JSON.stringify({ 'array': datos }),
             contentType: 'application/json',
-            headers: {'X-CSRFToken': csrftoken}, 
-            
+            headers: { 'X-CSRFToken': getCookie('csrftoken') },
+
             success: function(data) {
-                // Limpia las opciones actuales del campo 'name'
-                alert(data.msm)
-                console.log(data)
-                // Recorre los productos recibidos y añade opciones al campo 'name'
-                
+                alert(data.msm);
+                console.log(data);
             },
             error: function(xhr, status, error) {
-                console.error('Error:', error);  // Maneja errores de la solicitud
+                console.error('Error:', error);
             }
         });
-    
-        //window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/inventarioProd')
+    });
 
-    
-  });
-
-const eliminarBotones = document.querySelectorAll('.eliminar');
-
-$(document).on('click', '.eliminar', function() {
-    $(this).closest('tr').remove();
-});
-
-$(document).ready(function() {
-        // Función para cargar productos basados en la categoría seleccionada
+    // Autenticación del usuario al cargar
     function authUsuario() {
         $.ajax({
-            url: '{% url "obtener_nombre_usuario" %}',  // URL para la vista AJAX
-            data: {
-                'category_id': "Consulta"  // Envia el ID de la categoría como parámetro
-            },
+            url: '{% url "obtener_nombre_usuario" %}',
+            data: { 'category_id': "Consulta" },
             success: function(data) {
-                // Limpia las opciones actuales del campo 'name'
-                var initialCategoryId =data.username;  // Obtiene el valor inicial del campo 'category'
                 $('#date').val(data.fecha);
                 $('#correo').val(data.encargado);
-                if (initialCategoryId) {
-                    console.log(initialCategoryId);
-                    loadProducts(initialCategoryId);
-                }
-            
+                loadProducts(data.username);
             },
             error: function(xhr, status, error) {
-                console.error('Error:', error);  // Maneja errores de la solicitud
+                console.error('Error:', error);
             }
         });
     }
+
     function loadProducts(categoryId) {
         $.ajax({
-            url: '{% url "load_dataUsuario" %}',  // URL para la vista AJAX
-            data: {
-                'category_id': categoryId  // Envia el ID de la categoría como parámetro
-            },
+            url: '{% url "load_dataUsuario" %}',
+            data: { 'category_id': categoryId },
             success: function(data) {
-                // Limpia las opciones actuales del campo 'name'
-                console.log(data);
-
-                // Recorre los productos recibidos y añade opciones al campo 'name'
                 $.each(data.datos, function(index, product) {
                     $('#Lug').append(
-                        $('<option>').text(product.finca.toString()).attr('value', product.finca.toString())
-                            
+                        $('<option>').text(product.finca).val(product.finca)
                     );
-                    
                 });
-
             },
             error: function(xhr, status, error) {
-                console.error('Error:', error);  // Maneja errores de la solicitud
+                console.error('Error:', error);
             }
         });
     }
-    
-    authUsuario();
-    // Llama a la función de carga de productos al cargar la página
-        
-});
 
+    authUsuario();
+});
 </script>
+
 </body>
 </html>
