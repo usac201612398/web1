@@ -230,51 +230,60 @@ $(document).ready(function() {
 
     // ENVÍO de datos
     $('.envio3').on('click', function() {
-        const fecha = document.getElementById('date').value;
-        const correo = document.getElementById('correo').value;
-        let datos = [];
+      const fecha = document.getElementById('date').value;
+      const correo = document.getElementById('correo').value;
+      let datos = [];
 
-        dataTable.rows().every(function(rowIdx, tableLoop, rowLoop) {
-            const row = this.node();
-            const cells = $(row).find('td');
+      dataTable.rows().every(function(rowIdx, tableLoop, rowLoop) {
+          const row = this.node();
+          const cells = $(row).find('td');
 
-            const itemCode = cells.eq(0).text();
-            const itemName = cells.eq(1).text();
-            const cajas = parseFloat(cells.eq(2).text()) || null;
-            const libras = parseFloat(cells.eq(3).text()) || null;
+          const itemCode = cells.eq(0).text();
+          const itemName = cells.eq(1).text();
+          const cajas = parseFloat(cells.eq(2).text()) || 0;
+          const libras = parseFloat(cells.eq(3).text()) || 0;
 
-            const prov = document.getElementById('Pro');
-            const text_prov = prov.options[prov.selectedIndex].innerText;
+          // ❗ Solo incluir si ambos valores son mayores que cero
+          if (cajas > 0 && libras > 0) {
+              const prov = document.getElementById('Pro');
+              const text_prov = prov.options[prov.selectedIndex].innerText;
 
-            const cult = document.getElementById('Cul');
-            const text_cult = cult.options[cult.selectedIndex].innerText;
+              const cult = document.getElementById('Cul');
+              const text_cult = cult.options[cult.selectedIndex].innerText;
 
-            const cat = document.getElementById('Cat');
-            const text_cat = cat.options[cat.selectedIndex].innerText;
+              const cat = document.getElementById('Cat');
+              const text_cat = cat.options[cat.selectedIndex].innerText;
 
-            const fila = [itemCode, itemName, cajas, libras, text_prov, text_cult, text_cat, fecha, correo];
-            datos.push(fila);
-        });
+              const fila = [itemCode, itemName, cajas, libras, text_prov, text_cult, text_cat, fecha, correo];
+              datos.push(fila);
+          }
+      });
 
-        console.log(datos);
+      console.log("Filas válidas a enviar:", datos);
 
-        $.ajax({
-            url: '{% url "inventarioProd_grabar" %}',
-            type: 'POST',
-            dataType: "json",
-            data: JSON.stringify({ 'array': datos }),
-            contentType: 'application/json',
-            headers: { 'X-CSRFToken': getCookie('csrftoken') },
+      if (datos.length === 0) {
+          alert("No hay datos válidos para enviar (requiere cajas y libras > 0).");
+          return;
+      }
 
-            success: function(data) {
-                alert(data.msm);
-                console.log(data);
-            },
-            error: function(xhr, status, error) {
-                console.error('Error:', error);
-            }
-        });
-    });
+      $.ajax({
+          url: '{% url "inventarioProd_grabar" %}',
+          type: 'POST',
+          dataType: "json",
+          data: JSON.stringify({ 'array': datos }),
+          contentType: 'application/json',
+          headers: { 'X-CSRFToken': getCookie('csrftoken') },
+
+          success: function(data) {
+              alert(data.msm);
+              console.log(data);
+          },
+          error: function(xhr, status, error) {
+              console.error('Error:', error);
+          }
+      });
+  });
+
 
     // Autenticación del usuario al cargar
     function authUsuario() {
