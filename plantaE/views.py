@@ -3288,11 +3288,11 @@ def boletas_reporterecepcion(request):
 
             # Obtener últimas 10 recepciones en proceso
             recepciones_raw = (
-                detallerec.objects
-                .filter(status="En proceso", cultivo=opcion1, finca=opcion2)
-                .values('recepcion', 'llave', 'finca', 'cultivo', 'fecha')
-                .annotate(total_libras=Sum('libras'))
-                .order_by('-recepcion')[:10]
+                detallerec.objects.filter(
+                    status="En proceso", cultivo=opcion1, finca=opcion2
+                ).values('recepcion', 'llave', 'finca', 'cultivo', 'fecha'
+                ).annotate(total_libras=Sum('libras')
+                ).order_by('-recepcion')[:10]
             )
 
             recepciones_dict = {
@@ -3305,9 +3305,57 @@ def boletas_reporterecepcion(request):
                 for r in recepciones_raw
             }
 
-            
+            detalles = (
+                detallerecaux.objects.filter(status="En proceso", recepcion__in=[r['recepcion'] for r in recepciones_raw])
+            )
 
-            return JsonResponse({'datos': recepciones_dict}, safe=False)
+            boleta_ids = detalles.values_list('boleta', flat=True).distinct()
+            boletas = Boletas.objects.filter(boleta__in=boleta_ids)
+            boletas_dict = {b.boleta: b for b in boletas}
+
+            agrupados = defaultdict(lambda: {'aprovechamiento': 0, 'devolución': 0, 'mediano': 0, 'total': 0})
+
+            for detalle in detalles:
+                boleta = boletas_dict.get(detalle.boleta)
+                if not boleta:
+                    continue
+
+                proveedor = obtener_proveedor_detalle(detalle.finca, detalle.llave)
+                clave = formar_clave3(detalle.recepcion, proveedor, detalle.cultivo, detalle.fecha)
+                
+                calidad = (boleta.calidad or '').strip().lower()
+                libras = detalle.libras or 0
+
+                if 'aprovechamiento' in calidad:
+                    agrupados[clave]['aprovechamiento'] += libras
+                elif 'devolución' in calidad:
+                    agrupados[clave]['devolución'] += libras
+                elif 'mediano' in calidad:
+                    agrupados[clave]['mediano'] += libras
+
+                agrupados[clave]['total'] += libras
+
+            resultado = []
+            for (recepcion, proveedor, cultivo, fecha), datos in agrupados.items():
+                total_distribuido = datos['total'] or 0
+                recepcion_libras = recepciones_dict.get((recepcion, proveedor, cultivo, fecha), 0)
+                pendiente = max(recepcion_libras - total_distribuido, 0)
+                porcentaje_pendiente = round(pendiente * 100 / recepcion_libras, 2) if recepcion_libras else 0
+                porcentaje_devolucion = round(datos['devolución'] * 100 / recepcion_libras, 2) if recepcion_libras else 0
+
+                resultado.append({
+                    'fecha': str(fecha),
+                    'recepcion': recepcion,
+                    'proveedor': proveedor,
+                    'cultivo': cultivo,
+                    'libras': round(recepcion_libras, 2),
+                    'aprovechamiento': round(datos['aprovechamiento'] * 100 / total_distribuido, 2) if total_distribuido else 0,
+                    'mediano': round(datos['mediano'] * 100 / total_distribuido, 2) if total_distribuido else 0,
+                    'devolucion': porcentaje_devolucion,
+                    'porcentaje_pendiente': porcentaje_pendiente,
+                })
+
+            return JsonResponse({'datos': resultado}, safe=False)
 
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
