@@ -3295,7 +3295,7 @@ def boletas_reporterecepcion(request):
                 .order_by('-recepcion')[:10]
             )
 
-            return JsonResponse({'datos': recepciones_raw}, safe=False)
+            return JsonResponse({'datos': list(recepciones_raw)}, safe=False)
 
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
