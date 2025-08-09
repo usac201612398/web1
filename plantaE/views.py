@@ -3309,9 +3309,11 @@ def boletas_reporterecepcion(request):
                 detallerecaux.objects
                 .filter(status="En proceso", recepcion__in=[r['recepcion'] for r in recepciones_raw])
             )
+            detalles_values = detalles.values(
+                'fecha', 'recepcion', 'cultivo' # pon aquí los campos que quieres enviar
+            )
 
-
-            return JsonResponse({'datos': list(detalles)}, safe=False)
+            return JsonResponse({'datos': list(detalles_values)}, safe=False)
 
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
