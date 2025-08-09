@@ -3313,7 +3313,7 @@ def boletas_reporterecepcion(request):
             boleta_ids = detalles.values_list('boleta', flat=True).distinct()
             boletas = Boletas.objects.filter(boleta__in=boleta_ids)
             boletas_dict = {b.boleta: b for b in boletas}
-            return JsonResponse({'datos': boletas_dict}, safe=False)
+            return JsonResponse({'datos': list(boletas_dict)}, safe=False)
 
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
