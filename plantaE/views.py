@@ -3305,15 +3305,9 @@ def boletas_reporterecepcion(request):
                 for r in recepciones_raw
             }
 
-            detalles = (
-                detallerecaux.objects
-                .filter(status="En proceso", recepcion__in=[r['recepcion'] for r in recepciones_raw])
-            )
+            
 
-            boleta_ids = detalles.values_list('boleta', flat=True).distinct()
-            boletas = Boletas.objects.filter(boleta__in=boleta_ids)
-            boletas_dict = {b.boleta: b for b in boletas}
-            return JsonResponse({'datos': list(boletas_dict)}, safe=False)
+            return JsonResponse({'datos': recepciones_dict}, safe=False)
 
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
