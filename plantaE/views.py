@@ -3311,7 +3311,7 @@ def boletas_reporterecepcion(request):
             )
 
 
-            return JsonResponse({'datos': detalles}, safe=False)
+            return JsonResponse({'datos': list(detalles)}, safe=False)
 
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
