@@ -242,10 +242,9 @@
                 $('#Cul').html('');
                 $('#Cul').html('<option value="">Seleccionar cultivo</option>');
                 // Recorre los productos recibidos y añade opciones al campo 'name'
-                $.each(data.cultivo, function(index, product) {
-                    data.cultivo.forEach(item => {
-                      $('#Cul').append(`<option value="${item.cultivo}">${item.cultivo}</option>`);
-                    });
+                
+                data.cultivo.forEach(item => {
+                  $('#Cul').append(`<option value="${item.cultivo}">${item.cultivo}</option>`);
                 });
 
 
