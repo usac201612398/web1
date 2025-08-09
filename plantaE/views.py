@@ -3320,7 +3320,8 @@ def boletas_reporterecepcion(request):
 
                 proveedor = obtener_proveedor_detalle(detalle.finca, detalle.llave)
                 clave = formar_clave3(detalle.recepcion, proveedor, detalle.cultivo, detalle.fecha)
-                calidad = (boleta.calidad or '').strip().lower()
+                
+                calidad = (str(boleta.calidad).strip().lower()) if boleta.calidad else ''
                 libras = detalle.libras or 0
 
                 if 'aprovechamiento' in calidad:
