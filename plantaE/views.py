@@ -3276,7 +3276,7 @@ def aprovechamientos(request):
         'registros_json': registros_json,
         'detalle_debug': detalle_debug_json
     })
-
+from django.core.serializers import serialize
 def boletas_reporterecepcion(request):
 
     if request.method == 'POST':
@@ -3309,11 +3309,11 @@ def boletas_reporterecepcion(request):
                 detallerecaux.objects
                 .filter(status="En proceso", recepcion__in=[r['recepcion'] for r in recepciones_raw])
             )
-            detalles_values = detalles.values(
-                'fecha', 'recepcion', 'cultivo' # pon aquí los campos que quieres enviar
-            )
+            detalles_json = serialize('json', detalles)
 
-            return JsonResponse({'datos': list(detalles_values)}, safe=False)
+            # Convertimos a objeto Python para enviar en JsonResponse
+            detalles_data = json.loads(detalles_json)
+            return JsonResponse({'datos': detalles_data}, safe=False)
 
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
