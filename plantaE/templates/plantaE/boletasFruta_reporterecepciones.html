@@ -149,7 +149,6 @@
       const cultivo = document.getElementById('Cul').value;
       const proveedor = document.getElementById('Prov').value;
       const tbody = document.querySelector('#myTable tbody');
-      const tbody2 = document.querySelector('#myTable2 tbody');
 
       tbody.innerHTML = '';
       tbody2.innerHTML = '';
@@ -167,6 +166,7 @@
       })
         .then(response => response.json())
         .then(data => {
+          console.log(data)
           data.datos.forEach(item => {
             const row = `<tr>
               <td>${item.fecha}</td>
