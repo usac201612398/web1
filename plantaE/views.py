@@ -3315,59 +3315,9 @@ def boletas_reporterecepcion(request):
                 for r in recepciones_filtradas
             }
 
-            # Obtener detalles asociados
-            detalles = (
-                detallerecaux.objects
-                .filter(status="En proceso", recepcion__in=recepciones_dict.keys())
-            )
+            
 
-            boleta_ids = detalles.values_list('boleta', flat=True).distinct()
-            boletas = Boletas.objects.filter(boleta__in=boleta_ids)
-            boletas_dict = {b.boleta: b for b in boletas}
-
-            agrupados = defaultdict(lambda: {'aprovechamiento': 0, 'mediano': 0, 'devolución': 0, 'total': 0})
-
-            for detalle in detalles:
-                recepcion_id = detalle.recepcion
-                boleta = boletas_dict.get(detalle.boleta)
-                if not boleta:
-                    continue
-
-                calidad = (boleta.calidad or '').strip().lower()
-                libras = detalle.libras or 0
-
-                if 'aprovechamiento' in calidad:
-                    agrupados[recepcion_id]['aprovechamiento'] += libras
-                elif 'mediano' in calidad:
-                    agrupados[recepcion_id]['mediano'] += libras
-                elif 'devolución' in calidad:
-                    agrupados[recepcion_id]['devolución'] += libras
-
-                agrupados[recepcion_id]['total'] += libras
-
-            resultado = []
-            for recepcion_id, datos in agrupados.items():
-                meta = recepciones_dict.get(recepcion_id)
-                if not meta:
-                    continue
-
-                total_recepcion = meta['total_libras'] or 0
-                total_distribuido = datos['total'] or 0
-                pendiente = max(total_recepcion - total_distribuido, 0)
-
-                resultado.append({
-                    'fecha': str(meta['fecha']),
-                    'recepcion': recepcion_id,
-                    'proveedor': meta['proveedor'],
-                    'cultivo': meta['cultivo'],
-                    'libras': round(total_recepcion, 2),
-                    'aprovechamiento': round(datos['aprovechamiento'] * 100 / total_distribuido, 2) if total_distribuido else 0,
-                    'mediano': round(datos['mediano'] * 100 / total_distribuido, 2) if total_distribuido else 0,
-                    'devolucion': round(datos['devolución'] * 100 / total_recepcion, 2) if total_recepcion else 0,
-                    'porcentaje_pendiente': round(pendiente * 100 / total_recepcion, 2) if total_recepcion else 0,
-                })
-
-            return JsonResponse({'datos': resultado}, safe=False)
+            return JsonResponse({'datos': list(recepciones_filtradas)}, safe=False)
 
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
