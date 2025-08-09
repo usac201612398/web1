@@ -342,37 +342,60 @@ def inventarioProd_grabarplantilla(request):
     data = json.loads(request.body)
     mensaje = data['array']
     
-    #mensaje = request.POST.get('array')
-    
     for i in mensaje:
         pesostd = productoTerm.objects.filter(itemsapcode=i[0]).first()
         productor_ = productores.objects.filter(productor=i[5]).first()
-        pesotarima = 57 
-        tara  = float(pesostd.taraxcaja)*int(i[2]) + pesotarima
-        pesosintara = int(i[3]) - tara 
-        pesoestandar = float(pesostd.pesostdxcaja)*int(i[2])
-        pesostdxcaja = pesostd.pesostdxcaja
-        if pesosintara < pesoestandar:
-            merma = 0
-        else:
-            merma = pesosintara-pesoestandar
-        pesosinmerma = pesosintara-merma
-        pesoporcaja = pesosintara/int(i[2])
-        ordenemp=pesostd.orden
-        pormerma = (merma/(pesoestandar))*100
-        if i[2] == '':
-            i[2] == None
-        if productor_.tipo=="EM":
-            inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[5],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=i[2],categoria=i[7],libras=i[3],lbsintara=pesosintara,pesostd=pesoestandar,merma=merma,pesorxcaja=pesoporcaja,orden="EM",pesostdxcaja=pesostdxcaja,tara=tara,pesosinmerma=pesosinmerma,calidad1=pesostd.calidad1)
-            #if merma > 0:
-            #    inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[5],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=0,categoria="Merma",libras=0,lbsintara=merma,pesostd=0,merma=merma,pesorxcaja=0,orden="SM",pesostdxcaja=0,tara=tara,pesosinmerma=pesosinmerma,calidad1=pesostd.calidad1)       
-        else:
-            inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[5],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=i[2],categoria=i[7],libras=i[3],lbsintara=pesosintara,pesostd=pesoestandar,merma=merma,pesorxcaja=pesoporcaja,orden=ordenemp,pesostdxcaja=pesostdxcaja,tara=tara,pesosinmerma=pesosinmerma,calidad1=pesostd.calidad1)
-            #if merma > 0:
-            #    inventarioProdTerm.objects.create(fecha=i[8],proveedor=i[5],cultivo=i[6],itemsapcode=i[0],itemsapname=i[1],cajas=0,categoria="Merma",libras=0,lbsintara=merma,pesostd=0,merma=merma,pesorxcaja=0,orden="SM",pesostdxcaja=0,tara=tara,pesosinmerma=pesosinmerma,calidad1=pesostd.calidad1)
-        #confirmacion = inventarioProdTerm.objects.filter(categoria="Exportación").exclude('Anulado').order_by('-registro').first()
 
-    return JsonResponse({'mensaje':mensaje,'msm': " Listo, se tiene una merma de: " + str(pormerma) + "%"})
+        if not pesostd:
+            return JsonResponse({'error': f"No se encontró producto estándar para código: {i[0]}"}, status=400)
+
+        if not productor_:
+            return JsonResponse({'error': f"No se encontró productor para: {i[5]}"}, status=400)
+
+        try:
+            pesotarima = 57
+            tara = float(pesostd.taraxcaja) * int(i[2]) + pesotarima
+            pesosintara = int(i[3]) - tara
+            pesoestandar = float(pesostd.pesostdxcaja) * int(i[2])
+            pesostdxcaja = pesostd.pesostdxcaja
+
+            merma = max(0, pesosintara - pesoestandar)
+            pesosinmerma = pesosintara - merma
+            pesoporcaja = pesosintara / int(i[2]) if int(i[2]) != 0 else 0
+            ordenemp = pesostd.orden
+            pormerma = (merma / pesoestandar) * 100 if pesoestandar > 0 else 0
+
+            if productor_.tipo == "EM":
+                orden = "EM"
+            else:
+                orden = ordenemp
+
+            inventarioProdTerm.objects.create(
+                fecha=i[8],
+                proveedor=i[5],
+                cultivo=i[6],
+                itemsapcode=i[0],
+                itemsapname=i[1],
+                cajas=i[2],
+                categoria=i[7],
+                libras=i[3],
+                lbsintara=pesosintara,
+                pesostd=pesoestandar,
+                merma=merma,
+                pesorxcaja=pesoporcaja,
+                orden=orden,
+                pesostdxcaja=pesostdxcaja,
+                tara=tara,
+                pesosinmerma=pesosinmerma,
+                calidad1=pesostd.calidad1
+            )
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
+    return JsonResponse({
+        'mensaje': mensaje,
+        'msm': f"Listo, se tiene una merma de: {round(pormerma, 2)}%"
+    })
 
 def cuadrar_RioDia(request):
     today = timezone.now().date()
