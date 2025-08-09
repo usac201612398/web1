@@ -3368,8 +3368,8 @@ def boletas_reporterecepcion(request):
                     'devolucion': round(datos['devolución'] * 100 / total_recepcion, 2) if total_recepcion else 0,
                     'porcentaje_pendiente': round(pendiente * 100 / total_recepcion, 2) if total_recepcion else 0,
                 })
-
-            return JsonResponse({'datos': resultado}, safe=False)
+            boletas_usadas = list(boletas_dict.keys())
+            return JsonResponse({'datos': resultado,'boletas': boletas_usadas}, safe=False)
 
 
 
