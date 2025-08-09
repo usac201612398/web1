@@ -3305,7 +3305,6 @@ def boletas_reporterecepcion(request):
             detalles = (
                 detallerecaux.objects
                 .filter(status="En proceso", recepcion__in=[r['recepcion'] for r in recepciones_raw])
-                .select_related('boleta')
             )
 
             boleta_ids = detalles.values_list('boleta', flat=True).distinct()

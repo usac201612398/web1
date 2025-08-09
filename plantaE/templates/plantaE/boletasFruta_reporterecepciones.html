@@ -151,7 +151,7 @@
       const tbody = document.querySelector('#myTable tbody');
 
       tbody.innerHTML = '';
-      
+
       console.log("Hola")
       fetch('{% url "boletasFruta_reporterecepcion" %}', {
         method: 'POST',
@@ -167,6 +167,11 @@
         .then(response => response.json())
         .then(data => {
           console.log(data)
+          if (!data.datos) {
+            console.warn("No se encontraron datos.");
+            return;
+          }
+
           data.datos.forEach(item => {
             const row = `<tr>
               <td>${item.fecha}</td>
