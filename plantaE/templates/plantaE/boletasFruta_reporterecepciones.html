@@ -68,19 +68,11 @@
                 </select>
               </div>
             </div>
-            <div class="column is-3">
+            <div class="column is-4">
               <label class="label" for="Cul">Cultivo</label>
               <div class="select is-fullwidth">
                 <select id="Cul" name="Cultivo">
                   <option value="">Seleccionar cultivo</option>
-                </select>
-              </div>
-            </div>
-            <div class="column is-3">
-              <label class="label" for="Rec">Recepciones</label>
-              <div class="select is-fullwidth">
-                <select id="Rec" name="Cultivo">
-                  <option value="">Seleccionar recepcion</option>
                 </select>
               </div>
             </div>
@@ -107,22 +99,26 @@
               <thead class="table-custom-header">
                 <tr>
                   <th>Fecha</th>
+                  <th>Recepcion</th>
                   <th>Finca</th>
                   <th>Cultivo</th>
-                  <th>Variedad</th>
-                  <th>Cajas</th>
                   <th>Libras</th>
+                  <th>%Aprovechamiento</th>
+                  <th>%Mediano</th>
+                  <th>%Devolución</th>
                 </tr>
               </thead>
               <tbody>
                 {% for registro in registros %}
                 <tr>
                   <td>{{ registro.fecha }}</td>
+                  <td>{{ registro.recepcion }}</td>
                   <td>{{ registro.finca }}</td>
                   <td>{{ registro.cultivo }}</td>
-                  <td>{{ registro.variedad }}</td>
-                  <td>{{ registro.total_cajas }}</td>
-                  <td class="number-cell" data-value="{{ registro.total_libras }}">{{ registro.total_libras }}</td>
+                  <td class="number-cell" data-value="{{ registro.libras }}">{{ registro.libras }}</td>
+                  <td class="number-cell" data-value="{{ registro.aprovechamiento }}">{{ registro.aprovechamiento }}</td>
+                  <td class="number-cell" data-value="{{ registro.mediano }}">{{ registro.mediano }}</td>
+                  <td class="number-cell" data-value="{{ registro.devolucion }}">{{ registro.devolucion }}</td>
                 </tr>
                 {% endfor %}
               </tbody>
@@ -151,14 +147,14 @@
     // CONSULTAR
     document.getElementById('consultar').addEventListener('click', function () {
       const cultivo = document.getElementById('Cul').value;
-      const fecha = document.getElementById('date').value;
+      const proveedor = document.getElementById('Prov').value;
       const tbody = document.querySelector('#myTable tbody');
       const tbody2 = document.querySelector('#myTable2 tbody');
 
       tbody.innerHTML = '';
       tbody2.innerHTML = '';
       console.log("Hola")
-      fetch('{% url "salidasFruta_cuadreValle" %}', {
+      fetch('{% url "boletasFruta_reporterecepcion" %}', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -166,7 +162,7 @@
         },
         body: new URLSearchParams({
           'opcion1': cultivo,
-          'opcion2': fecha
+          'opcion2': proveedor
         })
       })
         .then(response => response.json())
@@ -174,11 +170,16 @@
           data.datos.forEach(item => {
             const row = `<tr>
               <td>${item.fecha}</td>
-              <td>${item.finca}</td>
+              <td>${item.recepcion}</td>
+              <td>${item.proveedor}</td>
               <td>${item.cultivo}</td>
-              <td>${item.variedad}</td>
-              <td>${item.total_cajas}</td>
-              <td>${Math.round(item.total_libras)}</td>
+              <td>${Math.round(item.libras)}</td>
+              
+              <td>${Math.round(item.aprovechamiento)}</td>
+              
+              <td>${Math.round(item.mediano)}</td>
+              
+              <td>${Math.round(item.devolucion)}</td>
             </tr>`;
             tbody.insertAdjacentHTML('beforeend', row);
           });

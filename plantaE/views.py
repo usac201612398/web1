@@ -3161,6 +3161,18 @@ def formar_clave(finca, cultivo):
 def formar_clave2(finca, cultivo,orden,estructura,variedad):
     return (finca.strip().upper(), cultivo.strip().upper(),orden.strip().upper(),estructura.strip().upper(),variedad.strip().upper())
 
+def formar_clave3(recepcion,proveedor, cultivo, fecha):
+    return (recepcion.strip().upper(),proveedor.strip().upper(), cultivo.strip().upper(),fecha.strip().upper())
+
+def obtener_proveedor_desde_finca_llave(finca, llave):
+    if finca.strip().lower() == "productor":
+        return llave.strip()
+    return finca.strip()
+
+def obtener_proveedor_detalle(finca, llave):
+    if (finca or "").strip().lower() == "productor":
+        return (llave or "").strip()
+    return (finca or "").strip()
 
 def aprovechamientos(request):
     hoy = timezone.now().date()
@@ -3270,28 +3282,34 @@ def boletas_reporterecepcion(request):
         try:
             opcion1 = request.POST.get('opcion1')
             opcion2 = request.POST.get('opcion2')
-            hoy = timezone.now().date()
-            semana_actual = hoy.isocalendar()[1]
-            anio_actual = hoy.year
-            nombre_usuario=request.user.username
-            # Obtener fecha máxima en detallerecaux
-            fecha_max = detallerec.objects.aggregate(max_fecha=Max('fecha'))['max_fecha']
-            if not fecha_max:
-                fecha_max = hoy  # fallback si no hay registros
-
             # Filtrar las libras totales por variedad desde AcumFruta
-            acumfrutadatos = detallerec.objects.filter(
-                fecha__lte=fecha_max
-            ).annotate(
-                semana=ExtractWeek('fecha'),
-                anio=ExtractYear('fecha')
-            ).filter(
-                semana=semana_actual,
-                anio=anio_actual
-            ).values('finca', 'cultivo').annotate(total_libras=Sum('libras')).order_by()
+
+            acumfrutadatos = (
+                detallerec.objects
+                .filter(
+                    status="En proceso",  # Filtro por status
+                    cultivo = opcion1,
+                    finca = opcion2
+                )
+                .annotate(
+                    semana=ExtractWeek('fecha'),
+                    anio=ExtractYear('fecha')
+                )
+                .values('recepcion','llave','finca', 'cultivo','fecha')
+                .annotate(
+                    total_libras=Sum('libras')
+                )
+                .order_by('-recepcion')[:10]  # Orden descendente por recepcion, toma los últimos 10
+            )
 
             recepciones_dict = {
-                formar_clave(r['finca'], r['cultivo']): r['total_libras'] for r in acumfrutadatos
+                formar_clave3(
+                    r['recepcion'],
+                    obtener_proveedor_desde_finca_llave(r['finca'], r['llave']),
+                    r['cultivo'],
+                    r['fecha']
+                ): r['total_libras']
+                for r in acumfrutadatos
             }
 
             # Filtrar distribuciones desde AcumFrutaaux
@@ -3299,10 +3317,9 @@ def boletas_reporterecepcion(request):
                 semana=ExtractWeek('fecha'),
                 anio=ExtractYear('fecha')
             ).filter(
-                semana=semana_actual,
-                anio=anio_actual
-            )
-
+                    status="En proceso"  # Filtro por status
+                ).order_by('-recepcion')[:10]  # Orden descendente por recepcion, toma los últimos 10
+        
             boleta_ids = detalles.values_list('boleta', flat=True).distinct()
             boletas = Boletas.objects.filter(boleta__in=boleta_ids)
             boletas_dict = {b.boleta: b for b in boletas}
@@ -3315,7 +3332,8 @@ def boletas_reporterecepcion(request):
                 if not boleta:
                     continue
                 
-                clave = formar_clave2(detalle.finca, detalle.cultivo, detalle.orden, detalle.estructura, detalle.variedad)
+                proveedor = obtener_proveedor_detalle(detalle.finca, detalle.llave)
+                clave = formar_clave3(detalle.recepcion, proveedor, detalle.cultivo,detalle.fecha)
                 calidad = (boleta.calidad or '').strip().lower()
                 libras = detalle.libras or 0
 
@@ -3330,9 +3348,9 @@ def boletas_reporterecepcion(request):
 
             # Calcular los porcentajes de calidad
             resultado = []
-            for (finca, cultivo, orden, estructura, variedad), datos in agrupados.items():
+            for (recepcion,proveedor, cultivo,fecha), datos in agrupados.items():
                 total_distribuido = datos['total'] or 0
-                recepcion_libras = recepciones_dict.get((finca, cultivo, orden, estructura, variedad), 0)
+                recepcion_libras = recepciones_dict.get((recepcion,proveedor, cultivo), 0)
                 pendiente = recepcion_libras - total_distribuido
                 if pendiente < 0:
                     pendiente = 0
@@ -3342,11 +3360,10 @@ def boletas_reporterecepcion(request):
                 porcentaje_devolucion = round(datos['devolución'] * 100 / recepcion_libras, 2) if recepcion_libras else 0
 
                 resultado.append({
-                    'proveedor': finca,
+                    'fecha': fecha,
+                    'recepcion': recepcion,
+                    'proveedor': proveedor,
                     'cultivo': cultivo,
-                    'orden': orden,
-                    'estructura': estructura,
-                    'variedad': variedad,
                     'libras': round(recepcion_libras, 2),
                     'aprovechamiento': round(datos['aprovechamiento'] * 100 / total_distribuido, 2) if total_distribuido else 0,
                     'mediano': round(datos['mediano'] * 100 / total_distribuido, 2) if total_distribuido else 0,
@@ -3387,9 +3404,6 @@ def poraprovechamientos(request):
     ).annotate(
         semana=ExtractWeek('fecha'),
         anio=ExtractYear('fecha')
-    ).filter(
-        semana=semana_actual,
-        anio=anio_actual
     ).values('finca', 'cultivo', 'orden', 'estructura', 'variedad').annotate(total_libras=Sum('libras')).order_by()
 
     recepciones_dict = {
@@ -3400,9 +3414,6 @@ def poraprovechamientos(request):
     detalles = AcumFrutaaux.objects.annotate(
         semana=ExtractWeek('fecha'),
         anio=ExtractYear('fecha')
-    ).filter(
-        semana=semana_actual,
-        anio=anio_actual
     ).filter(correo=nombre_usuario)
 
     boleta_ids = detalles.values_list('boleta', flat=True).distinct()
