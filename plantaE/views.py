@@ -3369,7 +3369,7 @@ def boletas_reporterecepcion(request):
                     'porcentaje_pendiente': round(pendiente * 100 / total_recepcion, 2) if total_recepcion else 0,
                 })
             
-            return JsonResponse({'recdic':list(recepciones_dict),'datos': resultado,'detalles':list(detalles)}, safe=False)
+            return JsonResponse({'recdic':list(recepciones_dict),'datos': resultado}, safe=False)
 
 
 
