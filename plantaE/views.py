@@ -3280,28 +3280,42 @@ def aprovechamientos(request):
 def boletas_reporterecepcion(request):
     if request.method == 'POST':
         try:
-            opcion1 = request.POST.get('opcion1')
-            opcion2 = request.POST.get('opcion2')
-            # Filtrar las libras totales por variedad desde AcumFruta
+            opcion1 = request.POST.get('opcion1')  # cultivo
+            opcion2 = request.POST.get('opcion2')  # finca
 
+            # PASO 1: Obtener las 10 últimas recepciones únicas
+            ultimas_recepciones = (
+                detallerec.objects
+                .filter(
+                    status="En proceso",
+                    cultivo=opcion1,
+                    finca=opcion2
+                )
+                .order_by('-recepcion')
+                .values_list('recepcion', flat=True)
+                .distinct()[:10]
+            )
+
+            # PASO 2: Obtener los detalles para esas recepciones
             acumfrutadatos = (
                 detallerec.objects
                 .filter(
-                    status="En proceso",  # Filtro por status
-                    cultivo = opcion1,
-                    finca = opcion2
+                    status="En proceso",
+                    cultivo=opcion1,
+                    finca=opcion2,
+                    recepcion__in=ultimas_recepciones
                 )
                 .annotate(
                     semana=ExtractWeek('fecha'),
                     anio=ExtractYear('fecha')
                 )
-                .values('recepcion','llave','finca', 'cultivo','fecha')
+                .values('recepcion', 'llave', 'finca', 'cultivo', 'fecha')
                 .annotate(
                     total_libras=Sum('libras')
                 )
-                .order_by('-recepcion')[:10]  # Orden descendente por recepcion, toma los últimos 10
             )
 
+            # Mapea las recepciones usando una clave basada en proveedor
             recepciones_dict = {
                 formar_clave3(
                     r['recepcion'],
@@ -3312,28 +3326,37 @@ def boletas_reporterecepcion(request):
                 for r in acumfrutadatos
             }
 
-            # Filtrar distribuciones desde AcumFrutaaux
-            detalles = detallerecaux.objects.annotate(
-                semana=ExtractWeek('fecha'),
-                anio=ExtractYear('fecha')
-            ).filter(
-                    status="En proceso"  # Filtro por status
-                ).order_by('-recepcion')[:10]  # Orden descendente por recepcion, toma los últimos 10
-        
+            # PASO 3: Obtener detalles desde detallerecaux para esas recepciones
+            detalles = (
+                detallerecaux.objects
+                .filter(
+                    status="En proceso",
+                    recepcion__in=ultimas_recepciones
+                )
+                .annotate(
+                    semana=ExtractWeek('fecha'),
+                    anio=ExtractYear('fecha')
+                )
+            )
+
             boleta_ids = detalles.values_list('boleta', flat=True).distinct()
             boletas = Boletas.objects.filter(boleta__in=boleta_ids)
             boletas_dict = {b.boleta: b for b in boletas}
 
-            # Agrupar las libras por boleta
-            agrupados = defaultdict(lambda: {'aprovechamiento': 0, 'devolución': 0, 'mediano': 0, 'total': 0})
+            agrupados = defaultdict(lambda: {
+                'aprovechamiento': 0,
+                'devolución': 0,
+                'mediano': 0,
+                'total': 0
+            })
 
             for detalle in detalles:
                 boleta = boletas_dict.get(detalle.boleta)
                 if not boleta:
                     continue
-                
+
                 proveedor = obtener_proveedor_detalle(detalle.finca, detalle.llave)
-                clave = formar_clave3(detalle.recepcion, proveedor, detalle.cultivo,detalle.fecha)
+                clave = formar_clave3(detalle.recepcion, proveedor, detalle.cultivo, detalle.fecha)
                 calidad = (boleta.calidad or '').strip().lower()
                 libras = detalle.libras or 0
 
@@ -3346,17 +3369,15 @@ def boletas_reporterecepcion(request):
 
                 agrupados[clave]['total'] += libras
 
-            # Calcular los porcentajes de calidad
+            # PASO 4: Calcular resultados
             resultado = []
-            for (recepcion,proveedor, cultivo,fecha), datos in agrupados.items():
+            for (recepcion, proveedor, cultivo, fecha), datos in agrupados.items():
                 total_distribuido = datos['total'] or 0
-                recepcion_libras = recepciones_dict.get((recepcion,proveedor, cultivo), 0)
+                recepcion_libras = recepciones_dict.get((recepcion, proveedor, cultivo, fecha), 0)
                 pendiente = recepcion_libras - total_distribuido
                 if pendiente < 0:
                     pendiente = 0
                 porcentaje_pendiente = round(pendiente * 100 / recepcion_libras, 2) if recepcion_libras else 0
-
-                # Calcular porcentaje de devolución
                 porcentaje_devolucion = round(datos['devolución'] * 100 / recepcion_libras, 2) if recepcion_libras else 0
 
                 resultado.append({
@@ -3372,8 +3393,6 @@ def boletas_reporterecepcion(request):
                 })
 
             registros_json = json.dumps(resultado, default=str)
-
-            # Convertir los resultados en una tabla HTML
             df = pd.DataFrame(resultado)
             tabla_html = df.to_html(classes="table table-striped", index=False)
 
@@ -3382,11 +3401,12 @@ def boletas_reporterecepcion(request):
                 'tabla_html': tabla_html,
                 'registros_json': registros_json,
             })
+
         except Exception as e:
-            # Manejo de excepciones
             return JsonResponse({'error': str(e)}, status=500)
 
     return render(request, 'plantaE/boletasFruta_reporterecepciones.html')
+
 
 def poraprovechamientos(request):
     hoy = timezone.now().date()
