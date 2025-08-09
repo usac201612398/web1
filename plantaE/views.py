@@ -3287,16 +3287,15 @@ def boletas_reporterecepcion(request):
             opcion2 = request.POST.get('opcion2')
 
             # Obtener últimas 10 recepciones en proceso
-           
-            resultado=detallerec.objects.filter(
-                status="En proceso", cultivo=opcion1, finca=opcion2
-            ).values('recepcion', 'llave', 'finca', 'cultivo', 'fecha'
-            ).annotate(total_libras=Sum('libras')
-            ).order_by('-recepcion')[:10]
-        
+            recepciones_raw = (
+                detallerec.objects
+                .filter(status="En proceso", cultivo=opcion1, finca=opcion2)
+                .values('recepcion', 'llave', 'finca', 'cultivo', 'fecha')
+                .annotate(total_libras=Sum('libras'))
+                .order_by('-recepcion')[:10]
+            )
 
-
-            return JsonResponse({'datos': list(resultado)}, safe=False)
+            return JsonResponse({'datos': recepciones_raw}, safe=False)
 
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
