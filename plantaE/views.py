@@ -3278,8 +3278,11 @@ def aprovechamientos(request):
     })
 
 def boletas_reporterecepcion(request):
+
     if request.method == 'POST':
+
         try:
+
             opcion1 = request.POST.get('opcion1')
             opcion2 = request.POST.get('opcion2')
 
@@ -3320,9 +3323,7 @@ def boletas_reporterecepcion(request):
 
                 proveedor = obtener_proveedor_detalle(detalle.finca, detalle.llave)
                 clave = formar_clave3(detalle.recepcion, proveedor, detalle.cultivo, detalle.fecha)
-                
-                calidad = str(boleta.calidad).strip().lower() if isinstance(boleta.calidad, str) else str(boleta.calidad)
-
+                calidad = (boleta.calidad or '').strip().lower()
                 libras = detalle.libras or 0
 
                 if 'aprovechamiento' in calidad:
@@ -3365,8 +3366,6 @@ def boletas_reporterecepcion(request):
 
 def poraprovechamientos(request):
     hoy = timezone.now().date()
-    semana_actual = hoy.isocalendar()[1]
-    anio_actual = hoy.year
     nombre_usuario=request.user.username
     # Obtener fecha máxima en detallerecaux
     fecha_max = AcumFruta.objects.filter(correo=nombre_usuario).aggregate(max_fecha=Max('fecha'))['max_fecha']
