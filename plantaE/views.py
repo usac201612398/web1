@@ -3377,7 +3377,14 @@ def boletas_reporterecepcion(request):
 
                 resumen[recepcion]['total'] += libras
 
-            # === 3. Ahora armar vector1 con porcentaje correcto ===
+                # === vector1: desglose por boleta ===
+                # Calculamos porcentaje por recepción
+                total_actual = resumen[recepcion]['total']
+                porcentaje = round((libras * 100 / total_actual), 2) if total_actual else 0
+
+
+                # === Acumular en resumen_temporal para vector2 ===
+                resumen_temporal[recepcion][calidad] += libras
             vector1 = []
             for detalle in detalles:
                 boleta = boletas_dict.get(detalle.boleta)
@@ -3398,7 +3405,6 @@ def boletas_reporterecepcion(request):
                     'libras': libras,
                     'porcentaje': porcentaje
                 })
-
             # === 5. Armar vector2 (resumen por calidad) ===
             vector2 = []
 
