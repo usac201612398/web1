@@ -192,11 +192,19 @@
               
               <td>${Math.round(item.devolucion)}</td>
               <td>
-                <a href="{% url 'boletasFruta_constanciarecepcion' %}"?fecha=${encodeURIComponent(item.fecha)}&recepcion=${encodeURIComponent(item.recepcion)}&proveedor=${encodeURIComponent(item.proveedor)}&cultivo=${encodeURIComponent(item.cultivo)}&libras=${item.libras}&aprovechamiento=${item.aprovechamiento}&mediano=${item.mediano}&devolucion=${item.devolucion}" 
-                  target="_blank" 
-                  class="button is-small is-link">
+                <button 
+                  class="button is-small is-link imprimir-btn"
+                  data-fecha="${item.fecha}"
+                  data-recepcion="${item.recepcion}"
+                  data-proveedor="${item.proveedor}"
+                  data-cultivo="${item.cultivo}"
+                  data-libras="${item.libras}"
+                  data-aprovechamiento="${item.aprovechamiento}"
+                  data-mediano="${item.mediano}"
+                  data-devolucion="${item.devolucion}"
+                >
                   <i class="fas fa-print"></i>
-                </a>
+                </button>
               </td>
             </tr>`;
             tbody.insertAdjacentHTML('beforeend', row);
@@ -271,6 +279,56 @@
       formatCells('myTable');
       
     });
+
+    document.addEventListener('click', function(e) {
+  if (e.target.closest('.imprimir-btn')) {
+    const btn = e.target.closest('.imprimir-btn');
+    const fecha = btn.dataset.fecha;
+    const recepcion = btn.dataset.recepcion;
+    const proveedor = btn.dataset.proveedor;
+    const cultivo = btn.dataset.cultivo;
+    const libras = btn.dataset.libras;
+    const aprovechamiento = btn.dataset.aprovechamiento;
+    const mediano = btn.dataset.mediano;
+    const devolucion = btn.dataset.devolucion;
+
+    // Obtener los vectores (globales o desde data)
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = "{% url 'boletasFruta_constanciarecepcion' %}";
+    form.target = '_blank';
+
+    // CSRF token
+    const csrfToken = getCookie('csrftoken');
+    const csrfInput = document.createElement('input');
+    csrfInput.type = 'hidden';
+    csrfInput.name = 'csrfmiddlewaretoken';
+    csrfInput.value = csrfToken;
+    form.appendChild(csrfInput);
+
+    const fields = {
+      fecha, recepcion, proveedor, cultivo,
+      libras, aprovechamiento, mediano, devolucion,
+      vector1: JSON.stringify(window.vector1 || []),
+      vector2: JSON.stringify(window.vector2 || [])
+    };
+
+    Object.keys(fields).forEach(key => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = key;
+      input.value = fields[key];
+      form.appendChild(input);
+    });
+
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+  }
+});
+
+
   </script>
+  
 </body>
 </html>

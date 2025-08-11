@@ -3277,32 +3277,52 @@ def aprovechamientos(request):
         'detalle_debug': detalle_debug_json
     })
 
+from django.views.decorators.csrf import csrf_exempt
+import json
+from django.utils import timezone
+
+@csrf_exempt
 def boletas_constanciarecepcion(request):
+    if request.method == 'POST':
+        fecha = request.POST.get('fecha')
+        recepcion = request.POST.get('recepcion')
+        proveedor = request.POST.get('proveedor')
+        cultivo = request.POST.get('cultivo')
+        libras = request.POST.get('libras')
+        aprovechamiento = request.POST.get('aprovechamiento')
+        mediano = request.POST.get('mediano')
+        devolucion = request.POST.get('devolucion')
 
-    fecha = request.GET.get('fecha')
-    recepcion = request.GET.get('recepcion')
-    proveedor = request.GET.get('proveedor')
-    cultivo = request.GET.get('cultivo')
-    libras = request.GET.get('libras')
-    aprovechamiento = request.GET.get('aprovechamiento')
-    mediano = request.GET.get('mediano')
-    devolucion = request.GET.get('devolucion')
-    fechahoy= timezone.now().date()
+        vector1_json = request.POST.get('vector1')
+        vector2_json = request.POST.get('vector2')
 
-    context = {
-        'fecha': fecha,
-        'fechahoy':fechahoy,
-        'recepcion': recepcion,
-        'proveedor': proveedor,
-        'cultivo': cultivo,
-        'libras': libras,
-        'aprovechamiento': aprovechamiento,
-        'mediano': mediano,
-        'devolucion': devolucion,
-        'planta':"SDC - Nueva Santa Rosa"
-    }
+        try:
+            vector1 = json.loads(vector1_json)
+            vector2 = json.loads(vector2_json)
+        except json.JSONDecodeError:
+            vector1 = []
+            vector2 = []
 
-    return render(request, 'plantaE/boletasFruta_constanciarecepcion.html', context)
+        fechahoy = timezone.now().date()
+
+        context = {
+            'fecha': fecha,
+            'fechahoy': fechahoy,
+            'recepcion': recepcion,
+            'proveedor': proveedor,
+            'cultivo': cultivo,
+            'libras': libras,
+            'aprovechamiento': aprovechamiento,
+            'mediano': mediano,
+            'devolucion': devolucion,
+            'planta': "SDC - Nueva Santa Rosa",
+            'vector1': vector1,
+            'vector2': vector2,
+        }
+
+        return render(request, 'plantaE/boletasFruta_constanciarecepcion.html', context)
+
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
 
 
 def boletas_reporterecepcion(request):
