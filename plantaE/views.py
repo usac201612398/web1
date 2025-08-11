@@ -3303,13 +3303,7 @@ def boletas_constanciarecepcion(request):
     }
 
     return render(request, 'plantaE/boletasFruta_constanciarecepcion.html', context)
- 
-from collections import defaultdict
-from django.db.models import Sum
-from django.http import JsonResponse
-from django.shortcuts import render
-from .models import detallerec, detallerecaux, Boletas
-from .utils import obtener_proveedor_desde_finca_llave
+
 
 def boletas_reporterecepcion(request):
     if request.method == 'POST':
