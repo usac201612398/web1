@@ -3277,52 +3277,45 @@ def aprovechamientos(request):
         'detalle_debug': detalle_debug_json
     })
 
+
 def boletas_constanciarecepcion(request):
-    if request.method == 'POST':
-        cultivo = request.POST.get('opcion1') or request.POST.get('cultivo')
-        proveedor = request.POST.get('opcion2') or request.POST.get('proveedor')
+    fecha = request.POST.get('fecha')
+    recepcion = request.POST.get('recepcion')
+    proveedor = request.POST.get('proveedor')
+    cultivo = request.POST.get('cultivo')
+    libras = request.POST.get('libras')
+    aprovechamiento = request.POST.get('aprovechamiento')
+    mediano = request.POST.get('mediano')
+    devolucion = request.POST.get('devolucion')
 
-        # si vienen las opciones para obtener vectores (fetch)
-        if cultivo and proveedor and 'opcion1' in request.POST:
-            vector1 = ...  # lógica para vector1
-            vector2 = ...  # lógica para vector2
-            return JsonResponse({'vector1': vector1, 'vector2': vector2})
+    vector1_json = request.POST.get('vector1')
+    vector2_json = request.POST.get('vector2')
 
-        # si viene el formulario con todos los datos para imprimir
-        fecha = request.POST.get('fecha')
-        recepcion = request.POST.get('recepcion')
-        libras = request.POST.get('libras')
-        aprovechamiento = request.POST.get('aprovechamiento')
-        mediano = request.POST.get('mediano')
-        devolucion = request.POST.get('devolucion')
+    try:
+        vector1 = json.loads(vector1_json)
+        vector2 = json.loads(vector2_json)
+    except json.JSONDecodeError:
+        vector1 = []
+        vector2 = []
 
-        try:
-            vector1 = json.loads(request.POST.get('vector1', '[]'))
-            vector2 = json.loads(request.POST.get('vector2', '[]'))
-        except json.JSONDecodeError:
-            vector1 = []
-            vector2 = []
+    fechahoy = timezone.now().date()
 
-        fechahoy = timezone.now().date()
+    context = {
+        'fecha': fecha,
+        'fechahoy': fechahoy,
+        'recepcion': recepcion,
+        'proveedor': proveedor,
+        'cultivo': cultivo,
+        'libras': libras,
+        'aprovechamiento': aprovechamiento,
+        'mediano': mediano,
+        'devolucion': devolucion,
+        'planta': "SDC - Nueva Santa Rosa",
+        'vector1': vector1,
+        'vector2': vector2,
+    }
 
-        context = {
-            'fecha': fecha,
-            'fechahoy': fechahoy,
-            'recepcion': recepcion,
-            'proveedor': proveedor,
-            'cultivo': cultivo,
-            'libras': libras,
-            'aprovechamiento': aprovechamiento,
-            'mediano': mediano,
-            'devolucion': devolucion,
-            'planta': "SDC - Nueva Santa Rosa",
-            'vector1': vector1,
-            'vector2': vector2,
-        }
-
-        return render(request, 'plantaE/boletasFruta_constanciarecepcion.html', context)
-
-    return JsonResponse({'error': 'Método no permitido'}, status=405)
+    return render(request, 'plantaE/boletasFruta_constanciarecepcion.html', context)
 
 
 def boletas_reporterecepcion(request):
