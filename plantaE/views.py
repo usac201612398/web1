@@ -3297,7 +3297,7 @@ def boletas_constanciarecepcion(request):
 
         context = {
             'fecha': fecha,
-            'recepcion': recepcion,
+            'recepcion': int(recepcion),
             'proveedor': proveedor,
             'cultivo': cultivo,
             'libras': libras,
