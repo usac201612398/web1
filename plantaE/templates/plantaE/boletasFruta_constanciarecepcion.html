@@ -149,37 +149,8 @@
             
         </table>
 
-        <!-- Tabla de productos -->
-        <table class="info-table" id="productos-table">
-            <thead>
-                <tr>
-                    <th>No.</th>
-                    <th>Calidad</th>
-                    <th>Item</th>
-                    <th>Fecha Produccion</th>
-                    <th>Cajas</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in datos %}
-                <tr>
-                    <td>{{ item.palet }}</td>
-                    <td>{{ item.proveedor }}</td>
-                    <td>{{ item.itemsapname }}</td>
-                    <td>{{ item.fecha }}</td>
-                    <td class="cajas">{{ item.total_cajas }}</td>
-                </tr>
-                {% endfor %}
-                <!-- Fila con el total de cajas -->
-                <tr id="total-row">
-                    <td colspan="4"><strong>Total de Cajas:</strong></td>
-                    <td><strong id="total-cajas">0</strong></td>
-                </tr>
-            </tbody>
-        </table>
 
         <h3>Desglose por Boleta</h3>
-        <!-- Tabla Vector 1 -->
         <table>
         <thead>
             <tr>
@@ -187,49 +158,43 @@
             <th>Boleta</th>
             <th>Calidad</th>
             <th>Libras</th>
-            <th>%</th>
+            <th>Porcentaje</th>
             </tr>
         </thead>
         <tbody>
             {% for item in vector1 %}
-            {% if item.recepcion == recepcion %}
-                <tr>
-                <td>{{ item.recepcion }}</td>
-                <td>{{ item.boleta }}</td>
-                <td>{{ item.calidad }}</td>
-                <td>{{ item.libras }}</td>
-                <td>{{ item.porcentaje }}</td>
-                </tr>
-            {% endif %}
+            <tr>
+            <td>{{ item.recepcion }}</td>
+            <td>{{ item.boleta }}</td>
+            <td>{{ item.calidad }}</td>
+            <td>{{ item.libras }}</td>
+            <td>{{ item.porcentaje }}</td>
+            </tr>
             {% endfor %}
         </tbody>
         </table>
 
         <h3>Resumen por Recepción</h3>
-        <!-- Tabla Vector 2 -->
-<table>
-  <thead>
-    <tr>
-      <th>Recepción</th>
-      <th>Calidad</th>
-      <th>Libras</th>
-      <th>%</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for item in vector2 %}
-      {% if item.recepcion == recepcion %}
-        <tr>
-          <td>{{ item.recepcion }}</td>
-          <td>{{ item.calidad }}</td>
-          <td>{{ item.libras }}</td>
-          <td>{{ item.porcentaje }}</td>
-        </tr>
-      {% endif %}
-    {% endfor %}
-  </tbody>
-</table>
-
+        <table>
+        <thead>
+            <tr>
+            <th>Recepción</th>
+            <th>Calidad</th>
+            <th>Libras</th>
+            <th>Porcentaje</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in vector2 %}
+            <tr>
+            <td>{{ item.recepcion }}</td>
+            <td>{{ item.calidad }}</td>
+            <td>{{ item.libras }}</td>
+            <td>{{ item.porcentaje }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        </table>
 
         <!-- Pie de página -->
         <table class="footer-table">
@@ -251,20 +216,7 @@
     </div>
 
     <!-- JavaScript para calcular el total de cajas -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var totalCajas = 0;
-            var cajas = document.querySelectorAll('.cajas');
-
-            // Sumar las cajas
-            cajas.forEach(function(caja) {
-                totalCajas += parseInt(caja.textContent) || 0; // Asegúrate de manejar cualquier valor no numérico
-            });
-
-            // Mostrar el total en el pie de la tabla
-            document.getElementById('total-cajas').textContent = totalCajas;
-        });
-    </script>
+    
     <script>
     const vector1 = JSON.parse('{{ vector1|escapejs }}');
     const vector2 = JSON.parse('{{ vector2|escapejs }}');
@@ -272,5 +224,61 @@
     console.log('Vector1:', vector1);
     console.log('Vector2:', vector2);
     </script>
+    <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    function sumarTabla(selectorTabla, selectorFilas) {
+      let totalLibras = 0;
+      let totalPorcentaje = 0;
+
+      const filas = document.querySelectorAll(selectorTabla + " " + selectorFilas);
+      filas.forEach(fila => {
+        const celdas = fila.querySelectorAll("td");
+        if (celdas.length >= 5) {
+          const libras = parseFloat(celdas[3].textContent) || 0;
+          const porcentaje = parseFloat(celdas[4].textContent) || 0;
+          totalLibras += libras;
+          totalPorcentaje += porcentaje;
+        }
+      });
+
+      // Crear fila total
+      const totalRow = document.createElement("tr");
+      totalRow.innerHTML = `
+        <td colspan="3" style="text-align: right;"><strong>Total:</strong></td>
+        <td><strong>${totalLibras.toFixed(2)}</strong></td>
+        <td><strong>${totalPorcentaje.toFixed(2)}</strong></td>
+      `;
+      document.querySelector(selectorTabla + " tbody").appendChild(totalRow);
+    }
+
+    // Suma para vector1
+    sumarTabla("table:nth-of-type(3)", "tbody tr");
+
+    // Suma para vector2 (libras en col 2, porcentaje en col 3)
+    function sumarVector2() {
+      let totalLibras = 0;
+      let totalPorcentaje = 0;
+      const filas = document.querySelectorAll("table:nth-of-type(4) tbody tr");
+      filas.forEach(fila => {
+        const celdas = fila.querySelectorAll("td");
+        if (celdas.length >= 4) {
+          totalLibras += parseFloat(celdas[2].textContent) || 0;
+          totalPorcentaje += parseFloat(celdas[3].textContent) || 0;
+        }
+      });
+
+      const totalRow = document.createElement("tr");
+      totalRow.innerHTML = `
+        <td colspan="2" style="text-align: right;"><strong>Total:</strong></td>
+        <td><strong>${totalLibras.toFixed(2)}</strong></td>
+        <td><strong>${totalPorcentaje.toFixed(2)}</strong></td>
+      `;
+      document.querySelector("table:nth-of-type(4) tbody").appendChild(totalRow);
+    }
+
+    sumarVector2();
+  });
+</script>
+
 </body>
 </html>
