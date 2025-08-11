@@ -3463,12 +3463,10 @@ def poraprovechamientos(request):
     fecha_max = AcumFruta.objects.filter(correo=nombre_usuario).aggregate(max_fecha=Max('fecha'))['max_fecha']
     if not fecha_max:
         fecha_max = hoy  # fallback si no hay registros
-    ordenes_abiertas = datosProduccion.objects.filter(status='Abierta').values_list(
-    'orden')
+    ordenes_abiertas = datosProduccion.objects.filter(status='Abierta').values_list('orden', flat=True)
+
     # Filtrar las libras totales por variedad desde AcumFruta
-    acumfrutadatos = AcumFruta.objects.filter(correo=nombre_usuario).filter(
-    # Filtrar solo ordenes abiertas
-        Q(orden__in=[o[2] for o in ordenes_abiertas])
+    acumfrutadatos = AcumFruta.objects.filter(correo=nombre_usuario,orden__in=ordenes_abiertas
     ).annotate(
         semana=ExtractWeek('fecha'),
         anio=ExtractYear('fecha')
@@ -3482,7 +3480,7 @@ def poraprovechamientos(request):
     detalles = AcumFrutaaux.objects.annotate(
         semana=ExtractWeek('fecha'),
         anio=ExtractYear('fecha')
-    ).filter(correo=nombre_usuario)
+    ).filter(correo=nombre_usuario,orden__in=ordenes_abiertas)
 
     boleta_ids = detalles.values_list('boleta', flat=True).distinct()
     boletas = Boletas.objects.filter(boleta__in=boleta_ids)
