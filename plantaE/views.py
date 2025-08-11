@@ -3348,7 +3348,7 @@ def boletas_reporterecepcion(request):
             }
 
             # === 2. Detalles y boletas ===
-            detalles = detallerecaux.objects.filter(recepcion__in=recepciones_dict.keys())
+            detalles = detallerecaux.objects.filter(recepcion__in=recepciones_dict.keys()).exclude(status='Anulado')
             boleta_ids = detalles.values_list('boleta', flat=True).distinct()
             boletas = Boletas.objects.filter(boleta__in=boleta_ids)
             boletas_dict = {b.boleta: b for b in boletas}
