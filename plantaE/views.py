@@ -353,7 +353,7 @@ def inventarioProd_grabarplantilla(request):
             return JsonResponse({'error': f"No se encontró productor para: {i[4]}"}, status=400)
 
         try:
-            pesotarima = 57
+            pesotarima = 56.5
             tara = float(pesostd.taraxcaja) * int(i[2]) + pesotarima
             pesosintara = int(i[3]) - tara
             pesoestandar = float(pesostd.pesostdxcaja) * int(i[2])
