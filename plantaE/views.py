@@ -3463,7 +3463,7 @@ def poraprovechamientos(request):
     fecha_max = AcumFruta.objects.filter(correo=nombre_usuario).aggregate(max_fecha=Max('fecha'))['max_fecha']
     if not fecha_max:
         fecha_max = hoy  # fallback si no hay registros
-    ordenes_abiertas = datosProduccion.objects.filter(status='abierto').values_list(
+    ordenes_abiertas = datosProduccion.objects.filter(status='Abierta').values_list(
     'orden')
     # Filtrar las libras totales por variedad desde AcumFruta
     acumfrutadatos = AcumFruta.objects.filter(correo=nombre_usuario).filter(
