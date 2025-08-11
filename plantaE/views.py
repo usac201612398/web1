@@ -3473,7 +3473,7 @@ def poraprovechamientos(request):
     ).values('finca', 'cultivo', 'orden', 'estructura', 'variedad').annotate(total_libras=Sum('libras')).order_by()
 
     recepciones_dict = {
-        formar_clave(r['finca'], r['cultivo'], r['orden'], r['estructura'], r['variedad']): r['total_libras'] for r in acumfrutadatos
+        formar_clave2(r['finca'], r['cultivo'], r['orden'], r['estructura'], r['variedad']): r['total_libras'] for r in acumfrutadatos
     }
 
     # Filtrar distribuciones desde AcumFrutaaux
