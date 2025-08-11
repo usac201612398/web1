@@ -179,6 +179,7 @@
         </table>
 
         <h3>Desglose por Boleta</h3>
+        <!-- Tabla Vector 1 -->
         <table>
         <thead>
             <tr>
@@ -186,43 +187,49 @@
             <th>Boleta</th>
             <th>Calidad</th>
             <th>Libras</th>
-            <th>Porcentaje</th>
+            <th>%</th>
             </tr>
         </thead>
         <tbody>
             {% for item in vector1 %}
-            <tr>
-            <td>{{ item.recepcion }}</td>
-            <td>{{ item.boleta }}</td>
-            <td>{{ item.calidad }}</td>
-            <td>{{ item.libras }}</td>
-            <td>{{ item.porcentaje }}</td>
-            </tr>
+            {% if item.recepcion == recepcion %}
+                <tr>
+                <td>{{ item.recepcion }}</td>
+                <td>{{ item.boleta }}</td>
+                <td>{{ item.calidad }}</td>
+                <td>{{ item.libras }}</td>
+                <td>{{ item.porcentaje }}</td>
+                </tr>
+            {% endif %}
             {% endfor %}
         </tbody>
         </table>
 
         <h3>Resumen por Recepción</h3>
-        <table>
-        <thead>
-            <tr>
-            <th>Recepción</th>
-            <th>Calidad</th>
-            <th>Libras</th>
-            <th>Porcentaje</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in vector2 %}
-            <tr>
-            <td>{{ item.recepcion }}</td>
-            <td>{{ item.calidad }}</td>
-            <td>{{ item.libras }}</td>
-            <td>{{ item.porcentaje }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-        </table>
+        <!-- Tabla Vector 2 -->
+<table>
+  <thead>
+    <tr>
+      <th>Recepción</th>
+      <th>Calidad</th>
+      <th>Libras</th>
+      <th>%</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in vector2 %}
+      {% if item.recepcion == recepcion %}
+        <tr>
+          <td>{{ item.recepcion }}</td>
+          <td>{{ item.calidad }}</td>
+          <td>{{ item.libras }}</td>
+          <td>{{ item.porcentaje }}</td>
+        </tr>
+      {% endif %}
+    {% endfor %}
+  </tbody>
+</table>
+
 
         <!-- Pie de página -->
         <table class="footer-table">
