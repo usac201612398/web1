@@ -220,8 +220,8 @@
     <!-- JavaScript para calcular el total de cajas -->
     
     <script>
-    const vector1 = JSON.parse('{{ vector1|escapejs }}');
-    const vector2 = JSON.parse('{{ vector2|escapejs }}');
+    const vector1 = JSON.parse(document.getElementById('vector1-data').textContent);
+    const vector2 = JSON.parse(document.getElementById('vector2-data').textContent);
 
     console.log('Vector1:', vector1);
     console.log('Vector2:', vector2);
