@@ -163,13 +163,15 @@
         </thead>
         <tbody>
             {% for item in vector1 %}
-            <tr>
-            <td>{{ item.recepcion }}</td>
-            <td>{{ item.boleta }}</td>
-            <td>{{ item.calidad }}</td>
-            <td>{{ item.libras }}</td>
-            <td>{{ item.porcentaje }}</td>
-            </tr>
+                {% if item.recepcion==recepcion %}
+                    <tr>
+                    <td>{{ item.recepcion }}</td>
+                    <td>{{ item.boleta }}</td>
+                    <td>{{ item.calidad }}</td>
+                    <td>{{ item.libras }}</td>
+                    <td>{{ item.porcentaje }}</td>
+                    </tr>
+                {% endif %}
             {% endfor %}
         </tbody>
         </table>
@@ -186,12 +188,15 @@
         </thead>
         <tbody>
             {% for item in vector2 %}
-            <tr>
-            <td>{{ item.recepcion }}</td>
-            <td>{{ item.calidad }}</td>
-            <td>{{ item.libras }}</td>
-            <td>{{ item.porcentaje }}</td>
-            </tr>
+                
+                {% if item.recepcion==recepcion %}
+                    <tr>
+                    <td>{{ item.recepcion }}</td>
+                    <td>{{ item.calidad }}</td>
+                    <td>{{ item.libras }}</td>
+                    <td>{{ item.porcentaje }}</td>
+                    </tr>
+                {% endif %}
             {% endfor %}
         </tbody>
         </table>
