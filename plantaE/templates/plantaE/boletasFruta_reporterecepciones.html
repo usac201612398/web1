@@ -286,7 +286,7 @@ document.querySelectorAll('.imprimir-btn').forEach(button => {
     const proveedor = this.dataset.proveedor;
 
     // Hacemos de nuevo el mismo fetch que el botón CONSULTAR
-    fetch('{% url "boletasFruta_reporterecepcion" %}', {
+    fetch('{% url "boletasFruta_constanciarecepcion" %}', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
