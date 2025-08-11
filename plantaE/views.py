@@ -3355,7 +3355,6 @@ def boletas_reporterecepcion(request):
 
             # === 3. Inicializar estructuras ===
             resumen = defaultdict(lambda: {'aprovechamiento': 0, 'mediano': 0, 'devolución': 0, 'total': 0})
-            vector1 = []  # Desglose por boleta
             resumen_temporal = defaultdict(lambda: defaultdict(float))  # recepcion -> calidad -> libras
 
             # === 4. Recorrer detalles ===
@@ -3378,8 +3377,17 @@ def boletas_reporterecepcion(request):
 
                 resumen[recepcion]['total'] += libras
 
-                # === vector1: desglose por boleta ===
-                # Calculamos porcentaje por recepción
+            # === 3. Ahora armar vector1 con porcentaje correcto ===
+            vector1 = []
+            for detalle in detalles:
+                boleta = boletas_dict.get(detalle.boleta)
+                if not boleta:
+                    continue
+
+                calidad = (boleta.calidad or '').strip().lower()
+                libras = detalle.libras or 0
+                recepcion = detalle.recepcion
+
                 total_actual = resumen[recepcion]['total']
                 porcentaje = round((libras * 100 / total_actual), 2) if total_actual else 0
 
@@ -3390,9 +3398,6 @@ def boletas_reporterecepcion(request):
                     'libras': libras,
                     'porcentaje': porcentaje
                 })
-
-                # === Acumular en resumen_temporal para vector2 ===
-                resumen_temporal[recepcion][calidad] += libras
 
             # === 5. Armar vector2 (resumen por calidad) ===
             vector2 = []
