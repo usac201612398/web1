@@ -187,17 +187,14 @@
             </tr>
         </thead>
         <tbody>
-            {% for item in vector2 %}
-                
-                {% ifequal item.recepcion recepcion %}
-                    <tr>
-                    <td>{{ item.recepcion }}</td>
-                    <td>{{ item.calidad }}</td>
-                    <td>{{ item.libras }}</td>
-                    <td>{{ item.porcentaje }}</td>
-                    </tr>
-                {% endifequal %}
-            {% endfor %}
+            {% ifequal item.recepcion recepcion %}
+                <tr>
+                <td>{{ item.recepcion }}</td>
+                <td>{{ item.calidad }}</td>
+                <td>{{ item.libras }}</td>
+                <td>{{ item.porcentaje }}</td>
+                </tr>
+            {% endifequal %}
         </tbody>
         </table>
 
