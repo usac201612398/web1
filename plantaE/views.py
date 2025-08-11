@@ -3276,6 +3276,10 @@ def aprovechamientos(request):
         'registros_json': registros_json,
         'detalle_debug': detalle_debug_json
     })
+from django.http import JsonResponse
+from django.utils import timezone
+from django.shortcuts import render
+import json
 
 def boletas_constanciarecepcion(request):
     if request.method == 'POST':
@@ -3291,9 +3295,26 @@ def boletas_constanciarecepcion(request):
         vector1_json = request.POST.get('vector1')
         vector2_json = request.POST.get('vector2')
 
+        # Caso: si no hay datos pero sí cultivo/proveedor -> solicitud JSON
+        if not vector1_json and not vector2_json and cultivo and proveedor:
+            # Genera tus vectores aquí con base en cultivo/proveedor
+            vector1 = [
+                {'dato': 'Ejemplo1', 'valor': 123},
+                {'dato': 'Ejemplo2', 'valor': 456},
+            ]
+            vector2 = [
+                {'dato': 'Ejemplo3', 'valor': 789}
+            ]
+
+            return JsonResponse({
+                'vector1': vector1,
+                'vector2': vector2
+            })
+
+        # Si sí hay vector1/vector2 (llamada desde el formulario de impresión)
         try:
-            vector1 = json.loads(vector1_json)
-            vector2 = json.loads(vector2_json)
+            vector1 = json.loads(vector1_json or '[]')
+            vector2 = json.loads(vector2_json or '[]')
         except json.JSONDecodeError:
             vector1 = []
             vector2 = []
@@ -3318,6 +3339,7 @@ def boletas_constanciarecepcion(request):
         return render(request, 'plantaE/boletasFruta_constanciarecepcion.html', context)
 
     return JsonResponse({'error': 'Método no permitido'}, status=405)
+
 
 def boletas_reporterecepcion(request):
     if request.method == 'POST':

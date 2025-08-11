@@ -279,72 +279,64 @@
       formatCells('myTable');
       
     });
-    // Asociar el evento a los botones de impresión generados dinámicamente
-    document.addEventListener('click', function (e) {
-      if (e.target.closest('.imprimir-btn')) {
-        const button = e.target.closest('.imprimir-btn');
-        const cultivo = button.dataset.cultivo;
-        const proveedor = button.dataset.proveedor;
+    fetch('{% url "boletasFruta_constanciarecepcion" %}', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'X-CSRFToken': getCookie('csrftoken')
+  },
+  body: new URLSearchParams({
+    'opcion1': cultivo,
+    'opcion2': proveedor
+  })
+})
+.then(response => response.json())
+.then(data => {
+  const vector1 = JSON.stringify(data.vector1 || []);
+  const vector2 = JSON.stringify(data.vector2 || []);
 
-        fetch('{% url "boletasFruta_constanciarecepcion" %}', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-CSRFToken': getCookie('csrftoken')
-          },
-          body: new URLSearchParams({
-            'opcion1': cultivo,
-            'opcion2': proveedor
-          })
-        })
-          .then(response => response.json())
-          .then(data => {
-            const vector1 = JSON.stringify(data.vector1 || []);
-            const vector2 = JSON.stringify(data.vector2 || []);
+  // Crear y enviar formulario oculto para impresión
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = '{% url "boletasFruta_constanciarecepcion" %}';
+  form.target = '_blank';
 
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '{% url "boletasFruta_constanciarecepcion" %}';
-            form.target = '_blank';
+  const csrfToken = getCookie('csrftoken');
+  const csrfInput = document.createElement('input');
+  csrfInput.type = 'hidden';
+  csrfInput.name = 'csrfmiddlewaretoken';
+  csrfInput.value = csrfToken;
+  form.appendChild(csrfInput);
 
-            const csrfToken = getCookie('csrftoken');
-            const csrfInput = document.createElement('input');
-            csrfInput.type = 'hidden';
-            csrfInput.name = 'csrfmiddlewaretoken';
-            csrfInput.value = csrfToken;
-            form.appendChild(csrfInput);
+  // Datos desde botón
+  ['fecha', 'recepcion', 'proveedor', 'cultivo', 'libras', 'aprovechamiento', 'mediano', 'devolucion'].forEach(field => {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = field;
+    input.value = button.dataset[field];
+    form.appendChild(input);
+  });
 
-            // Datos desde botón
-            ['fecha', 'recepcion', 'proveedor', 'cultivo', 'libras', 'aprovechamiento', 'mediano', 'devolucion'].forEach(field => {
-              const input = document.createElement('input');
-              input.type = 'hidden';
-              input.name = field;
-              input.value = button.dataset[field];
-              form.appendChild(input);
-            });
+  // Vectores completos
+  const v1 = document.createElement('input');
+  v1.type = 'hidden';
+  v1.name = 'vector1';
+  v1.value = vector1;
+  form.appendChild(v1);
 
-            // Vectores completos
-            const v1 = document.createElement('input');
-            v1.type = 'hidden';
-            v1.name = 'vector1';
-            v1.value = vector1;
-            form.appendChild(v1);
+  const v2 = document.createElement('input');
+  v2.type = 'hidden';
+  v2.name = 'vector2';
+  v2.value = vector2;
+  form.appendChild(v2);
 
-            const v2 = document.createElement('input');
-            v2.type = 'hidden';
-            v2.name = 'vector2';
-            v2.value = vector2;
-            form.appendChild(v2);
-
-            document.body.appendChild(form);
-            form.submit();
-            document.body.removeChild(form);
-          })
-          .catch(error => {
-            console.error("Error al obtener datos para impresión:", error);
-          });
-      }
-    });
+  document.body.appendChild(form);
+  form.submit();
+  document.body.removeChild(form);
+})
+.catch(error => {
+  console.error("Error al obtener datos para impresión:", error);
+});
 
 
 
