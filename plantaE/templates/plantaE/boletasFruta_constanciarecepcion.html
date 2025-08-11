@@ -163,7 +163,7 @@
         </thead>
         <tbody>
             {% for item in vector1 %}
-                {% ifequal item.recepcion recepcion %}
+                {% if item.recepcion == recepcion %}
                     <tr>
                     <td>{{ item.recepcion }}</td>
                     <td>{{ item.boleta }}</td>
@@ -171,7 +171,7 @@
                     <td>{{ item.libras }}</td>
                     <td>{{ item.porcentaje }}</td>
                     </tr>
-                {% endifequal %}
+                {% endif %}
             {% endfor %}
         </tbody>
         </table>
@@ -187,14 +187,14 @@
             </tr>
         </thead>
         <tbody>
-            {% ifequal item.recepcion recepcion %}
+            {% if item.recepcion == recepcion %}
                 <tr>
                 <td>{{ item.recepcion }}</td>
                 <td>{{ item.calidad }}</td>
                 <td>{{ item.libras }}</td>
                 <td>{{ item.porcentaje }}</td>
                 </tr>
-            {% endifequal %}
+            {% endif %}
         </tbody>
         </table>
 
