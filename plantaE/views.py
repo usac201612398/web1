@@ -3277,11 +3277,6 @@ def aprovechamientos(request):
         'detalle_debug': detalle_debug_json
     })
 
-from django.views.decorators.csrf import csrf_exempt
-import json
-from django.utils import timezone
-
-@csrf_exempt
 def boletas_constanciarecepcion(request):
     if request.method == 'POST':
         fecha = request.POST.get('fecha')
