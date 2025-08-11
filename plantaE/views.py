@@ -3277,13 +3277,47 @@ def aprovechamientos(request):
         'detalle_debug': detalle_debug_json
     })
 
+def boletas_constanciarecepcion(request):
+
+    fecha = request.GET.get('fecha')
+    recepcion = request.GET.get('recepcion')
+    proveedor = request.GET.get('proveedor')
+    cultivo = request.GET.get('cultivo')
+    libras = request.GET.get('libras')
+    aprovechamiento = request.GET.get('aprovechamiento')
+    mediano = request.GET.get('mediano')
+    devolucion = request.GET.get('devolucion')
+    fechahoy= timezone.now().date()
+
+    context = {
+        'fecha': fecha,
+        'fechahoy':fechahoy,
+        'recepcion': recepcion,
+        'proveedor': proveedor,
+        'cultivo': cultivo,
+        'libras': libras,
+        'aprovechamiento': aprovechamiento,
+        'mediano': mediano,
+        'devolucion': devolucion,
+        'planta':"SDC - Nueva Santa Rosa"
+    }
+
+    return render(request, 'plantaE/boletasFruta_constanciarecepcion.html', context)
+ 
+from collections import defaultdict
+from django.db.models import Sum
+from django.http import JsonResponse
+from django.shortcuts import render
+from .models import detallerec, detallerecaux, Boletas
+from .utils import obtener_proveedor_desde_finca_llave
+
 def boletas_reporterecepcion(request):
     if request.method == 'POST':
         try:
             opcion1 = request.POST.get('opcion1')  # cultivo
             opcion2 = request.POST.get('opcion2')  # proveedor
 
-            # Obtener recepciones en proceso que coincidan con cultivo
+            # === 1. Recepciones base ===
             recepciones_raw = (
                 detallerec.objects
                 .filter(status="En proceso", cultivo=opcion1)
@@ -3292,7 +3326,6 @@ def boletas_reporterecepcion(request):
                 .order_by('-recepcion')
             )
 
-            # Filtrar por proveedor después de obtener los datos
             recepciones_filtradas = []
             for r in recepciones_raw:
                 proveedor = obtener_proveedor_desde_finca_llave(r['finca'], r['llave'])
@@ -3300,10 +3333,8 @@ def boletas_reporterecepcion(request):
                     r['proveedor'] = proveedor
                     recepciones_filtradas.append(r)
 
-            # Limitar a 10
             recepciones_filtradas = recepciones_filtradas[:10]
 
-            # Crear diccionario para búsqueda rápida
             recepciones_dict = {
                 r['recepcion']: {
                     'total_libras': r['total_libras'],
@@ -3314,20 +3345,18 @@ def boletas_reporterecepcion(request):
                 for r in recepciones_filtradas
             }
 
-            # Paso 1: Obtener detalles de esas recepciones
-            detalles = (
-                detallerecaux.objects
-                .filter(recepcion__in=recepciones_dict.keys())
-            )
-
-            # Paso 2: Obtener boletas únicas y cargarlas
+            # === 2. Detalles y boletas ===
+            detalles = detallerecaux.objects.filter(recepcion__in=recepciones_dict.keys())
             boleta_ids = detalles.values_list('boleta', flat=True).distinct()
             boletas = Boletas.objects.filter(boleta__in=boleta_ids)
             boletas_dict = {b.boleta: b for b in boletas}
 
-            # Paso 3: Agrupar libras por calidad
-            agrupados = defaultdict(lambda: {'aprovechamiento': 0, 'mediano': 0, 'devolución': 0, 'total': 0})
+            # === 3. Inicializar estructuras ===
+            resumen = defaultdict(lambda: {'aprovechamiento': 0, 'mediano': 0, 'devolución': 0, 'total': 0})
+            vector1 = []  # Desglose por boleta
+            resumen_temporal = defaultdict(lambda: defaultdict(float))  # recepcion -> calidad -> libras
 
+            # === 4. Recorrer detalles ===
             for detalle in detalles:
                 boleta = boletas_dict.get(detalle.boleta)
                 if not boleta:
@@ -3335,20 +3364,51 @@ def boletas_reporterecepcion(request):
 
                 calidad = (boleta.calidad or '').strip().lower()
                 libras = detalle.libras or 0
-                clave = detalle.recepcion  # Usamos recepcion como clave única
+                recepcion = detalle.recepcion
 
+                # Clasificación resumen
                 if 'aprovechamiento' in calidad:
-                    agrupados[clave]['aprovechamiento'] += libras
+                    resumen[recepcion]['aprovechamiento'] += libras
                 elif 'mediano' in calidad:
-                    agrupados[clave]['mediano'] += libras
+                    resumen[recepcion]['mediano'] += libras
                 elif 'devolución' in calidad:
-                    agrupados[clave]['devolución'] += libras
+                    resumen[recepcion]['devolución'] += libras
 
-                agrupados[clave]['total'] += libras
-            
+                resumen[recepcion]['total'] += libras
+
+                # === vector1: desglose por boleta ===
+                # Calculamos porcentaje por recepción
+                total_actual = resumen[recepcion]['total']
+                porcentaje = round((libras * 100 / total_actual), 2) if total_actual else 0
+
+                vector1.append({
+                    'recepcion': recepcion,
+                    'boleta': detalle.boleta,
+                    'calidad': calidad,
+                    'libras': libras,
+                    'porcentaje': porcentaje
+                })
+
+                # === Acumular en resumen_temporal para vector2 ===
+                resumen_temporal[recepcion][calidad] += libras
+
+            # === 5. Armar vector2 (resumen por calidad) ===
+            vector2 = []
+
+            for recepcion, calidades in resumen_temporal.items():
+                total = sum(calidades.values())
+                for calidad, libras in calidades.items():
+                    porcentaje = round(libras * 100 / total, 2) if total else 0
+                    vector2.append({
+                        'recepcion': recepcion,
+                        'calidad': calidad,
+                        'libras': libras,
+                        'porcentaje': porcentaje
+                    })
+
+            # === 6. Resultado principal (tabla de resumen) ===
             resultado = []
-
-            for recepcion_id, datos in agrupados.items():
+            for recepcion_id, datos in resumen.items():
                 meta = recepciones_dict.get(recepcion_id)
                 if not meta:
                     continue
@@ -3368,11 +3428,14 @@ def boletas_reporterecepcion(request):
                     'devolucion': round(datos['devolución'] * 100 / total_recepcion, 2) if total_recepcion else 0,
                     'porcentaje_pendiente': round(pendiente * 100 / total_recepcion, 2) if total_recepcion else 0,
                 })
-            
-            return JsonResponse({'recdic':list(recepciones_dict),'datos': resultado}, safe=False)
 
-
-
+            # === 7. Enviar respuesta JSON ===
+            return JsonResponse({
+                'recdic': list(recepciones_dict),
+                'datos': resultado,
+                'vector1': vector1,
+                'vector2': vector2,
+            }, safe=False)
 
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)

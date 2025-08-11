@@ -106,6 +106,7 @@
                   <th>%Aprovechamiento</th>
                   <th>%Mediano</th>
                   <th>%Devolución</th>
+                  <th>Constancia</th>
                 </tr>
               </thead>
               <tbody>
@@ -119,6 +120,7 @@
                   <td class="number-cell" data-value="{{ registro.aprovechamiento }}">{{ registro.aprovechamiento }}</td>
                   <td class="number-cell" data-value="{{ registro.mediano }}">{{ registro.mediano }}</td>
                   <td class="number-cell" data-value="{{ registro.devolucion }}">{{ registro.devolucion }}</td>
+                  <td></td>
                 </tr>
                 {% endfor %}
               </tbody>
@@ -171,7 +173,11 @@
             console.warn("No se encontraron datos.");
             return;
           }
+          const vector1 = data.vector1;
+          const vector2 = data.vector2;
 
+          console.table(vector1); // puedes ver los datos
+          console.table(vector2);
           data.datos.forEach(item => {
             const row = `<tr>
               <td>${item.fecha}</td>
@@ -185,6 +191,13 @@
               <td>${Math.round(item.mediano)}</td>
               
               <td>${Math.round(item.devolucion)}</td>
+              <td>
+                <a href="{% url 'boletasFruta_constanciarec' %}"?fecha=${encodeURIComponent(item.fecha)}&recepcion=${encodeURIComponent(item.recepcion)}&proveedor=${encodeURIComponent(item.proveedor)}&cultivo=${encodeURIComponent(item.cultivo)}&libras=${item.libras}&aprovechamiento=${item.aprovechamiento}&mediano=${item.mediano}&devolucion=${item.devolucion}" 
+                  target="_blank" 
+                  class="button is-small is-link">
+                  <i class="fas fa-print"></i>
+                </a>
+              </td>
             </tr>`;
             tbody.insertAdjacentHTML('beforeend', row);
           });

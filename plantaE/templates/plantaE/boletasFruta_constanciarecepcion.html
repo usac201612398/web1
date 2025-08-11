@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            margin: 5px;
+            padding: 5px;
+            border: 1px solid #ddd;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: auto; /* Ajuste automático del ancho de columnas */
+        }
+
+        table th, table td {
+            padding: 4px;
+            border: 1px solid #ddd;
+            text-align: left;
+            word-wrap: break-word; /* Asegura que el texto largo se ajuste */
+            font-size: 12px;
+            line-height: 0.25;
+        }
+
+        /* Estilo para las tablas */
+        .header-table {
+            font-size: 14px; /* Tamaño de letra más grande */
+            padding: 5px 10px; /* Ajustar el padding para aprovechar más el espacio */
+            line-height: 0.25; /* Reducir el interlineado */
+            margin-top: 0; /* Margen superior mínimo */
+        }
+
+        .info-table {
+            width: 100%;
+            margin-bottom: 10px;
+            margin-top: 5px;
+        }
+        .header-table td, .info-table td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        /* Estilos para el encabezado con tres columnas */
+        .encabezado-table {
+            width: 100%;
+            margin-bottom: 5px;
+        }
+
+        .encabezado-table td {
+            padding: 5px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .header-logo {
+            width: 20%; /* Ajusta al 50% del ancho del contenedor */
+            height: auto; /* Mantiene la proporción original de la imagen */
+        }
+
+        .encabezado-info {
+            font-size: 14px;
+            text-align: left;
+            line-height: 0.25;
+        }
+
+        /* Para dispositivos pequeños */
+        @media (max-width: 600px) {
+            .encabezado-table td {
+                font-size: 12px;
+            }
+        }
+
+        @media print {
+            body {
+                width: 100%;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+            }
+            table {
+                width: 100%;
+                table-layout: auto; /* Asegura que las columnas se ajusten correctamente */
+            }
+            .container {
+                width: 100%;
+                max-width: 100%;
+                overflow: hidden;
+            }
+            /* Ocultar el botón de impresión */
+            .print-button {
+                display: none;
+            }
+
+            /* Configuración para impresión horizontal */
+            @page {
+                size: A4 landscape; /* Configura el tamaño de la página en horizontal */
+                margin: 0;
+            }
+            /* Reducción de la escala para ajustarse al ancho de la página */
+            .container {
+                transform: scale(0.90); /* Ajusta la escala para que quepa todo el contenido */
+                transform-origin: top left; /* Fija el origen de la escala */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Encabezado con tres columnas -->
+        <table class="encabezado-table">
+            <tr>
+                <!-- Logo -->
+                <td style="width: 15%"><img src="{% static 'img/logo.jpg' %}" alt="logo" class="encabezado-logo"></td>
+                <!-- Guía de Embarque -->
+                <td style="width: 55%">
+                    <h3>Resumen de recepción</h3>
+                </td>
+                <!-- Información adicional -->
+                <td style="width: 30%" class="encabezado-info">
+                    <p><strong>Código:</strong> RE-EM-36</p>
+                    <p><strong>Versión:</strong> 1</p>
+                    <p><strong>Fecha de actualización:</strong> 11/08/2025</p>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Datos de Packing List -->
+        <table class="header-table">
+            <tr>
+                <td><strong>Planta:</strong> {{ planta }}</td>
+                <td><strong>Fecha - Constancia:</strong> {{ fechahoy }}</td>
+            </tr>
+            <tr>
+                <td><strong>Productor:</strong> {{ proveedor }}</td>
+                <td><strong>Recepcion:</strong> {{ recepcion }}</td>
+            </tr>
+            <tr>
+                <td><strong>Cultivo:</strong> {{ cultivo }}</td>
+                <td><strong>Fecha de recepción:</strong> {{ fecha }}</td>
+            </tr>
+            
+        </table>
+
+        <!-- Tabla de productos -->
+        <table class="info-table" id="productos-table">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Calidad</th>
+                    <th>Item</th>
+                    <th>Fecha Produccion</th>
+                    <th>Cajas</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in datos %}
+                <tr>
+                    <td>{{ item.palet }}</td>
+                    <td>{{ item.proveedor }}</td>
+                    <td>{{ item.itemsapname }}</td>
+                    <td>{{ item.fecha }}</td>
+                    <td class="cajas">{{ item.total_cajas }}</td>
+                </tr>
+                {% endfor %}
+                <!-- Fila con el total de cajas -->
+                <tr id="total-row">
+                    <td colspan="4"><strong>Total de Cajas:</strong></td>
+                    <td><strong id="total-cajas">0</strong></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Pie de página -->
+        <table class="footer-table">
+            <thead>
+                <tr>
+                    <th colspan="5">Elaborado por: </th>
+                </tr>
+            </thead>
+        </table>
+
+    </div>
+
+    <!-- Botón de impresión -->
+    <div class="container">
+        <button onclick="window.print()" class="print-button">
+            <i class="fas fa-print"></i> <!-- Ícono de la impresora -->
+            <span class="sr-only">Imprimir</span> <!-- Texto alternativo para accesibilidad -->
+        </button>
+    </div>
+
+    <!-- JavaScript para calcular el total de cajas -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var totalCajas = 0;
+            var cajas = document.querySelectorAll('.cajas');
+
+            // Sumar las cajas
+            cajas.forEach(function(caja) {
+                totalCajas += parseInt(caja.textContent) || 0; // Asegúrate de manejar cualquier valor no numérico
+            });
+
+            // Mostrar el total en el pie de la tabla
+            document.getElementById('total-cajas').textContent = totalCajas;
+        });
+    </script>
+</body>
+</html>
