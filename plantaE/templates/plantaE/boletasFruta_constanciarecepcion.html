@@ -224,9 +224,6 @@
         </tbody>
         </table>
 
-
-
-
         <!-- Pie de página -->
         <table class="footer-table">
             <thead>
@@ -260,6 +257,13 @@
             // Mostrar el total en el pie de la tabla
             document.getElementById('total-cajas').textContent = totalCajas;
         });
+    </script>
+    <script>
+    const vector1 = JSON.parse('{{ vector1|escapejs }}');
+    const vector2 = JSON.parse('{{ vector2|escapejs }}');
+
+    console.log('Vector1:', vector1);
+    console.log('Vector2:', vector2);
     </script>
 </body>
 </html>
