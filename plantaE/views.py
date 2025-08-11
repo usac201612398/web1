@@ -3279,21 +3279,26 @@ def aprovechamientos(request):
 
 def boletas_constanciarecepcion(request):
     if request.method == 'POST':
+        cultivo = request.POST.get('opcion1') or request.POST.get('cultivo')
+        proveedor = request.POST.get('opcion2') or request.POST.get('proveedor')
+
+        # si vienen las opciones para obtener vectores (fetch)
+        if cultivo and proveedor and 'opcion1' in request.POST:
+            vector1 = ...  # lógica para vector1
+            vector2 = ...  # lógica para vector2
+            return JsonResponse({'vector1': vector1, 'vector2': vector2})
+
+        # si viene el formulario con todos los datos para imprimir
         fecha = request.POST.get('fecha')
         recepcion = request.POST.get('recepcion')
-        proveedor = request.POST.get('proveedor')
-        cultivo = request.POST.get('cultivo')
         libras = request.POST.get('libras')
         aprovechamiento = request.POST.get('aprovechamiento')
         mediano = request.POST.get('mediano')
         devolucion = request.POST.get('devolucion')
 
-        vector1_json = request.POST.get('vector1')
-        vector2_json = request.POST.get('vector2')
-
         try:
-            vector1 = json.loads(vector1_json)
-            vector2 = json.loads(vector2_json)
+            vector1 = json.loads(request.POST.get('vector1', '[]'))
+            vector2 = json.loads(request.POST.get('vector2', '[]'))
         except json.JSONDecodeError:
             vector1 = []
             vector2 = []
