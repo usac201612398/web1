@@ -178,55 +178,52 @@
             </tbody>
         </table>
 
-        <h3>Detalle por Boleta</h3>
-        <table class="info-table">
+        <h3>Desglose por Boleta</h3>
+        <table>
         <thead>
             <tr>
-            <th>#</th>
             <th>Recepción</th>
             <th>Boleta</th>
             <th>Calidad</th>
             <th>Libras</th>
-            <th>%</th>
+            <th>Porcentaje</th>
             </tr>
         </thead>
         <tbody>
             {% for item in vector1 %}
             <tr>
-            <td>{{ forloop.counter }}</td>
             <td>{{ item.recepcion }}</td>
             <td>{{ item.boleta }}</td>
             <td>{{ item.calidad }}</td>
             <td>{{ item.libras }}</td>
-            <td>{{ item.porcentaje }}%</td>
+            <td>{{ item.porcentaje }}</td>
             </tr>
             {% endfor %}
         </tbody>
         </table>
 
-        <h3>Resumen por Calidad</h3>
-        <table class="info-table">
+        <h3>Resumen por Recepción</h3>
+        <table>
         <thead>
             <tr>
-            <th>#</th>
             <th>Recepción</th>
             <th>Calidad</th>
             <th>Libras</th>
-            <th>%</th>
+            <th>Porcentaje</th>
             </tr>
         </thead>
         <tbody>
             {% for item in vector2 %}
             <tr>
-            <td>{{ forloop.counter }}</td>
             <td>{{ item.recepcion }}</td>
             <td>{{ item.calidad }}</td>
             <td>{{ item.libras }}</td>
-            <td>{{ item.porcentaje }}%</td>
+            <td>{{ item.porcentaje }}</td>
             </tr>
             {% endfor %}
         </tbody>
         </table>
+
 
 
 
