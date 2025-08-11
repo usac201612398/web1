@@ -146,6 +146,9 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
   <script>
+    // Variables globales
+    window.vector1 = [];
+    window.vector2 = [];
     // CONSULTAR
     document.getElementById('consultar').addEventListener('click', function () {
       const cultivo = document.getElementById('Cul').value;
@@ -173,11 +176,12 @@
             console.warn("No se encontraron datos.");
             return;
           }
-          const vector1 = data.vector1;
-          const vector2 = data.vector2;
+          // Asignar globalmente
+          window.vector1 = data.vector1 || [];
+          window.vector2 = data.vector2 || [];
 
-          console.table(vector1); // puedes ver los datos
-          console.table(vector2);
+          console.table(window.vector1); // puedes ver los datos
+          console.table(window.vector2);
           data.datos.forEach(item => {
             const row = `<tr>
               <td>${item.fecha}</td>
@@ -295,7 +299,8 @@ document.addEventListener('click', function(e) {
   // Aquí usas variables globales o los datos que ya tengas cargados (vectores)
   const vector1 = window.vector1 || [];
   const vector2 = window.vector2 || [];
-
+  console.log('Vector1 antes de enviar:', window.vector1);
+  console.log('Vector2 antes de enviar:', window.vector2);
   const form = document.createElement('form');
   form.method = 'POST';
   form.action = '{% url "boletasFruta_constanciarecepcion" %}';
