@@ -2575,8 +2575,9 @@ def reporte_tabla_pivote2(request):
     }
 
     nombre_usuario = request.user.username
-
-    qs = AcumFruta.objects.filter(correo=nombre_usuario).exclude(finca="CIP").exclude(libras__isnull=True)
+    ordenes_abiertas = datosProduccion.objects.filter(status='Abierta').values_list('orden', flat=True)
+    
+    qs = AcumFruta.objects.filter(correo=nombre_usuario,orden__in=ordenes_abiertas).exclude(finca="CIP").exclude(libras__isnull=True)
 
     for campo, valor in filtros_get.items():
         if valor:
@@ -2636,11 +2637,11 @@ def reporte_tabla_pivote2(request):
 
     # Filtros disponibles
     filtros_completos = [
-        ('Finca', 'finca', AcumFruta.objects.filter(correo=nombre_usuario).exclude(finca__isnull=True).exclude(finca='').values_list('finca', flat=True).distinct()),
-        ('Orden', 'orden', AcumFruta.objects.filter(correo=nombre_usuario).exclude(orden__isnull=True).exclude(orden='').values_list('orden', flat=True).distinct()),
-        ('Variedad', 'variedad', AcumFruta.objects.filter(correo=nombre_usuario).exclude(variedad__isnull=True).exclude(variedad='').values_list('variedad', flat=True).distinct()),
-        ('Cultivo', 'cultivo', AcumFruta.objects.filter(correo=nombre_usuario).exclude(cultivo__isnull=True).exclude(cultivo='').values_list('cultivo', flat=True).distinct()),
-        ('Estructura', 'estructura', AcumFruta.objects.filter(correo=nombre_usuario).exclude(estructura__isnull=True).exclude(estructura='').values_list('estructura', flat=True).distinct()),
+        ('Finca', 'finca', AcumFruta.objects.filter(correo=nombre_usuario,orden__in=ordenes_abiertas).exclude(finca__isnull=True).exclude(finca='').values_list('finca', flat=True).distinct()),
+        ('Orden', 'orden', AcumFruta.objects.filter(correo=nombre_usuario,orden__in=ordenes_abiertas).exclude(orden__isnull=True).exclude(orden='').values_list('orden', flat=True).distinct()),
+        ('Variedad', 'variedad', AcumFruta.objects.filter(correo=nombre_usuario,orden__in=ordenes_abiertas).exclude(variedad__isnull=True).exclude(variedad='').values_list('variedad', flat=True).distinct()),
+        ('Cultivo', 'cultivo', AcumFruta.objects.filter(correo=nombre_usuario,orden__in=ordenes_abiertas).exclude(cultivo__isnull=True).exclude(cultivo='').values_list('cultivo', flat=True).distinct()),
+        ('Estructura', 'estructura', AcumFruta.objects.filter(correo=nombre_usuario,orden__in=ordenes_abiertas).exclude(estructura__isnull=True).exclude(estructura='').values_list('estructura', flat=True).distinct()),
     ]
 
     return render(request, 'plantaE/reporte_tabla_pivote2.html', {
@@ -3090,8 +3091,9 @@ def get_ordenes_por_finca(request):
 def get_ordenes_por_finca2(request):
     finca = request.POST.get('finca')
     nombre_usuario = request.user.username
+    ordenes_abiertas = datosProduccion.objects.filter(status='Abierta').values_list('orden', flat=True)
     if finca:
-        ordenes = AcumFruta.objects.filter(finca=finca,correo=nombre_usuario)\
+        ordenes = AcumFruta.objects.filter(finca=finca,correo=nombre_usuario,orden__in=ordenes_abiertas)\
             .exclude(orden__isnull=True)\
             .exclude(orden='')\
             .values_list('orden', flat=True)\
@@ -3101,6 +3103,7 @@ def get_ordenes_por_finca2(request):
 
 def get_estructuras_por_orden(request):
     orden = request.POST.get('orden')
+    
     if orden:
         estructuras = AcumFruta.objects.filter(orden=orden)\
             .exclude(estructura__isnull=True)\
