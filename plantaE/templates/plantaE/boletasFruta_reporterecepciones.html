@@ -279,8 +279,7 @@
       formatCells('myTable');
       
     });
-
-    document.addEventListener('click', function(e) {
+document.addEventListener('click', function(e) {
   const btn = e.target.closest('.imprimir-btn');
   if (!btn) return;
 
@@ -293,55 +292,44 @@
   const mediano = btn.dataset.mediano;
   const devolucion = btn.dataset.devolucion;
 
-  // Aquí haces el fetch para obtener los vectores actualizados
-  fetch('{% url "boletasFruta_constanciarecepcion" %}', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'X-CSRFToken': getCookie('csrftoken')
-    },
-    body: new URLSearchParams({
-      'opcion1': cultivo,
-      'opcion2': proveedor
-    })
-  })
-  .then(response => response.json())
-  .then(data => {
-    const vector1 = JSON.stringify(data.vector1 || []);
-    const vector2 = JSON.stringify(data.vector2 || []);
+  // Aquí usas variables globales o los datos que ya tengas cargados (vectores)
+  const vector1 = window.vector1 || [];
+  const vector2 = window.vector2 || [];
 
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = "{% url 'boletasFruta_constanciarecepcion' %}";
-    form.target = '_blank';
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = '{% url "boletasFruta_constanciarecepcion" %}';
+  form.target = '_blank';
 
-    // CSRF token
-    const csrfInput = document.createElement('input');
-    csrfInput.type = 'hidden';
-    csrfInput.name = 'csrfmiddlewaretoken';
-    csrfInput.value = getCookie('csrftoken');
-    form.appendChild(csrfInput);
+  // CSRF token
+  const csrfToken = getCookie('csrftoken'); // función para leer cookie CSRF
+  const csrfInput = document.createElement('input');
+  csrfInput.type = 'hidden';
+  csrfInput.name = 'csrfmiddlewaretoken';
+  csrfInput.value = csrfToken;
+  form.appendChild(csrfInput);
 
-    const fields = {
-      fecha, recepcion, proveedor, cultivo,
-      libras, aprovechamiento, mediano, devolucion,
-      vector1, vector2
-    };
+  // Añadir los campos
+  const data = {
+    fecha, recepcion, proveedor, cultivo,
+    libras, aprovechamiento, mediano, devolucion,
+    vector1: JSON.stringify(vector1),
+    vector2: JSON.stringify(vector2)
+  };
 
-    Object.entries(fields).forEach(([key, value]) => {
-      const input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = key;
-      input.value = value;
-      form.appendChild(input);
-    });
+  for (const [key, val] of Object.entries(data)) {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = key;
+    input.value = val;
+    form.appendChild(input);
+  }
 
-    document.body.appendChild(form);
-    form.submit();
-    document.body.removeChild(form);
-  })
-  .catch(err => console.error('Error al obtener datos para impresión:', err));
+  document.body.appendChild(form);
+  form.submit();
+  document.body.removeChild(form);
 });
+
   </script>
   
 </body>

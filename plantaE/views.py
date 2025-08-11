@@ -3277,45 +3277,40 @@ def aprovechamientos(request):
         'detalle_debug': detalle_debug_json
     })
 
-
 def boletas_constanciarecepcion(request):
-    fecha = request.POST.get('fecha')
-    recepcion = request.POST.get('recepcion')
-    proveedor = request.POST.get('proveedor')
-    cultivo = request.POST.get('cultivo')
-    libras = request.POST.get('libras')
-    aprovechamiento = request.POST.get('aprovechamiento')
-    mediano = request.POST.get('mediano')
-    devolucion = request.POST.get('devolucion')
+    if request.method == 'POST':
+        fecha = request.POST.get('fecha')
+        recepcion = request.POST.get('recepcion')
+        proveedor = request.POST.get('proveedor')
+        cultivo = request.POST.get('cultivo')
+        libras = request.POST.get('libras')
+        aprovechamiento = request.POST.get('aprovechamiento')
+        mediano = request.POST.get('mediano')
+        devolucion = request.POST.get('devolucion')
 
-    vector1_json = request.POST.get('vector1')
-    vector2_json = request.POST.get('vector2')
+        try:
+            vector1 = json.loads(request.POST.get('vector1', '[]'))
+            vector2 = json.loads(request.POST.get('vector2', '[]'))
+        except json.JSONDecodeError:
+            vector1 = []
+            vector2 = []
 
-    try:
-        vector1 = json.loads(vector1_json)
-        vector2 = json.loads(vector2_json)
-    except json.JSONDecodeError:
-        vector1 = []
-        vector2 = []
+        context = {
+            'fecha': fecha,
+            'recepcion': recepcion,
+            'proveedor': proveedor,
+            'cultivo': cultivo,
+            'libras': libras,
+            'aprovechamiento': aprovechamiento,
+            'mediano': mediano,
+            'devolucion': devolucion,
+            'planta': "SDC - Nueva Santa Rosa",
+            'vector1': vector1,
+            'vector2': vector2,
+        }
+        return render(request, 'plantaE/boletasFruta_constanciarecepcion.html', context)
 
-    fechahoy = timezone.now().date()
-
-    context = {
-        'fecha': fecha,
-        'fechahoy': fechahoy,
-        'recepcion': recepcion,
-        'proveedor': proveedor,
-        'cultivo': cultivo,
-        'libras': libras,
-        'aprovechamiento': aprovechamiento,
-        'mediano': mediano,
-        'devolucion': devolucion,
-        'planta': "SDC - Nueva Santa Rosa",
-        'vector1': vector1,
-        'vector2': vector2,
-    }
-
-    return render(request, 'plantaE/boletasFruta_constanciarecepcion.html', context)
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
 
 
 def boletas_reporterecepcion(request):
