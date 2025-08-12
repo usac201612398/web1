@@ -3303,7 +3303,7 @@ def boletas_constanciarecepcion(request):
         semana = fecha_obj.isocalendar()[1]
         llave = str(semana) + " | " + str(proveedor) + " | " +str(cultivo)
         causasrechazo = Ccalidad.objects.filter(llave = llave)
-
+        fechahoy = timezone.now().date()
         context = {
             'fecha': fecha,
             'recepcion': int(recepcion),
@@ -3316,7 +3316,7 @@ def boletas_constanciarecepcion(request):
             'planta': "SDC - Nueva Santa Rosa",
             'vector1': vector1,
             'vector2': vector2,
-            'llave': llave,
+            'fechahoy': fechahoy,
             'causas': causasrechazo,
             'causas2': list(causasrechazo)
         }
