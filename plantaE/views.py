@@ -3317,7 +3317,8 @@ def boletas_constanciarecepcion(request):
             'vector1': vector1,
             'vector2': vector2,
             'llave': llave,
-            'causas': causasrechazo
+            'causas': causasrechazo,
+            'causas2': list(causasrechazo)
         }
         return render(request, 'plantaE/boletasFruta_constanciarecepcion.html', context)
 
