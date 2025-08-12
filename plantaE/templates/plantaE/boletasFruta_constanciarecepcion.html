@@ -169,7 +169,8 @@
                     <td>{{ item.boleta }}</td>
                     <td>{{ item.calidad }}</td>
                     <td>{{ item.libras }}</td>
-                    <td>{{ item.porcentaje }}</td>
+                    <td>{{ item.porcentaje|floatformat:2 }}%</td>
+
                     </tr>
                 {% endif %}
             {% endfor %}
@@ -193,7 +194,8 @@
                     <td>{{ item.recepcion }}</td>
                     <td>{{ item.calidad }}</td>
                     <td>{{ item.libras }}</td>
-                    <td>{{ item.porcentaje }}</td>
+                    <td>{{ item.porcentaje|floatformat:2 }}%</td>
+
                     </tr>
                 {% endif %}
             {% endfor %}
@@ -269,7 +271,7 @@
       totalRow.innerHTML = `
         <td colspan="3" style="text-align: right;"><strong>Total:</strong></td>
         <td><strong>${totalLibras.toFixed(2)}</strong></td>
-        <td><strong>${totalPorcentaje.toFixed(2)}</strong></td>
+        <td><strong>${Math.round(totalPorcentaje)}%</strong></td>
       `;
       document.querySelector(selectorTabla + " tbody").appendChild(totalRow);
     }
@@ -294,7 +296,7 @@
       totalRow.innerHTML = `
         <td colspan="2" style="text-align: right;"><strong>Total:</strong></td>
         <td><strong>${totalLibras.toFixed(2)}</strong></td>
-        <td><strong>${totalPorcentaje.toFixed(2)}</strong></td>
+        <td><strong>${Math.round(totalPorcentaje)}%</strong></td>
       `;
       document.querySelector("table:nth-of-type(4) tbody").appendChild(totalRow);
     }
