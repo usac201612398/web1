@@ -3301,7 +3301,7 @@ def boletas_constanciarecepcion(request):
             vector2 = []
         fecha_obj = datetime.datetime.strptime(fecha, '%Y-%m-%d').date()
         semana = fecha_obj.isocalendar()[1]
-        llave = str(semana) + " | " + str(cultivo) + " | " +str(proveedor)
+        llave = str(semana) + " | " + str(proveedor) + " | " +str(cultivo)
         causasrechazo = Ccalidad.objects.filter(llave = llave)
 
         context = {
