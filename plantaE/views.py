@@ -3299,7 +3299,7 @@ def boletas_constanciarecepcion(request):
         except json.JSONDecodeError:
             vector1 = []
             vector2 = []
-        fecha_obj = datetime.strptime(fecha, '%Y-%m-%d').date()
+        fecha_obj = datetime.datetime.strptime(fecha, '%Y-%m-%d').date()
         semana = fecha_obj.isocalendar()[1]
         llave = str(semana) + " | " + str(cultivo) + " | " +str(proveedor)
         causasrechazo = Ccalidad.objects.filter(llave = llave)
