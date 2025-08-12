@@ -474,4 +474,8 @@ class boletasForm(forms.ModelForm):
     class Meta:
         model = Boletas
         fields = ['fecha', 'registro','boleta','finca', 'ordenfinca','proveedor','cultivo','orden','calidad1','itemsapname','calidad' , 'cajas', 'librasxcaja', 'libras','observaciones']
-
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['observaciones'].required = False
+        self.fields['orden'].required = False
