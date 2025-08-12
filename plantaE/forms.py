@@ -462,7 +462,7 @@ class boletasForm(forms.ModelForm):
     ordenfinca = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     proveedor = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     cultivo = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
-    orden = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    orden = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     calidad1 = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly':'readonly'}))  # Campo numérico
     calidad = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))

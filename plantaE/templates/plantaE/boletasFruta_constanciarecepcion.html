@@ -270,7 +270,7 @@
       const totalRow = document.createElement("tr");
       totalRow.innerHTML = `
         <td colspan="3" style="text-align: right;"><strong>Total:</strong></td>
-        <td><strong>${totalLibras.toFixed(2)}</strong></td>
+        <td><strong>${totalLibras.toFixed(0)}</strong></td>
         <td><strong>${Math.round(totalPorcentaje)}%</strong></td>
       `;
       document.querySelector(selectorTabla + " tbody").appendChild(totalRow);
@@ -295,7 +295,7 @@
       const totalRow = document.createElement("tr");
       totalRow.innerHTML = `
         <td colspan="2" style="text-align: right;"><strong>Total:</strong></td>
-        <td><strong>${totalLibras.toFixed(2)}</strong></td>
+        <td><strong>${totalLibras.toFixed(0)}</strong></td>
         <td><strong>${Math.round(totalPorcentaje)}%</strong></td>
       `;
       document.querySelector("table:nth-of-type(4) tbody").appendChild(totalRow);
