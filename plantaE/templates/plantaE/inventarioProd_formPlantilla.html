@@ -230,6 +230,9 @@ $(document).ready(function() {
 
     // ENVÍO de datos
     $('.envio3').on('click', function() {
+
+      const boton = $(this);
+      boton.prop('disabled', true); 
       const fecha = document.getElementById('date').value;
       const correo = document.getElementById('correo').value;
       let datos = [];
@@ -277,9 +280,11 @@ $(document).ready(function() {
           success: function(data) {
               alert(data.msm);
               console.log(data);
+              boton.prop('disabled', false);
           },
           error: function(xhr, status, error) {
               console.error('Error:', error);
+              boton.prop('disabled', false);
           }
       });
   });
