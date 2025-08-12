@@ -240,12 +240,18 @@
     <!-- JavaScript para calcular el total de cajas -->
     {{ vector1|json_script:"vector1-data" }}
     {{ vector2|json_script:"vector2-data" }}
+    {{ llave|json_script:"llave-data" }}
+    {{ causas|json_script:"causas-data" }}
     <script>
     const vector1 = JSON.parse(document.getElementById('vector1-data').textContent);
     const vector2 = JSON.parse(document.getElementById('vector2-data').textContent);
+    const llave = JSON.parse(document.getElementById('llave-data').textContent);
+    const causas = JSON.parse(document.getElementById('causas-data').textContent);
 
     console.log('Vector1:', vector1);
     console.log('Vector2:', vector2);
+    console.log('Llave:', llave);
+    console.log('Causas:', causas);
     </script>
     <script>
   document.addEventListener("DOMContentLoaded", function() {

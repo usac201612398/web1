@@ -3316,6 +3316,7 @@ def boletas_constanciarecepcion(request):
             'planta': "SDC - Nueva Santa Rosa",
             'vector1': vector1,
             'vector2': vector2,
+            'llave': llave,
             'causas': causasrechazo
         }
         return render(request, 'plantaE/boletasFruta_constanciarecepcion.html', context)
