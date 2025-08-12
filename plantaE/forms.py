@@ -360,7 +360,14 @@ class itemsForm(forms.ModelForm):
         
         model = productoTerm
         fields = ['cultivo','itemsapcode','itemsapcodelibra','itemsapname','calidad1','categoria','precio','taraxcaja', 'pesostdxcaja', 'tipo', 'orden']
-
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['itemsapcodelibra'].required = False
+        self.fields['orden'].required = False
+        self.fields['taraxcaja'].required = False
+        self.fields['precio'].required = False
+        self.fields['calidad1'].required = False
 class itemsenviosForm(forms.ModelForm):
 
     op_clasificacion =   [('','-'),('EMPAQUE','EMPAQUE'),('FRUTA','FRUTA'),('FERRETERIA','FERRETERIA')]

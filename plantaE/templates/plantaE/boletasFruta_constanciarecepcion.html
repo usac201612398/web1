@@ -212,7 +212,7 @@
             {% for item in causas %}
                     <tr>
                     <td>{{ item.causarechazo }}</td>
-                    <td>{{ item.porcentaje }}</td>
+                    <td>{% widthratio item.porcentaje 1 100 %}%</td>
                     </tr>
             {% endfor %}
         </tbody>
@@ -301,6 +301,27 @@
 
     sumarVector2();
   });
+  function sumarCausasRechazo() {
+  let totalPorcentaje = 0;
+  const filas = document.querySelectorAll("table:nth-of-type(5) tbody tr");
+  filas.forEach(fila => {
+    const celda = fila.querySelectorAll("td")[1];
+    if (celda) {
+      const valorTexto = celda.textContent.replace('%', '').trim();
+      const valorNumerico = parseFloat(valorTexto) || 0;
+      totalPorcentaje += valorNumerico;
+    }
+  });
+
+  const totalRow = document.createElement("tr");
+  totalRow.innerHTML = `
+    <td style="text-align: right;"><strong>Total:</strong></td>
+    <td><strong>${totalPorcentaje.toFixed(2)}%</strong></td>
+  `;
+  document.querySelector("table:nth-of-type(5) tbody").appendChild(totalRow);
+}
+
+sumarCausasRechazo();
 </script>
 
 </body>
