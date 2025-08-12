@@ -3299,8 +3299,9 @@ def boletas_constanciarecepcion(request):
         except json.JSONDecodeError:
             vector1 = []
             vector2 = []
-        semana = fecha.isocalendar()[1]
-        llave = str(semana) + " | " + str(cultivo) + " | " +str(proveedor) + " | " 
+        fecha_obj = datetime.strptime(fecha, '%Y-%m-%d').date()
+        semana = fecha_obj.isocalendar()[1]
+        llave = str(semana) + " | " + str(cultivo) + " | " +str(proveedor)
         causasrechazo = Ccalidad.objects.filter(llave = llave)
 
         context = {
@@ -3320,7 +3321,6 @@ def boletas_constanciarecepcion(request):
         return render(request, 'plantaE/boletasFruta_constanciarecepcion.html', context)
 
     return JsonResponse({'error': 'Método no permitido'}, status=405)
-
 
 def boletas_reporterecepcion(request):
     if request.method == 'POST':
