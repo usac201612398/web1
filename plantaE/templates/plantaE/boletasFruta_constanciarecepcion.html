@@ -200,6 +200,24 @@
         </tbody>
         </table>
 
+        <h4>Causas de rechazo</h3>
+        <table>
+        <thead>
+            <tr>
+            <th>Causa</th>
+            <th>Porcentaje</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in causas %}
+                    <tr>
+                    <td>{{ item.causarechazo }}</td>
+                    <td>{{ item.porcentaje }}</td>
+                    </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+
         <!-- Pie de página -->
         <table class="footer-table">
             <thead>

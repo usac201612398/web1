@@ -3299,6 +3299,9 @@ def boletas_constanciarecepcion(request):
         except json.JSONDecodeError:
             vector1 = []
             vector2 = []
+        semana = fecha.isocalendar()[1]
+        llave = str(semana) + " | " + str(cultivo) + " | " +str(proveedor) + " | " 
+        causasrechazo = Ccalidad.objects.filter(llave = llave)
 
         context = {
             'fecha': fecha,
@@ -3312,6 +3315,7 @@ def boletas_constanciarecepcion(request):
             'planta': "SDC - Nueva Santa Rosa",
             'vector1': vector1,
             'vector2': vector2,
+            'causas': causasrechazo
         }
         return render(request, 'plantaE/boletasFruta_constanciarecepcion.html', context)
 
