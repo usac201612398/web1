@@ -3535,6 +3535,7 @@ def poraprovechamientos(request):
             'aprovechamiento': round(datos['aprovechamiento'] * 100 / total_distribuido, 2) if total_distribuido else 0,
             'mediano': round(datos['mediano'] * 100 / total_distribuido, 2) if total_distribuido else 0,
             'devolucion': porcentaje_devolucion,
+            'pendiente': pendiente,
             'porcentaje_pendiente': porcentaje_pendiente,
         })
 

@@ -71,7 +71,8 @@
                   <th>Orden</th>
                   <th>Estructura</th>
                   <th>Variedad</th>
-                  <th>Libras</th>
+                  <th>Libras-Totales</th>
+                  <th>Libras-Procesadas</th>
                   <th>%Pendiente</th>
                   <th>%Aprovechamiento</th>
                   <th>%Mediano</th>
@@ -87,6 +88,7 @@
                   <td>{{ registro.estructura }}</td>
                   <td>{{ registro.variedad }}</td>
                   <td class="number-cell" data-value="{{ registro.libras }}">{{ registro.libras }}</td>
+                  <td class="number-cell" data-value="{{ registro.pendiente }}">{{ registro.pendiente }}</td>
                   <td class="number-cell" data-value="{{ registro.porcentaje_pendiente }}">{{ registro.porcentaje_pendiente }}</td>
                   <td class="number-cell" data-value="{{ registro.aprovechamiento }}">{{ registro.aprovechamiento }}%</td>
                   <td class="number-cell" data-value="{{ registro.mediano }}">{{ registro.mediano }}%</td>
