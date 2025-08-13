@@ -2988,6 +2988,20 @@ def inventariogeneral_list(request):
 
     # Ordenar la lista de registros por el campo 'proveedor'
     registros_agrupados = sorted(registros_agrupados, key=lambda x: x['proveedor'])
+    for registro in registros_agrupados:
+        try:
+            producto = productoTerm.objects.get(itemcode=registro['itemsapcode'])
+            cajasxtarima = producto.cajasxtarima
+        except productoTerm.DoesNotExist:
+            cajasxtarima = 0
+
+        registro['cajasxtarima'] = cajasxtarima
+
+        # (Opcional) calcular tarimas restantes
+        if cajasxtarima > 0:
+            registro['total_tarimas'] = registro['cajas_restantes'] // cajasxtarima
+        else:
+            registro['tarimas_restantes'] = 0
     registros_json = json.dumps(registros_agrupados, default=str)  # Usar default=str para evitar errores con objetos no serializables
 
     # Pasar los registros agrupados al renderizado de la plantilla
