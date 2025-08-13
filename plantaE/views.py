@@ -245,29 +245,18 @@ def load_dataUsuario6(request):
     return JsonResponse({'cultivo': list(cultivo)})
 
 def load_dataUsuario7(request):
+
     opcion1 = request.GET.get('fechareporte')  # fecha
     opcion2 = request.GET.get('cultivo')       # cultivo
 
-    if not opcion1 or not opcion2:
-        return JsonResponse({'error': 'Faltan parámetros fechareporte o cultivo'}, status=400)
-
-    try:
-        fecha_obj = datetime.datetime.strptime(opcion1, '%Y-%m-%d').date()
-    except ValueError:
-        return JsonResponse({'error': 'Formato de fecha inválido'}, status=400)
-
+    # Paso 1: Obtener los itemcodigo que tengan ese cultivo
+    
     items_filtrados = productoTerm.objects.filter(cultivo=opcion2).values_list('itemsapcode', flat=True)
 
-    envios = enviosrec.objects.filter(
-        fecha=fecha_obj,
-        itemcodigo__in=items_filtrados
-    ).exclude(status="Anulado").values('envio').distinct()
-
-    if not envios.exists():
-        return JsonResponse({'envio': [], 'mensaje': 'No se encontraron envíos para esa fecha y cultivo.'})
-
-    return JsonResponse({'envio': list(envios)})
-
+    fecha_obj = datetime.datetime.strptime(opcion1, '%Y-%m-%d').date()
+    envios = enviosrec.objects.filter(fecha=fecha_obj).exclude(status="Anulado").values('envios')
+            
+    return JsonResponse({'envio':list(envios)})
 
 def pesos_list(request):
     today = timezone.now().date()
