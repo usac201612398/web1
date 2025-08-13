@@ -255,8 +255,7 @@ def load_dataUsuario7(request):
     items_filtrados = productoTerm.objects.filter(cultivo=opcion2).values_list('itemsapcode', flat=True)
 
     envios = enviosrec.objects.filter(
-    fecha=opcion1,
-    itemcodigo__in=items_filtrados
+    fecha=opcion1
     ).exclude(status="Anulado").exclude(envio__isnull=True).exclude(envio__exact='').values('envio').distinct()
             
     return JsonResponse({'envio': envios,'items':list(items_filtrados)})
