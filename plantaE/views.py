@@ -259,7 +259,7 @@ def load_dataUsuario7(request):
     itemcodigo__in=items_filtrados
     ).exclude(status="Anulado").exclude(productor__isnull=True).exclude(productor__exact='').values('envio')
             
-    return JsonResponse({'envio': envios,'items':list(items_filtrados)})
+    return JsonResponse({'envio': list(envios),'items':list(items_filtrados)})
 
 def pesos_list(request):
     today = timezone.now().date()
