@@ -254,7 +254,7 @@ def load_dataUsuario7(request):
     items_filtrados = productoTerm.objects.filter(cultivo=str(opcion2)).values()
     
     
-    return JsonResponse({'envio': '','items':items_filtrados})
+    return JsonResponse({'envio': '','items':list(items_filtrados)})
 
 def pesos_list(request):
     today = timezone.now().date()
