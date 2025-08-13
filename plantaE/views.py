@@ -245,6 +245,7 @@ def load_dataUsuario6(request):
     return JsonResponse({'cultivo': list(cultivo)})
 
 def load_dataUsuario7(request):
+    
     opcion1 = request.GET.get('fechareporte')  # fecha
     opcion2 = request.GET.get('cultivo')       # cultivo
 
@@ -261,7 +262,6 @@ def load_dataUsuario7(request):
             ).values('envio').distinct()
     if not envio.exists():
         return JsonResponse({'envio': [], 'mensaje': 'No se encontraron envíos para esa fecha y cultivo.'})
-
 
     return JsonResponse({'envio': list(envio)})
 
