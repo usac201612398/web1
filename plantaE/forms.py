@@ -355,11 +355,12 @@ class itemsForm(forms.ModelForm):
     pesostdxcaja = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
     tipo = forms.ChoiceField(choices=op_tipo, widget=forms.Select(attrs={'class': 'form-control'}))  # Campo numérico
     orden = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
-    
+    cajasxtarima = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+
     class Meta:
         
         model = productoTerm
-        fields = ['cultivo','itemsapcode','itemsapcodelibra','itemsapname','calidad1','categoria','precio','taraxcaja', 'pesostdxcaja', 'tipo', 'orden']
+        fields = ['cultivo','cajasxtarima','itemsapcode','itemsapcodelibra','itemsapname','calidad1','categoria','precio','taraxcaja', 'pesostdxcaja', 'tipo', 'orden']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -368,6 +369,8 @@ class itemsForm(forms.ModelForm):
         self.fields['taraxcaja'].required = False
         self.fields['precio'].required = False
         self.fields['calidad1'].required = False
+        self.fields['cajasxtarima'].required = False
+
 class itemsenviosForm(forms.ModelForm):
 
     op_clasificacion =   [('','-'),('EMPAQUE','EMPAQUE'),('FRUTA','FRUTA'),('FERRETERIA','FERRETERIA')]

@@ -250,6 +250,13 @@
             </div>
         </div>
 
+        <div class="form-group">
+            <div class="form-row">
+                <label for="cajasxtarima" class="form-label">CajasxTarima</label>
+                {{ form.cajasxtarima }}
+            </div>
+        </div>
+
         <!-- Botones centrados en una fila -->
         <div class="form-group button-row">
             <button type="submit" class="btn btn-primary">{{ form.instance.pk|yesno:"Actualizar,Crear" }}</button>
