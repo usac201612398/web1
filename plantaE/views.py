@@ -3347,7 +3347,7 @@ def boletas_constanciatraza(request):
     if request.method == 'POST':
         fecha = request.POST.get('fecha')
         envio=request.POST.get('envio')
-        proveedor = request.POST.get('proveedor')
+        proveedor = request.POST.get('productor')
         registro = request.POST.get('registro')
         itemsapcode = request.POST.get('itemsapcode')
         itemsapname = request.POST.get('itemsapname')
@@ -3363,7 +3363,7 @@ def boletas_constanciatraza(request):
         context = {
             'fecha': fecha,
             'itemsapcode': itemsapcode,
-            'proveedor':proveedor,
+            'productor':proveedor,
             'cultivo': datosinv.first().cultivo,
             'itemsapname': itemsapname,
             'libras': libras,
