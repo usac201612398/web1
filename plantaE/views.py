@@ -249,9 +249,12 @@ def load_dataUsuario7(request):
     opcion1 = request.GET.get('fechareporte')  # fecha
     opcion2 = request.GET.get('cultivo')       # cultivo
 
+    # Paso 1: Obtener los itemcodigo que tengan ese cultivo
     
-
-    return JsonResponse({'opcion1':opcion1,'opcion':opcion2})
+    items_filtrados = productoTerm.objects.filter(cultivo=str(opcion2)).values()
+    
+    
+    return JsonResponse({'envio': '','items':items_filtrados})
 
 def pesos_list(request):
     today = timezone.now().date()
