@@ -251,11 +251,11 @@ def load_dataUsuario7(request):
 
     # Paso 1: Obtener los itemcodigo que tengan ese cultivo
     
-    items_filtrados = productoTerm.objects.filter(cultivo=str(opcion2)).values()
     items_filtrados = productoTerm.objects.filter(cultivo=opcion2).values_list('itemsapcode', flat=True)
 
+    fecha_obj = datetime.strptime(opcion1, '%Y-%m-%d').date()
     envios = enviosrec.objects.filter(
-    fecha=opcion1,
+    fecha=fecha_obj,
     itemcodigo__in=items_filtrados
     ).exclude(status="Anulado").values('envio')
             
