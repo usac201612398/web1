@@ -3346,33 +3346,33 @@ def boletas_constanciatraza(request):
 
     if request.method == 'POST':
         fecha = request.POST.get('fecha')
+        libras = request.POST.get('libras')
+        registro = request.POST.get('registro')
+        empaque_tipo = request.POST.get('empaque_tipo')
+        fechahoy = timezone.now().date()
         envio=request.POST.get('envio')
         proveedor = request.POST.get('proveedor')
-        registro = request.POST.get('registro')
         itemsapcode = request.POST.get('itemsapcode')
         itemsapname = request.POST.get('itemsapname')
-        empaque_tipo = request.POST.get('empaque_tipo')
         empaque_cnt = request.POST.get('empaque_cnt')
-        libras = request.POST.get('libras')
         datosinv=inventarioProdTerm.objects.filter(itemsapcode=str(itemsapcode),enviorec=int(envio))
         boletas = datosinv.values_list('boleta',flat=True)  
         detallefruta = AcumFrutaaux.objects.filter(boleta__in=boletas)
-
-        fecha_obj = datetime.datetime.strptime(fecha, '%Y-%m-%d').date()
-        fechahoy = timezone.now().date()
+        
         context = {
             'fecha': fecha,
-            'itemsapcode': itemsapcode,
-            'proveedor':proveedor,
-            'itemsapname': itemsapname,
             'libras': libras,
             'registro': registro,
             'empaque_tipo': empaque_tipo,
-            'empaque_cnt': empaque_cnt,
             'planta': "SDC - Nueva Santa Rosa",
-            'vector1': list(detallefruta.values()),
             'fechahoy': fechahoy,
-            'datos':list(datosinv.values())
+            'itemsapcode': itemsapcode,
+            'proveedor':proveedor,
+            'itemsapname': itemsapname,
+            'empaque_cnt': empaque_cnt,
+            'vector1': list(detallefruta.values()),
+            'datos':list(datosinv.values()),
+            'envio': envio
         }
         return JsonResponse(context)
 
