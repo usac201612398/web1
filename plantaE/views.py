@@ -3371,7 +3371,7 @@ def boletas_constanciatraza(request):
             'empaque_tipo': empaque_tipo,
             'empaque_cnt': empaque_cnt,
             'planta': "SDC - Nueva Santa Rosa",
-            'vector1': detallefruta,
+            'vector1': list(detallefruta),
             'fechahoy': fechahoy,
             'mercado': datosinv.first().categoria
         }
