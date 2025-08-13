@@ -101,13 +101,12 @@
               <thead class="table-custom-header">
                 <tr>
                   <th>Fecha</th>
-                  <th>Recepcion</th>
-                  <th>Finca</th>
-                  <th>Cultivo</th>
+                  <th>Registro</th>
+                  <th>ItemSAPCode</th>
+                  <th>ItemSAPNombre</th>
+                  <th>empaque_tipo</th>
+                  <th>empaque_cnt</th>
                   <th>Libras</th>
-                  <th>%Aprovechamiento</th>
-                  <th>%Mediano</th>
-                  <th>%Devolución</th>
                   <th>Constancia</th>
                 </tr>
               </thead>
@@ -115,13 +114,13 @@
                 {% for registro in registros %}
                 <tr>
                   <td>{{ registro.fecha }}</td>
-                  <td>{{ registro.recepcion }}</td>
-                  <td>{{ registro.finca }}</td>
-                  <td>{{ registro.cultivo }}</td>
+                  <td>{{ registro.registro }}</td>
+                  <td>{{ registro.itemsap_code }}</td>
+                  <td>{{ registro.itemsap_name  }}</td>
+                  <td>{{ registro.empaque_tipo  }}</td>
+                  <td>{{ registro.empaque_cnt  }}</td>
+                  <td class="number-cell" data-value="{{ registro.empaque_cnt  }}">{{ registro.empaque_cnt  }}</td>
                   <td class="number-cell" data-value="{{ registro.libras }}">{{ registro.libras }}</td>
-                  <td class="number-cell" data-value="{{ registro.aprovechamiento }}">{{ registro.aprovechamiento }}</td>
-                  <td class="number-cell" data-value="{{ registro.mediano }}">{{ registro.mediano }}</td>
-                  <td class="number-cell" data-value="{{ registro.devolucion }}">{{ registro.devolucion }}</td>
                   <td></td>
                 </tr>
                 {% endfor %}
@@ -133,11 +132,11 @@
 
 
     <div class="has-text-centered mt-6">
-        <a href="{% url 'salidasFruta_listValle' %}" class="button is-success is-medium is-rounded">
+        <a href="{% url 'plantaE_home' %}" class="button is-success is-medium is-rounded">
             <span class="icon">
             <i class="fas fa-home"></i>
             </span>
-            <span>Ir al Home</span>
+            <span>Home</span>
         </a>
     </div>
     </div>
@@ -160,7 +159,7 @@
       tbody.innerHTML = '';
 
       console.log("Hola")
-      fetch('{% url "boletasFruta_reporterecepcion" %}', {
+      fetch('{% url "boletasFruta_reportetraza" %}', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
