@@ -2990,7 +2990,7 @@ def inventariogeneral_list(request):
     registros_agrupados = sorted(registros_agrupados, key=lambda x: x['proveedor'])
     for registro in registros_agrupados:
         try:
-            producto = productoTerm.objects.get(itemcode=registro['itemsapcode'])
+            producto = productoTerm.objects.get(itemsapcode=registro['itemsapcode'])
             cajasxtarima = producto.cajasxtarima
         except productoTerm.DoesNotExist:
             cajasxtarima = 0
