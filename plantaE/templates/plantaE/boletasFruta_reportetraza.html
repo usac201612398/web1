@@ -47,68 +47,61 @@
 </head>
 <body>
   <section class="section">
-    <div class="container">
-      <!-- HEADER -->
-        <section class="hero is-success is-small mb-5">
-        <div class="hero-body">
-            <div class="container has-text-centered">
-            <h1 class="title is-3 has-text-white">Panel de Control</h1>
-            <p class="subtitle is-6 has-text-white-ter">Consulta de salidas de fruta</p>
-            </div>
-        </div>
-        </section>
-      <div class="filters box">
-        <form id="filtros">
-          <div class="columns is-variable is-4">
-            <div class="column is-4">
-              <label class="label" for="date">Fecha</label>
-              <input
-                id="date"
-                class="input"
-                type="date"
-                value="{{ fecha }}"
-                name="date"
-              />
-            </div>
-            <div class="column is-4">
-              <label class="label" for="Cultivo">Cultivo</label>
-              <div class="select is-fullwidth">
-                <select id="Cultivo" name="Cultivo">
-                  
-                  <option value="">Seleccionar cultivo</option>
-                  <option value="GRAPE">GRAPE</option>
-                  <option value="GRAPE ORGANICO">GRAPE ORGANICO</option>
-                  <option value="CHERRY">CHERRY</option>
-                  <option value="MEDLEY">MEDLEY</option>
-                  <option value="ROMA">ROMA</option>
-                  <option value="BLOCKY">BLOCKY</option>
-                  <option value="BLOCKY ORGANICO">BLOCKY ORGANICO</option>
-                  <option value="AGUACATE">AGUACATE</option>
-                  <option value="PEPINO">PEPINO</option>
-                </select>
-              </div>
-            </div>
-            <div class="column is-4">
-              <label class="label" for="Envio">Envio</label>
-              <div class="select is-fullwidth">
-                <select id="Envio" name="Envio">
-                  <option value="">Seleccionar envio</option>
-                </select>
-              </div>
-            </div>
-            <div class="column is-4">
-              <label class="label" for="correo">Usuario</label>
-              <input class="input" id="correo" type="text" value="{{ usuario }}" readonly>
-            </div>
-            <div class="column is-2 is-flex is-align-items-end">
-              <button type="button" id="consultar" class="button is-success is-fullwidth">
-                <span class="icon"><i class="fas fa-search"></i></span>
-                <span>Consultar</span>
-              </button>
-            </div>
-          </div>
-        </form>
+    <div class="filters box">
+  <form id="filtros">
+    <div class="columns is-multiline is-vcentered">
+      <!-- Fecha -->
+      <div class="column is-2">
+        <label class="label" for="date">Fecha</label>
+        <input id="date" class="input" type="date" value="{{ fecha }}" name="date" />
       </div>
+
+      <!-- Cultivo -->
+      <div class="column is-2">
+        <label class="label" for="Cultivo">Cultivo</label>
+        <div class="select is-fullwidth">
+          <select id="Cultivo" name="Cultivo">
+            <option value="">Seleccionar cultivo</option>
+            <option value="GRAPE">GRAPE</option>
+            <option value="GRAPE ORGANICO">GRAPE ORGANICO</option>
+            <option value="CHERRY">CHERRY</option>
+            <option value="MEDLEY">MEDLEY</option>
+            <option value="ROMA">ROMA</option>
+            <option value="BLOCKY">BLOCKY</option>
+            <option value="BLOCKY ORGANICO">BLOCKY ORGANICO</option>
+            <option value="AGUACATE">AGUACATE</option>
+            <option value="PEPINO">PEPINO</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Envío -->
+      <div class="column is-2">
+        <label class="label" for="Envio">Envío</label>
+        <div class="select is-fullwidth">
+          <select id="Envio" name="Envio">
+            <option value="">Seleccionar envío</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Usuario -->
+      <div class="column is-3">
+        <label class="label" for="correo">Usuario</label>
+        <input class="input" id="correo" type="text" value="{{ usuario }}" readonly>
+      </div>
+
+      <!-- Botón -->
+      <div class="column is-3 is-flex is-align-items-end">
+        <button type="button" id="consultar" class="button is-success is-fullwidth">
+          <span class="icon"><i class="fas fa-search"></i></span>
+          <span>Consultar</span>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
 
       <!-- TABLA 1 -->
       <div class="data-section">
