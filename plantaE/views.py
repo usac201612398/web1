@@ -3366,13 +3366,13 @@ def boletas_constanciatraza(request):
             'empaque_tipo': empaque_tipo,
             'planta': "SDC - Nueva Santa Rosa",
             'fechahoy': fechahoy,
+            'envio': envio,
             'itemsapcode': itemsapcode,
             'proveedor':proveedor,
             'itemsapname': itemsapname,
             'empaque_cnt': empaque_cnt,
             'vector1': list(detallefruta.values()),
-            'datos':list(datosinv.values()),
-            'envio': envio
+            'datos':list(datosinv.values())
         }
         return JsonResponse(context)
 
