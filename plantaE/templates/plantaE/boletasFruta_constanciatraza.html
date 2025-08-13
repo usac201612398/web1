@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            margin: 5px;
+            padding: 5px;
+            border: 1px solid #ddd;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: auto; /* Ajuste automático del ancho de columnas */
+        }
+
+        table th, table td {
+            padding: 4px;
+            border: 1px solid #ddd;
+            text-align: left;
+            word-wrap: break-word; /* Asegura que el texto largo se ajuste */
+            font-size: 12px;
+            line-height: 0.25;
+        }
+
+        /* Estilo para las tablas */
+        .header-table {
+            font-size: 14px; /* Tamaño de letra más grande */
+            padding: 5px 10px; /* Ajustar el padding para aprovechar más el espacio */
+            line-height: 0.25; /* Reducir el interlineado */
+            margin-top: 0; /* Margen superior mínimo */
+        }
+
+        .info-table {
+            width: 100%;
+            margin-bottom: 10px;
+            margin-top: 5px;
+        }
+        .header-table td, .info-table td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        /* Estilos para el encabezado con tres columnas */
+        .encabezado-table {
+            width: 100%;
+            margin-bottom: 5px;
+        }
+
+        .encabezado-table td {
+            padding: 5px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .header-logo {
+            width: 20%; /* Ajusta al 50% del ancho del contenedor */
+            height: auto; /* Mantiene la proporción original de la imagen */
+        }
+
+        .encabezado-info {
+            font-size: 14px;
+            text-align: left;
+            line-height: 0.25;
+        }
+
+        /* Para dispositivos pequeños */
+        @media (max-width: 600px) {
+            .encabezado-table td {
+                font-size: 12px;
+            }
+        }
+
+        @media print {
+            body {
+                width: 100%;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+            }
+            table {
+                width: 100%;
+                table-layout: auto; /* Asegura que las columnas se ajusten correctamente */
+            }
+            .container {
+                width: 100%;
+                max-width: 100%;
+                overflow: hidden;
+            }
+            /* Ocultar el botón de impresión */
+            .print-button {
+                display: none;
+            }
+
+            /* Configuración para impresión horizontal */
+            @page {
+                size: A4 landscape; /* Configura el tamaño de la página en horizontal */
+                margin: 0;
+            }
+            /* Reducción de la escala para ajustarse al ancho de la página */
+            .container {
+                transform: scale(0.90); /* Ajusta la escala para que quepa todo el contenido */
+                transform-origin: top left; /* Fija el origen de la escala */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Encabezado con tres columnas -->
+        <table class="encabezado-table">
+            <tr>
+                <!-- Logo -->
+                <td style="width: 15%"><img src="{% static 'img/logo.jpg' %}" alt="logo" class="encabezado-logo"></td>
+                <!-- Guía de Embarque -->
+                <td style="width: 55%">
+                    <h3>Resumen de recepción</h3>
+                </td>
+                <!-- Información adicional -->
+                <td style="width: 30%" class="encabezado-info">
+                    <p><strong>Código:</strong> RE-EM-36</p>
+                    <p><strong>Versión:</strong> 1</p>
+                    <p><strong>Fecha de actualización:</strong> 11/08/2025</p>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Datos de Packing List -->
+        <table class="header-table">
+            <tr>
+                <td><strong>Planta:</strong> {{ planta }}</td>
+                <td><strong>Fecha - Constancia:</strong> {{ fechahoy }}</td>
+                <td><strong>Envio:</strong> {{ envio }}</td>
+                <td><strong>Registro:</strong> {{ registro }}</td>
+            </tr>
+            <tr>
+                <td><strong>Productor:</strong> {{ proveedor }}</td>
+                <td><strong>Fecha de envio:</strong> {{ fecha }}</td>
+                <td><strong>Cultivo:</strong> {{ cultivo }}</td>
+                <td><strong>Empaque:</strong> {{ empaque_cnt }}</td>
+            </tr>
+            <tr>
+            </tr>
+            <tr>
+                <td><strong>Mercado:</strong> {{ mercado }}</td>
+                <td><strong>ItemSAPCode:</strong> {{ cultivo }}</td>
+                <td><strong>ItemSAPName:</strong> {{ fecha }}</td>
+                <td><strong>Libras:</strong> {{ libras }}</td>
+
+            </tr>
+            
+        </table>
+
+
+        <h3>Desglose por Boleta</h3>
+        <table>
+        <thead>
+            <tr>
+            <th>Boleta</th>
+            <th>Id.Viaje</th>
+            <th>Fecha - Cosecha</th>
+            <th>Finca</th>
+            <th>Cultivo</th>
+            <th>Orden</th>
+            <th>Estructura</th>
+            <th>Variedad</th>
+            <th>Libras</th>
+            <th>Recepcion</th>
+            
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in vector1 %}
+                {% if item.recepcion == recepcion %}
+                    <tr>
+                    <td>{{ item.boleta }}</td>
+                    <td>{{ item.acumfrutaid }}</td>
+                    <td>{{ item.fecha }}</td>
+                    <td>{{ item.finca }}</td>
+                    <td>{{ item.cultivo }}</td>
+                    <td>{{ item.orden }}</td>
+                    <td>{{ item.estructura }}</td>
+                    <td>{{ item.variedad }}</td>
+                    <td>{{ item.libras }}</td>
+                    <td>{{ item.recepcion }}%</td>
+
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+        </table>
+
+        <!-- Pie de página -->
+        <table class="footer-table">
+            <thead>
+                <tr>
+                    <th colspan="5">Elaborado por: </th>
+                </tr>
+            </thead>
+        </table>
+
+    </div>
+
+    <!-- Botón de impresión -->
+    <div class="container">
+        <button onclick="window.print()" class="print-button">
+            <i class="fas fa-print"></i> <!-- Ícono de la impresora -->
+            <span class="sr-only">Imprimir</span> <!-- Texto alternativo para accesibilidad -->
+        </button>
+    </div>
+
+    <!-- JavaScript para calcular el total de cajas -->
+    {{ vector1|json_script:"vector1-data" }}
+    <script>
+    const vector1 = JSON.parse(document.getElementById('vector1-data').textContent);
+
+    console.log('Vector1:', vector1);
+    </script>
+    <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    function sumarTabla(selectorTabla, selectorFilas) {
+      let totalLibras = 0;
+
+      const filas = document.querySelectorAll(selectorTabla + " " + selectorFilas);
+      filas.forEach(fila => {
+        const celdas = fila.querySelectorAll("td");
+        if (celdas.length >= 5) {
+          const libras = parseFloat(celdas[3].textContent) || 0;
+          totalLibras += libras;
+        }
+      });
+
+      // Crear fila total
+      const totalRow = document.createElement("tr");
+      totalRow.innerHTML = `
+        <td colspan="3" style="text-align: right;"><strong>Total:</strong></td>
+        <td><strong>${totalLibras.toFixed(0)}</strong></td>
+      `;
+      document.querySelector(selectorTabla + " tbody").appendChild(totalRow);
+    }
+
+    // Suma para vector1
+    sumarTabla("table:nth-of-type(3)", "tbody tr");
+
+    // Suma para vector2 (libras en col 2, porcentaje en col 3)
+    function sumarVector2() {
+      let totalLibras = 0;
+      const filas = document.querySelectorAll("table:nth-of-type(4) tbody tr");
+      filas.forEach(fila => {
+        const celdas = fila.querySelectorAll("td");
+        if (celdas.length >= 4) {
+          totalLibras += parseFloat(celdas[2].textContent) || 0;
+        }
+      });
+
+      const totalRow = document.createElement("tr");
+      totalRow.innerHTML = `
+        <td colspan="2" style="text-align: right;"><strong>Total:</strong></td>
+        <td><strong>${totalLibras.toFixed(0)}</strong></td>
+      `;
+      document.querySelector("table:nth-of-type(4) tbody").appendChild(totalRow);
+    }
+
+    sumarVector2();
+  });
+  
+</script>
+
+</body>
+</html>

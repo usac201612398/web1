@@ -245,10 +245,24 @@ def load_dataUsuario6(request):
     return JsonResponse({'cultivo': list(cultivo)})
 
 def load_dataUsuario7(request):
+    opcion1 = request.GET.get('fechareporte')  # fecha
+    opcion2 = request.GET.get('cultivo')       # cultivo
 
-    opcion1 = request.GET.get('fechareporte')
-    envio = enviosrec.objects.filter(fecha=opcion1).exclude(status="Anulado").values('envio').distinct('envio')
-    
+    # Paso 1: Obtener los itemcodigo que tengan ese cultivo
+    items_filtrados = productoTerm.objects.filter(cultivo=opcion2).values_list('itemcodigo', flat=True)
+
+    # Paso 2: Filtrar enviosrec con esa fecha y esos itemcodigo
+    envio = enviosrec.objects.filter(
+                fecha=opcion1,
+                itemcodigo__in=items_filtrados
+            ).exclude(status="Anulado"
+            ).exclude(envio__isnull=True
+            ).exclude(envio__exact=''
+            ).values('envio').distinct()
+    if not envio.exists():
+        return JsonResponse({'envio': [], 'mensaje': 'No se encontraron envíos para esa fecha y cultivo.'})
+
+
     return JsonResponse({'envio': list(envio)})
 
 def pesos_list(request):
@@ -3330,6 +3344,43 @@ def boletas_constanciarecepcion(request):
 
     return JsonResponse({'error': 'Método no permitido'}, status=405)
 
+def boletas_constanciatraza(request):
+
+    if request.method == 'POST':
+        fecha = request.POST.get('fecha')
+        envio=request.POST.get('envio')
+        proveedor = request.POST.get('proveedor')
+        registro = request.POST.get('registro')
+        itemsapcode = request.POST.get('itemsapcode')
+        itemsapname = request.POST.get('itemsapname')
+        empaque_tipo = request.POST.get('empaque_tipo')
+        empaque_cnt = request.POST.get('empaque_cnt')
+        libras = request.POST.get('libras')
+        datosinv=inventarioProdTerm.objects.filter(itemsapcode=itemsapcode,envio=envio)
+        boletas = datosinv.values_list('boleta',flat=True)  
+        detallefruta = AcumFrutaaux.objects.filter(boleta__in=boletas)
+
+        fecha_obj = datetime.datetime.strptime(fecha, '%Y-%m-%d').date()
+        fechahoy = timezone.now().date()
+        context = {
+            'fecha': fecha,
+            'itemsapcode': itemsapcode,
+            'proveedor':proveedor,
+            'cultivo': datosinv.first().cultivo,
+            'itemsapname': itemsapname,
+            'libras': libras,
+            'registro': registro,
+            'empaque_tipo': empaque_tipo,
+            'empaque_cnt': empaque_cnt,
+            'planta': "SDC - Nueva Santa Rosa",
+            'vector1': detallefruta,
+            'fechahoy': fechahoy,
+            'mercado': datosinv.first().categoria
+        }
+        return render(request, 'plantaE/boletasFruta_constanciatraza.html', context)
+
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
+
 def boletas_reporterecepcion(request):
     if request.method == 'POST':
         try:
@@ -3476,7 +3527,7 @@ def boletas_reporterecepcion(request):
 def boletas_reportetraza(request):
     if request.method == 'POST':
         try:
-            opcion1 = request.POST.get('opcion1')  # envio
+            opcion1 = request.POST.get('opcion1')  # envio}
 
             envios = enviosrec.objects.filter(envio=opcion1).values()
             # === 7. Enviar respuesta JSON ===
