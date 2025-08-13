@@ -3374,7 +3374,7 @@ def boletas_constanciatraza(request):
             'fechahoy': fechahoy,
             'datos':list(datosinv.values())
         }
-        JsonResponse(context)
+        return JsonResponse(context)
 
     return JsonResponse({'error': 'Método no permitido'}, status=405)
 
