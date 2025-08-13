@@ -230,7 +230,7 @@
       filas.forEach(fila => {
         const celdas = fila.querySelectorAll("td");
         if (celdas.length >= 5) {
-          const libras = parseFloat(celdas[3].textContent) || 0;
+          const libras = parseFloat(celdas[8].textContent) || 0;
           totalLibras += libras;
         }
       });
@@ -238,7 +238,7 @@
       // Crear fila total
       const totalRow = document.createElement("tr");
       totalRow.innerHTML = `
-        <td colspan="3" style="text-align: right;"><strong>Total:</strong></td>
+        <td colspan="8" style="text-align: right;"><strong>Total:</strong></td>
         <td><strong>${totalLibras.toFixed(0)}</strong></td>
       `;
       document.querySelector(selectorTabla + " tbody").appendChild(totalRow);
@@ -247,26 +247,6 @@
     // Suma para vector1
     sumarTabla("table:nth-of-type(3)", "tbody tr");
 
-    // Suma para vector2 (libras en col 2, porcentaje en col 3)
-    function sumarVector2() {
-      let totalLibras = 0;
-      const filas = document.querySelectorAll("table:nth-of-type(4) tbody tr");
-      filas.forEach(fila => {
-        const celdas = fila.querySelectorAll("td");
-        if (celdas.length >= 4) {
-          totalLibras += parseFloat(celdas[2].textContent) || 0;
-        }
-      });
-
-      const totalRow = document.createElement("tr");
-      totalRow.innerHTML = `
-        <td colspan="2" style="text-align: right;"><strong>Total:</strong></td>
-        <td><strong>${totalLibras.toFixed(0)}</strong></td>
-      `;
-      document.querySelector("table:nth-of-type(4) tbody").appendChild(totalRow);
-    }
-
-    sumarVector2();
   });
   
 </script>
