@@ -252,7 +252,7 @@ def load_dataUsuario7(request):
         return JsonResponse({'error': 'Faltan parámetros fechareporte o cultivo'}, status=400)
 
     try:
-        fecha_obj = datetime.strptime(opcion1, '%Y-%m-%d').date()
+        fecha_obj = datetime.datetime.strptime(opcion1, '%Y-%m-%d').date()
     except ValueError:
         return JsonResponse({'error': 'Formato de fecha inválido'}, status=400)
 
