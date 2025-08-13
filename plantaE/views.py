@@ -245,12 +245,12 @@ def load_dataUsuario6(request):
     return JsonResponse({'cultivo': list(cultivo)})
 
 def load_dataUsuario7(request):
-    
+
     opcion1 = request.GET.get('fechareporte')  # fecha
     opcion2 = request.GET.get('cultivo')       # cultivo
 
     # Paso 1: Obtener los itemcodigo que tengan ese cultivo
-    items_filtrados = productoTerm.objects.filter(cultivo=opcion2).values_list('itemcodigo', flat=True)
+    items_filtrados = productoTerm.objects.filter(cultivo=opcion2).values_list('itemsapcodigo', flat=True)
 
     # Paso 2: Filtrar enviosrec con esa fecha y esos itemcodigo
     envio = enviosrec.objects.filter(
