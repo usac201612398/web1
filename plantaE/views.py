@@ -3354,7 +3354,7 @@ def boletas_constanciatraza(request):
         empaque_tipo = request.POST.get('empaque_tipo')
         empaque_cnt = request.POST.get('empaque_cnt')
         libras = request.POST.get('libras')
-        datosinv=inventarioProdTerm.objects.filter(itemsapcode=itemsapcode,enviorec=int(envio))
+        datosinv=inventarioProdTerm.objects.filter(itemsapcode=str(itemsapcode),enviorec=int(envio))
         boletas = datosinv.values_list('boleta',flat=True)  
         detallefruta = AcumFrutaaux.objects.filter(boleta__in=boletas)
 
