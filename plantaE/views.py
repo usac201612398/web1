@@ -3364,7 +3364,6 @@ def boletas_constanciatraza(request):
             'fecha': fecha,
             'itemsapcode': itemsapcode,
             'proveedor':proveedor,
-            'cultivo': datosinv.first().cultivo,
             'itemsapname': itemsapname,
             'libras': libras,
             'registro': registro,
@@ -3373,7 +3372,7 @@ def boletas_constanciatraza(request):
             'planta': "SDC - Nueva Santa Rosa",
             'vector1': detallefruta,
             'fechahoy': fechahoy,
-            'mercado': datosinv.first().categoria
+            'datos':list(datosinv)
         }
         JsonResponse(context)
 
