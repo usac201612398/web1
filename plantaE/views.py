@@ -252,8 +252,9 @@ def load_dataUsuario7(request):
     # Paso 1: Obtener los itemcodigo que tengan ese cultivo
     
     items_filtrados = productoTerm.objects.filter(cultivo=str(opcion2)).values()
-    
-    
+    items_filtrados = productoTerm.objects.filter(cultivo=opcion2).values_list('itemsapcode', flat=True)
+
+
     return JsonResponse({'envio': '','items':list(items_filtrados)})
 
 def pesos_list(request):
