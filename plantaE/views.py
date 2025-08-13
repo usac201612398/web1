@@ -3375,7 +3375,7 @@ def boletas_constanciatraza(request):
             'fechahoy': fechahoy,
             'mercado': datosinv.first().categoria
         }
-        return render(request, 'plantaE/boletasFruta_constanciatraza.html', context)
+        JsonResponse(context)
 
     return JsonResponse({'error': 'Método no permitido'}, status=405)
 
