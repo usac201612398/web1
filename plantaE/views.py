@@ -261,7 +261,7 @@ def load_dataUsuario7(request):
                 productor__exact=''
             ).values_list('envio', flat=True).distinct()    
             
-    return JsonResponse({'envio':'' ,'items':list(envios)})
+    return JsonResponse({'envio':list(envios)})
 
 def pesos_list(request):
     today = timezone.now().date()
