@@ -254,8 +254,12 @@ def load_dataUsuario7(request):
     items_filtrados = productoTerm.objects.filter(cultivo=str(opcion2)).values()
     items_filtrados = productoTerm.objects.filter(cultivo=opcion2).values_list('itemsapcode', flat=True)
 
-
-    return JsonResponse({'envio': '','items':list(items_filtrados)})
+    envios = enviosrec.objects.filter(
+    fecha=opcion1,
+    itemcodigo__in=items_filtrados
+    ).exclude(status="Anulado").exclude(envio__isnull=True).exclude(envio__exact='').values('envio').distinct()
+            
+    return JsonResponse({'envio': envios,'items':list(items_filtrados)})
 
 def pesos_list(request):
     today = timezone.now().date()
