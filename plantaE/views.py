@@ -255,9 +255,8 @@ def load_dataUsuario7(request):
 
     fecha_obj = datetime.strptime(opcion1, '%Y-%m-%d').date()
     envios = enviosrec.objects.filter(
-    fecha=fecha_obj,
-    itemcodigo__in=items_filtrados
-    ).exclude(status="Anulado").values('envio')
+    fecha=fecha_obj
+    ).exclude(status="Anulado").values()
             
     return JsonResponse({'envio':'' ,'items':list(envios)})
 
