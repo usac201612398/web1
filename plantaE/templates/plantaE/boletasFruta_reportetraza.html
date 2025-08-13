@@ -152,13 +152,11 @@
     window.vector2 = [];
     // CONSULTAR
     document.getElementById('consultar').addEventListener('click', function () {
-      const cultivo = document.getElementById('Cul').value;
-      const proveedor = document.getElementById('Prov').value;
+      const envio = document.getElementById('Envio').value;
       const tbody = document.querySelector('#myTable tbody');
 
       tbody.innerHTML = '';
 
-      console.log("Hola")
       fetch('{% url "boletasFruta_reportetraza" %}', {
         method: 'POST',
         headers: {
@@ -166,8 +164,7 @@
           'X-CSRFToken': getCookie('csrftoken')
         },
         body: new URLSearchParams({
-          'opcion1': cultivo,
-          'opcion2': proveedor
+          'opcion1': envio
         })
       })
         .then(response => response.json())
@@ -178,35 +175,26 @@
             return;
           }
           // Asignar globalmente
-          window.vector1 = data.vector1 || [];
-          window.vector2 = data.vector2 || [];
 
-          console.table(window.vector1); // puedes ver los datos
-          console.table(window.vector2);
           data.datos.forEach(item => {
             const row = `<tr>
               <td>${item.fecha}</td>
-              <td>${item.recepcion}</td>
-              <td>${item.proveedor}</td>
-              <td>${item.cultivo}</td>
+              <td>${item.registro}</td>
+              <td>${item.itemsap_code}</td>
+              <td>${item.itemsap_name}</td>
+              <td>${item.empaque_tipo}</td>
+              <td>${Math.round(item.empaque_cnt)}</td>
               <td>${Math.round(item.libras)}</td>
-              
-              <td>${Math.round(item.aprovechamiento)}</td>
-              
-              <td>${Math.round(item.mediano)}</td>
-              
-              <td>${Math.round(item.devolucion)}</td>
               <td>
                 <button 
                   class="button is-small is-link imprimir-btn"
                   data-fecha="${item.fecha}"
-                  data-recepcion="${item.recepcion}"
-                  data-proveedor="${item.proveedor}"
-                  data-cultivo="${item.cultivo}"
+                  data-registro="${item.registro}"
+                  data-itemsapcode="${item.itemsap_code}"
+                  data-itemsapname="${item.itemsap_name}"
+                  data-libras="${item.empaque_tipo}"
+                  data-libras="${item.empaque_cnt}"
                   data-libras="${item.libras}"
-                  data-aprovechamiento="${item.aprovechamiento}"
-                  data-mediano="${item.mediano}"
-                  data-devolucion="${item.devolucion}"
                 >
                   <i class="fas fa-print"></i>
                 </button>
