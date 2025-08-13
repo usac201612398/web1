@@ -3478,7 +3478,7 @@ def boletas_reportetraza(request):
         try:
             opcion1 = request.POST.get('opcion1')  # envio
 
-            envios = enviosrec.objects.filter(envio=opcion1)
+            envios = enviosrec.objects.filter(envio=opcion1).values()
             # === 7. Enviar respuesta JSON ===
             return JsonResponse({
                 'datos': list(envios)
