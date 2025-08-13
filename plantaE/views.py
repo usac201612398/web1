@@ -250,7 +250,10 @@ def load_dataUsuario7(request):
     opcion2 = request.GET.get('cultivo')       # cultivo
 
     # Paso 1: Obtener los itemcodigo que tengan ese cultivo
-    items_filtrados = productoTerm.objects.filter(cultivo=opcion2).values_list('itemsapcode', flat=True)
+    try:
+        items_filtrados = productoTerm.objects.filter(cultivo=opcion2).values_list('itemsapcode', flat=True)
+    except:
+        return JsonResponse({'envio': [], 'mensaje': 'Error en el filtro.'})
     if not items_filtrados.exists():
         return JsonResponse({'envio': [], 'mensaje': 'No se encontraron items para ese cultivo.'})
     # Paso 2: Filtrar enviosrec con esa fecha y esos itemcodigo
