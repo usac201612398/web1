@@ -257,6 +257,7 @@
 
 
     function loadProducts(categoryId) {
+      console.log(document.getElementById('date').value)
         $.ajax({
             url: '{% url "load_dataUsuario7" %}',  // URL para la vista AJAX
             data: {
