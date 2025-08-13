@@ -294,8 +294,8 @@ document.addEventListener('click', function(e) {
 
   const fecha = btn.dataset.fecha;
   const registro = btn.dataset.registro;
-  const itemsapcode = btn.dataset.itemsap_code;
-  const itemsapname = btn.dataset.itemsap_name;
+  const itemsapcode = btn.dataset.itemsapcode;
+  const itemsapname = btn.dataset.itemsapname;
   const empaque_tipo = btn.dataset.empaque_tipo;
   const empaque_cnt = btn.dataset.empaque_cnt;
   const libras = btn.dataset.libras;
@@ -319,8 +319,8 @@ document.addEventListener('click', function(e) {
 
   // Añadir los campos
   const data = {
-    fecha, registro,envio, itemsapcode, itemsapname,
-    libras, empaque_cnt, empaque_tipo,productor
+    fecha, registro,envio,empaque_tipo,libras, itemsapcode, itemsapname,
+     empaque_cnt, productor
   };
 
   for (const [key, val] of Object.entries(data)) {
