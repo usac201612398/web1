@@ -3372,7 +3372,7 @@ def boletas_constanciatraza(request):
             'planta': "SDC - Nueva Santa Rosa",
             'vector1': detallefruta,
             'fechahoy': fechahoy,
-            'datos':list(datosinv)
+            'datos':list(datosinv.values())
         }
         JsonResponse(context)
 
