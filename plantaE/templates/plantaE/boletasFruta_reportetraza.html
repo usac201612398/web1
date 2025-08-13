@@ -223,7 +223,7 @@
     // CARGA INICIAL
     $(document).ready(function () {
       $.ajax({
-        url: '{% url "load_dataUsuario5" %}',
+        url: '{% url "obtener_nombre_usuario" %}',
         data: { 'category_id': 'Consulta' },
         success: function (data) {
           $('#correo').val(data.username);

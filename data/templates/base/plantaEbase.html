@@ -99,25 +99,30 @@
                     <a class="navbar-item" href="{% url 'plantaE_home'%}">Inicio</a>
                     <a class="navbar-item" href="{% url 'exportar_excel'%}">Cosecha</a>
                     <div class="navbar-item has-dropdown is-hoverable">
-                            <a class="navbar-link">
-                                Recepcion
-                            </a>
-                            <div class="navbar-dropdown">
-                                <a class="navbar-item" href="{% url 'salidasFruta_list2'%}">Viajes - Fruta</a>
-                                <a class="navbar-item" href="{% url 'acumFruta_list2'%}">Detalles - Veajes</a>
-                                <a class="navbar-item" href="{% url 'pesos_list'%}">Pesos</a>
-                                <a class="navbar-item" href="{% url 'recepcionesFruta_list'%}">Recepciones</a>
-                            </div>
+                        <a class="navbar-link">
+                            Recepcion
+                        </a>
+                        <div class="navbar-dropdown">
+                            <a class="navbar-item" href="{% url 'salidasFruta_list2'%}">Viajes - Fruta</a>
+                            <a class="navbar-item" href="{% url 'acumFruta_list2'%}">Detalles - Veajes</a>
+                            <a class="navbar-item" href="{% url 'pesos_list'%}">Pesos</a>
+                            <a class="navbar-item" href="{% url 'recepcionesFruta_list'%}">Recepciones</a>
                         </div>
-                    
+                    </div>
                     <a class="navbar-item" href="{% url 'envioslocal_list'%}">Envios</a>
                     <a class="navbar-item" href="{% url 'ccalidad_list'%}">CCalidad</a>
                     <a class="navbar-item" href="{% url 'inventarioProd_list'%}">Empaques</a>
                     <a class="navbar-item" href="{% url 'boletasFruta_list'%}">Boletas</a>
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                            Reportes
+                        </a>
+                        <div class="navbar-dropdown">
+                            <a class="navbar-item" href="{% url 'boletasFruta_reporterecepcion'%}">Balance</a>
+                            <a class="navbar-item" href="{% url 'boletasFruta_reportetraza'%}">Traza</a>
+                        </div>
+                    </div>
                     
-                    <a class="navbar-item" href="{% url 'boletasFruta_reporterecepcion'%}">Balance</a>
-                    
-                    <a class="navbar-item" href="{% url 'boletasFruta_reportetraza'%}">Traza</a>
                     <a class="navbar-item" href="#">Sobre Nosotros</a>
 
                     <div class="navbar-item has-dropdown is-hoverable">
