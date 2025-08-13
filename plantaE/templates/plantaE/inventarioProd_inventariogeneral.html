@@ -114,26 +114,51 @@
 
 <script>
 
-   $(document).ready(function() {
-        $('#myTable').DataTable({
-            pageLength: 20,  // Cuántas filas se muestran por defecto
-            lengthMenu: [5, 10,20, 25, 50, 100], // Opciones de entradas
-            language: {
-            lengthMenu: "Mostrar _MENU_ entradas",
-            zeroRecords: "No se encontraron resultados",
-            info: "Mostrando _START_ a _END_ de _TOTAL_ entradas",
-            infoEmpty: "Mostrando 0 a 0 de 0 entradas",
-            infoFiltered: "(filtrado de _MAX_ entradas totales)",
-            search: "Buscar:",
-            paginate: {
-                first: "Primero",
-                last: "Último",
-                next: "Siguiente",
-                previous: "Anterior"
-            },
-            }
-        });
-    });
+   $(document).ready(function () {
+  $('#myTable').DataTable({
+    pageLength: 20,
+    lengthMenu: [5, 10, 20, 25, 50, 100],
+    language: {
+      lengthMenu: "Mostrar _MENU_ entradas",
+      zeroRecords: "No se encontraron resultados",
+      info: "Mostrando _START_ a _END_ de _TOTAL_ entradas",
+      infoEmpty: "Mostrando 0 a 0 de 0 entradas",
+      infoFiltered: "(filtrado de _MAX_ entradas totales)",
+      search: "Buscar:",
+      paginate: {
+        first: "Primero",
+        last: "Último",
+        next: "Siguiente",
+        previous: "Anterior"
+      },
+    },
+    footerCallback: function (row, data, start, end, display) {
+      var api = this.api();
+
+      // Helper para convertir texto a número
+      var intVal = function (i) {
+        return typeof i === 'string' ?
+          parseFloat(i.replace(/[\$,]/g, '')) || 0 :
+          typeof i === 'number' ?
+            i : 0;
+      };
+
+      // Sumar cajas (columna 4) y tarimas (columna 5)
+      var totalCajas = api.column(4, { page: 'current' }).data().reduce(function (a, b) {
+        return intVal(a) + intVal(b);
+      }, 0);
+
+      var totalTarimas = api.column(5, { page: 'current' }).data().reduce(function (a, b) {
+        return intVal(a) + intVal(b);
+      }, 0);
+
+      // Actualizar footer
+      $(api.column(4).footer()).html(totalCajas.toFixed(0));
+      $(api.column(5).footer()).html(totalTarimas.toFixed(2));
+    }
+  });
+});
+
 
 </script>
 
@@ -153,50 +178,7 @@
 
 
 </script>
-    
-<script>
-  function sumarTotales() {
-    let totalCajas = 0;
-    let totalTarimas = 0;
 
-    const filas = document.querySelectorAll('#myTable tbody tr');
-
-    filas.forEach(fila => {
-      const celdas = fila.querySelectorAll('td');
-
-      if (celdas.length === 6) {
-        const cajas = parseFloat(celdas[4].innerText) || 0;
-        const tarimas = parseFloat(celdas[5].innerText) || 0;
-        totalCajas += cajas;
-        totalTarimas += tarimas;
-      }
-    });
-
-    // Crear una fila de totales que también tenga 6 celdas
-    const filaTotales = document.createElement('tr');
-    filaTotales.innerHTML = `
-      <td colspan="4" style="text-align: right; font-weight: bold;">Total:</td>
-      <td style="font-weight: bold;">${totalCajas.toFixed(0)}</td>
-      <td style="font-weight: bold;">${totalTarimas.toFixed(2)}</td>
-    `;
-
-    // Agrega la fila fuera del control de DataTables
-    const table = $('#myTable').DataTable();
-
-    // Destruye la tabla temporalmente para insertar la fila sin conflicto
-    table.destroy();
-
-    document.querySelector('#myTable tbody').appendChild(filaTotales);
-
-    // Reactiva DataTables
-    $('#myTable').DataTable();
-  }
-
-  document.addEventListener('DOMContentLoaded', function () {
-    // Espera a que se configure DataTables antes de agregar la fila
-    setTimeout(sumarTotales, 500);
-  });
-</script>
 
 
 
