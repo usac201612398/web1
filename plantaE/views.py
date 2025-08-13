@@ -249,25 +249,9 @@ def load_dataUsuario7(request):
     opcion1 = request.GET.get('fechareporte')  # fecha
     opcion2 = request.GET.get('cultivo')       # cultivo
 
-    # Paso 1: Obtener los itemcodigo que tengan ese cultivo
-    try:
-        items_filtrados = productoTerm.objects.filter(cultivo=opcion2).values_list('itemsapcode', flat=True)
-    except:
-        return JsonResponse({'envio': [], 'mensaje': 'Error en el filtro.'})
-    if not items_filtrados.exists():
-        return JsonResponse({'envio': [], 'mensaje': 'No se encontraron items para ese cultivo.'})
-    # Paso 2: Filtrar enviosrec con esa fecha y esos itemcodigo
-    envio = enviosrec.objects.filter(
-                fecha=opcion1,
-                itemcodigo__in=items_filtrados
-            ).exclude(status="Anulado"
-            ).exclude(envio__isnull=True
-            ).exclude(envio__exact=''
-            ).values('envio').distinct()
-    if not envio.exists():
-        return JsonResponse({'envio': [], 'mensaje': 'No se encontraron envíos para esa fecha y cultivo.'})
+    
 
-    return JsonResponse({'envio': list(envio)})
+    return JsonResponse({'opcion1':opcion1,'opcion':opcion2})
 
 def pesos_list(request):
     today = timezone.now().date()
