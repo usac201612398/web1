@@ -125,9 +125,9 @@
                 </td>
                 <!-- Información adicional -->
                 <td style="width: 30%" class="encabezado-info">
-                    <p><strong>Código:</strong> RE-EM-36</p>
+                    <p><strong>Código:</strong> RE-EM-124</p>
                     <p><strong>Versión:</strong> 1</p>
-                    <p><strong>Fecha de actualización:</strong> 11/08/2025</p>
+                    <p><strong>Fecha de actualización:</strong> 13/08/2025</p>
                 </td>
             </tr>
         </table>
@@ -178,7 +178,6 @@
         </thead>
         <tbody>
             {% for item in vector1 %}
-                {% if item.recepcion == recepcion %}
                     <tr>
                     <td>{{ item.boleta }}</td>
                     <td>{{ item.acumfrutaid }}</td>
@@ -192,7 +191,6 @@
                     <td>{{ item.recepcion }}%</td>
 
                     </tr>
-                {% endif %}
             {% endfor %}
         </tbody>
         </table>

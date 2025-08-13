@@ -3373,6 +3373,7 @@ def boletas_constanciatraza(request):
             'planta': "SDC - Nueva Santa Rosa",
             'vector1': list(detallefruta.values()),
             'fechahoy': fechahoy,
+            'envio':envio,
             'mercado': datosinv.first().categoria
         }
         return render(request, 'plantaE/boletasFruta_constanciatraza.html', context)
