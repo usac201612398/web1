@@ -83,7 +83,7 @@
             <td>{{ registro.itemsapcode }}</td>
             <td>{{ registro.itemsapname }}</td>
             <td><div contenteditable="true" class="editable-cell">{{ registro.cajas_restantes }}</div></td>
-            <td><div contenteditable="true" class="editable-cell">{{ registro.total_tarimas }}</div></td>
+            <td><div contenteditable="true" class="editable-cell">{{ registro.total_tarimas|floatformat:2 }}</div></td>
           </tr>
           {% endfor %}
         </tbody>
@@ -150,6 +150,34 @@
       // Inicializa el total al cargar la página
 
   });
+
+  function sumarTabla(selectorTabla, selectorFilas) {
+      let totalTarimas = 0;
+      let totalCajas = 0;
+
+      const filas = document.querySelectorAll(selectorTabla + " " + selectorFilas);
+      filas.forEach(fila => {
+        const celdas = fila.querySelectorAll("td");
+        if (celdas.length >= 5) {
+          const cajas = parseFloat(celdas[4].textContent) || 0;
+          const  tarimas = parseFloat(celdas[5].textContent) || 0;
+          totalTarimas += tarimas;
+          totalCajas += cajas;
+        }
+      });
+
+      // Crear fila total
+      const totalRow = document.createElement("tr");
+      totalRow.innerHTML = `
+        <td colspan="4" style="text-align: right;"><strong>Total:</strong></td>
+        <td><strong>${totalCajas.toFixed(0)}</strong></td>
+        <td><strong>${totalTarimas.toFixed(2)}%</strong></td>
+      `;
+      document.querySelector(selectorTabla + " tbody").appendChild(totalRow);
+    }
+
+    // Suma para vector1
+    sumarTabla("table:nth-of-type(3)", "tbody tr");
 </script>
     
 
