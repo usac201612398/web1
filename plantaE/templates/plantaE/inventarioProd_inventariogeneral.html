@@ -154,30 +154,25 @@
 
 </script>
     
-
-
 <script>
   function sumarTotales() {
     let totalCajas = 0;
     let totalTarimas = 0;
 
-    // Recorre cada fila del cuerpo de la tabla
     const filas = document.querySelectorAll('#myTable tbody tr');
 
     filas.forEach(fila => {
       const celdas = fila.querySelectorAll('td');
 
-      // Asegúrate de que hay suficientes celdas
-      if (celdas.length >= 6) {
+      if (celdas.length === 6) {
         const cajas = parseFloat(celdas[4].innerText) || 0;
         const tarimas = parseFloat(celdas[5].innerText) || 0;
-
         totalCajas += cajas;
         totalTarimas += tarimas;
       }
     });
 
-    // Crear una fila de totales
+    // Crear una fila de totales que también tenga 6 celdas
     const filaTotales = document.createElement('tr');
     filaTotales.innerHTML = `
       <td colspan="4" style="text-align: right; font-weight: bold;">Total:</td>
@@ -185,15 +180,24 @@
       <td style="font-weight: bold;">${totalTarimas.toFixed(2)}</td>
     `;
 
-    // Agregar la fila al final del tbody
+    // Agrega la fila fuera del control de DataTables
+    const table = $('#myTable').DataTable();
+
+    // Destruye la tabla temporalmente para insertar la fila sin conflicto
+    table.destroy();
+
     document.querySelector('#myTable tbody').appendChild(filaTotales);
+
+    // Reactiva DataTables
+    $('#myTable').DataTable();
   }
 
-  // Ejecutar la función cuando el documento esté listo
   document.addEventListener('DOMContentLoaded', function () {
-    sumarTotales();
+    // Espera a que se configure DataTables antes de agregar la fila
+    setTimeout(sumarTotales, 500);
   });
 </script>
+
 
 
 </html>
