@@ -82,11 +82,18 @@
             <td>{{ registro.cultivo }}</td>
             <td>{{ registro.itemsapcode }}</td>
             <td>{{ registro.itemsapname }}</td>
-            <td><div contenteditable="true" class="editable-cell">{{ registro.cajas_restantes }}</div></td>
-            <td><div contenteditable="true" class="editable-cell">{{ registro.total_tarimas|floatformat:2 }}</div></td>
+            <td contenteditable="true" class="editable-cell">{{ registro.cajas_restantes }}</td>
+            <td contenteditable="true" class="editable-cell">{{ registro.total_tarimas|floatformat:2 }}</td>
           </tr>
           {% endfor %}
         </tbody>
+        <tfoot>
+          <tr>
+            <th colspan="4" style="text-align: right;">Total:</th>
+            <th id="total-cajas"></th>
+            <th id="total-tarimas"></th>
+          </tr>
+        </tfoot>
       </table>
     </div>
   </div>
