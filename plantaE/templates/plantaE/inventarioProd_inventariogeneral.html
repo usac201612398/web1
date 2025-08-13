@@ -151,36 +151,49 @@
 
   });
 
-  function sumarTabla(selectorTabla, selectorFilas) {
-      let totalTarimas = 0;
-      let totalCajas = 0;
 
-      const filas = document.querySelectorAll(selectorTabla + " " + selectorFilas);
-      filas.forEach(fila => {
-        const celdas = fila.querySelectorAll("td");
-        if (celdas.length >= 5) {
-          const cajas = parseFloat(celdas[4].textContent) || 0;
-          const  tarimas = parseFloat(celdas[5].textContent) || 0;
-          totalTarimas += tarimas;
-          totalCajas += cajas;
-        }
-      });
-
-      // Crear fila total
-      const totalRow = document.createElement("tr");
-      totalRow.innerHTML = `
-        <td colspan="4" style="text-align: right;"><strong>Total:</strong></td>
-        <td><strong>${totalCajas.toFixed(0)}</strong></td>
-        <td><strong>${totalTarimas.toFixed(2)}%</strong></td>
-      `;
-      document.querySelector(selectorTabla + " tbody").appendChild(totalRow);
-    }
-
-    // Suma para vector1
-    sumarTabla("table:nth-of-type(3)", "tbody tr");
 </script>
     
 
 
-</html>
+<script>
+  function sumarTotales() {
+    let totalCajas = 0;
+    let totalTarimas = 0;
 
+    // Recorre cada fila del cuerpo de la tabla
+    const filas = document.querySelectorAll('#myTable tbody tr');
+
+    filas.forEach(fila => {
+      const celdas = fila.querySelectorAll('td');
+
+      // Asegúrate de que hay suficientes celdas
+      if (celdas.length >= 6) {
+        const cajas = parseFloat(celdas[4].innerText) || 0;
+        const tarimas = parseFloat(celdas[5].innerText) || 0;
+
+        totalCajas += cajas;
+        totalTarimas += tarimas;
+      }
+    });
+
+    // Crear una fila de totales
+    const filaTotales = document.createElement('tr');
+    filaTotales.innerHTML = `
+      <td colspan="4" style="text-align: right; font-weight: bold;">Total:</td>
+      <td style="font-weight: bold;">${totalCajas.toFixed(0)}</td>
+      <td style="font-weight: bold;">${totalTarimas.toFixed(2)}</td>
+    `;
+
+    // Agregar la fila al final del tbody
+    document.querySelector('#myTable tbody').appendChild(filaTotales);
+  }
+
+  // Ejecutar la función cuando el documento esté listo
+  document.addEventListener('DOMContentLoaded', function () {
+    sumarTotales();
+  });
+</script>
+
+
+</html>
