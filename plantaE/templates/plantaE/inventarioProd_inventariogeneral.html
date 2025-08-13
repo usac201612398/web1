@@ -72,6 +72,7 @@
             <th>itemSAPCode</th>
             <th>itemSAPName</th>
             <th>Cajas</th>
+            <th>Tarimas</th>
           </tr>
         </thead>
         <tbody>
@@ -82,6 +83,7 @@
             <td>{{ registro.itemsapcode }}</td>
             <td>{{ registro.itemsapname }}</td>
             <td><div contenteditable="true" class="editable-cell">{{ registro.cajas_restantes }}</div></td>
+            <td><div contenteditable="true" class="editable-cell">{{ registro.total_tarimas }}</div></td>
           </tr>
           {% endfor %}
         </tbody>
