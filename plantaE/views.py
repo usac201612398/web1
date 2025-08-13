@@ -253,7 +253,7 @@ def load_dataUsuario7(request):
     
     items_filtrados = productoTerm.objects.filter(cultivo=opcion2).values_list('itemsapcode', flat=True)
 
-    fecha_obj = datetime.strptime(opcion1, '%Y-%m-%d').date()
+    fecha_obj = datetime.datetime.strptime(opcion1, '%Y-%m-%d').date()
     envios = enviosrec.objects.filter(fecha=fecha_obj).exclude(status="Anulado").values()
             
     return JsonResponse({'envio':'' ,'items':list(envios)})
