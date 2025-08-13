@@ -244,6 +244,13 @@ def load_dataUsuario6(request):
     
     return JsonResponse({'cultivo': list(cultivo)})
 
+def load_dataUsuario7(request):
+
+    opcion1 = request.GET.get('fechareporte')
+    envio = enviosrec.objects.filter(fecha=opcion1).values('envio').distinct('envio')
+    
+    return JsonResponse({'envio': list(envio)})
+
 def pesos_list(request):
     today = timezone.now().date()
     salidas = Actpeso.objects.filter(fecha=today).exclude(status='Anulado')
@@ -3465,6 +3472,149 @@ def boletas_reporterecepcion(request):
 
     # GET
     return render(request, 'plantaE/boletasFruta_reporterecepciones.html')
+
+def boletas_reportetraza(request):
+    if request.method == 'POST':
+        try:
+            opcion1 = request.POST.get('opcion1')  # envio
+            opcion2 = request.POST.get('opcion2')  # item
+
+            # === 1. Recepciones base ===
+            recepciones_raw = (
+                detallerec.objects
+                .filter(status="En proceso", cultivo=opcion1)
+                .values('recepcion', 'llave', 'finca', 'cultivo', 'fecha')
+                .annotate(total_libras=Sum('libras'))
+                .order_by('-recepcion')
+            )
+
+            recepciones_filtradas = []
+            for r in recepciones_raw:
+                proveedor = obtener_proveedor_desde_finca_llave(r['finca'], r['llave'])
+                if proveedor == opcion2:
+                    r['proveedor'] = proveedor
+                    recepciones_filtradas.append(r)
+
+            recepciones_filtradas = recepciones_filtradas[:10]
+
+            recepciones_dict = {
+                r['recepcion']: {
+                    'total_libras': r['total_libras'],
+                    'proveedor': r['proveedor'],
+                    'cultivo': r['cultivo'],
+                    'fecha': r['fecha'],
+                }
+                for r in recepciones_filtradas
+            }
+
+            # === 2. Detalles y boletas ===
+            detalles = detallerecaux.objects.filter(recepcion__in=recepciones_dict.keys()).exclude(status='Anulado')
+            boleta_ids = detalles.values_list('boleta', flat=True).distinct()
+            boletas = Boletas.objects.filter(boleta__in=boleta_ids)
+            boletas_dict = {b.boleta: b for b in boletas}
+
+            # === 3. Inicializar estructuras ===
+            resumen = defaultdict(lambda: {'aprovechamiento': 0, 'mediano': 0, 'devolución': 0, 'total': 0})
+            resumen_temporal = defaultdict(lambda: defaultdict(float))  # recepcion -> calidad -> libras
+
+            # === 4. Recorrer detalles ===
+            for detalle in detalles:
+                boleta = boletas_dict.get(detalle.boleta)
+                if not boleta:
+                    continue
+
+                calidad = (boleta.calidad or '').strip().lower()
+                libras = detalle.libras or 0
+                recepcion = detalle.recepcion
+
+                # Clasificación resumen
+                if 'aprovechamiento' in calidad:
+                    resumen[recepcion]['aprovechamiento'] += libras
+                elif 'mediano' in calidad:
+                    resumen[recepcion]['mediano'] += libras
+                elif 'devolución' in calidad:
+                    resumen[recepcion]['devolución'] += libras
+
+                resumen[recepcion]['total'] += libras
+
+                # === vector1: desglose por boleta ===
+                # Calculamos porcentaje por recepción
+                total_actual = resumen[recepcion]['total']
+                porcentaje = round((libras * 100 / total_actual), 2) if total_actual else 0
+
+
+                # === Acumular en resumen_temporal para vector2 ===
+                resumen_temporal[recepcion][calidad] += libras
+            vector1 = []
+            for detalle in detalles:
+                boleta = boletas_dict.get(detalle.boleta)
+                if not boleta:
+                    continue
+
+                calidad = (boleta.calidad or '').strip().lower()
+                libras = detalle.libras or 0
+                recepcion = detalle.recepcion
+
+                total_actual = resumen[recepcion]['total']
+                porcentaje = round((libras * 100 / total_actual), 2) if total_actual else 0
+
+                vector1.append({
+                    'recepcion': recepcion,
+                    'boleta': detalle.boleta,
+                    'calidad': calidad,
+                    'libras': libras,
+                    'porcentaje': porcentaje
+                })
+            # === 5. Armar vector2 (resumen por calidad) ===
+            vector2 = []
+
+            for recepcion, calidades in resumen_temporal.items():
+                total = sum(calidades.values())
+                for calidad, libras in calidades.items():
+                    porcentaje = round(libras * 100 / total, 2) if total else 0
+                    vector2.append({
+                        'recepcion': recepcion,
+                        'calidad': calidad,
+                        'libras': libras,
+                        'porcentaje': porcentaje
+                    })
+
+            # === 6. Resultado principal (tabla de resumen) ===
+            resultado = []
+            for recepcion_id, datos in resumen.items():
+                meta = recepciones_dict.get(recepcion_id)
+                if not meta:
+                    continue
+
+                total_recepcion = meta['total_libras'] or 0
+                total_distribuido = datos['total'] or 0
+                pendiente = max(total_recepcion - total_distribuido, 0)
+
+                resultado.append({
+                    'fecha': str(meta['fecha']),
+                    'recepcion': recepcion_id,
+                    'proveedor': meta['proveedor'],
+                    'cultivo': meta['cultivo'],
+                    'libras': round(total_recepcion, 2),
+                    'aprovechamiento': round(datos['aprovechamiento'] * 100 / total_distribuido, 2) if total_distribuido else 0,
+                    'mediano': round(datos['mediano'] * 100 / total_distribuido, 2) if total_distribuido else 0,
+                    'devolucion': round(datos['devolución'] * 100 / total_recepcion, 2) if total_recepcion else 0,
+                    'porcentaje_pendiente': round(pendiente * 100 / total_recepcion, 2) if total_recepcion else 0,
+                })
+
+            # === 7. Enviar respuesta JSON ===
+            return JsonResponse({
+                'recdic': list(recepciones_dict),
+                'datos': resultado,
+                'vector1': vector1,
+                'vector2': vector2,
+            }, safe=False)
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
+    # GET
+    return render(request, 'plantaE/boletasFruta_reportetraza.html')
 
 def poraprovechamientos(request):
     hoy = timezone.now().date()

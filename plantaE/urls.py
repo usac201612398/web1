@@ -18,6 +18,7 @@ urlpatterns = [
     path('ajax/load-dataUsuario4/', views.load_dataUsuario4, name='load_dataUsuario4'),
     path('ajax/load-dataUsuario5/', views.load_dataUsuario5, name='load_dataUsuario5'),
     path('ajax/load-dataUsuario6/', views.load_dataUsuario6, name='load_dataUsuario6'),
+    path('ajax/load-dataUsuario7/', views.load_dataUsuario7, name='load_dataUsuario7'),
 
     path('ajax/obtener-nombre-usuario/', views.obtener_nombre_usuario, name='obtener_nombre_usuario'),
     path('ajax/obtener-fecha-invFruta/', views.obtenerfecha_invFruta, name='obtenerfecha_invFruta'),
@@ -79,6 +80,7 @@ urlpatterns = [
     path("recepcionesFruta/reporteAcum/loadgrafico",views.graficas,name='load_grafico'),
     path("boletasFruta",views.boletas_list,name='boletasFruta_list'),
     path("boletasFruta/reporterecepcion",views.boletas_reporterecepcion,name='boletasFruta_reporterecepcion'),
+    path("boletasFruta/reportetraza",views.boletas_reportetraza,name='boletasFruta_reportetraza'),
     path("boletasFruta/constanciarecepcion",views.boletas_constanciarecepcion,name='boletasFruta_constanciarecepcion'),
     path('boletasFruta/<int:pk>/edit/', views.boletas_update, name='boletas_update'),
     path('boletasFruta/<int:pk>/', views.boletas_detail, name='boletas_detail'),
