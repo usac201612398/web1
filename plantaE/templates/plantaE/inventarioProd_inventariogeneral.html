@@ -118,13 +118,28 @@
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 
    $(document).ready(function () {
+  $(document).ready(function () {
   $('#myTable').DataTable({
     pageLength: 20,
     lengthMenu: [5, 10, 20, 25, 50, 100],
+    dom: 'Bfrtip',  // <- habilita los botones
+    buttons: [
+      {
+        extend: 'excelHtml5',
+        text: 'Exportar a Excel',
+        title: 'Inventario General',
+        exportOptions: {
+          columns: [0, 1, 2, 3, 4, 5]  // columnas a exportar
+        }
+      }
+    ],
     language: {
       lengthMenu: "Mostrar _MENU_ entradas",
       zeroRecords: "No se encontraron resultados",
@@ -141,29 +156,27 @@
     },
     footerCallback: function (row, data, start, end, display) {
       var api = this.api();
-
-      // Helper para convertir texto a número
       var intVal = function (i) {
-        return typeof i === 'string' ?
-          parseFloat(i.replace(/[\$,]/g, '')) || 0 :
-          typeof i === 'number' ?
-            i : 0;
+        return typeof i === 'string'
+          ? parseFloat(i.replace(/[\$,]/g, '')) || 0
+          : typeof i === 'number'
+            ? i
+            : 0;
       };
 
-      // Sumar cajas (columna 4) y tarimas (columna 5)
       var totalCajas = api.column(4, { page: 'current' }).data().reduce(function (a, b) {
         return intVal(a) + intVal(b);
       }, 0);
-
       var totalTarimas = api.column(5, { page: 'current' }).data().reduce(function (a, b) {
         return intVal(a) + intVal(b);
       }, 0);
 
-      // Actualizar footer
       $(api.column(4).footer()).html(totalCajas.toFixed(0));
       $(api.column(5).footer()).html(totalTarimas.toFixed(2));
     }
   });
+});
+
 });
 
 
