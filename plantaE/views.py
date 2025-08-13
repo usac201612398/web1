@@ -2999,7 +2999,7 @@ def inventariogeneral_list(request):
 
         # (Opcional) calcular tarimas restantes
         if cajasxtarima > 0:
-            registro['total_tarimas'] = registro['cajas_restantes'] // cajasxtarima
+            registro['total_tarimas'] = registro['cajas_restantes'] / cajasxtarima
         else:
             registro['tarimas_restantes'] = 0
     registros_json = json.dumps(registros_agrupados, default=str)  # Usar default=str para evitar errores con objetos no serializables
