@@ -3341,6 +3341,7 @@ def boletas_constanciarecepcion(request):
             'fecha': fecha,
             'recepcion': int(recepcion),
             'proveedor': proveedor,
+            'orden': vector1[0].orden,
             'cultivo': cultivo,
             'libras': libras,
             'aprovechamiento': aprovechamiento,
@@ -3536,6 +3537,7 @@ def boletas_reporterecepcion(request):
                 'datos': resultado,
                 'vector1': vector1,
                 'vector2': vector2,
+                
             }, safe=False)
 
         except Exception as e:
