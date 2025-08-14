@@ -3475,6 +3475,7 @@ def boletas_reporterecepcion(request):
 
                 calidad = (boleta.calidad or '').strip().lower()
                 calidad1 = (boleta.calidad1 or '').strip().lower()
+                ordenfinca = (boleta.ordenfinca or '').strip().lower()
                 cajas = detalle.cajas or 0
                 libras = detalle.libras or 0
                 recepcion = detalle.recepcion
@@ -3487,6 +3488,7 @@ def boletas_reporterecepcion(request):
                     'boleta': detalle.boleta,
                     'calidad': calidad,
                     'calidad1': calidad1,
+                    'orden': ordenfinca,
                     'cajas': cajas,
                     'libras': libras,
                     'porcentaje': porcentaje
