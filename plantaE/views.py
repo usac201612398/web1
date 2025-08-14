@@ -3384,7 +3384,7 @@ def boletas_constanciatrazarecepcion(request):
         context = {
             'fecha': fecha,
             'productor':proveedor,
-            'cultivo': detallefruta.first().cultivo,
+            'cultivo': cultivo,
             'libras': libras,
             'planta': "SDC - Nueva Santa Rosa",
             'vector1': list(detallefruta.values()),
