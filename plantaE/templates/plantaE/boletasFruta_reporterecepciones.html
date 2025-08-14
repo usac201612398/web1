@@ -61,6 +61,16 @@
         <form id="filtros">
           <div class="columns is-variable is-4">
             <div class="column is-3">
+              <label class="label" for="date">Fecha</label>
+              <input
+                id="date"
+                class="input"
+                type="date"
+                value="{{ fecha }}"
+                name="date"
+              />
+            </div>
+            <div class="column is-3">
               <label class="label" for="Prov">Proveedor</label>
               <div class="select is-fullwidth">
                 <select id="Prov" name="Proveedor">
@@ -76,10 +86,7 @@
                 </select>
               </div>
             </div>
-            <div class="column is-3">
-              <label class="label" for="correo">Usuario</label>
-              <input class="input" id="correo" type="text" value="{{ usuario }}" readonly>
-            </div>
+            
             <div class="column is-2 is-flex is-align-items-end">
               <button type="button" id="consultar" class="button is-success is-fullwidth">
                 <span class="icon"><i class="fas fa-search"></i></span>
@@ -153,11 +160,11 @@
     document.getElementById('consultar').addEventListener('click', function () {
       const cultivo = document.getElementById('Cul').value;
       const proveedor = document.getElementById('Prov').value;
+      const fechaconsulta = document.getElementById('date').value;
       const tbody = document.querySelector('#myTable tbody');
 
       tbody.innerHTML = '';
 
-      console.log("Hola")
       fetch('{% url "boletasFruta_reporterecepcion" %}', {
         method: 'POST',
         headers: {
@@ -166,7 +173,8 @@
         },
         body: new URLSearchParams({
           'opcion1': cultivo,
-          'opcion2': proveedor
+          'opcion2': proveedor,
+          'opcion3': fechaconsulta
         })
       })
         .then(response => response.json())
@@ -224,7 +232,6 @@
         url: '{% url "load_dataUsuario5" %}',
         data: { 'category_id': 'Consulta' },
         success: function (data) {
-          $('#correo').val(data.username);
           $('#Prov').html('');
           $('#Prov').html('<option value="">Seleccionar proveedor</option>');
           data.proveedor.forEach(item => {

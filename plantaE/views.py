@@ -3399,11 +3399,12 @@ def boletas_reporterecepcion(request):
         try:
             opcion1 = request.POST.get('opcion1')  # cultivo
             opcion2 = request.POST.get('opcion2')  # proveedor
+            opcion3 = request.POST.get('opcion3')  # fecha
 
             # === 1. Recepciones base ===
             recepciones_raw = (
                 detallerec.objects
-                .filter(status="En proceso", cultivo=opcion1)
+                .filter(status="En proceso", cultivo=opcion1,fechasalidafruta=opcion3)
                 .values('recepcion', 'llave', 'finca', 'cultivo', 'fecha')
                 .annotate(total_libras=Sum('libras'))
                 .order_by('-recepcion')
