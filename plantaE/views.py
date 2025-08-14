@@ -3539,7 +3539,7 @@ def boletas_reporterecepcion(request):
                 'cenma': 2,
                 'devolución': 3
             }
-            vector1.sort(key=lambda x: orden_personalizado.get(x['orden'], 99))
+            vector1.sort(key=lambda x: orden_personalizado.get(x['categoria'], 99))
             # === 7. Enviar respuesta JSON ===
             return JsonResponse({
                 'recdic': list(recepciones_dict),
