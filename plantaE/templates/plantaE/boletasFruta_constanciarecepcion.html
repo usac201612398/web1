@@ -344,7 +344,7 @@
   const totalRow = document.createElement("tr");
   totalRow.innerHTML = `
     <td style="text-align: right;"><strong>Total:</strong></td>
-    <td><strong>${totalPorcentaje.toFixed(2)}%</strong></td>
+    <td><strong>${totalPorcentaje.toFixed(0)}%</strong></td>
   `;
   document.querySelector("table:nth-of-type(5) tbody").appendChild(totalRow);
 }
