@@ -3358,7 +3358,7 @@ def boletas_constanciarecepcion(request):
     return JsonResponse({'error': 'Método no permitido'}, status=405)
 
 
-def boletas_constanciatraza(request):
+def boletas_constanciatrazarecepcion(request):
 
     if request.method == 'POST':
         fecha = request.POST.get('fecha')
