@@ -3534,10 +3534,10 @@ def boletas_reporterecepcion(request):
                 })
 
             orden_personalizado = {
-                'exportacion': 0,
+                'exportación': 0,
                 'carreta': 1,
                 'cenma': 2,
-                'devolucion': 3
+                'devolución': 3
             }
             vector1.sort(key=lambda x: orden_personalizado.get(x['orden'], 99))
             # === 7. Enviar respuesta JSON ===

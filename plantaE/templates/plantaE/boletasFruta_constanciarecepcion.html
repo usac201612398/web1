@@ -158,7 +158,6 @@
         <table>
         <thead>
             <tr>
-            <th>Recepción</th>
             <th>Boleta</th>
             <th>Categoria</th>
             <th>Calidad1</th>
@@ -171,7 +170,6 @@
             {% for item in vector1 %}
                 {% if item.recepcion == recepcion %}
                     <tr>
-                    <td>{{ item.recepcion }}</td>
                     <td>{{ item.boleta }}</td>
                     <td>{{ item.categoria }}</td>
                     <td>{{ item.calidad1 }}</td>
