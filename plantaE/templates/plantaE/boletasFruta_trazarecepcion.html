@@ -310,7 +310,7 @@ document.addEventListener('click', function(e) {
   console.log('Vector2 antes de enviar:', window.vector2);
   const form = document.createElement('form');
   form.method = 'POST';
-  form.action = '{% url "boletasFruta_constanciarecepcion" %}';
+  form.action = '{% url "boletasFruta_constanciatrazarecepcion" %}';
   form.target = '_blank';
 
   // CSRF token

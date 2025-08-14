@@ -3357,6 +3357,45 @@ def boletas_constanciarecepcion(request):
 
     return JsonResponse({'error': 'Método no permitido'}, status=405)
 
+
+def boletas_constanciatraza(request):
+
+    if request.method == 'POST':
+        fecha = request.POST.get('fecha')
+        envio=request.POST.get('envio')
+        proveedor = request.POST.get('productor')
+        registro = request.POST.get('registro')
+        itemsapcode = request.POST.get('itemsapcode')
+        itemsapname = request.POST.get('itemsapname')
+        empaque_tipo = request.POST.get('empaque_tipo')
+        empaque_cnt = request.POST.get('empaque_cnt')
+        libras = request.POST.get('libras')
+        datosinv=inventarioProdTerm.objects.filter(itemsapcode=itemsapcode,enviorec=int(envio))
+        boletas = datosinv.values_list('boleta',flat=True)  
+        detallefruta = AcumFrutaaux.objects.filter(boleta__in=boletas)
+
+        fecha_obj = datetime.datetime.strptime(fecha, '%Y-%m-%d').date()
+        fechahoy = timezone.now().date()
+        context = {
+            'fecha': fecha,
+            'itemsapcode': itemsapcode,
+            'productor':proveedor,
+            'cultivo': datosinv.first().cultivo,
+            'itemsapname': itemsapname,
+            'libras': libras,
+            'registro': registro,
+            'empaque_tipo': empaque_tipo,
+            'empaque_cnt': empaque_cnt,
+            'planta': "SDC - Nueva Santa Rosa",
+            'vector1': list(detallefruta.values()),
+            'fechahoy': fechahoy,
+            'envio':envio,
+            'mercado': datosinv.first().categoria
+        }
+        return render(request, 'plantaE/boletasFruta_constanciatrazarecepcion.html', context)
+
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
+
 def boletas_constanciatraza(request):
 
     if request.method == 'POST':
