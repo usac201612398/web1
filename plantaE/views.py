@@ -3362,35 +3362,33 @@ def boletas_constanciatrazarecepcion(request):
 
     if request.method == 'POST':
         fecha = request.POST.get('fecha')
-        envio=request.POST.get('envio')
-        proveedor = request.POST.get('productor')
-        registro = request.POST.get('registro')
-        itemsapcode = request.POST.get('itemsapcode')
-        itemsapname = request.POST.get('itemsapname')
-        empaque_tipo = request.POST.get('empaque_tipo')
-        empaque_cnt = request.POST.get('empaque_cnt')
+        recepcion = request.POST.get('recepcion')
+        proveedor = request.POST.get('proveedor')
+        cultivo = request.POST.get('cultivo')
         libras = request.POST.get('libras')
-        datosinv=inventarioProdTerm.objects.filter(itemsapcode=itemsapcode,enviorec=int(envio))
-        boletas = datosinv.values_list('boleta',flat=True)  
-        detallefruta = AcumFrutaaux.objects.filter(boleta__in=boletas)
+        aprovechamiento = request.POST.get('aprovechamiento')
+        mediano = request.POST.get('mediano')
+        devolucion = request.POST.get('devolucion')
+
+        try:
+            vector1 = json.loads(request.POST.get('vector1', '[]'))
+            vector2 = json.loads(request.POST.get('vector2', '[]'))
+        except json.JSONDecodeError:
+            vector1 = []
+            vector2 = []
+        
+        detallefruta = AcumFrutaaux.objects.filter(recepcion__in=recepcion)
 
         fecha_obj = datetime.datetime.strptime(fecha, '%Y-%m-%d').date()
         fechahoy = timezone.now().date()
         context = {
             'fecha': fecha,
-            'itemsapcode': itemsapcode,
             'productor':proveedor,
-            'cultivo': datosinv.first().cultivo,
-            'itemsapname': itemsapname,
+            'cultivo': detallefruta.first().cultivo,
             'libras': libras,
-            'registro': registro,
-            'empaque_tipo': empaque_tipo,
-            'empaque_cnt': empaque_cnt,
             'planta': "SDC - Nueva Santa Rosa",
             'vector1': list(detallefruta.values()),
-            'fechahoy': fechahoy,
-            'envio':envio,
-            'mercado': datosinv.first().categoria
+            'fechahoy': fechahoy
         }
         return render(request, 'plantaE/boletasFruta_constanciatrazarecepcion.html', context)
 
