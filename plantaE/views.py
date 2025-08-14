@@ -3366,21 +3366,11 @@ def boletas_constanciatrazarecepcion(request):
         proveedor = request.POST.get('proveedor')
         cultivo = request.POST.get('cultivo')
         libras = request.POST.get('libras')
-        aprovechamiento = request.POST.get('aprovechamiento')
-        mediano = request.POST.get('mediano')
-        devolucion = request.POST.get('devolucion')
 
-        try:
-            vector1 = json.loads(request.POST.get('vector1', '[]'))
-            vector2 = json.loads(request.POST.get('vector2', '[]'))
-        except json.JSONDecodeError:
-            vector1 = []
-            vector2 = []
-        
-        detallefruta = AcumFrutaaux.objects.filter(recepcion__in=recepcion)
+        detallefruta = AcumFrutaaux.objects.filter(recepcion=recepcion)
         cajas = detallerec.objects.get(recepcion=recepcion).cajas
-        fecha_obj = datetime.datetime.strptime(fecha, '%Y-%m-%d').date()
         fechahoy = timezone.now().date()
+
         context = {
             'fecha': fecha,
             'recepcion': recepcion,
