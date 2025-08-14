@@ -3713,7 +3713,7 @@ def boletas_trazarecepcion(request):
             return JsonResponse({'error': str(e)}, status=500)
 
     # GET
-    return render(request, 'plantaE/boletasFruta_reporterecepciones.html')
+    return render(request, 'plantaE/boletasFruta_trazarecepcion.html')
 
 def boletas_reportetraza(request):
     if request.method == 'POST':
