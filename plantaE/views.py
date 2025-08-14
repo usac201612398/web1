@@ -3341,7 +3341,7 @@ def boletas_constanciarecepcion(request):
             'fecha': fecha,
             'recepcion': int(recepcion),
             'proveedor': proveedor,
-            'orden': vector1[0].orden,
+            'orden': vector1[0],
             'cultivo': cultivo,
             'libras': libras,
             'aprovechamiento': aprovechamiento,
