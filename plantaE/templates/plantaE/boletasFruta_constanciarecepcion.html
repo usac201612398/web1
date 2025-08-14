@@ -136,18 +136,15 @@
         <table class="header-table">
             <tr>
                 <td><strong>Planta:</strong> {{ planta }}</td>
-                <td><strong>Fecha - Constancia:</strong> {{ fechahoy }}</td>
-            </tr>
-            <tr>
                 <td><strong>Productor:</strong> {{ proveedor }}</td>
-                <td><strong>Cultivo:</strong> {{ cultivo }}</td>
-            </tr>
-            <tr>
                 <td><strong>Recepcion:</strong> {{ recepcion }}</td>
-                <td><strong>Fecha de recepción:</strong> {{ fecha }}</td>
+                <td><strong>Orden:</strong> {{ orden.orden }}</td>
+                
             </tr>
             <tr>
-                <td><strong>Orden:</strong> {{ orden.orden }}</td>
+                <td><strong>Fecha - Constancia:</strong> {{ fechahoy }}</td>
+                <td><strong>Cultivo:</strong> {{ cultivo }}</td>
+                <td><strong>Fecha de recepción:</strong> {{ fecha }}</td>
                 <td><strong>Libras:</strong> {{ libras }}</td>
             </tr>
             
@@ -225,7 +222,7 @@
             {% endfor %}
         </tbody>
         </table>
-        
+
         <br>
         <!-- Pie de página -->
         <table class="footer-table">
@@ -286,8 +283,10 @@
         if (celdas.length >= 5) {
           const libras = parseFloat(celdas[3].textContent) || 0;
           const porcentaje = parseFloat(celdas[4].textContent) || 0;
+          const cajas = parseFloat(celdas[5].textContent) || 0;
           totalLibras += libras;
           totalPorcentaje += porcentaje;
+          totalCajas += cajas;
         }
       });
 
@@ -297,6 +296,7 @@
         <td colspan="3" style="text-align: right;"><strong>Total:</strong></td>
         <td><strong>${totalLibras.toFixed(0)}</strong></td>
         <td><strong>${Math.round(totalPorcentaje)}</strong></td>
+        <td><strong>${Math.round(totalCajas)}%</strong></td>
       `;
       document.querySelector(selectorTabla + " tbody").appendChild(totalRow);
     }
