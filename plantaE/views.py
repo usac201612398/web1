@@ -3378,7 +3378,7 @@ def boletas_constanciatrazarecepcion(request):
             vector2 = []
         
         detallefruta = AcumFrutaaux.objects.filter(recepcion__in=recepcion)
-        cajas = detallerec.objects.get(recepcion=recepcion)
+        cajas = detallerec.objects.get(recepcion=recepcion).cajas
         fecha_obj = datetime.datetime.strptime(fecha, '%Y-%m-%d').date()
         fechahoy = timezone.now().date()
         context = {
