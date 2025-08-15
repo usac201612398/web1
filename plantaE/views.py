@@ -3766,7 +3766,7 @@ def boletas_reportetrazaexpo(request):
 
     # Paso 1: Obtener los itemcodigo que tengan ese cultivo
 
-            fecha_obj = datetime.datetime.strptime(opcion1, '%Y-%m-%d').date()
+            fecha_obj = datetime.datetime.strptime(opcion2, '%Y-%m-%d').date()
 
             conten = salidacontenedores.objects.filter(contenedor=opcion1,fechasalcontenedor=fecha_obj).values()
             # === 7. Enviar respuesta JSON ===
