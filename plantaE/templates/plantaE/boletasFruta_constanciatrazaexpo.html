@@ -110,6 +110,11 @@
                 transform-origin: top left; /* Fija el origen de la escala */
             }
         }
+        tfoot td {
+    font-weight: bold;
+    background-color: #f2f2f2;
+}
+
     </style>
 </head>
 <body>
@@ -291,38 +296,50 @@
     console.log('Vector1:', vector1);
     console.log('Vector3:', vector3);
     </script>
- <script>
+<script>
   document.addEventListener("DOMContentLoaded", function () {
-    function sumarColumna(selectorTabla, columnaIndex, label) {
-      let total = 0;
+    function sumarMultiplesColumnas(selectorTabla, columnas) {
+      let totales = new Array(columnas.length).fill(0);
       const filas = document.querySelectorAll(`${selectorTabla} tbody tr`);
 
       filas.forEach((fila) => {
         const celdas = fila.querySelectorAll("td");
-        if (celdas.length > columnaIndex) {
-          const valor = parseFloat(celdas[columnaIndex].textContent) || 0;
-          total += valor;
-        }
+        columnas.forEach((colIndex, i) => {
+          if (celdas.length > colIndex) {
+            const valor = parseFloat(celdas[colIndex].textContent) || 0;
+            totales[i] += valor;
+          }
+        });
       });
 
       // Crear fila total
       const totalRow = document.createElement("tr");
-      totalRow.innerHTML = `
-        <td colspan="${columnaIndex}" style="text-align: right;"><strong>Total ${label}:</strong></td>
-        <td><strong>${total.toFixed(4)}</strong></td>
-      `;
+      let rowHTML = "";
+
+      for (let i = 0; i < Math.max(...columnas) + 1; i++) {
+        if (columnas.includes(i)) {
+          const indexInList = columnas.indexOf(i);
+          rowHTML += `<td><strong>${totales[indexInList].toFixed(4)}</strong></td>`;
+        } else {
+          rowHTML += `<td></td>`;
+        }
+      }
+
+      // Etiqueta de Totales en la columna 0
+      rowHTML = rowHTML.replace("<td></td>", `<td><strong>Totales:</strong></td>`);
+
+      totalRow.innerHTML = rowHTML;
       document.querySelector(`${selectorTabla} tbody`).appendChild(totalRow);
     }
 
-    // Tabla de vector1 (3ra tabla): sumar libras (índice 8)
-    sumarColumna("table:nth-of-type(3)", 8, "Libras");
+    // Tabla de vector2 (4ta tabla): Cajas (índice 5), Libras (índice 6)
+    sumarMultiplesColumnas("table:nth-of-type(4)", [5, 6]);
 
-    // Tabla de vector2 (4ta tabla): sumar libras (índice 6)
-    sumarColumna("table:nth-of-type(4)", 6, "Libras");
-    
-    sumarColumna("table:nth-of-type(5)", 6, "Libras");
+    // Tabla de vector3 (5ta tabla): Cajas (índice 5), Libras (índice 6)
+    sumarMultiplesColumnas("table:nth-of-type(5)", [5, 6]);
   });
 </script>
+
 
 
 </body>
