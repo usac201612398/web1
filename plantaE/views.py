@@ -3757,7 +3757,7 @@ def boletas_trazarecepcion(request):
     # GET
     return render(request, 'plantaE/boletasFruta_trazarecepcion.html')
 
-from django.db.models.functions import First
+
 def boletas_reportetrazaexpo(request):
     if request.method == 'POST':
         try:
@@ -3772,11 +3772,7 @@ def boletas_reportetrazaexpo(request):
                         fechasalcontenedor=fecha_obj
                     ).values('palet').annotate(
                         total_cajas=Sum('cajas'),
-                        total_libras=Sum('lbsintara'),
-                        fecha=First('fechasalcontenedor'),
-                        proveedor=First('proveedor'),
-                        itemsapcode=First('itemsapcode'),
-                        itemsapname=First('itemsapname')
+                        total_libras=Sum('lbsintara')
                     ).order_by('palet')
             # === 7. Enviar respuesta JSON ===
             return JsonResponse({
