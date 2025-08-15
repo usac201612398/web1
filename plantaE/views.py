@@ -3428,6 +3428,7 @@ def boletas_constanciatrazarexpo(request):
         detallefruta = AcumFrutaaux.objects.filter(boleta__in=boletasid)
         fecha_obj = datetime.datetime.strptime(fecha, '%Y-%m-%d').date()
         fechahoy = timezone.now().date()
+        totalboletainv= inventarioProdTerm.objects.filter(boleta__in=boletasid)
         context = {
             'fecha': fecha,
             'itemsapcode': itemsapcode,
@@ -3440,6 +3441,7 @@ def boletas_constanciatrazarexpo(request):
             'empaque_cnt': empaque_cnt,
             'planta': "SDC - Nueva Santa Rosa",
             'vector1': list(detallefruta.values()),
+            'vector2': list(totalboletainv.values()),
             'fechahoy': fechahoy,
             'envio':conten.first().contenedor,
             'mercado': datosinv.first().categoria,
