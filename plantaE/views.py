@@ -3465,6 +3465,7 @@ def boletas_constanciatrazarexpo(request):
             'planta': "SDC - Nueva Santa Rosa",
             'vector1': list(detallefruta.values()),
             'vector2': list(totalboletainv.values()),
+            'vector3': vector3,
             'fechahoy': fechahoy,
             'envio':conten.first().contenedor,
             'mercado': datosinv.first().categoria,
