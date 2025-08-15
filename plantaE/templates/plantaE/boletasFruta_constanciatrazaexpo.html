@@ -197,6 +197,7 @@
         <table>
         <thead>
             <tr>
+            <th>Boleta</th>
             <th>Registro (Inventario)</th>
             <th>FechaProducto</th>
             <th>ItemSAPName</th>
@@ -210,6 +211,7 @@
         <tbody>
             {% for item in vector2 %}
                     <tr>
+                    <td>{{ item.boleta }}</td>
                     <td>{{ item.registro }}</td>
                     <td>{{ item.fecha }}</td>
                     <td>{{ item.itemsapname }}</td>
