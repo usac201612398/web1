@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+{% load static %}
+<head>
+  <meta charset="UTF-8">
+  <title>Panel - totalFruta</title>
+
+  <!-- Bulma CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    body {
+      background-color: #f9f9f9;
+    }
+    .panel-header {
+      margin-bottom: 1.5rem;
+    }
+    .filters {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .data-section {
+      margin-top: 2rem;
+    }
+    .box {
+      border-radius: 6px;
+    }
+    .back-link {
+      margin-top: 2rem;
+      display: inline-block;
+    }
+    .is-small-text {
+      font-size: 0.9rem;
+      color: #777;
+    }
+    .table-custom-header th {
+    background: linear-gradient(to right, #6c757d, #495057);
+    color: white !important;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <section class="section">
+    <div class="container">
+      <!-- HEADER -->
+        <section class="hero is-success is-small mb-5">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+            <h1 class="title is-3 has-text-white">Panel de Control</h1>
+            <p class="subtitle is-6 has-text-white-ter">Consulta de salidas de fruta</p>
+            </div>
+        </div>
+        </section>
+      <div class="filters box">
+        <form id="filtros">
+          <div class="columns is-variable is-4">
+            <div class="column is-3">
+              <label class="label" for="date">Fecha</label>
+              <input
+                id="date"
+                class="input"
+                type="date"
+                value="{{ fecha }}"
+                name="date"
+              />
+            </div>
+            <div class="column is-3">
+              <label class="label" for="Cultivo">Cultivo</label>
+              <div class="select is-fullwidth">
+                <select id="Cultivo" name="Cultivo">
+                  
+                  <option value="">Seleccionar cultivo</option>
+                  <option value="GRAPE">GRAPE</option>
+                  <option value="GRAPE ORGANICO">GRAPE ORGANICO</option>
+                  <option value="CHERRY">CHERRY</option>
+                  <option value="MEDLEY">MEDLEY</option>
+                  <option value="ROMA">ROMA</option>
+                  <option value="BLOCKY">BLOCKY</option>
+                  <option value="BLOCKY ORGANICO">BLOCKY ORGANICO</option>
+                  <option value="AGUACATE">AGUACATE</option>
+                  <option value="PEPINO">PEPINO</option>
+                </select>
+              </div>
+            </div>
+            <div class="column is-3">
+              <label class="label" for="Envio">Envio</label>
+              <div class="select is-fullwidth">
+                <select id="Envio" name="Envio">
+                  <option value="">Seleccionar envio</option>
+                </select>
+              </div>
+            </div>
+            <div class="column is-2 is-flex is-align-items-end">
+              <button type="button" id="consultar" class="button is-success is-fullwidth">
+                <span class="icon"><i class="fas fa-search"></i></span>
+                <span>Consultar</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- TABLA 1 -->
+      <div class="data-section">
+        <div class="box">
+          <h2 class="title is-5">Detalle por variedad</h2>
+          <div class="table-container">
+            <table class="table is-striped is-fullwidth is-hoverable" id="myTable">
+              <thead class="table-custom-header">
+                <tr>
+                  <th>Fecha</th>
+                  <th>Registro</th>
+                  <th>Productor</th>
+                  <th>ItemSAPCode</th>
+                  <th>ItemSAPNombre</th>
+                  <th>empaque_tipo</th>
+                  <th>empaque_cnt</th>
+                  <th>Libras</th>
+                  <th>Constancia</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for registro in registros %}
+                <tr>
+                  <td>{{ registro.fecha }}</td>
+                  <td>{{ registro.registro }}</td>
+                  <td>{{ registro.productor }}</td>
+                  <td>{{ registro.itemsap_code }}</td>
+                  <td>{{ registro.itemsap_name  }}</td>
+                  <td>{{ registro.empaque_tipo  }}</td>
+                  <td>{{ registro.empaque_cnt  }}</td>
+                  <td class="number-cell" data-value="{{ registro.empaque_cnt  }}">{{ registro.empaque_cnt  }}</td>
+                  <td class="number-cell" data-value="{{ registro.libras }}">{{ registro.libras }}</td>
+                  <td></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+
+    <div class="has-text-centered mt-6">
+        <a href="{% url 'plantaE_home' %}" class="button is-success is-medium is-rounded">
+            <span class="icon">
+            <i class="fas fa-home"></i>
+            </span>
+            <span>Home</span>
+        </a>
+    </div>
+    </div>
+  </section>
+
+  <!-- SCRIPTS -->
+  <script src="{% static '/lib/cockies.js' %}"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <script>
+    // Variables globales
+    window.vector1 = [];
+    window.vector2 = [];
+    // CONSULTAR
+    document.getElementById('consultar').addEventListener('click', function () {
+      const envio = document.getElementById('Envio').value;
+      const tbody = document.querySelector('#myTable tbody');
+
+      tbody.innerHTML = '';
+
+      fetch('{% url "boletasFruta_reportetraza" %}', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: new URLSearchParams({
+          'opcion1': envio
+        })
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data)
+          if (!data.datos) {
+            console.warn("No se encontraron datos.");
+            return;
+          }
+          // Asignar globalmente
+
+          data.datos.forEach(item => {
+            const row = `<tr>
+              <td>${item.fecha}</td>
+              <td>${item.registro}</td>
+              <td>${item.productor}</td>
+              <td>${item.itemsap_code}</td>
+              <td>${item.itemsap_name}</td>
+              <td>${item.empaque_tipo}</td>
+              <td>${Math.round(item.empaque_cnt)}</td>
+              <td>${Math.round(item.libras)}</td>
+              <td>
+                <button 
+                  class="button is-small is-link imprimir-btn"
+                  data-fecha="${item.fecha}"
+                  data-registro="${item.registro}"
+                  data-productor="${item.productor}"
+                  data-itemsapcode="${item.itemsap_code}"
+                  data-itemsapname="${item.itemsap_name}"
+                  data-empaque_tipo="${item.empaque_tipo}"
+                  data-empaque_cnt="${item.empaque_cnt}"
+                  data-libras="${item.libras}"
+                >
+                  <i class="fas fa-print"></i>
+                </button>
+              </td>
+            </tr>`;
+            tbody.insertAdjacentHTML('beforeend', row);
+          });
+
+          formatCells('myTable');
+        });
+    });
+
+    // CARGA INICIAL
+    $(document).ready(function () {
+      $.ajax({
+        url: '{% url "obtener_nombre_usuario" %}',
+        data: { 'category_id': 'Consulta' },
+        success: function (data) {
+          $('#date').val(data.fecha);
+        },
+        error: function (xhr, status, error) {
+          console.error('Error al cargar usuario:', error);
+        }
+      });
+    });
+
+    // FORMATEO DE NÚMEROS
+    function formatCells(tableId) {
+      const cells = document.querySelectorAll(`#${tableId} td.number-cell`);
+      cells.forEach(cell => {
+        const value = Number(cell.getAttribute('data-value'));
+        if (!isNaN(value)) {
+          cell.textContent = value.toLocaleString('es-ES');
+        }
+      });
+    }
+    
+    $('#Cultivo').change(function() {
+        var categoryId = $(this).val();  // Obtiene el ID de la categoría seleccionada
+        loadProducts(categoryId);  // Llama a la función para cargar productos
+    });
+
+
+    function loadProducts(categoryId) {
+      console.log(document.getElementById('date').value)
+        $.ajax({
+            url: '{% url "load_dataUsuario7" %}',  // URL para la vista AJAX
+            data: {
+                'fechareporte':document.getElementById('date').value,
+                'cultivo':categoryId
+            },
+            success: function(data) {
+                // Limpia las opciones actuales del campo 'name'
+                console.log(data);
+                if (data.envio.length === 0) {
+                    alert(data.mensaje || 'No se encontraron envíos.');
+                } else {
+                    $('#Envio').html('');
+                    $('#Envio').html('<option value="">Seleccionar envio</option>');
+                    // Recorre los productos recibidos y añade opciones al campo 'name'
+                    data.envio.forEach(item => {
+                      $('#Envio').append(`<option value="${item}">${item}</option>`);
+                    });
+                }
+                
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);  // Maneja errores de la solicitud
+            }
+        });
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      formatCells('myTable');
+      
+    });
+document.addEventListener('click', function(e) {
+  const btn = e.target.closest('.imprimir-btn');
+  if (!btn) return;
+
+  const fecha = btn.dataset.fecha;
+  const registro = btn.dataset.registro;
+  const itemsapcode = btn.dataset.itemsapcode;
+  const itemsapname = btn.dataset.itemsapname;
+  const empaque_tipo = btn.dataset.empaque_tipo;
+  const empaque_cnt = btn.dataset.empaque_cnt;
+  const libras = btn.dataset.libras;
+  const productor = btn.dataset.productor;
+  const envio = document.getElementById('Envio').value;
+  console.log(envio);
+  // Aquí usas variables globales o los datos que ya tengas cargados (vectores)
+  
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = '{% url "boletasFruta_constanciatraza" %}';
+  form.target = '_blank';
+
+  // CSRF token
+  const csrfToken = getCookie('csrftoken'); // función para leer cookie CSRF
+  const csrfInput = document.createElement('input');
+  csrfInput.type = 'hidden';
+  csrfInput.name = 'csrfmiddlewaretoken';
+  csrfInput.value = csrfToken;
+  form.appendChild(csrfInput);
+
+  // Añadir los campos
+  const data = {
+    fecha, registro,envio,empaque_tipo,libras, itemsapcode, itemsapname,
+     empaque_cnt, productor
+  };
+
+  for (const [key, val] of Object.entries(data)) {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = key;
+    input.value = val;
+    form.appendChild(input);
+  }
+
+  document.body.appendChild(form);
+  form.submit();
+  document.body.removeChild(form);
+});
+
+  </script>
+  
+</body>
+</html>

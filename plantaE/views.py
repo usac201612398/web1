@@ -3744,6 +3744,24 @@ def boletas_trazarecepcion(request):
     # GET
     return render(request, 'plantaE/boletasFruta_trazarecepcion.html')
 
+
+def boletas_reportetrazaexpo(request):
+    if request.method == 'POST':
+        try:
+            opcion1 = request.POST.get('opcion1')  # envio}
+
+            envios = enviosrec.objects.filter(envio=opcion1).values()
+            # === 7. Enviar respuesta JSON ===
+            return JsonResponse({
+                'datos': list(envios)
+            }, safe=False)
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
+    # GET
+    return render(request, 'plantaE/boletasFruta_reportetrazaexpo.html')
+
 def boletas_reportetraza(request):
     if request.method == 'POST':
         try:

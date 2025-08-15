@@ -81,6 +81,7 @@ urlpatterns = [
     path("boletasFruta",views.boletas_list,name='boletasFruta_list'),
     path("boletasFruta/reporterecepcion",views.boletas_reporterecepcion,name='boletasFruta_reporterecepcion'),
     path("boletasFruta/reportetraza",views.boletas_reportetraza,name='boletasFruta_reportetraza'),
+    path("boletasFruta/reportetrazaexpo",views.boletas_reportetrazaexpo,name='boletasFruta_reportetrazaexpo'),
     path("boletasFruta/trazarecepcion",views.boletas_trazarecepcion,name='boletasFruta_trazarecepcion'),
     path("boletasFruta/constanciatrazarecepcion",views.boletas_constanciatrazarecepcion,name='boletasFruta_constanciatrazarecepcion'),
     path("boletasFruta/constanciatraza",views.boletas_constanciatraza,name='boletasFruta_constanciatraza'),
