@@ -462,7 +462,7 @@ class boletasForm(forms.ModelForm):
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
     boleta = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     finca = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
-    ordenfinca = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    ordenfinca = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     proveedor = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     cultivo = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     orden = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -482,3 +482,4 @@ class boletasForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['observaciones'].required = False
         self.fields['orden'].required = False
+        self.fields['ordenfinca'].required = False

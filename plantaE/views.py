@@ -263,6 +263,23 @@ def load_dataUsuario7(request):
             
     return JsonResponse({'envio':list(envios)})
 
+def load_dataUsuario7(request):
+
+    opcion1 = request.GET.get('fechareporte')  # fecha
+    opcion2 = request.GET.get('cultivo')       # cultivo
+
+    # Paso 1: Obtener los itemcodigo que tengan ese cultivo
+
+    fecha_obj = datetime.datetime.strptime(opcion1, '%Y-%m-%d').date()
+    conten = salidacontenedores.objects.filter(fecha=fecha_obj,cultivo=opcion2).exclude(status="Anulado"
+            ).exclude(
+                productor__isnull=True
+            ).exclude(
+                productor__exact=''
+            ).values_list('envio', flat=True).distinct()    
+            
+    return JsonResponse({'envio':list(conten)})
+
 def pesos_list(request):
     today = timezone.now().date()
     salidas = Actpeso.objects.filter(fecha=today).exclude(status='Anulado')

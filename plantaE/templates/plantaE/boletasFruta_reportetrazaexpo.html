@@ -89,10 +89,10 @@
               </div>
             </div>
             <div class="column is-3">
-              <label class="label" for="Envio">Envio</label>
+              <label class="label" for="Contenedor">Contenedor</label>
               <div class="select is-fullwidth">
-                <select id="Envio" name="Envio">
-                  <option value="">Seleccionar envio</option>
+                <select id="Contenedor" name="Contenedor">
+                  <option value="">Seleccionar contenedor</option>
                 </select>
               </div>
             </div>
@@ -116,11 +116,11 @@
                 <tr>
                   <th>Fecha</th>
                   <th>Registro</th>
+                  <th>Palet</th>
                   <th>Productor</th>
                   <th>ItemSAPCode</th>
                   <th>ItemSAPNombre</th>
-                  <th>empaque_tipo</th>
-                  <th>empaque_cnt</th>
+                  <th>Cajas</th>
                   <th>Libras</th>
                   <th>Constancia</th>
                 </tr>
@@ -130,12 +130,11 @@
                 <tr>
                   <td>{{ registro.fecha }}</td>
                   <td>{{ registro.registro }}</td>
+                  <td>{{ registro.palet }}</td>
                   <td>{{ registro.productor }}</td>
                   <td>{{ registro.itemsap_code }}</td>
                   <td>{{ registro.itemsap_name  }}</td>
-                  <td>{{ registro.empaque_tipo  }}</td>
-                  <td>{{ registro.empaque_cnt  }}</td>
-                  <td class="number-cell" data-value="{{ registro.empaque_cnt  }}">{{ registro.empaque_cnt  }}</td>
+                  <td class="number-cell" data-value="{{ registro.cajas }}">{{ registro.cajas  }}</td>
                   <td class="number-cell" data-value="{{ registro.libras }}">{{ registro.libras }}</td>
                   <td></td>
                 </tr>
@@ -257,9 +256,8 @@
 
 
     function loadProducts(categoryId) {
-      console.log(document.getElementById('date').value)
         $.ajax({
-            url: '{% url "load_dataUsuario7" %}',  // URL para la vista AJAX
+            url: '{% url "load_dataUsuario8" %}',  // URL para la vista AJAX
             data: {
                 'fechareporte':document.getElementById('date').value,
                 'cultivo':categoryId
@@ -270,11 +268,11 @@
                 if (data.envio.length === 0) {
                     alert(data.mensaje || 'No se encontraron envíos.');
                 } else {
-                    $('#Envio').html('');
-                    $('#Envio').html('<option value="">Seleccionar envio</option>');
+                    $('#Contenedor').html('');
+                    $('#Contenedor').html('<option value="">Seleccionar contenedor</option>');
                     // Recorre los productos recibidos y añade opciones al campo 'name'
                     data.envio.forEach(item => {
-                      $('#Envio').append(`<option value="${item}">${item}</option>`);
+                      $('#Contenedor').append(`<option value="${item}">${item}</option>`);
                     });
                 }
                 
