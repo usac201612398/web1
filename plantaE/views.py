@@ -3399,6 +3399,50 @@ def boletas_constanciatrazarecepcion(request):
 
     return JsonResponse({'error': 'Método no permitido'}, status=405)
 
+def boletas_constanciatrazarexpo(request):
+
+    if request.method == 'POST':
+        fecha = request.POST.get('fecha')
+        palet=request.POST.get('palet')
+        contenedor = request.POST.get('contenedor')
+        proveedor = request.POST.get('proveedor')
+        itemsapcode = request.POST.get('itemsapcode')
+        itemsapname = request.POST.get('itemsapname')
+        empaque_tipo = request.POST.get('empaque_tipo')
+        empaque_cnt = request.POST.get('empaque_cnt')
+        libras = request.POST.get('libras')
+        conten=salidacontenedores.objects.filter(
+            itemsapcode=itemsapcode,
+            palet=int(palet),
+            proveedor=proveedor,
+            fechasalcontenedor=fecha,
+            contenedor=contenedor).exclude(status="Anulado")
+        salcontentids = conten.values_list('registro',flat=True).distinct()
+        datosinvaux = inventarioProdTermAux.objects.filter(salidacontenedores__in=salcontentids)
+        registrosinv= datosinvaux.values_list('inventarioreg',flat=True)
+        datosinv = inventarioProdTerm.objects.filter(registro__in=registrosinv)
+        boletasid=datosinv.values_list('boleta',flat=True)
+        detallefruta = AcumFrutaaux.objects.filter(boleta__in=boletasid)
+        fecha_obj = datetime.datetime.strptime(fecha, '%Y-%m-%d').date()
+        fechahoy = timezone.now().date()
+        context = {
+            'fecha': fecha,
+            'itemsapcode': itemsapcode,
+            'productor':proveedor,
+            'cultivo': conten.first().cultivo,
+            'itemsapname': itemsapname,
+            'libras': libras,
+            'empaque_tipo': empaque_tipo,
+            'empaque_cnt': empaque_cnt,
+            'planta': "SDC - Nueva Santa Rosa",
+            'vector1': list(detallefruta.values()),
+            'fechahoy': fechahoy,
+            'envio':conten.first().contenedor,
+            'mercado': datosinv.first().categoria,
+            'palet': palet
+        }
+        return render(request, 'plantaE/boletasFruta_constanciatrazaexpo.html', context)
+    
 def boletas_constanciatraza(request):
 
     if request.method == 'POST':
@@ -3770,12 +3814,10 @@ def boletas_reportetrazaexpo(request):
             conten = salidacontenedores.objects.filter(
                         contenedor=opcion1,
                         fechasalcontenedor=fecha_obj
-                    ).values('palet').annotate(
+                    ).values('palet','itemsapcode','proveedor').annotate(
                         total_cajas=Sum('cajas'),
                         total_libras=Sum('lbsintara'),
                         fecha=Min('fechasalcontenedor'),
-                        proveedor=Min('proveedor'),
-                        itemsapcode=Min('itemsapcode'),
                         itemsapname=Min('itemsapname')
                     ).order_by('palet')
             # === 7. Enviar respuesta JSON ===

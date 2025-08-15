@@ -288,20 +288,19 @@ document.addEventListener('click', function(e) {
   if (!btn) return;
 
   const fecha = btn.dataset.fecha;
-  const registro = btn.dataset.registro;
+  const palet = btn.dataset.palet;
   const itemsapcode = btn.dataset.itemsapcode;
   const itemsapname = btn.dataset.itemsapname;
-  const empaque_tipo = btn.dataset.empaque_tipo;
-  const empaque_cnt = btn.dataset.empaque_cnt;
-  const libras = btn.dataset.libras;
+  const total_cajas = btn.dataset.total_cajas;
+  const total_libras = btn.dataset.total_libras;
   const productor = btn.dataset.productor;
-  const envio = document.getElementById('Envio').value;
+  const contenedor = document.getElementById('Contenedor').value;
   console.log(envio);
   // Aquí usas variables globales o los datos que ya tengas cargados (vectores)
   
   const form = document.createElement('form');
   form.method = 'POST';
-  form.action = '{% url "boletasFruta_constanciatraza" %}';
+  form.action = '{% url "boletasFruta_constanciatrazaexpo" %}';
   form.target = '_blank';
 
   // CSRF token
@@ -314,8 +313,8 @@ document.addEventListener('click', function(e) {
 
   // Añadir los campos
   const data = {
-    fecha, registro,envio,empaque_tipo,libras, itemsapcode, itemsapname,
-     empaque_cnt, productor
+    fecha, palet,total_libras, itemsapcode, itemsapname,
+     total_cajas, productor,contenedor
   };
 
   for (const [key, val] of Object.entries(data)) {
