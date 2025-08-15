@@ -251,35 +251,40 @@
 
     console.log('Vector1:', vector1);
     </script>
-    <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    function sumarTabla(selectorTabla, selectorFilas) {
-      let totalLibras = 0;
+ <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    function sumarColumna(selectorTabla, columnaIndex, label) {
+      let total = 0;
+      const filas = document.querySelectorAll(`${selectorTabla} tbody tr`);
 
-      const filas = document.querySelectorAll(selectorTabla + " " + selectorFilas);
-      filas.forEach(fila => {
+      filas.forEach((fila) => {
         const celdas = fila.querySelectorAll("td");
-        if (celdas.length >= 5) {
-          const libras = parseFloat(celdas[8].textContent) || 0;
-          totalLibras += libras;
+        if (celdas.length > columnaIndex) {
+          const valor = parseFloat(celdas[columnaIndex].textContent) || 0;
+          total += valor;
         }
       });
 
       // Crear fila total
       const totalRow = document.createElement("tr");
       totalRow.innerHTML = `
-        <td colspan="8" style="text-align: right;"><strong>Total:</strong></td>
-        <td><strong>${totalLibras.toFixed(5)}</strong></td>
+        <td colspan="${columnaIndex}" style="text-align: right;"><strong>Total ${label}:</strong></td>
+        <td><strong>${total.toFixed(5)}</strong></td>
       `;
-      document.querySelector(selectorTabla + " tbody").appendChild(totalRow);
+      document.querySelector(`${selectorTabla} tbody`).appendChild(totalRow);
     }
 
-    // Suma para vector1
-    sumarTabla("table:nth-of-type(3)", "tbody tr",8);
-    sumarTabla("table:nth-of-type(4)", "tbody tr", 6);
+    // Tabla de vector1 (3ra tabla): sumar libras (índice 8)
+    sumarColumna("table:nth-of-type(3)", 8, "Libras");
+
+    // Tabla de vector2 (4ta tabla): sumar cajas (índice 5)
+    sumarColumna("table:nth-of-type(4)", 5, "Cajas");
+
+    // Tabla de vector2 (4ta tabla): sumar libras (índice 6)
+    sumarColumna("table:nth-of-type(4)", 6, "Libras");
   });
-  
 </script>
+
 
 </body>
 </html>
