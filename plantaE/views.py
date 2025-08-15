@@ -3418,7 +3418,7 @@ def boletas_constanciatrazarexpo(request):
             fechasalcontenedor=fecha,
             contenedor=contenedor).exclude(status="Anulado")
         #salcontentids = conten.values_list('registro',flat=True).distinct()
-        return JsonResponse(list(conten.values()))
+        return JsonResponse(conten.values())
     
 def boletas_constanciatraza(request):
 
