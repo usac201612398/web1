@@ -3429,6 +3429,7 @@ def boletas_constanciatrazarexpo(request):
         detallefruta = AcumFrutaaux.objects.filter(boleta__in=boletasid)
         fecha_obj = datetime.datetime.strptime(fecha, '%Y-%m-%d').date()
         fechahoy = timezone.now().date()
+        conten=salidacontenedores.objects.exclude(status="Anulado")
         totalboletainv= inventarioProdTerm.objects.filter(boleta__in=boletasid)
         conten_dict = {
             str(obj.registro): {
