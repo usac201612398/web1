@@ -259,7 +259,7 @@
                     <td>{{ item.cajas }}</td>
                     <td>{{ item.lbsintara|floatformat:5 }}</td>
                     <td>{{ item.orden }}</td>
-                    <th>{{ item.salidacontenedores}}</th>
+                    <td>{{ item.salidacontenedores}}</td>
                     <td>{{ item.contenedor }}</td>
                     <td>{{ item.palet }}</td>
 
@@ -317,25 +317,24 @@
       let rowHTML = "";
 
       for (let i = 0; i < Math.max(...columnas) + 1; i++) {
-        if (columnas.includes(i)) {
-          const indexInList = columnas.indexOf(i);
-          rowHTML += `<td><strong>${totales[indexInList].toFixed(4)}</strong></td>`;
+        if (i === 0) {
+          rowHTML += `<td><strong>Totales:</strong></td>`;
+        } else if (columnas.includes(i)) {
+          const idx = columnas.indexOf(i);
+          rowHTML += `<td><strong>${totales[idx].toFixed(4)}</strong></td>`;
         } else {
           rowHTML += `<td></td>`;
         }
       }
 
-      // Etiqueta de Totales en la columna 0
-      rowHTML = rowHTML.replace("<td></td>", `<td><strong>Totales:</strong></td>`);
-
       totalRow.innerHTML = rowHTML;
       document.querySelector(`${selectorTabla} tbody`).appendChild(totalRow);
     }
 
-    // Tabla de vector2 (4ta tabla): Cajas (índice 5), Libras (índice 6)
+    // Tabla 4: vector2 (Cajas: col 5, Libras: col 6)
     sumarMultiplesColumnas("table:nth-of-type(4)", [5, 6]);
 
-    // Tabla de vector3 (5ta tabla): Cajas (índice 5), Libras (índice 6)
+    // Tabla 5: vector3 (Cajas: col 5, Libras: col 6)
     sumarMultiplesColumnas("table:nth-of-type(5)", [5, 6]);
   });
 </script>

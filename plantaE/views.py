@@ -3413,13 +3413,13 @@ def boletas_constanciatrazarexpo(request):
         total_libras = request.POST.get('total_libras')
         total_cajas = request.POST.get('total_cajas')
 
-        conten=salidacontenedores.objects.filter(
+        conten2=salidacontenedores.objects.filter(
             itemsapcode=itemsapcode,
             palet=int(palet),
             proveedor=proveedor,
             fechasalcontenedor=fecha,
             contenedor=contenedor).exclude(status="Anulado")
-        salcontentids = conten.values_list('registro',flat=True).distinct()
+        salcontentids = conten2.values_list('registro',flat=True).distinct()
         ids = [str(x) for x in salcontentids]
         datosinvaux = inventarioProdTermAux.objects.filter(salidacontenedores__in=ids)
         registrosinv= datosinvaux.values_list('inventarioreg',flat=True)
@@ -3468,7 +3468,7 @@ def boletas_constanciatrazarexpo(request):
             'vector2': list(totalboletainv.values()),
             'vector3': vector3,
             'fechahoy': fechahoy,
-            'contenedor':conten.first().contenedor,
+            'contenedor':conten2.first().contenedor,
             'mercado': datosinv.first().categoria,
             'palet': palet
         }
