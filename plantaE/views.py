@@ -3425,10 +3425,33 @@ def boletas_constanciatrazarexpo(request):
         registrosinv= datosinvaux.values_list('inventarioreg',flat=True)
         datosinv = inventarioProdTerm.objects.filter(registro__in=registrosinv)
         boletasid=datosinv.values_list('boleta',flat=True)
+        invboletasid=datosinv.values_list('registro',flat=True)
         detallefruta = AcumFrutaaux.objects.filter(boleta__in=boletasid)
         fecha_obj = datetime.datetime.strptime(fecha, '%Y-%m-%d').date()
         fechahoy = timezone.now().date()
         totalboletainv= inventarioProdTerm.objects.filter(boleta__in=boletasid)
+        conten_dict = {
+            str(obj.registro): {
+                'palet': obj.palet,
+                'contenedor': obj.contenedor
+            }
+            for obj in conten
+        }
+        #totalboletainvaux= inventarioProdTermAux.objects.filter(inventarioreg__in=invboletasid)
+        totalboletainvaux = inventarioProdTermAux.objects.filter(
+            inventarioreg__in=invboletasid
+        ).values()
+
+        # Agregar el palet de forma manual
+        vector3 = []
+        for item in totalboletainvaux:
+            registro = str(item['salidacontenedores'])  # debe coincidir con las claves del dict
+            data_conten = conten_dict.get(registro, {})
+            
+            item['palet'] = data_conten.get('palet', 'N/D')
+            item['contenedor'] = data_conten.get('contenedor', 'N/D')
+            
+            vector3.append(item)
         context = {
             'fecha': fecha,
             'itemsapcode': itemsapcode,
