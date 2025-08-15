@@ -3419,7 +3419,7 @@ def boletas_constanciatrazarexpo(request):
             contenedor=contenedor).exclude(status="Anulado")
         salcontentids = conten.values_list('registro',flat=True).distinct()
 
-        return JsonResponse(dict(salcontentids),safe=False)
+        return JsonResponse(list(salcontentids), safe=False)
     
 def boletas_constanciatraza(request):
 
