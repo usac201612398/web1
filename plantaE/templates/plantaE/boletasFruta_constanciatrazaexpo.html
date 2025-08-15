@@ -185,7 +185,7 @@
                     <td>{{ item.orden }}</td>
                     <td>{{ item.estructura }}</td>
                     <td>{{ item.variedad }}</td>
-                    <td>{{ item.libras }}</td>
+                    <td>{{ item.libras|floatformat:5 }}</td>
                     <td>{{ item.recepcion }}</td>
 
                     </tr>
@@ -237,7 +237,7 @@
       const totalRow = document.createElement("tr");
       totalRow.innerHTML = `
         <td colspan="8" style="text-align: right;"><strong>Total:</strong></td>
-        <td><strong>${totalLibras.toFixed(0)}</strong></td>
+        <td><strong>${totalLibras.toFixed(5)}</strong></td>
       `;
       document.querySelector(selectorTabla + " tbody").appendChild(totalRow);
     }
