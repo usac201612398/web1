@@ -3767,8 +3767,13 @@ def boletas_reportetrazaexpo(request):
     # Paso 1: Obtener los itemcodigo que tengan ese cultivo
 
             fecha_obj = datetime.datetime.strptime(opcion2, '%Y-%m-%d').date()
-
-            conten = salidacontenedores.objects.filter(contenedor=opcion1,fechasalcontenedor=fecha_obj).values().order_by('registro')
+            conten = salidacontenedores.objects.filter(
+                        contenedor=opcion1,
+                        fechasalcontenedor=fecha_obj
+                    ).values('palet').annotate(
+                        total_cajas=Sum('cajas'),
+                        total_libras=Sum('libras')
+                    ).order_by('palet')
             # === 7. Enviar respuesta JSON ===
             return JsonResponse({
                 'datos': list(conten)
