@@ -3421,7 +3421,7 @@ def boletas_constanciatrazarexpo(request):
         datosinvaux = inventarioProdTermAux.objects.filter(salidacontenedores__in=salcontentids)
         registrosinv= datosinvaux.values_list('inventarioreg',flat=True)
         datosinv = inventarioProdTerm.objects.filter(registro__in=registrosinv)
-        return JsonResponse(datosinv.values(),safe=False)
+        return JsonResponse(list(datosinv.values()), safe=False)
     
 def boletas_constanciatraza(request):
 
