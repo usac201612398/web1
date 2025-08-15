@@ -229,7 +229,7 @@
         <table>
         <thead>
             <tr>
-            <th>Boleta</th>
+            <th>Registro (Inventario)</th>
             <th>Registro (InventarioAux)</th>
             <th>FechaProducto</th>
             <th>ItemSAPName</th>
@@ -239,14 +239,13 @@
             <th>Orden (Empaque)</th>
             <th>Contenedor</th>
             <th>Palet</th>
-            <th>Registro (Inventario)</th>
             
             </tr>
         </thead>
         <tbody>
             {% for item in vector3 %}
                     <tr>
-                    <td>{{ item.boleta }}</td>
+                    <td>{{ item.inventarioreg }}</td>
                     <td>{{ item.registro }}</td>
                     <td>{{ item.fecha }}</td>
                     <td>{{ item.itemsapname }}</td>
@@ -257,7 +256,6 @@
                     <td>{{ item.contenedor }}</td>
                     <td>{{ item.orden }}</td>
                     <td>{{ item.contenedor }}</td>
-                    <td>{{ item.inventarioreg }}</td>
 
                     </tr>
             {% endfor %}
@@ -317,6 +315,8 @@
 
     // Tabla de vector2 (4ta tabla): sumar libras (índice 6)
     sumarColumna("table:nth-of-type(4)", 6, "Libras");
+    
+    sumarColumna("table:nth-of-type(5)", 6, "Libras");
   });
 </script>
 
