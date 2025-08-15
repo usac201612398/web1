@@ -3418,9 +3418,10 @@ def boletas_constanciatrazarexpo(request):
             fechasalcontenedor=fecha,
             contenedor=contenedor).exclude(status="Anulado")
         salcontentids = conten.values_list('registro',flat=True).distinct()
-        datosinvaux = inventarioProdTermAux.objects.filter(salidacontenedores__in=salcontentids)
-        
-        return JsonResponse(list(datosinvaux.values()), safe=False)
+        datosinvaux = inventarioProdTermAux.objects.filter(salidacontenedores__in=str(salcontentids))
+        registrosinv= datosinvaux.values_list('inventarioreg',flat=True)
+        datosinv = inventarioProdTerm.objects.filter(registro__in=registrosinv)
+        return JsonResponse(list(datosinv.values()),safe=False)
     
 def boletas_constanciatraza(request):
 
