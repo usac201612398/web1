@@ -3410,7 +3410,9 @@ def boletas_constanciatrazarexpo(request):
         itemsapname = request.POST.get('itemsapname')
         empaque_tipo = request.POST.get('empaque_tipo')
         empaque_cnt = request.POST.get('empaque_cnt')
-        libras = request.POST.get('libras')
+        total_libras = request.POST.get('total_libras')
+        total_cajas = request.POST.get('total_libras')
+
         conten=salidacontenedores.objects.filter(
             itemsapcode=itemsapcode,
             palet=int(palet),
@@ -3432,7 +3434,8 @@ def boletas_constanciatrazarexpo(request):
             'productor':proveedor,
             'cultivo': conten.first().cultivo,
             'itemsapname': itemsapname,
-            'libras': libras,
+            'cajas': total_cajas,
+            'libras': total_libras,
             'empaque_tipo': empaque_tipo,
             'empaque_cnt': empaque_cnt,
             'planta': "SDC - Nueva Santa Rosa",
