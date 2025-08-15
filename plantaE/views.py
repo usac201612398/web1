@@ -3768,7 +3768,7 @@ def boletas_reportetrazaexpo(request):
 
             fecha_obj = datetime.datetime.strptime(opcion2, '%Y-%m-%d').date()
 
-            conten = salidacontenedores.objects.filter(contenedor=opcion1,fechasalcontenedor=fecha_obj).values()
+            conten = salidacontenedores.objects.filter(contenedor=opcion1,fechasalcontenedor=fecha_obj).values().order_by('registro')
             # === 7. Enviar respuesta JSON ===
             return JsonResponse({
                 'datos': list(conten)
