@@ -265,13 +265,13 @@
             success: function(data) {
                 // Limpia las opciones actuales del campo 'name'
                 console.log(data);
-                if (data.envio.length === 0) {
+                if (data.contenedores.length === 0) {
                     alert(data.mensaje || 'No se encontraron envíos.');
                 } else {
                     $('#Contenedor').html('');
                     $('#Contenedor').html('<option value="">Seleccionar contenedor</option>');
                     // Recorre los productos recibidos y añade opciones al campo 'name'
-                    data.envio.forEach(item => {
+                    data.contenedores.forEach(item => {
                       $('#Contenedor').append(`<option value="${item}">${item}</option>`);
                     });
                 }

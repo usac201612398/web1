@@ -271,14 +271,10 @@ def load_dataUsuario8(request):
     # Paso 1: Obtener los itemcodigo que tengan ese cultivo
 
     fecha_obj = datetime.datetime.strptime(opcion1, '%Y-%m-%d').date()
-    conten = salidacontenedores.objects.filter(fecha=fecha_obj,cultivo=opcion2).exclude(status="Anulado"
-            ).exclude(
-                productor__isnull=True
-            ).exclude(
-                productor__exact=''
-            ).values_list('envio', flat=True).distinct()    
+    conten = salidacontenedores.objects.filter(fechasalidacontenedor=fecha_obj,cultivo=opcion2).exclude(status="Anulado"
+            ).values_list('contenedor', flat=True).distinct()    
             
-    return JsonResponse({'envio':list(conten)})
+    return JsonResponse({'contenedores':list(conten)})
 
 def pesos_list(request):
     today = timezone.now().date()
