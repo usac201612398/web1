@@ -115,7 +115,6 @@
               <thead class="table-custom-header">
                 <tr>
                   <th>Fecha</th>
-                  <th>Registro</th>
                   <th>Palet</th>
                   <th>Productor</th>
                   <th>ItemSAPCode</th>
@@ -129,7 +128,6 @@
                 {% for registro in registros %}
                 <tr>
                   <td>{{ registro.fecha }}</td>
-                  <td>{{ registro.registro }}</td>
                   <td>{{ registro.palet }}</td>
                   <td>{{ registro.productor }}</td>
                   <td>{{ registro.itemsap_code }}</td>
@@ -195,18 +193,16 @@
           data.datos.forEach(item => {
             const row = `<tr>
               <td>${item.fecha}</td>
-              <td>${item.registro}</td>
               <td>${item.palet}</td>
               <td>${item.proveedor}</td>
               <td>${item.itemsapcode}</td>
               <td>${item.itemsapname}</td>
-              <td>${Math.round(item.cajas)}</td>
-              <td>${Math.round(item.lbsintara)}</td>
+              <td>${Math.round(item.total_cajas)}</td>
+              <td>${Math.round(item.total_libras)}</td>
               <td>
                 <button 
                   class="button is-small is-link imprimir-btn"
                   data-fecha="${item.fecha}"
-                  data-registro="${item.registro}"
                   data-palet="${item.palet}"
                   data-productor="${item.proveedor}"
                   data-itemsapcode="${item.itemsapcode}"
