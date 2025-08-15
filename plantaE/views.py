@@ -3762,7 +3762,7 @@ def boletas_reportetrazaexpo(request):
     if request.method == 'POST':
         try:
             opcion1 = request.POST.get('opcion1')  # envio
-            opcion2 = request.GET.get('fechareporte')  # fecha
+            opcion2 = request.GET.get('opcion2')  # fecha
 
     # Paso 1: Obtener los itemcodigo que tengan ese cultivo
 
