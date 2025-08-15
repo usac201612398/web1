@@ -19,6 +19,7 @@ urlpatterns = [
     path('ajax/load-dataUsuario5/', views.load_dataUsuario5, name='load_dataUsuario5'),
     path('ajax/load-dataUsuario6/', views.load_dataUsuario6, name='load_dataUsuario6'),
     path('ajax/load-dataUsuario7/', views.load_dataUsuario7, name='load_dataUsuario7'),
+    path('ajax/load-dataUsuario8/', views.load_dataUsuario8, name='load_dataUsuario8'),
 
     path('ajax/obtener-nombre-usuario/', views.obtener_nombre_usuario, name='obtener_nombre_usuario'),
     path('ajax/obtener-fecha-invFruta/', views.obtenerfecha_invFruta, name='obtenerfecha_invFruta'),

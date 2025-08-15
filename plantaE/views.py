@@ -263,7 +263,7 @@ def load_dataUsuario7(request):
             
     return JsonResponse({'envio':list(envios)})
 
-def load_dataUsuario7(request):
+def load_dataUsuario8(request):
 
     opcion1 = request.GET.get('fechareporte')  # fecha
     opcion2 = request.GET.get('cultivo')       # cultivo
