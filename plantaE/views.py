@@ -3411,7 +3411,7 @@ def boletas_constanciatrazarexpo(request):
         empaque_tipo = request.POST.get('empaque_tipo')
         empaque_cnt = request.POST.get('empaque_cnt')
         total_libras = request.POST.get('total_libras')
-        total_cajas = request.POST.get('total_libras')
+        total_cajas = request.POST.get('total_cajas')
 
         conten=salidacontenedores.objects.filter(
             itemsapcode=itemsapcode,
