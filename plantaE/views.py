@@ -3761,12 +3761,17 @@ def boletas_trazarecepcion(request):
 def boletas_reportetrazaexpo(request):
     if request.method == 'POST':
         try:
-            opcion1 = request.POST.get('opcion1')  # envio}
+            opcion1 = request.POST.get('opcion1')  # envio
+            opcion2 = request.GET.get('fechareporte')  # fecha
 
-            envios = enviosrec.objects.filter(envio=opcion1).values()
+    # Paso 1: Obtener los itemcodigo que tengan ese cultivo
+
+            fecha_obj = datetime.datetime.strptime(opcion1, '%Y-%m-%d').date()
+
+            conten = salidacontenedores.objects.filter(contenedor=opcion1,fechasalcontenedor=fecha_obj).values()
             # === 7. Enviar respuesta JSON ===
             return JsonResponse({
-                'datos': list(envios)
+                'datos': list(conten)
             }, safe=False)
 
         except Exception as e:

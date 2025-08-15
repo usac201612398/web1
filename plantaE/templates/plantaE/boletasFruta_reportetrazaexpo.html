@@ -167,19 +167,20 @@
     window.vector2 = [];
     // CONSULTAR
     document.getElementById('consultar').addEventListener('click', function () {
-      const envio = document.getElementById('Envio').value;
+      const contenedor = document.getElementById('Contenedor').value;
       const tbody = document.querySelector('#myTable tbody');
 
       tbody.innerHTML = '';
 
-      fetch('{% url "boletasFruta_reportetraza" %}', {
+      fetch('{% url "boletasFruta_reportetrazaexpo" %}', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
           'X-CSRFToken': getCookie('csrftoken')
         },
         body: new URLSearchParams({
-          'opcion1': envio
+          'opcion1': contenedor,
+          'opcion2':document.getElementById('date').value
         })
       })
         .then(response => response.json())
@@ -195,22 +196,22 @@
             const row = `<tr>
               <td>${item.fecha}</td>
               <td>${item.registro}</td>
+              <td>${item.palet}</td>
               <td>${item.productor}</td>
               <td>${item.itemsap_code}</td>
               <td>${item.itemsap_name}</td>
-              <td>${item.empaque_tipo}</td>
-              <td>${Math.round(item.empaque_cnt)}</td>
+              <td>${Math.round(item.cajas)}</td>
               <td>${Math.round(item.libras)}</td>
               <td>
                 <button 
                   class="button is-small is-link imprimir-btn"
                   data-fecha="${item.fecha}"
                   data-registro="${item.registro}"
+                  data-palet="${item.palet}"
                   data-productor="${item.productor}"
                   data-itemsapcode="${item.itemsap_code}"
                   data-itemsapname="${item.itemsap_name}"
-                  data-empaque_tipo="${item.empaque_tipo}"
-                  data-empaque_cnt="${item.empaque_cnt}"
+                  data-empaque_cnt="${item.cajas}"
                   data-libras="${item.libras}"
                 >
                   <i class="fas fa-print"></i>
