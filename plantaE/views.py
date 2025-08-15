@@ -274,7 +274,7 @@ def load_dataUsuario8(request):
     conten = salidacontenedores.objects.filter(fechasalcontenedor=fecha_obj,cultivo=opcion2).exclude(status="Anulado"
             ).values_list('contenedor', flat=True).distinct()    
             
-    return JsonResponse({'envio':list(conten)})
+    return JsonResponse({'contenedores':list(conten)})
 
 def pesos_list(request):
     today = timezone.now().date()
