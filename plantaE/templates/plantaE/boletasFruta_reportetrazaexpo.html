@@ -197,22 +197,22 @@
               <td>${item.fecha}</td>
               <td>${item.registro}</td>
               <td>${item.palet}</td>
-              <td>${item.productor}</td>
-              <td>${item.itemsap_code}</td>
-              <td>${item.itemsap_name}</td>
+              <td>${item.proveedor}</td>
+              <td>${item.itemsapcode}</td>
+              <td>${item.itemsapname}</td>
               <td>${Math.round(item.cajas)}</td>
-              <td>${Math.round(item.libras)}</td>
+              <td>${Math.round(item.lbsintara)}</td>
               <td>
                 <button 
                   class="button is-small is-link imprimir-btn"
                   data-fecha="${item.fecha}"
                   data-registro="${item.registro}"
                   data-palet="${item.palet}"
-                  data-productor="${item.productor}"
-                  data-itemsapcode="${item.itemsap_code}"
-                  data-itemsapname="${item.itemsap_name}"
+                  data-productor="${item.proveedor}"
+                  data-itemsapcode="${item.itemsapcode}"
+                  data-itemsapname="${item.itemsapname}"
                   data-empaque_cnt="${item.cajas}"
-                  data-libras="${item.libras}"
+                  data-libras="${item.lbsintara}"
                 >
                   <i class="fas fa-print"></i>
                 </button>
