@@ -3422,7 +3422,27 @@ def boletas_constanciatrazarexpo(request):
         datosinvaux = inventarioProdTermAux.objects.filter(salidacontenedores__in=ids)
         registrosinv= datosinvaux.values_list('inventarioreg',flat=True)
         datosinv = inventarioProdTerm.objects.filter(registro__in=registrosinv)
-        return JsonResponse(list(datosinv.values()),safe=False)
+        boletasid=datosinv.values_list('boleta',flat=True)
+        detallefruta = AcumFrutaaux.objects.filter(boleta__in=boletasid)
+        fecha_obj = datetime.datetime.strptime(fecha, '%Y-%m-%d').date()
+        fechahoy = timezone.now().date()
+        context = {
+            'fecha': fecha,
+            'itemsapcode': itemsapcode,
+            'productor':proveedor,
+            'cultivo': conten.first().cultivo,
+            'itemsapname': itemsapname,
+            'libras': libras,
+            'empaque_tipo': empaque_tipo,
+            'empaque_cnt': empaque_cnt,
+            'planta': "SDC - Nueva Santa Rosa",
+            'vector1': list(detallefruta.values()),
+            'fechahoy': fechahoy,
+            'envio':conten.first().contenedor,
+            'mercado': datosinv.first().categoria,
+            'palet': palet
+        }
+        return render(request, 'plantaE/boletasFruta_constanciatrazaexpo.html', context)
     
 def boletas_constanciatraza(request):
 
