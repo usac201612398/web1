@@ -3772,7 +3772,7 @@ def boletas_reportetrazaexpo(request):
                         fechasalcontenedor=fecha_obj
                     ).values('palet').annotate(
                         total_cajas=Sum('cajas'),
-                        total_libras=Sum('libras')
+                        total_libras=Sum('lbsintara')
                     ).order_by('palet')
             # === 7. Enviar respuesta JSON ===
             return JsonResponse({
