@@ -5,7 +5,7 @@ from openpyxl import Workbook
 from django.shortcuts import get_object_or_404, redirect
 from .models import Actpeso, paramenvlocales,enviosrec,AcumFrutaaux,salidacontenedores, inventarioProdTermAux,productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
 from .forms import boletasForm,itemsForm, itemsenviosForm,salidacontenedoresForm,salidasFrutaForm, contenedoresForm,recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
-from django.db.models import Sum, Q, Max,Value as V
+from django.db.models import Sum, Q, Max, Min,Value as V
 from django.utils import timezone
 import matplotlib.pyplot as plt
 import datetime
@@ -3772,7 +3772,11 @@ def boletas_reportetrazaexpo(request):
                         fechasalcontenedor=fecha_obj
                     ).values('palet').annotate(
                         total_cajas=Sum('cajas'),
-                        total_libras=Sum('lbsintara')
+                        total_libras=Sum('lbsintara'),
+                        fecha=Min('fechasalcontenedor'),
+                        proveedor=Min('proveedor'),
+                        itemsapcode=Min('itemsapcode'),
+                        itemsapname=Min('itemsapname')
                     ).order_by('palet')
             # === 7. Enviar respuesta JSON ===
             return JsonResponse({
