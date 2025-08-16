@@ -104,6 +104,7 @@
                         <th>Género</th>
                         <th>Apodo Variedad</th>
                         <th>Status</th>
+                        <th>QR</th>
                         <th>Editar</th>
                         <th>Anular</th>
                     </tr>
@@ -121,6 +122,11 @@
                         <td>{{ registro.genero }}</td>
                         <td>{{ registro.apodo_variedad }}</td>
                         <td>{{ registro.status }}</td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-dark generate-qr-btn" data-id="{{ registro.id }}" data-bs-toggle="modal" data-bs-target="#qrModal">
+                                <i class="fas fa-qrcode"></i>
+                            </button>
+                        </td>
                         <td class="text-center">
                             <a href="{% url 'lotes_update' registro.pk %}" class="text-warning">
                                 <i class="fas fa-edit"></i>
@@ -168,13 +174,28 @@
             </a>
         </div>
     </div>
+        <!-- Modal para mostrar QR -->
+    <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="qrModalLabel">Código QR del ID</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body text-center">
+            <canvas id="qrCanvas"></canvas>
+            <p class="mt-2" id="qrText" style="font-size: 0.9rem;"></p>
+        </div>
+        </div>
+    </div>
+    </div>
 
     <!-- Scripts -->
     <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
     <script>
         $(document).ready(function () {
             var table = $('#myTable').DataTable({
@@ -187,6 +208,19 @@
 
             $('#myTable').on('init.dt', function () {
                 table.columns.adjust();
+            });
+
+            // Generar QR dinámicamente
+            $('.generate-qr-btn').on('click', function () {
+                const id = $(this).data('id');
+                const qr = new QRious({
+                    element: document.getElementById('qrCanvas'),
+                    value: `ID: ${id}`,  // Puedes cambiar el contenido aquí
+                    size: 200,
+                    level: 'H'
+                });
+
+                $('#qrText').text(`ID: ${id}`);
             });
         });
     </script>
