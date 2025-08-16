@@ -184,7 +184,10 @@
         </div>
         <div class="modal-body text-center">
             <canvas id="qrCanvas"></canvas>
+            
             <p class="mt-2" id="qrText" style="font-size: 0.9rem;"></p>
+            <a id="downloadQR" class="btn btn-outline-primary mt-3" download="codigo_qr.png">Descargar QR</a>
+
         </div>
         </div>
     </div>
@@ -221,6 +224,9 @@
                 });
 
                 $('#qrText').text(`ID: ${id}`);
+                const canvas = document.getElementById('qrCanvas');
+                const dataURL = canvas.toDataURL('image/png');
+                $('#downloadQR').attr('href', dataURL);
             });
         });
     </script>
