@@ -309,6 +309,7 @@ function startScanner() {
                 return response.json();
             })
             .then(data => {
+                console.log(data);
                 document.getElementById("id_codigo_lote").value = data.codigo_lote;
                 document.getElementById("id_apodo_variedad").value = data.apodo_variedad;
                 document.getElementById("id_tipo_cultivo").value = data.tipo_cultivo;
