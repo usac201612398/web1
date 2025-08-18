@@ -486,13 +486,18 @@ def obtener_datos_lote(request):
     if request.method == 'POST':
         # Asumiendo que recibes un JSON o form-urlencoded con 'codigo_lote'
         codigo_lote = request.POST.get('codigo_lote') or json.loads(request.body).get('codigo_lote')
-        codigo_lote = int(codigo_lote.strip())
+        codigo_lote = codigo_lote.strip()
         try:
             lote = lotes.objects.get(id=int(codigo_lote))
             #variedad = variedades.objects.get(variedad_code=lote.variedad_code)
 
             data = {
-                'codigo_lote': lote.id
+                'codigo_lote': lote.id,
+                'apodo_variedad': lote.apodo_variedad,
+                'tipo_cultivo': lote.cultivo,
+                'ubicacion_lote': lote.ubicación,
+                'estructura': lote.estructura,
+                'genero': lote.genero
             }
             return JsonResponse(data)
 
