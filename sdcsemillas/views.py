@@ -497,6 +497,7 @@ def obtener_datos_lote(request):
                 'tipo_cultivo': lote.cultivo,
                 'ubicacion_lote': lote.ubicación,
                 'estructura': lote.estructura,
+                'variedad_code':lote.variedad_code,
                 'genero': lote.genero
             }
             return JsonResponse(data)
