@@ -490,7 +490,7 @@ def obtener_datos_lote(request):
         try:
             lote = lotes.objects.get(id=int(codigo_lote))
             codigo_variedad = str(lote.variedad_code).strip()
-            variedad = variedades.objects.filter(variedad_code=codigo_variedad).first()
+            variedad = variedades.objects.filter(variedad_code=codigo_variedad).values()
 
             data = {
                 'codigo_lote': lote.id,
@@ -498,7 +498,8 @@ def obtener_datos_lote(request):
                 'tipo_cultivo': lote.cultivo,
                 'ubicacion_lote': lote.ubicación,
                 'estructura': lote.estructura,
-                'genero': lote.genero
+                'genero': lote.genero,
+                'variedad':list(variedad)
             }
             return JsonResponse(data)
 
