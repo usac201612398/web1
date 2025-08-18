@@ -293,7 +293,7 @@ function startScanner() {
         (decodedText) => {
             html5QrCode.stop();
             const codigoLote = decodedText.trim();
-
+            console.log(codigoLote);
             fetch('{% url "obtener_datos_lote" %}', {
                 method: 'POST',
                 headers: {
