@@ -489,8 +489,8 @@ def obtener_datos_lote(request):
         codigo_lote = codigo_lote.strip()
         try:
             lote = lotes.objects.get(id=int(codigo_lote))
-            codigo_variedad = str(lote.variedad_code).strip().upper()  
-            variedad = variedades.objects.get(variedad_code=codigo_variedad)
+            codigo_variedad = str(lote.variedad_code).strip()
+            variedad = variedades.objects.filter(variedad_code=codigo_variedad).first()
 
             data = {
                 'codigo_lote': lote.id,
