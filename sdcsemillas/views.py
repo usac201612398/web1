@@ -488,11 +488,11 @@ def obtener_datos_lote(request):
         codigo_lote = request.POST.get('codigo_lote') or json.loads(request.body).get('codigo_lote')
         codigo_lote = int(codigo_lote.strip())
         try:
-            #lote = lotes.objects.get(id=int(codigo_lote))
+            lote = lotes.objects.get(id=int(codigo_lote))
             #variedad = variedades.objects.get(variedad_code=lote.variedad_code)
 
             data = {
-                'codigo_lote': codigo_lote
+                'codigo_lote': lote.id
             }
             return JsonResponse(data)
 
