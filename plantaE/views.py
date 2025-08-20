@@ -3024,6 +3024,72 @@ def inventariogeneral_list(request):
     # Pasar los registros agrupados al renderizado de la plantilla
     return render(request, 'plantaE/inventarioProd_inventariogeneral.html', {'registros': registros_agrupados,'registros_json':registros_json})
 
+def dashboard_acumfrutakgxm2(request):
+
+    # Filtros desde GET
+    filtros_get = {
+        'finca': request.GET.get('finca'),
+        'orden': request.GET.get('orden'),
+        'cultivo': request.GET.get('cultivo'),
+    }
+
+    ordenes_abiertas = datosProduccion.objects.filter(status='Abierta').values_list('orden', flat=True)
+
+    # Query base AcumFruta
+    qs = AcumFruta.objects.filter(orden__in=ordenes_abiertas).exclude(finca="CIP").exclude(libras__isnull=True)
+
+    # Aplicar filtros a AcumFruta
+    for campo, valor in filtros_get.items():
+        if valor:
+            qs = qs.filter(**{campo: valor})
+
+    # Agrupar por semana y año
+    datos = qs.annotate(
+        semana=ExtractWeek('fecha'),
+        anio=ExtractYear('fecha')
+    ).values('anio', 'semana').annotate(
+        libras_totales=Sum('libras')
+    ).order_by('anio', 'semana')
+
+    # Obtener las órdenes filtradas para calcular el área total
+    ordenes_filtradas = qs.values_list('orden', flat=True).distinct()
+    area_total = datosProduccion.objects.filter(orden__in=ordenes_filtradas).aggregate(
+        area=Sum('area')
+    )['area'] or 0
+
+    if area_total == 0:
+        area_total = 1  # Para evitar división por cero y mostrar 0 kg/m²
+
+    # Ejes para la gráfica
+    fechas = []
+    kgxm2 = []
+    derivadas = []
+
+    for i, d in enumerate(datos):
+        fecha = get_date_from_week(d['anio'], d['semana'])
+        kg = d['libras_totales'] / 2.20462  # convertir a kg
+        kg_m2 = round(kg / area_total, 2)
+        fechas.append(fecha.isoformat())
+        kgxm2.append(kg_m2)
+        derivadas.append(0 if i == 0 else kgxm2[i] - kgxm2[i - 1])
+
+    # Filtros disponibles
+    filtros_completos = [
+        ('Finca', 'finca', AcumFruta.objects.filter(orden__in=ordenes_abiertas).exclude(finca__isnull=True).exclude(finca='').values_list('finca', flat=True).distinct()),
+        ('Orden', 'orden', AcumFruta.objects.filter(orden__in=ordenes_abiertas).exclude(orden__isnull=True).exclude(orden='').values_list('orden', flat=True).distinct()),
+        ('Variedad', 'variedad', AcumFruta.objects.filter(orden__in=ordenes_abiertas).exclude(variedad__isnull=True).exclude(variedad='').values_list('variedad', flat=True).distinct()),
+        ('Cultivo', 'cultivo', AcumFruta.objects.filter(orden__in=ordenes_abiertas).exclude(cultivo__isnull=True).exclude(cultivo='').values_list('cultivo', flat=True).distinct()),
+        ('Estructura', 'estructura', AcumFruta.objects.filter(orden__in=ordenes_abiertas).exclude(estructura__isnull=True).exclude(estructura='').values_list('estructura', flat=True).distinct()),
+    ]
+
+    context = {
+        'filtros_completos': filtros_completos,
+        'fechas_json': json.dumps(fechas),
+        'kgxm2_json': json.dumps(kgxm2),
+        'derivadas_json': json.dumps(derivadas),
+        'request': request,
+    }
+    return render(request, 'plantaE/dashboard_acumfrutakgxm2.html', context)
 
 def dashboard_acumfruta(request):
 
