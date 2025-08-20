@@ -102,38 +102,57 @@
     const fechas = JSON.parse('{{ fechas_json|escapejs }}');
     const libras = JSON.parse('{{ kgxm2_json|escapejs }}');
     const derivadas = JSON.parse('{{ derivadas_json|escapejs }}');
+    const fechasProy = JSON.parse('{{ fechas_proy_json|escapejs }}');
+    const proyKgxm2 = JSON.parse('{{ proy_kgxm2_json|escapejs }}');
 
     new Chart(document.getElementById('graficoProduccion'), {
-        type: 'line',
-        data: {
-            labels: fechas,
-            datasets: [{
-                label: 'Producción (kg/m2)',
+    type: 'line',
+    data: {
+        labels: fechas,
+        datasets: [
+            {
+                label: 'Producción real (kg/m²)',
                 data: libras,
                 borderColor: 'green',
                 backgroundColor: 'rgba(0,128,0,0.2)',
                 fill: true,
                 tension: 0.3
-            }]
+            },
+            {
+                label: 'Proyección (kg/m²)',
+                data: proyKgxm2,
+                borderColor: 'orange',
+                backgroundColor: 'rgba(255,165,0,0.1)',
+                fill: false,
+                tension: 0.3,
+                borderDash: [5, 5]  // Línea punteada
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: true
+            }
         },
-        options: {
-            responsive: true,
-            scales: {
-                x: {
-                    type: 'time',
-                    time: {
-                        unit: 'week',
-                        tooltipFormat: 'dd/MM/yyyy'
-                    },
-                    ticks: {
-                        autoSkip: true,
-                        maxTicksLimit: 10,
-                        maxRotation: 45
-                    }
+        scales: {
+            x: {
+                type: 'time',
+                time: {
+                    unit: 'week',
+                    tooltipFormat: 'dd/MM/yyyy'
+                },
+                ticks: {
+                    autoSkip: true,
+                    maxTicksLimit: 10,
+                    maxRotation: 45
                 }
             }
         }
-    });
+    }
+});
+
 
     new Chart(document.getElementById('graficoDerivada'), {
         type: 'line',
