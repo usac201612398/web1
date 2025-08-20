@@ -135,6 +135,37 @@
         }
     });
 
+    new Chart(document.getElementById('graficoDerivada'), {
+        type: 'line',
+        data: {
+            labels: fechas,
+            datasets: [{
+                label: 'Variación diaria',
+                data: derivadas,
+                borderColor: 'red',
+                backgroundColor: 'rgba(255,0,0,0.2)',
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'week',
+                        tooltipFormat: 'dd/MM/yyyy'
+                    },
+                    ticks: {
+                        autoSkip: true,
+                        maxTicksLimit: 10,
+                        maxRotation: 45
+                    }
+                }
+            }
+        }
+    });
 </script>
 
 <script>

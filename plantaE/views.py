@@ -3026,53 +3026,65 @@ def inventariogeneral_list(request):
 
 def dashboard_acumfrutakgxm2(request):
 
-    # Filtros desde GET
+    # Filtros GET
     filtros_get = {
         'finca': request.GET.get('finca'),
         'orden': request.GET.get('orden'),
         'cultivo': request.GET.get('cultivo'),
     }
 
+    # Órdenes abiertas
     ordenes_abiertas = datosProduccion.objects.filter(status='Abierta').values_list('orden', flat=True)
 
-    # Query base AcumFruta
+    # Base queryset de AcumFruta
     qs = AcumFruta.objects.filter(orden__in=ordenes_abiertas).exclude(finca="CIP").exclude(libras__isnull=True)
 
-    # Aplicar filtros a AcumFruta
+    # Filtros aplicados
     for campo, valor in filtros_get.items():
         if valor:
             qs = qs.filter(**{campo: valor})
 
     # Agrupar por semana y año
-    datos = qs.annotate(
+    datos_agrupados = qs.annotate(
         semana=ExtractWeek('fecha'),
         anio=ExtractYear('fecha')
     ).values('anio', 'semana').annotate(
         libras_totales=Sum('libras')
     ).order_by('anio', 'semana')
 
-    # Obtener las órdenes filtradas para calcular el área total
-    ordenes_filtradas = qs.values_list('orden', flat=True).distinct()
-    area_total = datosProduccion.objects.filter(orden__in=ordenes_filtradas).aggregate(
-        area=Sum('area')
-    )['area'] or 0
+    # Map: (anio, semana) → órdenes involucradas
+    ordenes_por_semana = defaultdict(set)
+    for record in qs.annotate(
+        semana=ExtractWeek('fecha'),
+        anio=ExtractYear('fecha')
+    ).values('anio', 'semana', 'orden'):
+        ordenes_por_semana[(record['anio'], record['semana'])].add(record['orden'])
 
-    if area_total == 0:
-        area_total = 1  # Para evitar división por cero y mostrar 0 kg/m²
-
-    # Ejes para la gráfica
+    # Resultados finales
     fechas = []
     kgxm2 = []
     derivadas = []
 
-    for i, d in enumerate(datos):
-        fecha = get_date_from_week(d['anio'], d['semana'])
-        kg = d['libras_totales'] / 2.20462  # convertir a kg
-        kg_m2 = round(kg / area_total, 2)
+    for i, d in enumerate(datos_agrupados):
+        anio = d['anio']
+        semana = d['semana']
+        fecha = get_date_from_week(anio, semana)
+
+        # Kilos totales esa semana
+        kg_totales = d['libras_totales'] / 2.20462
+
+        # Áreas de estructuras asociadas a las órdenes de esa semana
+        ordenes_semana = list(ordenes_por_semana[(anio, semana)])
+        area_total = detallesEstructuras.objects.filter(orden__in=ordenes_semana).aggregate(
+            total_area=Sum('area')
+        )['total_area'] or 0
+
+        # Seguridad ante área cero
+        kg_m2 = round(kg_totales / area_total, 2) if area_total > 0 else 0
+
         fechas.append(fecha.isoformat())
         kgxm2.append(kg_m2)
         derivadas.append(0 if i == 0 else kgxm2[i] - kgxm2[i - 1])
-
     # Filtros disponibles
     filtros_completos = [
         ('Finca', 'finca', AcumFruta.objects.filter(orden__in=ordenes_abiertas).exclude(finca__isnull=True).exclude(finca='').values_list('finca', flat=True).distinct()),
