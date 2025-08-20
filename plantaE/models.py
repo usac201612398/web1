@@ -29,7 +29,7 @@ class proyecciones(models.Model):
     temporada = models.CharField(max_length=45,blank=True)
     
     def __str__(self):
-        return (str(self.finca) + " | " + str(self.orden)+ " | " + str(self.temporada)+ " | " + str(self.status) )
+        return (str(self.semanacosecha) + " | " + str(self.orden)+ " | " + str(self.cultivo)+ " | " + str(self.finca) )
      
 class datosProduccion(models.Model):
 
