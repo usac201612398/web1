@@ -3085,6 +3085,7 @@ def dashboard_acumfrutakgxm2(request):
         fechas.append(fecha.isoformat())
         kgxm2.append(kg_m2)
         derivadas.append(0 if i == 0 else kgxm2[i] - kgxm2[i - 1])
+        
     # Filtros disponibles
     filtros_completos = [
         ('Finca', 'finca', AcumFruta.objects.filter(orden__in=ordenes_abiertas).exclude(finca__isnull=True).exclude(finca='').values_list('finca', flat=True).distinct()),
