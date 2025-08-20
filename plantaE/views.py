@@ -3031,6 +3031,7 @@ def dashboard_acumfrutakgxm2(request):
         'finca': request.GET.get('finca'),
         'orden': request.GET.get('orden'),
         'cultivo': request.GET.get('cultivo'),
+        'estructura_filtro': request.GET.get('estructura')
     }
 
     # Órdenes abiertas
@@ -3065,35 +3066,32 @@ def dashboard_acumfrutakgxm2(request):
     kgxm2 = []
     derivadas = []
 
-    for i, d in enumerate(datos_agrupados):
+    for i, d in enumerate(ordenes_por_semana):
         anio = d['anio']
         semana = d['semana']
         fecha = get_date_from_week(anio, semana)
 
-        # Kilos totales esa semana
+        # Total de kilos en esa semana
         kg_totales = d['libras_totales'] / 2.20462
 
-        # Áreas de estructuras asociadas a las órdenes de esa semana
-        ordenes_semana = list(ordenes_por_semana[(anio, semana)])
-        area_total = detallesEstructuras.objects.filter(orden__in=ordenes_semana).aggregate(
+        # Área total de esa estructura dentro de las órdenes analizadas
+        ordenes_en_qs = qs.filter(
+            fecha__year=anio,
+            fecha__week=semana
+        ).values_list('orden', flat=True).distinct()
+
+        area_total = detallesEstructuras.objects.filter(
+            estructura=estructura_filtro,
+            orden__in=ordenes_en_qs
+        ).aggregate(
             total_area=Sum('area')
         )['total_area'] or 0
 
-        # Seguridad ante área cero
         kg_m2 = round(kg_totales / area_total, 2) if area_total > 0 else 0
 
         fechas.append(fecha.isoformat())
         kgxm2.append(kg_m2)
         derivadas.append(0 if i == 0 else kgxm2[i] - kgxm2[i - 1])
-
-    # Filtros disponibles
-    filtros_completos = [
-        ('Finca', 'finca', AcumFruta.objects.filter(orden__in=ordenes_abiertas).exclude(finca__isnull=True).exclude(finca='').values_list('finca', flat=True).distinct()),
-        ('Orden', 'orden', AcumFruta.objects.filter(orden__in=ordenes_abiertas).exclude(orden__isnull=True).exclude(orden='').values_list('orden', flat=True).distinct()),
-        ('Variedad', 'variedad', AcumFruta.objects.filter(orden__in=ordenes_abiertas).exclude(variedad__isnull=True).exclude(variedad='').values_list('variedad', flat=True).distinct()),
-        ('Cultivo', 'cultivo', AcumFruta.objects.filter(orden__in=ordenes_abiertas).exclude(cultivo__isnull=True).exclude(cultivo='').values_list('cultivo', flat=True).distinct()),
-        ('Estructura', 'estructura', AcumFruta.objects.filter(orden__in=ordenes_abiertas).exclude(estructura__isnull=True).exclude(estructura='').values_list('estructura', flat=True).distinct()),
-    ]
 
     context = {
         'filtros_completos': filtros_completos,
