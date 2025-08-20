@@ -3066,11 +3066,11 @@ def dashboard_acumfruta(request):
         if valor:
             proyecciones_qs = proyecciones_qs.filter(**{campo: valor})
 
-    proyecciones_agrupadas = proyecciones_qs.values('anio', 'semana').annotate(
+    proyecciones_agrupadas = proyecciones_qs.values('año', 'semana').annotate(
         kilos_proyectados=Sum('kilos')
-    ).order_by('anio', 'semana')
+    ).order_by('año', 'semana')
 
-    fechas_proyectadas = [get_date_from_week(p['anio'], p['semana']).isoformat() for p in proyecciones_agrupadas]
+    fechas_proyectadas = [get_date_from_week(p['año'], p['semana']).isoformat() for p in proyecciones_agrupadas]
     kilos_proyectados = [round(p['kilos_proyectados'], 2) for p in proyecciones_agrupadas]
 
     # Filtros disponibles
