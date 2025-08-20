@@ -1,0 +1,91 @@
+
+{% extends "base/plantaEbaseGerencial.html" %}
+{% load static %}
+{% block style %}
+{% endblock %}
+{% block title %}{% endblock %}
+{% block enc %}{% endblock %}
+{% block parrafo %}{% endblock %}
+
+{% block content %}
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="{% static '/main.css' %}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
+
+<h2 class="title"><p class="texto-con-margen">Semillas del Campo, S.A.</p></h2>
+<h2 class="subtitle"><p class="texto-con-margen">¡Gestiona procesos de producción!</p></h2>
+<style>
+    .swiper-container {
+        width: 100%;
+        height: 100vh; /* Ajusta según el diseño */
+    }
+    .swiper-slide {
+        display: flex;
+        justify-content: center; /* Centra horizontalmente */
+        align-items: center;    /* Centra verticalmente */
+        height: 100%;           /* Asegura que las diapositivas ocupen el 100% del contenedor */
+    }
+    .swiper-slide img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain; /* Ajusta la imagen sin distorsión */
+    }
+</style>
+<body>
+{% if user.is_authenticated %}
+    <br>
+    <br>
+    <br>
+    <div class="image-container">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide"><img src="{% static 'img/img6.jpeg' %}" alt="Imagen 1"></div>
+                
+                <div class="swiper-slide"><img src="{% static 'img/img7.jpeg' %}" alt="Imagen 1"></div>
+                
+                <div class="swiper-slide"><img src="{% static 'img/img8.jpeg' %}" alt="Imagen 1"></div>
+                <div class="swiper-slide"><img src="{% static 'img/logo.png' %}" alt="Imagen 2"></div>
+                <div class="swiper-slide"><img src="{% static 'img/cosecha.jpg' %}" alt="Imagen 3"></div>
+            </div>
+            <!-- Añadir paginación -->
+            <div class="swiper-pagination"></div>
+            <!-- Añadir botones de navegación -->
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+
+    </div>
+{% else %}
+    
+{% endif %}
+
+
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+
+<script>
+    var swiper = new Swiper('.swiper-container', {
+        loop: true,
+        autoplay: {
+            delay: 5000,
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+    });
+</script>
+
+
+{% endblock %}
+{% block script %}{% endblock %}

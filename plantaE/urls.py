@@ -8,7 +8,8 @@ urlpatterns = [
 #    path("homepage/", views.homepage, name="homepage"),
 #    path('logout/', views.logout_view, name='logout'),
     path("",views.plantaEhomepage,name='plantaE_home'),
-    
+    path("gerencial/",views.plantaEhomepageger,name='plantaE_homeger'),
+
     path('mostrarvascula/', views.vascula_monitor, name='sensor_monitor'),
     path('exportar_excel/', views.exportar_excel, name='exportar_excel'),
     
@@ -51,7 +52,7 @@ urlpatterns = [
     path('salidasFruta2/<int:pk>/delete/', views.article_delete2, name='salidasFruta_delete2'),
     path('salidasFruta/<int:pk>/delete/Valle', views.article_deleteValle, name='salidasFruta_deleteValle'),
     path('salidasFruta/consultaaprovechamientos', views.poraprovechamientos, name='salidasFruta_aprovechamietos'),
-
+    path('salidasFruta/consultaaprovechamientosger', views.poraprovechamientosger, name='salidasFruta_aprovechamietosger'),
     path("acumFrutaView",views.acumFruta_list2,name='acumFruta_list2'),
     path("acumFruta",views.acumFruta_list,name='acumFruta_list'),
     path("acumFruta/Valle",views.acumFruta_list,name='acumFruta_listValle'),
