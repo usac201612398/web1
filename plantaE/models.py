@@ -9,7 +9,28 @@ class usuariosAppFruta(models.Model):
     
     def __str__(self):
         return (self.finca + " | " + self.encargado)
+
+class proyecciones(models.Model):
+
+    #op_finca = [('VALLE','VALLE'),('RIO','RIO'),('CIP', 'CIP'),('FLE','FLE'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.')]
+    #op_cultivo = [('AGUACATE','AGUACATE'),('PEPINO','PEPINO'),('CHERRY','CHERRY'),('ROMA','ROMA'),('MEDLEY','MEDLEY'),('BEEF','BEEF'),('SALADETTE','SALADETTE'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
+    #op_status = [('Abierta','Abierta'),('Cerrada','Cerrada')]
+    #op_temporada = [('Temp 2023-2024','Temp 2023-2024'),('Temp 2024-2025','Temp 2024-2025')]
+    id = models.AutoField(primary_key=True)
+    fecha = models.DateField(blank=True, null=True)
+    semana = models.IntegerField(blank=True, null=True)
+    año = models.IntegerField(blank=True, null=True)
+    semanacosecha = models.IntegerField(blank=True, null=True)
+    finca = models.CharField(max_length=25,blank=True)
+    orden = models.CharField(max_length=30,blank=True)
+    cultivo = models.CharField(max_length=35, blank=True)
+    kgm2 = models.FloatField(blank=True, null=True)
+    kilos = models.FloatField(blank=True, null=True)
+    temporada = models.CharField(max_length=45,blank=True)
     
+    def __str__(self):
+        return (str(self.finca) + " | " + str(self.orden)+ " | " + str(self.temporada)+ " | " + str(self.status) )
+     
 class datosProduccion(models.Model):
 
     #op_finca = [('VALLE','VALLE'),('RIO','RIO'),('CIP', 'CIP'),('FLE','FLE'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.')]
