@@ -3067,7 +3067,7 @@ def dashboard_acumfruta(request):
 
     # Iterar sobre cada semana de datos reales y buscar su proyección
     for i, d in enumerate(datos_reales):
-        fecha = get_date_from_week(d['anio'], d['semana'])
+        fecha = get_date_from_week(d['año'], d['semana'])
         kg = round(d['libras_totales'] / 2.20462, 2)
 
         fechas.append(fecha.isoformat())
@@ -3080,7 +3080,7 @@ def dashboard_acumfruta(request):
             derivadas.append(kg - kilos[i - 1])
 
         # Buscar proyección correspondiente
-        proy = proy_qs.filter(anio=d['anio'], semana=d['semana']).aggregate(
+        proy = proy_qs.filter(anio=d['año'], semana=d['semana']).aggregate(
             suma_kilos=Sum('kilos')
         )
 
