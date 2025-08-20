@@ -3081,7 +3081,7 @@ def dashboard_acumfrutakgxm2(request):
         kgxm2.append(kg_m2)
         derivadas.append(0 if i == 0 else kgxm2[i] - kgxm2[i - 1])
 
-    # PROYECCIONES
+    # PROYECCIONES – solo por finca, orden y cultivo
     proy_qs = proyecciones.objects.all()
 
     for campo in ['finca', 'orden', 'cultivo']:
@@ -3090,10 +3090,11 @@ def dashboard_acumfrutakgxm2(request):
 
     proy_qs = proy_qs.exclude(kgm2__isnull=True)
 
+    # Dict para acceso rápido
     proy_data = proy_qs.values('año', 'semana', 'kgm2').order_by('año', 'semana')
-
     proy_dict = {(p['año'], p['semana']): p['kgm2'] for p in proy_data}
 
+    # Solo mostrar proyecciones para las semanas que existen en datos reales
     fechas_proy = []
     proy_kgxm2 = []
 
@@ -3122,7 +3123,6 @@ def dashboard_acumfrutakgxm2(request):
     }
 
     return render(request, 'plantaE/dashboard_acumfrutakgxm2.html', context)
-
 
 
 def dashboard_acumfruta(request):
