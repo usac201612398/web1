@@ -3049,9 +3049,9 @@ def dashboard_acumfruta(request):
     datos_reales = qs.annotate(
         semana=ExtractWeek('fecha'),
         anio=ExtractYear('fecha')
-    ).values('anio', 'semana').annotate(
+    ).values('año', 'semana').annotate(
         libras_totales=Sum('libras')
-    ).order_by('anio', 'semana')
+    ).order_by('año', 'semana')
 
     fechas = []
     kilos = []
