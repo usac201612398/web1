@@ -3028,7 +3028,6 @@ def get_date_from_week(year, week):
     return datetime.strptime(f'{year}-W{int(week)}-1', "%Y-W%W-%w").date()
 
 def dashboard_acumfruta(request):
-
     # Filtros desde GET
     filtros_get = {
         'finca': request.GET.get('finca'),
@@ -3040,40 +3039,56 @@ def dashboard_acumfruta(request):
 
     ordenes_abiertas = datosProduccion.objects.filter(status='Abierta').values_list('orden', flat=True)
 
-    # Query base
+    # Query datos reales
     qs = AcumFruta.objects.filter(orden__in=ordenes_abiertas).exclude(finca="CIP").exclude(libras__isnull=True)
-
-    # Aplicar filtros
     for campo, valor in filtros_get.items():
         if valor:
             qs = qs.filter(**{campo: valor})
 
-    # Agrupación por semana
-    datos = qs.annotate(
+    # Agrupación por semana/año
+    datos_reales = qs.annotate(
         semana=ExtractWeek('fecha'),
         anio=ExtractYear('fecha')
     ).values('anio', 'semana').annotate(
         libras_totales=Sum('libras')
     ).order_by('anio', 'semana')
 
-    # Ejes para la gráfica
-    fechas = [get_date_from_week(d['anio'], d['semana']).isoformat() for d in datos]
-    kilos = [round(d['libras_totales'] / 2.20462, 2) for d in datos]
-    derivadas = [0] + [kilos[i] - kilos[i - 1] for i in range(1, len(kilos))]
+    fechas = []
+    kilos = []
+    derivadas = []
+    fechas_proyectadas = []
+    kilos_proyectados = []
 
-    proyecciones_qs = proyecciones.objects.all()
+    # Filtro base para proyecciones
+    proy_qs = proyecciones.objects.all()
     for campo, valor in filtros_get.items():
         if valor:
-            proyecciones_qs = proyecciones_qs.filter(**{campo: valor})
+            proy_qs = proy_qs.filter(**{campo: valor})
 
-    proyecciones_agrupadas = proyecciones_qs.values('año', 'semana').annotate(
-        kilos_proyectados=Sum('kilos')
-    ).order_by('año', 'semana')
+    # Iterar sobre cada semana de datos reales y buscar su proyección
+    for i, d in enumerate(datos_reales):
+        fecha = get_date_from_week(d['anio'], d['semana'])
+        kg = round(d['libras_totales'] / 2.20462, 2)
 
-    fechas_proyectadas = [get_date_from_week(p['año'], p['semana']).isoformat() for p in proyecciones_agrupadas]
-    kilos_proyectados = [round(p['kilos_proyectados'], 2) for p in proyecciones_agrupadas]
+        fechas.append(fecha.isoformat())
+        kilos.append(kg)
 
-    # Filtros disponibles
+        # Derivada
+        if i == 0:
+            derivadas.append(0)
+        else:
+            derivadas.append(kg - kilos[i - 1])
+
+        # Buscar proyección correspondiente
+        proy = proy_qs.filter(anio=d['anio'], semana=d['semana']).aggregate(
+            suma_kilos=Sum('kilos')
+        )
+
+        proy_kilos = round(proy['suma_kilos'] or 0, 2)
+        fechas_proyectadas.append(fecha.isoformat())
+        kilos_proyectados.append(proy_kilos)
+
+    # Filtros para el frontend
     filtros_completos = [
         ('Finca', 'finca', AcumFruta.objects.filter(orden__in=ordenes_abiertas).exclude(finca__isnull=True).exclude(finca='').values_list('finca', flat=True).distinct()),
         ('Orden', 'orden', AcumFruta.objects.filter(orden__in=ordenes_abiertas).exclude(orden__isnull=True).exclude(orden='').values_list('orden', flat=True).distinct()),
@@ -3091,6 +3106,7 @@ def dashboard_acumfruta(request):
         'kilos_proyectados_json': json.dumps(kilos_proyectados),
         'request': request,
     }
+
     return render(request, 'plantaE/dashboard_acumfruta.html', context)
 
 def get_date_from_week(anio, semana):
