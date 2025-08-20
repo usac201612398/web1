@@ -27,6 +27,7 @@ class proyecciones(models.Model):
     kgm2 = models.FloatField(blank=True, null=True)
     kilos = models.FloatField(blank=True, null=True)
     temporada = models.CharField(max_length=45,blank=True)
+    status = models.CharField(max_length=35, blank=True)
     
     def __str__(self):
         return (str(self.semanacosecha) + " | " + str(self.orden)+ " | " + str(self.cultivo)+ " | " + str(self.finca) )

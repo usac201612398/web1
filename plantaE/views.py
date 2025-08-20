@@ -3,7 +3,7 @@ from django.http import JsonResponse, HttpResponse
 from openpyxl import Workbook
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect
-from .models import Actpeso, paramenvlocales,enviosrec,AcumFrutaaux,salidacontenedores, inventarioProdTermAux,productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
+from .models import Actpeso, paramenvlocales,proyecciones,enviosrec,AcumFrutaaux,salidacontenedores, inventarioProdTermAux,productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
 from .forms import boletasForm,itemsForm, itemsenviosForm,salidacontenedoresForm,salidasFrutaForm, contenedoresForm,recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
 from django.db.models import Sum, Q, Max, Min,Value as V
 from django.utils import timezone
@@ -3024,6 +3024,8 @@ def inventariogeneral_list(request):
     # Pasar los registros agrupados al renderizado de la plantilla
     return render(request, 'plantaE/inventarioProd_inventariogeneral.html', {'registros': registros_agrupados,'registros_json':registros_json})
 
+def get_date_from_week(year, week):
+    return datetime.strptime(f'{year}-W{int(week)}-1', "%Y-W%W-%w").date()
 
 def dashboard_acumfruta(request):
 
@@ -3059,6 +3061,17 @@ def dashboard_acumfruta(request):
     kilos = [round(d['libras_totales'] / 2.20462, 2) for d in datos]
     derivadas = [0] + [kilos[i] - kilos[i - 1] for i in range(1, len(kilos))]
 
+    proyecciones_qs = proyecciones.objects.all()
+    for campo, valor in filtros_get.items():
+        if valor:
+            proyecciones_qs = proyecciones_qs.filter(**{campo: valor})
+
+    proyecciones_agrupadas = proyecciones_qs.values('anio', 'semana').annotate(
+        kilos_proyectados=Sum('kilos')
+    ).order_by('anio', 'semana')
+
+    fechas_proyectadas = [get_date_from_week(p['anio'], p['semana']).isoformat() for p in proyecciones_agrupadas]
+    kilos_proyectados = [round(p['kilos_proyectados'], 2) for p in proyecciones_agrupadas]
 
     # Filtros disponibles
     filtros_completos = [
@@ -3074,6 +3087,8 @@ def dashboard_acumfruta(request):
         'fechas_json': json.dumps(fechas),
         'libras_json': json.dumps(kilos),
         'derivadas_json': json.dumps(derivadas),
+        'fechas_proyectadas_json': json.dumps(fechas_proyectadas),
+        'kilos_proyectados_json': json.dumps(kilos_proyectados),
         'request': request,
     }
     return render(request, 'plantaE/dashboard_acumfruta.html', context)

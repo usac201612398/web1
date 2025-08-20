@@ -102,19 +102,33 @@
     const fechas = JSON.parse('{{ fechas_json|escapejs }}');
     const libras = JSON.parse('{{ libras_json|escapejs }}');
     const derivadas = JSON.parse('{{ derivadas_json|escapejs }}');
-
+    const fechasProyectadas = JSON.parse('{{ fechas_proyectadas_json|escapejs }}');
+    const kilosProyectados = JSON.parse('{{ kilos_proyectados_json|escapejs }}');
+    // Unir las fechas sin duplicados
+    const todasFechas = [...new Set([...fechas, ...fechasProyectadas])];
     new Chart(document.getElementById('graficoProduccion'), {
         type: 'line',
         data: {
-            labels: fechas,
-            datasets: [{
-                label: 'Producción (libras)',
-                data: libras,
-                borderColor: 'green',
-                backgroundColor: 'rgba(0,128,0,0.2)',
-                fill: true,
-                tension: 0.3
-            }]
+            labels: todasFechas,
+            datasets: [
+                {
+                    label: 'Producción real (kg)',
+                    data: fechas.map((f, i) => ({ x: f, y: libras[i] })),
+                    borderColor: 'green',
+                    backgroundColor: 'rgba(0,128,0,0.2)',
+                    fill: true,
+                    tension: 0.3
+                },
+                {
+                    label: 'Proyección (kg)',
+                    data: fechasProyectadas.map((f, i) => ({ x: f, y: kilosProyectados[i] })),
+                    borderColor: 'blue',
+                    backgroundColor: 'rgba(0,0,255,0.1)',
+                    borderDash: [5, 5],
+                    fill: true,
+                    tension: 0.3
+                }
+            ]
         },
         options: {
             responsive: true,
@@ -127,7 +141,7 @@
                     },
                     ticks: {
                         autoSkip: true,
-                        maxTicksLimit: 10,
+                        maxTicksLimit: 12,
                         maxRotation: 45
                     }
                 }
