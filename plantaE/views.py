@@ -3035,7 +3035,9 @@ def dashboard_acumfruta(request):
         'cultivo': request.GET.get('cultivo'),
         'estructura': request.GET.get('estructura'),
     }
+
     ordenes_abiertas = datosProduccion.objects.filter(status='Abierta').values_list('orden', flat=True)
+
     # Query base
     qs = AcumFruta.objects.filter(orden__in=ordenes_abiertas).exclude(finca="CIP").exclude(libras__isnull=True)
 
@@ -3044,11 +3046,19 @@ def dashboard_acumfruta(request):
         if valor:
             qs = qs.filter(**{campo: valor})
 
-    # Agrupación por fecha
-    datos = qs.values('fecha').annotate(libras_totales=Sum('libras')).order_by('fecha')
-    fechas = [d['fecha'].strftime('%Y-%m-%d') for d in datos]
-    libras = [d['libras_totales'] for d in datos]
-    derivadas = [0] + [libras[i] - libras[i - 1] for i in range(1, len(libras))]
+    # Agrupación por semana
+    datos = qs.annotate(
+        semana=ExtractWeek('fecha'),
+        anio=ExtractYear('fecha')
+    ).values('anio', 'semana').annotate(
+        libras_totales=Sum('libras')
+    ).order_by('anio', 'semana')
+
+    # Ejes para la gráfica
+    fechas = [get_date_from_week(d['anio'], d['semana']).isoformat() for d in datos]
+    kilos = [round(d['libras_totales'] / 2.20462, 2) for d in datos]
+    derivadas = [0] + [kilos[i] - kilos[i - 1] for i in range(1, len(kilos))]
+
 
     # Filtros disponibles
     filtros_completos = [
@@ -3062,11 +3072,10 @@ def dashboard_acumfruta(request):
     context = {
         'filtros_completos': filtros_completos,
         'fechas_json': json.dumps(fechas),
-        'libras_json': json.dumps(libras),
+        'libras_json': json.dumps(kilos),
         'derivadas_json': json.dumps(derivadas),
         'request': request,
     }
-
     return render(request, 'plantaE/dashboard_acumfruta.html', context)
 
 def get_date_from_week(anio, semana):
