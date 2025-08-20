@@ -3024,28 +3024,33 @@ def inventariogeneral_list(request):
     # Pasar los registros agrupados al renderizado de la plantilla
     return render(request, 'plantaE/inventarioProd_inventariogeneral.html', {'registros': registros_agrupados,'registros_json':registros_json})
 
-def dashboard_acumfrutakgxm2(request):
+from collections import defaultdict
+from django.db.models import Sum
+from django.db.models.functions import ExtractWeek, ExtractYear
+from django.shortcuts import render
+import json
 
+def dashboard_acumfrutakgxm2(request):
     # Filtros GET
     filtros_get = {
         'finca': request.GET.get('finca'),
         'orden': request.GET.get('orden'),
         'cultivo': request.GET.get('cultivo'),
-        'estructura_filtro': request.GET.get('estructura')
+        'estructura': request.GET.get('estructura'),  # se agrega estructura
     }
 
-    # Órdenes abiertas
+    # Obtener órdenes abiertas
     ordenes_abiertas = datosProduccion.objects.filter(status='Abierta').values_list('orden', flat=True)
 
-    # Base queryset de AcumFruta
+    # Query base de AcumFruta
     qs = AcumFruta.objects.filter(orden__in=ordenes_abiertas).exclude(finca="CIP").exclude(libras__isnull=True)
 
-    # Filtros aplicados
+    # Aplicar filtros a AcumFruta
     for campo, valor in filtros_get.items():
         if valor:
             qs = qs.filter(**{campo: valor})
 
-    # Agrupar por semana y año
+    # Agrupar libras por semana y año
     datos_agrupados = qs.annotate(
         semana=ExtractWeek('fecha'),
         anio=ExtractYear('fecha')
@@ -3053,45 +3058,41 @@ def dashboard_acumfrutakgxm2(request):
         libras_totales=Sum('libras')
     ).order_by('anio', 'semana')
 
-    # Map: (anio, semana) → órdenes involucradas
-    ordenes_por_semana = defaultdict(set)
-    for record in qs.annotate(
-        semana=ExtractWeek('fecha'),
-        anio=ExtractYear('fecha')
-    ).values('anio', 'semana', 'orden'):
-        ordenes_por_semana[(record['anio'], record['semana'])].add(record['orden'])
-
-    # Resultados finales
+    # Preparar resultados
     fechas = []
     kgxm2 = []
     derivadas = []
 
-    for i, d in enumerate(ordenes_por_semana):
+    for i, d in enumerate(datos_agrupados):
         anio = d['anio']
         semana = d['semana']
         fecha = get_date_from_week(anio, semana)
 
-        # Total de kilos en esa semana
+        # Convertir libras a kilos
         kg_totales = d['libras_totales'] / 2.20462
 
-        # Área total de esa estructura dentro de las órdenes analizadas
-        ordenes_en_qs = qs.filter(
-            fecha__year=anio,
-            fecha__week=semana
-        ).values_list('orden', flat=True).distinct()
-
-        area_total = detallesEstructuras.objects.filter(
-            estructura=estructura_filtro,
-            orden__in=ordenes_en_qs
-        ).aggregate(
+        # Calcular área de estructuras que coincidan con los filtros aplicados
+        filtros_area = {k: v for k, v in filtros_get.items() if v}
+        area_total = detallesEstructuras.objects.filter(**filtros_area).aggregate(
             total_area=Sum('area')
         )['total_area'] or 0
 
+        # Calcular kg/m2
         kg_m2 = round(kg_totales / area_total, 2) if area_total > 0 else 0
 
+        # Agregar a resultados
         fechas.append(fecha.isoformat())
         kgxm2.append(kg_m2)
         derivadas.append(0 if i == 0 else kgxm2[i] - kgxm2[i - 1])
+
+    # Filtros para el template
+    filtros_completos = [
+        ('Finca', 'finca', AcumFruta.objects.filter(orden__in=ordenes_abiertas).exclude(finca__isnull=True).exclude(finca='').values_list('finca', flat=True).distinct()),
+        ('Orden', 'orden', AcumFruta.objects.filter(orden__in=ordenes_abiertas).exclude(orden__isnull=True).exclude(orden='').values_list('orden', flat=True).distinct()),
+        ('Variedad', 'variedad', AcumFruta.objects.filter(orden__in=ordenes_abiertas).exclude(variedad__isnull=True).exclude(variedad='').values_list('variedad', flat=True).distinct()),
+        ('Cultivo', 'cultivo', AcumFruta.objects.filter(orden__in=ordenes_abiertas).exclude(cultivo__isnull=True).exclude(cultivo='').values_list('cultivo', flat=True).distinct()),
+        ('Estructura', 'estructura', AcumFruta.objects.filter(orden__in=ordenes_abiertas).exclude(estructura__isnull=True).exclude(estructura='').values_list('estructura', flat=True).distinct()),
+    ]
 
     context = {
         'filtros_completos': filtros_completos,
@@ -3100,7 +3101,9 @@ def dashboard_acumfrutakgxm2(request):
         'derivadas_json': json.dumps(derivadas),
         'request': request,
     }
+
     return render(request, 'plantaE/dashboard_acumfrutakgxm2.html', context)
+
 
 def dashboard_acumfruta(request):
 
