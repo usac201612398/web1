@@ -3038,7 +3038,7 @@ def reporte_mermas_view(request):
     registros = inventarioProdTerm.objects.filter(
         fecha__range=(fecha_inicio, fecha_fin),
         categoria="Exportación"
-    ).exclude(status__in=['En proceso', 'Anulado'])
+    ).exclude(status__in=[ 'Anulado'])
 
     agrupaciones = defaultdict(lambda: {
         'cajas': 0,
