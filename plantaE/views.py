@@ -3061,7 +3061,7 @@ def reporte_mermas_view(request):
 
         pesostd = r.pesostdxcaja or 0
         cajas = r.cajas or 0
-        libras = r.libras or 0
+        libras = r.lbsintara or 0
         peso_teorico = cajas * pesostd
 
         agrupaciones[clave]['cajas'] += cajas
