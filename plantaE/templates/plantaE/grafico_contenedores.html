@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+{% load static %}
+<head>
+  <meta charset="UTF-8">
+  <title>Gráfico de Contenedores</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+</head>
+<body>
+<section class="section">
+  <div class="container">
+    <h1 class="title has-text-centered">Reporte de Contenedores</h1>
+
+    <div class="tabs is-centered is-toggle is-toggle-rounded">
+      <ul>
+        <li class="is-active" id="tab-dia"><a>Día</a></li>
+        <li id="tab-semana"><a>Semana</a></li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <canvas id="graficoContenedores" height="100"></canvas>
+    </div>
+
+    <div class="has-text-centered">
+      <a href="{% url 'plantaE_homeger' %}" class="button is-success mt-4">Home</a>
+    </div>
+  </div>
+</section>
+<script>
+  const datosDia = JSON.parse('{{ por_dia|escapejs }}');
+  const datosSemana = JSON.parse('{{ por_semana|escapejs }}');
+</script>
+<script>
+ 
+  let chart;
+
+  const config = (labels, data) => ({
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Contenedores',
+        data: data,
+        backgroundColor: 'rgba(75, 192, 192, 0.5)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: 'Cantidad'
+          }
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Fecha'
+          }
+        }
+      }
+    }
+  });
+
+  function renderGrafico(labels, data) {
+    const ctx = document.getElementById('graficoContenedores').getContext('2d');
+    if (chart) chart.destroy();
+    chart = new Chart(ctx, config(labels, data));
+  }
+
+  // Inicial
+  renderGrafico(datosDia.labels, datosDia.data);
+
+  // Tabs
+  document.getElementById('tab-dia').addEventListener('click', function () {
+    this.classList.add('is-active');
+    document.getElementById('tab-semana').classList.remove('is-active');
+    renderGrafico(datosDia.labels, datosDia.data);
+  });
+
+  document.getElementById('tab-semana').addEventListener('click', function () {
+    this.classList.add('is-active');
+    document.getElementById('tab-dia').classList.remove('is-active');
+    renderGrafico(datosSemana.labels, datosSemana.data);
+  });
+</script>
+
+</body>
+</html>

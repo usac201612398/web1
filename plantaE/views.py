@@ -3024,6 +3024,54 @@ def inventariogeneral_list(request):
     # Pasar los registros agrupados al renderizado de la plantilla
     return render(request, 'plantaE/inventarioProd_inventariogeneral.html', {'registros': registros_agrupados,'registros_json':registros_json})
 
+
+from django.db.models.functions import TruncDate
+from django.db.models import Count
+
+
+def contenedores_grafico_view(request):
+    # Agrupación por día
+    por_dia = (
+        salidacontenedores.objects
+        .filter(fechasalcontenedor__isnull=False)
+        .annotate(fecha=TruncDate('fechasalcontenedor'))
+        .values('fecha')
+        .annotate(total=Count('registro'))
+        .order_by('fecha')
+    )
+
+    # Agrupación por semana ISO (año + semana)
+    por_semana = (
+        salidacontenedores.objects
+        .filter(fechasalcontenedor__isnull=False)
+        .annotate(
+            semana=ExtractWeek('fechasalcontenedor'),
+            anio=ExtractYear('fechasalcontenedor')
+        )
+        .values('anio', 'semana')
+        .annotate(total=Count('registro'))
+        .order_by('anio', 'semana')
+    )
+
+    # Preparar datos para el frontend (Chart.js)
+    datos_por_dia = {
+        "labels": [str(item["fecha"]) for item in por_dia],
+        "data": [item["total"] for item in por_dia]
+    }
+
+    datos_por_semana = {
+        "labels": [f'{item["anio"]}-W{item["semana"]}' for item in por_semana],
+        "data": [item["total"] for item in por_semana]
+    }
+
+    context = {
+        "por_dia": json.dumps(datos_por_dia),
+        "por_semana": json.dumps(datos_por_semana),
+    }
+
+    return render(request, 'plantaE/grafico_contenedores.html', context)
+
+
 def reporte_mermas_view(request):
     # Parámetros desde GET
     tipo = request.GET.get('tipo', 'acumulado')  # "dia", "semana", "mes", "acumulado"
