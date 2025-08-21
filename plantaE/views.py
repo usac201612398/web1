@@ -3034,10 +3034,10 @@ def contenedores_grafico_view(request):
     por_dia = (
         salidacontenedores.objects
         .filter(fechasalcontenedor__isnull=False)
-        .annotate(fecha=TruncDate('fechasalcontenedor'))
-        .values('fecha')
+        .annotate(fecha_trunc=TruncDate('fechasalcontenedor'))
+        .values('fecha_trunc')
         .annotate(total=Count('registro'))
-        .order_by('fecha')
+        .order_by('fecha_trunc')
     )
 
     # Agrupación por semana ISO (año + semana)
@@ -3055,7 +3055,7 @@ def contenedores_grafico_view(request):
 
     # Preparar datos para el frontend (Chart.js)
     datos_por_dia = {
-        "labels": [str(item["fecha"]) for item in por_dia],
+        "labels": [str(item["fecha_trunc"]) for item in por_dia],
         "data": [item["total"] for item in por_dia]
     }
 
