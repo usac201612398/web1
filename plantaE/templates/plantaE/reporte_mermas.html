@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+{% load static %}
+<head>
+  <meta charset="UTF-8">
+  <title>Reporte de Mermas</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+</head>
+<body>
+<section class="section">
+  <div class="container">
+    <h1 class="title">Reporte de Mermas por Presentación</h1>
+
+    <!-- FILTROS -->
+    <form method="get" class="mb-4">
+      <div class="columns is-multiline">
+        <div class="column is-3">
+          <label class="label">Inicio</label>
+          <input type="date" name="inicio" class="input" value="{{ fecha_inicio }}">
+        </div>
+        <div class="column is-3">
+          <label class="label">Fin</label>
+          <input type="date" name="fin" class="input" value="{{ fecha_fin }}">
+        </div>
+        <div class="column is-3">
+          <label class="label">Agrupar por</label>
+          <div class="select is-fullwidth">
+            <select name="tipo">
+              <option value="dia" {% if tipo == "dia" %}selected{% endif %}>Día</option>
+              <option value="semana" {% if tipo == "semana" %}selected{% endif %}>Semana</option>
+              <option value="mes" {% if tipo == "mes" %}selected{% endif %}>Mes</option>
+              <option value="acumulado" {% if tipo == "acumulado" %}selected{% endif %}>Acumulado</option>
+            </select>
+          </div>
+        </div>
+        <div class="column is-3">
+          <label class="label">&nbsp;</label>
+          <button type="submit" class="button is-primary is-fullwidth">
+            Filtrar
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <!-- TABLA -->
+    <table class="table is-striped is-fullwidth" id="tablaMermas">
+      <thead>
+        <tr>
+          <th>Grupo</th>
+          <th>Producto</th>
+          <th>Cajas</th>
+          <th>Peso Real (lb)</th>
+          <th>Peso Teórico (lb)</th>
+          <th>Exceso (lb)</th>
+          <th>Exceso (%)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in reporte %}
+        <tr>
+          <td>{{ r.fecha_grupo }}</td>
+          <td>{{ r.itemsapname }}</td>
+          <td>{{ r.cajas }}</td>
+          <td>{{ r.peso_real }}</td>
+          <td>{{ r.peso_teorico }}</td>
+          <td>{{ r.exceso }}</td>
+          <td>{{ r.exceso_pct }}%</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <a href="{% url 'plantaE_homeger' %}" class="button is-light mt-5">← Volver</a>
+  </div>
+</section>
+
+<!-- JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+$(document).ready(function () {
+  $('#tablaMermas').DataTable({
+    dom: 'Bfrtip',
+    pageLength: 25,
+    buttons: [
+      {
+        extend: 'excelHtml5',
+        text: 'Exportar a Excel',
+        title: 'Reporte de Mermas',
+        exportOptions: {
+          columns: ':visible'
+        }
+      }
+    ],
+    language: {
+      search: "Buscar:",
+      lengthMenu: "Mostrar _MENU_ registros",
+      info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+      paginate: {
+        first: "Primero", last: "Último", next: "Siguiente", previous: "Anterior"
+      },
+      zeroRecords: "No se encontraron registros",
+    }
+  });
+});
+</script>
+</body>
+</html>

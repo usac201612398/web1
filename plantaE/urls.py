@@ -114,6 +114,7 @@ urlpatterns = [
     path('inventarioProd/packinglist_detail/<int:pk>/delete/', views.packinglist_delete, name='inventarioProd_packinglist_delete'),
     path("inventarioProd/inventariogeneral",views.inventariogeneral_list,name='inventarioProd_inventariogeneral'),
     path("inventarioProd/inventariogeneralger",views.inventariogeneralger_list,name='inventarioProd_inventariogeneralger'),
+    path("gerencial/reportedemermas",views.reporte_mermas_view,name='gerencial_reportedemermas'),
     path("inventarioProd/inventariogeneralfruta",views.inventariogeneralfruta_list,name='inventarioProd_inventariogeneralfruta'),
     path("inventarioProd/aprovechamientos",views.aprovechamientos,name='inventarioProd_aprovechamientos'),
     path('inventarioProd/reporteInv', views.reporteInventario, name='reporte_inventario'),

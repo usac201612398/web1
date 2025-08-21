@@ -3024,6 +3024,75 @@ def inventariogeneral_list(request):
     # Pasar los registros agrupados al renderizado de la plantilla
     return render(request, 'plantaE/inventarioProd_inventariogeneral.html', {'registros': registros_agrupados,'registros_json':registros_json})
 
+def reporte_mermas_view(request):
+    # Parámetros desde GET
+    tipo = request.GET.get('tipo', 'acumulado')  # "dia", "semana", "mes", "acumulado"
+    fecha_inicio = request.GET.get('inicio')
+    fecha_fin = request.GET.get('fin')
+
+    hoy = timezone.now().date()
+    fecha_inicio = datetime.strptime(fecha_inicio, '%Y-%m-%d').date() if fecha_inicio else hoy.replace(day=1)
+    fecha_fin = datetime.strptime(fecha_fin, '%Y-%m-%d').date() if fecha_fin else hoy
+
+    # Filtrar datos base
+    registros = inventarioProdTerm.objects.filter(
+        fecha__range=(fecha_inicio, fecha_fin),
+        categoria="Exportación"
+    ).exclude(status__in=['En proceso', 'Anulado'])
+
+    agrupaciones = defaultdict(lambda: {
+        'cajas': 0,
+        'peso_real': 0,
+        'peso_teorico': 0,
+    })
+
+    for r in registros:
+        # Agrupación dinámica
+        if tipo == 'dia':
+            clave_fecha = r.fecha.strftime('%Y-%m-%d')
+        elif tipo == 'semana':
+            clave_fecha = f"{r.fecha.isocalendar().year}-W{r.fecha.isocalendar().week:02d}"
+        elif tipo == 'mes':
+            clave_fecha = r.fecha.strftime('%Y-%m')
+        else:  # acumulado
+            clave_fecha = 'ACUMULADO'
+
+        clave = (clave_fecha, r.itemsapname)
+
+        pesostd = r.pesostdxcaja or 0
+        cajas = r.cajas or 0
+        libras = r.libras or 0
+        peso_teorico = cajas * pesostd
+
+        agrupaciones[clave]['cajas'] += cajas
+        agrupaciones[clave]['peso_real'] += libras
+        agrupaciones[clave]['peso_teorico'] += peso_teorico
+
+    # Preparar datos para la tabla
+    reporte = []
+    for (fecha_grupo, item), valores in agrupaciones.items():
+        exceso = valores['peso_real'] - valores['peso_teorico']
+        exceso_pct = (exceso / valores['peso_teorico']) * 100 if valores['peso_teorico'] > 0 else 0
+
+        reporte.append({
+            'fecha_grupo': fecha_grupo,
+            'itemsapname': item,
+            'cajas': valores['cajas'],
+            'peso_real': round(valores['peso_real'], 2),
+            'peso_teorico': round(valores['peso_teorico'], 2),
+            'exceso': round(exceso, 2),
+            'exceso_pct': round(exceso_pct, 2)
+        })
+
+    reporte = sorted(reporte, key=lambda x: (x['fecha_grupo'], x['itemsapname']))
+    return render(request, 'plantaE/reporte_mermas.html', {
+        'reporte': reporte,
+        'reporte_json': json.dumps(reporte, default=str),
+        'tipo': tipo,
+        'fecha_inicio': fecha_inicio,
+        'fecha_fin': fecha_fin
+    })
+
 def inventariogeneralger_list(request):
     today = timezone.now().date()
 
