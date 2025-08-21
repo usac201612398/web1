@@ -369,6 +369,7 @@ class inventarioProdTerm(models.Model):
     def __str__(self):
         return str(self.registro) + " | " + str(self.proveedor) + " | " + str(self.itemsapname)+ " | " + str(self.cultivo)
 
+
 class inventarioProdTermAux(models.Model):
     
     #op_proveedor = [('','-'),('FINCA LA PASTORIA, S.A.','FINCA LA PASTORIA, S.A.'),('INVERSIONES LA PASTORIA, S.A.','INVERSIONES LA PASTORIA, S.A.'),('SDC','SDC'),('AGROINDUSTRIAS SAN RAFAEL, S.A.','AGROINDUSTRIAS SAN RAFAEL, S.A.'),('INVERNADEROS TECNOLOGICOS S.A','INVERNADEROS TECNOLOGICOS S.A'),('HORTEX, S.A.','HORTEX, S.A.'),('DANIEL ESTUARDO GALICIA CARRERA','DANIEL ESTUARDO GALICIA CARRERA'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.')]

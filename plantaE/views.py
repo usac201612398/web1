@@ -3024,6 +3024,107 @@ def inventariogeneral_list(request):
     # Pasar los registros agrupados al renderizado de la plantilla
     return render(request, 'plantaE/inventarioProd_inventariogeneral.html', {'registros': registros_agrupados,'registros_json':registros_json})
 
+def inventariogeneralger_list(request):
+    today = timezone.now().date()
+
+    # Obtener todas las salidas de inventario y salidas de contenedores
+    salidas = inventarioProdTerm.objects.filter(
+        fecha__lte=today,
+        categoria="Exportación"
+    ).filter(
+        Q(status='') | Q(status__isnull=True)
+    ).order_by('registro')
+
+    salidas2 = inventarioProdTermAux.objects.filter(
+        fecha__lte=today,
+        categoria="Exportación"
+    ).exclude(
+        Q(status='En proceso') | Q(status='Anulado')
+    )
+
+    # Crear un diccionario para almacenar los resultados agrupados por 'itemsapcode' y 'proveedor'
+    agrupaciones = {}
+
+    # Agrupar las salidas de inventario (salidas) por 'itemsapcode' y 'proveedor'
+    for salida in salidas:
+        # 🔁 Reemplazo de itemsapname según condiciones específicas
+        if (
+            salida.pesostdxcaja == 11 and
+            salida.cultivo == 'BLOCKY ORGANICO' and
+            salida.itemsapcode != '305.100.268' and
+            salida.categoria == 'Exportación'
+        ):
+            salida.itemsapname = 'CHILE ORGANICO DE COLORES (CAJA 11 LIBRAS)'
+
+        elif (
+            salida.pesostdxcaja == 11 and
+            salida.cultivo == 'BLOCKY' and
+            salida.itemsapcode != '305.100.268' and
+            salida.categoria == 'Exportación'
+        ):
+            salida.itemsapname = 'CHILE DE COLORES (CAJA 11 LIBRAS)'
+
+        # Crear la clave de agrupación
+        clave_agrupacion = (salida.itemsapcode, salida.proveedor)
+
+        if clave_agrupacion not in agrupaciones:
+            agrupaciones[clave_agrupacion] = {
+                'itemsapcode': salida.itemsapcode,
+                'itemsapname': salida.itemsapname,
+                'proveedor': salida.proveedor,
+                'cultivo': salida.cultivo,
+                'total_cajas_salidas': 0,
+                'total_cajas_salidas2': 0,
+                'salidas': []
+            }
+
+        agrupaciones[clave_agrupacion]['total_cajas_salidas'] += salida.cajas or 0
+        agrupaciones[clave_agrupacion]['salidas'].append(salida)
+
+    # Agrupar las salidas de contenedores (salidas2) por 'itemsapcode' y 'proveedor'
+    for salida2 in salidas2:
+        clave_agrupacion = (salida2.itemsapcode, salida2.proveedor)
+
+        if clave_agrupacion in agrupaciones:
+            agrupaciones[clave_agrupacion]['total_cajas_salidas2'] += salida2.cajas or 0
+
+    # Calcular cajas restantes
+    registros_agrupados = []
+    for agrupacion in agrupaciones.values():
+        agrupacion['cajas_restantes'] = agrupacion['total_cajas_salidas'] - agrupacion['total_cajas_salidas2']
+
+        # Solo incluir si hay cajas restantes
+        if agrupacion['cajas_restantes'] > 0:
+            try:
+                producto = productoTerm.objects.get(itemsapcode=agrupacion['itemsapcode'])
+                cajasxtarima = producto.cajasxtarima
+            except productoTerm.DoesNotExist:
+                cajasxtarima = 0
+
+            agrupacion['cajasxtarima'] = cajasxtarima
+
+            if cajasxtarima > 0:
+                agrupacion['total_tarimas'] = agrupacion['cajas_restantes'] / cajasxtarima
+            else:
+                agrupacion['total_tarimas'] = 0
+
+            registros_agrupados.append(agrupacion)
+
+    # Ordenar por proveedor
+    registros_agrupados = sorted(registros_agrupados, key=lambda x: x['proveedor'])
+
+    # Convertir a JSON
+    registros_json = json.dumps(registros_agrupados, default=str)
+
+    return render(
+        request,
+        'plantaE/inventarioProd_inventariogeneralger.html',
+        {
+            'registros': registros_agrupados,
+            'registros_json': registros_json
+        }
+    )
+
 def dashboard_acumfrutakgxm2(request):
     filtros_get = {
         'finca': request.GET.get('finca'),
@@ -4186,6 +4287,7 @@ def poraprovechamientosger(request):
         'tabla_html': tabla_html,
         'registros_json': registros_json,
     })
+
 
 def inventariogeneralfruta_list(request):
     today = timezone.now().date()
