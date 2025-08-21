@@ -3036,20 +3036,20 @@ def contenedores_grafico_view(request):
         .filter(fechasalcontenedor__isnull=False)
         .annotate(fecha_trunc=TruncDate('fechasalcontenedor'))
         .values('fecha_trunc')
-        .annotate(total=Count('registro'))
+        .annotate(total=Count('contenedor', distinct=True))
         .order_by('fecha_trunc')
     )
 
     # Agrupación por semana ISO (año + semana)
     por_semana = (
         salidacontenedores.objects
-        .filter(fechasalcontenedor__isnull=False).distinct("contenedor")
+        .filter(fechasalcontenedor__isnull=False)
         .annotate(
             semana=ExtractWeek('fechasalcontenedor'),
             anio=ExtractYear('fechasalcontenedor')
         )
         .values('anio', 'semana')
-        .annotate(total=Count('registro'))
+        .annotate(total=Count('contenedor', distinct=True))
         .order_by('anio', 'semana')
     )
 
