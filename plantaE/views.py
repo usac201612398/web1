@@ -3103,11 +3103,19 @@ def dashboard_acumfrutakgxm2(request):
         fecha = get_date_from_week(*key)
         fechas_proy.append(fecha.isoformat())
         proy_kgxm2.append(round(proy_dict.get(key, 0), 2))
-    # Suma total acumulada real
+    # Acumulado real hasta ahora (filtrado y calculado previamente)
     acumulado_real = round(sum(kgxm2), 2)
 
-    # Suma total proyectada
-    total_proyectado = round(sum(proy_kgxm2), 2)
+    # Proyección total de la temporada (NO limitada a fechas reales)
+    proyeccion_total_temp = proyecciones.objects.all()
+
+    for campo in ['finca', 'orden', 'cultivo']:
+        if filtros_get.get(campo):
+            proyeccion_total_temp = proyeccion_total_temp.filter(**{campo: filtros_get[campo]})
+
+    proyeccion_total_temp = proyeccion_total_temp.exclude(kgm2__isnull=True)
+
+    total_proyectado = round(proyeccion_total_temp.aggregate(total=Sum('kgm2'))['total'] or 0, 2)
     filtros_completos = [
         ('Finca', 'finca', AcumFruta.objects.filter(orden__in=ordenes_abiertas).exclude(finca__isnull=True).exclude(finca='').values_list('finca', flat=True).distinct()),
         ('Orden', 'orden', AcumFruta.objects.filter(orden__in=ordenes_abiertas).exclude(orden__isnull=True).exclude(orden='').values_list('orden', flat=True).distinct()),
