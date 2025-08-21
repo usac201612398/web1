@@ -3051,7 +3051,8 @@ def reporte_mermas_view(request):
         if tipo == 'dia':
             clave_fecha = r.fecha.strftime('%Y-%m-%d')
         elif tipo == 'semana':
-            clave_fecha = f"{r.fecha.isocalendar().year}-W{r.fecha.isocalendar().week:02d}"
+            iso_year, iso_week, _ = r.fecha.isocalendar()
+            clave_fecha = f"{iso_year}-W{iso_week:02d}"
         elif tipo == 'mes':
             clave_fecha = r.fecha.strftime('%Y-%m')
         else:  # acumulado
