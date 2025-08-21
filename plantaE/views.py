@@ -3031,8 +3031,8 @@ def reporte_mermas_view(request):
     fecha_fin = request.GET.get('fin')
 
     hoy = timezone.now().date()
-    fecha_inicio = datetime.strptime(fecha_inicio, '%Y-%m-%d').date() if fecha_inicio else hoy.replace(day=1)
-    fecha_fin = datetime.strptime(fecha_fin, '%Y-%m-%d').date() if fecha_fin else hoy
+    fecha_inicio = datetime.datetime.strptime(fecha_inicio, '%Y-%m-%d').date() if fecha_inicio else hoy.replace(day=1)
+    fecha_fin = datetime.datetime.strptime(fecha_fin, '%Y-%m-%d').date() if fecha_fin else hoy
 
     # Filtrar datos base
     registros = inventarioProdTerm.objects.filter(
@@ -3071,7 +3071,9 @@ def reporte_mermas_view(request):
     # Preparar datos para la tabla
     reporte = []
     for (fecha_grupo, item), valores in agrupaciones.items():
+
         exceso = valores['peso_real'] - valores['peso_teorico']
+        
         exceso_pct = (exceso / valores['peso_teorico']) * 100 if valores['peso_teorico'] > 0 else 0
 
         reporte.append({
