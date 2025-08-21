@@ -3025,6 +3025,7 @@ def inventariogeneral_list(request):
     return render(request, 'plantaE/inventarioProd_inventariogeneral.html', {'registros': registros_agrupados,'registros_json':registros_json})
 
 def inventariogeneralger_list(request):
+    
     today = timezone.now().date()
 
     # Obtener todas las salidas de inventario y salidas de contenedores
