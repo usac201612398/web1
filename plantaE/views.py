@@ -3043,14 +3043,14 @@ def contenedores_grafico_view(request):
     # Agrupación por semana ISO (año + semana)
     por_semana = (
         salidacontenedores.objects
-        .filter(fechasalcontenedor__isnull=False)
+        .filter(fechasalcontenedor__isnull=False).distinct("contenedor")
         .annotate(
             semana=ExtractWeek('fechasalcontenedor'),
             anio=ExtractYear('fechasalcontenedor')
         )
         .values('anio', 'semana')
         .annotate(total=Count('registro'))
-        .order_by('anio', 'semana').distinct("contenedor")
+        .order_by('anio', 'semana')
     )
 
     # Preparar datos para el frontend (Chart.js)
