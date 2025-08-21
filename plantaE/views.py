@@ -3057,8 +3057,25 @@ def reporte_mermas_view(request):
             clave_fecha = r.fecha.strftime('%Y-%m')
         else:  # acumulado
             clave_fecha = 'ACUMULADO'
+        # Corrección de itemSAPName según condiciones específicas
+        if (
+            r.pesostdxcaja == 11 and
+            r.cultivo == "BLOCKY ORGANICO" and
+            r.itemsapcode != "305.100.268" and
+            r.categoria == "Exportación"
+        ):
+            itemsapname = "CHILE ORGANICO DE COLORES (CAJA 11 LIBRAS)"
+        elif (
+            r.pesostdxcaja == 11 and
+            r.cultivo == "BLOCKY" and
+            r.itemsapcode != "305.100.268" and
+            r.categoria == "Exportación"
+        ):
+            itemsapname = "CHILE DE COLORES (CAJA 11 LIBRAS)"
+        else:
+            itemsapname = r.itemsapname  # Usa el nombre original si no cumple condición
 
-        clave = (clave_fecha, r.itemsapname)
+        clave = (clave_fecha, itemsapname)
 
         pesostd = r.pesostdxcaja or 0
         cajas = r.cajas or 0
