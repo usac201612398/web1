@@ -3103,7 +3103,11 @@ def dashboard_acumfrutakgxm2(request):
         fecha = get_date_from_week(*key)
         fechas_proy.append(fecha.isoformat())
         proy_kgxm2.append(round(proy_dict.get(key, 0), 2))
+    # Suma total acumulada real
+    acumulado_real = round(sum(kgxm2), 2)
 
+    # Suma total proyectada
+    total_proyectado = round(sum(proy_kgxm2), 2)
     filtros_completos = [
         ('Finca', 'finca', AcumFruta.objects.filter(orden__in=ordenes_abiertas).exclude(finca__isnull=True).exclude(finca='').values_list('finca', flat=True).distinct()),
         ('Orden', 'orden', AcumFruta.objects.filter(orden__in=ordenes_abiertas).exclude(orden__isnull=True).exclude(orden='').values_list('orden', flat=True).distinct()),
@@ -3114,6 +3118,8 @@ def dashboard_acumfrutakgxm2(request):
 
     context = {
         'filtros_completos': filtros_completos,
+        'acumulado_real_json': json.dumps(acumulado_real),
+        'total_proyectado_json': json.dumps(total_proyectado),
         'fechas_json': json.dumps(fechas),
         'kgxm2_json': json.dumps(kgxm2),
         'proy_kgxm2_json': json.dumps(proy_kgxm2),

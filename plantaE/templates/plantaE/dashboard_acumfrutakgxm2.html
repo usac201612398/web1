@@ -88,7 +88,13 @@
             <canvas id="graficoDerivada"></canvas>
         </div>
     </div>
-
+        <!-- Gráfica de Progreso Total -->
+    <div class="card mb-4">
+        <div class="card-header">Progreso total acumulado vs Proyección</div>
+        <div class="card-body">
+            <canvas id="graficoProgreso"></canvas>
+        </div>
+    </div>
     <div class="text-center mt-5">
     <a href="{% url 'plantaE_homeger' %}" class="btn btn-success btn-lg rounded-pill">
         <i class="fas fa-home me-2"></i>Home
@@ -186,7 +192,59 @@
         }
     });
 </script>
+<script>
+    const acumuladoReal = JSON.parse('{{ acumulado_real_json|escapejs }}');
+    const totalProyectado = JSON.parse('{{ total_proyectado_json|escapejs }}');
 
+    new Chart(document.getElementById('graficoProgreso'), {
+        type: 'bar',
+        data: {
+            labels: ['Progreso Total'],
+            datasets: [
+                {
+                    label: 'Acumulado real (kg/m²)',
+                    data: [acumuladoReal],
+                    backgroundColor: 'green',
+                    borderRadius: 5,
+                    stack: 'Stack 0',
+                },
+                {
+                    label: 'Proyección restante (kg/m²)',
+                    data: [Math.max(0, totalProyectado - acumuladoReal)],
+                    backgroundColor: 'lightgray',
+                    borderRadius: 5,
+                    stack: 'Stack 0',
+                }
+            ]
+        },
+        options: {
+            indexAxis: 'y',  // Barra horizontal
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            return `${context.dataset.label}: ${context.raw} kg/m²`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    max: totalProyectado * 1.1,  // un poco más del total
+                    title: {
+                        display: true,
+                        text: 'kg/m²'
+                    }
+                }
+            }
+        }
+    });
+</script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     function getCookie(name) {
