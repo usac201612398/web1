@@ -1109,7 +1109,7 @@ def recepcionesFruta_delete(request, pk):
     salidas = get_object_or_404(detallerec, pk=pk)
 
     # Verificar si existen registros en detallerecaux con la misma recepción
-    existe_en_aux = detallerecaux.objects.filter(recepcion=salidas.recepcion).exists()
+    existe_en_aux = detallerecaux.objects.filter(recepcion=salidas.recepcion).exclude(status="Anulado").exists()
 
     if existe_en_aux:
         return render(request, 'plantaE/recepciones_confirm_delete.html', {
