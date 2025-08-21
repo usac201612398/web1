@@ -3025,10 +3025,9 @@ def inventariogeneral_list(request):
     return render(request, 'plantaE/inventarioProd_inventariogeneral.html', {'registros': registros_agrupados,'registros_json':registros_json})
 
 def inventariogeneralger_list(request):
-    
     today = timezone.now().date()
 
-    # Obtener todas las salidas de inventario y salidas de contenedores
+    # Filtrar salidas (inventario actual)
     salidas = inventarioProdTerm.objects.filter(
         fecha__lte=today,
         categoria="Exportación"
@@ -3036,6 +3035,7 @@ def inventariogeneralger_list(request):
         Q(status='') | Q(status__isnull=True)
     ).order_by('registro')
 
+    # Filtrar salidas de contenedores
     salidas2 = inventarioProdTermAux.objects.filter(
         fecha__lte=today,
         categoria="Exportación"
@@ -3043,12 +3043,11 @@ def inventariogeneralger_list(request):
         Q(status='En proceso') | Q(status='Anulado')
     )
 
-    # Crear un diccionario para almacenar los resultados agrupados por 'itemsapcode' y 'proveedor'
+    # Agrupar por (proveedor, cultivo, itemsapname)
     agrupaciones = {}
 
-    # Agrupar las salidas de inventario (salidas) por 'itemsapcode' y 'proveedor'
     for salida in salidas:
-        # 🔁 Reemplazo de itemsapname según condiciones específicas
+        # 🔁 Reemplazo de nombre de ítem si aplica
         if (
             salida.pesostdxcaja == 11 and
             salida.cultivo == 'BLOCKY ORGANICO' and
@@ -3065,56 +3064,38 @@ def inventariogeneralger_list(request):
         ):
             salida.itemsapname = 'CHILE DE COLORES (CAJA 11 LIBRAS)'
 
-        # Crear la clave de agrupación
-        clave_agrupacion = (salida.itemsapcode, salida.proveedor)
+        clave = (salida.proveedor, salida.cultivo, salida.itemsapname)
 
-        if clave_agrupacion not in agrupaciones:
-            agrupaciones[clave_agrupacion] = {
-                'itemsapcode': salida.itemsapcode,
-                'itemsapname': salida.itemsapname,
+        if clave not in agrupaciones:
+            agrupaciones[clave] = {
                 'proveedor': salida.proveedor,
                 'cultivo': salida.cultivo,
-                'total_cajas_salidas': 0,
-                'total_cajas_salidas2': 0,
-                'salidas': []
+                'itemsapname': salida.itemsapname,
+                'cajas_salidas': 0,
+                'cajas_salidas2': 0
             }
 
-        agrupaciones[clave_agrupacion]['total_cajas_salidas'] += salida.cajas or 0
-        agrupaciones[clave_agrupacion]['salidas'].append(salida)
+        agrupaciones[clave]['cajas_salidas'] += salida.cajas or 0
 
-    # Agrupar las salidas de contenedores (salidas2) por 'itemsapcode' y 'proveedor'
+    # Restar salidas2
     for salida2 in salidas2:
-        clave_agrupacion = (salida2.itemsapcode, salida2.proveedor)
+        clave = (salida2.proveedor, salida2.cultivo, salida2.itemsapname)
 
-        if clave_agrupacion in agrupaciones:
-            agrupaciones[clave_agrupacion]['total_cajas_salidas2'] += salida2.cajas or 0
+        if clave in agrupaciones:
+            agrupaciones[clave]['cajas_salidas2'] += salida2.cajas or 0
 
-    # Calcular cajas restantes
+    # Calcular cajas restantes y filtrar si hay > 0
     registros_agrupados = []
     for agrupacion in agrupaciones.values():
-        agrupacion['cajas_restantes'] = agrupacion['total_cajas_salidas'] - agrupacion['total_cajas_salidas2']
-
-        # Solo incluir si hay cajas restantes
-        if agrupacion['cajas_restantes'] > 0:
-            try:
-                producto = productoTerm.objects.get(itemsapcode=agrupacion['itemsapcode'])
-                cajasxtarima = producto.cajasxtarima
-            except productoTerm.DoesNotExist:
-                cajasxtarima = 0
-
-            agrupacion['cajasxtarima'] = cajasxtarima
-
-            if cajasxtarima > 0:
-                agrupacion['total_tarimas'] = agrupacion['cajas_restantes'] / cajasxtarima
-            else:
-                agrupacion['total_tarimas'] = 0
-
+        cajas_restantes = agrupacion['cajas_salidas'] - agrupacion['cajas_salidas2']
+        if cajas_restantes > 0:
+            agrupacion['cajas_restantes'] = cajas_restantes
             registros_agrupados.append(agrupacion)
 
     # Ordenar por proveedor
     registros_agrupados = sorted(registros_agrupados, key=lambda x: x['proveedor'])
 
-    # Convertir a JSON
+    # JSON opcional
     registros_json = json.dumps(registros_agrupados, default=str)
 
     return render(
@@ -3125,6 +3106,7 @@ def inventariogeneralger_list(request):
             'registros_json': registros_json
         }
     )
+
 
 def dashboard_acumfrutakgxm2(request):
     filtros_get = {
