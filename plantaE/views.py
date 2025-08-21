@@ -3050,7 +3050,7 @@ def contenedores_grafico_view(request):
         )
         .values('anio', 'semana')
         .annotate(total=Count('registro'))
-        .order_by('anio', 'semana')
+        .order_by('anio', 'semana').distinct("contenedor")
     )
 
     # Preparar datos para el frontend (Chart.js)
