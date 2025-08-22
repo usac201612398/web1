@@ -3107,6 +3107,7 @@ def contenedores_grafico_view(request):
     for item in contenedores_list:
         clave = (item['contenedor'], item['fecha'])
         item['naviera'] = navieras_dict.get(clave, 'No registrada')
+        
     return render(request, 'plantaE/grafico_contenedores.html', {
         'tipo': tipo,
         'fecha_inicio': fecha_inicio,
