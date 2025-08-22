@@ -3093,7 +3093,24 @@ def contenedores_grafico_view(request):
             'pct_sdc': pct_sdc,
             'pct_no_sdc': pct_no_sdc,
         })
+    # Obtener los registros de la tabla contenedores que coincidan con (contenedor, fecha)
+    claves_join = [(c['contenedor'], c['fecha']) for c in contenedores_list]
 
+    # Consultar contenedores con esas claves
+    navieras_qs = contenedores.objects.filter(
+        contenedor__in=[c[0] for c in claves_join],
+        fecha__in=[c[1] for c in claves_join]
+    )
+
+    # Crear diccionario clave (contenedor, fecha) → naviera
+    navieras_dict = {
+        (c.contenedor, c.fecha): c.naviera for c in navieras_qs
+    }
+
+    # Asociar naviera en contenedores_list
+    for item in contenedores_list:
+        clave = (item['contenedor'], item['fecha'])
+        item['naviera'] = navieras_dict.get(clave, 'No registrada')
     return render(request, 'plantaE/grafico_contenedores.html', {
         'tipo': tipo,
         'fecha_inicio': fecha_inicio,
