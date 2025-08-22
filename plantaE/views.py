@@ -3028,6 +3028,7 @@ def inventariogeneral_list(request):
 from django.db.models.functions import TruncDate
 from django.db.models import Count
 
+
 def contenedores_grafico_view(request):
     # Filtros desde GET
     tipo = request.GET.get('tipo', 'dia')
@@ -3066,55 +3067,17 @@ def contenedores_grafico_view(request):
         labels = [f'{item["anio"]}-W{item["semana"]:02d}' for item in agrupado]
         data = [item['total'] for item in agrupado]
 
-    # Obtener información de navieras (modelo contenedores)
-    contenedores_naviera = contenedores.objects.filter(
-        contenedor__in=[r.contenedor for r in registros],
-        fecha__in=[r.fechasalcontenedor for r in registros]
-    )
+    # Preparar datos para tabla
+    contenedores = registros.order_by('contenedor', 'fechasalcontenedor').distinct('contenedor')
 
-    navieras_dict = {
-        (c.contenedor, c.fecha): c for c in contenedores_naviera
-    }
-
-    # Agrupación por contenedor + fecha
-    contenedores_info = []
-
-    for r in registros.order_by('fechasalcontenedor', 'contenedor'):
-        clave = (r.contenedor, r.fechasalcontenedor)
-        naviera_obj = navieras_dict.get(clave)
-
-        # Cálculo de cajas por proveedor en este contenedor
-        total_cajas = salidacontenedores.objects.filter(
-            contenedor=r.contenedor,
-            fechasalcontenedor=r.fechasalcontenedor
-        ).aggregate(total=Sum('cajas'))['total'] or 0
-
-        cajas_sdc = salidacontenedores.objects.filter(
-            contenedor=r.contenedor,
-            fechasalcontenedor=r.fechasalcontenedor,
-            proveedor="SDC"
-        ).aggregate(total=Sum('cajas'))['total'] or 0
-
-        porcentaje_sdc = round(cajas_sdc * 100 / total_cajas, 2) if total_cajas else 0
-
-        contenedores_info.append({
-            'fechasalcontenedor': r.fechasalcontenedor,
-            'contenedor': r.contenedor,
-            'status': r.status,
-            'naviera': naviera_obj.naviera if naviera_obj else 'No registrada',
-            'total_cajas': total_cajas,
-            'cajas_sdc': cajas_sdc,
-            'porcentaje_sdc': porcentaje_sdc,
-        })
 
     return render(request, 'plantaE/grafico_contenedores.html', {
         'tipo': tipo,
         'fecha_inicio': fecha_inicio,
         'fecha_fin': fecha_fin,
         'por_dia': json.dumps({'labels': labels, 'data': data}, default=str),
-        'contenedores': contenedores_info,
+        'contenedores': contenedores,
     })
-
 
 def reporte_mermas_view(request):
     # Parámetros desde GET
