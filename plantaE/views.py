@@ -3100,9 +3100,6 @@ def contenedores_grafico_view(request):
         contenedores_info.append({
             'fechasalcontenedor': r.fechasalcontenedor,
             'contenedor': r.contenedor,
-            'destino': r.destino,
-            'transportista': r.transportista,
-            'marchamo': r.marchamo,
             'status': r.status,
             'naviera': naviera_obj.naviera if naviera_obj else 'No registrada',
             'total_cajas': total_cajas,
