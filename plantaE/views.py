@@ -3028,7 +3028,6 @@ def inventariogeneral_list(request):
 from django.db.models.functions import TruncDate
 from django.db.models import Count
 
-
 def contenedores_grafico_view(request):
     # Filtros desde GET
     tipo = request.GET.get('tipo', 'dia')
@@ -3067,17 +3066,42 @@ def contenedores_grafico_view(request):
         labels = [f'{item["anio"]}-W{item["semana"]:02d}' for item in agrupado]
         data = [item['total'] for item in agrupado]
 
-    # Preparar datos para tabla
-    contenedores = registros.order_by('contenedor', 'fechasalcontenedor').distinct('contenedor')
+    # Obtener lista de contenedores únicos (por contenedor y fecha)
+    claves_unicas = registros.values_list('contenedor', 'fechasalcontenedor').distinct()
 
+    contenedores_list = []
+    for contenedor_id, fecha in claves_unicas:
+        subquery = registros.filter(contenedor=contenedor_id, fechasalcontenedor=fecha)
+
+        total_cajas = subquery.aggregate(s=Sum('cajas'))['s'] or 0
+        cajas_sdc = subquery.filter(proveedor="SDC").aggregate(s=Sum('cajas'))['s'] or 0
+        cajas_no_sdc = total_cajas - cajas_sdc
+        pct_sdc = round(cajas_sdc * 100 / total_cajas, 2) if total_cajas else 0
+        pct_no_sdc = 100 - pct_sdc if total_cajas else 0
+
+        # Para completar el resto de los campos visibles en la tabla
+        primero = subquery.first()
+
+        contenedores_list.append({
+            'fecha': fecha,
+            'contenedor': contenedor_id,
+            'naviera': primero.naviera if hasattr(primero, 'naviera') else '',
+            'status': primero.status,
+            'cajas_sdc': cajas_sdc,
+            'cajas_no_sdc': cajas_no_sdc,
+            'total_cajas': total_cajas,
+            'pct_sdc': pct_sdc,
+            'pct_no_sdc': pct_no_sdc,
+        })
 
     return render(request, 'plantaE/grafico_contenedores.html', {
         'tipo': tipo,
         'fecha_inicio': fecha_inicio,
         'fecha_fin': fecha_fin,
         'por_dia': json.dumps({'labels': labels, 'data': data}, default=str),
-        'contenedores': contenedores,
+        'contenedores': contenedores_list,
     })
+
 
 def reporte_mermas_view(request):
     # Parámetros desde GET
