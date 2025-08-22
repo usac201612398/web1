@@ -3068,7 +3068,8 @@ def contenedores_grafico_view(request):
         data = [item['total'] for item in agrupado]
 
     # Preparar datos para tabla
-    contenedores = registros.order_by('fechasalcontenedor').distinct("contenedor")
+    contenedores = registros.order_by('contenedor', 'fechasalcontenedor').distinct('contenedor')
+
 
     return render(request, 'plantaE/grafico_contenedores.html', {
         'tipo': tipo,
