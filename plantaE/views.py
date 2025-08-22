@@ -3079,14 +3079,10 @@ def contenedores_grafico_view(request):
         pct_sdc = round(cajas_sdc * 100 / total_cajas, 2) if total_cajas else 0
         pct_no_sdc = 100 - pct_sdc if total_cajas else 0
 
-        # Para completar el resto de los campos visibles en la tabla
-        primero = subquery.first()
 
         contenedores_list.append({
             'fecha': fecha,
             'contenedor': contenedor_id,
-            'naviera': primero.naviera if hasattr(primero, 'naviera') else '',
-            'status': primero.status,
             'cajas_sdc': cajas_sdc,
             'cajas_no_sdc': cajas_no_sdc,
             'total_cajas': total_cajas,
@@ -3104,7 +3100,7 @@ def contenedores_grafico_view(request):
 
     # Crear diccionario clave (contenedor, fecha) → naviera
     navieras_dict = {
-        (c.contenedor, c.fecha): c.naviera for c in navieras_qs
+        (c.contenedor, c.fecha): c.transportista for c in navieras_qs
     }
 
     # Asociar naviera en contenedores_list
