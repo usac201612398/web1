@@ -3030,47 +3030,53 @@ from django.db.models import Count
 
 
 def contenedores_grafico_view(request):
-    # Agrupación por día
-    por_dia = (
-        salidacontenedores.objects
-        .filter(fechasalcontenedor__isnull=False)
-        .annotate(fecha_trunc=TruncDate('fechasalcontenedor'))
-        .values('fecha_trunc')
-        .annotate(total=Count('contenedor', distinct=True))
-        .order_by('fecha_trunc')
-    )
+    # Filtros desde GET
+    tipo = request.GET.get('tipo', 'dia')
+    fecha_inicio = request.GET.get('inicio')
+    fecha_fin = request.GET.get('fin')
 
-    # Agrupación por semana ISO (año + semana)
-    por_semana = (
-        salidacontenedores.objects
-        .filter(fechasalcontenedor__isnull=False)
-        .annotate(
-            semana=ExtractWeek('fechasalcontenedor'),
-            anio=ExtractYear('fechasalcontenedor')
+    hoy = timezone.now().date()
+    fecha_inicio = datetime.datetime.strptime(fecha_inicio, '%Y-%m-%d').date() if fecha_inicio else hoy.replace(day=1)
+    fecha_fin = datetime.datetime.strptime(fecha_fin, '%Y-%m-%d').date() if fecha_fin else hoy
+
+    # Filtrar registros base
+    registros = salidacontenedores.objects.filter(
+        fechasalcontenedor__range=(fecha_inicio, fecha_fin)
+    ).exclude(fechasalcontenedor__isnull=True)
+
+    # Agrupación para gráfico
+    if tipo == 'dia':
+        agrupado = (
+            registros.annotate(fecha_trunc=TruncDate('fechasalcontenedor'))
+            .values('fecha_trunc')
+            .annotate(total=Count('contenedor', distinct=True))
+            .order_by('fecha_trunc')
         )
-        .values('anio', 'semana')
-        .annotate(total=Count('contenedor', distinct=True))
-        .order_by('anio', 'semana')
-    )
+        labels = [str(item['fecha_trunc']) for item in agrupado]
+        data = [item['total'] for item in agrupado]
+    else:  # semana
+        agrupado = (
+            registros.annotate(
+                semana=ExtractWeek('fechasalcontenedor'),
+                anio=ExtractYear('fechasalcontenedor')
+            )
+            .values('anio', 'semana')
+            .annotate(total=Count('contenedor', distinct=True))
+            .order_by('anio', 'semana')
+        )
+        labels = [f'{item["anio"]}-W{item["semana"]:02d}' for item in agrupado]
+        data = [item['total'] for item in agrupado]
 
-    # Preparar datos para el frontend (Chart.js)
-    datos_por_dia = {
-        "labels": [str(item["fecha_trunc"]) for item in por_dia],
-        "data": [item["total"] for item in por_dia]
-    }
+    # Preparar datos para tabla
+    contenedores = registros.order_by('fechasalcontenedor')
 
-    datos_por_semana = {
-        "labels": [f'{item["anio"]}-W{item["semana"]}' for item in por_semana],
-        "data": [item["total"] for item in por_semana]
-    }
-
-    context = {
-        "por_dia": json.dumps(datos_por_dia),
-        "por_semana": json.dumps(datos_por_semana),
-    }
-
-    return render(request, 'plantaE/grafico_contenedores.html', context)
-
+    return render(request, 'plantaE/grafico_contenedores.html', {
+        'tipo': tipo,
+        'fecha_inicio': fecha_inicio,
+        'fecha_fin': fecha_fin,
+        'por_dia': json.dumps({'labels': labels, 'data': data}, default=str),
+        'contenedores': contenedores,
+    })
 
 def reporte_mermas_view(request):
     # Parámetros desde GET

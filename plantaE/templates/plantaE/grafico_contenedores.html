@@ -3,46 +3,89 @@
 {% load static %}
 <head>
   <meta charset="UTF-8">
-  <title>Gráfico de Contenedores</title>
+  <title>Reporte de Contenedores</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 </head>
 <body>
 <section class="section">
   <div class="container">
     <h1 class="title has-text-centered">Reporte de Contenedores</h1>
 
-    <div class="tabs is-centered is-toggle is-toggle-rounded">
-      <ul>
-        <li class="is-active" id="tab-dia"><a>Día</a></li>
-        <li id="tab-semana"><a>Semana</a></li>
-      </ul>
-    </div>
+    <!-- Filtros -->
+    <form method="get" class="mb-5">
+      <div class="columns is-multiline">
+        <div class="column is-3">
+          <label class="label">Inicio</label>
+          <input type="date" name="inicio" class="input" value="{{ fecha_inicio }}">
+        </div>
+        <div class="column is-3">
+          <label class="label">Fin</label>
+          <input type="date" name="fin" class="input" value="{{ fecha_fin }}">
+        </div>
+        <div class="column is-3">
+          <label class="label">Agrupar por</label>
+          <div class="select is-fullwidth">
+            <select name="tipo">
+              <option value="dia" {% if tipo == "dia" %}selected{% endif %}>Día</option>
+              <option value="semana" {% if tipo == "semana" %}selected{% endif %}>Semana</option>
+            </select>
+          </div>
+        </div>
+        <div class="column is-3">
+          <label class="label">&nbsp;</label>
+          <button type="submit" class="button is-primary is-fullwidth">Filtrar</button>
+        </div>
+      </div>
+    </form>
 
+    <!-- Gráfico -->
     <div class="box">
       <canvas id="graficoContenedores" height="100"></canvas>
     </div>
 
-    <div class="has-text-centered">
-      <a href="{% url 'plantaE_homeger' %}" class="button is-success mt-4">Home</a>
+    <!-- Tabla -->
+    <h2 class="subtitle">Listado de Contenedores</h2>
+    <table class="table is-striped is-fullwidth" id="tablaContenedores">
+      <thead>
+        <tr>
+          <th>Contenedor</th>
+          <th>Fecha Salida</th>
+          <th>Destino</th>
+          <th>Naviera</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in contenedores %}
+        <tr>
+          <td>{{ c.contenedor }}</td>
+          <td>{{ c.fechasalcontenedor }}</td>
+          <td>{{ c.destino }}</td>
+          <td>{{ c.naviera }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="has-text-centered mt-5">
+      <a href="{% url 'plantaE_homeger' %}" class="button is-light">← Volver</a>
     </div>
   </div>
 </section>
-<script>
-  const datosDia = JSON.parse('{{ por_dia|escapejs }}');
-  const datosSemana = JSON.parse('{{ por_semana|escapejs }}');
-</script>
-<script>
- 
-  let chart;
 
-  const config = (labels, data) => ({
+<!-- JS -->
+<script>
+  const datos = JSON.parse('{{ por_dia|escapejs }}');
+
+  const ctx = document.getElementById('graficoContenedores').getContext('2d');
+  new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: labels,
+      labels: datos.labels,
       datasets: [{
         label: 'Contenedores',
-        data: data,
+        data: datos.data,
         backgroundColor: 'rgba(75, 192, 192, 0.5)',
         borderWidth: 1
       }]
@@ -60,35 +103,34 @@
         x: {
           title: {
             display: true,
-            text: 'Fecha'
+            text: '{{ tipo|title }}'
           }
         }
       }
     }
   });
+</script>
 
-  function renderGrafico(labels, data) {
-    const ctx = document.getElementById('graficoContenedores').getContext('2d');
-    if (chart) chart.destroy();
-    chart = new Chart(ctx, config(labels, data));
-  }
-
-  // Inicial
-  renderGrafico(datosDia.labels, datosDia.data);
-
-  // Tabs
-  document.getElementById('tab-dia').addEventListener('click', function () {
-    this.classList.add('is-active');
-    document.getElementById('tab-semana').classList.remove('is-active');
-    renderGrafico(datosDia.labels, datosDia.data);
-  });
-
-  document.getElementById('tab-semana').addEventListener('click', function () {
-    this.classList.add('is-active');
-    document.getElementById('tab-dia').classList.remove('is-active');
-    renderGrafico(datosSemana.labels, datosSemana.data);
+<!-- DataTables -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $('#tablaContenedores').DataTable({
+      pageLength: 25,
+      language: {
+        search: "Buscar:",
+        lengthMenu: "Mostrar _MENU_ registros",
+        info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+        paginate: {
+          first: "Primero", last: "Último", next: "Siguiente", previous: "Anterior"
+        },
+        zeroRecords: "No se encontraron registros",
+      }
+    });
   });
 </script>
 
 </body>
 </html>
+
