@@ -45,24 +45,35 @@
       <canvas id="graficoContenedores" height="100"></canvas>
     </div>
 
-    <!-- Tabla -->
-    <h2 class="subtitle">Listado de Contenedores</h2>
+    <h2 class="subtitle">Distribución por Proveedor (SDC vs No-SDC)</h2>
     <table class="table is-striped is-fullwidth" id="tablaContenedores">
       <thead>
         <tr>
+          <th>Fecha</th>
           <th>Contenedor</th>
-          <th>Fecha Salida</th>
-          <th>Destino</th>
           <th>Naviera</th>
+          <th>Destino</th>
+          <th>Status</th>
+          <th>Cajas SDC</th>
+          <th>Cajas No-SDC</th>
+          <th>Total Cajas</th>
+          <th>% SDC</th>
+          <th>% No-SDC</th>
         </tr>
       </thead>
       <tbody>
-        {% for c in contenedores %}
+        {% for item in contenedores %}
         <tr>
-          <td>{{ c.contenedor }}</td>
-          <td>{{ c.fechasalcontenedor }}</td>
-          <td>{{ c.destino }}</td>
-          <td>{{ c.naviera }}</td>
+          <td>{{ item.fecha }}</td>
+          <td>{{ item.contenedor }}</td>
+          <td>{{ item.naviera }}</td>
+          <td>{{ item.destino }}</td>
+          <td>{{ item.status }}</td>
+          <td>{{ item.cajas_sdc }}</td>
+          <td>{{ item.cajas_no_sdc }}</td>
+          <td>{{ item.total_cajas }}</td>
+          <td>{{ item.pct_sdc }}%</td>
+          <td>{{ item.pct_no_sdc }}%</td>
         </tr>
         {% endfor %}
       </tbody>
