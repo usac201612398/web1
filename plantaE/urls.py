@@ -53,6 +53,7 @@ urlpatterns = [
     path('salidasFruta/<int:pk>/delete/Valle', views.article_deleteValle, name='salidasFruta_deleteValle'),
     path('salidasFruta/consultaaprovechamientos', views.poraprovechamientos, name='salidasFruta_aprovechamietos'),
     path('salidasFruta/consultaaprovechamientosger', views.poraprovechamientosger, name='salidasFruta_aprovechamietosger'),
+    path('salidasFruta/consultaaprovechamientosempger', views.poraprovechamientosempger, name='salidasFruta_aprovechamietosempger'),
     path("acumFrutaView",views.acumFruta_list2,name='acumFruta_list2'),
     path("acumFruta",views.acumFruta_list,name='acumFruta_list'),
     path("acumFruta/Valle",views.acumFruta_list,name='acumFruta_listValle'),

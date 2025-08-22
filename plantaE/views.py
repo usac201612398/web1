@@ -4418,6 +4418,94 @@ def poraprovechamientosger(request):
         'registros_json': registros_json,
     })
 
+def poraprovechamientosempger(request):
+    hoy = timezone.now().date()
+    # Obtener fecha máxima en detallerecaux
+    fecha_max = AcumFruta.objects.aggregate(max_fecha=Max('fecha'))['max_fecha']
+    if not fecha_max:
+        fecha_max = hoy  # fallback si no hay registros
+    ordenes_abiertas = datosProduccion.objects.filter(status='Abierta').values_list('orden', flat=True)
+
+    # Filtrar las libras totales por variedad desde AcumFruta
+    acumfrutadatos = AcumFruta.objects.filter(orden__in=ordenes_abiertas
+    ).annotate(
+        semana=ExtractWeek('fecha'),
+        anio=ExtractYear('fecha')
+    ).values('finca', 'cultivo', 'orden', 'estructura', 'variedad').annotate(total_libras=Sum('libras')).order_by()
+
+    recepciones_dict = {
+        formar_clave2(r['finca'], r['cultivo'], r['orden'], r['estructura'], r['variedad']): r['total_libras'] for r in acumfrutadatos
+    }
+
+    # Filtrar distribuciones desde AcumFrutaaux
+    detalles = AcumFrutaaux.objects.annotate(
+        semana=ExtractWeek('fecha'),
+        anio=ExtractYear('fecha')
+    ).filter(orden__in=ordenes_abiertas)
+
+    boleta_ids = detalles.values_list('boleta', flat=True).distinct()
+    boletas = Boletas.objects.filter(boleta__in=boleta_ids)
+    boletas_dict = {b.boleta: b for b in boletas}
+
+    # Agrupar las libras por boleta
+    agrupados = defaultdict(lambda: {'aprovechamiento': 0, 'devolución': 0, 'mediano': 0, 'total': 0})
+
+    for detalle in detalles:
+        boleta = boletas_dict.get(detalle.boleta)
+        if not boleta:
+            continue
+        
+        clave = formar_clave2(detalle.finca, detalle.cultivo, detalle.orden, detalle.estructura, detalle.variedad)
+        calidad = (boleta.calidad or '').strip().lower()
+        libras = detalle.libras or 0
+
+        if 'aprovechamiento' in calidad:
+            agrupados[clave]['aprovechamiento'] += libras
+        elif 'devolución' in calidad:
+            agrupados[clave]['devolución'] += libras
+        elif 'mediano' in calidad:
+            agrupados[clave]['mediano'] += libras
+
+        agrupados[clave]['total'] += libras
+
+    # Calcular los porcentajes de calidad
+    resultado = []
+    for (finca, cultivo, orden, estructura, variedad), datos in agrupados.items():
+        total_distribuido = datos['total'] or 0
+        recepcion_libras = recepciones_dict.get((finca, cultivo, orden, estructura, variedad), 0)
+        pendiente = recepcion_libras - total_distribuido
+        if pendiente < 0:
+            pendiente = 0
+        porcentaje_pendiente = round(pendiente * 100 / recepcion_libras, 2) if recepcion_libras else 0
+
+        # Calcular porcentaje de devolución
+        porcentaje_devolucion = round(datos['devolución'] * 100 / recepcion_libras, 2) if recepcion_libras else 0
+
+        resultado.append({
+            'proveedor': finca,
+            'cultivo': cultivo,
+            'orden': orden,
+            'estructura': estructura,
+            'variedad': variedad,
+            'libras': round(recepcion_libras, 2),
+            'aprovechamiento': round(datos['aprovechamiento'] * 100 / total_distribuido, 2) if total_distribuido else 0,
+            'mediano': round(datos['mediano'] * 100 / total_distribuido, 2) if total_distribuido else 0,
+            'devolucion': porcentaje_devolucion,
+            'procesado': total_distribuido,
+            'porcentaje_pendiente': porcentaje_pendiente,
+        })
+
+    registros_json = json.dumps(resultado, default=str)
+
+    # Convertir los resultados en una tabla HTML
+    df = pd.DataFrame(resultado)
+    tabla_html = df.to_html(classes="table table-striped", index=False)
+
+    return render(request, 'plantaE/salidasFruta_aprovechamientosempger.html', {
+        'registros': resultado,
+        'tabla_html': tabla_html,
+        'registros_json': registros_json,
+    })
 
 def inventariogeneralfruta_list(request):
     today = timezone.now().date()
