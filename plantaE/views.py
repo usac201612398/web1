@@ -3024,96 +3024,90 @@ def inventariogeneral_list(request):
     # Pasar los registros agrupados al renderizado de la plantilla
     return render(request, 'plantaE/inventarioProd_inventariogeneral.html', {'registros': registros_agrupados,'registros_json':registros_json})
 
+
 from django.db.models.functions import TruncDate
 from django.db.models import Count
 
 def contenedores_grafico_view(request):
-    # Filtros de fecha
+    # Filtros desde GET
+    tipo = request.GET.get('tipo', 'dia')
     fecha_inicio = request.GET.get('inicio')
     fecha_fin = request.GET.get('fin')
+
     hoy = timezone.now().date()
-    fecha_inicio = datetime.strptime(fecha_inicio, '%Y-%m-%d').date() if fecha_inicio else hoy.replace(day=1)
-    fecha_fin = datetime.strptime(fecha_fin, '%Y-%m-%d').date() if fecha_fin else hoy
+    fecha_inicio = datetime.datetime.strptime(fecha_inicio, '%Y-%m-%d').date() if fecha_inicio else hoy.replace(day=1)
+    fecha_fin = datetime.datetime.strptime(fecha_fin, '%Y-%m-%d').date() if fecha_fin else hoy
 
-    # Filtrar registros válidos
+    # Filtrar registros base
     registros = salidacontenedores.objects.filter(
-        fechasalcontenedor__range=(fecha_inicio, fecha_fin),
-        fechasalcontenedor__isnull=False
-    ).order_by('contenedor', 'fechasalcontenedor')
+        fechasalcontenedor__range=(fecha_inicio, fecha_fin)
+    ).exclude(fechasalcontenedor__isnull=True)
 
-    # Agrupación: clave = (contenedor, fechasalcontenedor)
-    agrupado = defaultdict(lambda: {
-        'cajas_sdc': 0,
-        'cajas_no_sdc': 0,
-        'total_cajas': 0,
-        'destino': '',
-        'status': '',
-    })
+    # Agrupación para gráfico
+    if tipo == 'dia':
+        agrupado = (
+            registros.annotate(fecha_trunc=TruncDate('fechasalcontenedor'))
+            .values('fecha_trunc')
+            .annotate(total=Count('contenedor', distinct=True))
+            .order_by('fecha_trunc')
+        )
+        labels = [str(item['fecha_trunc']) for item in agrupado]
+        data = [item['total'] for item in agrupado]
+    else:  # semana
+        agrupado = (
+            registros.annotate(
+                semana=ExtractWeek('fechasalcontenedor'),
+                anio=ExtractYear('fechasalcontenedor')
+            )
+            .values('anio', 'semana')
+            .annotate(total=Count('contenedor', distinct=True))
+            .order_by('anio', 'semana')
+        )
+        labels = [f'{item["anio"]}-W{item["semana"]:02d}' for item in agrupado]
+        data = [item['total'] for item in agrupado]
 
-    for r in registros:
-        clave = (r.contenedor, r.fechasalcontenedor)
-        cajas = getattr(r, 'cajas', 1)  # Si no hay campo 'cajas', usar 1 por default
-
-        if r.proveedor and r.proveedor.strip().upper() == 'SDC':
-            agrupado[clave]['cajas_sdc'] += cajas
-        else:
-            agrupado[clave]['cajas_no_sdc'] += cajas
-
-        agrupado[clave]['total_cajas'] += cajas
-        agrupado[clave]['destino'] = r.destino
-        agrupado[clave]['status'] = r.status
-
-    # Obtener navieras desde modelo contenedores
-    cont_nav = contenedores.objects.filter(
-        contenedor__in=[k[0] for k in agrupado.keys()],
-        fecha__in=[k[1] for k in agrupado.keys()]
+    # Obtener información de navieras (modelo contenedores)
+    contenedores_naviera = contenedores.objects.filter(
+        contenedor__in=[r.contenedor for r in registros],
+        fecha__in=[r.fechasalcontenedor for r in registros]
     )
-    navieras_dict = {(c.contenedor, c.fecha): c for c in cont_nav}
 
-    # Preparar datos para tabla
-    tabla_contenedores = []
-    for (contenedor, fecha), datos in agrupado.items():
-        total = datos['total_cajas']
-        pct_sdc = round(datos['cajas_sdc'] * 100 / total, 2) if total else 0
-        pct_no_sdc = round(datos['cajas_no_sdc'] * 100 / total, 2) if total else 0
-        naviera = navieras_dict.get((contenedor, fecha))
-
-        tabla_contenedores.append({
-            'contenedor': contenedor,
-            'fecha': fecha,
-            'naviera': getattr(naviera, 'naviera', 'No registrada'),
-            'destino': datos['destino'],
-            'status': datos['status'],
-            'cajas_sdc': datos['cajas_sdc'],
-            'cajas_no_sdc': datos['cajas_no_sdc'],
-            'total_cajas': total,
-            'pct_sdc': pct_sdc,
-            'pct_no_sdc': pct_no_sdc,
-        })
-
-    return render(request, 'plantaE/grafico_contenedores.html', {
-        'contenedores': tabla_contenedores,
-        'fecha_inicio': fecha_inicio,
-        'fecha_fin': fecha_fin,
-    })
-
-
-    # Crear diccionario con clave (contenedor, fecha)
     navieras_dict = {
         (c.contenedor, c.fecha): c for c in contenedores_naviera
     }
-    contenedores_con_navieras = []
+
+    # Agrupación por contenedor + fecha
+    contenedores_info = []
+
     for r in registros.order_by('fechasalcontenedor', 'contenedor'):
         clave = (r.contenedor, r.fechasalcontenedor)
         naviera_obj = navieras_dict.get(clave)
-        contenedores_con_navieras.append({
+
+        # Cálculo de cajas por proveedor en este contenedor
+        total_cajas = salidacontenedores.objects.filter(
+            contenedor=r.contenedor,
+            fechasalcontenedor=r.fechasalcontenedor
+        ).aggregate(total=Sum('cajas'))['total'] or 0
+
+        cajas_sdc = salidacontenedores.objects.filter(
+            contenedor=r.contenedor,
+            fechasalcontenedor=r.fechasalcontenedor,
+            proveedor="SDC"
+        ).aggregate(total=Sum('cajas'))['total'] or 0
+
+        porcentaje_sdc = round(cajas_sdc * 100 / total_cajas, 2) if total_cajas else 0
+
+        contenedores_info.append({
             'fechasalcontenedor': r.fechasalcontenedor,
             'contenedor': r.contenedor,
             'destino': r.destino,
             'transportista': r.transportista,
             'marchamo': r.marchamo,
             'status': r.status,
-            'naviera': naviera_obj.naviera if naviera_obj else 'No registrada'
+            'naviera': naviera_obj.naviera if naviera_obj else 'No registrada',
+            'total_cajas': total_cajas,
+            'cajas_sdc': cajas_sdc,
+            'porcentaje_sdc': porcentaje_sdc,
         })
 
     return render(request, 'plantaE/grafico_contenedores.html', {
@@ -3121,8 +3115,9 @@ def contenedores_grafico_view(request):
         'fecha_inicio': fecha_inicio,
         'fecha_fin': fecha_fin,
         'por_dia': json.dumps({'labels': labels, 'data': data}, default=str),
-        'contenedores': contenedores_con_navieras,
+        'contenedores': contenedores_info,
     })
+
 
 def reporte_mermas_view(request):
     # Parámetros desde GET
