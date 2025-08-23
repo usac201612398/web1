@@ -146,6 +146,7 @@ class conteosemillasForm(forms.ModelForm):
     op_estructura = op_invernadero + op_modulo + op_malla
     op_clasificacion = [('','-'),('Fruto maduro','Fruto maduro'),('Fruto verde','Fruto verde')]
     op_semana = [('','-'),(1,'1'),(2,'2'),(3,'3'),(4,'4'),(5,'5'),(6,'6')]
+
     nsemana = forms.ChoiceField(choices=op_semana,widget=forms.Select(attrs={'class': 'form-control'}))
     codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     codigo_empleado = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
@@ -179,6 +180,7 @@ class conteosemillasForm(forms.ModelForm):
         self.fields['observaciones'].required = False
         self.fields['codigo_empleado'].required = False
         self.fields['operario_name'].required = False
+        self.fields['codigo_empleado'].required = False
 
 class conteofrutosForm(forms.ModelForm):
 
