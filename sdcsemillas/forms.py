@@ -65,7 +65,7 @@ class lotesForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(lotesForm, self).__init__(*args, **kwargs)
-        variedades_qs = variedades.objects.all()
+        variedades_qs = variedades.objects.exclude(status="Anulado")
         self.fields['variedad_code'].choices = [('', '-')] + [(v.variedad_code, v.variedad_code) for v in variedades_qs]
         self.fields['apodo_variedad'].choices = [('', '-')] + [(v.apodo_variedad, v.apodo_variedad) for v in variedades_qs]
 
@@ -180,7 +180,6 @@ class conteosemillasForm(forms.ModelForm):
         self.fields['observaciones'].required = False
         self.fields['codigo_empleado'].required = False
         self.fields['operario_name'].required = False
-        self.fields['codigo_empleado'].required = False
 
 class conteofrutosForm(forms.ModelForm):
 
