@@ -354,7 +354,7 @@ class ccalidadpolenForm(forms.ModelForm):
         
         self.fields['calidad'].required = False
         self.fields['consistencia'].required = False
-        self.fields['agentesexternos'].required = False
+        self.fields['ag_externos'].required = False
         self.fields['observaciones'].required = False
         self.fields['codigo_empleado'].required = False
         self.fields['operario_name'].required = False
