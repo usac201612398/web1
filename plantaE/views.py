@@ -3096,7 +3096,7 @@ def contenedores_grafico_view(request):
     navieras_qs = contenedores.objects.filter(
         contenedor__in=[c[0] for c in claves_join],
         fecha__in=[c[1] for c in claves_join]
-    )
+    ).exclude(status="Anulado")
 
     # Crear diccionario clave (contenedor, fecha) → naviera
     navieras_dict = {
