@@ -3041,7 +3041,7 @@ def contenedores_grafico_view(request):
     # Filtrar registros base
     registros = salidacontenedores.objects.filter(
         fechasalcontenedor__range=(fecha_inicio, fecha_fin)
-    ).exclude(fechasalcontenedor__isnull=True,status="Anulado")
+    ).exclude(fechasalcontenedor__isnull=True).exclude(status="Anulado")
 
     # Agrupación para gráfico
     if tipo == 'dia':
