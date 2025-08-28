@@ -2488,7 +2488,7 @@ def procesarinvprodconten(request):
     data = json.loads(request.body)
     mensaje = data['array']
     contenedor_=data['contenedor']
-    today = timezone.now().date()
+    today = timezone.localtime(timezone.now()).date()
     semana_actual = today.isocalendar()[1]  # semana actual
     #mensaje = request.POST.get('array')
         
