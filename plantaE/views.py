@@ -2813,14 +2813,14 @@ def procesarinvprodcontenv2(request):
             )
 
             # Verificar si se agotó todo el stock del registro
-            aux_sum = inventarioProdTermAux.objects.filter(inventarioreg=registro.registro).aggregate(
+            aux_sum = inventarioProdTermAux.objects.filter(inventarioreg=registro.registro).exclude(status="Anulado").aggregate(
                 sumacajas=Sum('cajas'),
                 sumalbs=Sum('lbsintara')
             )
             if (aux_sum['sumacajas'] or 0) >= total_cajas and (aux_sum['sumalbs'] or 0) >= total_libras:
                 registro.status = 'En proceso'
                 registro.save()
-                inventarioProdTermAux.objects.filter(orden=orden).update(status='En proceso')
+                inventarioProdTermAux.objects.filter(inventarioreg=registro.registro).update(status='En proceso')
 
             # Solo aquí se suma una vez
             cajas_acumuladas += cajas_usadas
