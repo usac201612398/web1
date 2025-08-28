@@ -223,15 +223,15 @@ class indexpolinizacion(models.Model):
     apodo_variedad = models.CharField(max_length= 50, blank = True, null =  True)
     tipo_cultivo = models.CharField(max_length= 20, blank = True, null =  True)
     color_lana= models.CharField(max_length= 20, blank = True, null =  True)
-    cantidad_camas = models.IntegerField(blank = True, null = True)
-    cantidad_index = models.IntegerField(blank = True, null = True) #Index por cama colocados
+    cantidad_camas = models.FloatField(blank = True, null = True)
+    cantidad_index = models.FloatField(blank = True, null = True) #Index por cama colocados
     cama1  = models.CharField(max_length= 50, blank = True, null =  True)
     cama2  = models.CharField(max_length= 50, blank = True, null =  True)
     cama3  = models.CharField(max_length= 50, blank = True, null =  True)
     cama4  = models.CharField(max_length= 50, blank = True, null =  True)
     cama5  = models.CharField(max_length= 50, blank = True, null =  True)
     media  = models.CharField(max_length= 50, blank = True, null =  True)
-    total_index=  models.IntegerField(blank = True, null = True)
+    total_index=  models.FloatField(blank = True, null = True)
     created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     observaciones = models.CharField(max_length= 75, blank = True, null =  True)
