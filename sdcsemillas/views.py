@@ -376,7 +376,7 @@ def conteofrutosplan_delete(request, pk):
         messages.success(request, "Conteo anulado correctamente.")
         return redirect('conteofrutosplan_list')
     
-    return render(request, 'sdcsemillas/conteofrutospla_confirm_delete.html', {'registros': salidas})
+    return render(request, 'sdcsemillas/conteofrutosplan_confirm_delete.html', {'registros': salidas})
 
 
 def conteofrutosplan_detail(request, pk):
