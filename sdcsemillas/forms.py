@@ -578,8 +578,8 @@ class cosechaForm(forms.ModelForm):
     kg_producidos=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     semillasxfruto=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     semillasxgramo=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
-    por_gem_enpapel=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
-    por_gem_enbandeja=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    por_germ_enpapel=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    por_germ_enbandeja=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
 
     class Meta:
