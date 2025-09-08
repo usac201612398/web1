@@ -320,6 +320,7 @@ class cosecha(models.Model):
     created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     observaciones = models.CharField(max_length= 75, blank = True, null =  True)
+    status = models.CharField(max_length= 30, blank = True, null =  True)
 
 class paramcosecha(models.Model):
     #op_status = [('Pendiente','-'),('En proceso','En proceso'),('Cerrado','Cerrado')]
@@ -337,8 +338,9 @@ class paramcosecha(models.Model):
     desinfecciondet  = models.CharField(max_length=175, blank = True, null =  True)
     fechaenvio_uvg = models.DateField(blank=True, null=True)
     fechaenviosemilla = models.DateField(blank=True, null=True)
-    status = models.CharField(max_length= 30, blank = True, null =  True)
+    statuslote = models.CharField(max_length= 30, blank = True, null =  True)
     separacion_lot_split = models.CharField(max_length= 30, blank = True, null =  True)
     created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     observaciones = models.CharField(max_length= 75, blank = True, null =  True)
+    status = models.CharField(max_length= 30, blank = True, null =  True)

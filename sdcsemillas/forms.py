@@ -613,7 +613,7 @@ class paramcosechaForm(forms.ModelForm):
     fechaenvio_uvg= forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','type': 'date'}))
     fechaenviosemilla= forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','type': 'date'}))
     total_kg=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
-    status=forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'form-control'}))
+    statuslote=forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'form-control'}))
     separacion_lot_split=forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
     observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
 
