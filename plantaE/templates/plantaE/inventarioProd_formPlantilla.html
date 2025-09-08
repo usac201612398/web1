@@ -125,7 +125,7 @@
           <table class="table is-striped is-hoverable is-fullwidth" id="myTable">
             <thead class="table-custom-header">
               <tr>
-                <th>ItemCode</th>
+                <th>ItemSAPCode</th>
                 <th>ItemName</th>
                 <th>Cajas</th>
                 <th>Libras</th>
@@ -209,7 +209,7 @@ $(document).ready(function() {
             const rows = data.datos.map(item => {
                 return [
                     item.itemsapcode,
-                    item.itemsapname,
+                    item.calidad1,
                     '<div contenteditable="true" class="editable-cell"></div>',
                     '<div contenteditable="true" class="editable-cell"></div>',
                     `<button class="button is-small is-danger is-light eliminar" title="Eliminar fila">

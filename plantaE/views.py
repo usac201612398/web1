@@ -407,7 +407,7 @@ def inventarioProd_grabarplantilla(request):
                 proveedor=i[4],
                 cultivo=i[5],
                 itemsapcode=i[0],
-                itemsapname=i[1],
+                itemsapname=pesostd.itemsapname,
                 cajas=i[2],
                 categoria=i[6],
                 libras=i[3],
@@ -2194,7 +2194,7 @@ def inventarioProd_create(request):
         opcion1 = request.POST.get('opcion1')
         opcion2 = request.POST.get('opcion2')
         # Filtra tus datos según la opción seleccionada
-        datos = productoTerm.objects.filter(cultivo=opcion1,categoria=opcion2).values('itemsapcode','itemsapname')  # Ajusta los campos
+        datos = productoTerm.objects.filter(cultivo=opcion1,categoria=opcion2).values('itemsapcode','itemsapname','calidad1')  # Ajusta los campos
         return JsonResponse({'datos': list(datos),'opcion1':opcion1,'opcion2':opcion2}, safe=False)
     return render(request, 'plantaE/inventarioProd_formPlantilla.html')
 '''
@@ -2338,7 +2338,7 @@ def contenedorpacking_list(request):
 
     # Filtra tus datos según la opción seleccionada
     contenedores = salidacontenedores.objects.exclude(Q(status='Cerrado') | Q(status='Anulado'))
-    contenedores = contenedores.order_by("registro").values('proveedor', 'itemsapcode', 'itemsapname', 'contenedor','fechasalcontenedor', 'cajas', 'importe', 'cultivo')
+    contenedores = contenedores.order_by("registro").values('proveedor', 'itemsapcode', 'itemsapname','calidad1', 'contenedor','fechasalcontenedor', 'cajas', 'importe', 'cultivo')
     # Crea un DataFrame a partir de los datos
     df = pd.DataFrame(list(contenedores))
     registros_finales = []
@@ -2349,6 +2349,7 @@ def contenedorpacking_list(request):
             fecha=('fechasalcontenedor', 'first'),
             cultivo=('cultivo', 'first'),
             contenedor=('contenedor', 'first'),
+            calidad1=('itemsapcode', 'first'),
             itemsapcode=('itemsapcode', 'first'),
             itemsapname=('itemsapname', 'first'),
             total_cajas=('cajas', 'sum'),
@@ -2376,6 +2377,7 @@ def contenedorpacking_list(request):
                 fecha=('fechasalcontenedor', 'first'),
                 cultivo=('cultivo', 'first'),
                 itemsapcode=('itemsapcode', 'first'),
+                calidad1=('calidad1', 'first'),
                 itemsapname=('itemsapname', 'first'),
                 total_cajas=('cajas', 'sum'),
                 total_importe=('importe', 'sum')
@@ -2699,15 +2701,16 @@ def procesarinvprodcontenv2(request):
     registros = []
 
     for i in mensaje:
+        
+        producto = productoTerm.objects.filter(itemsapcode=itemsapcode).first()
+        precio = float(producto.precio) if producto and producto.precio else 0.0
         proveedor = i[0]
         cultivo = i[1]
         itemsapcode = i[2]
-        itemsapname = i[3]
+        itemsapname = producto.itemsapname
         cajas_a_enviar = int(i[4])
         fecha_salida = i[9]
 
-        producto = productoTerm.objects.filter(itemsapcode=itemsapcode).first()
-        precio = float(producto.precio) if producto and producto.precio else 0.0
 
         disponibles = inventarioProdTerm.objects.filter(
             proveedor=proveedor,
@@ -2868,6 +2871,7 @@ def cargacontenedores_listv2(request):
             agrupaciones[clave_agrupacion] = {
                 'itemsapcode': salida.itemsapcode,
                 'itemsapname': salida.itemsapname,
+                'calidad1': salida.calidad1,
                 'proveedor': salida.proveedor,
                 'cultivo': salida.cultivo,
                 'total_cajas_salidas': 0,  # Cajas de salidas
@@ -2971,6 +2975,7 @@ def inventariogeneral_list(request):
             agrupaciones[clave_agrupacion] = {
                 'itemsapcode': salida.itemsapcode,
                 'itemsapname': salida.itemsapname,
+                'calidad1': salida.calidad1,
                 'proveedor': salida.proveedor,
                 'cultivo': salida.cultivo,
                 'total_cajas_salidas': 0,  # Cajas de salidas

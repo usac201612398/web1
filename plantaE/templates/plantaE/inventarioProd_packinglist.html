@@ -199,7 +199,7 @@ input[type="button"]:focus {
                 <tr> 
                     <td> {{registro.contenedor}}</td>
                     <td>{{registro.cultivo}}</td>
-                    <td>{{registro.itemsapname}}</td>
+                    <td>{{registro.calidad1}}</td>
                     <td>{{registro.total_cajas}}</td>
                     <td>{{registro.total_importe}}</td>
                     <td>{{registro.created_at}}</td>
@@ -301,7 +301,7 @@ input[type="button"]:focus {
                 // Recorrer los datos y agregar las filas de la tabla
                 data.datos.forEach(item => {
                     const fila = document.createElement('tr');
-                    fila.innerHTML = `<td>${item.contenedor}</td><td>${item.cultivo}</td><td>${item.itemsapname}</td><td>${item.total_cajas}</td><td>${item.total_importe}</td>`;
+                    fila.innerHTML = `<td>${item.contenedor}</td><td>${item.cultivo}</td><td>${item.calidad1}</td><td>${item.total_cajas}</td><td>${item.total_importe}</td>`;
                     tbody.appendChild(fila);
 
                     // Sumar los valores de cajas e importe para los totales
