@@ -379,6 +379,9 @@ function startScanner() {
             .then(data => {
                 document.getElementById("id_codigo_lote").value = data.codigo_lote;
                 document.getElementById("id_apodo_variedad").value = data.apodo_variedad;
+                document.getElementById("id_codigo_variedad").value = data.codigo_variedad;
+                document.getElementById("id_pl").value = data.pl;
+                document.getElementById("id_contrato").value = data.contrato;
                 document.getElementById("id_tipo_cultivo").value = data.tipo_cultivo;
                 document.getElementById("id_ubicacion_lote").value = data.ubicacion_lote;
                 document.getElementById("id_estructura").value = data.estructura;
