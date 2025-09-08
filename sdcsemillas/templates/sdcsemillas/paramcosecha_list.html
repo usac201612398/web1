@@ -51,15 +51,13 @@
             <thead class="table-custom-header">
                 <tr>
                     <th>Id</th>
-                    <th>Apodo Variedad</th>
+                    <th>Apodo-Variedad</th>
                     <th>Ubicación</th>
                     <th>Estructura</th>
                     <th>Cultivo</th>
-                    <th>Semana</th>
-                    <th>Cajas</th>
-                    <th>kg-producidos</th>
-                    <th>Semillas-Fruto</th>
-                    <th>Semillas-Gramo</th>
+                    <th>Fecha-UVG</th>
+                    <th>Fecha-Envio</th>
+                    <th>Status</th>
                     <th>Editar</th>
                     <th>Anular</th>
                 </tr>
@@ -67,23 +65,21 @@
             <tbody>
                 {% for registro in registros %}
                 <tr>
-                    <td><a href="{% url 'cosecha_detail' registro.pk %}">{{ registro.id }}</a></td>
+                    <td><a href="{% url 'paramcosecha_detail' registro.pk %}">{{ registro.id }}</a></td>
                     <td>{{ registro.apodo_variedad }}</td>
                     <td>{{ registro.ubicacion_lote }}</td>
                     <td>{{ registro.estructura }}</td>
                     <td>{{ registro.tipo_cultivo }}</td>
-                    <td>{{ registro.nsemana }}</td>
-                    <td>{{ registro.cajas }}</td>
-                    <td>{{ registro.kg_producidos }}</td>
-                    <td>{{ registro.semillasxfruto }}</td>
-                    <td>{{ registro.semillasxgramo }}</td>
+                    <td>{{ registro.fechaenvio_uvg }}</td>
+                    <td>{{ registro.fechaenviosemilla }}</td>
+                    <td>{{ registro.statuslote }}</td>
                     <td class="text-center">
-                        <a href="{% url 'cosecha_update' registro.pk %}" class="text-warning">
+                        <a href="{% url 'paramcosecha_update' registro.pk %}" class="text-warning">
                             <i class="fas fa-edit"></i>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="{% url 'cosecha_delete' registro.pk %}" class="text-danger">
+                        <a href="{% url 'paramcosecha_delete' registro.pk %}" class="text-danger">
                             <i class="fas fa-trash-alt"></i>
                         </a>
                     </td>
@@ -103,16 +99,14 @@
                     <strong>Ubicación:</strong> {{ registro.ubicacion_lote }}<br>
                     <strong>Estructura:</strong> {{ registro.estructura }}<br>
                     <strong>Cultivo:</strong> {{ registro.tipo_cultivo }}<br>
-                    <strong>Semana:</strong> {{ registro.nsemana }}<br>
-                    <strong>Cajas:</strong> {{ registro.cajas }}<br>
-                    <strong>kg-producidos:</strong> {{ registro.kg_producidos }}<br>
-                    <strong>Semillas-Fruto:</strong> {{ registro.semillasxfruto }}<br>
-                    <strong>Semillas-Gramo:</strong> {{ registro.semillasxgramo }}<br>
+                    <strong>Fecha-UVG:</strong> {{ registro.fechaenvio_uvg }}<br>
+                    <strong>Fecha-Envio:</strong> {{ registro.fechaenviosemilla }}<br>
+                    <strong>Status:</strong> {{ registro.statuslote }}
                 </p>
                 <div class="d-flex justify-content-between">
-                    <a href="{% url 'cosecha_detail' registro.pk %}" class="btn btn-sm btn-outline-primary">Ver</a>
-                    <a href="{% url 'cosecha_update' registro.pk %}" class="btn btn-sm btn-outline-warning">Editar</a>
-                    <a href="{% url 'cosecha_delete' registro.pk %}" class="btn btn-sm btn-outline-danger">Anular</a>
+                    <a href="{% url 'paramcosecha_detail' registro.pk %}" class="btn btn-sm btn-outline-primary">Ver</a>
+                    <a href="{% url 'paramcosecha_update' registro.pk %}" class="btn btn-sm btn-outline-warning">Editar</a>
+                    <a href="{% url 'paramcosecha_delete' registro.pk %}" class="btn btn-sm btn-outline-danger">Anular</a>
                 </div>
             </div>
         </div>

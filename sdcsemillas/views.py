@@ -1028,3 +1028,69 @@ def cosecha_delete(request, pk):
 def cosecha_detail(request, pk):
     salidas = get_object_or_404(cosecha, pk=pk)
     return render(request, 'sdcsemillas/cosecha_detail.html', {'registros': salidas})
+
+def paramcosecha_list(request):
+    #today = timezone.localtime(timezone.now()).date()
+    salidas = paramcosecha.objects.exclude(status__in=["Anulado", "Cerrado"])
+    return render(request, 'sdcsemillas/paramcosecha_list.html', {'registros': salidas})
+
+def paramcosecha_create(request):
+    
+    nombre_supervisor = ''
+    
+    try:
+        usuario = usuariosApp.objects.get(correo=request.user.email)
+        nombre_supervisor = usuario.encargado
+    except usuariosApp.DoesNotExist:
+        nombre_supervisor = request.user.username  # Fallback si no se encuentra
+
+    if request.method == 'POST':
+        form = paramcosechaForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+            except Exception as e:
+                # Manejar excepciones específicas (por ejemplo, UniqueConstraintError)
+                return JsonResponse({'error': str(e)}, status=400)
+            return redirect('paramcosecha_list')
+        else:
+             # Imprimir errores para depuración
+            return JsonResponse({'errores': form.errors}, status=400)
+    else:
+        hoy = date.today()
+        #dia_semana = calendar.day_name[hoy.weekday()]  # e.g., 'Monday'
+        
+        initial_data = {
+            'supervisor_name': nombre_supervisor,
+            'fecha': hoy
+        }
+        form = paramcosechaForm(initial=initial_data)
+       
+    return render(request, 'sdcsemillas/paramcosecha_form.html', {'form': form,'modo':'crear'})
+
+def paramcosecha_update(request, pk):
+    salidas = get_object_or_404(paramcosecha, pk=pk)
+    if request.method == 'POST':
+        form = paramcosechaForm(request.POST, instance=salidas)
+        if form.is_valid():
+            form.save()
+            return redirect('paramcosecha_list')
+    else:
+        form = paramcosechaForm(instance=salidas)
+    return render(request, 'sdcsemillas/paramcosecha_list.html', {'form': form,'modo':'actualizar'})
+
+def paramcosecha_delete(request, pk):
+
+    salidas = get_object_or_404(paramcosecha, pk=pk)
+
+    if request.method == 'POST':
+        salidas.status = 'Anulado'
+        salidas.save()
+        messages.success(request, "Control anulado correctamente.")
+        return redirect('paramcosecha_list')
+    
+    return render(request, 'sdcsemillas/paramcosecha_confirm_delete.html', {'registros': salidas})
+
+def paramcosecha_detail(request, pk):
+    salidas = get_object_or_404(paramcosecha, pk=pk)
+    return render(request, 'sdcsemillas/paramcosecha_detail.html', {'registros': salidas})
