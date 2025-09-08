@@ -91,6 +91,12 @@ urlpatterns = [
     path('obtener_semana_cosecha/', views.obtener_semana_desde_cosecha, name='obtener_semana_cosecha'),
     path('exportar/<str:nombre_modelo>/', views.exportar_excel_generico, name='exportar_excel_generico'),
 
+    path("cosecha/",views.cosecha_list,name='cosecha_list'),
+    path('cosecha/<int:pk>/', views.cosecha_detail, name='cosecha_detail'),
+    path('cosecha/new/', views.cosecha_create, name='cosecha_create'),
+    path('cosecha/<int:pk>/edit/', views.cosecha_update, name='cosecha_update'),
+    path('cosecha/<int:pk>/delete/', views.cosecha_delete, name='cosecha_delete'),
+
 
 
 ]

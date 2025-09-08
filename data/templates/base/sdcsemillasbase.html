@@ -94,6 +94,23 @@
                     {% endif %}
                     <a class="navbar-item" href="#">Sobre Nosotros</a>
                     <a class="navbar-item" href="{% url 'operarios_list'%}">Personal</a>
+                    {% if user.username in "brandon.portillo@popoyan.com.gt,kimberly.hernández@popoyan.com.gt, claudia.moreno@popoyan.com.gt" %}
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-link">
+                                Gestión de Cosecha
+                            </a>
+                            <div class="navbar-dropdown">
+                                
+                                
+                                <a class="navbar-item" href="{% url 'cosecha_list'%}">Cosecha</a>
+                                <a class="navbar-item" href="">Parametros - Cosecha</a>
+                                <a class="navbar-item" href="">Reporte</a>
+
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if user.username not in "kimberly.hernández@popoyan.com.gt" %}
                     <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-link">
                             Registros
@@ -112,6 +129,8 @@
                             <a class="navbar-item" href="{% url 'conteosemillas_list'%}">Semillas</a>
                         </div>
                     </div>
+                    
+                    {% endif %}
     
                     <a class="navbar-item" href="#">Contacto</a>
                 </div>

@@ -1,7 +1,6 @@
 from django import forms
 from .models import *
 from django import forms
-from .models import lotes, variedades
 
 
 class lotesForm(forms.ModelForm):
@@ -429,7 +428,6 @@ class conteofloresForm(forms.ModelForm):
     op_estructura = op_invernadero + op_modulo + op_malla
     op_sel = [('','-'),('Si','Si'),('No','No')]
     op_semana = [('','-'),(1,'1'),(2,'2'),(3,'3'),(4,'4'),(5,'5'),(6,'6')]
-
     codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     operario_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     codigo_empleado = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
@@ -546,3 +544,80 @@ class operariosForm(forms.ModelForm):
         self.fields['codigoevo'].required = False
         self.fields['supervisor'].required = False
         self.fields['codigo_lote'].required = False
+
+class cosechaForm(forms.ModelForm):
+
+    op_ubicacion = [('','-'),('SL','SL'),('CIP','CIP'),('Cecilio', 'Cecilio'),('Bella Vista', 'Bella Vista')]
+    op_modulo = [('','-'),('Modulo 1','Modulo 1'),('Modulo 2','Modulo 2'),('Modulo 3', 'Modulo 3'),('Modulo 4','Modulo 4'),('Modulo 5','Modulo 5'),('Modulo 6', 'Modulo 6'),('Modulo 7','Modulo 7'),('Modulo 8','Modulo 8'),('Modulo 9', 'Modulo 9'),('Modulo 10','Modulo 10'),('Modulo 11','Modulo 11')]
+    op_invernadero = [('','-'),('Invernadero 1','Invernadero 1'),('Invernadero 2','Invernadero 2'),('Invernadero 3', 'Invernadero 3'),('Invernadero 4','Invernadero 4'),('Invernadero 5','Invernadero 5'),('Invernadero 6', 'Invernadero 6'),('Invernadero 7','Invernadero 7'),('Invernadero 8','Invernadero 8'),('Invernadero 9', 'Invernadero 9'),('Invernadero 10','Invernadero 10'),('Invernadero 11','Invernadero 11')]
+    op_malla = [('','-'),('Casa Malla','Casa Malla')]
+    op_cultivo = [('','-'),('Chile','Chile'),('Tomtate','Tomate')]
+    op_tipocajas = [('','-'),('Grande','Grande'),('Pequeña','Pequeña')]
+    op_estructura = op_invernadero + op_modulo + op_malla
+    op_extraccion = [('','-'),('Manual','Manual'),('Máquina','Máquina')]
+    op_desinfeccion = [('','-'),('Desinf. Blower','Desinf. lower'),('Desinf. Normal','Desinf. Normal'),('Sin desinfección','Sin desinfección')]
+    op_semana = [('','-'),(1,'1'),(2,'2'),(3,'3'),(4,'4'),(5,'5'),(6,'6')]
+
+    codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    tipo_cultivo = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'})) 
+    codigo_variedad = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    pl = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    contrato = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    supervisor_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    apodo_variedad = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    ubicacion_lote = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'})) 
+    estructura = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))  
+    genero = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'})) 
+    nsemana = forms.ChoiceField(choices=op_semana,widget=forms.Select(attrs={'class': 'form-control'}))
+    iniciosemana= forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','type': 'date'}))
+    finsemana= forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','type': 'date'}))
+    tipocajas=forms.ChoiceField(choices=op_tipocajas,widget=forms.Select(attrs={'class': 'form-control'}))
+    cajas=forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    extraccion=forms.ChoiceField(choices=op_extraccion,widget=forms.Select(attrs={'class': 'form-control'}))
+    desinfeccion=forms.ChoiceField(choices=op_desinfeccion,widget=forms.Select(attrs={'class': 'form-control'}))
+    kg_producidos=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    semillasxfruto=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    semillasxgramo=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    por_gem_enpapel=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    por_gem_enbandeja=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
+
+    class Meta:
+    
+        model = cosecha
+        fields = '__all__'
+    
+class paramcosechaForm(forms.ModelForm):
+
+    op_ubicacion = [('','-'),('SL','SL'),('CIP','CIP'),('Cecilio', 'Cecilio'),('Bella Vista', 'Bella Vista')]
+    op_modulo = [('','-'),('Modulo 1','Modulo 1'),('Modulo 2','Modulo 2'),('Modulo 3', 'Modulo 3'),('Modulo 4','Modulo 4'),('Modulo 5','Modulo 5'),('Modulo 6', 'Modulo 6'),('Modulo 7','Modulo 7'),('Modulo 8','Modulo 8'),('Modulo 9', 'Modulo 9'),('Modulo 10','Modulo 10'),('Modulo 11','Modulo 11')]
+    op_invernadero = [('','-'),('Invernadero 1','Invernadero 1'),('Invernadero 2','Invernadero 2'),('Invernadero 3', 'Invernadero 3'),('Invernadero 4','Invernadero 4'),('Invernadero 5','Invernadero 5'),('Invernadero 6', 'Invernadero 6'),('Invernadero 7','Invernadero 7'),('Invernadero 8','Invernadero 8'),('Invernadero 9', 'Invernadero 9'),('Invernadero 10','Invernadero 10'),('Invernadero 11','Invernadero 11')]
+    op_malla = [('','-'),('Casa Malla','Casa Malla')]
+    op_cultivo = [('','-'),('Chile','Chile'),('Tomtate','Tomate')]
+    op_tipocajas = [('','-'),('Grande','Grande'),('Pequeña','Pequeña')]
+    op_estructura = op_invernadero + op_modulo + op_malla
+    op_status = [('','-'),('En cosecha','En cosecha'),('Finalizó cosecha','Finalizó cosecha'),('Enviada','Enviada'),]
+    op_semana = [('','-'),(1,'1'),(2,'2'),(3,'3'),(4,'4'),(5,'5'),(6,'6')]
+
+    codigo_lote = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    tipo_cultivo = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'})) 
+    codigo_variedad = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    pl = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    contrato = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    supervisor_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    apodo_variedad = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
+    ubicacion_lote = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'})) 
+    estructura = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))  
+    genero = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'})) 
+    desinfecciondet = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
+    fechaenvio_uvg= forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','type': 'date'}))
+    fechaenviosemilla= forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','type': 'date'}))
+    total_kg=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    status=forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'form-control'}))
+    separacion_lot_split=forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
+    observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
+
+    class Meta:
+    
+        model = paramcosecha
+        fields = '__all__'

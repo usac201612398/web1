@@ -872,7 +872,7 @@ def controlcosecha_update(request, pk):
         form = controlcosechaForm(request.POST, instance=salidas)
         if form.is_valid():
             form.save()
-            return redirect('controlcosecHa_list')
+            return redirect('controlcosecha_list')
     else:
         form = controlcosechaForm(instance=salidas)
     return render(request, 'sdcsemillas/controlcosecha_list.html', {'form': form,'modo':'actualizar'})
@@ -958,3 +958,69 @@ def operarios_delete(request, pk):
         return redirect('operarios_list')
     
     return render(request, 'sdcsemillas/operarios_confirm_delete.html', {'registros': salidas})
+
+def cosecha_list(request):
+    #today = timezone.localtime(timezone.now()).date()
+    salidas = cosecha.objects.exclude(status__in=["Anulado", "Cerrado"])
+    return render(request, 'sdcsemillas/cosecha_list.html', {'registros': salidas})
+
+def cosecha_create(request):
+    
+    nombre_supervisor = ''
+    
+    try:
+        usuario = usuariosApp.objects.get(correo=request.user.email)
+        nombre_supervisor = usuario.encargado
+    except usuariosApp.DoesNotExist:
+        nombre_supervisor = request.user.username  # Fallback si no se encuentra
+
+    if request.method == 'POST':
+        form = cosechaForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+            except Exception as e:
+                # Manejar excepciones específicas (por ejemplo, UniqueConstraintError)
+                return JsonResponse({'error': str(e)}, status=400)
+            return redirect('cosecha_list')
+        else:
+             # Imprimir errores para depuración
+            return JsonResponse({'errores': form.errors}, status=400)
+    else:
+        hoy = date.today()
+        #dia_semana = calendar.day_name[hoy.weekday()]  # e.g., 'Monday'
+        
+        initial_data = {
+            'supervisor_name': nombre_supervisor,
+            'fecha': hoy
+        }
+        form = cosechaForm(initial=initial_data)
+       
+    return render(request, 'sdcsemillas/cosecha_form.html', {'form': form,'modo':'crear'})
+
+def cosecha_update(request, pk):
+    salidas = get_object_or_404(cosecha, pk=pk)
+    if request.method == 'POST':
+        form = cosechaForm(request.POST, instance=salidas)
+        if form.is_valid():
+            form.save()
+            return redirect('cosecha_list')
+    else:
+        form = cosechaForm(instance=salidas)
+    return render(request, 'sdcsemillas/cosecha_list.html', {'form': form,'modo':'actualizar'})
+
+def cosecha_delete(request, pk):
+
+    salidas = get_object_or_404(cosecha, pk=pk)
+
+    if request.method == 'POST':
+        salidas.status = 'Anulado'
+        salidas.save()
+        messages.success(request, "Control anulado correctamente.")
+        return redirect('cosecha_list')
+    
+    return render(request, 'sdcsemillas/cosecha_confirm_delete.html', {'registros': salidas})
+
+def cosecha_detail(request, pk):
+    salidas = get_object_or_404(cosecha, pk=pk)
+    return render(request, 'sdcsemillas/cosecha_detail.html', {'registros': salidas})
