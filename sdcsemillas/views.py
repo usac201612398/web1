@@ -1094,3 +1094,28 @@ def paramcosecha_delete(request, pk):
 def paramcosecha_detail(request, pk):
     salidas = get_object_or_404(paramcosecha, pk=pk)
     return render(request, 'sdcsemillas/paramcosecha_detail.html', {'registros': salidas})
+
+from django.db.models import Sum
+
+def cosecha_inventariosemilla_list(request):
+    # Filtramos los registros válidos
+    salidas = cosecha.objects.exclude(status__in=["Anulado", "Cerrado"])
+
+    # Agrupamos por lote y sumamos los kg_producidos
+    acumulados = salidas.values('codigo_lote','pl',
+        'apodo_variedad',
+        'ubicacion_lote',
+        'tipo_cultivo',
+        'estructura').annotate(
+        total_kg_producidos=Sum('kg_producidos')
+    ).order_by('codigo_lote')
+
+    return render(request, 'sdcsemillas/cosecha_inventariosemilla_list.html', {
+        'registros': salidas,
+        'acumulados': acumulados
+    })
+def cosechareporte_list(request):
+    #today = timezone.localtime(timezone.now()).date()
+    salidas = cosecha.objects.exclude(status__in=["Anulado", "Cerrado"])
+
+    return render(request, 'sdcsemillas/cosechareporte_list.html', {'registros': salidas})

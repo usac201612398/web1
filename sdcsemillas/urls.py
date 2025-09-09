@@ -96,7 +96,8 @@ urlpatterns = [
     path('cosecha/new/', views.cosecha_create, name='cosecha_create'),
     path('cosecha/<int:pk>/edit/', views.cosecha_update, name='cosecha_update'),
     path('cosecha/<int:pk>/delete/', views.cosecha_delete, name='cosecha_delete'),
-
+    path("cosecha/inventariosemilla/",views.cosecha_inventariosemilla_list,name='cosecha_inventariosemilla_list'),
+    path("cosecha/consolidado",views.cosechareporte_list,name='cosechareporte_list'),
     path("paramcosecha/",views.paramcosecha_list,name='paramcosecha_list'),
     path('paramcosecha/<int:pk>/', views.paramcosecha_detail, name='paramcosecha_detail'),
     path('paramcosecha/new/', views.paramcosecha_create, name='paramcosecha_create'),
