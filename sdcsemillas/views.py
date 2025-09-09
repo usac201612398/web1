@@ -1163,5 +1163,5 @@ def cosechareporte_list(request):
             'observaciones_param': param.observaciones if param else '',
         })
 
-    return render(request, 'cosechareporte_list.html', {'registros': registros})
+    return render(request, 'sdcsemillas/cosechareporte_list.html', {'registros': registros})
 
