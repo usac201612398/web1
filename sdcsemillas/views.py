@@ -1116,39 +1116,52 @@ def cosecha_inventariosemilla_list(request):
     })
 
 def cosechareporte_list(request):
-    # Filtramos solo registros válidos
-    cosechas = cosecha.objects.exclude(status__in=["Anulado", "Cerrado"])
-    parametros = paramcosecha.objects.exclude(status__in=["Anulado", "Cerrado"])
-
-    # Creamos un diccionario para acceso rápido por codigo_lote
-    parametros_dict = {
-        p.codigo_lote: p for p in parametros
-    }
-
-    # Lista consolidada
-    reporte = []
+    cosechas = cosecha.objects.all()
+    registros = []
 
     for c in cosechas:
-        param = parametros_dict.get(c.codigo_lote)
-        if param:
-            reporte.append({
-                'id': c.id,
-                'apodo_variedad': c.apodo_variedad,
-                'ubicacion_lote': c.ubicacion_lote,
-                'estructura': c.estructura,
-                'tipo_cultivo': c.tipo_cultivo,
-                'nsemana': c.nsemana,
-                'cajas': c.cajas,
-                'kg_producidos': c.kg_producidos,
-                'semillasxfruto': c.semillasxfruto,
-                'semillasxgramo': c.semillasxgramo,
-                'fechaenvio_uvg': param.fechaenvio_uvg,
-                'fechaenviosemilla': param.fechaenviosemilla,
-                'desinfecciondet': param.desinfecciondet,
-                'statuslote': param.statuslote,
-                'registro_id': c.id
-            })
+        param = paramcosecha.objects.filter(codigo_lote=c.codigo_lote).first()
 
-    return render(request, 'sdcsemillas/cosechareporte_list.html', {
-        'registros': reporte
-    })
+        registros.append({
+            # Campos de cosecha
+            'registro_id': c.id,
+            'id': c.id,
+            'tipo_cultivo': c.tipo_cultivo,
+            'codigo_lote': c.codigo_lote,
+            'codigo_variedad': c.codigo_variedad,
+            'pl': c.pl,
+            'contrato': c.contrato,
+            'supervisor_name': c.supervisor_name,
+            'apodo_variedad': c.apodo_variedad,
+            'ubicacion_lote': c.ubicacion_lote,
+            'estructura': c.estructura,
+            'genero': c.genero,
+            'nsemana': c.nsemana,
+            'iniciosemana': c.iniciosemana,
+            'finsemana': c.finsemana,
+            'tipocajas': c.tipocajas,
+            'cajas': c.cajas,
+            'extraccion': c.extraccion,
+            'desinfeccion': c.desinfeccion,
+            'kg_producidos': c.kg_producidos,
+            'semillasxfruto': c.semillasxfruto,
+            'semillasxgramo': c.semillasxgramo,
+            'por_germ_enpapel': c.por_germ_enpapel,
+            'por_germ_enbandeja': c.por_germ_enbandeja,
+            'created': c.created,
+            'updated_at': c.updated_at,
+            'observaciones': c.observaciones,
+            'status': c.status,
+
+            # Campos extra de paramcosecha
+            'param_id': param.id if param else '',
+            'desinfecciondet': param.desinfecciondet if param else '',
+            'fechaenvio_uvg': param.fechaenvio_uvg if param else '',
+            'fechaenviosemilla': param.fechaenviosemilla if param else '',
+            'statuslote': param.statuslote if param else '',
+            'separacion_lot_split': param.separacion_lot_split if param else '',
+            'observaciones_param': param.observaciones if param else '',
+        })
+
+    return render(request, 'cosechareporte_list.html', {'registros': registros})
+
