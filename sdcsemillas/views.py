@@ -1114,8 +1114,41 @@ def cosecha_inventariosemilla_list(request):
         'registros': salidas,
         'acumulados': acumulados
     })
-def cosechareporte_list(request):
-    #today = timezone.localtime(timezone.now()).date()
-    salidas = cosecha.objects.exclude(status__in=["Anulado", "Cerrado"])
 
-    return render(request, 'sdcsemillas/cosechareporte_list.html', {'registros': salidas})
+def cosechareporte_list(request):
+    # Filtramos solo registros válidos
+    cosechas = cosecha.objects.exclude(status__in=["Anulado", "Cerrado"])
+    parametros = paramcosecha.objects.exclude(status__in=["Anulado", "Cerrado"])
+
+    # Creamos un diccionario para acceso rápido por codigo_lote
+    parametros_dict = {
+        p.codigo_lote: p for p in parametros
+    }
+
+    # Lista consolidada
+    reporte = []
+
+    for c in cosechas:
+        param = parametros_dict.get(c.codigo_lote)
+        if param:
+            reporte.append({
+                'id': c.id,
+                'apodo_variedad': c.apodo_variedad,
+                'ubicacion_lote': c.ubicacion_lote,
+                'estructura': c.estructura,
+                'tipo_cultivo': c.tipo_cultivo,
+                'nsemana': c.nsemana,
+                'cajas': c.cajas,
+                'kg_producidos': c.kg_producidos,
+                'semillasxfruto': c.semillasxfruto,
+                'semillasxgramo': c.semillasxgramo,
+                'fechaenvio_uvg': param.fechaenvio_uvg,
+                'fechaenviosemilla': param.fechaenviosemilla,
+                'desinfecciondet': param.desinfecciondet,
+                'statuslote': param.statuslote,
+                'registro_id': c.id
+            })
+
+    return render(request, 'sdcsemillas/cosechareporte_list.html', {
+        'registros': reporte
+    })
