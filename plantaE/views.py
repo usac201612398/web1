@@ -2701,12 +2701,12 @@ def procesarinvprodcontenv2(request):
     registros = []
 
     for i in mensaje:
-        
-        producto = productoTerm.objects.filter(itemsapcode=itemsapcode).first()
-        precio = float(producto.precio) if producto and producto.precio else 0.0
         proveedor = i[0]
         cultivo = i[1]
         itemsapcode = i[2]
+        producto = productoTerm.objects.filter(itemsapcode=itemsapcode).first()
+        precio = float(producto.precio) if producto and producto.precio else 0.0
+        
         itemsapname = producto.itemsapname
         cajas_a_enviar = int(i[4])
         fecha_salida = i[9]
