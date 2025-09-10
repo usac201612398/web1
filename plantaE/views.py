@@ -2376,7 +2376,6 @@ def contenedorpacking_list(request):
                 fecha=('fechasalcontenedor', 'first'),
                 cultivo=('cultivo', 'first'),
                 itemsapcode=('itemsapcode', 'first'),
-                calidad1=('calidad1', 'first'),
                 itemsapname=('itemsapname', 'first'),
                 total_cajas=('cajas', 'sum'),
                 total_importe=('importe', 'sum')
