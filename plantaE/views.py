@@ -2338,7 +2338,7 @@ def contenedorpacking_list(request):
 
     # Filtra tus datos según la opción seleccionada
     contenedores = salidacontenedores.objects.exclude(Q(status='Cerrado') | Q(status='Anulado'))
-    contenedores = contenedores.order_by("registro").values('proveedor', 'itemsapcode', 'itemsapname','calidad1', 'contenedor','fechasalcontenedor', 'cajas', 'importe', 'cultivo')
+    contenedores = contenedores.order_by("registro").values('proveedor', 'itemsapcode', 'itemsapname', 'contenedor','fechasalcontenedor', 'cajas', 'importe', 'cultivo')
     # Crea un DataFrame a partir de los datos
     df = pd.DataFrame(list(contenedores))
     registros_finales = []
@@ -2349,7 +2349,6 @@ def contenedorpacking_list(request):
             fecha=('fechasalcontenedor', 'first'),
             cultivo=('cultivo', 'first'),
             contenedor=('contenedor', 'first'),
-            calidad1=('itemsapcode', 'first'),
             itemsapcode=('itemsapcode', 'first'),
             itemsapname=('itemsapname', 'first'),
             total_cajas=('cajas', 'sum'),
