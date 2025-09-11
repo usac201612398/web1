@@ -11,6 +11,7 @@ import json
 from openpyxl import Workbook
 from django.apps import apps
 from django.http import HttpResponse
+from django.db.models import Sum, Avg, Min
 
 def sdcsemillashomepage(request):
     return render(request,'sdcsemillas/sdcsemillas_home.html')
@@ -18,9 +19,61 @@ def sdcsemillashomepage(request):
 def consulta_list(request):
     return render(request,'sdcsemillas/monitorear.html')
 
-def reporte_lote(request,lote_id):
-    salidas = get_object_or_404(lotes, id=int(lote_id))
-    return render(request,'sdcsemillas/monitorear_detalles.html', {'registros': salidas})
+
+def lotesreporte_list(request):
+    salidas = lotes.objects.all()
+    datos_combinados = []
+
+    for lote in salidas:
+        codigo_lote = lote.lote_code  # este es el campo en común
+
+        # Agregaciones desde cosecha
+        cosecha_data = cosecha.objects.filter(codigo_lote=codigo_lote).aggregate(
+            total_kg=Sum('kg_producidos'),
+            avg_semillasxfruto=Avg('semillasxfruto'),
+            avg_semillasxgramo=Avg('semillasxgramo')
+        )
+
+        # Fechas específicas de inicio y fin por evento
+        inicio_cosecha = etapasdelote.objects.filter(
+            codigo_lote=codigo_lote,
+            evento__iexact='Cosecha',
+            status__iexact='Inicio'
+        ).aggregate(Min('fecha'))['fecha__min']
+
+        fin_cosecha = etapasdelote.objects.filter(
+            codigo_lote=codigo_lote,
+            evento__iexact='Cosecha',
+            status__iexact='Fin'
+        ).aggregate(Min('fecha'))['fecha__min']
+
+        inicio_polinizacion = etapasdelote.objects.filter(
+            codigo_lote=codigo_lote,
+            evento__iexact='Polinización',
+            status__iexact='Inicio'
+        ).aggregate(Min('fecha'))['fecha__min']
+
+        fin_polinizacion = etapasdelote.objects.filter(
+            codigo_lote=codigo_lote,
+            evento__iexact='Polinización',
+            status__iexact='Fin'
+        ).aggregate(Min('fecha'))['fecha__min']
+
+        datos_combinados.append({
+            'lote': lote,
+            'total_kg': cosecha_data['total_kg'] or 0,
+            'avg_semillasxfruto': round(cosecha_data['avg_semillasxfruto'] or 0, 2),
+            'avg_semillasxgramo': round(cosecha_data['avg_semillasxgramo'] or 0, 2),
+            'inicio_cosecha': inicio_cosecha,
+            'fin_cosecha': fin_cosecha,
+            'inicio_polinizacion': inicio_polinizacion,
+            'fin_polinizacion': fin_polinizacion,
+        })
+
+    return render(request, 'sdcsemillas/lotesreporte_list.html', {
+        'registros': datos_combinados
+    })
+
 
 def exportar_excel_generico(request, nombre_modelo):
     # Obtiene el modelo desde el nombre
@@ -74,6 +127,7 @@ def lotes_list(request):
 def lotesreporte_list(request):
     #today = timezone.localtime(timezone.now()).date()
     salidas = lotes.objects.all()
+
     return render(request, 'sdcsemillas/lotesreporte_list.html', {'registros': salidas})
 
 def lotes_detail(request, pk):
@@ -1098,8 +1152,6 @@ def paramcosecha_delete(request, pk):
 def paramcosecha_detail(request, pk):
     salidas = get_object_or_404(paramcosecha, pk=pk)
     return render(request, 'sdcsemillas/paramcosecha_detail.html', {'registros': salidas})
-
-from django.db.models import Sum
 
 def cosecha_inventariosemilla_list(request):
     # Filtramos los registros válidos
