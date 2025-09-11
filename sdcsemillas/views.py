@@ -22,7 +22,6 @@ def reporte_lote(request,lote_id):
     salidas = get_object_or_404(lotes, id=int(lote_id))
     return render(request,'sdcsemillas/monitorear_detalles.html', {'registros': salidas})
 
-
 def exportar_excel_generico(request, nombre_modelo):
     # Obtiene el modelo desde el nombre
     try:
@@ -71,6 +70,11 @@ def lotes_list(request):
     #today = timezone.localtime(timezone.now()).date()
     salidas = lotes.objects.all()
     return render(request, 'sdcsemillas/lotes_list.html', {'registros': salidas})
+
+def lotesreporte_list(request):
+    #today = timezone.localtime(timezone.now()).date()
+    salidas = lotes.objects.all()
+    return render(request, 'sdcsemillas/lotesreporte_list.html', {'registros': salidas})
 
 def lotes_detail(request, pk):
     salidas = get_object_or_404(lotes, pk=pk)
