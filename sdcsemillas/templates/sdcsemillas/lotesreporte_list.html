@@ -94,13 +94,16 @@
                 <thead class="table-custom-header">
                     <tr>
                         <th>Lote</th>
-                        <th>Fecha S. Madre</th>
+                        <th>Cultivo</th>
+                        <th>Variedad</th>
+                        <th>Apodo Variedad</th>
                         <th>Ubicación</th>
                         <th>Estructura</th>
-                        <th>Cultivo</th>
-                        
                         <th>Género</th>
-                        <th>Apodo Variedad</th>
+                        <th>Contrato</th>
+                        <th>#Plantas - Mamá</th>
+                        <th>#Plantas - Papá</th>
+                        <th>Siembra</th>
                         <th>Status</th>
                         <th>QR</th>
                     </tr>
@@ -109,13 +112,16 @@
                     {% for registro in registros %}
                     <tr>
                         <td>{{ registro.lote_code }}</td>
-                        <td>{{ registro.siembra_madre }}</td>
+                        <td>{{ registro.cultivo }}</td>
+                        <td>{{ registro.variedad_code }}</td>
+                        <td>{{ registro.apodo_variedad }}</td>
                         <td>{{ registro.ubicación }}</td>
                         <td>{{ registro.estructura }}</td>
-                        <td>{{ registro.cultivo }}</td>
-                        
                         <td>{{ registro.genero }}</td>
-                        <td>{{ registro.apodo_variedad }}</td>
+                        <td>{{ registro.harvest_code }}</td>
+                        <td>{{ registro.plantas_madre }}</td>
+                        <td>{{ registro.plantas_padre }}</td>
+                        <td>{{ registro.siembra_madre }}</td>
                         <td>{{ registro.status }}</td>
                         <td class="text-center">
                             <button class="btn btn-sm btn-outline-dark generate-qr-btn" data-id="{{ registro.id }}" data-bs-toggle="modal" data-bs-target="#qrModal">
