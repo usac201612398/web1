@@ -12,6 +12,8 @@ from openpyxl import Workbook
 from django.apps import apps
 from django.http import HttpResponse
 from django.db.models import Sum, Avg, Min
+from datetime import timedelta
+
 
 def sdcsemillashomepage(request):
     return render(request,'sdcsemillas/sdcsemillas_home.html')
@@ -19,61 +21,112 @@ def sdcsemillashomepage(request):
 def consulta_list(request):
     return render(request,'sdcsemillas/monitorear.html')
 
-
 def lotesreporte_list(request):
     salidas = lotes.objects.all()
     datos_combinados = []
 
     for lote in salidas:
-        codigo_lote = lote.lote_code  # este es el campo en común
+        codigo_lote = lote.lote_code
+        genero=lote.genero
+        # === Calcular fecha siembra padre restando 15 días a siembra_madre ===
+        siembra_madre = lote.siembra_madre
+        if siembra_madre:
+            siembra_padre = siembra_madre - timedelta(days=15)
+        else:
+            siembra_padre = None
+        if genero == "Padre":
+            siembra = siembra_padre
+        elif genero == "Madre":
+            siembra = siembra_padre
+        else:
+            siembra = "Pendiente"
+        # === Fechas desde etapasdelote ===
+        def get_fecha_evento(evento, status):
+            etapa = etapasdelote.objects.filter(
+                codigo_lote=codigo_lote,
+                evento__iexact=evento,
+                status__iexact=status
+            ).order_by('fecha').first()
+            return etapa.fecha if etapa else None
 
-        # Agregaciones desde cosecha
-        cosecha_data = cosecha.objects.filter(codigo_lote=codigo_lote).aggregate(
-            total_kg=Sum('kg_producidos'),
-            avg_semillasxfruto=Avg('semillasxfruto'),
-            avg_semillasxgramo=Avg('semillasxgramo')
-        )
+        fecha_inicio_cosecha = get_fecha_evento("Cosecha", "Inicio") or "Pendiente"
+        fecha_fin_cosecha = get_fecha_evento("Cosecha", "Fin") or "Pendiente"
+        fecha_inicio_poliniza = get_fecha_evento("Polinización", "Inicio") or "Pendiente"
+        fecha_fin_poliniza = get_fecha_evento("Polinización", "Fin") or "Pendiente"
 
-        # Fechas específicas de inicio y fin por evento
-        inicio_cosecha = etapasdelote.objects.filter(
-            codigo_lote=codigo_lote,
-            evento__iexact='Cosecha',
-            status__iexact='Inicio'
-        ).aggregate(Min('fecha'))['fecha__min']
+        # === Datos de cosecha ===
+        cosecha_lote = cosecha.objects.filter(codigo_lote=codigo_lote)
+        # Buscar la variedad relacionada por código
+        variedad = variedades.objects.filter(codigo_variedad=lote.variedad_code).first()
+        if variedad:
+            if lote.genero.lower() == "padre":
+                codigo_genetico = variedad.codigo_padre
+            elif lote.genero.lower() == "madre":
+                codigo_genetico = variedad.codigo_madre
 
-        fin_cosecha = etapasdelote.objects.filter(
-            codigo_lote=codigo_lote,
-            evento__iexact='Cosecha',
-            status__iexact='Fin'
-        ).aggregate(Min('fecha'))['fecha__min']
+        kg_producidos_total = cosecha_lote.aggregate(total=Sum('kg_producidos'))['total'] or 0
+        semillasxfruto_avg = cosecha_lote.aggregate(avg=Avg('semillasxfruto'))['avg'] or 0
+        semillasxgramo_avg = cosecha_lote.aggregate(avg=Avg('semillasxgramo'))['avg'] or 0
 
-        inicio_polinizacion = etapasdelote.objects.filter(
-            codigo_lote=codigo_lote,
-            evento__iexact='Polinización',
-            status__iexact='Inicio'
-        ).aggregate(Min('fecha'))['fecha__min']
+        # Redondear promedios a 2 decimales
+        semillasxfruto_avg = round(semillasxfruto_avg, 2)
+        semillasxgramo_avg = round(semillasxgramo_avg, 2)
 
-        fin_polinizacion = etapasdelote.objects.filter(
-            codigo_lote=codigo_lote,
-            evento__iexact='Polinización',
-            status__iexact='Fin'
-        ).aggregate(Min('fecha'))['fecha__min']
+        # === Promedio frutos por planta ===
+        frutos_avg = conteofrutosplanilla.objects.filter(
+            codigo_lote=codigo_lote
+        ).aggregate(prom_general_avg=Avg('prom_general'))['prom_general_avg'] or 0
+        frutos_avg = round(frutos_avg, 2)
+
+        # === Datos únicos desde conteoplantas ===
+        def get_conteoplantas_valores(evento, status):
+            cp = conteoplantas.objects.filter(
+                codigo_lote=codigo_lote,
+                evento__iexact=evento,
+                status__iexact=status
+            ).first()
+            if cp:
+                return cp.plantas_activas, cp.plantas_faltantes
+            return "Pendiente", "Pendiente"
+
+        # Cosecha - Inicio y Fin
+        pc_ci_activas, pc_ci_faltantes = get_conteoplantas_valores("Cosecha", "Inicio")
+        pc_cf_activas, pc_cf_faltantes = get_conteoplantas_valores("Cosecha", "Fin")
+
+        # Polinización - Inicio y Fin
+        pp_ci_activas, pp_ci_faltantes = get_conteoplantas_valores("Polinización", "Inicio")
+        pp_cf_activas, pp_cf_faltantes = get_conteoplantas_valores("Polinización", "Fin")
 
         datos_combinados.append({
             'lote': lote,
-            'total_kg': cosecha_data['total_kg'] or 0,
-            'avg_semillasxfruto': round(cosecha_data['avg_semillasxfruto'] or 0, 2),
-            'avg_semillasxgramo': round(cosecha_data['avg_semillasxgramo'] or 0, 2),
-            'inicio_cosecha': inicio_cosecha,
-            'fin_cosecha': fin_cosecha,
-            'inicio_polinizacion': inicio_polinizacion,
-            'fin_polinizacion': fin_polinizacion,
+            'siembra':siembra,
+            'codigotipo':codigo_genetico,
+            # Fechas de etapasdelote
+            'inicio_cosecha': fecha_inicio_cosecha,
+            'fin_cosecha': fecha_fin_cosecha,
+            'inicio_poliniza': fecha_inicio_poliniza,
+            'fin_poliniza': fecha_fin_poliniza,
+
+            # Datos de cosecha
+            'kg_producidos': kg_producidos_total,
+            'semillasxfruto': semillasxfruto_avg,
+            'semillasxgramo': semillasxgramo_avg,
+
+            # Promedio de conteofrutosplanilla
+            'promedio_frutos_general': frutos_avg,
+
+            # Conteo de plantas
+            'pc_ci_activas': pc_ci_activas,
+            'pc_ci_faltantes': pc_ci_faltantes,
+            'pc_cf_activas': pc_cf_activas,
+            'pc_cf_faltantes': pc_cf_faltantes,
+            'pp_ci_activas': pp_ci_activas,
+            'pp_ci_faltantes': pp_ci_faltantes,
+            'pp_cf_activas': pp_cf_activas,
+            'pp_cf_faltantes': pp_cf_faltantes,
         })
 
-    return render(request, 'sdcsemillas/lotesreporte_list.html', {
-        'registros': datos_combinados
-    })
-
+    return render(request, 'sdcsemillas/lotesreporte_list.html', {'registros': datos_combinados})
 
 def exportar_excel_generico(request, nombre_modelo):
     # Obtiene el modelo desde el nombre
