@@ -74,19 +74,18 @@
 </head>
 <body>
     <div class="container py-3">
-        <!-- Banner del título -->
-        <div class="page-header-box text-white text-center py-3 mb-4">
-            <h1 class="m-0">Panel de Lotes</h1>
-        </div>
-
-        <!-- Botones -->
-        <div class="d-flex justify-content-between flex-wrap mb-3">
-            <a href="{% url 'lotes_create' %}" class="btn btn-outline-secondary">
-                <i class="fas fa-plus"></i> Agregar
-            </a>
-            <a href="{% url 'exportar_excel_generico' 'lotes' %}" class="btn btn-outline-secondary">
-                <i class="fas fa-file-excel"></i> Exportar
-            </a>
+        <div class="bg-dark text-white p-4 rounded shadow-sm mb-4">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+                <div>
+                    <h1 class="h3 mb-1">📊 Reporte Consolidado de Lotes</h1>
+                    <p class="mb-0 text-light">Información cruzada entre cosecha y control de calidad</p>
+                </div>
+                <div class="mt-3 mt-md-0">
+                    <a href="{% url 'sdcsemillas_home' %}" class="btn btn-outline-light">
+                        <i class="fas fa-home"></i> Inicio
+                    </a>
+                </div>
+            </div>
         </div>
 
         <!-- Tabla para pantallas medianas y grandes -->
