@@ -73,7 +73,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 #    'django.contrib.auth.middleware.AuthenticationMiddleware',
 #    'django.contrib.auth.middleware.RemoteUserMiddleware',
-    'django_auth_adfs.middleware.LoginRequiredMiddleware',
+#    'django_auth_adfs.middleware.LoginRequiredMiddleware',
+    
+    'web1.middleware.LoginRequiredMiddleware',
 ]
 
 CUSTOM_FAILED_RESPONSE_VIEW = 'dot.path.to.custom.views.login_failed'
