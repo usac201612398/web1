@@ -61,7 +61,8 @@ def lotesreporte_list(request):
                 codigo_genetico = variedad.cod_padre
             elif lote.genero.lower() == "madre":
                 codigo_genetico = variedad.cod_madre
-
+        else:
+            codigo_genetico="No existe"
         kg_producidos_total = cosecha_lote.aggregate(total=Sum('kg_producidos'))['total'] or 0
         semillasxfruto_avg = cosecha_lote.aggregate(avg=Avg('semillasxfruto'))['avg'] or 0
         semillasxgramo_avg = cosecha_lote.aggregate(avg=Avg('semillasxgramo'))['avg'] or 0
