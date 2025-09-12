@@ -308,12 +308,7 @@
                     <p class="card-text mb-1"><strong>PP Polinización Fin Activas:</strong> {{ registro.pp_cf_activas|default:"Pendiente" }}</p>
                     <p class="card-text mb-1"><strong>PP Polinización Fin Faltantes:</strong> {{ registro.pp_cf_faltantes|default:"Pendiente" }}</p>
 
-                    <!-- Botones -->
-                    <div class="d-flex justify-content-between mt-3">
-                        <a href="{% url 'lotes_detail' registro.lote.pk %}" class="btn btn-sm btn-outline-primary">Ver</a>
-                        <a href="{% url 'lotes_update' registro.lote.pk %}" class="btn btn-sm btn-outline-warning">Editar</a>
-                        <a href="{% url 'lotes_delete' registro.lote.pk %}" class="btn btn-sm btn-outline-danger">Anular</a>
-                    </div>
+                    
                 </div>
             </div>
             {% endfor %}
