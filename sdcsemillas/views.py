@@ -14,6 +14,7 @@ from django.http import HttpResponse
 from django.db.models import Sum, Avg, Min
 from datetime import timedelta
 
+from django.core.serializers.json import DjangoJSONEncoder
 def sdcsemillashomepage(request):
     return render(request,'sdcsemillas/sdcsemillas_home.html')
 
@@ -124,8 +125,10 @@ def lotesreporte_list(request):
             'pp_cf_activas': pp_cf_activas,
             'pp_cf_faltantes': pp_cf_faltantes,
         })
+        
+    registros_json = json.dumps(datos_combinados, cls=DjangoJSONEncoder)
 
-    return render(request, 'sdcsemillas/lotesreporte_list.html', {'registros': datos_combinados})
+    return render(request, 'sdcsemillas/lotesreporte_list.html', {'registros': datos_combinados,'registros_json': registros_json})
 
 def exportar_excel_generico(request, nombre_modelo):
     # Obtiene el modelo desde el nombre

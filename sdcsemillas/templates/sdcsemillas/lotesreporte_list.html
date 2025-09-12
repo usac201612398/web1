@@ -387,6 +387,10 @@
             });
         });
     </script>
+    <script>
+    const registros = JSON.parse('{{ registros_json|escapejs }}');
+    console.log("Registros recibidos desde Django:", registros);
+</script>
 </body>
 </html>
 
