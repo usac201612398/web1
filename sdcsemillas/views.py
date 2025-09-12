@@ -98,7 +98,17 @@ def lotesreporte_list(request):
         pp_cf_activas, pp_cf_faltantes = get_conteoplantas_valores("Polinización", "Fin")
 
         datos_combinados.append({
-            'lote': lote,
+            'lote_code': lote.lote_code,
+            'cultivo': lote.cultivo,
+            'variedad_code': lote.variedad_code,
+            'apodo_variedad': lote.apodo_variedad,
+            'ubicacion': lote.ubicación,
+            'estructura': lote.estructura,
+            'genero': lote.genero,
+            'harvest_code': lote.harvest_code,
+            'plantas_madre': lote.plantas_madre,
+            'plantas_padre': lote.plantas_padre,
+            'status': lote.status,
             'siembra':siembra,
             'codigotipo':codigo_genetico,
             # Fechas de etapasdelote
