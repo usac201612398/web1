@@ -31,12 +31,9 @@ def lotesreporte_list(request):
         genero=lote.genero
         # === Calcular fecha siembra padre restando 15 días a siembra_madre ===
         siembra_madre = lote.siembra_madre
-        if siembra_madre:
-            siembra_padre = siembra_madre - timedelta(days=15)
-        else:
-            siembra_padre = None
+
         if genero == "Padre":
-            siembra = siembra_padre
+            siembra= siembra_madre - timedelta(days=15)
         elif genero == "Madre":
             siembra = siembra_madre
         else:
@@ -58,7 +55,7 @@ def lotesreporte_list(request):
         # === Datos de cosecha ===
         cosecha_lote = cosecha.objects.filter(codigo_lote=codigo_lote)
         # Buscar la variedad relacionada por código
-        variedad = variedades.objects.filter(codigo_variedad=lote.variedad_code).first()
+        variedad = variedades.objects.filter(variedad_code=lote.variedad_code).first()
         if variedad:
             if lote.genero.lower() == "padre":
                 codigo_genetico = variedad.cod_padre
