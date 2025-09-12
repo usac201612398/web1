@@ -144,7 +144,7 @@
                         <td>{{ registro.harvest_code }}</td>
                         <td>{{ registro.plantas_madre }}</td>
                         <td>{{ registro.plantas_padre }}</td>
-                        <td>{{ registro.codigotipo}}</td>
+                        <td>{{ registro.codigo_genetico}}</td>
                         <td>{{ registro.siembra }}</td>
                         <td>{{ registro.status }}</td>
 
@@ -229,14 +229,14 @@
             {% for registro in registros %}
             <div class="card mb-2">
                 <div class="card-body">
-                    <h5 class="card-title">Lote: {{ registro.lote.lote_code }}</h5>
+                    <h5 class="card-title">Lote: {{ registro.lote_code }}</h5>
                     <p class="card-text">
-                        <strong>Fecha S. Madre:</strong> {{ registro.lote.siembra_madre }}<br />
-                        <strong>Ubicación:</strong> {{ registro.lote.ubicación }}<br />
-                        <strong>Estructura:</strong> {{ registro.lote.estructura }}<br />
-                        <strong>Cultivo:</strong> {{ registro.lote.cultivo }}<br />
-                        <strong>Variedad:</strong> {{ registro.lote.apodo_variedad }}<br />
-                        <strong>Status:</strong> {{ registro.lote.status }}
+                        <strong>Fecha S. Madre:</strong> {{ registro.siembra_madre }}<br />
+                        <strong>Ubicación:</strong> {{ registro.ubicación }}<br />
+                        <strong>Estructura:</strong> {{ registro.estructura }}<br />
+                        <strong>Cultivo:</strong> {{ registro.cultivo }}<br />
+                        <strong>Variedad:</strong> {{ registro.apodo_variedad }}<br />
+                        <strong>Status:</strong> {{ registro.status }}
                     </p>
 
                     <!-- NUEVA INFORMACIÓN -->
