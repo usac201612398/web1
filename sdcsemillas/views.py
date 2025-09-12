@@ -128,7 +128,7 @@ def lotesreporte_list(request):
         
     registros_json = json.dumps(salidas, cls=DjangoJSONEncoder)
 
-    return render(request, 'sdcsemillas/lotesreporte_list.html', {'registros': datos_combinados,'registros_json': registros_json})
+    return render(request, 'sdcsemillas/lotesreporte_list.html', {'registros': datos_combinados,'registros_json': list(registros_json)})
 
 def exportar_excel_generico(request, nombre_modelo):
     # Obtiene el modelo desde el nombre
