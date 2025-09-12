@@ -22,6 +22,7 @@ def consulta_list(request):
     return render(request,'sdcsemillas/monitorear.html')
 
 def lotesreporte_list(request):
+
     salidas = lotes.objects.all()
     datos_combinados = []
 
@@ -37,7 +38,7 @@ def lotesreporte_list(request):
         if genero == "Padre":
             siembra = siembra_padre
         elif genero == "Madre":
-            siembra = siembra_padre
+            siembra = siembra_madre
         else:
             siembra = "Pendiente"
         # === Fechas desde etapasdelote ===
@@ -60,9 +61,9 @@ def lotesreporte_list(request):
         variedad = variedades.objects.filter(codigo_variedad=lote.variedad_code).first()
         if variedad:
             if lote.genero.lower() == "padre":
-                codigo_genetico = variedad.codigo_padre
+                codigo_genetico = variedad.cod_padre
             elif lote.genero.lower() == "madre":
-                codigo_genetico = variedad.codigo_madre
+                codigo_genetico = variedad.cod_madre
 
         kg_producidos_total = cosecha_lote.aggregate(total=Sum('kg_producidos'))['total'] or 0
         semillasxfruto_avg = cosecha_lote.aggregate(avg=Avg('semillasxfruto'))['avg'] or 0
