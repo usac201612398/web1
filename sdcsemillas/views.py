@@ -126,7 +126,7 @@ def lotesreporte_list(request):
             'pp_cf_faltantes': pp_cf_faltantes,
         })
         
-    registros_json = json.dumps(datos_combinados, cls=DjangoJSONEncoder)
+    registros_json = json.dumps(salidas, cls=DjangoJSONEncoder)
 
     return render(request, 'sdcsemillas/lotesreporte_list.html', {'registros': datos_combinados,'registros_json': registros_json})
 
