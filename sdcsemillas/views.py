@@ -14,19 +14,34 @@ from django.http import HttpResponse
 from django.db.models import Sum, Avg, Min
 from datetime import timedelta
 from datetime import datetime
-
+import pandas as pd
 from django.core.serializers.json import DjangoJSONEncoder
 def sdcsemillashomepage(request):
     return render(request,'sdcsemillas/sdcsemillas_home.html')
 
 def consulta_list(request):
     return render(request,'sdcsemillas/monitorear.html')
-import pandas as pd
-from datetime import timedelta
-from django.shortcuts import render
-from django.db.models import Sum, Avg
-from .models import lotes, variedades, etapasdelote, cosecha, conteofrutosplanilla, conteoplantas
 
+def obtener_codigo_genetico(row):
+    if row['genero'].lower() == 'padre':
+        return row.get('cod_padre', 'No existe')
+    elif row['genero'].lower() == 'madre':
+        return row.get('cod_madre', 'No existe')
+    else:
+        return "Desconocido"
+    
+def get_fecha_evento(evento, status,df_etapas):
+        filtro = df_etapas[
+            (df_etapas['evento'].str.lower() == evento.lower()) &
+            (df_etapas['status'].str.lower() == status.lower())
+        ]
+        return filtro.groupby('codigo_lote')['fecha'].min()
+def get_conteo(evento, status, campo,df_plantas):
+        filtro = df_plantas[
+            (df_plantas['evento'].str.lower() == evento.lower()) &
+            (df_plantas['status'].str.lower() == status.lower())
+        ]
+        return filtro.set_index('codigo_lote')[campo]
 def lotesreporte_list(request):
     # 1. Cargar datos desde modelos
     df_lotes = pd.DataFrame(list(lotes.objects.values()))
@@ -44,28 +59,17 @@ def lotesreporte_list(request):
                               else row['siembra_madre'] if row['genero'] == 'Madre' else None, axis=1)
 
     # 4. Calcular código genético
-    def obtener_codigo_genetico(row):
-        if row['genero'].lower() == 'padre':
-            return row.get('cod_padre', 'No existe')
-        elif row['genero'].lower() == 'madre':
-            return row.get('cod_madre', 'No existe')
-        else:
-            return "Desconocido"
+
 
     df['codigo_genetico'] = df.apply(obtener_codigo_genetico, axis=1)
 
     # 5. Agregar fechas de eventos (inicio y fin de cosecha y polinización)
-    def get_fecha_evento(evento, status):
-        filtro = df_etapas[
-            (df_etapas['evento'].str.lower() == evento.lower()) &
-            (df_etapas['status'].str.lower() == status.lower())
-        ]
-        return filtro.groupby('codigo_lote')['fecha'].min()
+    
 
-    df = df.merge(get_fecha_evento("Cosecha", "Inicio").rename("inicio_cosecha"), how="left", left_on="lote_code", right_index=True)
-    df = df.merge(get_fecha_evento("Cosecha", "Fin").rename("fin_cosecha"), how="left", left_on="lote_code", right_index=True)
-    df = df.merge(get_fecha_evento("Polinización", "Inicio").rename("inicio_poliniza"), how="left", left_on="lote_code", right_index=True)
-    df = df.merge(get_fecha_evento("Polinización", "Fin").rename("fin_poliniza"), how="left", left_on="lote_code", right_index=True)
+    df = df.merge(get_fecha_evento("Cosecha", "Inicio",df_etapas).rename("inicio_cosecha"), how="left", left_on="lote_code", right_index=True)
+    df = df.merge(get_fecha_evento("Cosecha", "Fin",df_etapas).rename("fin_cosecha"), how="left", left_on="lote_code", right_index=True)
+    df = df.merge(get_fecha_evento("Polinización", "Inicio",df_etapas).rename("inicio_poliniza"), how="left", left_on="lote_code", right_index=True)
+    df = df.merge(get_fecha_evento("Polinización", "Fin",df_etapas).rename("fin_poliniza"), how="left", left_on="lote_code", right_index=True)
 
     # 6. Datos de cosecha
     df_cosecha_grouped = df_cosecha.groupby('codigo_lote').agg({
@@ -82,23 +86,18 @@ def lotesreporte_list(request):
     df = df.merge(df_frutos_grouped, how='left', left_on='lote_code', right_on='codigo_lote')
 
     # 8. Conteo de plantas activas y faltantes por evento/status
-    def get_conteo(evento, status, campo):
-        filtro = df_plantas[
-            (df_plantas['evento'].str.lower() == evento.lower()) &
-            (df_plantas['status'].str.lower() == status.lower())
-        ]
-        return filtro.set_index('codigo_lote')[campo]
+    
 
     # Agregar todas las combinaciones
     conteos = {
-        'pc_ci_activas': get_conteo("Cosecha", "Inicio", "plantas_activas"),
-        'pc_ci_faltantes': get_conteo("Cosecha", "Inicio", "plantas_faltantes"),
-        'pc_cf_activas': get_conteo("Cosecha", "Fin", "plantas_activas"),
-        'pc_cf_faltantes': get_conteo("Cosecha", "Fin", "plantas_faltantes"),
-        'pp_ci_activas': get_conteo("Polinización", "Inicio", "plantas_activas"),
-        'pp_ci_faltantes': get_conteo("Polinización", "Inicio", "plantas_faltantes"),
-        'pp_cf_activas': get_conteo("Polinización", "Fin", "plantas_activas"),
-        'pp_cf_faltantes': get_conteo("Polinización", "Fin", "plantas_faltantes"),
+        'pc_ci_activas': get_conteo("Cosecha", "Inicio", "plantas_activas",df_plantas),
+        'pc_ci_faltantes': get_conteo("Cosecha", "Inicio", "plantas_faltantes",df_plantas),
+        'pc_cf_activas': get_conteo("Cosecha", "Fin", "plantas_activas",df_plantas),
+        'pc_cf_faltantes': get_conteo("Cosecha", "Fin", "plantas_faltantes",df_plantas),
+        'pp_ci_activas': get_conteo("Polinización", "Inicio", "plantas_activas",df_plantas),
+        'pp_ci_faltantes': get_conteo("Polinización", "Inicio", "plantas_faltantes",df_plantas),
+        'pp_cf_activas': get_conteo("Polinización", "Fin", "plantas_activas",df_plantas),
+        'pp_cf_faltantes': get_conteo("Polinización", "Fin", "plantas_faltantes",df_plantas),
     }
 
     for nombre_col, serie in conteos.items():
