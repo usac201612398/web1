@@ -54,8 +54,7 @@ def lotesreporte_list(request):
     # 2. Merge variedades con lotes
     #df = pd.merge(df_lotes, df_variedades, how="left", left_on="variedad_code", right_on="variedad_code")
     df = df_lotes
-    if 'siembra_madre' in df.columns:
-        df['siembra_madre'] = pd.to_datetime(df['siembra_madre'], errors='coerce')
+    df['siembra_madre'] = pd.to_datetime(df['siembra_madre'], errors='coerce')
     # 3. Calcular siembra según género
     df['siembra'] = df.apply(
     lambda row: row['siembra_madre'] - timedelta(days=15) if row['genero'] == 'Padre'
