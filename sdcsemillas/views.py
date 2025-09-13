@@ -22,7 +22,6 @@ def sdcsemillashomepage(request):
 def consulta_list(request):
     return render(request,'sdcsemillas/monitorear.html')
 
-
 def lotesreporte_list(request):
 
     salidas = lotes.objects.all()
@@ -61,7 +60,7 @@ def lotesreporte_list(request):
         if variedad:
             if str(lote.genero) == "Padre":
                 codigo_genetico = variedad.cod_padre
-            elif str(lote.genero) == "madre":
+            elif str(lote.genero) == "Madre":
                 codigo_genetico = variedad.cod_madre
         else:
             codigo_genetico="No existe"
