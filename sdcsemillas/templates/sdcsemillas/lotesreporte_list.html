@@ -87,7 +87,7 @@
                 </div>
             </div>
         </div>
-        <pre>{{ registro|json_script:"registro-debug" }}</pre>
+        <p>{{ registros }}</p>
         <!-- Tabla para pantallas medianas y grandes -->
         <div class="table-responsive d-none d-md-block">
             <table class="table table-striped table-bordered" id="myTable">
@@ -142,7 +142,7 @@
             </table>
         </div>
 
-
+        
         <!-- Cards para pantallas pequeñas -->
         <div class="d-block d-md-none">
             {% for registro in registros %}
