@@ -239,9 +239,10 @@
     </script>
 
     {{ datos|json_script:"datos-data" }}
+
     <script>
-        const columnas = JSON.parse(document.getElementById('datos-data').textContent);
-        console.log('Columnas del DataFrame:', columnas);
+    const columnas = JSON.parse(document.getElementById('datos-data').textContent);
+    console.log("Columnas del DataFrame:", columnas);
     </script>
 </body>
 </html>
