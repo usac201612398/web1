@@ -213,7 +213,7 @@
                         <td>{{ registro.pp_cf_faltantes|default:"Pendiente" }}</td>
 
                         <td class="text-center">
-                            <button class="btn btn-sm btn-outline-dark generate-qr-btn" data-id="{{ registro.lote.id }}" data-bs-toggle="modal" data-bs-target="#qrModal">
+                            <button class="btn btn-sm btn-outline-dark generate-qr-btn" data-id="{{ registro.lote_code }}" data-bs-toggle="modal" data-bs-target="#qrModal">
                                 <i class="fas fa-qrcode"></i>
                             </button>
                         </td>
@@ -329,7 +329,7 @@
                     <p class="mt-2" id="qrText" style="font-size: 0.9rem;"></p>
                     <a id="downloadQR" class="btn btn-outline-primary mt-3" download="codigo_qr.png">Descargar QR</a>
                 </div>
-            </div>
+            </div>  
         </div>
     </div>
 
@@ -369,8 +369,8 @@
                     });
                 }
 
-                qr.value = `ID: ${id}`;
-                $('#qrText').text(`ID: ${id}`);
+                qr.value = `Lote: ${id}`;
+                $('#qrText').text(`Lote: ${id}`);
 
                 const canvas = document.getElementById('qrCanvas');
                 const dataURL = canvas.toDataURL('image/png');
