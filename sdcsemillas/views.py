@@ -75,7 +75,7 @@ def lotesreporte_list(request):
     ]
 
     df = df[columnas_finales]
-    comprobante =list([df.columns])
+    comprobante =list(df.columns)
     # 10. Pasar a diccionarios para el template
     registros = df.fillna("Pendiente").to_dict(orient='records')
   
