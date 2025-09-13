@@ -22,26 +22,7 @@ def sdcsemillashomepage(request):
 def consulta_list(request):
     return render(request,'sdcsemillas/monitorear.html')
 
-def obtener_codigo_genetico(row):
-    if row['genero'].lower() == 'padre':
-        return row.get('cod_padre', 'No existe')
-    elif row['genero'].lower() == 'madre':
-        return row.get('cod_madre', 'No existe')
-    else:
-        return "Desconocido"
-    
-def get_fecha_evento(evento, status,df_etapas):
-        filtro = df_etapas[
-            (df_etapas['evento'].str.lower() == evento.lower()) &
-            (df_etapas['status'].str.lower() == status.lower())
-        ]
-        return filtro.groupby('codigo_lote')['fecha'].min()
-def get_conteo(evento, status, campo,df_plantas):
-        filtro = df_plantas[
-            (df_plantas['evento'].str.lower() == evento.lower()) &
-            (df_plantas['status'].str.lower() == status.lower())
-        ]
-        return filtro.set_index('codigo_lote')[campo]
+
 def lotesreporte_list(request):
     # 1. Cargar datos desde modelos
     df_lotes = pd.DataFrame(list(lotes.objects.values()))
@@ -50,32 +31,94 @@ def lotesreporte_list(request):
     df_cosecha = pd.DataFrame(list(cosecha.objects.values()))
     df_frutos = pd.DataFrame(list(conteofrutosplanilla.objects.values()))
     df_plantas = pd.DataFrame(list(conteoplantas.objects.values()))
-    df_lotes['variedad_code'] = df_lotes['variedad_code'].fillna('').str.strip().str.upper()
-    df_variedades['variedad_code'] = df_variedades['variedad_code'].fillna('').str.strip().str.upper()
+
     # 2. Merge variedades con lotes
-    df = pd.merge(
-        df_lotes,
-        df_variedades,
-        how="left",
-        on="variedad_code",
-        suffixes=('_lote', '_variedad')
-    )
+    df = pd.merge(df_lotes, df_variedades, how="left", left_on="variedad_code", right_on="variedad_code")
+
     # 3. Calcular siembra según género
-    
+    df['siembra'] = df.apply(lambda row: row['siembra_madre'] - timedelta(days=15) if row['genero'] == 'Padre'
+                              else row['siembra_madre'] if row['genero'] == 'Madre' else None, axis=1)
+
     # 4. Calcular código genético
+    def obtener_codigo_genetico(row):
+        if row['genero'].lower() == 'padre':
+            return row.get('cod_padre', 'No existe')
+        elif row['genero'].lower() == 'madre':
+            return row.get('cod_madre', 'No existe')
+        else:
+            return "Desconocido"
+
+    df['codigo_genetico'] = df.apply(obtener_codigo_genetico, axis=1)
+
+    # 5. Agregar fechas de eventos (inicio y fin de cosecha y polinización)
+    def get_fecha_evento(evento, status):
+        filtro = df_etapas[
+            (df_etapas['evento'].str.lower() == evento.lower()) &
+            (df_etapas['status'].str.lower() == status.lower())
+        ]
+        return filtro.groupby('codigo_lote')['fecha'].min()
+
+    df = df.merge(get_fecha_evento("Cosecha", "Inicio").rename("inicio_cosecha"), how="left", left_on="lote_code", right_index=True)
+    df = df.merge(get_fecha_evento("Cosecha", "Fin").rename("fin_cosecha"), how="left", left_on="lote_code", right_index=True)
+    df = df.merge(get_fecha_evento("Polinización", "Inicio").rename("inicio_poliniza"), how="left", left_on="lote_code", right_index=True)
+    df = df.merge(get_fecha_evento("Polinización", "Fin").rename("fin_poliniza"), how="left", left_on="lote_code", right_index=True)
+
+    # 6. Datos de cosecha
+    df_cosecha_grouped = df_cosecha.groupby('codigo_lote').agg({
+        'kg_producidos': 'sum',
+        'semillasxfruto': 'mean',
+        'semillasxgramo': 'mean',
+    }).reset_index()
+
+    df = df.merge(df_cosecha_grouped, how='left', left_on='lote_code', right_on='codigo_lote')
+
+    # 7. Promedio frutos por planta
+    df_frutos_grouped = df_frutos.groupby('codigo_lote')['prom_general'].mean().reset_index()
+    df_frutos_grouped.rename(columns={'prom_general': 'promedio_frutos_general'}, inplace=True)
+    df = df.merge(df_frutos_grouped, how='left', left_on='lote_code', right_on='codigo_lote')
+
+    # 8. Conteo de plantas activas y faltantes por evento/status
+    def get_conteo(evento, status, campo):
+        filtro = df_plantas[
+            (df_plantas['evento'].str.lower() == evento.lower()) &
+            (df_plantas['status'].str.lower() == status.lower())
+        ]
+        return filtro.set_index('codigo_lote')[campo]
+
+    # Agregar todas las combinaciones
+    conteos = {
+        'pc_ci_activas': get_conteo("Cosecha", "Inicio", "plantas_activas"),
+        'pc_ci_faltantes': get_conteo("Cosecha", "Inicio", "plantas_faltantes"),
+        'pc_cf_activas': get_conteo("Cosecha", "Fin", "plantas_activas"),
+        'pc_cf_faltantes': get_conteo("Cosecha", "Fin", "plantas_faltantes"),
+        'pp_ci_activas': get_conteo("Polinización", "Inicio", "plantas_activas"),
+        'pp_ci_faltantes': get_conteo("Polinización", "Inicio", "plantas_faltantes"),
+        'pp_cf_activas': get_conteo("Polinización", "Fin", "plantas_activas"),
+        'pp_cf_faltantes': get_conteo("Polinización", "Fin", "plantas_faltantes"),
+    }
+
+    for nombre_col, serie in conteos.items():
+        df = df.merge(serie.rename(nombre_col), how="left", left_on="lote_code", right_index=True)
 
     # 9. Limpiar y formatear final
+    columnas_finales = [
+        'lote_code', 'cultivo', 'variedad_code', 'apodo_variedad', 'ubicación', 'estructura',
+        'genero', 'harvest_code', 'plantas_madre', 'plantas_padre', 'codigo_genetico',
+        'siembra', 'status',
+        'kg_producidos', 'semillasxfruto', 'semillasxgramo', 'promedio_frutos_general',
+        'inicio_cosecha', 'fin_cosecha', 'inicio_poliniza', 'fin_poliniza',
+        'pc_ci_activas', 'pc_ci_faltantes', 'pc_cf_activas', 'pc_cf_faltantes',
+        'pp_ci_activas', 'pp_ci_faltantes', 'pp_cf_activas', 'pp_cf_faltantes',
+    ]
 
-
-    columnas = list(df.columns)  # Esto es una lista de strings, ideal para JSON
+    df = df[columnas_finales]
 
     # 10. Pasar a diccionarios para el template
     registros = df.fillna("Pendiente").to_dict(orient='records')
-  
+
     return render(request, 'sdcsemillas/lotesreporte_list.html', {
         'registros': registros,
         'registros2': registros,  # para JSON export o debug
-        'datos':list(registros)
     })
 
 def exportar_excel_generico(request, nombre_modelo):
@@ -126,12 +169,6 @@ def lotes_list(request):
     #today = timezone.localtime(timezone.now()).date()
     salidas = lotes.objects.all()
     return render(request, 'sdcsemillas/lotes_list.html', {'registros': salidas})
-
-def lotesreporte_list(request):
-    #today = timezone.localtime(timezone.now()).date()
-    salidas = lotes.objects.all()
-
-    return render(request, 'sdcsemillas/lotesreporte_list.html', {'registros': salidas})
 
 def lotes_detail(request, pk):
     salidas = get_object_or_404(lotes, pk=pk)
