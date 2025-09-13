@@ -75,7 +75,7 @@ def lotesreporte_list(request):
     return render(request, 'sdcsemillas/lotesreporte_list.html', {
         'registros': registros,
         'registros2': registros,  # para JSON export o debug
-        'datos':columnas
+        'datos':list(df.columns)
     })
 
 def exportar_excel_generico(request, nombre_modelo):
