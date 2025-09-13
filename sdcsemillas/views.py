@@ -64,25 +64,18 @@ def lotesreporte_list(request):
     
     # 4. Calcular código genético
 
-
-    
-
     # 9. Limpiar y formatear final
-    columnas_finales = [
-        'lote_code', 'cultivo_lote', 'variedad_code_lote', 'apodo_variedad_lote', 'ubicación', 'estructura',
-        'genero', 'harvest_code', 'plantas_madre', 'plantas_padre', 
-        'siembra_madre', 'status_lote','cod_padre_variedad','cod_madre_variedad'
-    ]
 
-    df = df[columnas_finales]
-    comprobante =list(df.columns)
+
+    columnas = list(df.columns)  # Esto es una lista de strings, ideal para JSON
+
     # 10. Pasar a diccionarios para el template
     registros = df.fillna("Pendiente").to_dict(orient='records')
   
     return render(request, 'sdcsemillas/lotesreporte_list.html', {
         'registros': registros,
         'registros2': registros,  # para JSON export o debug
-        'datos':comprobante
+        'datos':columnas
     })
 
 def exportar_excel_generico(request, nombre_modelo):
