@@ -52,8 +52,13 @@ def lotesreporte_list(request):
     df_plantas = pd.DataFrame(list(conteoplantas.objects.values()))
     
     # 2. Merge variedades con lotes
-    df = pd.merge(df_lotes, df_variedades, how="left", left_on="variedad_code", right_on="variedad_code")
-
+    df = pd.merge(
+        df_lotes,
+        df_variedades,
+        how="left",
+        on="variedad_code",
+        suffixes=('_lote', '_variedad')
+    )
     # 3. Calcular siembra según género
     
     # 4. Calcular código genético
@@ -63,9 +68,9 @@ def lotesreporte_list(request):
 
     # 9. Limpiar y formatear final
     columnas_finales = [
-        'lote_code', 'cultivo', 'variedad_code', 'apodo_variedad', 'ubicación', 'estructura',
+        'lote_code', 'cultivo_lote', 'variedad_code_lote', 'apodo_variedad_lote', 'ubicación', 'estructura',
         'genero', 'harvest_code', 'plantas_madre', 'plantas_padre', 
-        'siembra_madre', 'status','cod_padre','cod_madre'
+        'siembra_madre', 'status_lote','cod_padre','cod_madre'
     ]
 
     df = df[columnas_finales]
