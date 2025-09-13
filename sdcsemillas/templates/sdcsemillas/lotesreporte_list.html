@@ -240,9 +240,8 @@
 
     {{ datos|json_script:"datos-data" }}
     <script>
-    const vector1 = JSON.parse(document.getElementById('datos-data').textContent);
-
-    console.log('Vector1:', vector1);
+        const columnas = JSON.parse(document.getElementById('datos-data').textContent);
+        console.log('Columnas del DataFrame:', columnas);
     </script>
 </body>
 </html>

@@ -75,10 +75,10 @@ def lotesreporte_list(request):
     ]
 
     df = df[columnas_finales]
-    comprobante =[df.columns]
+    comprobante =list([df.columns])
     # 10. Pasar a diccionarios para el template
     registros = df.fillna("Pendiente").to_dict(orient='records')
-    comprobante = json.loads(comprobante)
+  
     return render(request, 'sdcsemillas/lotesreporte_list.html', {
         'registros': registros,
         'registros2': registros,  # para JSON export o debug
