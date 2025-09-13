@@ -21,123 +21,109 @@ def sdcsemillashomepage(request):
 
 def consulta_list(request):
     return render(request,'sdcsemillas/monitorear.html')
+import pandas as pd
+from datetime import timedelta
+from django.shortcuts import render
+from django.db.models import Sum, Avg
+from .models import lotes, variedades, etapasdelote, cosecha, conteofrutosplanilla, conteoplantas
 
 def lotesreporte_list(request):
+    # 1. Cargar datos desde modelos
+    df_lotes = pd.DataFrame(list(lotes.objects.values()))
+    df_variedades = pd.DataFrame(list(variedades.objects.values()))
+    df_etapas = pd.DataFrame(list(etapasdelote.objects.values()))
+    df_cosecha = pd.DataFrame(list(cosecha.objects.values()))
+    df_frutos = pd.DataFrame(list(conteofrutosplanilla.objects.values()))
+    df_plantas = pd.DataFrame(list(conteoplantas.objects.values()))
 
-    salidas = lotes.objects.all()
-    datos_combinados = []
+    # 2. Merge variedades con lotes
+    df = pd.merge(df_lotes, df_variedades, how="left", left_on="variedad_code", right_on="variedad_code")
 
-    for lote in salidas:
-        codigo_lote = lote.lote_code
-        genero=lote.genero
-        # === Calcular fecha siembra padre restando 15 días a siembra_madre ===
-        siembra_madre = lote.siembra_madre
+    # 3. Calcular siembra según género
+    df['siembra'] = df.apply(lambda row: row['siembra_madre'] - timedelta(days=15) if row['genero'] == 'Padre'
+                              else row['siembra_madre'] if row['genero'] == 'Madre' else None, axis=1)
 
-        if genero == "Padre":
-            siembra= siembra_madre - timedelta(days=15)
-        elif genero == "Madre":
-            siembra = siembra_madre
+    # 4. Calcular código genético
+    def obtener_codigo_genetico(row):
+        if row['genero'].lower() == 'padre':
+            return row.get('cod_padre', 'No existe')
+        elif row['genero'].lower() == 'madre':
+            return row.get('cod_madre', 'No existe')
         else:
-            siembra = "Pendiente"
-        # === Fechas desde etapasdelote ===
-        def get_fecha_evento(evento, status):
-            etapa = etapasdelote.objects.filter(
-                codigo_lote=codigo_lote,
-                evento__iexact=evento,
-                status__iexact=status
-            ).order_by('fecha').first()
-            return etapa.fecha if etapa else None
+            return "Desconocido"
 
-        fecha_inicio_cosecha = get_fecha_evento("Cosecha", "Inicio") or "Pendiente"
-        fecha_fin_cosecha = get_fecha_evento("Cosecha", "Fin") or "Pendiente"
-        fecha_inicio_poliniza = get_fecha_evento("Polinización", "Inicio") or "Pendiente"
-        fecha_fin_poliniza = get_fecha_evento("Polinización", "Fin") or "Pendiente"
+    df['codigo_genetico'] = df.apply(obtener_codigo_genetico, axis=1)
 
-        # === Datos de cosecha ===
-        cosecha_lote = cosecha.objects.filter(codigo_lote=codigo_lote)
-        # Buscar la variedad relacionada por código
-        variedad = variedades.objects.filter(variedad_code=str(lote.variedad_code)).first()
-        if variedad:
-            if str(lote.genero) == "Padre":
-                codigo_genetico = variedad.cod_padre
-            elif str(lote.genero) == "Madre":
-                codigo_genetico = variedad.cod_madre
-        else:
-            codigo_genetico="No existe"
-        kg_producidos_total = cosecha_lote.aggregate(total=Sum('kg_producidos'))['total'] or 0
-        semillasxfruto_avg = cosecha_lote.aggregate(avg=Avg('semillasxfruto'))['avg'] or 0
-        semillasxgramo_avg = cosecha_lote.aggregate(avg=Avg('semillasxgramo'))['avg'] or 0
+    # 5. Agregar fechas de eventos (inicio y fin de cosecha y polinización)
+    def get_fecha_evento(evento, status):
+        filtro = df_etapas[
+            (df_etapas['evento'].str.lower() == evento.lower()) &
+            (df_etapas['status'].str.lower() == status.lower())
+        ]
+        return filtro.groupby('codigo_lote')['fecha'].min()
 
-        # Redondear promedios a 2 decimales
-        semillasxfruto_avg = round(semillasxfruto_avg, 2)
-        semillasxgramo_avg = round(semillasxgramo_avg, 2)
+    df = df.merge(get_fecha_evento("Cosecha", "Inicio").rename("inicio_cosecha"), how="left", left_on="lote_code", right_index=True)
+    df = df.merge(get_fecha_evento("Cosecha", "Fin").rename("fin_cosecha"), how="left", left_on="lote_code", right_index=True)
+    df = df.merge(get_fecha_evento("Polinización", "Inicio").rename("inicio_poliniza"), how="left", left_on="lote_code", right_index=True)
+    df = df.merge(get_fecha_evento("Polinización", "Fin").rename("fin_poliniza"), how="left", left_on="lote_code", right_index=True)
 
-        # === Promedio frutos por planta ===
-        frutos_avg = conteofrutosplanilla.objects.filter(
-            codigo_lote=codigo_lote
-        ).aggregate(prom_general_avg=Avg('prom_general'))['prom_general_avg'] or 0
-        frutos_avg = round(frutos_avg, 2)
+    # 6. Datos de cosecha
+    df_cosecha_grouped = df_cosecha.groupby('codigo_lote').agg({
+        'kg_producidos': 'sum',
+        'semillasxfruto': 'mean',
+        'semillasxgramo': 'mean',
+    }).reset_index()
 
-        # === Datos únicos desde conteoplantas ===
-        def get_conteoplantas_valores(evento, status):
-            cp = conteoplantas.objects.filter(
-                codigo_lote=codigo_lote,
-                evento__iexact=evento,
-                status__iexact=status
-            ).first()
-            if cp:
-                return cp.plantas_activas, cp.plantas_faltantes
-            return "Pendiente", "Pendiente"
+    df = df.merge(df_cosecha_grouped, how='left', left_on='lote_code', right_on='codigo_lote')
 
-        # Cosecha - Inicio y Fin
-        pc_ci_activas, pc_ci_faltantes = get_conteoplantas_valores("Cosecha", "Inicio")
-        pc_cf_activas, pc_cf_faltantes = get_conteoplantas_valores("Cosecha", "Fin")
+    # 7. Promedio frutos por planta
+    df_frutos_grouped = df_frutos.groupby('codigo_lote')['prom_general'].mean().reset_index()
+    df_frutos_grouped.rename(columns={'prom_general': 'promedio_frutos_general'}, inplace=True)
+    df = df.merge(df_frutos_grouped, how='left', left_on='lote_code', right_on='codigo_lote')
 
-        # Polinización - Inicio y Fin
-        pp_ci_activas, pp_ci_faltantes = get_conteoplantas_valores("Polinización", "Inicio")
-        pp_cf_activas, pp_cf_faltantes = get_conteoplantas_valores("Polinización", "Fin")
+    # 8. Conteo de plantas activas y faltantes por evento/status
+    def get_conteo(evento, status, campo):
+        filtro = df_plantas[
+            (df_plantas['evento'].str.lower() == evento.lower()) &
+            (df_plantas['status'].str.lower() == status.lower())
+        ]
+        return filtro.set_index('codigo_lote')[campo]
 
-        datos_combinados.append({
-            'lote_code': lote.lote_code,
-            'cultivo': lote.cultivo,
-            'variedad_code': lote.variedad_code,
-            'apodo_variedad': lote.apodo_variedad,
-            'ubicacion': lote.ubicación,
-            'estructura': lote.estructura,
-            'genero': lote.genero,
-            'harvest_code': lote.harvest_code,
-            'plantas_madre': lote.plantas_madre,
-            'plantas_padre': lote.plantas_padre,
-            'status': lote.status,
-            'siembra':siembra_madre,
-            'codigo_genetico':codigo_genetico,
-            # Fechas de etapasdelote
-            'inicio_cosecha': fecha_inicio_cosecha,
-            'fin_cosecha': fecha_fin_cosecha,
-            'inicio_poliniza': fecha_inicio_poliniza,
-            'fin_poliniza': fecha_fin_poliniza,
+    # Agregar todas las combinaciones
+    conteos = {
+        'pc_ci_activas': get_conteo("Cosecha", "Inicio", "plantas_activas"),
+        'pc_ci_faltantes': get_conteo("Cosecha", "Inicio", "plantas_faltantes"),
+        'pc_cf_activas': get_conteo("Cosecha", "Fin", "plantas_activas"),
+        'pc_cf_faltantes': get_conteo("Cosecha", "Fin", "plantas_faltantes"),
+        'pp_ci_activas': get_conteo("Polinización", "Inicio", "plantas_activas"),
+        'pp_ci_faltantes': get_conteo("Polinización", "Inicio", "plantas_faltantes"),
+        'pp_cf_activas': get_conteo("Polinización", "Fin", "plantas_activas"),
+        'pp_cf_faltantes': get_conteo("Polinización", "Fin", "plantas_faltantes"),
+    }
 
-            # Datos de cosecha
-            'kg_producidos': kg_producidos_total,
-            'semillasxfruto': semillasxfruto_avg,
-            'semillasxgramo': semillasxgramo_avg,
+    for nombre_col, serie in conteos.items():
+        df = df.merge(serie.rename(nombre_col), how="left", left_on="lote_code", right_index=True)
 
-            # Promedio de conteofrutosplanilla
-            'promedio_frutos_general': frutos_avg,
+    # 9. Limpiar y formatear final
+    columnas_finales = [
+        'lote_code', 'cultivo', 'variedad_code', 'apodo_variedad', 'ubicación', 'estructura',
+        'genero', 'harvest_code', 'plantas_madre', 'plantas_padre', 'codigo_genetico',
+        'siembra', 'status',
+        'kg_producidos', 'semillasxfruto', 'semillasxgramo', 'promedio_frutos_general',
+        'inicio_cosecha', 'fin_cosecha', 'inicio_poliniza', 'fin_poliniza',
+        'pc_ci_activas', 'pc_ci_faltantes', 'pc_cf_activas', 'pc_cf_faltantes',
+        'pp_ci_activas', 'pp_ci_faltantes', 'pp_cf_activas', 'pp_cf_faltantes',
+    ]
 
-            # Conteo de plantas
-            'pc_ci_activas': pc_ci_activas,
-            'pc_ci_faltantes': pc_ci_faltantes,
-            'pc_cf_activas': pc_cf_activas,
-            'pc_cf_faltantes': pc_cf_faltantes,
-            'pp_ci_activas': pp_ci_activas,
-            'pp_ci_faltantes': pp_ci_faltantes,
-            'pp_cf_activas': pp_cf_activas,
-            'pp_cf_faltantes': pp_cf_faltantes,
-        })
-    
+    df = df[columnas_finales]
 
-    return render(request, 'sdcsemillas/lotesreporte_list.html', {'registros': datos_combinados,'registros2':list(datos_combinados)})
+    # 10. Pasar a diccionarios para el template
+    registros = df.fillna("Pendiente").to_dict(orient='records')
+
+    return render(request, 'sdcsemillas/lotesreporte_list.html', {
+        'registros': registros,
+        'registros2': registros,  # para JSON export o debug
+    })
 
 def exportar_excel_generico(request, nombre_modelo):
     # Obtiene el modelo desde el nombre
