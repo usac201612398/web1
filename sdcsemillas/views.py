@@ -22,10 +22,6 @@ def sdcsemillashomepage(request):
 def consulta_list(request):
     return render(request,'sdcsemillas/monitorear.html')
 
-def safe_date(value):
-    if isinstance(value, (date, datetime)):
-        return value.strftime('%Y-%m-%d')
-    return value
 
 def lotesreporte_list(request):
 
@@ -61,11 +57,11 @@ def lotesreporte_list(request):
         # === Datos de cosecha ===
         cosecha_lote = cosecha.objects.filter(codigo_lote=codigo_lote)
         # Buscar la variedad relacionada por código
-        variedad = variedades.objects.filter(variedad_code=lote.variedad_code).first()
+        variedad = variedades.objects.filter(variedad_code=str(lote.variedad_code)).first()
         if variedad:
-            if lote.genero.lower() == "padre":
+            if str(lote.genero) == "Padre":
                 codigo_genetico = variedad.cod_padre
-            elif lote.genero.lower() == "madre":
+            elif str(lote.genero) == "madre":
                 codigo_genetico = variedad.cod_madre
         else:
             codigo_genetico="No existe"
@@ -140,10 +136,7 @@ def lotesreporte_list(request):
             'pp_cf_activas': pp_cf_activas,
             'pp_cf_faltantes': pp_cf_faltantes,
         })
-    for item in datos_combinados:
-        for key, value in item.items():
-            item[key] = safe_date(value)    
-        datos = list(datos_combinados)
+    
 
     return render(request, 'sdcsemillas/lotesreporte_list.html', {'registros': datos_combinados,'datos':datos})
 
