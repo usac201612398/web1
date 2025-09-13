@@ -388,9 +388,9 @@
         });
     </script>
 
-    {{ datos|json_script:"datos-data" }}
+    {{ datos_combinados|json_script:"datos_combinados-data" }}
     <script>
-    const vector1 = JSON.parse(document.getElementById('datos-data').textContent);
+    const vector1 = JSON.parse(document.getElementById('datos_combinados-data').textContent);
 
     console.log('Vector1:', vector1);
     </script>

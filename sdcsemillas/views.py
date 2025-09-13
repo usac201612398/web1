@@ -138,7 +138,7 @@ def lotesreporte_list(request):
         })
     
 
-    return render(request, 'sdcsemillas/lotesreporte_list.html', {'registros': datos_combinados,'datos':datos})
+    return render(request, 'sdcsemillas/lotesreporte_list.html', {'registros': datos_combinados})
 
 def exportar_excel_generico(request, nombre_modelo):
     # Obtiene el modelo desde el nombre
