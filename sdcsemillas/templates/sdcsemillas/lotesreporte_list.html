@@ -144,73 +144,9 @@
                         <td>{{ registro.harvest_code }}</td>
                         <td>{{ registro.plantas_madre }}</td>
                         <td>{{ registro.plantas_padre }}</td>
-                        <td>{{ registro.codigo_genetico}}</td>
                         <td>{{ registro.siembra }}</td>
                         <td>{{ registro.status }}</td>
 
-                        <!-- Datos calculados -->
-                        <td>{{ registro.kg_producidos|default:"Pendiente" }}</td>
-                        <td>
-                            {% if registro.semillasxfruto %}
-                                {{ registro.semillasxfruto|floatformat:2 }}
-                            {% else %}
-                                Pendiente
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if registro.semillasxgramo %}
-                                {{ registro.semillasxgramo|floatformat:2 }}
-                            {% else %}
-                                Pendiente
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if registro.promedio_frutos_general %}
-                                {{ registro.promedio_frutos_general|floatformat:2 }}
-                            {% else %}
-                                Pendiente
-                            {% endif %}
-                        </td>
-
-                        <!-- Fechas -->
-                        <td>
-                            {% if registro.inicio_cosecha %}
-                                {{ registro.inicio_cosecha|date:"d-m-Y" }}
-                            {% else %}
-                                Pendiente
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if registro.fin_cosecha %}
-                                {{ registro.fin_cosecha|date:"d-m-Y" }}
-                            {% else %}
-                                Pendiente
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if registro.inicio_poliniza %}
-                                {{ registro.inicio_poliniza|date:"d-m-Y" }}
-                            {% else %}
-                                Pendiente
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if registro.fin_poliniza %}
-                                {{ registro.fin_poliniza|date:"d-m-Y" }}
-                            {% else %}
-                                Pendiente
-                            {% endif %}
-                        </td>
-
-                        <!-- Conteo plantas -->
-                        <td>{{ registro.pc_ci_activas|default:"Pendiente" }}</td>
-                        <td>{{ registro.pc_ci_faltantes|default:"Pendiente" }}</td>
-                        <td>{{ registro.pc_cf_activas|default:"Pendiente" }}</td>
-                        <td>{{ registro.pc_cf_faltantes|default:"Pendiente" }}</td>
-                        <td>{{ registro.pp_ci_activas|default:"Pendiente" }}</td>
-                        <td>{{ registro.pp_ci_faltantes|default:"Pendiente" }}</td>
-                        <td>{{ registro.pp_cf_activas|default:"Pendiente" }}</td>
-                        <td>{{ registro.pp_cf_faltantes|default:"Pendiente" }}</td>
 
                         <td class="text-center">
                             <button class="btn btn-sm btn-outline-dark generate-qr-btn" data-id="{{ registro.lote_code }}" data-bs-toggle="modal" data-bs-target="#qrModal">
@@ -239,75 +175,7 @@
                         <strong>Status:</strong> {{ registro.status }}
                     </p>
 
-                    <!-- NUEVA INFORMACIÓN -->
-                    <hr />
-                    <p class="card-text mb-1"><strong>Código Genético:</strong> {{ registro.codigo_genetico }}</p>
-                    <p class="card-text mb-1"><strong>KG Producidos:</strong> {{ registro.kg_producidos|default:"Pendiente" }}</p>
-                    <p class="card-text mb-1"><strong>Semillas x Fruto:</strong>
-                        {% if registro.semillasxfruto %}
-                            {{ registro.semillasxfruto|floatformat:2 }}
-                        {% else %}
-                            Pendiente
-                        {% endif %}
-                    </p>
-
-                    <p class="card-text mb-1"><strong>Semillas x Gramo:</strong>
-                        {% if registro.semillasxgramo %}
-                            {{ registro.semillasxgramo|floatformat:2 }}
-                        {% else %}
-                            Pendiente
-                        {% endif %}
-                    </p>
-                    <p class="card-text mb-1"><strong>Promedio Frutos General:</strong>
-                        {% if registro.promedio_frutos_general %}
-                            {{ registro.promedio_frutos_general|floatformat:2 }}
-                        {% else %}
-                            Pendiente
-                        {% endif %}
-                    </p>
-
-                    <hr />
-                    <p class="card-text mb-1"><strong>Inicio Cosecha:</strong>
-                        {% if registro.inicio_cosecha %}
-                            {{ registro.inicio_cosecha|date:"d-m-Y" }}
-                        {% else %}
-                            Pendiente
-                        {% endif %}
-                    </p>
-                    <p class="card-text mb-1"><strong>Fin Cosecha:</strong>
-                        {% if registro.fin_cosecha %}
-                            {{ registro.fin_cosecha|date:"d-m-Y" }}
-                        {% else %}
-                            Pendiente
-                        {% endif %}
-                    </p>
-                    <p class="card-text mb-1"><strong>Inicio Polinización:</strong>
-                        {% if registro.inicio_poliniza %}
-                            {{ registro.inicio_poliniza|date:"d-m-Y" }}
-                        {% else %}
-                            Pendiente
-                        {% endif %}
-                    </p>
-                    <p class="card-text mb-1"><strong>Fin Polinización:</strong>
-                        {% if registro.fin_poliniza %}
-                            {{ registro.fin_poliniza|date:"d-m-Y" }}
-                        {% else %}
-                            Pendiente
-                        {% endif %}
-                    </p>
-
-                    <!-- Conteo plantas -->
-                    <hr />
-                    <p class="card-text mb-1"><strong>PC Cosecha Inicio Activas:</strong> {{ registro.pc_ci_activas|default:"Pendiente" }}</p>
-                    <p class="card-text mb-1"><strong>PC Cosecha Inicio Faltantes:</strong> {{ registro.pc_ci_faltantes|default:"Pendiente" }}</p>
-                    <p class="card-text mb-1"><strong>PC Cosecha Fin Activas:</strong> {{ registro.pc_cf_activas|default:"Pendiente" }}</p>
-                    <p class="card-text mb-1"><strong>PC Cosecha Fin Faltantes:</strong> {{ registro.pc_cf_faltantes|default:"Pendiente" }}</p>
-
-                    <p class="card-text mb-1"><strong>PP Polinización Inicio Activas:</strong> {{ registro.pp_ci_activas|default:"Pendiente" }}</p>
-                    <p class="card-text mb-1"><strong>PP Polinización Inicio Faltantes:</strong> {{ registro.pp_ci_faltantes|default:"Pendiente" }}</p>
-                    <p class="card-text mb-1"><strong>PP Polinización Fin Activas:</strong> {{ registro.pp_cf_activas|default:"Pendiente" }}</p>
-                    <p class="card-text mb-1"><strong>PP Polinización Fin Faltantes:</strong> {{ registro.pp_cf_faltantes|default:"Pendiente" }}</p>
-
+                   
                     
                 </div>
             </div>

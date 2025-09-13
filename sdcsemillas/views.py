@@ -61,57 +61,13 @@ def lotesreporte_list(request):
     # 4. Calcular código genético
 
 
-    df['codigo_genetico'] = df.apply(obtener_codigo_genetico, axis=1)
-
-    # 5. Agregar fechas de eventos (inicio y fin de cosecha y polinización)
     
-
-    df = df.merge(get_fecha_evento("Cosecha", "Inicio",df_etapas).rename("inicio_cosecha"), how="left", left_on="lote_code", right_index=True)
-    df = df.merge(get_fecha_evento("Cosecha", "Fin",df_etapas).rename("fin_cosecha"), how="left", left_on="lote_code", right_index=True)
-    df = df.merge(get_fecha_evento("Polinización", "Inicio",df_etapas).rename("inicio_poliniza"), how="left", left_on="lote_code", right_index=True)
-    df = df.merge(get_fecha_evento("Polinización", "Fin",df_etapas).rename("fin_poliniza"), how="left", left_on="lote_code", right_index=True)
-
-    # 6. Datos de cosecha
-    df_cosecha_grouped = df_cosecha.groupby('codigo_lote').agg({
-        'kg_producidos': 'sum',
-        'semillasxfruto': 'mean',
-        'semillasxgramo': 'mean',
-    }).reset_index()
-
-    df = df.merge(df_cosecha_grouped, how='left', left_on='lote_code', right_on='codigo_lote')
-
-    # 7. Promedio frutos por planta
-    df_frutos_grouped = df_frutos.groupby('codigo_lote')['prom_general'].mean().reset_index()
-    df_frutos_grouped.rename(columns={'prom_general': 'promedio_frutos_general'}, inplace=True)
-    df = df.merge(df_frutos_grouped, how='left', left_on='lote_code', right_on='codigo_lote')
-
-    # 8. Conteo de plantas activas y faltantes por evento/status
-    
-
-    # Agregar todas las combinaciones
-    conteos = {
-        'pc_ci_activas': get_conteo("Cosecha", "Inicio", "plantas_activas",df_plantas),
-        'pc_ci_faltantes': get_conteo("Cosecha", "Inicio", "plantas_faltantes",df_plantas),
-        'pc_cf_activas': get_conteo("Cosecha", "Fin", "plantas_activas",df_plantas),
-        'pc_cf_faltantes': get_conteo("Cosecha", "Fin", "plantas_faltantes",df_plantas),
-        'pp_ci_activas': get_conteo("Polinización", "Inicio", "plantas_activas",df_plantas),
-        'pp_ci_faltantes': get_conteo("Polinización", "Inicio", "plantas_faltantes",df_plantas),
-        'pp_cf_activas': get_conteo("Polinización", "Fin", "plantas_activas",df_plantas),
-        'pp_cf_faltantes': get_conteo("Polinización", "Fin", "plantas_faltantes",df_plantas),
-    }
-
-    for nombre_col, serie in conteos.items():
-        df = df.merge(serie.rename(nombre_col), how="left", left_on="lote_code", right_index=True)
 
     # 9. Limpiar y formatear final
     columnas_finales = [
         'lote_code', 'cultivo', 'variedad_code', 'apodo_variedad', 'ubicación', 'estructura',
-        'genero', 'harvest_code', 'plantas_madre', 'plantas_padre', 'codigo_genetico',
-        'siembra', 'status',
-        'kg_producidos', 'semillasxfruto', 'semillasxgramo', 'promedio_frutos_general',
-        'inicio_cosecha', 'fin_cosecha', 'inicio_poliniza', 'fin_poliniza',
-        'pc_ci_activas', 'pc_ci_faltantes', 'pc_cf_activas', 'pc_cf_faltantes',
-        'pp_ci_activas', 'pp_ci_faltantes', 'pp_cf_activas', 'pp_cf_faltantes',
+        'genero', 'harvest_code', 'plantas_madre', 'plantas_padre', 
+        'siembra', 'status'
     ]
 
     df = df[columnas_finales]
