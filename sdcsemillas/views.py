@@ -50,7 +50,8 @@ def lotesreporte_list(request):
     df_cosecha = pd.DataFrame(list(cosecha.objects.values()))
     df_frutos = pd.DataFrame(list(conteofrutosplanilla.objects.values()))
     df_plantas = pd.DataFrame(list(conteoplantas.objects.values()))
-    
+    df_lotes['variedad_code'] = df_lotes['variedad_code'].fillna('').str.strip().str.upper()
+    df_variedades['variedad_code'] = df_variedades['variedad_code'].fillna('').str.strip().str.upper()
     # 2. Merge variedades con lotes
     df = pd.merge(
         df_lotes,
