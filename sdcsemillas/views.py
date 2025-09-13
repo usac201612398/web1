@@ -28,7 +28,7 @@ def lotesreporte_list(request):
     datos_combinados = []
 
     for lote in salidas:
-        codigo_lote = lote.lote_code
+        codigo_lote = lote.id
         genero=lote.genero
         # === Calcular fecha siembra padre restando 15 días a siembra_madre ===
         siembra_madre = lote.siembra_madre
