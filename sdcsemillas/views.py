@@ -13,6 +13,7 @@ from django.apps import apps
 from django.http import HttpResponse
 from django.db.models import Sum, Avg, Min
 from datetime import timedelta
+from datetime import datetime
 
 from django.core.serializers.json import DjangoJSONEncoder
 def sdcsemillashomepage(request):
@@ -20,6 +21,11 @@ def sdcsemillashomepage(request):
 
 def consulta_list(request):
     return render(request,'sdcsemillas/monitorear.html')
+
+def safe_date(value):
+    if isinstance(value, (date, datetime)):
+        return value.strftime('%Y-%m-%d')
+    return value
 
 def lotesreporte_list(request):
 
@@ -134,8 +140,10 @@ def lotesreporte_list(request):
             'pp_cf_activas': pp_cf_activas,
             'pp_cf_faltantes': pp_cf_faltantes,
         })
-        
-    datos = list(datos_combinados)
+    for item in datos_combinados:
+        for key, value in item.items():
+            item[key] = safe_date(value)    
+        datos = list(datos_combinados)
 
     return render(request, 'sdcsemillas/lotesreporte_list.html', {'registros': datos_combinados,'datos':datos})
 
