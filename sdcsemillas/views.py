@@ -67,7 +67,7 @@ def lotesreporte_list(request):
     columnas_finales = [
         'lote_code', 'cultivo', 'variedad_code', 'apodo_variedad', 'ubicación', 'estructura',
         'genero', 'harvest_code', 'plantas_madre', 'plantas_padre', 
-        'siembra', 'status'
+        'siembra_madre', 'status'
     ]
 
     df = df[columnas_finales]
