@@ -108,7 +108,7 @@ def lotesreporte_list(request):
             'plantas_madre': lote.plantas_madre,
             'plantas_padre': lote.plantas_padre,
             'status': lote.status,
-            'siembra':siembra,
+            'siembra':siembra_madre,
             'codigo_genetico':codigo_genetico,
             # Fechas de etapasdelote
             'inicio_cosecha': fecha_inicio_cosecha,
