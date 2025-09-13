@@ -135,9 +135,9 @@ def lotesreporte_list(request):
             'pp_cf_faltantes': pp_cf_faltantes,
         })
         
-    registros_json = list(datos_combinados)
+    datos = list(datos_combinados)
 
-    return render(request, 'sdcsemillas/lotesreporte_list.html', {'registros': datos_combinados,'registros_json':registros_json})
+    return render(request, 'sdcsemillas/lotesreporte_list.html', {'registros': datos_combinados,'datos':datos})
 
 def exportar_excel_generico(request, nombre_modelo):
     # Obtiene el modelo desde el nombre
