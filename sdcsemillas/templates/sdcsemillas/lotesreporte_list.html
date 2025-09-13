@@ -388,9 +388,9 @@
         });
     </script>
 
-    {{ registros|json_script:"registros-data" }}
+    {{ registros2|json_script:"registros2-data" }}
     <script>
-    const vector1 = JSON.parse(document.getElementById('registros-data').textContent);
+    const vector1 = JSON.parse(document.getElementById('registros2-data').textContent);
 
     console.log('Vector1:', vector1);
     </script>
