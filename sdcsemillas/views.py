@@ -68,7 +68,7 @@ def lotesreporte_list(request):
 
     # 9. Limpiar y formatear final
     columnas_finales = [
-        'lote_code', 'cultivo', 'variedad_code', 'apodo_variedad', 'ubicación', 'estructura',
+        'lote_code', 'cultivo', 'apodo_variedad', 'ubicación', 'estructura',
         'genero', 'harvest_code', 'plantas_madre', 'plantas_padre', 
         'siembra', 'status'
     ]
