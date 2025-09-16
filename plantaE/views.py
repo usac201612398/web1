@@ -3210,6 +3210,7 @@ def reporte_mermas_view(request):
     })
 
 def inventariogeneralger_list(request):
+
     today = timezone.now().date()
 
     salidas = inventarioProdTerm.objects.filter(
@@ -3222,14 +3223,15 @@ def inventariogeneralger_list(request):
     salidas2 = inventarioProdTermAux.objects.filter(
         fecha__lte=today,
         categoria="Exportación"
-    ).exclude(
-        Q(status='En proceso') | Q(status='Anulado')
-    )
+    ).filter(
+        Q(status='') | Q(status__isnull=True)
+    ).order_by('registro')
+
 
     agrupaciones = {}
 
     for salida in salidas:
-        # 🔁 Reemplazo de nombre de ítem si aplica
+        # Reemplazo de nombre de ítem si aplica
         if (
             salida.pesostdxcaja == 11 and
             salida.cultivo == 'BLOCKY ORGANICO' and
@@ -3246,7 +3248,7 @@ def inventariogeneralger_list(request):
         ):
             salida.itemsapname = 'CHILE DE COLORES (CAJA 11 LIBRAS)'
 
-        # ✅ Agrupar por proveedor, cultivo, itemsapname y guardar itemsapcode para usar después
+        # Agrupar por proveedor, cultivo, itemsapname y guardar itemsapcode para usar después
         clave = (salida.proveedor, salida.cultivo, salida.itemsapname)
 
         if clave not in agrupaciones:
@@ -3268,12 +3270,13 @@ def inventariogeneralger_list(request):
             agrupaciones[clave]['cajas_salidas2'] += salida2.cajas or 0
 
     registros_agrupados = []
+
     for agrupacion in agrupaciones.values():
         cajas_restantes = agrupacion['cajas_salidas'] - agrupacion['cajas_salidas2']
         if cajas_restantes > 0:
             agrupacion['cajas_restantes'] = cajas_restantes
 
-            # 🔍 Buscar productoTerm para obtener cajasxtarima
+            # Buscar productoTerm para obtener cajasxtarima
             try:
                 producto = productoTerm.objects.get(itemsapcode=agrupacion['itemsapcode'])
                 cajasxtarima = producto.cajasxtarima or 0
