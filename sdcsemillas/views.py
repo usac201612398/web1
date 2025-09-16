@@ -87,15 +87,15 @@ def lotesreporte_list(request):
             ).first()
             if cp:
                 return cp.plantas_activas, cp.plantas_faltantes
-            return "Pendiente", "Pendiente"
+            return None, None
 
         # Cosecha - Inicio y Fin
         pc_ci_activas, pc_ci_faltantes = get_conteoplantas_valores("Cosecha", "Inicio")
         pc_cf_activas, pc_cf_faltantes = get_conteoplantas_valores("Cosecha", "Fin")
 
         # Polinización - Inicio y Fin
-        pp_ci_activas, pp_ci_faltantes = get_conteoplantas_valores("Polinización", "Inicio")
-        pp_cf_activas, pp_cf_faltantes = get_conteoplantas_valores("Polinización", "Fin")
+        pp_ci_activas, pp_ci_faltantes = get_conteoplantas_valores("Polinizacion", "Inicio")
+        pp_cf_activas, pp_cf_faltantes = get_conteoplantas_valores("Polinizacion", "Fin")
 
         datos_combinados.append({
             'lote_code': lote.lote_code,
