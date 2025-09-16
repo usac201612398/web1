@@ -3295,7 +3295,7 @@ def inventariogeneralger_list(request):
     registros_agrupados = sorted(registros_agrupados, key=lambda x: x['proveedor'])
 
     registros_json = json.dumps(registros_agrupados, default=str)
-    query = json.dumps(list(salidas2.values), default=str)
+    query = json.dumps(list(salidas2.values()), default=str)
     return render(
         request,
         'plantaE/inventarioProd_inventariogeneralger.html',
