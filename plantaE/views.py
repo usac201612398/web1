@@ -4383,7 +4383,7 @@ def poraprovechamientos(request):
         porcentaje_pendiente = round(pendiente * 100 / recepcion_libras, 2) if recepcion_libras else 0
 
         # Calcular porcentaje de devolución
-        porcentaje_devolucion = round(datos['devolución'] * 100 / recepcion_libras, 2) if recepcion_libras else 0
+        #porcentaje_devolucion = round(datos['devolución'] * 100 / recepcion_libras, 2) if recepcion_libras else 0
 
         resultado.append({
             'proveedor': finca,
@@ -4394,7 +4394,7 @@ def poraprovechamientos(request):
             'libras': round(recepcion_libras, 2),
             'aprovechamiento': round(datos['aprovechamiento'] * 100 / total_distribuido, 2) if total_distribuido else 0,
             'mediano': round(datos['mediano'] * 100 / total_distribuido, 2) if total_distribuido else 0,
-            'devolucion': porcentaje_devolucion,
+            'devolucion': round(datos['devolución'] * 100 / total_distribuido, 2) if total_distribuido else 0,
             'procesado': total_distribuido,
             'porcentaje_pendiente': porcentaje_pendiente,
         })
@@ -4472,7 +4472,7 @@ def poraprovechamientosger(request):
         porcentaje_pendiente = round(pendiente * 100 / recepcion_libras, 2) if recepcion_libras else 0
 
         # Calcular porcentaje de devolución
-        porcentaje_devolucion = round(datos['devolución'] * 100 / recepcion_libras, 2) if recepcion_libras else 0
+        #porcentaje_devolucion = round(datos['devolución'] * 100 / recepcion_libras, 2) if recepcion_libras else 0
 
         resultado.append({
             'proveedor': finca,
