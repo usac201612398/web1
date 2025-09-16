@@ -3223,10 +3223,9 @@ def inventariogeneralger_list(request):
     salidas2 = inventarioProdTermAux.objects.filter(
         fecha__lte=today,
         categoria="Exportación"
-    ).filter(
-        Q(status='') | Q(status__isnull=True)
-    ).order_by('registro')
-
+    ).exclude(
+        Q(status='En proceso') | Q(status='Anulado')
+    )
 
     agrupaciones = {}
 
@@ -3302,7 +3301,8 @@ def inventariogeneralger_list(request):
         'plantaE/inventarioProd_inventariogeneralger.html',
         {
             'registros': registros_agrupados,
-            'registros_json': registros_json
+            'registros_json': registros_json,
+            'query':list(salidas2.values)
         }
     )
 
