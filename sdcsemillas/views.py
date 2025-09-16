@@ -50,8 +50,8 @@ def lotesreporte_list(request):
 
         fecha_inicio_cosecha = get_fecha_evento("Cosecha", "Inicio") or "Pendiente"
         fecha_fin_cosecha = get_fecha_evento("Cosecha", "Fin") or "Pendiente"
-        fecha_inicio_poliniza = get_fecha_evento("Polinización", "Inicio") or "Pendiente"
-        fecha_fin_poliniza = get_fecha_evento("Polinización", "Fin") or "Pendiente"
+        fecha_inicio_poliniza = get_fecha_evento("Polinizacion", "Inicio") or "Pendiente"
+        fecha_fin_poliniza = get_fecha_evento("Polinizacion", "Fin") or "Pendiente"
 
         # === Datos de cosecha ===
         cosecha_lote = cosecha.objects.filter(codigo_lote=codigo_lote)
