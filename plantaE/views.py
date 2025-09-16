@@ -3248,7 +3248,7 @@ def inventariogeneralger_list(request):
             salida.itemsapname = 'CHILE DE COLORES (CAJA 11 LIBRAS)'
 
         # Agrupar por proveedor, cultivo, itemsapname y guardar itemsapcode para usar después
-        clave = (salida.proveedor, salida.cultivo, salida.itemsapname)
+        clave = (salida.proveedor, salida.cultivo, salida.itemsapcode)
 
         if clave not in agrupaciones:
             agrupaciones[clave] = {
@@ -3263,7 +3263,7 @@ def inventariogeneralger_list(request):
         agrupaciones[clave]['cajas_salidas'] += salida.cajas or 0
 
     for salida2 in salidas2:
-        clave = (salida2.proveedor, salida2.cultivo, salida2.itemsapname)
+        clave = (salida2.proveedor, salida2.cultivo, salida2.itemsapcode)
 
         if clave in agrupaciones:
             agrupaciones[clave]['cajas_salidas2'] += salida2.cajas or 0
@@ -3296,6 +3296,7 @@ def inventariogeneralger_list(request):
 
     registros_json = json.dumps(registros_agrupados, default=str)
     query = json.dumps(list(salidas2.values()), default=str)
+    
     return render(
         request,
         'plantaE/inventarioProd_inventariogeneralger.html',
