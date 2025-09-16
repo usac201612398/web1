@@ -60,7 +60,7 @@
         <a href="{% url 'conteofrutos_create' %}" class="btn btn-outline-success mb-2">
             <i class="fas fa-plus"></i> Agregar
         </a>
-        <a href="{% url 'exportar_excel_generico' 'frutos' %}" class="btn btn-outline-success mb-2">
+        <a href="{% url 'exportar_excel_generico' 'conteofrutos' %}" class="btn btn-outline-success mb-2">
             <i class="fas fa-file-excel"></i> Exportar
         </a>
     </div>
@@ -74,9 +74,14 @@
                 <th>Ubicación</th>
                 <th>Estructura</th>
                 <th>Cultivo</th>
-                <th>Plantas Activas</th>
-                <th>Plantas Faltantes</th>
+                <th>Autopolinizados</th>
+                <th>Flores-Abiertas</th>
+                <th>Polinizados</th>
+                <th>Cama</th>
+                <th>Area</th>
+                <th>Promedio</th>
                 <th>Fecha</th>
+                <th>Semana</th>
                 <th>Evento</th>
                 <th>Status</th>
                 <th>Editar</th>
@@ -86,23 +91,28 @@
         <tbody>
             {% for registro in registros %}
             <tr>
-                <td><a href="{% url 'conteoplantas_detail' registro.pk %}">{{ registro.id }}</a></td>
+                <td><a href="{% url 'conteofrutos_detail' registro.pk %}">{{ registro.id }}</a></td>
                 <td>{{ registro.apodo_variedad }}</td>
                 <td>{{ registro.ubicacion_lote }}</td>
                 <td>{{ registro.estructura }}</td>
                 <td>{{ registro.tipo_cultivo }}</td>
-                <td>{{ registro.plantas_activas }}</td>
-                <td>{{ registro.plantas_faltantes }}</td>
+                <td>{{ registro.prom_autopolinizados }}</td>
+                <td>{{ registro.prom_floresabiertas }}</td>
+                <td>{{ registro.prom_polinizados }}</td>
+                <td>{{ registro.prom_cama }}</td>
+                <td>{{ registro.prom_area }}</td>
+                <td>{{ registro.prom_general }}</td>
                 <td>{{ registro.fecha }}</td>
+                <td>{{ registro.nsemana }}</td>
                 <td>{{ registro.evento }}</td>
                 <td>{{ registro.status }}</td>
                 <td class="text-center">
-                    <a href="{% url 'conteoplantas_update' registro.pk %}" class="text-warning">
+                    <a href="{% url 'conteofrutos_update' registro.pk %}" class="text-warning">
                         <i class="fas fa-edit"></i>
                     </a>
                 </td>
                 <td class="text-center">
-                    <a href="{% url 'conteoplantas_delete' registro.pk %}" class="text-danger">
+                    <a href="{% url 'conteofrutos_delete' registro.pk %}" class="text-danger">
                         <i class="fas fa-trash-alt"></i>
                     </a>
                 </td>

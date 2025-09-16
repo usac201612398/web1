@@ -14,8 +14,8 @@ from django.http import HttpResponse
 from django.db.models import Sum, Avg, Min
 from datetime import timedelta
 from datetime import datetime
-
 from django.core.serializers.json import DjangoJSONEncoder
+
 def sdcsemillashomepage(request):
     return render(request,'sdcsemillas/sdcsemillas_home.html')
 
