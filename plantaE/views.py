@@ -3209,8 +3209,8 @@ def reporte_mermas_view(request):
         'fecha_fin': fecha_fin
     })
 
-def inventariogeneralger_list(request):
 
+def inventariogeneralger_list(request):
     today = timezone.now().date()
 
     salidas = inventarioProdTerm.objects.filter(
@@ -3247,7 +3247,6 @@ def inventariogeneralger_list(request):
         ):
             salida.itemsapname = 'CHILE DE COLORES (CAJA 11 LIBRAS)'
 
-        # Agrupar por proveedor, cultivo, itemsapname y guardar itemsapcode para usar después
         clave = (salida.proveedor, salida.cultivo, salida.itemsapcode)
 
         if clave not in agrupaciones:
@@ -3255,7 +3254,7 @@ def inventariogeneralger_list(request):
                 'proveedor': salida.proveedor,
                 'cultivo': salida.cultivo,
                 'itemsapname': salida.itemsapname,
-                'itemsapcode': salida.itemsapcode,  # Necesario para buscar cajasxtarima
+                'itemsapcode': salida.itemsapcode,
                 'cajas_salidas': 0,
                 'cajas_salidas2': 0
             }
@@ -3291,19 +3290,50 @@ def inventariogeneralger_list(request):
 
             registros_agrupados.append(agrupacion)
 
-    # Ordenar por proveedor
-    registros_agrupados = sorted(registros_agrupados, key=lambda x: x['proveedor'])
+    # Agrupar registros por itemsapname (segunda agrupación)
+    agrupados_final = defaultdict(lambda: {
+        'proveedor': '',
+        'cultivo': '',
+        'itemsapname': '',
+        'cajas_restantes': 0,
+        'cajasxtarima': 0,
+        'tarimas_restantes': 0,
+    })
 
-    registros_json = json.dumps(registros_agrupados, default=str)
+    for registro in registros_agrupados:
+        key = (registro['proveedor'], registro['cultivo'], registro['itemsapname'])
+        grupo = agrupados_final[key]
+
+        grupo['proveedor'] = registro['proveedor']
+        grupo['cultivo'] = registro['cultivo']
+        grupo['itemsapname'] = registro['itemsapname']
+        grupo['cajas_restantes'] += registro['cajas_restantes']
+
+        # Considera el promedio de cajasxtarima si hay diferencias
+        if registro['cajasxtarima'] > 0:
+            if grupo['cajasxtarima'] == 0:
+                grupo['cajasxtarima'] = registro['cajasxtarima']
+            else:
+                grupo['cajasxtarima'] = (grupo['cajasxtarima'] + registro['cajasxtarima']) / 2
+
+    # Calcular tarimas restantes nuevamente
+    for grupo in agrupados_final.values():
+        if grupo['cajasxtarima'] > 0:
+            grupo['tarimas_restantes'] = round(grupo['cajas_restantes'] / grupo['cajasxtarima'], 2)
+
+    # Convertir a lista y ordenar
+    registros_agrupados_final = sorted(agrupados_final.values(), key=lambda x: x['proveedor'])
+
+    registros_json = json.dumps(registros_agrupados_final, default=str)
     query = json.dumps(list(salidas2.values()), default=str)
     
     return render(
         request,
         'plantaE/inventarioProd_inventariogeneralger.html',
         {
-            'registros': registros_agrupados,
+            'registros': registros_agrupados_final,
             'registros_json': registros_json,
-            'query':query
+            'query': query
         }
     )
 
