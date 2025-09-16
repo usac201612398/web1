@@ -90,8 +90,8 @@ def lotesreporte_list(request):
             return None, None
 
         # Cosecha - Inicio y Fin
-        pc_ci_activas, pc_ci_faltantes = get_conteoplantas_valores("Cosecha")
-        pc_cf_activas, pc_cf_faltantes = get_conteoplantas_valores("Cosecha")
+        pc_ci_activas, pc_ci_faltantes = get_conteoplantas_valores("Cosecha","En proceso")
+        pc_cf_activas, pc_cf_faltantes = get_conteoplantas_valores("Cosecha","Finalizado")
 
         # Polinización - Inicio y Fin
         pp_ci_activas, pp_ci_faltantes = get_conteoplantas_valores("Polinización", "En proceso")
