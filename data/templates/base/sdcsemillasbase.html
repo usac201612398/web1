@@ -95,7 +95,7 @@
                     {% endif %}
                     <a class="navbar-item" href="#">Sobre Nosotros</a>
                     <a class="navbar-item" href="{% url 'operarios_list'%}">Personal</a>
-                    {% if user.username in "brandon.portillo@popoyan.com.gt,kimberly.hernández@popoyan.com.gt, claudia.moreno@popoyan.com.gt" %}
+                    {% if user.username in "brandon.portillo@popoyan.com.gt,kimberly.hernandez@popoyan.com.gt, claudia.moreno@popoyan.com.gt" %}
                         <div class="navbar-item has-dropdown is-hoverable">
                             <a class="navbar-link">
                                 Gestión de Cosecha
@@ -119,7 +119,7 @@
                         </a>
                         <div class="navbar-dropdown">
                             <a class="navbar-item" href="{% url 'etapasdelote_list'%}">Periodos</a>
-                            {% if user.username not in "kimberly.hernández@popoyan.com.gt" %}
+                            {% if user.username not in "kimberly.hernandez@popoyan.com.gt" %}
                                 <a class="navbar-item" href="{% url 'conteoplantas_list'%}">Plantas</a>
                                 <a class="navbar-item" href="{% url 'conteoflores_list'%}">Flores</a>
                                 <a class="navbar-item" href="{% url 'ccalidadpolen_list'%}">Polen</a>
