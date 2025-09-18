@@ -107,6 +107,7 @@ def lotesreporte_list(request):
         pp_cf_activas, pp_cf_faltantes = get_conteoplantas_valores("Polinización", "Finalizado")
 
         datos_combinados.append({
+            'id':lote.id,
             'lote_code': lote.lote_code,
             'cultivo': lote.cultivo,
             'variedad_code': lote.variedad_code,
