@@ -116,7 +116,7 @@
                         <th>Fin Cosecha</th>
                         <th>Inicio Polinización</th>
                         <th>Fin Polinización</th>
-
+                        <th>Transplante</th>
                         <!-- Conteo plantas -->
                         <th>PC Cosecha Inicio Activas</th>
                         <th>PC Cosecha Inicio Faltantes</th>
@@ -145,7 +145,7 @@
                         <td>{{ registro.plantas_madre }}</td>
                         <td>{{ registro.plantas_padre }}</td>
                         <td>{{ registro.codigo_genetico}}</td>
-                        <td>{{ registro.siembra }}</td>
+                        <td>{{ registro.siembra|date:"d-m-Y" }}</td>
                         <td>{{ registro.status }}</td>
 
                         <!-- Datos calculados -->
@@ -202,6 +202,13 @@
                             {% endif %}
                         </td>
 
+                        <td>
+                            {% if registro.fecha_transplante %}
+                                {{ registro.fechatransplante|date:"d-m-Y" }}
+                            {% else %}
+                                Pendiente
+                            {% endif %}
+                        </td>
                         <!-- Conteo plantas -->
                         <td>{{ registro.pc_ci_activas|default:"Pendiente" }}</td>
                         <td>{{ registro.pc_ci_faltantes|default:"Pendiente" }}</td>
@@ -295,6 +302,13 @@
                             Pendiente
                         {% endif %}
                     </p>
+                    <p class="card-text mb-1"><strong>Transplante:</strong>
+                        {% if registro.fecha_trasplante %}
+                            {{ registro.fecha_transplante|date:"d-m-Y" }}
+                        {% else %}
+                            Pendiente
+                        {% endif %}
+                    </p>
 
                     <!-- Conteo plantas -->
                     <hr />
@@ -370,7 +384,7 @@
                 }
 
                 qr.value = `ID: ${id}`;
-                $('#qrText').text(`ID: ${id}`);
+                $('#qrText').text(`${id}`);
 
                 const canvas = document.getElementById('qrCanvas');
                 const dataURL = canvas.toDataURL('image/png');

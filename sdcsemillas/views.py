@@ -47,11 +47,20 @@ def lotesreporte_list(request):
                 status__iexact=status
             ).order_by('fecha').first()
             return etapa.fecha if etapa else None
+        
+        def get_fecha_trasplante(evento, status):
+            etapa = conteoplantas.objects.filter(
+                codigo_lote=codigo_lote,
+                evento__iexact=evento,
+                status__iexact=status
+            ).order_by('fecha').first()
+            return etapa.fecha if etapa else None
 
         fecha_inicio_cosecha = get_fecha_evento("Cosecha", "Inicio") or "Pendiente"
         fecha_fin_cosecha = get_fecha_evento("Cosecha", "Fin") or "Pendiente"
         fecha_inicio_poliniza = get_fecha_evento("Polinizacion", "Inicio") or "Pendiente"
         fecha_fin_poliniza = get_fecha_evento("Polinizacion", "Fin") or "Pendiente"
+        fecha_transplante = get_fecha_trasplante("Al transplante", "En proceso") or "Pendiente"
 
         # === Datos de cosecha ===
         cosecha_lote = cosecha.objects.filter(codigo_lote=codigo_lote)
@@ -116,7 +125,7 @@ def lotesreporte_list(request):
             'fin_cosecha': fecha_fin_cosecha,
             'inicio_poliniza': fecha_inicio_poliniza,
             'fin_poliniza': fecha_fin_poliniza,
-
+            'fecha_transplante': fecha_transplante,
             # Datos de cosecha
             'kg_producidos': kg_producidos_total,
             'semillasxfruto': semillasxfruto_avg,
