@@ -371,21 +371,17 @@
             // Variable para guardar el QRious instance
             let qr;
 
-            // Generar QR dinámicamente
+                        // Generar QR dinámicamente
             $('.generate-qr-btn').on('click', function () {
                 const id = $(this).data('id');
+                const qr = new QRious({
+                    element: document.getElementById('qrCanvas'),
+                    value: `${id}`,  // Puedes cambiar el contenido aquí
+                    size: 200,
+                    level: 'H'
+                });
 
-                if (!qr) {
-                    qr = new QRious({
-                        element: document.getElementById('qrCanvas'),
-                        size: 200,
-                        level: 'H'
-                    });
-                }
-
-                qr.value = `${id}`;
                 $('#qrText').text(`ID: ${id}`);
-
                 const canvas = document.getElementById('qrCanvas');
                 const dataURL = canvas.toDataURL('image/png');
                 $('#downloadQR').attr('href', dataURL);
