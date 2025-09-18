@@ -586,6 +586,14 @@ class cosechaForm(forms.ModelForm):
     
         model = cosecha
         fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+        
+        self.fields['observaciones'].required = False
+        self.fields['por_germ_enpapel'].required = False
+        self.fields['por_germ_enbandeja'].required = False
     
 class paramcosechaForm(forms.ModelForm):
 
