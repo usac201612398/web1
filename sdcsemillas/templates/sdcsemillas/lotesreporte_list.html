@@ -383,8 +383,8 @@
                     });
                 }
 
-                qr.value = `ID: ${id}`;
-                $('#qrText').text(`${id}`);
+                qr.value = `${id}`;
+                $('#qrText').text(`ID: ${id}`);
 
                 const canvas = document.getElementById('qrCanvas');
                 const dataURL = canvas.toDataURL('image/png');
