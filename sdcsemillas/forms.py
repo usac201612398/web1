@@ -629,3 +629,14 @@ class paramcosechaForm(forms.ModelForm):
     
         model = paramcosecha
         fields = '__all__'
+    
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+        
+        self.fields['observaciones'].required = False
+        self.fields['fechaenvio_uvg'].required = False
+        self.fields['fechaenviosemilla'].required = False
+        self.fields['total_kg'].required = False
+        self.fields['separacion_lot_split'].required = False
+        self.fields['desinfecciondet'].required = False
