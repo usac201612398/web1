@@ -112,27 +112,28 @@
                         </div>
                     {% endif %}
 
-                    {% if user.username not in "kimberly.hernández@popoyan.com.gt" %}
+                    
                     <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-link">
                             Registros
                         </a>
                         <div class="navbar-dropdown">
-                            
-                            
                             <a class="navbar-item" href="{% url 'etapasdelote_list'%}">Periodos</a>
-                            <a class="navbar-item" href="{% url 'conteoplantas_list'%}">Plantas</a>
-                            <a class="navbar-item" href="{% url 'conteoflores_list'%}">Flores</a>
-                            <a class="navbar-item" href="{% url 'ccalidadpolen_list'%}">Polen</a>
-                            <a class="navbar-item" href="{% url 'indexpolinizacion_list'%}">Index</a>
-                            <a class="navbar-item" href="{% url 'conteofrutosplan_list'%}">Frutos-Planilla</a>
-                            <a class="navbar-item" href="{% url 'conteofrutos_list'%}">Frutos</a>
-                            <a class="navbar-item" href="{% url 'controlcosecha_list'%}">Cosecha</a>
-                            <a class="navbar-item" href="{% url 'conteosemillas_list'%}">Semillas</a>
+                            {% if user.username not in "kimberly.hernández@popoyan.com.gt" %}
+                                <a class="navbar-item" href="{% url 'conteoplantas_list'%}">Plantas</a>
+                                <a class="navbar-item" href="{% url 'conteoflores_list'%}">Flores</a>
+                                <a class="navbar-item" href="{% url 'ccalidadpolen_list'%}">Polen</a>
+                                <a class="navbar-item" href="{% url 'indexpolinizacion_list'%}">Index</a>
+                                <a class="navbar-item" href="{% url 'conteofrutosplan_list'%}">Frutos-Planilla</a>
+                                <a class="navbar-item" href="{% url 'conteofrutos_list'%}">Frutos</a>
+                                <a class="navbar-item" href="{% url 'controlcosecha_list'%}">Cosecha</a>
+                                <a class="navbar-item" href="{% url 'conteosemillas_list'%}">Semillas</a>
+                            {% endif %}
+                            
                         </div>
                     </div>
                     
-                    {% endif %}
+                    
     
                     <a class="navbar-item" href="#">Contacto</a>
                 </div>
