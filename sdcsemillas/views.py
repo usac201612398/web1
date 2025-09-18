@@ -1005,7 +1005,7 @@ def controlcosecha_update(request, pk):
             return redirect('controlcosecha_list')
     else:
         form = controlcosechaForm(instance=salidas)
-    return render(request, 'sdcsemillas/controlcosecha_list.html', {'form': form,'modo':'actualizar'})
+    return render(request, 'sdcsemillas/controlcosecha_form.html', {'form': form,'modo':'actualizar'})
 
 def controlcosecha_delete(request, pk):
 
@@ -1137,7 +1137,7 @@ def cosecha_update(request, pk):
             return redirect('cosecha_list')
     else:
         form = cosechaForm(instance=salidas)
-    return render(request, 'sdcsemillas/cosecha_list.html', {'form': form,'modo':'actualizar'})
+    return render(request, 'sdcsemillas/cosecha_form.html', {'form': form,'modo':'actualizar'})
 
 def cosecha_delete(request, pk):
 
