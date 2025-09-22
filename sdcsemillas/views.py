@@ -250,6 +250,12 @@ def lotesreporte_list2(request,lote_id):
             'codigo_genetico': codigo_genetico,
             'siembra': siembra,
             # Fechas de etapasdelote
+            'shipment_hub': lote.shipment_hub,
+            'target': lote.target,
+            'surface': lote.surface,
+            'nb_plantas_padre': lote.as_per_SDCMale,
+            'tipo': lote.tipo,
+            'nb_plantas_madre': lote.as_per_SDCFemale,
             'inicio_cosecha': fecha_inicio_cosecha,
             'fin_cosecha': fecha_fin_cosecha,
             'inicio_poliniza': fecha_inicio_poliniza,
