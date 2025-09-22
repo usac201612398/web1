@@ -72,9 +72,23 @@
         }
     </style>
     <style>
-    div.dt-buttons {
-        margin-bottom: 10px;
-    }
+        .text-truncate-cell {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 160px; /* Puedes ajustar */
+            cursor: pointer;
+        }
+
+        th.text-truncate-cell {
+            max-width: 180px;
+            font-weight: bold;
+            position: relative;
+        }
+
+        div.dt-buttons {
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -97,41 +111,40 @@
             <table class="table table-striped table-bordered" id="myTable">
                 <thead class="table-custom-header">
                     <tr>
-                        <th>Lote</th>
-                        <th>Cultivo</th>
-                        <th>Variedad</th>
-                        <th>Apodo Variedad</th>
-                        <th>Ubicación</th>
-                        <th>Estructura</th>
-                        <th>Género</th>
-                        <th>Contrato</th>
-                        <th>#Plantas - Mamá</th>
-                        <th>#Plantas - Papá</th>
-                        <th>Código-Genético</th>
-                        <th>Siembra</th>
-                        <th>Status</th>
+                        <th class="text-truncate-cell" title="Lote">Lote</th>
+                        <th class="text-truncate-cell" title="Cultivo">Cultivo</th>
+                        <th class="text-truncate-cell" title="Variedad">Variedad</th>
+                        <th class="text-truncate-cell" title="Apodo Variedad">Apodo Variedad</th>
+                        <th class="text-truncate-cell" title="Ubicación">Ubicación</th>
+                        <th class="text-truncate-cell" title="Estructura">Estructura</th>
+                        <th class="text-truncate-cell" title="Género">Género</th>
+                        <th class="text-truncate-cell" title="Contrato">Contrato</th>
+                        <th class="text-truncate-cell" title="#Plantas - Mamá">#Plantas - Mamá</th>
+                        <th class="text-truncate-cell" title="#Plantas - Papá">#Plantas - Papá</th>
+                        <th class="text-truncate-cell" title="Código-Genético">Código-Genético</th>
+                        <th class="text-truncate-cell" title="Siembra">Siembra</th>
+                        <th class="text-truncate-cell" title="Status">Status</th>
 
                         <!-- NUEVAS COLUMNAS -->
-                        <th>KG Producción</th>
-                        <th>Semillas x Fruto</th>
-                        <th>Semillas x Gramo</th>
-                        <th>Promedio Frutos General</th>
-
-                        <th>Inicio Cosecha</th>
-                        <th>Fin Cosecha</th>
-                        <th>Inicio Polinización</th>
-                        <th>Fin Polinización</th>
-                        <th>Transplante</th>
+                        <th class="text-truncate-cell" title="KG Producción">KG Producción</th>
+                        <th class="text-truncate-cell" title="Semillas x Fruto">Semillas x Fruto</th>
+                        <th class="text-truncate-cell" title="Semillas x Gramo">Semillas x Gramo</th>
+                        <th class="text-truncate-cell" title="Promedio Frutos General">Promedio Frutos General</th>
+                        <th class="text-truncate-cell" title="Inicio Cosecha">Inicio Cosecha</th>
+                        <th class="text-truncate-cell" title="Fin Cosecha">Fin Cosecha</th>
+                        <th class="text-truncate-cell" title="Inicio Polinización">Inicio Polinización</th>
+                        <th class="text-truncate-cell" title="Fin Polinización">Fin Polinización</th>
+                        <th class="text-truncate-cell" title="Transplante">Transplante</th>
                         <!-- Conteo plantas -->
-                        <th>PC Cosecha Inicio Activas</th>
-                        <th>PC Cosecha Inicio Faltantes</th>
-                        <th>PC Cosecha Fin Activas</th>
-                        <th>PC Cosecha Fin Faltantes</th>
+                        <th class="text-truncate-cell" title="PC Cosecha Inicio Activas">PC Cosecha Inicio Activas</th>
+                        <th class="text-truncate-cell" title="PC Cosecha Inicio Faltantes">PC Cosecha Inicio Faltantes</th>
+                        <th class="text-truncate-cell" title="PC Cosecha Fin Activas">PC Cosecha Fin Activas</th>
+                        <th class="text-truncate-cell" title="PC Cosecha Fin Faltantes">PC Cosecha Fin Faltantes</th>
 
-                        <th>PP Polinización Inicio Activas</th>
-                        <th>PP Polinización Inicio Faltantes</th>
-                        <th>PP Polinización Fin Activas</th>
-                        <th>PP Polinización Fin Faltantes</th>
+                        <th class="text-truncate-cell" title="PP Polinización Inicio Activas">PP Polinización Inicio Activas</th>
+                        <th class="text-truncate-cell" title="PP Polinización Inicio Faltantes">PP Polinización Inicio Faltantes</th>
+                        <th class="text-truncate-cell" title="PP Polinización Fin Activas">PP Polinización Fin Activas</th>
+                        <th class="text-truncate-cell" title="PP Polinización Fin Faltantes">PP Polinización Fin Faltantes</th>
 
                         <th>QR</th>
                     </tr>
@@ -139,37 +152,37 @@
                 <tbody>
                     {% for registro in registros %}
                     <tr>
-                        <td>{{ registro.lote_code }}</td>
-                        <td>{{ registro.cultivo }}</td>
-                        <td>{{ registro.variedad_code }}</td>
-                        <td>{{ registro.apodo_variedad }}</td>
-                        <td>{{ registro.ubicacion }}</td>
-                        <td>{{ registro.estructura }}</td>
-                        <td>{{ registro.genero }}</td>
-                        <td>{{ registro.harvest_code }}</td>
-                        <td>{{ registro.plantas_madre }}</td>
-                        <td>{{ registro.plantas_padre }}</td>
-                        <td>{{ registro.codigo_genetico}}</td>
-                        <td>{{ registro.siembra|date:"d-m-Y" }}</td>
-                        <td>{{ registro.status }}</td>
+                        <td class="text-truncate-cell" title="{{ registro.lote_code }}">{{ registro.lote_code }}</td>
+                        <td class="text-truncate-cell" title="{{ registro.cultivo }}">{{ registro.cultivo }}</td>
+                        <td class="text-truncate-cell" title="{{ registro.variedad_code }}">{{ registro.variedad_code }}</td>
+                        <td class="text-truncate-cell" title="{{ registro.apodo_variedad }}">{{ registro.apodo_variedad }}</td>
+                        <td class="text-truncate-cell" title="{{ registro.ubicacion }}">{{ registro.ubicacion }}</td>
+                        <td class="text-truncate-cell" title="{{ registro.estructura }}">{{ registro.estructura }}</td>
+                        <td class="text-truncate-cell" title="{{ registro.genero }}">{{ registro.genero }}</td>
+                        <td class="text-truncate-cell" title="{{ registro.harvest_code }}">{{ registro.harvest_code }}</td>
+                        <td class="text-truncate-cell" title="{{ registro.plantas_madre }}">{{ registro.plantas_madre }}</td>
+                        <td class="text-truncate-cell" title="{{ registro.plantas_padre }}">{{ registro.plantas_padre }}</td>
+                        <td class="text-truncate-cell" title="{{ registro.codigo_genetico }}">{{ registro.codigo_genetico}}</td>
+                        <td class="text-truncate-cell" title="{{ registro.siembra }}">{{ registro.siembra|date:"d-m-Y" }}</td>
+                        <td class="text-truncate-cell" title="{{ registro.status }}">{{ registro.status }}</td>
 
                         <!-- Datos calculados -->
-                        <td>{{ registro.kg_producidos|default:"Pendiente" }}</td>
-                        <td>
+                        <td class="text-truncate-cell" title="{{ registro.kg_producidos }}">{{ registro.kg_producidos|default:"Pendiente" }}</td>
+                        <td class="text-truncate-cell" title="{{ registro.semillasxfruto }}">
                             {% if registro.semillasxfruto %}
                                 {{ registro.semillasxfruto|floatformat:2 }}
                             {% else %}
                                 Pendiente
                             {% endif %}
                         </td>
-                        <td>
+                        <td class="text-truncate-cell" title="{{ registro.semillasxgramo }}">
                             {% if registro.semillasxgramo %}
                                 {{ registro.semillasxgramo|floatformat:2 }}
                             {% else %}
                                 Pendiente
                             {% endif %}
                         </td>
-                        <td>
+                        <td class="text-truncate-cell" title="{{ registro.promedio_frutos_general }}">
                             {% if registro.promedio_frutos_general %}
                                 {{ registro.promedio_frutos_general|floatformat:2 }}
                             {% else %}
@@ -178,28 +191,28 @@
                         </td>
 
                         <!-- Fechas -->
-                        <td>
+                        <td class="text-truncate-cell" title="{{ registro.inicio_cosecha }}">
                             {% if registro.inicio_cosecha %}
                                 {{ registro.inicio_cosecha|date:"d-m-Y" }}
                             {% else %}
                                 Pendiente
                             {% endif %}
                         </td>
-                        <td>
+                        <td class="text-truncate-cell" title="{{ registro.fin_cosecha }}">
                             {% if registro.fin_cosecha %}
                                 {{ registro.fin_cosecha|date:"d-m-Y" }}
                             {% else %}
                                 Pendiente
                             {% endif %}
                         </td>
-                        <td>
+                        <td class="text-truncate-cell" title="{{ registro.inicio_poliniza }}">
                             {% if registro.inicio_poliniza %}
                                 {{ registro.inicio_poliniza|date:"d-m-Y" }}
                             {% else %}
                                 Pendiente
                             {% endif %}
                         </td>
-                        <td>
+                        <td class="text-truncate-cell" title="{{ registro.fin_poliniza }}">
                             {% if registro.fin_poliniza %}
                                 {{ registro.fin_poliniza|date:"d-m-Y" }}
                             {% else %}
@@ -207,7 +220,7 @@
                             {% endif %}
                         </td>
 
-                        <td>
+                        <td class="text-truncate-cell" title="{{ registro.fecha_trasplante }}">
                             {% if registro.fecha_transplante %}
                                 {{ registro.fecha_transplante|date:"d-m-Y" }}
                             {% else %}
@@ -215,14 +228,14 @@
                             {% endif %}
                         </td>
                         <!-- Conteo plantas -->
-                        <td>{{ registro.pc_ci_activas|default:"Pendiente" }}</td>
-                        <td>{{ registro.pc_ci_faltantes|default:"Pendiente" }}</td>
-                        <td>{{ registro.pc_cf_activas|default:"Pendiente" }}</td>
-                        <td>{{ registro.pc_cf_faltantes|default:"Pendiente" }}</td>
-                        <td>{{ registro.pp_ci_activas|default:"Pendiente" }}</td>
-                        <td>{{ registro.pp_ci_faltantes|default:"Pendiente" }}</td>
-                        <td>{{ registro.pp_cf_activas|default:"Pendiente" }}</td>
-                        <td>{{ registro.pp_cf_faltantes|default:"Pendiente" }}</td>
+                        <td class="text-truncate-cell" title="{{ registro.pc_ci_activas }}">{{ registro.pc_ci_activas|default:"Pendiente" }}</td>
+                        <td class="text-truncate-cell" title="{{ registro.pc_ci_faltantes }}">{{ registro.pc_ci_faltantes|default:"Pendiente" }}</td>
+                        <td class="text-truncate-cell" title="{{ registro.pc_cf_activas }}">{{ registro.pc_cf_activas|default:"Pendiente" }}</td>
+                        <td class="text-truncate-cell" title="{{ registro.pc_cf_faltantes }}">{{ registro.pc_cf_faltantes|default:"Pendiente" }}</td>
+                        <td class="text-truncate-cell" title="{{ registro.pp_ci_activas }}">{{ registro.pp_ci_activas|default:"Pendiente" }}</td>
+                        <td class="text-truncate-cell" title="{{ registro.pp_ci_faltantes }}">{{ registro.pp_ci_faltantes|default:"Pendiente" }}</td>
+                        <td class="text-truncate-cell" title="{{ registro.pp_cf_activas }}">{{ registro.pp_cf_activas|default:"Pendiente" }}</td>
+                        <td class="text-truncate-cell" title="{{ registro.pp_cf_faltantes }}">{{ registro.pp_cf_faltantes|default:"Pendiente" }}</td>
 
                         <td class="text-center">
                             <button class="btn btn-sm btn-outline-dark generate-qr-btn" data-id="{{ registro.id }}" data-bs-toggle="modal" data-bs-target="#qrModal">
@@ -465,9 +478,15 @@
 
     {{ registros2|json_script:"registros2-data" }}
     <script>
+
     const vector1 = JSON.parse(document.getElementById('registros2-data').textContent);
 
     console.log('Vector1:', vector1);
+    </script>
+    <script>
+        document.querySelectorAll('.text-truncate-cell').forEach(function(el) {
+            new bootstrap.Tooltip(el);
+        });
     </script>
 </body>
 </html>
