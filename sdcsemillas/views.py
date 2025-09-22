@@ -275,7 +275,7 @@ def lotesreporte_list2(request,lote_id):
         })
     
 
-    return render(request, 'sdcsemillas/monitorear_detalles.html', {'registros': datos_combinados,'registros2':list(datos_combinados)})
+    return render(request, 'sdcsemillas/monitorear_detalles.html', {'registros': datos_combinados[0],'registros2':list(datos_combinados)})
 
 def exportar_excel_generico(request, nombre_modelo):
     # Obtiene el modelo desde el nombre
