@@ -160,31 +160,31 @@
                         <td class="text-truncate-cell" title="{{ registro.estructura }}">{{ registro.estructura }}</td>
                         <td class="text-truncate-cell" title="{{ registro.genero }}">{{ registro.genero }}</td>
                         <td class="text-truncate-cell" title="{{ registro.harvest_code }}">{{ registro.harvest_code }}</td>
-                        <td class="text-truncate-cell" title="{{ registro.plantas_madre }}">{{ registro.plantas_madre }}</td>
-                        <td class="text-truncate-cell" title="{{ registro.plantas_padre }}">{{ registro.plantas_padre }}</td>
+                        <td class="text-truncate-cell" title="{{ registro.plantas_madre }}">{{ registro.plantas_madre|floatformat:2 }}</td>
+                        <td class="text-truncate-cell" title="{{ registro.plantas_padre }}">{{ registro.plantas_padre|floatformat:2 }}</td>
                         <td class="text-truncate-cell" title="{{ registro.codigo_genetico }}">{{ registro.codigo_genetico}}</td>
                         <td class="text-truncate-cell" title="{{ registro.siembra }}">{{ registro.siembra|date:"d-m-Y" }}</td>
                         <td class="text-truncate-cell" title="{{ registro.status }}">{{ registro.status }}</td>
 
                         <!-- Datos calculados -->
-                        <td class="text-truncate-cell" title="{{ registro.kg_producidos }}">{{ registro.kg_producidos|default:"Pendiente" }}</td>
+                        <td class="text-truncate-cell" title="{{ registro.kg_producidos }}">{{ registro.kg_producidos|floatformat:2|default:"Pendiente" }}</td>
                         <td class="text-truncate-cell" title="{{ registro.semillasxfruto }}">
                             {% if registro.semillasxfruto %}
-                                {{ registro.semillasxfruto|floatformat:2 }}
+                                {{ registro.semillasxfruto|floatformat:2|floatformat:2 }}
                             {% else %}
                                 Pendiente
                             {% endif %}
                         </td>
                         <td class="text-truncate-cell" title="{{ registro.semillasxgramo }}">
                             {% if registro.semillasxgramo %}
-                                {{ registro.semillasxgramo|floatformat:2 }}
+                                {{ registro.semillasxgramo|floatformat:2|floatformat:2 }}
                             {% else %}
                                 Pendiente
                             {% endif %}
                         </td>
                         <td class="text-truncate-cell" title="{{ registro.promedio_frutos_general }}">
                             {% if registro.promedio_frutos_general %}
-                                {{ registro.promedio_frutos_general|floatformat:2 }}
+                                {{ registro.promedio_frutos_general|floatformat:2|floatformat:2 }}
                             {% else %}
                                 Pendiente
                             {% endif %}
@@ -267,10 +267,10 @@
                     <!-- NUEVA INFORMACIÓN -->
                     <hr />
                     <p class="card-text mb-1"><strong>Código Genético:</strong> {{ registro.codigo_genetico }}</p>
-                    <p class="card-text mb-1"><strong>KG Producidos:</strong> {{ registro.kg_producidos|default:"Pendiente" }}</p>
+                    <p class="card-text mb-1"><strong>KG Producidos:</strong> {{ registro.kg_producidos|floatformat:2|default:"Pendiente" }}</p>
                     <p class="card-text mb-1"><strong>Semillas x Fruto:</strong>
                         {% if registro.semillasxfruto %}
-                            {{ registro.semillasxfruto|floatformat:2 }}
+                            {{ registro.semillasxfruto|floatformat:2|floatformat:2 }}
                         {% else %}
                             Pendiente
                         {% endif %}
@@ -278,14 +278,14 @@
 
                     <p class="card-text mb-1"><strong>Semillas x Gramo:</strong>
                         {% if registro.semillasxgramo %}
-                            {{ registro.semillasxgramo|floatformat:2 }}
+                            {{ registro.semillasxgramo|floatformat:2|floatformat:2 }}
                         {% else %}
                             Pendiente
                         {% endif %}
                     </p>
                     <p class="card-text mb-1"><strong>Promedio Frutos General:</strong>
                         {% if registro.promedio_frutos_general %}
-                            {{ registro.promedio_frutos_general|floatformat:2 }}
+                            {{ registro.promedio_frutos_general|floatformat:2|floatformat:2 }}
                         {% else %}
                             Pendiente
                         {% endif %}
