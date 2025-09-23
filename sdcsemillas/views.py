@@ -79,24 +79,26 @@ def lotesreporte_list(request):
         hoy = date.today()
 
         # === Conversión de fechas ===
+        siembra = convertir_fecha(siembra)
         fecha_transplante = convertir_fecha(fecha_transplante)
+        fecha_inicio_poliniza = convertir_fecha(fecha_inicio_poliniza)
         fecha_fin_poliniza = convertir_fecha(fecha_fin_poliniza)
         fecha_inicio_cosecha = convertir_fecha(fecha_inicio_cosecha)
         fecha_fin_cosecha = convertir_fecha(fecha_fin_cosecha)
-        siembra = convertir_fecha(siembra)
 
-        # === Determinar estado actual según fechas ===
+        # === Determinar estado actual ===
         estado_actual = "Sin datos"
 
-        if fecha_fin_cosecha and hoy > fecha_fin_cosecha:
+        if fecha_fin_cosecha:
             estado_actual = "Finalizado"
-        elif fecha_inicio_cosecha and hoy >= fecha_inicio_cosecha:
+        elif fecha_inicio_cosecha:
             estado_actual = "Cosechando"
-        elif fecha_fin_poliniza and fecha_inicio_cosecha and hoy >= fecha_fin_poliniza and hoy < fecha_inicio_cosecha:
+        elif fecha_inicio_poliniza and not fecha_fin_poliniza and not fecha_inicio_cosecha:
             estado_actual = "Polinizando"
-        elif fecha_transplante and hoy >= fecha_transplante:
+        elif fecha_transplante and not fecha_inicio_poliniza and not fecha_inicio_cosecha:
             estado_actual = "Trasplantado"
-
+        elif siembra:
+            estado_actual = "Sembrado"
         # === Edad de la planta ===
         if siembra:
             edad_dias = (hoy - siembra).days
@@ -246,26 +248,31 @@ def lotesreporte_list2(request,lote_id):
         hoy = date.today()
 
         # === Conversión de fechas ===
+        siembra = convertir_fecha(siembra)
         fecha_transplante = convertir_fecha(fecha_transplante)
+        fecha_inicio_poliniza = convertir_fecha(fecha_inicio_poliniza)
         fecha_fin_poliniza = convertir_fecha(fecha_fin_poliniza)
         fecha_inicio_cosecha = convertir_fecha(fecha_inicio_cosecha)
         fecha_fin_cosecha = convertir_fecha(fecha_fin_cosecha)
-        siembra = convertir_fecha(siembra)
-
-        # === Determinar estado actual según fechas ===
 
         # === Determinar estado actual ===
         estado_actual = "Sin datos"
 
-        if fecha_fin_cosecha and hoy > fecha_fin_cosecha:
-            estado_actual = "Finalizado"
-        elif fecha_inicio_cosecha and hoy >= fecha_inicio_cosecha:
+        if fecha_fin_cosecha:
+            estado_actual = "Cosechado"
+        elif fecha_inicio_cosecha:
             estado_actual = "Cosechando"
-        elif fecha_fin_poliniza and fecha_inicio_cosecha and hoy >= fecha_fin_poliniza and hoy < fecha_inicio_cosecha:
+        elif fecha_inicio_poliniza and not fecha_fin_poliniza and not fecha_inicio_cosecha:
             estado_actual = "Polinizando"
-        elif fecha_transplante and hoy >= fecha_transplante:
+        elif fecha_transplante and not fecha_inicio_poliniza and not fecha_inicio_cosecha:
             estado_actual = "Trasplantado"
-
+        elif siembra:
+            estado_actual = "Sembrado"
+        # === Edad de la planta ===
+        if siembra:
+            edad_dias = (hoy - siembra).days
+        else:
+            edad_dias = "Pendiente"
         # === Edad de la planta ===
         if siembra:
             edad_dias = (hoy - siembra).days
