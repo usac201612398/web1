@@ -65,8 +65,25 @@ def lotesreporte_list(request):
         fecha_inicio_poliniza = get_fecha_evento("Polinizacion", "Inicio") or "Pendiente"
         fecha_fin_poliniza = get_fecha_evento("Polinizacion", "Fin") or "Pendiente"
         fecha_transplante = get_fecha_trasplante("Al transplante", "En proceso") or "Pendiente"
+        def convertir_fecha(fecha):
+            if isinstance(fecha, str) and fecha != "Pendiente":
+                try:
+                    return datetime.strptime(fecha, "%Y-%m-%d").date()
+                except ValueError:
+                    return None
+            elif isinstance(fecha, date):
+                return fecha
+            return None
+
         # === Fecha actual ===
         hoy = date.today()
+
+        # === Conversión de fechas ===
+        fecha_transplante = convertir_fecha(fecha_transplante)
+        fecha_fin_poliniza = convertir_fecha(fecha_fin_poliniza)
+        fecha_inicio_cosecha = convertir_fecha(fecha_inicio_cosecha)
+        fecha_fin_cosecha = convertir_fecha(fecha_fin_cosecha)
+        siembra = convertir_fecha(siembra)
 
         # === Determinar estado actual según fechas ===
         estado_actual = "Sin datos"
@@ -215,8 +232,25 @@ def lotesreporte_list2(request,lote_id):
         fecha_inicio_poliniza = get_fecha_evento("Polinizacion", "Inicio") or "Pendiente"
         fecha_fin_poliniza = get_fecha_evento("Polinizacion", "Fin") or "Pendiente"
         fecha_transplante = get_fecha_trasplante("Al transplante", "En proceso") or "Pendiente"
+        def convertir_fecha(fecha):
+            if isinstance(fecha, str) and fecha != "Pendiente":
+                try:
+                    return datetime.strptime(fecha, "%Y-%m-%d").date()
+                except ValueError:
+                    return None
+            elif isinstance(fecha, date):
+                return fecha
+            return None
+
         # === Fecha actual ===
         hoy = date.today()
+
+        # === Conversión de fechas ===
+        fecha_transplante = convertir_fecha(fecha_transplante)
+        fecha_fin_poliniza = convertir_fecha(fecha_fin_poliniza)
+        fecha_inicio_cosecha = convertir_fecha(fecha_inicio_cosecha)
+        fecha_fin_cosecha = convertir_fecha(fecha_fin_cosecha)
+        siembra = convertir_fecha(siembra)
 
         # === Determinar estado actual según fechas ===
         estado_actual = "Sin datos"
