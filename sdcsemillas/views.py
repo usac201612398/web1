@@ -32,26 +32,7 @@ def lotesreporte_list(request):
         codigo_lote = lote.id
         genero=lote.genero
 
-        # === Fecha actual ===
-        hoy = date.today()
-
-        # === Determinar estado actual según fechas ===
-        estado_actual = "Sin datos"
-
-        if fecha_fin_cosecha != "Pendiente" and isinstance(fecha_fin_cosecha, date) and hoy > fecha_fin_cosecha:
-            estado_actual = "Finalizado"
-        elif fecha_inicio_cosecha != "Pendiente" and isinstance(fecha_inicio_cosecha, date) and hoy >= fecha_inicio_cosecha:
-            estado_actual = "Cosechando"
-        elif fecha_fin_poliniza != "Pendiente" and isinstance(fecha_fin_poliniza, date) and hoy >= fecha_fin_poliniza and hoy < fecha_inicio_cosecha:
-            estado_actual = "Polinizando"
-        elif fecha_transplante != "Pendiente" and isinstance(fecha_transplante, date) and hoy >= fecha_transplante:
-            estado_actual = "Trasplantado"
-
-        # === Edad de la planta ===
-        if isinstance(siembra, date):
-            edad_dias = (hoy - siembra).days
-        else:
-            edad_dias = "Pendiente"
+        
 
         # === Calcular fecha siembra padre restando 15 días a siembra_madre ===
         siembra_madre = lote.siembra_madre
@@ -84,7 +65,26 @@ def lotesreporte_list(request):
         fecha_inicio_poliniza = get_fecha_evento("Polinizacion", "Inicio") or "Pendiente"
         fecha_fin_poliniza = get_fecha_evento("Polinizacion", "Fin") or "Pendiente"
         fecha_transplante = get_fecha_trasplante("Al transplante", "En proceso") or "Pendiente"
+        # === Fecha actual ===
+        hoy = date.today()
 
+        # === Determinar estado actual según fechas ===
+        estado_actual = "Sin datos"
+
+        if fecha_fin_cosecha != "Pendiente" and isinstance(fecha_fin_cosecha, date) and hoy > fecha_fin_cosecha:
+            estado_actual = "Finalizado"
+        elif fecha_inicio_cosecha != "Pendiente" and isinstance(fecha_inicio_cosecha, date) and hoy >= fecha_inicio_cosecha:
+            estado_actual = "Cosechando"
+        elif fecha_fin_poliniza != "Pendiente" and isinstance(fecha_fin_poliniza, date) and hoy >= fecha_fin_poliniza and hoy < fecha_inicio_cosecha:
+            estado_actual = "Polinizando"
+        elif fecha_transplante != "Pendiente" and isinstance(fecha_transplante, date) and hoy >= fecha_transplante:
+            estado_actual = "Trasplantado"
+
+        # === Edad de la planta ===
+        if isinstance(siembra, date):
+            edad_dias = (hoy - siembra).days
+        else:
+            edad_dias = "Pendiente"
         # === Datos de cosecha ===
         cosecha_lote = cosecha.objects.filter(codigo_lote=codigo_lote)
         # Buscar la variedad relacionada por código
@@ -181,25 +181,7 @@ def lotesreporte_list2(request,lote_id):
     
     for lote in salidas:
 
-        # === Fecha actual ===
-        hoy = date.today()
-
-        # === Determinar estado actual según fechas ===
-        estado_actual = "Sin datos"
-        if fecha_fin_cosecha != "Pendiente" and isinstance(fecha_fin_cosecha, date) and hoy > fecha_fin_cosecha:
-            estado_actual = "Finalizado"
-        elif fecha_inicio_cosecha != "Pendiente" and isinstance(fecha_inicio_cosecha, date) and hoy >= fecha_inicio_cosecha:
-            estado_actual = "Cosechando"
-        elif fecha_fin_poliniza != "Pendiente" and isinstance(fecha_fin_poliniza, date) and hoy >= fecha_fin_poliniza and hoy < fecha_inicio_cosecha:
-            estado_actual = "Polinizando"
-        elif fecha_transplante != "Pendiente" and isinstance(fecha_transplante, date) and hoy >= fecha_transplante:
-            estado_actual = "Trasplantado"
-
-        # === Edad de la planta ===
-        if isinstance(siembra, date):
-            edad_dias = (hoy - siembra).days
-        else:
-            edad_dias = "Pendiente"
+        
         codigo_lote = lote.id
         genero=lote.genero
         # === Calcular fecha siembra padre restando 15 días a siembra_madre ===
@@ -233,7 +215,25 @@ def lotesreporte_list2(request,lote_id):
         fecha_inicio_poliniza = get_fecha_evento("Polinizacion", "Inicio") or "Pendiente"
         fecha_fin_poliniza = get_fecha_evento("Polinizacion", "Fin") or "Pendiente"
         fecha_transplante = get_fecha_trasplante("Al transplante", "En proceso") or "Pendiente"
+        # === Fecha actual ===
+        hoy = date.today()
 
+        # === Determinar estado actual según fechas ===
+        estado_actual = "Sin datos"
+        if fecha_fin_cosecha != "Pendiente" and isinstance(fecha_fin_cosecha, date) and hoy > fecha_fin_cosecha:
+            estado_actual = "Finalizado"
+        elif fecha_inicio_cosecha != "Pendiente" and isinstance(fecha_inicio_cosecha, date) and hoy >= fecha_inicio_cosecha:
+            estado_actual = "Cosechando"
+        elif fecha_fin_poliniza != "Pendiente" and isinstance(fecha_fin_poliniza, date) and hoy >= fecha_fin_poliniza and hoy < fecha_inicio_cosecha:
+            estado_actual = "Polinizando"
+        elif fecha_transplante != "Pendiente" and isinstance(fecha_transplante, date) and hoy >= fecha_transplante:
+            estado_actual = "Trasplantado"
+
+        # === Edad de la planta ===
+        if isinstance(siembra, date):
+            edad_dias = (hoy - siembra).days
+        else:
+            edad_dias = "Pendiente"
         # === Datos de cosecha ===
         cosecha_lote = cosecha.objects.filter(codigo_lote=codigo_lote)
         # Buscar la variedad relacionada por código
