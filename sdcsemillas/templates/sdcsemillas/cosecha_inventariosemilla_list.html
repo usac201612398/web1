@@ -68,7 +68,7 @@
                     <td>{{ registro.ubicacion_lote }}</td>
                     <td>{{ registro.estructura }}</td>
                     <td>{{ registro.tipo_cultivo }}</td>
-                    <td>{{ registro.total_kg_producidos }}</td>
+                    <td>{{ registro.total_kg_producidos|floatformat:2 }}</td>
                     
                 </tr>
                 {% endfor %}
@@ -87,7 +87,7 @@
                     <strong>Ubicación:</strong> {{ registro.ubicacion_lote }}<br>
                     <strong>Estructura:</strong> {{ registro.estructura }}<br>
                     <strong>Cultivo:</strong> {{ registro.tipo_cultivo }}<br>
-                    <strong>kg-producidos:</strong> {{ registro.kg_producidos }}<br>
+                    <strong>kg-producidos:</strong> {{ registro.kg_producidos|floatformat:2 }}<br>
                 </p>
             </div>
         </div>
