@@ -88,17 +88,17 @@ def lotesreporte_list(request):
         # === Determinar estado actual según fechas ===
         estado_actual = "Sin datos"
 
-        if fecha_fin_cosecha != "Pendiente" and isinstance(fecha_fin_cosecha, date) and hoy > fecha_fin_cosecha:
+        if fecha_fin_cosecha and hoy > fecha_fin_cosecha:
             estado_actual = "Finalizado"
-        elif fecha_inicio_cosecha != "Pendiente" and isinstance(fecha_inicio_cosecha, date) and hoy >= fecha_inicio_cosecha:
+        elif fecha_inicio_cosecha and hoy >= fecha_inicio_cosecha:
             estado_actual = "Cosechando"
-        elif fecha_fin_poliniza != "Pendiente" and isinstance(fecha_fin_poliniza, date) and hoy >= fecha_fin_poliniza and hoy < fecha_inicio_cosecha:
+        elif fecha_fin_poliniza and fecha_inicio_cosecha and hoy >= fecha_fin_poliniza and hoy < fecha_inicio_cosecha:
             estado_actual = "Polinizando"
-        elif fecha_transplante != "Pendiente" and isinstance(fecha_transplante, date) and hoy >= fecha_transplante:
+        elif fecha_transplante and hoy >= fecha_transplante:
             estado_actual = "Trasplantado"
 
         # === Edad de la planta ===
-        if isinstance(siembra, date):
+        if siembra:
             edad_dias = (hoy - siembra).days
         else:
             edad_dias = "Pendiente"
@@ -253,18 +253,21 @@ def lotesreporte_list2(request,lote_id):
         siembra = convertir_fecha(siembra)
 
         # === Determinar estado actual según fechas ===
+
+        # === Determinar estado actual ===
         estado_actual = "Sin datos"
-        if fecha_fin_cosecha != "Pendiente" and isinstance(fecha_fin_cosecha, date) and hoy > fecha_fin_cosecha:
+
+        if fecha_fin_cosecha and hoy > fecha_fin_cosecha:
             estado_actual = "Finalizado"
-        elif fecha_inicio_cosecha != "Pendiente" and isinstance(fecha_inicio_cosecha, date) and hoy >= fecha_inicio_cosecha:
+        elif fecha_inicio_cosecha and hoy >= fecha_inicio_cosecha:
             estado_actual = "Cosechando"
-        elif fecha_fin_poliniza != "Pendiente" and isinstance(fecha_fin_poliniza, date) and hoy >= fecha_fin_poliniza and hoy < fecha_inicio_cosecha:
+        elif fecha_fin_poliniza and fecha_inicio_cosecha and hoy >= fecha_fin_poliniza and hoy < fecha_inicio_cosecha:
             estado_actual = "Polinizando"
-        elif fecha_transplante != "Pendiente" and isinstance(fecha_transplante, date) and hoy >= fecha_transplante:
+        elif fecha_transplante and hoy >= fecha_transplante:
             estado_actual = "Trasplantado"
 
         # === Edad de la planta ===
-        if isinstance(siembra, date):
+        if siembra:
             edad_dias = (hoy - siembra).days
         else:
             edad_dias = "Pendiente"
