@@ -124,6 +124,7 @@
                         <th class="text-truncate-cell" title="Código-Genético">Código-Genético</th>
                         <th class="text-truncate-cell" title="Siembra">Siembra</th>
                         <th class="text-truncate-cell" title="Status">Status</th>
+                        <th class="text-truncate-cell" title="Status">Estado - Actual</th>
 
                         <!-- NUEVAS COLUMNAS -->
                         <th class="text-truncate-cell" title="KG Producción">KG Producción</th>
@@ -165,7 +166,7 @@
                         <td class="text-truncate-cell" title="{{ registro.codigo_genetico }}">{{ registro.codigo_genetico}}</td>
                         <td class="text-truncate-cell" title="{{ registro.siembra }}">{{ registro.siembra|date:"d-m-Y" }}</td>
                         <td class="text-truncate-cell" title="{{ registro.status }}">{{ registro.status }}</td>
-
+                        <td class="text-truncate-cell" title="{{ registro.estado_actual }}">{{ registro.estado_actual }}</td> 
                         <!-- Datos calculados -->
                         <td class="text-truncate-cell" title="{{ registro.kg_producidos }}">{{ registro.kg_producidos|floatformat:2|default:"Pendiente" }}</td>
                         <td class="text-truncate-cell" title="{{ registro.semillasxfruto }}">
@@ -262,6 +263,7 @@
                         <strong>Cultivo:</strong> {{ registro.cultivo }}<br />
                         <strong>Variedad:</strong> {{ registro.apodo_variedad }}<br />
                         <strong>Status:</strong> {{ registro.status }}
+                        <strong>Estado - Actual:</strong> {{ registro.estado_actual }}
                     </p>
 
                     <!-- NUEVA INFORMACIÓN -->
@@ -339,7 +341,6 @@
                     <p class="card-text mb-1"><strong>PP Polinización Inicio Faltantes:</strong> {{ registro.pp_ci_faltantes|default:"Pendiente" }}</p>
                     <p class="card-text mb-1"><strong>PP Polinización Fin Activas:</strong> {{ registro.pp_cf_activas|default:"Pendiente" }}</p>
                     <p class="card-text mb-1"><strong>PP Polinización Fin Faltantes:</strong> {{ registro.pp_cf_faltantes|default:"Pendiente" }}</p>
-
                     
                 </div>
             </div>
