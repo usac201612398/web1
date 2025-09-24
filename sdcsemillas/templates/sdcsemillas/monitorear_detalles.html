@@ -34,6 +34,30 @@
         <div class="page-header-box text-white text-center py-3 mb-4" style="background: linear-gradient(to right, #6c757d, #495057); border-radius: 8px;">
             <h1 class="m-0">Reporte de Lote</h1>
         </div>
+        <!-- KPIs -->
+        <div class="row text-center mb-4">
+            <!-- Estado -->
+            <div class="col-md-6 mb-3">
+                <div class="card shadow-sm border-0 kpi-card h-100" style="background-color: #f8f9fa;">
+                    <div class="card-body">
+                        <i class="fas fa-seedling fa-2x text-success mb-2"></i>
+                        <h6 class="text-muted">Estado</h6>
+                        <h4 class="fw-bold text-dark">{{ registros.estado_actual }}</h4>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edad -->
+            <div class="col-md-6 mb-3">
+                <div class="card shadow-sm border-0 kpi-card h-100" style="background-color: #f8f9fa;">
+                    <div class="card-body">
+                        <i class="fas fa-calendar-day fa-2x text-primary mb-2"></i>
+                        <h6 class="text-muted">Edad (días)</h6>
+                        <h4 class="fw-bold text-dark">{{ registros.edad_dias }}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Card con detalles -->
         <div class="card shadow-sm mb-4">
