@@ -44,7 +44,15 @@
             border: none;
             background: transparent;
         }
-
+        td, th {
+            white-space: nowrap; /* Evita salto de línea */
+            overflow: hidden;    /* Oculta texto que no quepa */
+            text-overflow: ellipsis; /* Muestra "..." si el texto es muy largo */
+            max-width: 200px;    /* Ajusta a tu gusto */
+        }
+        .table-container {
+            overflow-x: auto;
+        }
     </style>
 </head>
 
@@ -93,17 +101,17 @@
                 <tbody>
                 {%for registro in registros %} 
                 <tr> 
-                    <td>{{registro.registro }}</td>
-                    <td>{{registro.cultivo}}</td>
-                    <td>{{registro.itemsapcode}}</td>
-                    <td>{{registro.itemsapname}}</td>
-                    <td>{{registro.calidad1}}</td>
-                    <td>{{registro.categoria}}</td>
-                    <td>{{registro.precio}}</td>
-                    <td>{{registro.taraxcaja}}</td>
-                    <td>{{registro.pesostdxcaja}}</td>
-                    <td>{{registro.tipo}}</td>
-                    <td>{{registro.orden}}</td>
+                    <td title="{{ registro.registro }}">{{registro.registro }}</td>
+                    <td title="{{ registro.cultivo }}">{{registro.cultivo}}</td>
+                    <td title="{{ registro.itemsapcode }}">{{registro.itemsapcode}}</td>
+                    <td title="{{ registro.itemsapname }}">{{registro.itemsapname}}</td>
+                    <td title="{{ registro.calidad1 }}">{{registro.calidad1}}</td>
+                    <td title="{{ registro.categoria }}">{{registro.categoria}}</td>
+                    <td title="{{ registro.precio }}">{{registro.precio}}</td>
+                    <td title="{{ registro.taraxcaja }}">{{registro.taraxcaja}}</td>
+                    <td title="{{ registro.pesostdxcaja }}">{{registro.pesostdxcaja}}</td>
+                    <td title="{{ registro.tipo }}">{{registro.tipo}}</td>
+                    <td title="{{ registro.orden }}">{{registro.orden}}</td>
                     <th ><a href="{% url 'items_update' registro.pk %}"> <i class="fas fa-edit"></i>Editar</a></th>
                     <th ><a href="{% url 'items_delete' registro.pk %}"><i class="fas fa-trash-alt"></i>Eliminar</a></th>
                     </tr> 
@@ -123,8 +131,9 @@
 <script>
 
     $(document).ready(function() {
-        $('#myTable').DataTable();
+        $('#myTable').DataTable({
+            scrollX: true
+        });
     });
-
 </script>
 </html>
