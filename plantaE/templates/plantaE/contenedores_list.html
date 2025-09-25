@@ -16,88 +16,66 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
+        td, th {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+            vertical-align: middle;
         }
 
         .table-container {
             overflow-x: auto;
         }
 
-        td, th {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 180px;
-            vertical-align: middle;
-        }
-
-        .box-link {
-            background-color: #f0f0f0;
-            border: 1px solid #ddd;
-            padding: 12px 20px;
-            text-align: center;
-            border-radius: 6px;
-            transition: 0.3s;
+        .btn-primary {
             font-weight: 500;
+            transition: 0.3s;
         }
-
-        .box-link:hover {
-            background-color: #e2e6ea;
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
         }
 
         .action-icons i {
-            margin-right: 6px;
+            margin: 0 5px;
             cursor: pointer;
             color: #333;
         }
-
         .action-icons i:hover {
             color: #0d6efd;
         }
 
-        .text-danger:hover {
-            color: #c82333 !important;
-        }
-
         .panel-header {
-            background-color: #ffffff;
-            padding: 1rem 1.5rem;
-            margin-bottom: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: .5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
         .panel-header h1 {
             margin: 0;
-            font-size: 1.5rem;
         }
     </style>
 </head>
 
 <body>
-
     <div class="container mt-4">
-
+        <!-- Encabezado tipo “Boletas Procesadas” -->
         <div class="panel-header">
-            <h1>🚢 Panel de Contenedores</h1>
-            <div>
-                <a href="{% url 'contenedores_create' %}" class="btn btn-primary me-2">
-                    <i class="fas fa-plus"></i> Agregar Viaje
-                </a>
-                <a href="{% url 'inventarioProd_packinglist' %}" class="btn btn-outline-secondary">
-                    <i class="fas fa-archive"></i> Carga - Contenedores
-                </a>
-            </div>
+            <h1 class="h3 m-0">🚚 Contenedores</h1>
+            <a href="{% url 'contenedores_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Agregar viaje
+            </a>
         </div>
 
         <div class="table-container">
             <table class="table table-striped table-hover" id="myTable">
-                <thead class="table-light">
+                <thead>
                     <tr>
                         <th>Llave</th>
                         <th>Fecha</th>
@@ -109,8 +87,8 @@
                         <th>Vent</th>
                         <th>Piloto</th>
                         <th>Marchamo</th>
-                        <th>Placa Camión</th>
-                        <th>Hora Salida</th>
+                        <th>PlacaCamion</th>
+                        <th>HoraSalida</th>
                         <th>Status</th>
                         <th>ETA</th>
                         <th>ETD</th>
@@ -142,7 +120,7 @@
                         <td>{{ registro.booking }}</td>
                         <td class="action-icons">
                             <a href="{% url 'contenedores_update' registro.pk %}" title="Editar">
-                                <i class="fas fa-edit"></i>
+                                <i class="fas fa-edit text-primary"></i>
                             </a>
                         </td>
                         <td class="action-icons">
@@ -155,7 +133,6 @@
                 </tbody>
             </table>
         </div>
-
     </div>
 
     <!-- Scripts -->
@@ -172,6 +149,5 @@
             });
         });
     </script>
-
 </body>
 </html>
