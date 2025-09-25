@@ -1,132 +1,136 @@
 <!DOCTYPE html>
 <html>
-  
-{% load static %}   
+{% load static %}
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous">   
+    <meta charset="UTF-8">
+    <title>Consulta Packing List</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Bootstrap + Bulma -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
-    <title>Consulta Packing List </title>
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
     <style>
-        .inputs-row {
-        display: flex;
-        flex-wrap: nwrap; /* Para que se acomoden bien en pantallas más pequeñas */
-        
-    }
-        h1 {
-            margin: 15px;
-            font-family: Arial, sans-serif;
+        td, th {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
         }
 
-        a {
-            margin: 20px;
-            font-family: Arial, sans-serif;
-        }
-        .half {
-        display: flex;
-        height: 100%;
-        grid-template-columns:  repeat(auto-fit, minmax(min-content, max-content)); /* Divide cada mitad en dos columnas iguales */
-        gap: 5px; /* Espacio entre columnas */
-        text-align: center;
+        .table-container {
+            overflow-x: auto;
         }
 
-        .box {
-            background-color: #f0f0f0;
-            border: 1px solid #ddd;
-            padding: 10px;
-            flex: auto; 
-            height: 100%;    
-        }
-        td {
-            padding: 0;
-        }
-        td input {
-            width: 100%;
-            border: none;
-            background: transparent;
+        .btn-success {
+            font-weight: 500;
+            transition: 0.3s;
         }
 
-        /* Estilo para los inputs cuando están dentro de un contenedor con espacio */
-        .inputs-row {
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+
+        .action-icons i {
+            margin: 0 5px;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .action-icons i:hover {
+            color: #0d6efd;
+        }
+
+        .page-header {
             display: flex;
-            flex-wrap: wrap;
             justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
-        .inputs-row input {
-            width: 48%;  /* Divide los inputs en dos columnas (si la pantalla es suficientemente ancha) */
-            margin-bottom: 10px;
+        .page-header h1 {
+            margin: 0;
         }
-
-
     </style>
 </head>
 <body>
-    <h1 class="roboto">Palets</h1>
-    <br>
-    
-    <div class="container">
-        <div class="columns">
-            <div class="column is-12">
-            <div class="table-container">
-                <table class="table is-striped is-hoverable is is-fullwidth" id="myTable">
-                <thead id = "enc1">
-                    <tr class="header">
-                    <th >Registro</th>
-                    <th >Fecha</th>
-                    <th >Contenedor</th>
-                    <th >Palet</th>
-                    <th >Proveedor</th>
-                    <th >Cultivo</th>
-                    <th >ItemName</th>
-                    <th >Cajas</th>
-                    <th >Importe</th>
-                    <th >Created</th>
-                    <th >Editar</th>
-                    <th >Eliminar</th>
+    <div class="container mt-4">
+        <div class="page-header">
+            <h1 class="h3">🚚 Consulta Packing List</h1>
+            <a href="{% url 'inventarioProd_packinglist' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Regresar
+            </a>
+        </div>
+
+        <div class="table-container">
+            <table class="table table-striped table-hover" id="myTable">
+                <thead>
+                    <tr>
+                        <th>Registro</th>
+                        <th>Fecha</th>
+                        <th>Contenedor</th>
+                        <th>Palet</th>
+                        <th>Proveedor</th>
+                        <th>Cultivo</th>
+                        <th>ItemName</th>
+                        <th>Cajas</th>
+                        <th>Importe</th>
+                        <th>Created</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
                     </tr>
                 </thead>
-                
                 <tbody>
-                {%for registro in data %} 
-                <tr> 
-                    <td> {{registro.registro}}</td>
-                    <td> {{registro.fecha}}</td>
-                    <td> {{registro.contenedor}}</td>
-                    <td> {{registro.palet}}</td>
-                    <td> {{registro.proveedor}}</td>
-                    <td> {{registro.cultivo}}</td>
-                    <td> {{registro.calidad1}}</td>
-                    <td> {{registro.cajas}}</td>
-                    <td> {{registro.importe}}</td>
-                    <td> {{registro.created_at}}</td>
-                    <th ><a href="{% url 'inventarioProd_packinglist_update' registro.pk %}"><i class="fas fa-edit"></i></a></th>
-                    <th ><a href="{% url 'inventarioProd_packinglist_delete' registro.pk %}"><i class="fas fa-trash-alt"></i></a></th>
-                    </tr> 
-                        
-                {% endfor %}
+                    {% for registro in data %}
+                    <tr>
+                        <td title="{{ registro.registro }}">{{ registro.registro }}</td>
+                        <td title="{{ registro.fecha }}">{{ registro.fecha }}</td>
+                        <td title="{{ registro.contenedor }}">{{ registro.contenedor }}</td>
+                        <td title="{{ registro.palet }}">{{ registro.palet }}</td>
+                        <td title="{{ registro.proveedor }}">{{ registro.proveedor }}</td>
+                        <td title="{{ registro.cultivo }}">{{ registro.cultivo }}</td>
+                        <td title="{{ registro.calidad1 }}">{{ registro.calidad1 }}</td>
+                        <td title="{{ registro.cajas }}">{{ registro.cajas }}</td>
+                        <td title="{{ registro.importe }}">{{ registro.importe }}</td>
+                        <td title="{{ registro.created_at }}">{{ registro.created_at }}</td>
+                        <td class="action-icons">
+                            <a href="{% url 'inventarioProd_packinglist_update' registro.pk %}" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        </td>
+                        <td class="action-icons">
+                            <a href="{% url 'inventarioProd_packinglist_delete' registro.pk %}" title="Eliminar">
+                                <i class="fas fa-trash-alt text-danger"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
                 </tbody>
+            </table>
+        </div>
+    </div>
 
-                </table>
-            </div>
-            </div>
-        </div>
-        </div>
-        <br>
-        <a href="{% url 'inventarioProd_packinglist' %}">Regresar</a>
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static '/lib/cockies.js' %}"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                scrollX: true
+            });
+        });
+    </script>
 </body>
 </html>
-<script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-
-<script>
-
-    $(document).ready(function() {
-        $('#myTable').DataTable();
-    });
-
-</script>
