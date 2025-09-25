@@ -97,8 +97,8 @@
                         </td>
                         <td>{{ registro.envio }}</td>
                         <td>{{ registro.fecha|date:"d-m-Y" }}</td>
-                        <td>{{ registro.productor }}</td>
-                        <td>{{ registro.destino }}</td>
+                        <td title="{{ registro.productor }}">{{ registro.productor }}</td>
+                        <td title="{{ registro.destino }}">{{ registro.destino }}</td>
                         <td>{{ registro.itemsap_code }}</td>
                         <td title="{{ registro.itemsap_name }}">{{ registro.itemsap_name }}</td>
                         <td>{{ registro.cantidad }}</td>
