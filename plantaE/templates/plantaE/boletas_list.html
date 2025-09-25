@@ -18,6 +18,25 @@
             font-family: Arial, sans-serif;
         }
 
+        td, th {
+            white-space: nowrap; /* Evita salto de línea */
+            overflow: hidden;    /* Oculta texto que no quepa */
+            text-overflow: ellipsis; /* Muestra "..." si el texto es muy largo */
+            max-width: 200px;    /* Ajusta a tu gusto */
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .btn-success {
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
     </style>
 </head>
 <body>
@@ -31,9 +50,7 @@
             </div>
             
         </div>
-
-
-           
+  
     </div>
 <br>
     <div class="container">
@@ -65,7 +82,7 @@
                 <tr> 
                     <td> <a href="{% url 'boletas_detail' registro.pk %}">{{ registro.registro }}</a></td>
                     <td>{{registro.boleta}}</td>
-                    <td>{{registro.fecha}}</td>
+                    <td>{{registro.fecha|date:"d-m-Y"}}</td>
                     <td>{{registro.finca}}</td>
                     <td>{{registro.cultivo}}</td>
                     <td>{{registro.orden}}</td>
@@ -97,7 +114,9 @@
 <script>
 
     $(document).ready(function() {
-        $('#myTable').DataTable();
+        $('#myTable').DataTable({
+            scrollX: true
+        });
     });
 
 </script>
