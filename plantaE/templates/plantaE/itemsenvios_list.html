@@ -44,7 +44,25 @@
             border: none;
             background: transparent;
         }
+        td, th {
+            white-space: nowrap; /* Evita salto de línea */
+            overflow: hidden;    /* Oculta texto que no quepa */
+            text-overflow: ellipsis; /* Muestra "..." si el texto es muy largo */
+            max-width: 200px;    /* Ajusta a tu gusto */
+        }
+        .table-container {
+            overflow-x: auto;
+        }
 
+        .btn-success {
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
     </style>
 </head>
 
@@ -52,17 +70,12 @@
 </head>
 
 <body>
-    <h1 class="roboto">Panel</h1>
-    
-
-
-    <div class = "container"> 
-        <div class="half">
-
-            <div class="box">
-                <a href="{% url 'itemsenvios_create' %}">Agregar Item</a> 
-            </div>
-
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-3 p-3 bg-light rounded shadow-sm">
+            <h1 class="h3 m-0">Items</h1>
+            <a href="{% url 'itemsenvios_create' %}" class="btn btn-success">
+                <i class="fas fa-plus"></i> Agregar Item
+            </a>
         </div>
     </div>
     <br>
@@ -90,14 +103,14 @@
                 <tbody>
                 {%for registro in registros %} 
                 <tr> 
-                    <td>{{registro.registro }}</td>
-                    <td>{{registro.item}}</td>
-                    <td>{{registro.descripcion}}</td>
-                    <td>{{registro.u_m}}</td>
-                    <td>{{registro.almacen}}</td>
-                    <td>{{registro.clasificacion}}</td>
-                    <td>{{registro.grupo}}</td>
-                    <td>{{registro.rubro}}</td>
+                    <td title="{{ registro.registro }}">{{registro.registro }}</td>
+                    <td title="{{ registro.item }}">{{registro.item}}</td>
+                    <td title="{{ registro.descripcion }}">{{registro.descripcion}}</td>
+                    <td title="{{ registro.u_m }}">{{registro.u_m}}</td>
+                    <td title="{{ registro.almacen }}">{{registro.almacen}}</td>
+                    <td title="{{ registro.clasificacion }}">{{registro.clasificacion}}</td>
+                    <td title="{{ registro.grupo }}">{{registro.grupo}}</td>
+                    <td title="{{ registro.rubro }}">{{registro.rubro}}</td>
                     <th ><a href="{% url 'itemsenvios_update' registro.pk %}"> <i class="fas fa-edit"></i>Editar</a></th>
                     <th ><a href="{% url 'itemsenvios_delete' registro.pk %}"><i class="fas fa-trash-alt"></i>Eliminar</a></th>
                     </tr> 
