@@ -24,8 +24,10 @@
         }
 
         .table-container {
+            width: 100%;
             overflow-x: auto;
         }
+
 
         .btn-success {
             font-weight: 500;
@@ -59,7 +61,7 @@
         </div>
 
         <div class="table-container">
-            <table class="table table-striped table-hover" id="myTable">
+            <table class="table table-striped table-hover w-100" id="myTable">
                 <thead>
                     <tr>
                         <th>Llave</th>
@@ -115,7 +117,8 @@
     <script>
         $(document).ready(function () {
             $('#myTable').DataTable({
-                scrollX: true
+                scrollX: true,
+                autoWidth: false
             });
         });
     </script>
