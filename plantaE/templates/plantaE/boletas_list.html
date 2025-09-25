@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 {% load static %}
 <head>
     <meta charset="UTF-8">
-    <title>Palets - Packing List</title>
+    <title>Boletas Procesadas</title>
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -27,6 +27,27 @@
             overflow-x: auto;
         }
 
+        .btn-success {
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+
+        .editable-cell {
+            background-color: #f9f9f9;
+            padding: 4px;
+            border-radius: 4px;
+            min-width: 60px;
+        }
+
+        .editable-cell:focus {
+            outline: 2px solid #007bff;
+        }
+
         .action-icons i {
             margin: 0 5px;
             cursor: pointer;
@@ -36,64 +57,66 @@
         .action-icons i:hover {
             color: #0d6efd;
         }
-
-        .text-danger:hover {
-            color: #c82333 !important;
-        }
+        
     </style>
 </head>
 
 <body>
 
     <div class="container mt-4">
-
-        <!-- Header Panel -->
         <div class="d-flex justify-content-between align-items-center mb-3 p-3 bg-light rounded shadow-sm">
-            <h1 class="h3 m-0">📦 Palets - Packing List</h1>
-            <a href="{% url 'inventarioProd_packinglist' %}" class="btn btn-primary">
-                <i class="fas fa-arrow-left"></i> Regresar
+            <h1 class="h3 m-0">📋 Boletas Procesadas</h1>
+            <a href="{% url 'inventarioProd_aprovechamientos' %}" class="btn btn-primary">
+                <i class="fas fa-box-open"></i> Aprovechamientos
             </a>
         </div>
 
-        <!-- Table -->
         <div class="table-container">
             <table class="table table-striped table-hover" id="myTable">
                 <thead>
                     <tr>
-                        <th>Registro</th>
+                        <th>Key</th>
+                        <th>Boleta</th>
                         <th>Fecha</th>
-                        <th>Contenedor</th>
-                        <th>Palet</th>
-                        <th>Proveedor</th>
+                        <th>Finca</th>
                         <th>Cultivo</th>
-                        <th>Item Name</th>
+                        <th>Orden</th>
+                        <th>Proveedor</th>
+                        <th>Calidad1</th>
+                        <th>Calidad</th>
                         <th>Cajas</th>
-                        <th>Importe</th>
+                        <th>LibrasxCaja</th>
+                        <th>Libras</th>
                         <th>Creado</th>
                         <th>Editar</th>
                         <th>Eliminar</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for registro in data %}
+                    {% for registro in registros %}
                     <tr>
-                        <td>{{ registro.registro }}</td>
+                        <td>
+                            <a href="{% url 'boletas_detail' registro.pk %}">{{ registro.registro }}</a>
+                        </td>
+                        <td>{{ registro.boleta }}</td>
                         <td>{{ registro.fecha|date:"d-m-Y" }}</td>
-                        <td>{{ registro.contenedor }}</td>
-                        <td>{{ registro.palet }}</td>
-                        <td>{{ registro.proveedor }}</td>
+                        <td>{{ registro.finca }}</td>
                         <td>{{ registro.cultivo }}</td>
-                        <td>{{ registro.calidad1 }}</td>
-                        <td>{{ registro.cajas }}</td>
-                        <td>{{ registro.importe }}</td>
-                        <td>{{ registro.created_at|date:"d-m-Y H:i" }}</td>
+                        <td>{{ registro.orden }}</td>
+                        <td>{{ registro.proveedor }}</td>
+                        <td title="{{ registro.calidad1 }}">{{ registro.calidad1 }}</td>
+                        <td>{{ registro.calidad }}</td>
+                        <td><div contenteditable="true" class="editable-cell">{{ registro.cajas }}</div></td>
+                        <td><div contenteditable="true" class="editable-cell">{{ registro.librasxcaja }}</div></td>
+                        <td><div contenteditable="true" class="editable-cell">{{ registro.libras }}</div></td>
+                        <td>{{ registro.created|date:"d-m-Y H:i" }}</td>
                         <td class="action-icons">
-                            <a href="{% url 'inventarioProd_packinglist_update' registro.pk %}" title="Editar">
+                            <a href="{% url 'boletas_update' registro.pk %}" title="Editar">
                                 <i class="fas fa-edit"></i>
                             </a>
                         </td>
                         <td class="action-icons">
-                            <a href="{% url 'inventarioProd_packinglist_delete' registro.pk %}" title="Eliminar">
+                            <a href="{% url 'boletas_delete' registro.pk %}" title="Eliminar">
                                 <i class="fas fa-trash-alt text-danger"></i>
                             </a>
                         </td>
@@ -112,13 +135,9 @@
     <script>
         $(document).ready(function () {
             $('#myTable').DataTable({
-                scrollX: true,
-                language: {
-                    url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
-                }
+                scrollX: true
             });
         });
     </script>
-
 </body>
 </html>

@@ -3,7 +3,7 @@
 {% load static %}
 <head>
     <meta charset="UTF-8">
-    <title>Consulta Packing List</title>
+    <title>Palets - Packing List</title>
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -16,25 +16,19 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #ffffff;
+        td, th {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
         }
 
         .table-container {
             overflow-x: auto;
         }
 
-        td, th {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 180px;
-            vertical-align: middle;
-        }
-
         .action-icons i {
-            margin-right: 6px;
+            margin: 0 5px;
             cursor: pointer;
             color: #333;
         }
@@ -46,25 +40,6 @@
         .text-danger:hover {
             color: #c82333 !important;
         }
-
-        .panel-header {
-            background-color: #ffffff;
-            padding: 1rem 1.5rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 1px solid #dee2e6;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .panel-header h1 {
-            margin: 0;
-            font-size: 1.5rem;
-        }
-
-        .btn-return {
-            margin-top: 1rem;
-        }
     </style>
 </head>
 
@@ -72,16 +47,18 @@
 
     <div class="container mt-4">
 
-        <div class="panel-header">
-            <h1>📦 Palets - Packing List</h1>
-            <a href="{% url 'inventarioProd_packinglist' %}" class="btn btn-outline-secondary">
+        <!-- Header Panel -->
+        <div class="d-flex justify-content-between align-items-center mb-3 p-3 bg-light rounded shadow-sm">
+            <h1 class="h3 m-0">📦 Palets - Packing List</h1>
+            <a href="{% url 'inventarioProd_packinglist' %}" class="btn btn-primary">
                 <i class="fas fa-arrow-left"></i> Regresar
             </a>
         </div>
 
+        <!-- Table -->
         <div class="table-container">
             <table class="table table-striped table-hover" id="myTable">
-                <thead class="table-light">
+                <thead>
                     <tr>
                         <th>Registro</th>
                         <th>Fecha</th>
@@ -97,7 +74,6 @@
                         <th>Eliminar</th>
                     </tr>
                 </thead>
-
                 <tbody>
                     {% for registro in data %}
                     <tr>
@@ -105,12 +81,12 @@
                         <td>{{ registro.fecha|date:"d-m-Y" }}</td>
                         <td>{{ registro.contenedor }}</td>
                         <td>{{ registro.palet }}</td>
-                        <td title="{{ registro.proveedor }}">{{ registro.proveedor }}</td>
+                        <td>{{ registro.proveedor }}</td>
                         <td>{{ registro.cultivo }}</td>
-                        <td title="{{ registro.calidad1 }}">{{ registro.calidad1 }}</td>
+                        <td>{{ registro.calidad1 }}</td>
                         <td>{{ registro.cajas }}</td>
                         <td>{{ registro.importe }}</td>
-                        <td>{{ registro.created_at }}</td>
+                        <td>{{ registro.created_at|date:"d-m-Y H:i" }}</td>
                         <td class="action-icons">
                             <a href="{% url 'inventarioProd_packinglist_update' registro.pk %}" title="Editar">
                                 <i class="fas fa-edit"></i>
@@ -146,3 +122,4 @@
 
 </body>
 </html>
+
