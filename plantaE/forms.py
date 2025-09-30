@@ -254,11 +254,11 @@ class inventarioFrutaForm(forms.ModelForm):
     merma=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))  # Campo numérico
     pesostdxcaja=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))  # Campo numérico
     pesorxcaja=forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))  # Campo numérico
-    
+    orden=forms.CharField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
     class Meta:
         
         model = inventarioProdTerm
-        fields = ['registro','proveedor','itemsapcode','itemsapname','cajas','libras','lbsintara','pesostd','pesostdxcaja','pesorxcaja','merma','pesosinmerma']
+        fields = ['registro','proveedor','itemsapcode','itemsapname','cajas','libras','lbsintara','pesostd','pesostdxcaja','pesorxcaja','merma','pesosinmerma','orden']
     def clean(self):
         cleaned_data = super().clean()
 
