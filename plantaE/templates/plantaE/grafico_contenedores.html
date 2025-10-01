@@ -15,6 +15,26 @@
 <section class="section">
   <div class="container">
     <h1 class="title has-text-centered">Reporte de Contenedores</h1>
+    <div class="columns has-text-centered mb-5">
+      <div class="column">
+        <div class="box has-background-primary-light">
+          <p class="title is-4">{{ total_contenedores }}</p>
+          <p class="subtitle is-6">Total Contenedores</p>
+        </div>
+      </div>
+      <div class="column">
+        <div class="box has-background-success-light">
+          <p class="title is-4">{{ pct_cajas_sdc }}%</p>
+          <p class="subtitle is-6">% Cajas SDC</p>
+        </div>
+      </div>
+      <div class="column">
+        <div class="box has-background-warning-light">
+          <p class="title is-4">{{ pct_cajas_no_sdc }}%</p>
+          <p class="subtitle is-6">% Cajas VALLE</p>
+        </div>
+      </div>
+    </div>
 
     <!-- Filtros -->
     <form method="get" class="mb-5">

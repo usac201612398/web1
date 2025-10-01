@@ -3110,13 +3110,22 @@ def contenedores_grafico_view(request):
     for item in contenedores_list:
         clave = (item['contenedor'], item['fecha'])
         item['naviera'] = navieras_dict.get(clave, 'No registrada')
-        
+    total_contenedores = len(contenedores_list)
+    total_cajas = sum(item['total_cajas'] for item in contenedores_list)
+    total_cajas_sdc = sum(item['cajas_sdc'] for item in contenedores_list)
+    total_cajas_no_sdc = total_cajas - total_cajas_sdc
+
+    pct_cajas_sdc = round((total_cajas_sdc * 100 / total_cajas), 2) if total_cajas else 0
+    pct_cajas_no_sdc = 100 - pct_cajas_sdc if total_cajas else 0
     return render(request, 'plantaE/grafico_contenedores.html', {
         'tipo': tipo,
         'fecha_inicio': fecha_inicio,
         'fecha_fin': fecha_fin,
         'por_dia': json.dumps({'labels': labels, 'data': data}, default=str),
         'contenedores': contenedores_list,
+        'total_contenedores': total_contenedores,
+        'pct_cajas_sdc': pct_cajas_sdc,
+        'pct_cajas_no_sdc': pct_cajas_no_sdc,
     })
 
 
