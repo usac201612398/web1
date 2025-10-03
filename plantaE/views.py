@@ -4481,7 +4481,8 @@ def semanalprodterm_pivot(request):
                 aggfunc='sum'
             )
             tabla_pivote = tabla_pivote.fillna("")  # Reemplaza NaN por vacío
-            tabla_html = tabla_pivote.to_html(classes="table table-striped", index=True, header=True)
+            tabla_html = tabla_pivote.to_html(classes="table table-striped", index=True, na_rep="", table_id="tabla-pivote")
+
 
     return render(request, 'plantaE/inventarioProd_reportesemanalprodterm_pivot.html', {
         'tabla_html': tabla_html,

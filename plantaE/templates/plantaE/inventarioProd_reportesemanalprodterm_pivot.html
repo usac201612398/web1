@@ -65,7 +65,7 @@
 
 <script>
 $(document).ready(function () {
-    $('#tabla-pivote').DataTable({
+    let table = $('#tabla-pivote').DataTable({
         scrollX: true,
         paging: true,
         ordering: true,
@@ -78,10 +78,39 @@ $(document).ready(function () {
         language: {
             url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
         },
-        autoWidth: false,
+        footerCallback: function (row, data, start, end, display) {
+            let api = this.api();
+
+            // Sumar por columnas
+            api.columns().every(function () {
+                let column = this;
+                let total = column
+                    .data()
+                    .reduce(function (a, b) {
+                        a = parseFloat(a) || 0;
+                        b = parseFloat(b) || 0;
+                        return a + b;
+                    }, 0);
+                // Mostrar total solo si es número
+                $(column.footer()).html(
+                    total > 0 ? total.toFixed(2) : ''
+                );
+            });
+        }
     });
+
+    // Si no hay footer, lo agregamos dinámicamente
+    if ($('#tabla-pivote tfoot').length === 0) {
+        let footer = $('<tfoot><tr></tr></tfoot>');
+        $('#tabla-pivote thead tr th').each(function () {
+            footer.find('tr').append('<th></th>');
+        });
+        $('#tabla-pivote').append(footer);
+        table.draw(); // Redibujar para aplicar el footerCallback
+    }
 });
 </script>
+
 
 </body>
 </html>
