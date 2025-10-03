@@ -4476,7 +4476,7 @@ def semanalprodterm_pivot(request):
             )
             tabla_html = tabla_pivote.to_html(classes="table table-striped", index=True, header=True)
 
-    return render(request, 'plantaE/tabla_pivote.html', {
+    return render(request, 'plantaE/inventarioProd_reportesemanalprodterm_pivot.html', {
         'tabla_html': tabla_html,
         'registros_json': registros_json,
     })
