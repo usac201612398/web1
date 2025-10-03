@@ -4422,13 +4422,12 @@ def poraprovechamientos(request):
 
 def semanalprodterm_pivot(request):
     hoy = timezone.now().date()
-    # Obtener fecha máxima en detallerecaux
     fecha_max = AcumFruta.objects.aggregate(max_fecha=Max('fecha'))['max_fecha']
     if not fecha_max:
-        fecha_max = hoy  # fallback si no hay registros
+        fecha_max = hoy
+
     ordenes_abiertas = datosProduccion.objects.filter(status='Abierta').values_list('orden', flat=True)
 
-    # Filtrar datos por órdenes abiertas y agregar semana y año
     inventario_datos = Boletas.objects.filter(orden__in=ordenes_abiertas).annotate(
         semana=ExtractWeek('fecha'),
         anio=ExtractYear('fecha')
@@ -4436,50 +4435,47 @@ def semanalprodterm_pivot(request):
         total_libras=Sum('libras')
     ).order_by('anio', 'semana', 'itemsapname', 'categoria')
 
-    # Procesar los datos para calcular los porcentajes y convertir las libras a kilos
     resultado = []
-    total_por_semana = defaultdict(lambda: 0)
+    total_por_semana = defaultdict(float)
 
-    # Calculamos el total de libras por semana
     for registro in inventario_datos:
         clave = (registro['anio'], registro['semana'])
-        total_por_semana[clave] += registro['total_libras']
+        total_libras = registro['total_libras'] or 0
+        total_por_semana[clave] += total_libras
 
-    # Procesamos los registros para calcular los porcentajes
     for registro in inventario_datos:
         clave = (registro['anio'], registro['semana'])
         total_semana = total_por_semana[clave]
-        porcentaje = (registro['total_libras'] / total_semana) * 100 if total_semana else 0
-        
+        total_libras = registro['total_libras'] or 0
+        porcentaje = (total_libras / total_semana) * 100 if total_semana else 0
+
         resultado.append({
             'itemsapname': registro['itemsapname'],
             'categoria': registro['categoria'],
             'cultivo': registro['cultivo'],
             'semana': registro['semana'],
             'anio': registro['anio'],
-            'libras': registro['total_libras'],
-            'kilos': registro['total_libras'] / 2.20462,  # Conversión a kilos
             'porcentaje': round(porcentaje, 2),
         })
 
-    # Convertir los resultados a formato JSON para ser procesados en la plantilla
     registros_json = json.dumps(resultado, default=str)
 
-    # Convertimos los resultados en un DataFrame de pandas
-    df = pd.DataFrame(resultado)
+    if not resultado:
+        tabla_html = "<p class='text-danger'>No hay datos disponibles para mostrar.</p>"
+    else:
+        df = pd.DataFrame(resultado)
 
-    # Crear la tabla pivote: 'semana' como índice, 'itemsapname' y 'categoria' como columnas
-    tabla_pivote = df.pivot_table(
-        index=['semana', 'anio'],
-        columns=['itemsapname', 'cultivo', 'categoria'],
-        values=[ 'porcentaje'],
-        aggfunc='sum'
-    )
+        if 'porcentaje' not in df.columns:
+            tabla_html = "<p class='text-warning'>No se pudo generar la tabla pivote. Campo 'porcentaje' no encontrado.</p>"
+        else:
+            tabla_pivote = df.pivot_table(
+                index=['semana', 'anio'],
+                columns=['itemsapname', 'cultivo', 'categoria'],
+                values=['porcentaje'],
+                aggfunc='sum'
+            )
+            tabla_html = tabla_pivote.to_html(classes="table table-striped", index=True, header=True)
 
-    # Convertir la tabla pivote a HTML
-    tabla_html = tabla_pivote.to_html(classes="table table-striped", index=True, header=True)
-
-    # Pasar los datos a la plantilla
     return render(request, 'plantaE/tabla_pivote.html', {
         'tabla_html': tabla_html,
         'registros_json': registros_json,
