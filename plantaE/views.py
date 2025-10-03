@@ -4429,11 +4429,11 @@ def semanalprodterm_pivot(request):
     ordenes_abiertas = datosProduccion.objects.filter(status='Abierta').values_list('orden', flat=True)
 
     # Filtrar datos por órdenes abiertas y agregar semana y año
-    inventario_datos = inventarioProdTerm.objects.filter(orden__in=ordenes_abiertas).annotate(
+    inventario_datos = Boletas.objects.filter(orden__in=ordenes_abiertas).annotate(
         semana=ExtractWeek('fecha'),
         anio=ExtractYear('fecha')
     ).values('itemsapname', 'categoria', 'cultivo', 'semana', 'anio').annotate(
-        total_libras=Sum('lbsintara')
+        total_libras=Sum('libras')
     ).order_by('anio', 'semana', 'itemsapname', 'categoria')
 
     # Procesar los datos para calcular los porcentajes y convertir las libras a kilos
@@ -4472,7 +4472,7 @@ def semanalprodterm_pivot(request):
     tabla_pivote = df.pivot_table(
         index=['semana', 'anio'],
         columns=['itemsapname', 'cultivo', 'categoria'],
-        values=[ 'kilos', 'porcentaje'],
+        values=[ 'porcentaje'],
         aggfunc='sum'
     )
 
@@ -4484,6 +4484,7 @@ def semanalprodterm_pivot(request):
         'tabla_html': tabla_html,
         'registros_json': registros_json,
     })
+
 def poraprovechamientosger(request):
     hoy = timezone.now().date()
     # Obtener fecha máxima en detallerecaux
