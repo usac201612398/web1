@@ -4428,23 +4428,24 @@ def semanalprodterm_pivot(request):
         fecha_max = hoy  # fallback si no hay registros
     ordenes_abiertas = datosProduccion.objects.filter(status='Abierta').values_list('orden', flat=True)
 
+    # Filtrar datos por órdenes abiertas y agregar semana y año
     inventario_datos = inventarioProdTerm.objects.filter(orden__in=ordenes_abiertas).annotate(
-    semana=ExtractWeek('fecha'),
-    anio=ExtractYear('fecha')
-    ).values('itemsapname', 'categoria','cultivo', 'semana', 'anio').annotate(
+        semana=ExtractWeek('fecha'),
+        anio=ExtractYear('fecha')
+    ).values('itemsapname', 'categoria', 'cultivo', 'semana', 'anio').annotate(
         total_libras=Sum('lbsintara')
     ).order_by('anio', 'semana', 'itemsapname', 'categoria')
 
-    # Procesamos los datos para calcular los porcentajes y convertir las libras a kilos
+    # Procesar los datos para calcular los porcentajes y convertir las libras a kilos
     resultado = []
     total_por_semana = defaultdict(lambda: 0)
 
-    # Primero, calculamos el total de libras por semana para cada pedido
+    # Calculamos el total de libras por semana
     for registro in inventario_datos:
         clave = (registro['anio'], registro['semana'])
         total_por_semana[clave] += registro['total_libras']
 
-    # Ahora procesamos los registros para calcular los porcentajes por cada item
+    # Procesamos los registros para calcular los porcentajes
     for registro in inventario_datos:
         clave = (registro['anio'], registro['semana'])
         total_semana = total_por_semana[clave]
@@ -4460,18 +4461,25 @@ def semanalprodterm_pivot(request):
             'kilos': registro['total_libras'] / 2.20462,  # Conversión a kilos
             'porcentaje': round(porcentaje, 2),
         })
-    # Convertir los resultados a formato JSON para ser procesado en la plantilla
+
+    # Convertir los resultados a formato JSON para ser procesados en la plantilla
     registros_json = json.dumps(resultado, default=str)
+
     # Convertimos los resultados en un DataFrame de pandas
     df = pd.DataFrame(resultado)
 
-    # Pivotamos los datos: 'semana' como índice, 'itemsapname' y 'categoria' como columnas
-    tabla_pivote = df.pivot_table(index=['semana', 'anio'], columns=['itemsapname','cultivo', 'categoria'], values=['libras', 'kilos', 'porcentaje'], aggfunc='sum')
+    # Crear la tabla pivote: 'semana' como índice, 'itemsapname' y 'categoria' como columnas
+    tabla_pivote = df.pivot_table(
+        index=['semana', 'anio'],
+        columns=['itemsapname', 'cultivo', 'categoria'],
+        values=['libras', 'kilos', 'porcentaje'],
+        aggfunc='sum'
+    )
 
-    # Convertimos la tabla pivote a HTML
+    # Convertir la tabla pivote a HTML
     tabla_html = tabla_pivote.to_html(classes="table table-striped", index=True, header=True)
 
-    # Ahora podemos pasar `tabla_html` a la plantilla
+    # Pasar los datos a la plantilla
     return render(request, 'plantaE/tabla_pivote.html', {
         'tabla_html': tabla_html,
         'registros_json': registros_json,
