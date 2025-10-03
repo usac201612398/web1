@@ -4480,27 +4480,19 @@ def semanalprodterm_pivot(request):
                 values=metrica,
                 aggfunc='sum'
             )
+           
             tabla_pivote = tabla_pivote.fillna("")
 
-            # Sumar totales por columna
-            totales = tabla_pivote.sum(axis=0)
-
-            # Resetear índice para aplanar multiindex filas
+            # Aplanar índices (convertir multiindex filas a columnas normales)
             tabla_pivote_reset = tabla_pivote.reset_index()
 
-            # Aplanar multiindex columnas
+            # Aplanar multiindex de columnas, por ejemplo: (semana, anio) -> "semana_anio"
             tabla_pivote_reset.columns = [
                 '_'.join(map(str, col)).strip() if isinstance(col, tuple) else col
                 for col in tabla_pivote_reset.columns.values
             ]
 
-            # Crear fila total con nombres planos
-            totales_row = ['TOTAL', '', ''] + totales.tolist()
-
-            # Agregar fila total al DataFrame
-            tabla_pivote_reset.loc[len(tabla_pivote_reset)] = totales_row
-
-            # Convertir a HTML
+            # Ahora sí, convertir a HTML
             tabla_html = tabla_pivote_reset.to_html(
                 classes="table table-striped",
                 index=False,
