@@ -24,13 +24,11 @@
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <form method="get" class="row g-3 mb-4">
-                <div class="col-md-2">
-                    <label class="form-label">Métrica</label>
-                    <select name="metrica" class="form-select">
-                        <option value="porcentaje" {% if request.GET|get_item:'metrica' == 'porcentaje' %}selected{% endif %}>Porcentajes</option>
-                        <option value="libras" {% if request.GET|get_item:'metrica' == 'libras' %}selected{% endif %}>Libras</option>
-                    </select>
-                </div>
+                <select name="metrica" class="form-select">
+                    <option value="porcentaje" {% if request.GET|get_item:'metrica' == 'porcentaje' %}selected{% endif %}>Porcentajes</option>
+                    <option value="libras" {% if request.GET|get_item:'metrica' == 'libras' %}selected{% endif %}>Libras</option>
+                    <option value="kilos" {% if request.GET|get_item:'metrica' == 'kilos' %}selected{% endif %}>Kilos</option>
+                </select>
                 <div class="col-md-2 d-flex align-items-end">
                     <button type="submit" class="btn btn-success w-100">Filtrar</button>
                 </div>

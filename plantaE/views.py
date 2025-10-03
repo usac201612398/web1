@@ -4440,12 +4440,14 @@ def semanalprodterm_pivot(request):
         clave = (registro['anio'], registro['semana'], registro['cultivo'])
         total_libras = registro['total_libras'] or 0
         total_por_semana_cultivo[clave] += total_libras
+        kilos = total_libras / 2.20462 if total_libras else 0
 
     for registro in inventario_datos:
         clave = (registro['anio'], registro['semana'], registro['cultivo'])
         total_cultivo_semana = total_por_semana_cultivo[clave]
         total_libras = registro['total_libras'] or 0
         porcentaje = (total_libras / total_cultivo_semana) * 100 if total_cultivo_semana else 0
+        kilos = total_libras / 2.20462 if total_libras else 0
 
         resultado.append({
             'itemsapname': registro['itemsapname'],
@@ -4455,6 +4457,7 @@ def semanalprodterm_pivot(request):
             'anio': registro['anio'],
             'libras': round(total_libras, 2),
             'porcentaje': round(porcentaje, 2),
+            'kilos': round(kilos, 2),
         })
 
     registros_json = json.dumps(resultado, default=str)
@@ -4465,7 +4468,7 @@ def semanalprodterm_pivot(request):
         df = pd.DataFrame(resultado)
 
         metrica = request.GET.get('metrica', 'porcentaje')
-        if metrica not in ['porcentaje', 'libras']:
+        if metrica not in ['porcentaje', 'libras', 'kilos']:
             metrica = 'porcentaje'
 
         if metrica not in df.columns:
