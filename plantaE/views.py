@@ -4493,10 +4493,12 @@ def semanalprodterm_pivot(request):
             ]
 
             # Ahora sí, convertir a HTML
-            tabla_html = tabla_pivote.to_html(classes="table table-striped", index=True, na_rep="", table_id="tabla-pivote")
-            # Insertar <tfoot> justo antes de </table>
-            tfoot = '<tfoot><tr>' + ''.join(['<th></th>' for _ in range(len(tabla_pivote.columns) + len(tabla_pivote.index.names))]) + '</tr></tfoot>'
-            tabla_html = tabla_html.replace('</table>', f'{tfoot}</table>')
+            tabla_html = tabla_pivote_reset.to_html(
+                classes="table table-striped",
+                index=False,
+                na_rep="",
+                table_id="tabla-pivote"
+            )
 
     return render(request, 'plantaE/inventarioProd_reportesemanalprodterm_pivot.html', {
         'tabla_html': tabla_html,

@@ -64,7 +64,16 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.0/jszip.min.js"></script>
 
 <script>
-$(document).ready(function () {
+    $(document).ready(function () {
+    // Crear el footer antes de inicializar DataTables
+    if ($('#tabla-pivote tfoot').length === 0) {
+        let footer = $('<tfoot><tr></tr></tfoot>');
+        $('#tabla-pivote thead tr th').each(function () {
+            footer.find('tr').append('<th></th>');
+        });
+        $('#tabla-pivote').append(footer);
+    }
+
     let table = $('#tabla-pivote').DataTable({
         scrollX: true,
         paging: true,
@@ -82,35 +91,21 @@ $(document).ready(function () {
         footerCallback: function (row, data, start, end, display) {
             let api = this.api();
 
-            // Para cada columna, calcular suma de la columna visible (tras filtro y paginación)
             api.columns().every(function () {
                 let column = this;
                 let sum = column
-                    .data({ search: 'applied', page: 'current' })  // solo los visibles
+                    .data({ search: 'applied', page: 'current' })
                     .reduce(function (a, b) {
-                        // Remover coma y convertir a número, o 0 si no es válido
                         let x = typeof a === 'string' ? a.replace(/,/g, '') : a;
                         let y = typeof b === 'string' ? b.replace(/,/g, '') : b;
                         x = parseFloat(x) || 0;
                         y = parseFloat(y) || 0;
                         return x + y;
                     }, 0);
-
-                // Escribir total en el footer, con 2 decimales si es número
                 $(column.footer()).html(sum ? sum.toFixed(2) : '');
             });
         }
     });
-
-    // Si no hay footer en la tabla, lo crea con el mismo número de columnas
-    if ($('#tabla-pivote tfoot').length === 0) {
-        let footer = $('<tfoot><tr></tr></tfoot>');
-        $('#tabla-pivote thead tr th').each(function () {
-            footer.find('tr').append('<th></th>');
-        });
-        $('#tabla-pivote').append(footer);
-        table.draw(); // redibujar para que footerCallback funcione
-    }
 });
 </script>
 
