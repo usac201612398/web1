@@ -4472,7 +4472,7 @@ def semanalprodterm_pivot(request):
     tabla_pivote = df.pivot_table(
         index=['semana', 'anio'],
         columns=['itemsapname', 'cultivo', 'categoria'],
-        values=['libras', 'kilos', 'porcentaje'],
+        values=[ 'kilos', 'porcentaje'],
         aggfunc='sum'
     )
 
