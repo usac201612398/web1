@@ -4431,7 +4431,7 @@ def semanalprodterm_pivot(request):
     inventario_datos = inventarioProdTerm.objects.filter(orden__in=ordenes_abiertas).annotate(
     semana=ExtractWeek('fecha'),
     anio=ExtractYear('fecha')
-    ).values('itemsapname', 'categoria','cultivo' 'semana', 'anio').annotate(
+    ).values('itemsapname', 'categoria','cultivo', 'semana', 'anio').annotate(
         total_libras=Sum('libras')
     ).order_by('anio', 'semana', 'itemsapname', 'categoria')
 
