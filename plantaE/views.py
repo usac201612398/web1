@@ -4475,7 +4475,7 @@ def semanalprodterm_pivot(request):
                 values='porcentaje',
                 aggfunc='sum'
             )
-            tabla_html = tabla_pivote.to_html(classes="table table-striped", index=True, header=True)
+            tabla_html = tabla_pivote.to_html(classes="table table-striped", index=True, header=True, na_rep='')
 
     return render(request, 'plantaE/inventarioProd_reportesemanalprodterm_pivot.html', {
         'tabla_html': tabla_html,
