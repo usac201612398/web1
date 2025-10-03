@@ -62,10 +62,9 @@
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.0/jszip.min.js"></script>
-
 <script>
-    $(document).ready(function () {
-    // Crear el footer antes de inicializar DataTables
+$(document).ready(function () {
+    // Si no hay footer, creamos uno para los totales
     if ($('#tabla-pivote tfoot').length === 0) {
         let footer = $('<tfoot><tr></tr></tfoot>');
         $('#tabla-pivote thead tr th').each(function () {
@@ -88,38 +87,42 @@
             url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
         },
         autoWidth: false,
+
         footerCallback: function (row, data, start, end, display) {
-    let api = this.api();
+            let api = this.api();
 
-    // Para cada columna visible (excepto las que no quieres sumar, ej: índices, texto)
-    api.columns().every(function (index) {
-        let column = this;
+            api.columns().every(function (index) {
+                let column = this;
 
-        // Obtenemos solo los datos filtrados y en la página visible
-        let dataFiltered = column.data({ search: 'applied', page: 'current' });
+                // Datos visibles y filtrados en la página actual
+                let dataFiltered = column.data({ search: 'applied', page: 'current' });
 
-        let sum = dataFiltered.reduce(function (a, b) {
-            // Limpiar strings: eliminar comas, espacios, signos %, etc.
-            let x = typeof a === 'string' ? a.replace(/[^\d.-]/g, '') : a;
-            let y = typeof b === 'string' ? b.replace(/[^\d.-]/g, '') : b;
-            x = parseFloat(x) || 0;
-            y = parseFloat(y) || 0;
-            return x + y;
-        }, 0);
+                // Sumar solo valores numéricos limpios
+                let sum = dataFiltered.reduce(function (a, b) {
+                    let x = typeof a === 'string' ? a.replace(/[^\d.-]/g, '') : a;
+                    let y = typeof b === 'string' ? b.replace(/[^\d.-]/g, '') : b;
+                    x = parseFloat(x) || 0;
+                    y = parseFloat(y) || 0;
+                    return x + y;
+                }, 0);
 
-        // Opcional: No mostrar total en columnas que no sean numéricas
-        // Por ejemplo si tienes columnas índice, texto, etc.
-        // Aquí asumo que las primeras 3 columnas son índices y no se suman
-        if (index < 3) {
-            $(column.footer()).html(''); // o poner texto como "Total"
-        } else {
-            $(column.footer()).html(sum.toFixed(2));
+                // No sumar columnas índice o texto: asumo primeras 3 columnas no numéricas
+                if (index < 3) {
+                    $(column.footer()).html('');
+                } else {
+                    $(column.footer()).html(sum ? sum.toFixed(2) : '');
+                }
+            });
         }
     });
-}
+
+    // Opcional: Forzar redraw para recalcular totales al buscar
+    table.on('search.dt', function () {
+        table.draw();
     });
 });
 </script>
+
 
 </body>
 </html>
