@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+{% load static %}
+<head>
+  <meta charset="UTF-8">
+  <title>Panel - Desglose por Producto</title>
+
+  <!-- Bulma CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    body {
+      background-color: #f9f9f9;
+    }
+    .panel-header {
+      margin-bottom: 1.5rem;
+    }
+    .filters {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .data-section {
+      margin-top: 2rem;
+    }
+    .box {
+      border-radius: 6px;
+    }
+    .back-link {
+      margin-top: 2rem;
+      display: inline-block;
+    }
+    .is-small-text {
+      font-size: 0.9rem;
+      color: #777;
+    }
+    .table-custom-header th {
+      background: linear-gradient(to right, #6c757d, #495057);
+      color: white !important;
+      font-weight: 600;
+      text-align: center;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <section class="section">
+    <div class="container">
+      <!-- HEADER -->
+        <section class="hero is-success is-small mb-5">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+            <h1 class="title is-3 has-text-white">Desglose por Producto y Semana</h1>
+            <p class="subtitle is-6 has-text-white-ter">Informe semanal de libras y porcentajes por producto</p>
+            </div>
+        </div>
+        </section>
+
+      <!-- TABLA -->
+      <div class="data-section">
+        <div class="box">
+          <h2 class="title is-5">Detalle por Producto</h2>
+          <div class="table-container">
+            {{ tabla_html|safe }}
+          </div>
+        </div>
+      </div>
+
+      <div class="has-text-centered mt-6">
+        <a href="{% url 'plantaE_homeger' %}" class="button is-success is-medium is-rounded">
+            <span class="icon">
+            <i class="fas fa-home"></i>
+            </span>
+            <span>Home</span>
+        </a>
+      </div>
+    
+    </div>
+  </section>
+</body>
+</html>

@@ -3347,6 +3347,7 @@ def inventariogeneralger_list(request):
     )
 
 def dashboard_acumfrutakgxm2(request):
+
     filtros_get = {
         'finca': request.GET.get('finca'),
         'orden': request.GET.get('orden'),
@@ -3459,7 +3460,6 @@ def dashboard_acumfrutakgxm2(request):
     }
 
     return render(request, 'plantaE/dashboard_acumfrutakgxm2.html', context)
-
 
 def dashboard_acumfruta(request):
 
@@ -4415,6 +4415,59 @@ def poraprovechamientos(request):
     tabla_html = df.to_html(classes="table table-striped", index=False)
 
     return render(request, 'plantaE/salidasFruta_aprovechamientos.html', {
+        'registros': resultado,
+        'tabla_html': tabla_html,
+        'registros_json': registros_json,
+    })
+
+def semanalprodterm_pivot(request):
+    hoy = timezone.now().date()
+    # Obtener fecha máxima en detallerecaux
+    fecha_max = AcumFruta.objects.aggregate(max_fecha=Max('fecha'))['max_fecha']
+    if not fecha_max:
+        fecha_max = hoy  # fallback si no hay registros
+    ordenes_abiertas = datosProduccion.objects.filter(status='Abierta').values_list('orden', flat=True)
+
+    inventario_datos = inventarioProdTerm.objects.filter(orden__in=ordenes_abiertas).annotate(
+        semana=ExtractWeek('fecha'),
+        anio=ExtractYear('fecha')
+    ).values('itemsapname', 'categoria', 'cultivo','semana', 'anio').annotate(
+        total_libras=Sum('libras')
+    ).order_by('anio', 'semana', 'itemsapname', 'categoria')
+
+    # Procesamos los datos de manera que podamos calcular los porcentajes de cada item
+    resultado = []
+    total_por_semana = defaultdict(lambda: 0)
+
+    # Primero, calculamos el total de libras por semana para cada pedido
+    for registro in inventario_datos:
+        clave = (registro['anio'], registro['semana'])
+        total_por_semana[clave] += registro['total_libras']
+
+    # Ahora procesamos los registros para calcular los porcentajes por cada item
+    for registro in inventario_datos:
+        clave = (registro['anio'], registro['semana'])
+        total_semana = total_por_semana[clave]
+        porcentaje = (registro['total_libras'] / total_semana) * 100 if total_semana else 0
+        
+        resultado.append({
+            'itemsapname': registro['itemsapname'],
+            'categoria': registro['categoria'],
+            'semana': registro['semana'],
+            'anio': registro['anio'],
+            'libras': registro['total_libras'],
+            'kilos': registro['total_libras'] / 2.20462,  # Conversión a kilos
+            'porcentaje': round(porcentaje, 2),
+        })
+
+    # Pasamos los datos a JSON para usarlos en la plantilla
+    registros_json = json.dumps(resultado, default=str)
+    df = pd.DataFrame(resultado)
+
+    # Crear la tabla HTML con el DataFrame
+    tabla_html = df.to_html(classes="table table-striped", index=False)
+
+    return render(request, 'plantaE/inventarioProd_reportesemanalprodterm_pivot.html', {
         'registros': resultado,
         'tabla_html': tabla_html,
         'registros_json': registros_json,

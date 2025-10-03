@@ -120,6 +120,7 @@ urlpatterns = [
     path("inventarioProd/inventariogeneralfruta",views.inventariogeneralfruta_list,name='inventarioProd_inventariogeneralfruta'),
     path("inventarioProd/aprovechamientos",views.aprovechamientos,name='inventarioProd_aprovechamientos'),
     path('inventarioProd/reporteInv', views.reporteInventario, name='reporte_inventario'),
+    path('inventarioProd/reportesemanalprodterm_pivot', views.semanalprodterm_pivot, name='reporte_reportesemanalprodterm_pivot'),
 
     path('inventarioProd/validaroventa', views.validaroventa, name='inventarioProd_validaroventa'),
     
