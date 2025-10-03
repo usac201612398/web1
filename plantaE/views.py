@@ -4453,6 +4453,7 @@ def semanalprodterm_pivot(request):
         resultado.append({
             'itemsapname': registro['itemsapname'],
             'categoria': registro['categoria'],
+            'cultivo': registro['cultivo'],
             'semana': registro['semana'],
             'anio': registro['anio'],
             'libras': registro['total_libras'],
@@ -4465,7 +4466,7 @@ def semanalprodterm_pivot(request):
     df = pd.DataFrame(resultado)
 
     # Pivotamos los datos: 'semana' como índice, 'itemsapname' y 'categoria' como columnas
-    tabla_pivote = df.pivot_table(index=['semana', 'anio'], columns=['itemsapname', 'categoria'], values=['libras', 'kilos', 'porcentaje'], aggfunc='sum')
+    tabla_pivote = df.pivot_table(index=['semana', 'anio'], columns=['itemsapname','cultivo', 'categoria'], values=['libras', 'kilos', 'porcentaje'], aggfunc='sum')
 
     # Convertimos la tabla pivote a HTML
     tabla_html = tabla_pivote.to_html(classes="table table-striped", index=True, header=True)
