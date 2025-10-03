@@ -4429,13 +4429,13 @@ def semanalprodterm_pivot(request):
     ordenes_abiertas = datosProduccion.objects.filter(status='Abierta').values_list('orden', flat=True)
 
     inventario_datos = inventarioProdTerm.objects.filter(orden__in=ordenes_abiertas).annotate(
-        semana=ExtractWeek('fecha'),
-        anio=ExtractYear('fecha')
-    ).values('itemsapname', 'categoria', 'cultivo','semana', 'anio').annotate(
+    semana=ExtractWeek('fecha'),
+    anio=ExtractYear('fecha')
+    ).values('itemsapname', 'categoria','cultivo' 'semana', 'anio').annotate(
         total_libras=Sum('libras')
     ).order_by('anio', 'semana', 'itemsapname', 'categoria')
 
-    # Procesamos los datos de manera que podamos calcular los porcentajes de cada item
+    # Procesamos los datos para calcular los porcentajes y convertir las libras a kilos
     resultado = []
     total_por_semana = defaultdict(lambda: 0)
 
@@ -4459,20 +4459,22 @@ def semanalprodterm_pivot(request):
             'kilos': registro['total_libras'] / 2.20462,  # Conversión a kilos
             'porcentaje': round(porcentaje, 2),
         })
-
-    # Pasamos los datos a JSON para usarlos en la plantilla
+    # Convertir los resultados a formato JSON para ser procesado en la plantilla
     registros_json = json.dumps(resultado, default=str)
+    # Convertimos los resultados en un DataFrame de pandas
     df = pd.DataFrame(resultado)
 
-    # Crear la tabla HTML con el DataFrame
-    tabla_html = df.to_html(classes="table table-striped", index=False)
+    # Pivotamos los datos: 'semana' como índice, 'itemsapname' y 'categoria' como columnas
+    tabla_pivote = df.pivot_table(index=['semana', 'anio'], columns=['itemsapname', 'categoria'], values=['libras', 'kilos', 'porcentaje'], aggfunc='sum')
 
-    return render(request, 'plantaE/inventarioProd_reportesemanalprodterm_pivot.html', {
-        'registros': resultado,
+    # Convertimos la tabla pivote a HTML
+    tabla_html = tabla_pivote.to_html(classes="table table-striped", index=True, header=True)
+
+    # Ahora podemos pasar `tabla_html` a la plantilla
+    return render(request, 'plantaE/tabla_pivote.html', {
         'tabla_html': tabla_html,
         'registros_json': registros_json,
     })
-
 def poraprovechamientosger(request):
     hoy = timezone.now().date()
     # Obtener fecha máxima en detallerecaux
