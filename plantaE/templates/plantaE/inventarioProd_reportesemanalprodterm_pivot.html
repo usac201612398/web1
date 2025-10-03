@@ -62,9 +62,10 @@
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.0/jszip.min.js"></script>
+
 <script>
-$(document).ready(function () {
-    // Si no hay footer, creamos uno para los totales
+    $(document).ready(function () {
+    // Crear el footer antes de inicializar DataTables
     if ($('#tabla-pivote tfoot').length === 0) {
         let footer = $('<tfoot><tr></tr></tfoot>');
         $('#tabla-pivote thead tr th').each(function () {
@@ -87,42 +88,26 @@ $(document).ready(function () {
             url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
         },
         autoWidth: false,
-
         footerCallback: function (row, data, start, end, display) {
             let api = this.api();
 
-            api.columns().every(function (index) {
+            api.columns().every(function () {
                 let column = this;
-
-                // Datos visibles y filtrados en la página actual
-                let dataFiltered = column.data({ search: 'applied', page: 'current' });
-
-                // Sumar solo valores numéricos limpios
-                let sum = dataFiltered.reduce(function (a, b) {
-                    let x = typeof a === 'string' ? a.replace(/[^\d.-]/g, '') : a;
-                    let y = typeof b === 'string' ? b.replace(/[^\d.-]/g, '') : b;
-                    x = parseFloat(x) || 0;
-                    y = parseFloat(y) || 0;
-                    return x + y;
-                }, 0);
-
-                // No sumar columnas índice o texto: asumo primeras 3 columnas no numéricas
-                if (index < 3) {
-                    $(column.footer()).html('');
-                } else {
-                    $(column.footer()).html(sum ? sum.toFixed(2) : '');
-                }
+                let sum = column
+                    .data({ search: 'applied', page: 'current' })
+                    .reduce(function (a, b) {
+                        let x = typeof a === 'string' ? a.replace(/,/g, '') : a;
+                        let y = typeof b === 'string' ? b.replace(/,/g, '') : b;
+                        x = parseFloat(x) || 0;
+                        y = parseFloat(y) || 0;
+                        return x + y;
+                    }, 0);
+                $(column.footer()).html(sum ? sum.toFixed(2) : '');
             });
         }
     });
-
-    // Opcional: Forzar redraw para recalcular totales al buscar
-    table.on('search.dt', function () {
-        table.draw();
-    });
 });
 </script>
-
 
 </body>
 </html>
