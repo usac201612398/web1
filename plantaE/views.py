@@ -4470,7 +4470,7 @@ def semanalprodterm_pivot(request):
             tabla_html = "<p class='text-warning'>No se pudo generar la tabla pivote. Campo 'porcentaje' no encontrado.</p>"
         else:
             tabla_pivote = df.pivot_table(
-                index=['itemsapname', 'cultivo', 'categoria'],
+                index=['cultivo', 'categoria','itemsapname'],
                 columns=['semana', 'anio'],
                 values='porcentaje',
                 aggfunc='sum'
