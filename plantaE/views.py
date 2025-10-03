@@ -4436,19 +4436,20 @@ def semanalprodterm_pivot(request):
     ).exclude(categoria="Devolución").order_by('anio', 'semana', 'itemsapname', 'categoria')
 
     resultado = []
-    total_por_semana = defaultdict(float)
+    total_por_cultivo_semana = defaultdict(float)
 
     for registro in inventario_datos:
-        clave = (registro['anio'], registro['semana'])
+        clave = (registro['anio'], registro['semana'], registro['cultivo'])
         total_libras = registro['total_libras'] or 0
-        total_por_semana[clave] += total_libras
+        total_por_cultivo_semana[clave] += total_libras
+
+    resultado = []
 
     for registro in inventario_datos:
-        clave = (registro['anio'], registro['semana'])
-        total_semana = total_por_semana[clave]
+        clave = (registro['anio'], registro['semana'], registro['cultivo'])
+        total_semana_cultivo = total_por_cultivo_semana[clave]
         total_libras = registro['total_libras'] or 0
-        porcentaje = (total_libras / total_semana) * 100 if total_semana else 0
-
+        porcentaje = (total_libras / total_semana_cultivo) * 100 if total_semana_cultivo else 0
         resultado.append({
             'itemsapname': registro['itemsapname'],
             'categoria': registro['categoria'],
