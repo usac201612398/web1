@@ -4422,9 +4422,7 @@ def poraprovechamientos(request):
 
 def semanalprodterm_pivot(request):
     hoy = timezone.now().date()
-    fecha_max = AcumFruta.objects.aggregate(max_fecha=Max('fecha'))['max_fecha']
-    if not fecha_max:
-        fecha_max = hoy
+    fecha_max = AcumFruta.objects.aggregate(max_fecha=Max('fecha'))['max_fecha'] or hoy
 
     ordenes_abiertas = datosProduccion.objects.filter(status='Abierta').values_list('orden', flat=True)
 
@@ -4436,26 +4434,26 @@ def semanalprodterm_pivot(request):
     ).exclude(categoria="Devolución").order_by('anio', 'semana', 'itemsapname', 'categoria')
 
     resultado = []
-    total_por_cultivo_semana = defaultdict(float)
+    total_por_semana_cultivo = defaultdict(float)
 
     for registro in inventario_datos:
         clave = (registro['anio'], registro['semana'], registro['cultivo'])
         total_libras = registro['total_libras'] or 0
-        total_por_cultivo_semana[clave] += total_libras
-
-    resultado = []
+        total_por_semana_cultivo[clave] += total_libras
 
     for registro in inventario_datos:
         clave = (registro['anio'], registro['semana'], registro['cultivo'])
-        total_semana_cultivo = total_por_cultivo_semana[clave]
+        total_cultivo_semana = total_por_semana_cultivo[clave]
         total_libras = registro['total_libras'] or 0
-        porcentaje = (total_libras / total_semana_cultivo) * 100 if total_semana_cultivo else 0
+        porcentaje = (total_libras / total_cultivo_semana) * 100 if total_cultivo_semana else 0
+
         resultado.append({
             'itemsapname': registro['itemsapname'],
             'categoria': registro['categoria'],
             'cultivo': registro['cultivo'],
             'semana': registro['semana'],
             'anio': registro['anio'],
+            'libras': round(total_libras, 2),
             'porcentaje': round(porcentaje, 2),
         })
 
@@ -4466,16 +4464,21 @@ def semanalprodterm_pivot(request):
     else:
         df = pd.DataFrame(resultado)
 
-        if 'porcentaje' not in df.columns:
-            tabla_html = "<p class='text-warning'>No se pudo generar la tabla pivote. Campo 'porcentaje' no encontrado.</p>"
+        metrica = request.GET.get('metrica', 'porcentaje')
+        if metrica not in ['porcentaje', 'libras']:
+            metrica = 'porcentaje'
+
+        if metrica not in df.columns:
+            tabla_html = f"<p class='text-warning'>No se pudo generar la tabla pivote. Campo '{metrica}' no encontrado.</p>"
         else:
             tabla_pivote = df.pivot_table(
-                index=['cultivo', 'categoria','itemsapname'],
+                index=['cultivo', 'categoria', 'itemsapname'],
                 columns=['semana', 'anio'],
-                values='porcentaje',
+                values=metrica,
                 aggfunc='sum'
             )
-            tabla_html = tabla_pivote.to_html(classes="table table-striped", index=True, header=True, na_rep='')
+            tabla_pivote = tabla_pivote.fillna("")  # Reemplaza NaN por vacío
+            tabla_html = tabla_pivote.to_html(classes="table table-striped", index=True, header=True)
 
     return render(request, 'plantaE/inventarioProd_reportesemanalprodterm_pivot.html', {
         'tabla_html': tabla_html,
