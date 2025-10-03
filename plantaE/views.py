@@ -4428,12 +4428,12 @@ def semanalprodterm_pivot(request):
 
     ordenes_abiertas = datosProduccion.objects.filter(status='Abierta').values_list('orden', flat=True)
 
-    inventario_datos = Boletas.objects.filter(orden__in=ordenes_abiertas).annotate(
+    inventario_datos = Boletas.objects.filter(ordenfinca__in=ordenes_abiertas).annotate(
         semana=ExtractWeek('fecha'),
         anio=ExtractYear('fecha')
     ).values('itemsapname', 'categoria', 'cultivo', 'semana', 'anio').annotate(
         total_libras=Sum('libras')
-    ).order_by('anio', 'semana', 'itemsapname', 'categoria')
+    ).exclude(categoria="Devolución").order_by('anio', 'semana', 'itemsapname', 'categoria')
 
     resultado = []
     total_por_semana = defaultdict(float)
