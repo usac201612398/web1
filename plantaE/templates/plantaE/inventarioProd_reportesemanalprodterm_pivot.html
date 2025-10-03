@@ -62,10 +62,27 @@
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.0/jszip.min.js"></script>
-
 <script>
 $(document).ready(function () {
-    let table = $('#tabla-pivote').DataTable({
+    const tabla = $('#tabla-pivote');
+
+    // Crear tfoot dinámicamente si no existe
+    if (tabla.find('tfoot').length === 0) {
+        const columnas = tabla.find('thead tr th').length;
+        let footerRow = '<tfoot><tr>';
+        for (let i = 0; i < columnas; i++) {
+            if (i === 0) {
+                footerRow += '<th>Total</th>';
+            } else {
+                footerRow += '<th></th>';
+            }
+        }
+        footerRow += '</tr></tfoot>';
+        tabla.append(footerRow);
+    }
+
+    // Inicializar DataTable después de insertar el tfoot
+    const table = tabla.DataTable({
         scrollX: true,
         paging: true,
         ordering: true,
@@ -78,38 +95,32 @@ $(document).ready(function () {
         language: {
             url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
         },
+        autoWidth: false,
+
+        // Calcular totales por columna en el footer
         footerCallback: function (row, data, start, end, display) {
             let api = this.api();
 
-            // Sumar por columnas
-            api.columns().every(function () {
-                let column = this;
-                let total = column
+            api.columns().every(function (colIdx) {
+                let total = api
+                    .column(colIdx, { page: 'current' })  // puedes usar 'current' o 'all'
                     .data()
                     .reduce(function (a, b) {
                         a = parseFloat(a) || 0;
                         b = parseFloat(b) || 0;
                         return a + b;
                     }, 0);
-                // Mostrar total solo si es número
-                $(column.footer()).html(
-                    total > 0 ? total.toFixed(2) : ''
-                );
+
+                // Mostrar solo si es número (para evitar textos como 'Total' o nombres)
+                if (!isNaN(total) && total !== 0) {
+                    $(api.column(colIdx).footer()).html(total.toFixed(2));
+                }
             });
         }
     });
-
-    // Si no hay footer, lo agregamos dinámicamente
-    if ($('#tabla-pivote tfoot').length === 0) {
-        let footer = $('<tfoot><tr></tr></tfoot>');
-        $('#tabla-pivote thead tr th').each(function () {
-            footer.find('tr').append('<th></th>');
-        });
-        $('#tabla-pivote').append(footer);
-        table.draw(); // Redibujar para aplicar el footerCallback
-    }
 });
 </script>
+
 
 
 </body>
