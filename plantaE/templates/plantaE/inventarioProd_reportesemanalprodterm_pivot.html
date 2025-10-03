@@ -15,6 +15,13 @@
     max-height: 400px;
     overflow-y: auto;
 }
+td:nth-child(3), /* Ajusta 3 por el número de columna itemsapname */
+th:nth-child(3) {
+    white-space: normal !important;
+    word-wrap: break-word;
+    max-width: 200px; /* Ajusta el ancho deseado */
+    overflow-wrap: break-word;
+}
 </style>
 <body>
     
@@ -39,7 +46,7 @@
 
             <div style="overflow-x: auto;">
                 <div class="card">
-                    <div class="card-header">Producción semanal (kg/m²)</div>
+                    <div class="card-header">Producción semanal (kg)</div>
                     <div class="card-body">
                         <div class="table-responsive">
                             {{ tabla_html|safe }}
@@ -80,7 +87,7 @@
         ordering: true,
         info: true,
         searching: true,
-        dom: 'Bfrtip',
+        dom: 'Blfrtip',
         lengthMenu: [10, 25, 50, 100],
         pageLength: 10,
         buttons: ['excelHtml5', 'csvHtml5'],
