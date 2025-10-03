@@ -4480,12 +4480,33 @@ def semanalprodterm_pivot(request):
                 values=metrica,
                 aggfunc='sum'
             )
-            totales = tabla_pivote.sum(axis=0)
-            totales.name = ('TOTAL', '', '')  # triple índice para que encaje con multiindex
-            tabla_pivote = pd.concat([tabla_pivote, pd.DataFrame([totales], index=[totales.name])])
-            tabla_pivote = tabla_pivote.fillna("")  # Reemplaza NaN por vacío
-            tabla_html = tabla_pivote.to_html(classes="table table-striped", index=True, na_rep="", table_id="tabla-pivote")
+            tabla_pivote = tabla_pivote.fillna("")
 
+            # Sumar totales por columna
+            totales = tabla_pivote.sum(axis=0)
+
+            # Resetear índice para aplanar multiindex filas
+            tabla_pivote_reset = tabla_pivote.reset_index()
+
+            # Aplanar multiindex columnas
+            tabla_pivote_reset.columns = [
+                '_'.join(map(str, col)).strip() if isinstance(col, tuple) else col
+                for col in tabla_pivote_reset.columns.values
+            ]
+
+            # Crear fila total con nombres planos
+            totales_row = ['TOTAL', '', ''] + totales.tolist()
+
+            # Agregar fila total al DataFrame
+            tabla_pivote_reset.loc[len(tabla_pivote_reset)] = totales_row
+
+            # Convertir a HTML
+            tabla_html = tabla_pivote_reset.to_html(
+                classes="table table-striped",
+                index=False,
+                na_rep="",
+                table_id="tabla-pivote"
+            )
 
     return render(request, 'plantaE/inventarioProd_reportesemanalprodterm_pivot.html', {
         'tabla_html': tabla_html,
