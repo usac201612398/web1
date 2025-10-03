@@ -4432,7 +4432,7 @@ def semanalprodterm_pivot(request):
     semana=ExtractWeek('fecha'),
     anio=ExtractYear('fecha')
     ).values('itemsapname', 'categoria','cultivo', 'semana', 'anio').annotate(
-        total_libras=Sum('libras')
+        total_libras=Sum('lbsintara')
     ).order_by('anio', 'semana', 'itemsapname', 'categoria')
 
     # Procesamos los datos para calcular los porcentajes y convertir las libras a kilos
