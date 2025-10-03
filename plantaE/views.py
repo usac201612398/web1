@@ -4471,8 +4471,8 @@ def semanalprodterm_pivot(request):
         if metrica not in ['porcentaje', 'libras', 'kilos']:
             metrica = 'porcentaje'
 
-        if metrica not in df.columns:
-            tabla_html = f"<p class='text-warning'>No se pudo generar la tabla pivote. Campo '{metrica}' no encontrado.</p>"
+        if metrica not in ['porcentaje', 'libras', 'kilos'] or metrica not in df.columns:
+            tabla_html = f"<p class='text-warning'>Métrica '{metrica}' inválida o no disponible.</p>"
         else:
             tabla_pivote = df.pivot_table(
                 index=['cultivo', 'categoria', 'itemsapname'],
@@ -4480,6 +4480,9 @@ def semanalprodterm_pivot(request):
                 values=metrica,
                 aggfunc='sum'
             )
+            totales = tabla_pivote.sum(axis=0)
+            totales.name = ('TOTAL', '', '')  # triple índice para que encaje con multiindex
+            tabla_pivote = pd.concat([tabla_pivote, pd.DataFrame([totales], index=[totales.name])])
             tabla_pivote = tabla_pivote.fillna("")  # Reemplaza NaN por vacío
             tabla_html = tabla_pivote.to_html(classes="table table-striped", index=True, na_rep="", table_id="tabla-pivote")
 
