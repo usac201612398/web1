@@ -4981,6 +4981,7 @@ def guardar_pedido(request):
         elemento[4] = int(elemento[4])
     
     for i in mensaje:
+        
         datos = productoTerm.objects.filter(itemsapcode=i[0]).first()
         
         pedidos.objects.create(fecha=today,fechaentrega=i[7],cliente=i[6],cultivo=i[2],cantidad=i[4],encargado=i[8],u_m=i[3],itemsapcode=i[0],itemsapname=i[1],precio=datos.precio,total=datos.precio*i[4],orden=datos.orden)

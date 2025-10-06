@@ -80,7 +80,6 @@
                     <th>Cultivo</th>
                     <th>Empaque</th>
                     <th>Cajas</th>
-                    <th>Eliminar</th>
                 </tr>
             </thead>
             <tbody>
@@ -91,9 +90,7 @@
                     <td>{{ registro.cultivo }}</td>
                     <td>{{ registro.u_m }}</td>
                     <td><div contenteditable="true" class="editable-cell"></div></td>
-                    <td class="text-center">
-                        <button class="btn btn-sm btn-outline-danger eliminar"><i class="fas fa-trash-alt"></i></button>
-                    </td>
+                    
                 </tr>
                 {% endfor %}
             </tbody>
