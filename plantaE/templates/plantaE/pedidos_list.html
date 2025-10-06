@@ -113,7 +113,6 @@
               <th>Categoría</th>
               <th>Cantidad</th>
               <th>Libras</th>
-              <th>Editar</th>
               <th>Anular</th>
             </tr>
           </thead>
@@ -129,7 +128,6 @@
               <td>{{ registro.categoria }}</td>
               <td class="number-cell">{{ registro.cantidad }}</td>
               <td class="number-cell">{{ registro.libras }}</td>
-              <td><a href="{% url 'pedidos_update' registro.pk %}"><i class="fas fa-edit"></i></a></td>
               <td><a href="{% url 'pedidos_delete' registro.pk %}" class="has-text-danger"><i class="fas fa-trash-alt"></i></a></td>
             </tr>
             {% endfor %}

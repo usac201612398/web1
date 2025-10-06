@@ -4968,7 +4968,7 @@ def article_create_pedidos(request):
     for item in items:
         cultivo = item['cultivo']
         item['stock'] = stock_por_cultivo.get(cultivo, 0)
-        
+
     context = {
         'usuario': nombre_usuario,
         'registros':items,
@@ -5017,6 +5017,10 @@ def pedidos_update(request, pk):
 def pedidos_delete(request, pk):
     salidas = get_object_or_404(pedidos, pk=pk)
     if request.method == 'POST':
-        salidas.delete()
-        return redirect('pedidos_list')
+        salidas.status = 'Anulado'
+        salidas.save()
+        return render(request, 'plantaE/pedidos_confirm_delete.html', {
+            'alert_message': "El registro fue anulado correctamente.",
+            'redirect_url': reverse('pedidos_list')
+        })
     return render(request, 'plantaE/pedidos_confirm_delete.html', {'registros': salidas})
