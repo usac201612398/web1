@@ -122,36 +122,53 @@
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 <script>
+
 $('.envio3').on('click', function () {
     const tabla = document.getElementById("myTable");
     const fecha = document.getElementById('date').value;
     const correo = document.getElementById('correo').value;
-    
 
     let datos = [];
+    let errorStock = false;
 
     $('#myTable tbody tr').each(function () {
         const tds = $(this).find('td');
-        const cajas = tds.eq(4).text().trim(); // columna de "Cajas"
 
+        const stockTexto = tds.eq(3).text().trim();  // Asume que el stock está en la columna 4
+        const cajas = tds.eq(4).text().trim();       // Columna de "Cajas"
+
+        // Saltar fila si no hay cajas válidas
         if (!cajas || isNaN(cajas) || parseInt(cajas) === 0) {
-            return; // Saltar fila si está vacía o es 0 o no es número
+            return;
+        }
+
+        // Verificar si el stock es cero (pero excluir el texto 'Disponible')
+        if (stockTexto !== "Disponible" && parseFloat(stockTexto) === 0) {
+            errorStock = true;
+            return false;  // Rompe el bucle
         }
 
         const fila = [
             tds.eq(0).text().trim(),  // ItemSAPCode
             tds.eq(1).text().trim(),  // ItemSAPName
             tds.eq(2).text().trim(),  // Cultivo
-            tds.eq(3).text().trim(),  // Empaque
+            stockTexto,
             cajas,
             $('#Lug option:selected').text(),
-            $('#date').val(),
-            $('#correo').val()
+            fecha,
+            correo
         ];
 
         datos.push(fila);
     });
 
+    // Si se detectó stock cero, mostrar mensaje y no enviar
+    if (errorStock) {
+        alert("No puedes enviar productos con stock 0.");
+        return;
+    }
+
+    // Enviar si todo está bien
     $.ajax({
         url: '{% url "guardar_pedido" %}',
         type: 'POST',
@@ -162,7 +179,6 @@ $('.envio3').on('click', function () {
         success: function (data) {
             alert("Datos guardados correctamente.");
             window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/pedidos');
-
         },
         error: function (xhr, status, error) {
             console.error('Error:', error);
