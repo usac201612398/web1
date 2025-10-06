@@ -4942,22 +4942,10 @@ def article_create_pedidos(request):
         'precio', 'itemsapname', 'itemsapcode', 'cultivo'
     ).distinct().order_by('cultivo')
 
-    # Creamos un diccionario de itemsapcode -> unidad_medida
-    unidades_dict = {
-        p['item']: p['u_m']
-        for p in paramenvlocales.objects.values('item', 'u_m')
-    }
-
-    # Añadimos la unidad de medida a cada item
-    registros = []
-    for item in items:
-        codigo = item['itemsapcode']
-        item['u_m'] = unidades_dict.get(codigo, 'N/A')  # Puedes poner None o 'N/A' si no se encuentra
-        registros.append(item)
     
     context = {
         'usuario': nombre_usuario,
-        'registros': registros,
+        'registros':items,
         'fecha': fecha_,
         'encargado': list(datos)[0]['encargado'] if datos else ''
     }

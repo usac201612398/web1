@@ -493,11 +493,10 @@ class pedidosForm(forms.ModelForm):
     itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     categoria = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     precio = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'})) 
-    u_m = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'})) 
     cantidad = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
     
     class Meta:
         
         model = pedidos
-        fields = ['id','fechaentrega','cultivo','itemsapcode','itemsapname','categoria','precio','u_m', 'cantidad']
+        fields = ['id','fechaentrega','cultivo','itemsapcode','itemsapname','categoria','precio', 'cantidad']
     
