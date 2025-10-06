@@ -4944,7 +4944,7 @@ def article_create_pedidos(request):
 
     # Creamos un diccionario de itemsapcode -> unidad_medida
     unidades_dict = {
-        p['itemsapcode']: p['u_m']
+        p['item']: p['u_m']
         for p in paramenvlocales.objects.values('item', 'u_m')
     }
 
