@@ -634,7 +634,7 @@ class pedidos(models.Model):
     cultivo = models.CharField(max_length=45, blank=True, null=True)
     itemsapname =models.CharField(max_length=150, blank=True, null=True)
     calidad1 =models.CharField(max_length=150, blank=True, null=True)
-    itemcode =models.CharField(max_length=45, blank=True, null=True)
+    itemsapcode =models.CharField(max_length=45, blank=True, null=True)
     u_m = models.CharField(max_length=45, blank=True, null=True)
     precio = models.FloatField(blank=True, null=True)
     total =models.FloatField(blank=True, null=True)
