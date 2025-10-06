@@ -4942,7 +4942,33 @@ def article_create_pedidos(request):
         'precio', 'itemsapname', 'itemsapcode', 'cultivo'
     ).distinct().order_by('cultivo')
 
-    
+    cultivos = set(item['cultivo'] for item in items)
+
+    stock_por_cultivo = {}
+
+    for cultivo in cultivos:
+        # Entradas (inventario inicial)
+        entradas = detallerec.objects.filter(
+            cultivo=cultivo
+        ).exclude(status__in=['Cerrado', 'En proceso']).exclude(status='Anulado')
+
+        total_entradas = entradas.aggregate(total=Sum('libras'))['total'] or 0
+
+        # Salidas (inventario entregado)
+        salidas = detallerecaux.objects.filter(
+            cultivo=cultivo
+        ).exclude(status='Cerrado').exclude(status='Anulado')
+
+        total_salidas = salidas.aggregate(total=Sum('libras'))['total'] or 0
+
+        stock = total_entradas - total_salidas
+        stock_por_cultivo[cultivo] = round(stock, 2)
+
+    # Agregar el stock a cada item
+    for item in items:
+        cultivo = item['cultivo']
+        item['stock'] = stock_por_cultivo.get(cultivo, 0)
+        
     context = {
         'usuario': nombre_usuario,
         'registros':items,
