@@ -4940,7 +4940,7 @@ def article_create_pedidos(request):
     # Traemos todos los items de la categoría Carreta
     items = productoTerm.objects.filter(categoria="Carreta").values(
         'precio', 'itemsapname', 'itemsapcode', 'cultivo'
-    ).distinct()
+    ).distinct().order_by('cultivo')
 
     # Creamos un diccionario de itemsapcode -> unidad_medida
     unidades_dict = {
@@ -4954,7 +4954,7 @@ def article_create_pedidos(request):
         codigo = item['itemsapcode']
         item['u_m'] = unidades_dict.get(codigo, 'N/A')  # Puedes poner None o 'N/A' si no se encuentra
         registros.append(item)
-
+    
     context = {
         'usuario': nombre_usuario,
         'registros': registros,
@@ -4981,7 +4981,7 @@ def guardar_pedido(request):
         elemento[4] = int(elemento[4])
     
     for i in mensaje:
-        
+
         datos = productoTerm.objects.filter(itemsapcode=i[0]).first()
         
         pedidos.objects.create(fecha=today,fechaentrega=i[7],cliente=i[6],cultivo=i[2],cantidad=i[4],encargado=i[8],u_m=i[3],itemsapcode=i[0],itemsapname=i[1],precio=datos.precio,total=datos.precio*i[4],orden=datos.orden)
