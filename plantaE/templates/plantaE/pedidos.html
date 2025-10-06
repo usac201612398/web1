@@ -90,7 +90,13 @@
                     <td>{{ registro.cultivo }}</td>
                     <td><div contenteditable="true" class="editable-cell"></div></td>
                     
-                    <td>{{ registro.stock }}</td>
+                    <td>
+                        {% if item.cultivo == "AGUACATE" %}
+                            Disponible
+                        {% else %}
+                            {{ item.stock }}
+                        {% endif %}
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
