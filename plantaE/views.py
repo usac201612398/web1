@@ -4923,7 +4923,7 @@ def itemsenvios_update(request, pk):
     return render(request, 'plantaE/itemsenvios_form.html', {'form': form,'modo':'actualizar'})
 
 def article_create_pedidos(request):
-
+    from django.utils import timezone
     fecha = timezone.now().date()
     dia = fecha.day
     mes = fecha.month
@@ -4938,16 +4938,54 @@ def article_create_pedidos(request):
     datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('finca', 'encargado')
 
     # Traemos todos los items de la categoría Carreta
-    items = productoTerm.objects.filter(categoria="Carreta").values(
+    items = list(productoTerm.objects.filter(categoria="Carreta").values(
         'precio', 'itemsapname', 'itemsapcode', 'cultivo'
-    ).distinct().order_by('cultivo')
+    ).distinct().order_by('cultivo'))
 
-    
+    # Obtenemos todos los cultivos únicos de los items
+    cultivos = set(item['cultivo'] for item in items)
+
+    # Calculamos el stock por cultivo
+    stock_por_cultivo = {}
+
+    for cultivo in cultivos:
+        # Recepciones cerradas (ya no cuentan como stock)
+        cerradas = detallerec.objects.filter(
+            cultivo=cultivo,
+            status="En proceso"
+        ).values_list('recepcion', flat=True)
+
+        # Recepciones abiertas en detallerecaux sin cerrarse aún
+        recepciones_abiertas = detallerecaux.objects.filter(
+            cultivo=cultivo,
+            status="En proceso"
+        ).exclude(
+            recepcion__in=detallerec.objects.values_list('recepcion', flat=True)
+        ).values_list('recepcion', flat=True)
+
+        libras_det = detallerec.objects.filter(
+            cultivo=cultivo,
+            recepcion__in=recepciones_abiertas
+        ).exclude(status="Anulado").aggregate(total=Sum('libras'))['total'] or 0
+
+        libras_aux = detallerecaux.objects.filter(
+            cultivo=cultivo,
+            recepcion__in=recepciones_abiertas
+        ).exclude(status="Anulado").aggregate(total=Sum('libras'))['total'] or 0
+
+        stock_disponible = libras_det - libras_aux
+        stock_por_cultivo[cultivo] = round(stock_disponible, 2)
+
+    # Agregar el stock a cada item según su cultivo
+    for item in items:
+        cultivo = item['cultivo']
+        item['stock'] = stock_por_cultivo.get(cultivo, 0)
+
     context = {
         'usuario': nombre_usuario,
-        'registros':items,
+        'registros': items,
         'fecha': fecha_,
-        'encargado': list(datos)[0]['encargado'] if datos else ''
+        'encargado': list(datos)[0]['encargado'] if datos else '',
     }
 
     return render(request, 'plantaE/pedidos.html', context)
