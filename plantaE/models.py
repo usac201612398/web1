@@ -624,3 +624,28 @@ class und_emplocales(models.Model):
     #op_status = [('Pendiente','-'),('En proceso','En proceso'),('Cerrado','Cerrado')]
     registro = models.BigAutoField(primary_key=True)
     cod_empaque = models.CharField(max_length= 20, blank = True, null =  True)
+
+
+class pedidos(models.Model):
+
+    registro = models.AutoField(primary_key=True)
+    fecha = models.DateField(blank=True, null=True)
+    fechapedido = models.DateField(blank=True, null=True)
+    cultivo = models.CharField(max_length=45, blank=True, null=True)
+    itemsapname =models.CharField(max_length=150, blank=True, null=True)
+    calidad1 =models.CharField(max_length=150, blank=True, null=True)
+    itemcode =models.CharField(max_length=45, blank=True, null=True)
+    u_m = models.CharField(max_length=45, blank=True, null=True)
+    precio = models.FloatField(blank=True, null=True)
+    total =models.FloatField(blank=True, null=True)
+    cantidad = models.IntegerField(blank=True, null=True)
+    orden = models.CharField(max_length=20, blank=True, null=True)
+    libras = models.FloatField(blank=True, null=True)
+    cantidadentregado = models.IntegerField(blank=True, null=True)
+    encargado = models.CharField(max_length=75, blank=True,  null=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
+    status = models.CharField(max_length=20, blank=True, null=True)
+
+    def __str__(self):
+        return (str(self.id)+ " | " + str(self.fecha) + " | " + str(self.itemsapname)+ " | " + str(self.encargado) + " | " + str(self.cultivo))

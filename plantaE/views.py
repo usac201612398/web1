@@ -3,8 +3,8 @@ from django.http import JsonResponse, HttpResponse
 from openpyxl import Workbook
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect
-from .models import Actpeso, proyecciones,paramenvlocales,enviosrec,AcumFrutaaux,salidacontenedores, inventarioProdTermAux,productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
-from .forms import boletasForm,itemsForm, itemsenviosForm,salidacontenedoresForm,salidasFrutaForm, contenedoresForm,recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
+from .models import Actpeso,pedidos, proyecciones,paramenvlocales,enviosrec,AcumFrutaaux,salidacontenedores, inventarioProdTermAux,productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
+from .forms import boletasForm,pedidosForm,itemsForm, itemsenviosForm,salidacontenedoresForm,salidasFrutaForm, contenedoresForm,recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
 from django.db.models import Sum, Q, Max, Min,Value as V
 from django.utils import timezone
 import matplotlib.pyplot as plt
@@ -4921,3 +4921,87 @@ def itemsenvios_update(request, pk):
     else:
         form = itemsenviosForm(instance=salidas)
     return render(request, 'plantaE/itemsenvios_form.html', {'form': form,'modo':'actualizar'})
+
+def article_create_pedidos(request):
+
+    fecha = timezone.now().date()
+    dia = fecha.day
+    mes = fecha.month
+    año = fecha.year
+    if mes < 10:
+        mes = "0" + str(mes)
+    if dia < 10:
+        dia = "0" + str(dia)
+    fecha_ = "{}-{}-{}".format(str(año), str(mes), str(dia))
+
+    nombre_usuario = request.user.username
+    datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('finca', 'encargado')
+
+    # Traemos todos los items de la categoría Carreta
+    items = productoTerm.objects.filter(categoria="Carreta").values(
+        'precio', 'itemsapname', 'itemsapcode', 'cultivo'
+    ).distinct()
+
+    # Creamos un diccionario de itemsapcode -> unidad_medida
+    unidades_dict = {
+        p['itemsapcode']: p['u_m']
+        for p in paramenvlocales.objects.values('item', 'u_m')
+    }
+
+    # Añadimos la unidad de medida a cada item
+    registros = []
+    for item in items:
+        codigo = item['itemsapcode']
+        item['u_m'] = unidades_dict.get(codigo, 'N/A')  # Puedes poner None o 'N/A' si no se encuentra
+        registros.append(item)
+
+    context = {
+        'usuario': nombre_usuario,
+        'registros': registros,
+        'fecha': fecha_,
+        'encargado': list(datos)[0]['encargado'] if datos else ''
+    }
+
+    return render(request, 'plantaE/pedidos.html', context)
+
+def pedidos_list(request):
+
+    salidas = pedidos.objects.filter(status__isnull=True)
+    salidas = salidas.order_by('-created_at')
+    
+    return render(request, 'plantaE/pedidos_list.html', {'registros': salidas})
+
+def guardar_pedido(request):
+    data = json.loads(request.body)
+    mensaje = data['array']
+    today = timezone.now().date()
+    #mensaje = request.POST.get('array')
+   
+    for elemento in mensaje:
+        elemento[4] = int(elemento[4])
+    
+    for i in mensaje:
+        datos = productoTerm.objects.filter(itemsapcode=i[0]).first()
+        
+        pedidos.objects.create(fecha=today,fechaentrega=i[7],cliente=i[6],cultivo=i[2],cantidad=i[4],encargado=i[8],u_m=i[3],itemsapcode=i[0],itemsapname=i[1],precio=datos.precio,total=datos.precio*i[4],orden=datos.orden)
+    
+    
+    return JsonResponse({'mensaje':mensaje})  
+
+def pedidos_update(request, pk):
+    salidas = get_object_or_404(pedidos, pk=pk)
+    if request.method == 'POST':
+        form = pedidosForm(request.POST, instance=salidas)
+        if form.is_valid():
+            form.save()
+            return redirect('pedidos_list')
+    else:
+        form = pedidosForm(instance=salidas)
+    return render(request, 'plantaE/pedidos_form.html', {'form': form,'modo':'actualizar'})
+
+def pedidos_delete(request, pk):
+    salidas = get_object_or_404(pedidos, pk=pk)
+    if request.method == 'POST':
+        salidas.delete()
+        return redirect('pedidos_list')
+    return render(request, 'plantaE/pedidos_confirm_delete.html', {'registros': salidas})

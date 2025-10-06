@@ -142,7 +142,6 @@ urlpatterns = [
     path('api/estructuras/', views.get_estructuras_por_orden, name='api_estructuras_por_orden'),
     path('api/variedad/', views.get_variedades_por_estructura, name='api_variedades_por_estructura'),
 
-    
     path('api/ordenes2/', views.get_ordenes_por_finca2, name='api_ordenes_por_finca2'),
     path('api/estructuras2/', views.get_estructuras_por_orden2, name='api_estructuras_por_orden2'),
     path('api/variedad2/', views.get_variedades_por_estructura2, name='api_variedades_por_estructura2'),
@@ -154,4 +153,12 @@ urlpatterns = [
     path('itemsenvios/new/', views.itemsenvios_create, name='itemsenvios_create'),
     path('itemsenvios/<int:pk>/edit/', views.itemsenvios_update, name='itemsenvios_update'),
     path('itemsenvios/<int:pk>/delete/', views.itemsenvios_delete, name='itemsenvios_delete'),
+
+    path('pedidos/<int:pk>/delete/', views.pedidos_delete, name='pedidos_delete'),
+    path("pedidos",views.pedidos_list,name='pedidos_list'),
+    path('pedidos/new/plantilla', views.article_create_pedidos, name='create_pedidos'),
+    path('ajax/guardar-pedido/', views.guardar_pedido, name='guardar_pedido'),
+    path('pedidos/<int:pk>/edit/', views.pedidos_update, name='pedidos_update'),
+    
+
 ]

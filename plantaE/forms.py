@@ -1,5 +1,5 @@
 from django import forms
-from .models import Actpeso,usuariosAppFruta,detallerec, detallesEstructuras, causasRechazo,paramenvlocales,Boletas,salidacontenedores,salidasFruta, productoTerm,contenedores, Recepciones, Ccalidad, inventarioProdTerm,AcumFruta, enviosFrutaPlantilla
+from .models import Actpeso,pedidos,usuariosAppFruta,detallerec, detallesEstructuras, causasRechazo,paramenvlocales,Boletas,salidacontenedores,salidasFruta, productoTerm,contenedores, Recepciones, Ccalidad, inventarioProdTerm,AcumFruta, enviosFrutaPlantilla
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Fieldset, Div
 from django.db.models import Sum
@@ -483,3 +483,21 @@ class boletasForm(forms.ModelForm):
         self.fields['observaciones'].required = False
         self.fields['orden'].required = False
         self.fields['ordenfinca'].required = False
+
+class pedidosForm(forms.ModelForm):
+
+    id = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    fechaentrega = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
+    cultivo = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    itemsapcode = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    categoria = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    precio = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'})) 
+    u_m = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'})) 
+    cantidad = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
+    
+    class Meta:
+        
+        model = pedidos
+        fields = ['id','fechaentrega','cultivo','itemsapcode','itemsapname','categoria','precio','u_m', 'cantidad']
+    

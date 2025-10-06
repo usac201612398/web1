@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pedidos - Producto Terminado</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Bulma CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    thead th {
+      background: linear-gradient(to right, #6c757d, #495057);
+      color: white !important;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    td.number-cell {
+      text-align: right;
+    }
+
+    td {
+      padding: 0 !important;
+    }
+    td input {
+      width: 100%;
+      border: none;
+      background: transparent;
+    }
+
+    .card-link {
+      display: block;
+      padding: 20px;
+      border-radius: 8px;
+      background: #f5f5f5;
+      text-align: center;
+      transition: background 0.3s;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .card-link:hover {
+      background: #e6f7ff;
+    }
+
+    .button-add {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  
+<!-- Sección de tarjetas -->
+<section class="section">
+  <div class="container">
+    <div class="columns is-multiline is-variable is-5">
+
+      <!-- Tarjeta 1 -->
+      <div class="column is-one-third">
+        <a href="" class="box has-text-centered is-clickable dashboard-card">
+          <span class="icon is-large has-text-primary mb-2">
+            <i class="fas fa-chart-line fa-2x"></i>
+          </span>
+          <p class="title is-6 mb-0">Pedidos</p>
+        </a>
+      </div>
+
+      <!-- Tarjeta 2 -->
+      <div class="column is-one-third">
+        <a href="" class="box has-text-centered is-clickable dashboard-card">
+          <span class="icon is-large has-text-warning mb-2">
+            <i class="fas fa-box-open fa-2x"></i>
+          </span>
+          <p class="title is-6 mb-0">Cumplimientos</p>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<section class="section pt-0 pb-0">
+  <div class="container">
+    <div class="level">
+      <!-- Botón a la izquierda -->
+      <div class="level-left">
+        <a href="{% url 'create_pedidos' %}" class="button is-success is-rounded">
+          <span class="icon"><i class="fas fa-plus"></i></span>
+          <span>Agregar</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+  <!-- Tabla -->
+  <section class="section pt-3">
+    <div class="container">
+      <div class="table-container">
+        <table class="table is-striped is-hoverable is-fullwidth" id="myTable">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Fecha</th>
+              <th>Cliente</th>
+              <th>Cultivo</th>
+              <th>ItemCode</th>
+              <th>ItemName</th>
+              <th>Categoría</th>
+              <th>Empaque</th>
+              <th>Libras</th>
+              <th>Editar</th>
+              <th>Anular</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for registro in registros %}
+            <tr>
+              <td>{{ registro.registro }}</td>
+              <td>{{ registro.fecha }}</td>
+              <td>{{ registro.cliente }}</td>
+              <td>{{ registro.cultivo }}</td>
+              <td>{{ registro.itemsapcode }}</td>
+              <td>{{ registro.calidad1 }}</td>
+              <td>{{ registro.categoria }}</td>
+              <td class="number-cell">{{ registro.cantidad }}</td>
+              <td class="number-cell">{{ registro.libras }}</td>
+              <td><a href="{% url 'pedidos_update' registro.pk %}"><i class="fas fa-edit"></i></a></td>
+              <td><a href="{% url 'pedidos_delete' registro.pk %}" class="has-text-danger"><i class="fas fa-trash-alt"></i></a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- JS -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+  <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable();
+        });
+  </script>
+
+</body>
+</html>
+    

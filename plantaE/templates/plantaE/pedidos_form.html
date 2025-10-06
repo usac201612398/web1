@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+    {% if modo == "actualizar" %}
+        Actualización
+    {% else %}
+        Registro
+    {% endif %}
+    </title>
+    <!-- Vincula a un archivo CSS de Bootstrap para una apariencia profesional -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            color: #333;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            font-size: 16px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .alert {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        /* Estilos globales para todos los campos de formulario */
+        .form-control {
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            padding: 12px 15px;  /* Asegura que los campos tengan el mismo tamaño */
+            font-size: 14px;
+            width: 100%;  /* Se asegura de que los campos usen el ancho completo disponible */
+            box-sizing: border-box; /* Asegura que el padding no afecte el ancho del campo */
+        }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        /* Estilos para campos no editables */
+        .form-control[readonly], .form-control[disabled] {
+            background-color: #f7f7f7;
+            border-color: #ccc;
+            color: #6c757d;
+        }
+
+        /* Mejorando el estilo de los campos select */
+        select.form-control {
+            background-color: #ffffff;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            padding: 12px 15px;
+            font-size: 14px;
+        }
+
+        select.form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+            padding: 10px 20px;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        /* Alineación de las etiquetas */
+        .form-row {
+            display: flex;
+            flex-direction: row; /* Los elementos estarán en fila */
+            align-items: center; /* Alinea verticalmente el contenido */
+        }
+
+        .form-label {
+            width: 150px; /* Definir un ancho fijo para las etiquetas */
+            font-weight: 500;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        /* Asegurando que los botones estén en una fila y centrados */
+        .button-row {
+            display: flex;
+            justify-content: center; /* Centra los botones */
+            gap: 20px; /* Da espacio entre los botones */
+        }
+
+        .button-row button {
+            width: auto; /* Asegura que los botones no se estiren */
+        }
+
+        /* Garantiza que los botones no ocupen todo el espacio */
+        .button-row a, .button-row button {
+            width: auto; /* Ajusta los botones a su contenido */
+            padding: 10px 20px; /* Tamaño adecuado de botones */
+        }
+
+    </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>
+    {% if modo == "actualizar" %}
+        Actualización de registro
+    {% else %}
+        Nuevo Item
+    {% endif %}
+    </h1>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Mostrar los errores del formulario -->
+        {% if form.errors %}
+            <div class="alert alert-danger">
+                <ul>
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <!-- Renderizar el formulario con etiquetas alineadas -->
+        <div class="form-group">
+            <div class="form-row">
+                <label for="fecha" class="form-label">Fecha-Entrega</label>
+                {{ form.fechapedido }}
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-row">
+                <label for="cultivo" class="form-label">Cultivo</label>
+                {{ form.cultivo }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-row">
+                <label for="itemsapcode" class="form-label">Item SAP (Código)</label>
+                {{ form.itemsapcode }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-row">
+                <label for="itemsapname" class="form-label">Item SAP (Nombre)</label>
+                {{ form.itemsapname }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-row">
+                <label for="categoria" class="form-label">Categoría</label>
+                {{ form.categoria }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-row">
+                <label for="precio" class="form-label">Precio</label>
+                {{ form.precio }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-row">
+                <label for="taraxcaja" class="form-label">Empaque</label>
+                {{ form.u_m }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-row">
+                <label for="pesostdxcaja" class="form-label">Cantidad</label>
+                {{ form.cantidad }}
+            </div>
+        </div>
+
+        <!-- Botones centrados en una fila -->
+        <div class="form-group button-row">
+            <button type="submit" class="btn btn-primary">{{ form.instance.pk|yesno:"Actualizar,Crear" }}</button>
+            <a href="{% url 'pedidos_list' %}" class="btn btn-secondary">Regresar</a>
+        </div>
+    </form>
+  </div>
+
+  <!-- Script de Bootstrap -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
