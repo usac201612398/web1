@@ -58,7 +58,7 @@
     <div class="columns is-multiline is-variable is-5">
 
       <!-- Tarjeta 1 -->
-      <div class="column is-one-third">
+      <div class="column is-half">
         <a href="" class="box has-text-centered is-clickable dashboard-card">
           <span class="icon is-large has-text-primary mb-2">
             <i class="fas fa-chart-line fa-2x"></i>
@@ -68,7 +68,7 @@
       </div>
 
       <!-- Tarjeta 2 -->
-      <div class="column is-one-third">
+      <div class="column is-half">
         <a href="" class="box has-text-centered is-clickable dashboard-card">
           <span class="icon is-large has-text-warning mb-2">
             <i class="fas fa-box-open fa-2x"></i>
@@ -113,6 +113,8 @@
               <th>Categoría</th>
               <th>Cantidad</th>
               <th>Libras</th>
+              <th>Catidad-Entregado</th>
+              <th>Envio</th>
               <th>Anular</th>
             </tr>
           </thead>
@@ -128,6 +130,10 @@
               <td>{{ registro.categoria }}</td>
               <td class="number-cell">{{ registro.cantidad }}</td>
               <td class="number-cell">{{ registro.libras }}</td>
+              
+              <td>{{ registro.cantidadentregado }}</td>
+              <td>{{ registro.envio }}</td>
+
               <td><a href="{% url 'pedidos_delete' registro.pk %}" class="has-text-danger"><i class="fas fa-trash-alt"></i></a></td>
             </tr>
             {% endfor %}
