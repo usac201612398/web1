@@ -5001,7 +5001,7 @@ def guardar_pedido(request):
         #pedidos.objects.create(fecha=today,fechaentrega=i[6],cliente=i[5],cultivo=i[2],cantidad=i[4],encargado=i[7],itemsapcode=i[0],itemsapname=i[1],precio=datos.precio,total=datos.precio*i[4],orden=datos.orden)
     
     
-    return JsonResponse({'mensaje':list(datos)})  
+    return JsonResponse({'mensaje':mensaje})  
 
 def pedidos_update(request, pk):
     salidas = get_object_or_404(pedidos, pk=pk)
