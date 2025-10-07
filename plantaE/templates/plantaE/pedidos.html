@@ -134,8 +134,8 @@ $('.envio3').on('click', function () {
     $('#myTable tbody tr').each(function () {
         const tds = $(this).find('td');
 
-        const stockTexto = tds.eq(3).text().trim();  // Asume que el stock está en la columna 4
-        const cajas = tds.eq(4).text().trim();       // Columna de "Cajas"
+        const stockTexto = tds.eq(4).text().trim();  // Stock está en la columna 5 (índice 4)
+        const cajas = tds.eq(3).find('.editable-cell').text().trim(); // Cantidad (editable)
 
         // Saltar fila si no hay cajas válidas
         if (!cajas || isNaN(cajas) || parseInt(cajas) === 0) {
