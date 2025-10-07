@@ -4985,23 +4985,41 @@ def pedidos_list(request):
     
     return render(request, 'plantaE/pedidos_list.html', {'registros': salidas})
 
+import traceback
 def guardar_pedido(request):
-    data = json.loads(request.body)
-    mensaje = data['array']
-    today = timezone.now().date()
-    #mensaje = request.POST.get('array')
-   
-    for elemento in mensaje:
-        elemento[4] = int(elemento[4])
-    
-    for i in mensaje:
+    try:
+        data = json.loads(request.body)
+        mensaje = data['array']
+        today = timezone.now().date()
 
-        datos = productoTerm.objects.filter(itemsapcode=i[0]).first()
-        
-        pedidos.objects.create(fecha=today,fechaentrega=i[6],cliente=i[5],cultivo=i[2],cantidad=i[4],encargado=i[7],itemsapcode=i[0],itemsapname=i[1],precio=datos.precio,total=datos.precio*i[4],orden=datos.orden)
+        for elemento in mensaje:
+            elemento[4] = int(elemento[4])  # Asegurar que la cantidad sea int
+
+        for i in mensaje:
+            datos = productoTerm.objects.filter(itemsapcode=i[0]).first()
+            if not datos:
+                return JsonResponse({'error': f"No se encontró producto con código {i[0]}"}, status=400)
+
+            pedidos.objects.create(
+                fecha=today,
+                fechaentrega=i[6],
+                cultivo=i[2],
+                cantidad=i[4],
+                encargado=i[7],
+                cliente=i[5],
+                itemsapcode=i[0],
+                itemsapname=i[1],
+                precio=datos.precio,
+                total=datos.precio * i[4],
+                orden=datos.orden
+            )
+
+        return JsonResponse({'mensaje': 'Guardado correctamente'})
     
-    
-    return JsonResponse({'mensaje':mensaje})  
+    except Exception as e:
+        # Devuelve el traceback completo como respuesta JSON
+        error_info = traceback.format_exc()
+        return JsonResponse({'error': str(e), 'trace': error_info}, status=500)
 
 def pedidos_update(request, pk):
     salidas = get_object_or_404(pedidos, pk=pk)
