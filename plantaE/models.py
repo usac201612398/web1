@@ -641,6 +641,7 @@ class pedidos(models.Model):
     orden = models.CharField(max_length=20, blank=True, null=True)
     libras = models.FloatField(blank=True, null=True)
     cantidadentregado = models.IntegerField(blank=True, null=True)
+    cliente = models.CharField(max_length=45, blank=True,  null=True)
     encargado = models.CharField(max_length=75, blank=True,  null=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
