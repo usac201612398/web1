@@ -122,7 +122,7 @@
             {% for registro in registros %}
             <tr>
               <td>{{ registro.registro }}</td>
-              <td>{{ registro.fechaentrega|date:"d-m-Y" }}</td>
+              <td>{{ registro.fechapedido|date:"d-m-Y" }}</td>
               <td>{{ registro.cliente }}</td>
               <td>{{ registro.cultivo }}</td>
               <td>{{ registro.itemsapcode }}</td>
