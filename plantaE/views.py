@@ -5019,7 +5019,7 @@ def pedidos_delete(request, pk):
 
     # Verificar si 'envio' tiene algún valor asignado
     if salidas.envio:  # Si NO está vacío o es None
-        return render(request, 'plantaE/pedidos_confirm_deleteValle.html', {
+        return render(request, 'plantaE/pedidos_confirm_delete.html', {
             'alert_message': "No se puede anular este pedido porque ya tiene un envío asignado.",
             'redirect_url': reverse('pedidos_list')
         })
