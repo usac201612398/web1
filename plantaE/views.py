@@ -5016,6 +5016,15 @@ def pedidos_update(request, pk):
 
 def pedidos_delete(request, pk):
     salidas = get_object_or_404(pedidos, pk=pk)
+
+    # Verificar si 'envio' tiene algún valor asignado
+    if salidas.envio:  # Si NO está vacío o es None
+        return render(request, 'plantaE/pedidos_confirm_deleteValle.html', {
+            'alert_message': "No se puede anular este pedido porque ya tiene un envío asignado.",
+            'redirect_url': reverse('pedidos_list')
+        })
+
+    # Si la solicitud es POST, proceder a anular
     if request.method == 'POST':
         salidas.status = 'Anulado'
         salidas.save()
@@ -5023,4 +5032,8 @@ def pedidos_delete(request, pk):
             'alert_message': "El registro fue anulado correctamente.",
             'redirect_url': reverse('pedidos_list')
         })
-    return render(request, 'plantaE/pedidos_confirm_delete.html', {'registros': salidas})
+
+    # Confirmación de anulación (GET request)
+    return render(request, 'plantaE/pedidos_confirm_delete.html', {
+        'registros': salidas
+    })
