@@ -649,4 +649,4 @@ class pedidos(models.Model):
     envio = models.BigIntegerField(blank=True, null = True)
 
     def __str__(self):
-        return (str(self.id)+ " | " + str(self.fecha) + " | " + str(self.itemsapname)+ " | " + str(self.encargado) + " | " + str(self.cultivo))
+        return (str(self.registro)+ " | " + str(self.fecha) + " | " + str(self.itemsapname)+ " | " + str(self.encargado) + " | " + str(self.cultivo))
