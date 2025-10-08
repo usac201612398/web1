@@ -395,13 +395,16 @@ def inventarioProd_grabarplantilla(request):
             pesosinmerma = pesosintara - merma
             pesoporcaja = pesosintara / int(i[2]) if int(i[2]) != 0 else 0
             ordenemp = pesostd.orden
+            ordenproductor = pesostd.orden2
             pormerma = (merma / pesoestandar) * 100 if pesoestandar > 0 else 0
 
             if productor_.tipo == "EM":
-                orden = "EM"
+                if not ordenproductor:  # Esto cubre tanto None como ''
+                    orden = "EM"
+                else:
+                    orden = ordenproductor
             else:
                 orden = ordenemp
-
             inventarioProdTerm.objects.create(
                 fecha=i[7],
                 proveedor=i[4],
