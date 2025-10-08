@@ -355,16 +355,18 @@ class itemsForm(forms.ModelForm):
     pesostdxcaja = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
     tipo = forms.ChoiceField(choices=op_tipo, widget=forms.Select(attrs={'class': 'form-control'}))  # Campo numérico
     orden = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    orden2 = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     cajasxtarima = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
 
     class Meta:
         
         model = productoTerm
-        fields = ['cultivo','cajasxtarima','itemsapcode','itemsapcodelibra','itemsapname','calidad1','categoria','precio','taraxcaja', 'pesostdxcaja', 'tipo', 'orden']
+        fields = ['cultivo','orden2','cajasxtarima','itemsapcode','itemsapcodelibra','itemsapname','calidad1','categoria','precio','taraxcaja', 'pesostdxcaja', 'tipo', 'orden']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['itemsapcodelibra'].required = False
+        self.fields['orden'].required = False
         self.fields['orden'].required = False
         self.fields['taraxcaja'].required = False
         self.fields['precio'].required = False
