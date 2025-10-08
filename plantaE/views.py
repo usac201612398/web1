@@ -5029,9 +5029,11 @@ def pedidos_update(request, pk):
 
 def pedidos_delete(request, pk):
     salidas = get_object_or_404(pedidos, pk=pk)
+    pedido_numero = salidas.pedido  # Este es el número de pedido
+    pedidos_a_anular = pedidos.objects.filter(pedido=pedido_numero)
 
-    # Verificar si 'envio' tiene algún valor asignado
-    if salidas.envio:  # Si NO está vacío o es None
+    # Verificar si alguno de los registros ya tiene envío
+    if pedidos_a_anular.filter(envio__isnull=False).exists():
         return render(request, 'plantaE/pedidos_confirm_delete.html', {
             'alert_message': "No se puede anular este pedido porque ya tiene un envío asignado.",
             'redirect_url': reverse('pedidos_list')
@@ -5039,14 +5041,16 @@ def pedidos_delete(request, pk):
 
     # Si la solicitud es POST, proceder a anular
     if request.method == 'POST':
-        salidas.status = 'Anulado'
-        salidas.save()
+        for pedido in pedidos_a_anular:
+            pedido.status = 'Anulado'
+            pedido.save()
+
         return render(request, 'plantaE/pedidos_confirm_delete.html', {
-            'alert_message': "El registro fue anulado correctamente.",
+            'alert_message': "El pedido fue anulado correctamente.",
             'redirect_url': reverse('pedidos_list')
         })
 
     # Confirmación de anulación (GET request)
     return render(request, 'plantaE/pedidos_confirm_delete.html', {
-        'registros': salidas
+        'registros': pedidos_a_anular  # Puedes mostrar todos los registros relacionados
     })
