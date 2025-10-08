@@ -5006,12 +5006,12 @@ def guardar_pedido(request):
 
     ultimo_pedido_obj = pedidos.objects.order_by('-registro').first()
     nuevo_pedido = ultimo_pedido_obj.pedido + 1 if ultimo_pedido_obj else 1
-
+    
     for i in mensaje:
 
         datos = productoTerm.objects.filter(itemsapcode=i[0]).first()
         
-        pedidos.objects.create(fecha=today,pedido=nuevo_pedido,calidad1=datos.calidad1,fechapedido=i[6],cliente=i[5],cultivo=i[2],categoria=datos.categoria,cantidad=i[4],encargado=i[7],itemsapcode=i[0],itemsapname=i[1],precio=datos.precio,total=datos.precio*i[4],orden=datos.orden)
+        pedidos.objects.create(fecha=today,proveedor=i[8],pedido=nuevo_pedido,calidad1=datos.calidad1,fechapedido=i[6],cliente=i[5],cultivo=i[2],categoria=datos.categoria,cantidad=i[4],encargado=i[7],itemsapcode=i[0],itemsapname=i[1],precio=datos.precio,total=datos.precio*i[4],orden=datos.orden)
     
     
     return JsonResponse({'mensaje':mensaje})  

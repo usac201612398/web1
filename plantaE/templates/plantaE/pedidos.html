@@ -51,22 +51,38 @@
     </div>
 
     <!-- Formulario -->
-    <div class="row g-3 mb-3">
-        <div class="col-md-4">
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
             <label for="date" class="form-label">Fecha-Entrega:</label>
             <input class="form-control" id="date" type="date" value="{{ fecha }}">
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
             <label for="Lug" class="form-label">Región:</label>
             <select class="form-select" name="Lugar" id="Lug"></select>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
             <label for="correo" class="form-label">Usuario:</label>
             <input class="form-control" id="correo" type="text" value="{{ encargado }}" readonly>
         </div>
 
+        <div class="col-md-3">
+              <label class="label" for="Pro">Proveedor</label>
+              <div class="select is-fullwidth">
+                <select id="Pro">
+                  <option value="">Seleccionar</option>
+                  <option value="SDC">SDC</option>
+                  <option value="INVERNADEROS TECNOLOGICOS S.A">INVERNADEROS TECNOLOGICOS S.A</option>
+                  <option value="PRODUCTOS DEL VALLE, S.A.">PRODUCTOS DEL VALLE, S.A.</option>
+                  <option value="HORTEX, S.A.">HORTEX, S.A.</option>
+                  <option value="DANIEL ESTUARDO GALICIA CARRERA">DANIEL ESTUARDO GALICIA CARRERA</option>
+                  <option value="INVERSIONES LA PASTORIA, S.A.">INVERSIONES LA PASTORIA, S.A.</option>
+                  <option value="AGROINDUSTRIAS SAN RAFAEL">AGROINDUSTRIAS SAN RAFAEL</option>
+                  <option value="INVERSIONES LA PASTORIA, S.A.">CORPORACIÓN SHALOM</option>
+                </select>
+              </div>
+            </div>
         
     </div>
 
@@ -80,6 +96,7 @@
                     <th>Cultivo</th>
                     <th>Cantidad</th>
                     <th>Stock</th>
+
                 </tr>
             </thead>
             <tbody>
@@ -156,7 +173,8 @@ $('.envio3').on('click', function () {
             cajas,
             $('#Lug option:selected').text(),
             fecha,
-            correo
+            correo,
+            $('#Pro option:selected').text(),
         ];
 
         datos.push(fila);
