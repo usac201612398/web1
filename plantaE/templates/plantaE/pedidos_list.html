@@ -105,6 +105,7 @@
           <thead>
             <tr>
               <th>Id</th>
+              <th>Pedido</th>
               <th>Fecha</th>
               <th>Cliente</th>
               <th>Cultivo</th>
@@ -122,6 +123,7 @@
             {% for registro in registros %}
             <tr>
               <td>{{ registro.registro }}</td>
+              <td>{{ registro.pedido }}</td>
               <td>{{ registro.fechapedido|date:"d-m-Y" }}</td>
               <td>{{ registro.cliente }}</td>
               <td>{{ registro.cultivo }}</td>

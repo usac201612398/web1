@@ -18,7 +18,7 @@ from openpyxl.utils.dataframe import dataframe_to_rows
 from django.template.loader import render_to_string
 from django.contrib import messages
 from collections import defaultdict
-from django.db.models.functions import ExtractWeek, ExtractYear
+from django.db.models.functions import ExtractWeek, ExtractYear, ExtractIsoYear
 from django.views.decorators.http import require_GET
 from django.urls import reverse
 
@@ -4979,10 +4979,19 @@ def article_create_pedidos(request):
     return render(request, 'plantaE/pedidos.html', context)
 
 def pedidos_list(request):
+    today = timezone.now().date()
+    semana_actual = today.isocalendar().week
+    año_actual = today.isocalendar().year
 
-    salidas = pedidos.objects.filter(status__isnull=True)
-    salidas = salidas.order_by('-created_at')
-    
+    salidas = pedidos.objects.annotate(
+        semana=ExtractWeek('fechapedido'),
+        anio=ExtractIsoYear('fechapedido')
+    ).filter(
+        status__isnull=True,
+        semana=semana_actual,
+        anio=año_actual
+    ).order_by('-created_at')
+
     return render(request, 'plantaE/pedidos_list.html', {'registros': salidas})
 
 def guardar_pedido(request):
@@ -4993,12 +5002,15 @@ def guardar_pedido(request):
    
     for elemento in mensaje:
         elemento[4] = int(elemento[4])
-    
+
+    ultimo_pedido_obj = pedidos.objects.order_by('-registro').first()
+    nuevo_pedido = ultimo_pedido_obj.pedido + 1 if ultimo_pedido_obj else 1
+
     for i in mensaje:
 
         datos = productoTerm.objects.filter(itemsapcode=i[0]).first()
         
-        pedidos.objects.create(fecha=today,calidad1=datos.calidad1,fechapedido=i[6],cliente=i[5],cultivo=i[2],categoria=datos.categoria,cantidad=i[4],encargado=i[7],itemsapcode=i[0],itemsapname=i[1],precio=datos.precio,total=datos.precio*i[4],orden=datos.orden)
+        pedidos.objects.create(fecha=today,pedido=nuevo_pedido,calidad1=datos.calidad1,fechapedido=i[6],cliente=i[5],cultivo=i[2],categoria=datos.categoria,cantidad=i[4],encargado=i[7],itemsapcode=i[0],itemsapname=i[1],precio=datos.precio,total=datos.precio*i[4],orden=datos.orden)
     
     
     return JsonResponse({'mensaje':mensaje})  

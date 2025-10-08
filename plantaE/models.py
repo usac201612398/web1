@@ -629,6 +629,7 @@ class und_emplocales(models.Model):
 class pedidos(models.Model):
 
     registro = models.AutoField(primary_key=True)
+    pedido = models.BigIntegerField(blank=True, null = True)
     fecha = models.DateField(blank=True, null=True)
     fechapedido = models.DateField(blank=True, null=True)
     cultivo = models.CharField(max_length=45, blank=True, null=True)
@@ -650,4 +651,4 @@ class pedidos(models.Model):
     envio = models.BigIntegerField(blank=True, null = True)
 
     def __str__(self):
-        return (str(self.registro)+ " | " + str(self.fecha) + " | " + str(self.itemsapname)+ " | " + str(self.encargado) + " | " + str(self.cultivo))
+        return (str(self.registro)+ " | " + str(self.fecha) + " | " + str(self.pedido) + " | " + str(self.itemsapname)+ " | " + str(self.encargado) + " | " + str(self.cultivo))
