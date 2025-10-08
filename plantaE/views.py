@@ -4980,16 +4980,17 @@ def article_create_pedidos(request):
 
 def pedidos_list(request):
     today = timezone.now().date()
-    semana_actual = today.isocalendar().week
-    año_actual = today.isocalendar().year
+    
+    # Para Python 3.8: isocalendar() devuelve una tupla (año, semana, día)
+    iso_year, iso_week, _ = today.isocalendar()
 
     salidas = pedidos.objects.annotate(
         semana=ExtractWeek('fechapedido'),
         anio=ExtractIsoYear('fechapedido')
     ).filter(
         status__isnull=True,
-        semana=semana_actual,
-        anio=año_actual
+        semana=iso_week,
+        anio=iso_year
     ).order_by('-created_at')
 
     return render(request, 'plantaE/pedidos_list.html', {'registros': salidas})
