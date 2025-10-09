@@ -367,7 +367,7 @@ class itemsForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['itemsapcodelibra'].required = False
         self.fields['orden'].required = False
-        self.fields['orden'].required = False
+        self.fields['orden2'].required = False
         self.fields['taraxcaja'].required = False
         self.fields['precio'].required = False
         self.fields['calidad1'].required = False

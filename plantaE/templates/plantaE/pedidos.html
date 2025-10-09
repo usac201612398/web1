@@ -175,7 +175,7 @@ $('.envio3').on('click', function () {
         datos.push(fila);
     });
 
-    console.log(datos);
+    //console.log(datos);
     // Enviar si todo está bien
     $.ajax({
         url: '{% url "guardar_pedido" %}',
@@ -187,7 +187,7 @@ $('.envio3').on('click', function () {
         success: function (data) {
             alert("Datos guardados correctamente.");
             
-            console.log(data);
+            //console.log(data);
             window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/pedidos');
         },
         error: function (xhr, status, error) {
