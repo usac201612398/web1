@@ -181,11 +181,8 @@ $('.envio3').on('click', function () {
     });
 
     // Si se detectó stock cero, mostrar mensaje y no enviar
-    if (errorStock) {
-        alert("No puedes enviar productos con stock 0.");
-        return;
-    }
-    console.log(datos);
+   
+    //console.log(datos);
     // Enviar si todo está bien
     $.ajax({
         url: '{% url "guardar_pedido" %}',
@@ -197,7 +194,7 @@ $('.envio3').on('click', function () {
         success: function (data) {
             alert("Datos guardados correctamente.");
             
-            console.log(data);
+            //console.log(data);
             window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/pedidos');
         },
         error: function (xhr, status, error) {
