@@ -160,10 +160,7 @@ $('.envio3').on('click', function () {
         }
 
         // Verificar si el stock es cero (pero excluir el texto 'Disponible')
-        if (stockTexto !== "Disponible" && parseFloat(stockTexto) === 0) {
-            errorStock = true;
-            return false;  // Rompe el bucle
-        }
+        
 
         const fila = [
             tds.eq(0).text().trim(),  // ItemSAPCode
