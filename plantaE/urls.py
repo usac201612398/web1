@@ -82,6 +82,7 @@ urlpatterns = [
     path("salidasFrutaPublic/graficoPublic",views.recepciones_reportecurva2,name='recepcionesFruta_reportecurva2'),
     path("recepcionesFruta/reporteAcum/loadgrafico",views.graficas,name='load_grafico'),
     path("boletasFruta",views.boletas_list,name='boletasFruta_list'),
+    path("boletasFruta/productor",views.boletas_listproductor,name='boletasFruta_listproductor'),
     path("boletasFruta/reporterecepcion",views.boletas_reporterecepcion,name='boletasFruta_reporterecepcion'),
     path("boletasFruta/reportetraza",views.boletas_reportetraza,name='boletasFruta_reportetraza'),
     path("boletasFruta/reportetrazaexpo",views.boletas_reportetrazaexpo,name='boletasFruta_reportetrazaexpo'),

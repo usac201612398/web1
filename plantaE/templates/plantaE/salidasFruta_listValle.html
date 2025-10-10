@@ -66,8 +66,11 @@
         <a href="{% url 'salidasFruta_aprovechamietos' %}" class="btn btn-success flex-fill text-center">
             <i class="fas fa-chart-line"></i> Aprovechamientos
         </a>
-
-        
+        {% if user.username == "provalle@popoyan.com.gt" %}
+            <a href="{% url 'boletasFruta_listproductor' %}" class="btn btn-success flex-fill text-center">
+                <i class="fas fa-chart-line"></i> Boletas
+            </a>
+        {% endif %}
 
     </div>
 

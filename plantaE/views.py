@@ -1768,6 +1768,26 @@ def boletas_list(request):
      
     return render(request, 'plantaE/boletas_list.html', {'registros': salidas})
 
+def boletas_listproductor(request):
+    
+    salidas = Boletas.objects.all()
+    nombre_usuario = request.user.username
+    datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('finca', 'encargado')
+
+    # Definir fecha límite: 31 de octubre de 2025
+    fecha_limite = datetime.date(2025, 9, 30)
+
+    if datos.exists():
+        finca_usuario = datos[0]['finca']
+        salidas = salidas.filter(
+            proveedor=finca_usuario,
+            fecha__gt=fecha_limite  # Filtra fechas posteriores a octubre
+        ).order_by('-boleta')
+    else:
+        salidas = Boletas.objects.none()  # No hay datos del usuario
+
+    return render(request, 'plantaE/boletas_list_productor.html', {'registros': salidas})
+
 def boletas_update(request, pk):
     salidas = get_object_or_404(Boletas, pk=pk)
     if request.method == 'POST':
