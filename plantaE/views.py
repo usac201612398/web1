@@ -4646,7 +4646,7 @@ def reporte_tabla_pivote_produccionsem(request):
         kilos = total_libras / 2.20462 if total_libras else 0
 
     for registro in inventario_datos:
-        clave = (registro['anio'], registro['semana'], registro['cultivo'], registro['orden'])
+        clave = (registro['anio'], registro['semana'], registro['cultivo'])
         total_cultivo_semana = total_por_semana_cultivo[clave]
         total_cajas = registro['total_cajas'] or 0
         total_libras = registro['total_libras'] or 0
