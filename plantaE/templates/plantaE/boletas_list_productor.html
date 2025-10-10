@@ -133,9 +133,13 @@
                 buttons: [
                     {
                         extend: 'excelHtml5',
-                        text: '📤 Exportar a Excel',
+                        text: 'Exportar a Excel',
                         className: 'btn btn-success'
                     }
+                ],
+                lengthMenu: [
+                    [10, 25, 50, -1], // Opciones internas: -1 significa "todos"
+                    [10, 25, 50, 'Mostrar todo'] // Lo que verá el usuario
                 ],
                 language: {
                     url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
