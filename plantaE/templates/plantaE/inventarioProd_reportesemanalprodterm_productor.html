@@ -1,0 +1,118 @@
+{% load static %}
+{% load custom_tags %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Tabla Pivote - Kg empacados por Semana</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css" />
+</head>
+<style>
+.table-responsive tbody {
+    min-height: 200px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+#tabla-pivote td:nth-child(3),
+#tabla-pivote th:nth-child(3) {
+    white-space: nowrap !important;
+}
+</style>
+<body>
+    
+<div class="container mt-4">
+    <h2 class="mb-4">Tabla Pivote - Kg por Semana</h2>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3 mb-4">
+                <div class="col-md-2">
+                    <label class="form-label">Métrica</label>
+                    <select name="metrica" class="form-select">
+                        <option value="porcentaje" {% if request.GET|get_item:'metrica' == 'porcentaje' %}selected{% endif %}>Porcentajes</option>
+                        <option value="libras" {% if request.GET|get_item:'metrica' == 'libras' %}selected{% endif %}>Libras</option>
+                        <option value="kilos" {% if request.GET|get_item:'metrica' == 'kilos' %}selected{% endif %}>Kilos</option>
+                        <option value="cajas" {% if request.GET|get_item:'metrica' == 'cajas' %}selected{% endif %}>Cajas</option>
+                    </select>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-success w-100">Filtrar</button>
+                </div>
+            </form>
+
+            <div style="overflow-x: auto;">
+                <div class="card">
+                    <div class="card-header">Producción semanal (kg)</div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            {{ tabla_html|safe }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="text-center mt-5">
+    <a href="{% url 'plantaE_homeger' %}" class="btn btn-success btn-lg rounded-pill">
+        <i class="fas fa-home me-2"></i>Home
+    </a>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.0/jszip.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+    // Crear el footer antes de inicializar DataTables
+    if ($('#tabla-pivote tfoot').length === 0) {
+        let footer = $('<tfoot><tr></tr></tfoot>');
+        $('#tabla-pivote thead tr th').each(function () {
+            footer.find('tr').append('<th></th>');
+        });
+        $('#tabla-pivote').append(footer);
+    }
+
+    let table = $('#tabla-pivote').DataTable({
+        scrollX: true,
+        paging: true,
+        ordering: true,
+        info: true,
+        searching: true,
+        dom: 'Blfrtip',
+        lengthMenu: [10, 25, 50, 100],
+        pageLength: 10,
+        buttons: ['excelHtml5', 'csvHtml5'],
+        language: {
+            url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
+        },
+        autoWidth: false,
+        footerCallback: function (row, data, start, end, display) {
+            let api = this.api();
+
+            api.columns().every(function () {
+                let column = this;
+                let sum = column
+                    .data({ search: 'applied', page: 'current' })
+                    .reduce(function (a, b) {
+                        let x = typeof a === 'string' ? a.replace(/,/g, '') : a;
+                        let y = typeof b === 'string' ? b.replace(/,/g, '') : b;
+                        x = parseFloat(x) || 0;
+                        y = parseFloat(y) || 0;
+                        return x + y;
+                    }, 0);
+                $(column.footer()).html(sum ? sum.toFixed(2) : '');
+            });
+        }
+    });
+});
+</script>
+
+</body>
+</html>
