@@ -67,9 +67,14 @@
     <div class="container mt-4">
         <div class="d-flex justify-content-between align-items-center mb-3 p-3 bg-light rounded shadow-sm">
             <h1 class="h3 m-0">📋 Boletas Procesadas</h1>
-            <a href="{% url 'reporte_reportesemanalprodterm_pivot_productor' %}" class="btn btn-primary">
-                <i class="fas fa-box-open"></i> Semanal
-            </a>
+            <div class="d-flex gap-2">
+                <a href="{% url 'reporte_reportesemanalprodterm_pivot_productor' %}" class="btn btn-outline-primary rounded-pill px-4">
+                    <i class="fas fa-calendar-week me-2"></i> Semanal
+                </a>
+                <a href="{% url 'salidasFruta_listValle' %}" class="btn btn-outline-success rounded-pill px-4">
+                    <i class="fas fa-home me-2"></i> Home
+                </a>
+            </div>
         </div>
 
         <div class="table-container">
@@ -113,11 +118,6 @@
                 </tbody>
             </table>
         </div>
-    </div>
-    <div class="text-center mt-5">
-        <a href="{% url 'salidasFruta_listValle' %}" class="btn btn-success btn-lg rounded-pill">
-            <i class="fas fa-home me-2"></i>Home
-        </a>
     </div>
     <!-- Scripts -->
     <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
