@@ -101,10 +101,10 @@
                         <td title="{{ registro.calidad1 }}">{{ registro.calidad1 }}</td>
                         <td>{{ registro.calidad }}</td>
                         <td>{{ registro.cajas }}</td>
-                        <td>{{ registro.librasxcaja }}</td>
-                        <td>{{ registro.libras }}</td>
-                        <td>{{ registro.status}}</td>
-                        <td>{{ registro.opsap }}</td>
+                        <td>{{ registro.librasxcaja|floatformat:2 }}</td>
+                        <td>{{ registro.libras|floatformat:2 }}</td>
+                        <td>{{ registro.status|default_if_none:""}}</td>
+                        <td>{{ registro.opsap|default_if_none:"" }}</td>
                         
                         
                     </tr>
