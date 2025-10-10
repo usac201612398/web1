@@ -4614,7 +4614,7 @@ def semanalprodterm_pivot_productor(request):
                 table_id="tabla-pivote"
             )
 
-    return render(request, 'plantaE/inventarioProd_reportesemanalprodterm_pivot_productor.html', {
+    return render(request, 'plantaE/inventarioProd_reportesemanalprodterm_productor.html', {
         'tabla_html': tabla_html,
         'registros_json': registros_json,
     })
