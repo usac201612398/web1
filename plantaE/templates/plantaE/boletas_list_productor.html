@@ -127,23 +127,20 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
     <script>
         $(document).ready(function () {
-            $('#myTable').DataTable({
+            $('#tabla-pivote').DataTable({
                 scrollX: true,
-                dom: '<"top"lfB>rt<"bottom"ip><"clear">',
-                buttons: [
-                    {
-                        extend: 'excelHtml5',
-                        text: '📤 Exportar a Excel',
-                        className: 'btn btn-success'
-                    }
-                ],
-                lengthMenu: [
-                    [10, 25, 50, -1],
-                    [10, 25, 50, 'Mostrar todo']
-                ],
+                paging: true,
+                ordering: true,
+                info: true,
+                searching: true,
+                dom: 'Bfrtip',
+                lengthMenu: [10, 25, 50, 100],
+                pageLength: 10,
+                buttons: ['excelHtml5', 'csvHtml5'],
                 language: {
                     url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
-                }
+                },
+                autoWidth: false, // Esto desactiva el ajuste automático de los anchos de columna
             });
         });
     </script>
