@@ -4639,15 +4639,13 @@ def reporte_tabla_pivote_produccionsem(request):
     total_por_semana_cultivo = defaultdict(float)
 
     for registro in inventario_datos:
-        clave = (registro['anio'], registro['semana'], registro['cultivo'], registro['estructura'], registro['variedad'])
+        clave = (registro['anio'], registro['semana'], registro['cultivo'])  # clave corregida
         total_libras = registro['total_libras'] or 0
-        total_cajas = registro['total_cajas'] or 0
         total_por_semana_cultivo[clave] += total_libras
-        kilos = total_libras / 2.20462 if total_libras else 0
 
     for registro in inventario_datos:
-        clave = (registro['anio'], registro['semana'], registro['cultivo'], registro['estructura'], registro['variedad'])
-        total_cultivo_semana = total_por_semana_cultivo[clave]
+        clave_total = (registro['anio'], registro['semana'], registro['cultivo'])  # clave corregida
+        total_cultivo_semana = total_por_semana_cultivo[clave_total]
         total_cajas = registro['total_cajas'] or 0
         total_libras = registro['total_libras'] or 0
         porcentaje = (total_libras / total_cultivo_semana) * 100 if total_cultivo_semana else 0
