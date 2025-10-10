@@ -4619,6 +4619,98 @@ def semanalprodterm_pivot_productor(request):
         'registros_json': registros_json,
     })
 
+def reporte_tabla_pivote_produccionsem(request):
+
+    nombre_usuario = request.user.username
+    datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('finca', 'encargado')
+
+    # Definir fecha límite: 31 de octubre de 2025
+    fecha_limite = datetime.date(2025, 9, 30)
+
+    finca_usuario = datos[0]['finca']
+    inventario_datos = AcumFruta.objects.filter(finca=finca_usuario,fecha__gt=fecha_limite).annotate(
+        semana=ExtractWeek('fecha'),
+        anio=ExtractYear('fecha')
+    ).values('orden', 'estructura', 'variedad', 'cultivo', 'semana', 'anio').annotate(
+        total_libras=Sum('libras'),total_cajas=Sum('cajas')
+    ).order_by('anio', 'semana', 'cultivo', 'estructura')
+
+    resultado = []
+    total_por_semana_cultivo = defaultdict(float)
+
+    for registro in inventario_datos:
+        clave = (registro['anio'], registro['semana'], registro['cultivo'], registro['estructura'], registro['variedad'])
+        total_libras = registro['total_libras'] or 0
+        total_cajas = registro['total_cajas'] or 0
+        total_por_semana_cultivo[clave] += total_libras
+        kilos = total_libras / 2.20462 if total_libras else 0
+
+    for registro in inventario_datos:
+        clave = (registro['anio'], registro['semana'], registro['cultivo'], registro['estructura'], registro['variedad'])
+        total_cultivo_semana = total_por_semana_cultivo[clave]
+        total_cajas = registro['total_cajas'] or 0
+        total_libras = registro['total_libras'] or 0
+        porcentaje = (total_libras / total_cultivo_semana) * 100 if total_cultivo_semana else 0
+        kilos = total_libras / 2.20462 if total_libras else 0
+
+        resultado.append({
+            'orden': registro['orden'],
+            'estructura': registro['estructura'],
+            'cultivo': registro['cultivo'],
+            'variedad': registro['variedad'],
+            'semana': registro['semana'],
+            'anio': registro['anio'],
+            'libras': round(total_libras, 2),
+            'cajas': round(total_cajas, 0),
+            'porcentaje': round(porcentaje, 2),
+            'kilos': round(kilos, 2),
+        })
+
+    registros_json = json.dumps(resultado, default=str)
+
+    if not resultado:
+        tabla_html = "<p class='text-danger'>No hay datos disponibles para mostrar.</p>"
+    else:
+        df = pd.DataFrame(resultado)
+
+        metrica = request.GET.get('metrica', 'porcentaje')
+        if metrica not in ['porcentaje', 'libras', 'kilos', 'cajas']:
+            metrica = 'porcentaje'
+
+        if metrica not in ['porcentaje', 'libras', 'kilos', 'cajas'] or metrica not in df.columns:
+            tabla_html = f"<p class='text-warning'>Métrica '{metrica}' inválida o no disponible.</p>"
+        else:
+            tabla_pivote = df.pivot_table(
+                index=['cultivo', 'estructura', 'variedad'],
+                columns=['semana', 'anio'],
+                values=metrica,
+                aggfunc='sum'
+            )
+           
+            tabla_pivote = tabla_pivote.fillna("")
+
+            # Aplanar índices (convertir multiindex filas a columnas normales)
+            tabla_pivote_reset = tabla_pivote.reset_index()
+
+            # Aplanar multiindex de columnas, por ejemplo: (semana, anio) -> "semana_anio"
+            tabla_pivote_reset.columns = [
+                '_'.join(map(str, col)).strip() if isinstance(col, tuple) else col
+                for col in tabla_pivote_reset.columns.values
+            ]
+
+            # Ahora sí, convertir a HTML
+            tabla_html = tabla_pivote_reset.to_html(
+                classes="table table-striped",
+                index=False,
+                na_rep="",
+                table_id="tabla-pivote"
+            )
+
+    return render(request, 'plantaE/reporte_tabla_pivoteproduccionsem.html', {
+        'tabla_html': tabla_html,
+        'registros_json': registros_json,
+    })
+
 def poraprovechamientosger(request):
     hoy = timezone.now().date()
     # Obtener fecha máxima en detallerecaux

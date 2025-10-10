@@ -150,6 +150,7 @@ urlpatterns = [
     
     path('reporte-pivote/tecnicos', views.reporte_tabla_pivote2, name='reporte_tabla_pivote2'),
     path('reporte-pivote/', views.reporte_tabla_pivote, name='reporte_tabla_pivote'),
+    path('reporte-pivote/produccionsem', views.reporte_tabla_pivote_produccionsem, name='reporte_tabla_pivote_produccionsem'),
 
     path("itemsenvios",views.itemsenvios_list,name='itemsenvios_list'),
     path('itemsenvios/new/', views.itemsenvios_create, name='itemsenvios_create'),
