@@ -86,7 +86,6 @@
                         <th>Cajas</th>
                         <th>LibrasxCaja</th>
                         <th>Libras</th>
-                        <th>Creado</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -101,10 +100,10 @@
                         <td>{{ registro.proveedor }}</td>
                         <td title="{{ registro.calidad1 }}">{{ registro.calidad1 }}</td>
                         <td>{{ registro.calidad }}</td>
-                        <td><div contenteditable="true" class="editable-cell">{{ registro.cajas }}</div></td>
-                        <td><div contenteditable="true" class="editable-cell">{{ registro.librasxcaja }}</div></td>
-                        <td><div contenteditable="true" class="editable-cell">{{ registro.libras }}</div></td>
-                        <td>{{ registro.created|date:"d-m-Y H:i" }}</td>
+                        <td>{{ registro.cajas }}</td>
+                        <td>{{ registro.librasxcaja }}</td>
+                        <td>>{{ registro.libras }}</td>
+                        
                         
                     </tr>
                     {% endfor %}
