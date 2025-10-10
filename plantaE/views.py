@@ -1770,7 +1770,7 @@ def boletas_list(request):
 
 def boletas_listproductor(request):
 
-    salidas = Boletas.objects.all()
+    salidas = Boletas.objects.exclude(status="Anulado")
     nombre_usuario = request.user.username
     datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('finca', 'encargado')
 
