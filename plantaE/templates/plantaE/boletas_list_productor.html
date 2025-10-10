@@ -79,13 +79,14 @@
                         <th>Fecha</th>
                         <th>Finca</th>
                         <th>Cultivo</th>
-                        <th>Orden</th>
                         <th>Proveedor</th>
                         <th>Calidad1</th>
                         <th>Calidad</th>
                         <th>Cajas</th>
                         <th>LibrasxCaja</th>
                         <th>Libras</th>
+                        <th>Status</th>
+                        <th>OPSAP</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -96,13 +97,14 @@
                         <td>{{ registro.fecha|date:"d-m-Y" }}</td>
                         <td>{{ registro.finca }}</td>
                         <td>{{ registro.cultivo }}</td>
-                        <td>{{ registro.orden }}</td>
                         <td>{{ registro.proveedor }}</td>
                         <td title="{{ registro.calidad1 }}">{{ registro.calidad1 }}</td>
                         <td>{{ registro.calidad }}</td>
                         <td>{{ registro.cajas }}</td>
                         <td>{{ registro.librasxcaja }}</td>
                         <td>{{ registro.libras }}</td>
+                        <td>{{ registro.status}}</td>
+                        <td>{{ registro.opsap }}</td>
                         
                         
                     </tr>
