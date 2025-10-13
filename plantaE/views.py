@@ -1864,6 +1864,10 @@ def boletas_devolver(request, pk):
         # Anular boletas relacionadas
         boletas_relacionadas.update(status='Anulado')
 
+        # Actualizar inventario relacionado
+        invrelacionado = inventarioProdTerm.objects.exclude(status='Anulado').filter(boleta=salidas.boleta)
+        invrelacionado.update(status3="Devuelto")
+
         # Obtener recepciones relacionadas
         recepciones_ids = detallerecaux.objects.exclude(status='Anulado') \
                                                .filter(boleta=salidas.boleta) \
