@@ -520,6 +520,7 @@ class productores(models.Model):
     registro = models.BigAutoField(primary_key=True)
     productor = models.CharField(max_length=75, blank=True, null=True)
     tipo = models.CharField(max_length=75, blank=True, null=True)
+    clasificacion = models.CharField(max_length=75, blank=True, null=True)
     def __str__(self):
         return str(self.productor)
 
