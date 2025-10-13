@@ -492,9 +492,7 @@ class productoTerm(models.Model):
     itemsapcodelibra = models.CharField(max_length=200, blank=True, null=True)
     
     empaque= models.IntegerField(blank=True, null=True)
-    itemsapcodelibraaux = models.CharField(max_length=200, blank=True, null=True)
     calidad1 = models.CharField(max_length=200, blank=True, null=True)
-    calidad1aux = models.CharField(max_length=200, blank=True, null=True)
     precio = models.FloatField(blank=True, null=True)
     categoria = models.CharField(max_length=50, blank=True, null=True)
     taraxcaja = models.FloatField(blank=True, null=True)
