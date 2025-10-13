@@ -89,7 +89,8 @@
                         <th>Libras</th>
                         <th>Creado</th>
                         <th>Editar</th>
-                        <th>Eliminar</th>
+                        <th>Anular</th>
+                        <th>Devolver</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -118,6 +119,11 @@
                         <td class="action-icons">
                             <a href="{% url 'boletas_delete' registro.pk %}" title="Eliminar">
                                 <i class="fas fa-trash-alt text-danger"></i>
+                            </a>
+                        </td>
+                        <td class="action-icons">
+                            <a href="{% url 'boletas_devolver' registro.pk %}" title="Devolver">
+                                <i class="fas fa-undo-alt"></i>
                             </a>
                         </td>
                     </tr>

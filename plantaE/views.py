@@ -1855,6 +1855,52 @@ def boletas_delete(request, pk):
 
     return render(request, 'plantaE/boletas_confirm_delete.html', {'registros': salidas})
 
+def boletas_devolver(request, pk):
+
+    salidas = get_object_or_404(Boletas, pk=pk)
+    boletas_relacionadas = Boletas.objects.filter(boleta=salidas.boleta)
+
+    if request.method == 'POST':
+        # Anular boletas relacionadas
+        boletas_relacionadas.update(status='Anulado')
+
+        # Obtener recepciones relacionadas
+        recepciones_ids = detallerecaux.objects.exclude(status='Anulado') \
+                                               .filter(boleta=salidas.boleta) \
+                                               .values_list('recepcion', flat=True).distinct()
+
+        for recepcion_id in recepciones_ids:
+            recepcion_aux = detallerecaux.objects.exclude(status='Anulado').filter(recepcion=recepcion_id)
+            recepcion_aux.update(status='En proceso')
+
+            recepcion_detalle = detallerec.objects.exclude(status='Anulado').filter(recepcion=recepcion_id)
+            recepcion_detalle.update(status=None)
+
+        # Anular detalles auxiliares
+        detalleaux_anular = detallerecaux.objects.exclude(status='Anulado').filter(boleta=salidas.boleta)
+        detalleaux_anular.update(status='Anulado')
+
+        # Procesar AcumFruta relacionados
+        acumfruta_ids = AcumFrutaaux.objects.exclude(status='Anulado') \
+                                            .filter(boleta=salidas.boleta) \
+                                            .values_list('acumfrutaid', flat=True).distinct()
+
+        for acumfruta_id in acumfruta_ids:
+            acumfruta_aux = AcumFrutaaux.objects.exclude(status='Anulado').filter(acumfrutaid=acumfruta_id)
+            acumfruta_aux.update(status=None)
+
+            acumfruta_detalle = AcumFruta.objects.exclude(status='Anulado').filter(id=acumfruta_id)
+            acumfruta_detalle.update(status=None)
+
+        # Anular acumfruta auxiliar
+        acumfruta_anular = AcumFrutaaux.objects.exclude(status='Anulado').filter(boleta=salidas.boleta)
+        acumfruta_anular.update(status='Anulado')
+
+        messages.success(request, "Registro anulado correctamente.")
+        return redirect('boletasFruta_list')
+
+    return render(request, 'plantaE/boletas_confirm_devolver.html', {'registros': salidas})
+
 def recepciones_detail(request, pk):
     salidas = get_object_or_404(detallerec, pk=pk)
 
