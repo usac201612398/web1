@@ -491,6 +491,7 @@ class productoTerm(models.Model):
     
     itemsapcodelibra = models.CharField(max_length=200, blank=True, null=True)
     
+    empaque= models.IntegerField(blank=True, null=True)
     itemsapcodelibraaux = models.CharField(max_length=200, blank=True, null=True)
     calidad1 = models.CharField(max_length=200, blank=True, null=True)
     calidad1aux = models.CharField(max_length=200, blank=True, null=True)
@@ -643,6 +644,8 @@ class pedidos(models.Model):
     precio = models.FloatField(blank=True, null=True)
     total =models.FloatField(blank=True, null=True)
     cantidad = models.IntegerField(blank=True, null=True)
+    
+    empaque = models.IntegerField(blank=True, null=True)
     orden = models.CharField(max_length=20, blank=True, null=True)
     libras = models.FloatField(blank=True, null=True)
     cantidadentregado = models.IntegerField(blank=True, null=True)

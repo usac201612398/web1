@@ -348,7 +348,11 @@ class itemsForm(forms.ModelForm):
     itemsapcode = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     itemsapcodelibra = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    
+    itemsapcodelibraaux = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     calidad1 = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    
+    calidad1aux = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     categoria = forms.ChoiceField(choices=op_categoria, widget=forms.Select(attrs={'class': 'form-control'}))
     precio = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
     taraxcaja = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
@@ -357,21 +361,27 @@ class itemsForm(forms.ModelForm):
     orden = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     orden2 = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     cajasxtarima = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    
+    empaque= forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
 
     class Meta:
         
         model = productoTerm
-        fields = ['cultivo','orden2','cajasxtarima','itemsapcode','itemsapcodelibra','itemsapname','calidad1','categoria','precio','taraxcaja', 'pesostdxcaja', 'tipo', 'orden']
+        fields = ['cultivo','empaque','orden2','cajasxtarima','itemsapcode','itemsapcodelibra','itemsapcodelibraaux','itemsapname','calidad1','calidad1aux','categoria','precio','taraxcaja', 'pesostdxcaja', 'tipo', 'orden']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['itemsapcodelibra'].required = False
+        self.fields['itemsapcodelibraaux'].required = False
         self.fields['orden'].required = False
         self.fields['orden2'].required = False
         self.fields['taraxcaja'].required = False
         self.fields['precio'].required = False
         self.fields['calidad1'].required = False
+        self.fields['calidad1aux'].required = False
         self.fields['cajasxtarima'].required = False
+        
+        self.fields['empaque'].required = False
 
 class itemsenviosForm(forms.ModelForm):
 
