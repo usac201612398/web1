@@ -160,6 +160,7 @@ urlpatterns = [
 
     path('pedidos/<int:pk>/delete/', views.pedidos_delete, name='pedidos_delete'),
     path("pedidos",views.pedidos_list,name='pedidos_list'),
+    path("pedidos/historico",views.pedidos_list_historico,name='pedidos_list_historico'),
     path('pedidos/new/plantilla', views.article_create_pedidos, name='create_pedidos'),
     path('ajax/guardar-pedido/', views.guardar_pedido, name='guardar_pedido'),
     path('pedidos/<int:pk>/edit/', views.pedidos_update, name='pedidos_update'),

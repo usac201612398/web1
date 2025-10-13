@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Pedidos - Producto Terminado</title>
+  <title>Pedidos - Historico</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- Bulma CSS -->
@@ -51,52 +51,6 @@
   </style>
 </head>
 <body>
-  
-<!-- Sección de tarjetas -->
-<section class="section">
-  <div class="container">
-    <div class="columns is-multiline is-variable is-5">
-
-      <!-- Tarjeta 1 -->
-      <div class="column is-half">
-        <a href="{% url 'pedidos_list_historico' %}" class="box has-text-centered is-clickable dashboard-card">
-          <span class="icon is-large has-text-primary mb-2">
-            <i class="fas fa-chart-line fa-2x"></i>
-          </span>
-          <p class="title is-6 mb-0">Pedidos</p>
-        </a>
-      </div>
-
-      <!-- Tarjeta 2 -->
-      <div class="column is-half">
-        <a href="" class="box has-text-centered is-clickable dashboard-card">
-          <span class="icon is-large has-text-warning mb-2">
-            <i class="fas fa-box-open fa-2x"></i>
-          </span>
-          <p class="title is-6 mb-0">Cumplimientos</p>
-        </a>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-
-<section class="section pt-0 pb-0">
-  <div class="container">
-    <div class="level">
-      <!-- Botón a la izquierda -->
-      <div class="level-left">
-        <a href="{% url 'create_pedidos' %}" class="button is-success is-rounded">
-          <span class="icon"><i class="fas fa-plus"></i></span>
-          <span>Agregar</span>
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
-
-
   <!-- Tabla -->
   <section class="section pt-3">
     <div class="container">
@@ -114,9 +68,9 @@
               <th>Categoría</th>
               <th>Cantidad</th>
               <th>Libras</th>
+              <th>Empaque</th>
               <th>Catidad-Entregado</th>
               <th>Envio</th>
-              <th>Anular</th>
             </tr>
           </thead>
           <tbody>
@@ -132,11 +86,9 @@
               <td>{{ registro.categoria }}</td>
               <td class="number-cell">{{ registro.cantidad }}</td>
               <td class="number-cell">{{ registro.libras }}</td>
-              
+              <td class="number-cell">{{ registro.empaque }}</td>
               <td>{{ registro.cantidadentregado }}</td>
               <td>{{ registro.envio }}</td>
-
-              <td><a href="{% url 'pedidos_delete' registro.pk %}" class="has-text-danger"><i class="fas fa-trash-alt"></i></a></td>
             </tr>
             {% endfor %}
           </tbody>

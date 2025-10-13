@@ -18,7 +18,7 @@ from openpyxl.utils.dataframe import dataframe_to_rows
 from django.template.loader import render_to_string
 from django.contrib import messages
 from collections import defaultdict
-from django.db.models.functions import ExtractWeek, ExtractYear, ExtractIsoYear
+from django.db.models.functions import ExtractWeek, ExtractYear, ExtractIsoYear, ExtractMonth
 from django.views.decorators.http import require_GET
 from django.urls import reverse
 
@@ -1669,7 +1669,6 @@ def recepciones_reportecurva2(request):
 def obtener_registros_y_graficar(filtros):
     registros = AcumFruta.objects.exclude('Anulado').filter(**filtros)
     
-
     df = pd.DataFrame(list(registros.values()), columns=['fecha', 'orden', 'libras'])
     df['fecha'] = pd.to_datetime(df['fecha'], errors='coerce')
 
@@ -1758,7 +1757,6 @@ def graficas(request):
             'variedad': mensaje[0][4],
             'dataframe': dataframe
         })
-
 
 def boletas_list(request):
     #today = timezone.now().date()
@@ -5248,6 +5246,22 @@ def pedidos_list(request):
     ).order_by('-created_at')
 
     return render(request, 'plantaE/pedidos_list.html', {'registros': salidas})
+
+def pedidos_list_historico(request):
+    today = timezone.now().date()
+    current_month = today.month
+    current_year = today.year
+
+    salidas = pedidos.objects.annotate(
+        mes=ExtractMonth('fechapedido'),
+        anio=ExtractYear('fechapedido')
+    ).filter(
+        status__isnull=True,
+        mes=current_month,
+        anio=current_year
+    ).order_by('-created_at')
+
+    return render(request, 'plantaE/pedidos_list_historico.html', {'registros': salidas})
 
 def guardar_pedido(request):
     data = json.loads(request.body)
