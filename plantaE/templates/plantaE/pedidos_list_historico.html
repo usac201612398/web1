@@ -69,9 +69,11 @@
               <th>ItemName</th>
               <th>Categoría</th>
               <th>Cantidad</th>
-              <th>Libras</th>
               <th>Empaque</th>
+              <th>Libras</th>
               <th>Catidad-Entregado</th>
+              <th>Lb-Empaque</th>
+              <th>Lb-UniSAP</th>
               <th>Envio</th>
               <th>Status</th>
             </tr>
@@ -89,7 +91,10 @@
               <td>{{ registro.itemsapname }}</td>
               <td>{{ registro.categoria }}</td>
               <td class="number-cell">{{ registro.cantidad }}</td>
+              <td class="number-cell">{{ registro.empaque }}</td>
               <td class="number-cell">{{ registro.libras }}</td>
+              <td class="number-cell">{{ registro.libras/registro.empaque }}</td>
+              <td class="number-cell">{{ registro.libras/registro.cantidad }}</td>
               <td class="number-cell">{{ registro.empaque }}</td>
               <td>{{ registro.cantidadentregado }}</td>
               <td>{{ registro.envio }}</td>
