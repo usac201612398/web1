@@ -5,7 +5,8 @@ from openpyxl import Workbook
 from django.shortcuts import get_object_or_404, redirect
 from .models import Actpeso,pedidos, proyecciones,paramenvlocales,enviosrec,AcumFrutaaux,salidacontenedores, inventarioProdTermAux,productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
 from .forms import boletasForm,pedidosForm,itemsForm, itemsenviosForm,salidacontenedoresForm,salidasFrutaForm, contenedoresForm,recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
-from django.db.models import Sum, Q, Max, Min,Value as V
+from django.db.models import Sum, Q, Max, Min,Value as V,F, ExpressionWrapper, FloatField
+
 from django.utils import timezone
 import matplotlib.pyplot as plt
 import datetime
@@ -5254,7 +5255,15 @@ def pedidos_list_historico(request):
 
     salidas = pedidos.objects.annotate(
         mes=ExtractMonth('fechapedido'),
-        anio=ExtractYear('fechapedido')
+        anio=ExtractYear('fechapedido'),
+        libras_por_empaque=ExpressionWrapper(
+            F('libras') / F('empaque'),
+            output_field=FloatField()
+        ),
+        libras_por_entregado=ExpressionWrapper(
+            F('libras') / F('cantidadentregado'),
+            output_field=FloatField()
+        )
     ).filter(
         mes=current_month,
         anio=current_year
