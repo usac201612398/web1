@@ -90,13 +90,14 @@
               <td>{{ registro.itemsapcode }}</td>
               <td>{{ registro.itemsapname }}</td>
               <td>{{ registro.categoria }}</td>
+              
               <td class="number-cell">{{ registro.cantidad }}</td>
               <td class="number-cell">{{ registro.empaque }}</td>
               <td class="number-cell">{{ registro.libras }}</td>
-              <td class="number-cell">{{ registro.libras/registro.empaque }}</td>
-              <td class="number-cell">{{ registro.libras/registro.cantidad }}</td>
-              <td class="number-cell">{{ registro.empaque }}</td>
-              <td>{{ registro.cantidadentregado }}</td>
+              <td class="number-cell">{{ registro.cantidadentregado }}</td>
+              <td class="number-cell">{{ (registro.libras/registro.empaque) }}</td>
+              <td class="number-cell">{{ (registro.libras/registro.cantidad) }}</td>
+              
               <td>{{ registro.envio }}</td>
               <td>{{ registro.status }}</td>
             </tr>
