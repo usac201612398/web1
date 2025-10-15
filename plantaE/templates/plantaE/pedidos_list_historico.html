@@ -51,6 +51,12 @@
   </style>
 </head>
 <body>
+  <div class="buttons is-right mb-3">
+  <a href="{% url 'descargar_excel_historico' %}" class="button is-success">
+    <span class="icon"><i class="fas fa-file-excel"></i></span>
+    <span>Descargar Excel</span>
+  </a>
+</div>
   <!-- Tabla -->
   <section class="section pt-3">
     <div class="container">
@@ -71,7 +77,8 @@
               <th>Empaque</th>
               <th>Libras</th>
               <th>Catidad-Entregado</th>
-              
+              <th>Libras/Empaque</th>
+              <th>Libras/Cantidad Entregada</th>
               <th></th>
               <th>Envio</th>
               <th>Status</th>
@@ -94,7 +101,12 @@
               <td class="number-cell">{{ registro.empaque }}</td>
               <td class="number-cell">{{ registro.libras }}</td>
               <td class="number-cell">{{ registro.cantidadentregado }}</td>
-              
+              <td class="number-cell">
+                {{ (registro.libras / registro.empaque)|round(2) if registro.empaque else 'N/A' }}
+              </td>
+              <td class="number-cell">
+                {{ (registro.libras / registro.cantidadentregado)|round(2) if registro.cantidadentregado else 'N/A' }}
+              </td>
               <td>{{ registro.envio }}</td>
               <td>{{ registro.status }}</td>
             </tr>
@@ -109,12 +121,34 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
   <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  <!-- DataTables Buttons CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
 
+  <!-- DataTables Buttons JS -->
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+
+  <!-- JSZip (requerido para exportar a Excel) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <script>
-        $(document).ready(function () {
-            $('#myTable').DataTable();
-        });
-  </script>
+  $(document).ready(function () {
+    $('#myTable').DataTable({
+      dom: 'Bfrtip',
+      buttons: [
+        {
+          extend: 'excelHtml5',
+          title: 'Historico_Pedidos',
+          text: '<i class="fas fa-file-excel"></i> Exportar a Excel',
+          className: 'button is-success'
+        }
+      ],
+      language: {
+        url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+      }
+    });
+  });
+</script>
 
 </body>
 </html>
