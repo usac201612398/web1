@@ -5258,7 +5258,7 @@ def pedidos_list_historico(request):
     ).filter(
         mes=current_month,
         anio=current_year
-    ).order_by('-created_at')
+    ).exclude(pedido=0).order_by('-created_at')
 
     return render(request, 'plantaE/pedidos_list_historico.html', {'registros': salidas})
 
