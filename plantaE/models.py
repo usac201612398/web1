@@ -655,7 +655,7 @@ class pedidos(models.Model):
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     status = models.CharField(max_length=20, blank=True, null=True)
     envio = models.BigIntegerField(blank=True, null = True)
-    costentregado = models.FloatField(blank=True, null=True)
-    
+    costoentregado = models.FloatField(blank=True, null=True)
+
     def __str__(self):
         return (str(self.registro)+ " | " + str(self.fecha) + " | " + str(self.pedido) + " | " + str(self.itemsapname)+ " | " + str(self.cultivo) + " | " + str(self.proveedor))
