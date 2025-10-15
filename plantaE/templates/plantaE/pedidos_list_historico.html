@@ -103,14 +103,14 @@
               <td class="number-cell">{{ registro.cantidadentregado }}</td>
               <td class="number-cell">
                 {% if registro.empaque %}
-                  {{ (registro.libras / registro.empaque)|round(2) }}
+                  {{ (registro.libras / registro.empaque) | round(2) }}
                 {% else %}
                   N/A
                 {% endif %}
               </td>
               <td class="number-cell">
                 {% if registro.cantidadentregado %}
-                  {{ (registro.libras / registro.cantidadentregado)|round(2) }}
+                  {{ (registro.libras / registro.cantidadentregado) | round(2) }}
                 {% else %}
                   N/A
                 {% endif %}
