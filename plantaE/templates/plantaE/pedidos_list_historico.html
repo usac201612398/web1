@@ -60,7 +60,9 @@
             <tr>
               <th>Id</th>
               <th>Pedido</th>
-              <th>Fecha</th>
+              
+              <th>FechaElab</th>
+              <th>FechaEnt</th>
               <th>Proveedor</th>
               <th>Cultivo</th>
               <th>ItemCode</th>
@@ -71,6 +73,7 @@
               <th>Empaque</th>
               <th>Catidad-Entregado</th>
               <th>Envio</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
@@ -78,6 +81,7 @@
             <tr>
               <td>{{ registro.registro }}</td>
               <td>{{ registro.pedido }}</td>
+              <td>{{ registro.fecha|date:"d-m-Y" }}</td>
               <td>{{ registro.fechapedido|date:"d-m-Y" }}</td>
               <td>{{ registro.proveedor }}</td>
               <td>{{ registro.cultivo }}</td>
@@ -89,6 +93,7 @@
               <td class="number-cell">{{ registro.empaque }}</td>
               <td>{{ registro.cantidadentregado }}</td>
               <td>{{ registro.envio }}</td>
+              <td>{{ registro.status }}</td>
             </tr>
             {% endfor %}
           </tbody>
