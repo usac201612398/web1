@@ -129,7 +129,7 @@
               <td class="number-cell">{{ registro.cantidad }}</td>
               <td class="number-cell">{{ registro.empaque }}</td>
               <td class="number-cell">{{ registro.libras }}</td>
-              <td class="number-cell">{{ registro.cantidadentregado }}</td>
+              <td class="number-cell">{{ registro.cantidadentregado|default:"" }}</td>
               <td class="number-cell">{{ registro.libras_por_empaque|floatformat:2 }}</td>
               <td class="number-cell">{{ registro.libras_por_entregado|floatformat:2 }}</td>
               <td class="number-cell">{{ registro.costoentregado|floatformat:2 }}</td>
