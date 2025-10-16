@@ -74,6 +74,7 @@
               <th>Catidad-Entregado</th>
               <th>Libras/Empaque</th>
               <th>Libras/Cantidad Entregada</th>
+              <th>CostoEntregado</th>
               <th>Envio</th>
               <th>Status</th>
             </tr>
@@ -97,6 +98,7 @@
               <td class="number-cell">{{ registro.cantidadentregado }}</td>
               <td class="number-cell">{{ registro.libras_por_empaque|floatformat:2 }}</td>
               <td class="number-cell">{{ registro.libras_por_entregado|floatformat:2 }}</td>
+              <td class="number-cell">{{ registro.costoentregado|floatformat:2 }}</td>
               <td>{{ registro.envio }}</td>
               <td>{{ registro.status }}</td>
             </tr>
