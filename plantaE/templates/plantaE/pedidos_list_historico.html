@@ -125,7 +125,7 @@
               <td class="number-cell">{{ registro.libras_por_empaque|floatformat:2 }}</td>
               <td class="number-cell">{{ registro.libras_por_entregado|floatformat:2 }}</td>
               <td class="number-cell">{{ registro.costoentregado|floatformat:2 }}</td>
-              <td>{{ registro.envio }}</td>
+              <td>{{ registro.envio|default:"" }}</td>
               <td>{{ registro.status|default:"" }}</td>
             </tr>
             {% endfor %}
@@ -153,6 +153,7 @@
   <script>
 $('#myTable').DataTable({
   dom: 'Bfrtip',
+  scrollX: true,
   buttons: [
     {
       extend: 'excelHtml5',

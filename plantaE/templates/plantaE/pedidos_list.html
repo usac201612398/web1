@@ -132,10 +132,10 @@
               <td>{{ registro.itemsapname }}</td>
               <td>{{ registro.categoria }}</td>
               <td class="number-cell">{{ registro.cantidad }}</td>
-              <td class="number-cell">{{ registro.libras }}</td>
+              <td class="number-cell">{{ registro.libras|default:"" }}</td>
               
-              <td>{{ registro.cantidadentregado }}</td>
-              <td>{{ registro.envio }}</td>
+              <td>{{ registro.cantidadentregado|default:"" }}</td>
+              <td>{{ registro.envio|default:"" }}</td>
 
               <td><a href="{% url 'pedidos_delete' registro.pk %}" class="has-text-danger"><i class="fas fa-trash-alt"></i></a></td>
               <td><a href="{% url 'pedidos_cancel' registro.pk %}" class="has-text-danger"><i class="fas fa-ban"></i></a></td>
