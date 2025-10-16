@@ -117,6 +117,7 @@
               <th>Catidad-Entregado</th>
               <th>Envio</th>
               <th>Anular</th>
+              <th>Cancelar</th>
             </tr>
           </thead>
           <tbody>
@@ -137,6 +138,7 @@
               <td>{{ registro.envio }}</td>
 
               <td><a href="{% url 'pedidos_delete' registro.pk %}" class="has-text-danger"><i class="fas fa-trash-alt"></i></a></td>
+              <td><a href="{% url 'pedidos_cancel' registro.pk %}" class="has-text-danger"><i class="fas fa-ban"></i></a></td>
             </tr>
             {% endfor %}
           </tbody>

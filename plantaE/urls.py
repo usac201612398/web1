@@ -159,6 +159,7 @@ urlpatterns = [
     path('itemsenvios/<int:pk>/delete/', views.itemsenvios_delete, name='itemsenvios_delete'),
 
     path('pedidos/<int:pk>/delete/', views.pedidos_delete, name='pedidos_delete'),
+    path('pedidos/<int:pk>/cancel/', views.pedidos_cancel, name='pedidos_cancel'),
     path("pedidos",views.pedidos_list,name='pedidos_list'),
     path("pedidos/historico",views.pedidos_list_historico,name='pedidos_list_historico'),
     path('pedidos/new/plantilla', views.article_create_pedidos, name='create_pedidos'),

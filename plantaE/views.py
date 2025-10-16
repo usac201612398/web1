@@ -5288,12 +5288,13 @@ def guardar_pedido(request):
         datos = productoTerm.objects.filter(itemsapcode=i[0]).first()
         
         if datos.itemsapcode == "305.100.354":
-            if i[4]<=60:
-                costo = i[4]*12
+            empaque = i[4]*datos.empaque 
+            if empaque <=1500:
+                costo = empaque*12
             else:
-                costo = 60*12 + (i[4]-60)*9
+                costo = 1500*12 + (empaque-1500)*9
         else:
-            costo = datos.precio
+            costo = (datos.precio/datos.empaque)*empaque
 
         pedidos.objects.create(fecha=today,proveedor=i[8],pedido=nuevo_pedido,calidad1=datos.calidad1,fechapedido=i[6],cliente=i[5],cultivo=i[2],categoria=datos.categoria,cantidad=i[4],encargado=i[7],itemsapcode=i[0],itemsapname=i[1],precio=costo,total=datos.precio*i[4],orden=datos.orden,empaque=datos.empaque*i[4])
     
@@ -5337,4 +5338,29 @@ def pedidos_delete(request, pk):
     # Confirmación de anulación (GET request)
     return render(request, 'plantaE/pedidos_confirm_delete.html', {
         'registros': pedidos_a_anular  # Puedes mostrar todos los registros relacionados
+    })
+
+def pedidos_cancel(request, pk):
+    salidas = get_object_or_404(pedidos, pk=pk)
+
+    # Verificar si alguno de los registros ya tiene envío
+    if salidas.filter(envio__isnull=False).exists():
+        return render(request, 'plantaE/pedidos_confirm_delete.html', {
+            'alert_message': "No se puede cancelar este pedido porque ya tiene un envío asignado.",
+            'redirect_url': reverse('pedidos_list')
+        })
+
+    # Si la solicitud es POST, proceder a anular
+    if request.method == 'POST':
+        salidas.status = 'Cancelado'
+        salidas.save()
+
+        return render(request, 'plantaE/pedidos_confirm_delete.html', {
+            'alert_message': "El elemento fue cancelado correctamente.",
+            'redirect_url': reverse('pedidos_list')
+        })
+
+    # Confirmación de anulación (GET request)
+    return render(request, 'plantaE/pedidos_confirm_cancel.html', {
+        'registros': salidas  # Puedes mostrar todos los registros relacionados
     })
