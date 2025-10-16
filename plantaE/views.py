@@ -5235,16 +5235,16 @@ def pedidos_list(request):
     today = timezone.now().date()
     
     # Para Python 3.8: isocalendar() devuelve una tupla (año, semana, día)
-    iso_year, iso_week, _ = today.isocalendar()
+    current_month = today.month
+    current_year = today.year
 
     salidas = pedidos.objects.annotate(
-        semana=ExtractWeek('fechapedido'),
-        anio=ExtractIsoYear('fechapedido')
+        mes=ExtractMonth('fechapedido'),
+        anio=ExtractYear('fechapedido'),
     ).filter(
-        status__isnull=True,
-        semana=iso_week,
-        anio=iso_year
-    ).order_by('-created_at')
+        mes=current_month,
+        anio=current_year
+    ).order_by('-created_at').exclude(status__in=['Anulado', 'Cancelado', 'Entregado'])
 
     return render(request, 'plantaE/pedidos_list.html', {'registros': salidas})
 
