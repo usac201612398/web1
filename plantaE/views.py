@@ -4674,7 +4674,7 @@ def reporte_tabla_pivote_produccionsem(request):
     datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('finca', 'encargado')
 
     # Definir fecha límite: 31 de octubre de 2025
-    fecha_limite = datetime.date(2025, 9, 30)
+    fecha_limite = datetime.date(2025, 9, 29)
 
     finca_usuario = datos[0]['finca']
     inventario_datos = AcumFruta.objects.filter(finca=finca_usuario,fecha__gt=fecha_limite).annotate(
