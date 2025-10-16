@@ -5287,7 +5287,15 @@ def guardar_pedido(request):
 
         datos = productoTerm.objects.filter(itemsapcode=i[0]).first()
         
-        pedidos.objects.create(fecha=today,proveedor=i[8],pedido=nuevo_pedido,calidad1=datos.calidad1,fechapedido=i[6],cliente=i[5],cultivo=i[2],categoria=datos.categoria,cantidad=i[4],encargado=i[7],itemsapcode=i[0],itemsapname=i[1],precio=datos.precio,total=datos.precio*i[4],orden=datos.orden,empaque=datos.empaque*i[4])
+        if datos.itemsapcode == "305.100.354":
+            if i[4]<=60:
+                costo = i[4]*12
+            else:
+                costo = 60*12 + (i[4]-60)*9
+        else:
+            costo = datos.precio
+
+        pedidos.objects.create(fecha=today,proveedor=i[8],pedido=nuevo_pedido,calidad1=datos.calidad1,fechapedido=i[6],cliente=i[5],cultivo=i[2],categoria=datos.categoria,cantidad=i[4],encargado=i[7],itemsapcode=i[0],itemsapname=i[1],precio=costo,total=datos.precio*i[4],orden=datos.orden,empaque=datos.empaque*i[4])
     
     
     return JsonResponse({'mensaje':mensaje})  

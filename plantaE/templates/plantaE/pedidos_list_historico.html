@@ -48,14 +48,34 @@
     .button-add {
       margin-bottom: 20px;
     }
+    td, th {
+      white-space: nowrap !important;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .dataTables_wrapper {
+      width: 100%;
+      overflow-x: auto;
+    }
   </style>
 </head>
 <body>
-  
+
+  <section class="section pb-0">
+    <div class="container">
+      <h1 class="title is-3 has-text-centered has-text-grey-dark">
+        Histórico de Pedidos
+      </h1>
+      <h2 class="subtitle has-text-centered has-text-grey">
+        Consulta y exporta el resumen de pedidos históricos
+      </h2>
+    </div>
+  </section>
+
   <!-- Tabla -->
   <section class="section pt-3">
     <div class="container">
-      <div class="table-container">
+      <div class="table-container" style="overflow-x: auto;">
         <table class="table is-striped is-hoverable is-fullwidth" id="myTable">
           <thead>
             <tr>
@@ -124,22 +144,22 @@
   <!-- JSZip (requerido para exportar a Excel) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <script>
-  $(document).ready(function () {
-    $('#myTable').DataTable({
-      dom: 'Bfrtip',
-      buttons: [
-        {
-          extend: 'excelHtml5',
-          title: 'Historico_Pedidos',
-          text: '<i class="fas fa-file-excel"></i> Exportar a Excel',
-          className: 'button is-success'
-        }
-      ],
-      language: {
-        url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
-      }
-    });
-  });
+$('#myTable').DataTable({
+  dom: 'Bfrtip',
+  buttons: [
+    {
+      extend: 'excelHtml5',
+      title: 'Historico_Pedidos',
+      text: '<i class="fas fa-file-excel"></i> Exportar a Excel',
+      className: 'button is-success'
+    }
+  ],
+  language: {
+    url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+  },
+  lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "Mostrar todo"]]
+});
+$('.dt-button').addClass('button is-small is-link');
 </script>
 
 </body>
