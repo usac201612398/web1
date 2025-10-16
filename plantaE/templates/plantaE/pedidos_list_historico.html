@@ -68,12 +68,20 @@
 
   <section class="section pb-0">
     <div class="container">
-      <h1 class="title is-3 has-text-centered has-text-grey-dark">
-        Histórico de Pedidos
-      </h1>
-      <h2 class="subtitle has-text-centered has-text-grey">
-        Consulta y exporta el resumen de pedidos históricos
-      </h2>
+      <div class="level">
+        <div class="level-left">
+          <div>
+            <h1 class="title is-3 has-text-grey-dark">Histórico de Pedidos</h1>
+            <h2 class="subtitle has-text-grey">Consulta y exporta el resumen de pedidos históricos</h2>
+          </div>
+        </div>
+        <div class="level-right">
+          <a href="{% url 'pesos_list' %}" class="button is-info is-light">
+            <span class="icon"><i class="fas fa-home"></i></span>
+            <span>Inicio</span>
+          </a>
+        </div>
+      </div>
     </div>
   </section>
 
