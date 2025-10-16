@@ -81,6 +81,7 @@
   <section class="section pt-3">
     <div class="container">
       <div class="table-container" style="overflow-x: auto;">
+        <div id="datatable-wrapper">
         <table class="table is-striped is-hoverable is-fullwidth" id="myTable">
           <thead>
             <tr>
@@ -125,11 +126,12 @@
               <td class="number-cell">{{ registro.libras_por_entregado|floatformat:2 }}</td>
               <td class="number-cell">{{ registro.costoentregado|floatformat:2 }}</td>
               <td>{{ registro.envio }}</td>
-              <td>{{ registro.status }}</td>
+              <td>{{ registro.status|default:"" }}</td>
             </tr>
             {% endfor %}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   </section>
