@@ -463,6 +463,7 @@ class salidacontenedoresForm(forms.ModelForm):
 
 
 class boletasForm(forms.ModelForm):
+    op_categoria = [('','-'),('Aprovechamiento','Aprovechamiento'),('Mediano','Mediano'),('Devolución','Devolución')]
     
     registro = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
@@ -474,7 +475,7 @@ class boletasForm(forms.ModelForm):
     orden = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     calidad1 = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly':'readonly'}))  # Campo numérico
-    calidad = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    calidad = forms.ChoiceField(widget=forms.Select(Choices=op_categoria,attrs={'class': 'form-control'}))
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     librasxcaja = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     libras = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
@@ -485,10 +486,12 @@ class boletasForm(forms.ModelForm):
         fields = ['fecha', 'registro','boleta','finca', 'ordenfinca','proveedor','cultivo','orden','calidad1','itemsapname','calidad' , 'cajas', 'librasxcaja', 'libras','observaciones']
     
     def __init__(self, *args, **kwargs):
+
         super().__init__(*args, **kwargs)
         self.fields['observaciones'].required = False
         self.fields['orden'].required = False
         self.fields['ordenfinca'].required = False
+
 
 class pedidosForm(forms.ModelForm):
 
