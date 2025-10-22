@@ -2,7 +2,7 @@ from django.db import models
 
 class QRCodeData(models.Model):
     op_color = [('','Seleccione un color'),('Amarillo','Amarillo'),('Naranja','Naranja'),('Rojo','Rojo'),('Morado','Morado'),('Verde','Verde'),('Café','Café'),('Rosado','Rosado')]
-    op_cosechador = [('','Seleccione un cosechador'),('JV','JV'),('RC','RC'),('SS','SS'),('SC','SC')]
+    op_cosechador = [('','Seleccione un cosechador'),('JV','JV'),('RC','RC'),('SS','SS'),('SC','SC'),('WT','WT'), ('PA','PA'),('BD','BD'),('DC','DC'),('MP','MP'),('LL','LL'),('VM','VM'),('LF','LF')]
     op_blossom = [('','Seleccione criterio'),('Si','Si'),('No','No')]
     op_status = [('Pendiente',''),('Cerrado','Cerrado')]
 
