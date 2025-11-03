@@ -532,6 +532,7 @@ class tipoCajas(models.Model):
     registro = models.BigAutoField(primary_key=True)
     tcaja = models.CharField(max_length=75, blank=True, null=True)
     peso =  models.FloatField(blank=True, null=True)
+    itemsapcode = models.CharField(max_length=30, blank=True, null=True)
     
 
     def __str__(self):
