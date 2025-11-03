@@ -225,7 +225,7 @@ class controlcajas(models.Model):
     fecha = models.DateField(blank=True, null=True)
     finca = models.CharField(max_length=75, blank=True, null=True)
     tarimas = models.BigIntegerField(blank=True, null=True)
-    cajas = models.BigIntegerField(blank=True, null=True)
+    cajas = models.FloatField(blank=True, null=True)
     tipodecaja = models.CharField(max_length=85, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     viaje = models.CharField(max_length=30, blank=True, null=True)
