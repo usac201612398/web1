@@ -3,7 +3,7 @@ from django.http import JsonResponse, HttpResponse
 from openpyxl import Workbook
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect
-from .models import Actpeso,pedidos, proyecciones,paramenvlocales,enviosrec,AcumFrutaaux,salidacontenedores, inventarioProdTermAux,productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
+from .models import Actpeso,pedidos,controlcajas, proyecciones,paramenvlocales,enviosrec,AcumFrutaaux,salidacontenedores, inventarioProdTermAux,productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
 from .forms import boletasForm,pedidosForm,itemsForm, itemsenviosForm,salidacontenedoresForm,salidasFrutaForm, contenedoresForm,recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
 from django.db.models import Sum, Q, Max, Min,Value as V,F, ExpressionWrapper, FloatField
 
@@ -1196,7 +1196,8 @@ def envioslocal_delete(request, pk):
 
         # Anular registros de inventario
         inventarios_relacionados.update(status='Anulado', status3='Anulado')
-
+        registros_a_anular_2 = controlcajas.objects.filter(transaccion=envio_original.envio)
+        registros_a_anular_2.update(status='Anulado')
         return render(request, 'plantaE/envioslocal_confirm_delete.html', {
             'registros': envio_original,
             'alert_message': "El envío y todos los registros relacionados fueron anulados correctamente.",
