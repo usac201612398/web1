@@ -223,7 +223,8 @@ class controlcajas(models.Model):
     transaccion = models.BigIntegerField(blank=True, null=True)
     tipomov = models.CharField(max_length=30, blank=True, null=True)
     fecha = models.DateField(blank=True, null=True)
-    finca = models.CharField(max_length=75, blank=True, null=True)
+    lugar_sale = models.CharField(max_length=75, blank=True, null=True)
+    lugar_entra = models.CharField(max_length=75, blank=True, null=True)
     tarimas = models.BigIntegerField(blank=True, null=True)
     cajas = models.FloatField(blank=True, null=True)
     tipodecaja = models.CharField(max_length=85, blank=True, null=True)
@@ -236,7 +237,7 @@ class controlcajas(models.Model):
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     def __str__(self):
-        return (str(self.finca)+ " | " + str(self.tipodecaja) + " | " + str(self.fechasalidafruta))
+        return (str(self.lugar_sale)+ " | " + str(self.lugar_entra)  + " | " +str(self.tipodecaja) + " | " + str(self.fechasalidafruta))
     
 class Actpeso(models.Model):
 
