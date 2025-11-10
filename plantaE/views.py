@@ -5231,9 +5231,9 @@ def obtener_items_relacionados(request):
         if variedad:
             return JsonResponse({'nombre': variedad.descripcion})
     elif nombre:
-        variedad = tipoCajas.objects.filter(itemsapcode=code).first()
+        variedad = tipoCajas.objects.filter(tcaja=nombre).first()
         if variedad:
-            return JsonResponse({'codigo': variedad.tcaja})
+            return JsonResponse({'codigo': variedad.itemsapcode})
 
     return JsonResponse({}, status=404)
 
