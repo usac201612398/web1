@@ -532,7 +532,6 @@ class tipoCajas(models.Model):
     peso =  models.FloatField(blank=True, null=True)
     itemsapcode = models.CharField(max_length=30, blank=True, null=True)
     
-
     def __str__(self):
         return str(self.tcaja)
 

@@ -5226,10 +5226,10 @@ def obtener_items_relacionados(request):
     nombre = request.GET.get('nombre')
 
     if code:
-        variedad = paramenvlocales.objects.filter(item=code).first()
+        variedad = tipoCajas.objects.filter(itemsapcode=code).first()
         
         if variedad:
-            return JsonResponse({'nombre': variedad.descripcion})
+            return JsonResponse({'nombre': variedad.tcaja})
     elif nombre:
         variedad = tipoCajas.objects.filter(tcaja=nombre).first()
         if variedad:
