@@ -23,9 +23,6 @@
             max-width: 200px;
         }
 
-        .table-container {
-            overflow-x: auto;
-        }
 
         .btn-success {
             font-weight: 500;
@@ -78,7 +75,7 @@
                     {% for registro in registros %}
                     <tr>
                         <td title="{{ registro.registro }}">{{ registro.registro }}</td>
-                        <td title="{{ registro.itemsapcode }}">{{ registro.itemsapname }}</td>
+                        <td title="{{ registro.itemsapcode }}">{{ registro.itemsapcode }}</td>
                         <td title="{{ registro.tipodecaja }}">{{ registro.tipodecaja }}</td>
                         <td title="{{ registro.cajas }}">{{ registro.cajas }}</td>
                         <td title="{{ registro.lugar_sale }}">{{ registro.lugar_sale }}</td>
