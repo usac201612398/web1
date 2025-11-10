@@ -434,7 +434,8 @@ class controlcajasForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(controlcajasForm, self).__init__(*args, **kwargs)
         # Assuming tipoCajas.objects is accessible and works as intended
-        items_qs = tipoCajas.objects.exclude(itemsapcode='') 
+        items_qs = tipoCajas.objects.exclude(itemsapcode__isnull=True).exclude(itemsapcode='')
+
         
         # Populate dynamic choices
         self.fields['itemsapcode'].choices = [('', '-')] + [(v.itemsapcode, v.itemsapcode) for v in items_qs]
