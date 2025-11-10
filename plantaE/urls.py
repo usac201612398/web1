@@ -165,6 +165,11 @@ urlpatterns = [
     path('pedidos/new/plantilla', views.article_create_pedidos, name='create_pedidos'),
     path('ajax/guardar-pedido/', views.guardar_pedido, name='guardar_pedido'),
     path('pedidos/<int:pk>/edit/', views.pedidos_update, name='pedidos_update'),
-    
+
+    path("controlcajasmanual",views.controlcajas_list,name='controlcajas_list'),
+    path('controlcajasmanual/new/', views.controlcajas_create, name='controlcajas_create'),
+    path('controlcajasmanual/<int:pk>/edit/', views.controlcajas_update, name='controlcajas_update'),
+    path('controlcajasmanual/<int:pk>/delete/', views.controlcajas_delete, name='controlcajas_delete'),
+    path('ajax/obtener-item/', views.obtener_items_relacionados, name='obtener_items'),
 
 ]

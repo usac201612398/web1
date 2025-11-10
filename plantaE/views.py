@@ -3,8 +3,8 @@ from django.http import JsonResponse, HttpResponse
 from openpyxl import Workbook
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect
-from .models import Actpeso,pedidos,controlcajas, proyecciones,paramenvlocales,enviosrec,AcumFrutaaux,salidacontenedores, inventarioProdTermAux,productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
-from .forms import boletasForm,pedidosForm,itemsForm, itemsenviosForm,salidacontenedoresForm,salidasFrutaForm, contenedoresForm,recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
+from .models import Actpeso,pedidos,tipoCajas,controlcajas, proyecciones,paramenvlocales,enviosrec,AcumFrutaaux,salidacontenedores, inventarioProdTermAux,productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
+from .forms import boletasForm,controlcajasForm,pedidosForm,itemsForm, itemsenviosForm,salidacontenedoresForm,salidasFrutaForm, contenedoresForm,recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
 from django.db.models import Sum, Q, Max, Min,Value as V,F, ExpressionWrapper, FloatField
 
 from django.utils import timezone
@@ -5175,6 +5175,80 @@ def itemsenvios_update(request, pk):
     else:
         form = itemsenviosForm(instance=salidas)
     return render(request, 'plantaE/itemsenvios_form.html', {'form': form,'modo':'actualizar'})
+
+
+def controlcajas_list(request):
+    salidas = controlcajas.objects.all() # Excluye los que tienen status 'Cerrado'
+    salidas = salidas.order_by('-registro')
+    return render(request, 'plantaE/controlcajas_list.html', {'registros': salidas})
+
+def controlcajas_delete(request, pk):
+
+    salidas = get_object_or_404(controlcajas, pk=pk)
+
+    if salidas.tipomov!="Manual":
+        return render(request, 'plantaE/controlcajas_confirm_delete.html', {
+            'registros': salidas,
+            'alert_message': "No se puede anular este  movimiento porque ya tiene no es de serie manual.",
+            'redirect_url': reverse('controlcajas_list')
+        })
+
+    if request.method == 'POST':
+        salidas.status = 'Anulado'
+        salidas.save()
+        return render(request, 'plantaE/controlpesos_confirm_delete.html', {
+            'alert_message': "El registro fue anulado correctamente.",
+            'redirect_url': reverse('controlpesos_list')
+        })
+    
+    return render(request, 'plantaE/controlcajas_confirm_delete.html', {'registros': salidas})
+
+def controlcajas_create(request):
+    if request.method == 'POST':
+        form = controlcajasForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+            except Exception as e:
+                # Manejar excepciones específicas (por ejemplo, UniqueConstraintError)
+                return JsonResponse({'error': str(e)}, status=400)
+            return redirect('controlcajas_list')
+        else:
+             # Imprimir errores para depuración
+            return JsonResponse({'errores': form.errors}, status=400)
+    else:
+        form = itemsenviosForm()
+    return render(request, 'plantaE/controlcajas_form.html', {'form': form,'modo':'crear'})
+
+def obtener_items_relacionados(request):
+
+    code = request.GET.get('codigo')
+    nombre = request.GET.get('nombre')
+
+    if code:
+        variedad = paramenvlocales.objects.filter(item=code).first()
+        
+        if variedad:
+            return JsonResponse({'nombre': variedad.descripcion})
+    elif nombre:
+        variedad = tipoCajas.objects.filter(itemsapcode=code).first()
+        if variedad:
+            return JsonResponse({'codigo': variedad.tcaja})
+
+    return JsonResponse({}, status=404)
+
+def controlcajas_update(request, pk):
+
+    salidas = get_object_or_404(controlcajas, pk=pk)
+    
+    if request.method == 'POST':
+        form = controlcajasForm(request.POST, instance=salidas)
+        if form.is_valid():
+            form.save()
+            return redirect('controlcajas_list')
+    else:
+        form = controlcajasForm(instance=salidas)
+    return render(request, 'plantaE/controlcajas_form.html', {'form': form,'modo':'actualizar'})
 
 def article_create_pedidos(request):
 

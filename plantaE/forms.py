@@ -1,5 +1,5 @@
 from django import forms
-from .models import Actpeso,pedidos,usuariosAppFruta,detallerec, detallesEstructuras, causasRechazo,paramenvlocales,Boletas,salidacontenedores,salidasFruta, productoTerm,contenedores, Recepciones, Ccalidad, inventarioProdTerm,AcumFruta, enviosFrutaPlantilla
+from .models import Actpeso,tipoCajas,pedidos,controlcajas,usuariosAppFruta,detallerec, detallesEstructuras, causasRechazo,paramenvlocales,Boletas,salidacontenedores,salidasFruta, productoTerm,contenedores, Recepciones, Ccalidad, inventarioProdTerm,AcumFruta, enviosFrutaPlantilla
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Fieldset, Div
 from django.db.models import Sum
@@ -398,7 +398,71 @@ class itemsenviosForm(forms.ModelForm):
         model = paramenvlocales
         fields = ['item','descripcion','u_m','clasificacion','almacen','grupo','rubro']
 
-    
+from django import forms
+
+# Assuming 'controlcajas' is your Model and 'tipoCajas' is the related Model
+# Replace with your actual model names if different
+
+class controlcajasForm(forms.ModelForm):
+
+    # Field Choices
+    l_entra = [('','-'),('RIO','RIO'),('VALLE','VALLE'),('PROVALLE','PROVALLE'),('FLE','FLE'),('CENMA','CENMA'),('CARRETA','CARRETA')]
+    l_sale = [('','-'),('RIO','RIO'),('VALLE','VALLE'),('PROVALLE','PROVALLE'),('FLE','FLE'),('CENMA','CENMA'),('CARRETA','CARRETA')]
+    op_mov = [('','-'),('Entrega','Entrega'),('Recepción','Recepción')]
+
+    # Fields
+    cajas = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    lugar_entra = forms.ChoiceField(choices=l_entra, widget=forms.Select(attrs={'class': 'form-control'}))
+    lugar_sale = forms.ChoiceField(choices=l_sale, widget=forms.Select(attrs={'class': 'form-control'}))
+    tipomov = forms.ChoiceField(choices=op_mov, widget=forms.Select(attrs={'class': 'form-control'}))
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
+
+    # Dynamic Choice Fields (initialized in __init__)
+    itemsapcode = forms.ChoiceField(
+        choices=[], required=False, 
+        widget=forms.Select(attrs={'class': 'form-control', 'id': 'id_itemsapcode'})
+    )
+    tipodecaja = forms.ChoiceField(
+        choices=[], 
+        widget=forms.Select(attrs={'class': 'form-control', 'id': 'id_tipodecaja'})
+    )
+
+    class Meta:
+        model = controlcajas
+        fields = ['itemsapcode','tipodecaja','cajas','lugar_entra','lugar_sale','tipomov','fecha']
+
+    def __init__(self, *args, **kwargs):
+        super(controlcajasForm, self).__init__(*args, **kwargs)
+        # Assuming tipoCajas.objects is accessible and works as intended
+        items_qs = tipoCajas.objects.exclude(status="Anulado").exclude(itemsapcode='') 
+        
+        # Populate dynamic choices
+        self.fields['itemsapcode'].choices = [('', '-')] + [(v.itemsapcode, v.itemsapcode) for v in items_qs]
+        self.fields['tipodecaja'].choices = [('', '-')] + [(v.tcaja, v.tcaja) for v in items_qs]
+
+    def clean(self):
+        # Call the base clean method to get cleaned data
+        cleaned_data = super().clean()
+        
+        cajas = cleaned_data.get('cajas')
+        tipomov = cleaned_data.get('tipomov')
+
+        # Only proceed if both fields have values
+        if cajas is not None and tipomov:
+            # Check for 'Entrega' (Delivery)
+            if tipomov == 'Entrega':
+                # If Entrega, boxes must be negative.
+                # Use abs() to ensure the number is negative regardless of input
+                cleaned_data['cajas'] = -abs(cajas)
+            
+            # Check for 'Recepcion' (Reception)
+            elif tipomov == 'Recepcion':
+                # If Recepcion, boxes must be positive.
+                # Use abs() to ensure the number is positive regardless of input
+                cleaned_data['cajas'] = abs(cajas)
+
+        return cleaned_data
+
 class salidacontenedoresForm(forms.ModelForm):
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
     contenedor = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
