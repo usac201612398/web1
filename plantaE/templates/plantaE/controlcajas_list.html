@@ -104,10 +104,12 @@
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
     <script>
-        $(document).ready(function () {
-            $('#myTable').DataTable({
-                scrollX: true
-            });
+        $('#myTable').DataTable({
+            scrollX: true,
+            autoWidth: false,
+            columnDefs: [
+                { width: "150px", targets: "_all" } // opcional, define ancho base
+            ]
         });
     </script>
 </body>
