@@ -5217,7 +5217,7 @@ def controlcajas_create(request):
              # Imprimir errores para depuración
             return JsonResponse({'errores': form.errors}, status=400)
     else:
-        form = itemsenviosForm()
+        form = controlcajasForm()
     return render(request, 'plantaE/controlcajas_form.html', {'form': form,'modo':'crear'})
 
 def obtener_items_relacionados(request):
