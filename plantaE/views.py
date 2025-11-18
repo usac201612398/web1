@@ -2627,14 +2627,14 @@ def reporte_tabla_pivote(request):
         ).round(2)
 
         # Obtener áreas por finca-orden-estructura
-        areas_qs = detallesEstructuras.objects.values('finca', 'orden', 'estructura').annotate(
+        areas_qs = detallesEstructuras.objects.values('finca', 'orden', 'cultivo', 'estructura').annotate(
             area_total=Sum('area')
         )
         df_areas = pd.DataFrame(list(areas_qs))
 
         # Unir pivot con áreas
         pivot = pivot.reset_index()
-        df_merge = pd.merge(pivot, df_areas, on=['finca', 'orden', 'estructura'], how='left')
+        df_merge = pd.merge(pivot, df_areas, on=['finca', 'orden', 'cultivo','estructura'], how='left')
 
         # Calcular rendimiento (kg/m²) por semana
         semanas = [col for col in df_merge.columns if col.startswith('20')]
@@ -4922,14 +4922,11 @@ def poraprovechamientosempger(request):
 
         # Calcular kg/m² con libras de aprovechamiento
         
-        
         clave_area = (orden, cultivo)
         area_m2 = areas_sumadas.get(clave_area, 0)
 
         aprovechamiento_kg = datos['aprovechamiento_libras'] / 2.20462 if datos['aprovechamiento_libras'] else 0
         kg_m2 = round(aprovechamiento_kg / area_m2, 2) if area_m2 > 0 else 0
-
-
 
         resultado.append({
             'proveedor': finca,
