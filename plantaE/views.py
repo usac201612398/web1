@@ -2606,7 +2606,7 @@ def reporte_tabla_pivote(request):
         if valor:
             qs = qs.filter(**{campo: valor})
 
-    data = qs.values('fecha', 'finca', 'orden', 'estructura').annotate(
+    data = qs.values('fecha', 'finca', 'orden','cultivo', 'estructura').annotate(
         total_libras=Sum('libras')
     )
 
@@ -2620,7 +2620,7 @@ def reporte_tabla_pivote(request):
         pivot = pd.pivot_table(
             df,
             values='kg',
-            index=['finca', 'orden', 'estructura'],
+            index=['finca', 'orden','cultivo', 'estructura'],
             columns='semana',
             aggfunc='sum',
             fill_value=0
