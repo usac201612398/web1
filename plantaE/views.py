@@ -4847,6 +4847,7 @@ def poraprovechamientosger(request):
         'tabla_html': tabla_html,
         'registros_json': registros_json,
     })
+
 def poraprovechamientosempger(request):
     hoy = timezone.now().date()
 
@@ -4897,12 +4898,12 @@ def poraprovechamientosempger(request):
 
         agrupados[clave]['total_distribuido_libras'] += libras
 
-    # Obtener áreas por clave
-    areas = detallesEstructuras.objects.values('finca', 'cultivo', 'orden', 'estructura', 'variedad', 'area')
-    areas_dict = {
-        formar_clave2(a['finca'], a['cultivo'], a['orden'], a['estructura'], a['variedad']): a['area']
-        for a in areas
-    }
+    
+    
+    areas_sumadas_qs = detallesEstructuras.objects.values('orden', 'cultivo').annotate(total_area=Sum('area'))
+    areas_sumadas = {(a['orden'], a['cultivo']): a['total_area'] for a in areas_sumadas_qs}
+
+
 
     # Armar resultado final
     resultado = []
@@ -4920,9 +4921,15 @@ def poraprovechamientosempger(request):
         kilos_pendientes = round(pendiente_libras / 2.20462, 2)
 
         # Calcular kg/m² con libras de aprovechamiento
-        area_m2 = areas_dict.get(clave)
+        
+        
+        clave_area = (orden, cultivo)
+        area_m2 = areas_sumadas.get(clave_area, 0)
+
         aprovechamiento_kg = datos['aprovechamiento_libras'] / 2.20462 if datos['aprovechamiento_libras'] else 0
-        kg_m2 = round(aprovechamiento_kg / area_m2, 2) if area_m2 else None
+        kg_m2 = round(aprovechamiento_kg / area_m2, 2) if area_m2 > 0 else 0
+
+
 
         resultado.append({
             'proveedor': finca,
