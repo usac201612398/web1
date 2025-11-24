@@ -398,11 +398,6 @@ class itemsenviosForm(forms.ModelForm):
         model = paramenvlocales
         fields = ['item','descripcion','u_m','clasificacion','almacen','grupo','rubro']
 
-from django import forms
-
-# Assuming 'controlcajas' is your Model and 'tipoCajas' is the related Model
-# Replace with your actual model names if different
-
 class controlcajasForm(forms.ModelForm):
 
     # Field Choices

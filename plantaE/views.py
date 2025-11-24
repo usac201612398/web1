@@ -2706,21 +2706,21 @@ def reporte_tabla_pivote2(request):
         pivot = pd.pivot_table(
             df,
             values='kg',
-            index=['finca', 'orden', 'estructura'],
+            index=['finca', 'orden','cultivo', 'estructura'],
             columns='semana',
             aggfunc='sum',
             fill_value=0
         ).round(2)
 
         # Obtener áreas por finca-orden-estructura
-        areas_qs = detallesEstructuras.objects.values('finca', 'orden', 'estructura').annotate(
+        areas_qs = detallesEstructuras.objects.values('finca', 'orden','cultivo', 'estructura').annotate(
             area_total=Sum('area')
         )
         df_areas = pd.DataFrame(list(areas_qs))
 
         # Unir pivot con áreas
         pivot = pivot.reset_index()
-        df_merge = pd.merge(pivot, df_areas, on=['finca', 'orden', 'estructura'], how='left')
+        df_merge = pd.merge(pivot, df_areas, on=['finca', 'orden', 'cultivo','estructura'], how='left')
 
         # Calcular rendimiento (kg/m²) por semana
         semanas = [col for col in df_merge.columns if col.startswith('20')]
