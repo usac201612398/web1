@@ -2692,7 +2692,7 @@ def reporte_tabla_pivote2(request):
         if valor:
             qs = qs.filter(**{campo: valor})
 
-    data = qs.values('fecha', 'finca', 'orden', 'estructura').annotate(
+    data = qs.values('fecha', 'finca', 'orden','cultivo', 'estructura').annotate(
         total_libras=Sum('libras')
     )
 
