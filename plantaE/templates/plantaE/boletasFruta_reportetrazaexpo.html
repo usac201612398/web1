@@ -132,6 +132,7 @@
                 </tr>
                 {% endfor %}
               </tbody>
+              <tfoot id="totalesRow"></tfoot>
             </table>
           </div>
         </div>
@@ -183,36 +184,50 @@
             console.warn("No se encontraron datos.");
             return;
           }
-          // Asignar globalmente
+          let sumaCajas = 0;
+let sumaLibras = 0;
 
-          data.datos.forEach(item => {
-            const row = `<tr>
-              <td>${item.fecha}</td>
-              <td>${item.palet}</td>
-              <td>${item.proveedor}</td>
-              <td>${item.cultivo}</td>
-              <td>${item.itemsapcode}</td>
-              <td>${item.itemsapname}</td>
-              <td>${Math.round(item.total_cajas)}</td>
-              <td>${Math.round(item.total_libras)}</td>
-              <td>
-                <button 
-                  class="button is-small is-link imprimir-btn"
-                  data-fecha="${item.fecha}"
-                  data-palet="${item.palet}"
-                  data-proveedor="${item.proveedor}"
-                  data-cultivo="${item.cultivo}"
-                  data-itemsapcode="${item.itemsapcode}"
-                  data-itemsapname="${item.itemsapname}"
-                  data-total_cajas="${item.total_cajas}"
-                  data-total_libras="${item.total_libras}"
-                >
-                  <i class="fas fa-print"></i>
-                </button>
-              </td>
-            </tr>`;
-            tbody.insertAdjacentHTML('beforeend', row);
-          });
+data.datos.forEach(item => {
+
+    sumaCajas += Number(item.total_cajas);
+    sumaLibras += Number(item.total_libras);
+
+    const row = `<tr>
+      <td>${item.fecha}</td>
+      <td>${item.palet}</td>
+      <td>${item.proveedor}</td>
+      <td>${item.cultivo}</td>
+      <td>${item.itemsapcode}</td>
+      <td>${item.itemsapname}</td>
+      <td>${Math.round(item.total_cajas)}</td>
+      <td>${Math.round(item.total_libras)}</td>
+      <td>
+        <button 
+          class="button is-small is-link imprimir-btn"
+          data-fecha="${item.fecha}"
+          data-palet="${item.palet}"
+          data-proveedor="${item.proveedor}"
+          data-cultivo="${item.cultivo}"
+          data-itemsapcode="${item.itemsapcode}"
+          data-itemsapname="${item.itemsapname}"
+          data-total_cajas="${item.total_cajas}"
+          data-total_libras="${item.total_libras}"
+        >
+          <i class="fas fa-print"></i>
+        </button>
+      </td>
+    </tr>`;
+    tbody.insertAdjacentHTML('beforeend', row);
+});
+
+// Agregar totales al footer
+document.getElementById('totalesRow').innerHTML = `
+<tr style="background:#d9fdd3; font-weight:bold;">
+    <td colspan="6" style="text-align:right;">TOTAL:</td>
+    <td>${sumaCajas.toLocaleString('es-ES')}</td>
+    <td>${sumaLibras.toLocaleString('es-ES')}</td>
+    <td></td>
+</tr>`;
 
           formatCells('myTable');
         });
