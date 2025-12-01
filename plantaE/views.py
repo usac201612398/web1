@@ -2278,6 +2278,7 @@ def generate_packing_list_pdf(request):
     
 def generate_packing_list_pdf2(request):
 
+
     fecha = request.POST.get('fecha')
     contenedor = request.POST.get('contenedor')
 
