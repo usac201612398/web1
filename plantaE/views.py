@@ -3959,15 +3959,15 @@ def boletas_constanciatrazarexpo(request):
             contenedor=contenedor).exclude(status="Anulado")
         salcontentids = conten2.values_list('registro',flat=True).distinct()
         ids = [str(x) for x in salcontentids]
-        datosinvaux = inventarioProdTermAux.objects.filter(salidacontenedores__in=ids)
+        datosinvaux = inventarioProdTermAux.objects.filter(salidacontenedores__in=ids).exclude(status="Anulado")
         registrosinv= datosinvaux.values_list('inventarioreg',flat=True)
-        datosinv = inventarioProdTerm.objects.filter(registro__in=registrosinv)
+        datosinv = inventarioProdTerm.objects.filter(registro__in=registrosinv).exclude(status="Anulado")
         boletasid=datosinv.values_list('boleta',flat=True)
-        detallefruta = AcumFrutaaux.objects.filter(boleta__in=boletasid)
+        detallefruta = AcumFrutaaux.objects.filter(boleta__in=boletasid).exclude(status="Anulado")
         fecha_obj = datetime.datetime.strptime(fecha, '%Y-%m-%d').date()
         fechahoy = timezone.now().date()
         conten=salidacontenedores.objects.exclude(status="Anulado")
-        totalboletainv= inventarioProdTerm.objects.filter(boleta__in=boletasid)
+        totalboletainv= inventarioProdTerm.objects.filter(boleta__in=boletasid).exclude(status="Anulado")
         
         invboletasid=totalboletainv.values_list('registro',flat=True)
         conten_dict = {
@@ -3992,6 +3992,7 @@ def boletas_constanciatrazarexpo(request):
             item['contenedor'] = data_conten.get('contenedor', 'N/D')
             
             vector3.append(item)
+
         context = {
             'fecha': fecha,
             'itemsapcode': itemsapcode,
@@ -4011,6 +4012,7 @@ def boletas_constanciatrazarexpo(request):
             'mercado': datosinv.first().categoria,
             'palet': palet
         }
+
         return render(request, 'plantaE/boletasFruta_constanciatrazaexpo.html', context)
     
 def boletas_constanciatraza(request):
