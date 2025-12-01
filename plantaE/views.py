@@ -4371,38 +4371,50 @@ def boletas_trazarecepcion(request):
     return render(request, 'plantaE/boletasFruta_trazarecepcion.html')
 
 
+import datetime
+from django.db.models import Sum, Min
+
 def boletas_reportetrazaexpo(request):
     if request.method == 'POST':
         try:
-            opcion1 = request.POST.get('opcion1')  # envio
+            opcion1 = request.POST.get('opcion1')  # contenedor
             opcion2 = request.POST.get('opcion2')  # fecha
-            opcion3 = request.POST.get('opcion3')  # fecha
-        # Si envias cultivo, se filtra también
+            opcion3 = request.POST.get('opcion3')  # cultivo
+
+            # Convertir fecha
+            fecha_obj = datetime.datetime.strptime(opcion2, '%Y-%m-%d').date()
+
+            # Base queryset
+            qs = salidacontenedores.objects.filter(
+                contenedor=opcion1,
+                fechasalcontenedor=fecha_obj
+            )
+
+            # Si se seleccionó cultivo, filtrar
             if opcion3:
                 qs = qs.filter(cultivo=opcion3)
-    # Paso 1: Obtener los itemcodigo que tengan ese cultivo
 
-            fecha_obj = datetime.datetime.strptime(opcion2, '%Y-%m-%d').date()
-            conten = salidacontenedores.objects.filter(
-                        contenedor=opcion1,
-                        fechasalcontenedor=fecha_obj
-                    ).values('palet','itemsapcode','proveedor','cultivo').annotate(
+            # Query final
+            conten = qs.values(
+                'palet',
+                'itemsapcode',
+                'proveedor',
+                'cultivo'
+            ).annotate(
+                total_cajas=Sum('cajas'),
+                total_libras=Sum('lbsintara'),
+                fecha=Min('fechasalcontenedor'),
+                itemsapname=Min('itemsapname')
+            ).order_by('palet')
 
-                        total_cajas=Sum('cajas'),
-                        total_libras=Sum('lbsintara'),
-                        fecha=Min('fechasalcontenedor'),
-                        itemsapname=Min('itemsapname')
-                    ).order_by('palet')
-            # === 7. Enviar respuesta JSON ===
-            return JsonResponse({
-                'datos': list(conten)
-            }, safe=False)
+            return JsonResponse({'datos': list(conten)})
 
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
 
     # GET
     return render(request, 'plantaE/boletasFruta_reportetrazaexpo.html')
+
 
 def boletas_reportetraza(request):
     if request.method == 'POST':
