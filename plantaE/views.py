@@ -3942,6 +3942,7 @@ def boletas_constanciatrazarexpo(request):
         fecha = request.POST.get('fecha')
         palet=request.POST.get('palet')
         contenedor = request.POST.get('contenedor')
+        cultivo = request.POST.get('cultivo')
         proveedor = request.POST.get('proveedor')
         itemsapcode = request.POST.get('itemsapcode')
         itemsapname = request.POST.get('itemsapname')
@@ -3995,7 +3996,7 @@ def boletas_constanciatrazarexpo(request):
             'fecha': fecha,
             'itemsapcode': itemsapcode,
             'productor':proveedor,
-            'cultivo': conten.first().cultivo,
+            'cultivo': cultivo,
             'itemsapname': itemsapname,
             'cajas': total_cajas,
             'libras': total_libras,

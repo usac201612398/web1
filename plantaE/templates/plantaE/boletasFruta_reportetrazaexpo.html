@@ -350,6 +350,8 @@ document.addEventListener('click', function(e) {
   const total_cajas = btn.dataset.total_cajas;
   const total_libras = btn.dataset.total_libras;
   const proveedor= btn.dataset.proveedor;
+  
+  const cultivo = btn.dataset.cultivo;
   const contenedor = document.getElementById('Contenedor').value;
  
   // Aquí usas variables globales o los datos que ya tengas cargados (vectores)
@@ -370,7 +372,7 @@ document.addEventListener('click', function(e) {
   // Añadir los campos
   const data = {
     fecha, palet,total_libras, itemsapcode, itemsapname,
-     total_cajas, proveedor,contenedor
+     total_cajas, proveedor,cultivo,contenedor
   };
 
   for (const [key, val] of Object.entries(data)) {
