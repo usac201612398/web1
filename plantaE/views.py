@@ -272,7 +272,7 @@ def load_dataUsuario8(request):
     # Paso 1: Obtener los itemcodigo que tengan ese cultivo
 
     fecha_obj = datetime.datetime.strptime(opcion1, '%Y-%m-%d').date()
-    conten = salidacontenedores.objects.filter(fechasalcontenedor=fecha_obj,cultivo=opcion2).exclude(status="Anulado"
+    conten = salidacontenedores.objects.filter(fechasalcontenedor=fecha_obj).exclude(status="Anulado"
             ).values_list('contenedor', flat=True).distinct()    
             
     return JsonResponse({'contenedores':list(conten)})
@@ -282,7 +282,7 @@ def load_dataUsuario9(request):
     fecha = request.GET.get('fecha')
 
     cultivos = (salidacontenedores.objects
-        .filter(contenedor=contenedor, fecha=fecha)
+        .filter(contenedor=contenedor, fechasalcontenedor=fecha)
         .values_list('cultivo', flat=True)
         .distinct()
     )
