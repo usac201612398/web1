@@ -2293,7 +2293,7 @@ def generate_packing_list_pdf2(request):
 
     # Información del contenedor
     infoconten = contenedores.objects.filter(
-        contenedor=contenedor,fechasalcontenedor=fecha_obj
+        contenedor=contenedor
     ).exclude(status="Anulado").first()
 
     if not infoconten:
