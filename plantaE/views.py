@@ -3942,7 +3942,7 @@ def boletas_constanciatrazarexpo(request):
         fecha = request.POST.get('fecha')
         palet=request.POST.get('palet')
         contenedor = request.POST.get('contenedor')
-        cultivo = request.POST.get('Cultivo')
+        cultivo = request.POST.get('cultivo')
         proveedor = request.POST.get('proveedor')
         itemsapcode = request.POST.get('itemsapcode')
         itemsapname = request.POST.get('itemsapname')
