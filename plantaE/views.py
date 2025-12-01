@@ -2279,7 +2279,7 @@ def generate_packing_list_pdf(request):
 def generate_packing_list_pdf2(request):
 
     # Recibir parámetros por GET
-    fecha = request.GET.get('fecha')
+    fecha = request.GET.get('date')
     contenedor = request.GET.get('contenedor')
 
     if not fecha or not contenedor:
