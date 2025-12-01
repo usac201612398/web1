@@ -93,6 +93,9 @@
                 <span class="icon"><i class="fas fa-search"></i></span>
                 <span>Consultar</span>
               </button>
+              <button type="button" id="packing" class="button is-info is-fullwidth mt-2">
+                <i class="fas fa-file-invoice"></i> Packing List
+            </button>
             </div>
           </div>
         </form>
@@ -401,6 +404,47 @@ document.addEventListener('click', function(e) {
   document.body.appendChild(form);
   form.submit();
   document.body.removeChild(form);
+});
+
+
+document.getElementById("packing").addEventListener("click", function () {
+
+    const fecha = document.getElementById('date').value;
+    const contenedor = document.getElementById('Contenedor').value;
+    const cultivo = document.getElementById('Cultivo').value;
+
+    if (!fecha || !contenedor) {
+        alert("Selecciona fecha y contenedor primero.");
+        return;
+    }
+
+    // Crear formulario para abrir en nueva pestaña
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = "{% url 'generate_packing_list_pdf' %}";
+    form.target = "_blank";
+
+    // CSRF
+    const csrf = document.createElement("input");
+    csrf.type = "hidden";
+    csrf.name = "csrfmiddlewaretoken";
+    csrf.value = getCookie("csrftoken");
+    form.appendChild(csrf);
+
+    // Enviar valores
+    const fields = { fecha, contenedor, cultivo };
+
+    Object.entries(fields).forEach(([k, v]) => {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = k;
+        input.value = v;
+        form.appendChild(input);
+    });
+
+    document.body.appendChild(form);
+    form.submit();
+    form.remove();
 });
 
   </script>
