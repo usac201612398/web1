@@ -57,6 +57,7 @@
             </div>
         </div>
         </section>
+
       <div class="filters box">
         <form id="filtros">
           <div class="columns is-variable is-4">
@@ -406,46 +407,29 @@ document.addEventListener('click', function(e) {
   document.body.removeChild(form);
 });
 
-
 document.getElementById("packing").addEventListener("click", function () {
 
-    const fecha = document.getElementById('date').value;
-    const contenedor = document.getElementById('Contenedor').value;
-    const cultivo = document.getElementById('Cultivo').value;
+  var contenedor = document.getElementById("Contenedor").value;
+  var fecha = document.getElementById("date").value;
 
-    if (!fecha || !contenedor) {
-        alert("Selecciona fecha y contenedor primero.");
-        return;
-    }
+  // Validaciones
+  if (!fecha) {
+      alert("Seleccione una fecha");
+      return;
+  }
+  if (!contenedor) {
+      alert("Seleccione un contenedor");
+      return;
+  }
 
-    // Crear formulario para abrir en nueva pestaña
-    const form = document.createElement("form");
-    form.method = "POST";
-    form.action = "{% url 'generate_packing_list_pdf' %}";
-    form.target = "_blank";
+  // Construir la URL con GET parameters
+  var url = '{% url "generate_packing_list_pdf2" %}?contenedor=' + encodeURIComponent(contenedor) + '&fecha=' + encodeURIComponent(fecha);
 
-    // CSRF
-    const csrf = document.createElement("input");
-    csrf.type = "hidden";
-    csrf.name = "csrfmiddlewaretoken";
-    csrf.value = getCookie("csrftoken");
-    form.appendChild(csrf);
+  // Abrir en nueva pestaña
+  window.open(url, '_blank');
 
-    // Enviar valores
-    const fields = { fecha, contenedor, cultivo };
-
-    Object.entries(fields).forEach(([k, v]) => {
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = k;
-        input.value = v;
-        form.appendChild(input);
-    });
-
-    document.body.appendChild(form);
-    form.submit();
-    form.remove();
 });
+
 
   </script>
   

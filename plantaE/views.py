@@ -2278,9 +2278,9 @@ def generate_packing_list_pdf(request):
     
 def generate_packing_list_pdf2(request):
 
-
-    fecha = request.POST.get('fecha')
-    contenedor = request.POST.get('contenedor')
+    # Recibir parámetros por GET
+    fecha = request.GET.get('fecha')
+    contenedor = request.GET.get('contenedor')
 
     if not fecha or not contenedor:
         return JsonResponse({'error': 'Faltan parámetros: fecha y contenedor'}, status=400)
@@ -2293,7 +2293,7 @@ def generate_packing_list_pdf2(request):
 
     # Información del contenedor
     infoconten = contenedores.objects.filter(
-        contenedor=contenedor
+        contenedor=contenedor,fechasalcontenedor=fecha_obj
     ).exclude(status="Anulado").first()
 
     if not infoconten:
@@ -2337,7 +2337,6 @@ def generate_packing_list_pdf2(request):
 
     return render(request, "plantaE/packinglist_template.html", context)
 
-       
 def inventarioProd_create(request):
     if request.method == 'POST':
         opcion1 = request.POST.get('opcion1')
