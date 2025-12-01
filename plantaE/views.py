@@ -277,6 +277,20 @@ def load_dataUsuario8(request):
             
     return JsonResponse({'contenedores':list(conten)})
 
+def load_dataUsuario9(request):
+    contenedor = request.GET.get('contenedor')
+    fecha = request.GET.get('fecha')
+
+    cultivos = (salidacontenedores.objects
+        .filter(contenedor=contenedor, fecha=fecha)
+        .values_list('cultivo', flat=True)
+        .distinct()
+    )
+
+    return JsonResponse({
+        "cultivos": list(cultivos)
+    })
+
 def pesos_list(request):
     today = timezone.now().date()
     salidas = Actpeso.objects.filter(fecha=today).exclude(status='Anulado')

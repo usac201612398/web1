@@ -246,10 +246,39 @@
       });
     }
     
-    $('#Cultivo').change(function() {
-        var categoryId = $(this).val();  // Obtiene el ID de la categoría seleccionada
-        loadProducts(categoryId);  // Llama a la función para cargar productos
+    // Cuando cambia el contenedor, cargar cultivos disponibles dentro de ese contenedor
+$('#Contenedor').change(function () {
+    const contenedor = $(this).val();
+    const fecha = $('#date').val();
+
+    if (!contenedor || !fecha) return;
+
+    $.ajax({
+        url: '{% url "load_dataUsuario9" %}', // vista nueva
+        data: {
+            'contenedor': contenedor,
+            'fecha': fecha
+        },
+        success: function (data) {
+            console.log("Cultivos recibidos:", data);
+
+            $('#Cultivo').html('<option value="">Seleccionar cultivo</option>');
+
+            if (data.cultivos.length === 0) {
+                alert("Este contenedor no tiene cultivos registrados.");
+                return;
+            }
+
+            data.cultivos.forEach(c => {
+                $('#Cultivo').append(`<option value="${c}">${c}</option>`);
+            });
+        },
+        error: function (xhr) {
+            console.error("Error cargando cultivos:", xhr);
+        }
     });
+});
+
 
 
     function loadProducts(categoryId) {
@@ -283,6 +312,36 @@
       formatCells('myTable');
       
     });
+
+// Cuando cambia la fecha, cargar contenedores
+$('#date').change(function () {
+    const fecha = $(this).val();
+    $('#Contenedor').html('<option>...</option>');
+    $('#Cultivo').html('<option value="">Seleccionar cultivo</option>');
+
+    if (!fecha) return;
+
+    $.ajax({
+        url: '{% url "load_dataUsuario8" %}',  
+        data: {
+            'fechareporte': fecha,
+            'cultivo': ''  
+        },
+        success: function (data) {
+            $('#Contenedor').html('<option value="">Seleccionar contenedor</option>');
+
+            if (data.contenedores.length === 0) {
+                alert('No se encontraron contenedores para esa fecha.');
+                return;
+            }
+
+            data.contenedores.forEach(item => {
+                $('#Contenedor').append(`<option value="${item}">${item}</option>`);
+            });
+        }
+    });
+});
+                                                         
 document.addEventListener('click', function(e) {
   const btn = e.target.closest('.imprimir-btn');
   if (!btn) return;
