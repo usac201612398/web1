@@ -2275,6 +2275,67 @@ def generate_packing_list_pdf(request):
     else:
         # Si no hay datos, devuelve una respuesta vacía o de error
         return JsonResponse({'error': 'No hay datos disponibles para esta semana'}, status=400)
+    
+def generate_packing_list_pdf2(request):
+
+    fecha = request.POST.get('fecha')
+    contenedor = request.POST.get('contenedor')
+
+    if not fecha or not contenedor:
+        return JsonResponse({'error': 'Faltan parámetros: fecha y contenedor'}, status=400)
+
+    # Convertir fecha
+    try:
+        fecha_obj = datetime.datetime.strptime(fecha, "%Y-%m-%d").date()
+    except:
+        return JsonResponse({'error': 'Formato de fecha inválido'}, status=400)
+
+    # Información del contenedor
+    infoconten = contenedores.objects.filter(
+        contenedor=contenedor
+    ).exclude(status="Anulado").first()
+
+    if not infoconten:
+        return JsonResponse({'error': 'Contenedor no encontrado'}, status=404)
+
+    # Obtener toda la fruta del contenedor en esa fecha
+    qs = salidacontenedores.objects.filter(
+        contenedor=contenedor,
+        fechasalcontenedor=fecha_obj
+    ).exclude(status="Anulado")
+
+    if not qs.exists():
+        return JsonResponse({'error': 'No hay registros para este contenedor y fecha'}, status=404)
+
+    # Agrupado igual al template
+    datos = qs.values(
+        "palet",
+        "proveedor",
+        "itemsapname",
+        "fechasalcontenedor"
+    ).annotate(
+        total_cajas=Sum("cajas")
+    ).order_by("palet")
+
+    # Contexto para el template
+    context = {
+        'planta': 'SDC',
+        'destino': infoconten.destino,
+        'contenedor': infoconten.contenedor,
+        'fecha': fecha_obj,
+        'viaje': infoconten.viaje,
+        'marchamo': infoconten.marchamo,
+        'placacamion': infoconten.placacamion,
+        'temperatura': infoconten.temperatura,
+        'ventilacion': infoconten.ventilacion,
+        'hora': infoconten.horasalida,
+        'piloto': infoconten.piloto,
+        'transportista': infoconten.transportista,
+        'datos': datos
+    }
+
+    return render(request, "plantaE/packinglist_template.html", context)
+
        
 def inventarioProd_create(request):
     if request.method == 'POST':

@@ -138,6 +138,7 @@ urlpatterns = [
     path('items/<int:pk>/edit/', views.items_update, name='items_update'),
     path('items/<int:pk>/delete/', views.items_delete, name='items_delete'),
     path('generate_packing_list_pdf/', views.generate_packing_list_pdf, name='generate_packing_list_pdf'),
+    path('generate_packing_list_pdf2/', views.generate_packing_list_pdf2, name='generate_packing_list_pdf2'),
     path('escanearbarras/', views.escanearbarras, name='escanearbarras'),
     path('dashboard/', views.dashboard_acumfruta, name='dashboard_acumfruta'),
     path('dashboardkgxm2/', views.dashboard_acumfrutakgxm2, name='dashboard_acumfrutakgxm2'),
