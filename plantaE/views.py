@@ -4376,14 +4376,18 @@ def boletas_reportetrazaexpo(request):
         try:
             opcion1 = request.POST.get('opcion1')  # envio
             opcion2 = request.POST.get('opcion2')  # fecha
-
+            opcion3 = request.POST.get('opcion3')  # fecha
+        # Si envias cultivo, se filtra también
+            if opcion3:
+                qs = qs.filter(cultivo=opcion3)
     # Paso 1: Obtener los itemcodigo que tengan ese cultivo
 
             fecha_obj = datetime.datetime.strptime(opcion2, '%Y-%m-%d').date()
             conten = salidacontenedores.objects.filter(
                         contenedor=opcion1,
                         fechasalcontenedor=fecha_obj
-                    ).values('palet','itemsapcode','proveedor').annotate(
+                    ).values('palet','itemsapcode','proveedor','cultivo').annotate(
+
                         total_cajas=Sum('cajas'),
                         total_libras=Sum('lbsintara'),
                         fecha=Min('fechasalcontenedor'),
