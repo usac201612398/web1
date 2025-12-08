@@ -401,15 +401,16 @@ class itemsenviosForm(forms.ModelForm):
 class controlcajasForm(forms.ModelForm):
 
     # Field Choices
-    l_entra = [('','-'),('RIO','RIO'),('VALLE','VALLE'),('PROVALLE','PROVALLE'),('FLE','FLE'),('CENMA','CENMA'),('CARRETA','CARRETA')]
-    l_sale = [('','-'),('RIO','RIO'),('VALLE','VALLE'),('PROVALLE','PROVALLE'),('FLE','FLE'),('CENMA','CENMA'),('CARRETA','CARRETA')]
+    l_entra = [('','-'),('RIO','RIO'),('VALLE','VALLE'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.'),('FLE','FLE'),('CENMA','CENMA'),('FINCA LA PASTORIA, S.A.','FINCA LA PASTORIA, S.A.'),('LA CARRETA “AMATITLAN”','LA CARRETA “AMATITLAN”'),('CATAGUANA','CATAGUANA'),('GUATEBERRIES','GUATEBERRIES')]
+    l_sale = [('','-'),('RIO','RIO'),('VALLE','VALLE'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.'),('FLE','FLE'),('CENMA','CENMA'),('FINCA LA PASTORIA, S.A.','FINCA LA PASTORIA, S.A.'),('LA CARRETA “AMATITLAN”','LA CARRETA “AMATITLAN”'),('CATAGUANA','CATAGUANA'),('GUATEBERRIES','GUATEBERRIES')]
     op_mov = [('','-'),('Entrega','Entrega'),('Recepción','Recepción')]
-
+    op_encargado = [('','-'),('Carlos Hernández','Carlos Hernández'),('Jhony Tecún','Jhony Tecún'),('Ariel Parada','Ariel Parada'),('Gonzalo Mayén','Gonzalo Mayén'),('Carlos Virula','Carlos Virula'),('Nolberto Morales','Nolberto Morales'),('Rita Florián','Rita Florian'),('Saul Ruano','Saul Ruano')]
     # Fields
     cajas = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     lugar_entra = forms.ChoiceField(choices=l_entra, widget=forms.Select(attrs={'class': 'form-control'}))
     lugar_sale = forms.ChoiceField(choices=l_sale, widget=forms.Select(attrs={'class': 'form-control'}))
     tipomov = forms.ChoiceField(choices=op_mov, widget=forms.Select(attrs={'class': 'form-control'}))
+    encargado = forms.ChoiceField(choices=op_encargado, widget=forms.Select(attrs={'class': 'form-control'}))
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
 
     # Dynamic Choice Fields (initialized in __init__)

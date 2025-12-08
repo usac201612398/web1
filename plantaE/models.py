@@ -232,6 +232,7 @@ class controlcajas(models.Model):
     status = models.CharField(max_length=20, blank=True, null=True)
     fechasalidafruta = models.DateField(blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
+    encargado = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
         return (str(self.lugar_sale)+ " | " + str(self.lugar_entra)  + " | " +str(self.tipodecaja) + " | " + str(self.fechasalidafruta))
