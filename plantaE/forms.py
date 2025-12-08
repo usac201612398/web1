@@ -401,8 +401,8 @@ class itemsenviosForm(forms.ModelForm):
 class controlcajasForm(forms.ModelForm):
 
     # Field Choices
-    l_entra = [('','-'),('RIO','RIO'),('VALLE','VALLE'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.'),('FLE','FLE'),('CENMA','CENMA'),('FINCA LA PASTORIA, S.A.','FINCA LA PASTORIA, S.A.'),('LA CARRETA “AMATITLAN”','LA CARRETA “AMATITLAN”'),('CATAGUANA','CATAGUANA'),('GUATEBERRIES','GUATEBERRIES')]
-    l_sale = [('','-'),('RIO','RIO'),('VALLE','VALLE'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.'),('FLE','FLE'),('CENMA','CENMA'),('FINCA LA PASTORIA, S.A.','FINCA LA PASTORIA, S.A.'),('LA CARRETA “AMATITLAN”','LA CARRETA “AMATITLAN”'),('CATAGUANA','CATAGUANA'),('GUATEBERRIES','GUATEBERRIES')]
+    l_entra = [('','-'),('PLANTAE','PLANTAE'),('RIO','RIO'),('VALLE','VALLE'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.'),('FLE','FLE'),('CENMA','CENMA'),('FINCA LA PASTORIA, S.A.','FINCA LA PASTORIA, S.A.'),('LA CARRETA “AMATITLAN”','LA CARRETA “AMATITLAN”'),('CATAGUANA','CATAGUANA'),('GUATEBERRIES','GUATEBERRIES')]
+    l_sale = [('','-'),('PLANTAE','PLANTAE'),('RIO','RIO'),('VALLE','VALLE'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.'),('FLE','FLE'),('CENMA','CENMA'),('FINCA LA PASTORIA, S.A.','FINCA LA PASTORIA, S.A.'),('LA CARRETA “AMATITLAN”','LA CARRETA “AMATITLAN”'),('CATAGUANA','CATAGUANA'),('GUATEBERRIES','GUATEBERRIES')]
     op_mov = [('','-'),('Entrega','Entrega'),('Recepción','Recepción')]
     op_encargado = [('','-'),('Carlos Hernández','Carlos Hernández'),('Jhony Tecún','Jhony Tecún'),('Ariel Parada','Ariel Parada'),('Gonzalo Mayén','Gonzalo Mayén'),('Carlos Virula','Carlos Virula'),('Nolberto Morales','Nolberto Morales'),('Rita Florián','Rita Florian'),('Saul Ruano','Saul Ruano')]
     # Fields
