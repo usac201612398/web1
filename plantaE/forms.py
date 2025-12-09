@@ -401,10 +401,10 @@ class itemsenviosForm(forms.ModelForm):
 class controlcajasForm(forms.ModelForm):
 
     # Field Choices
-    l_entra = [('','-'),('PLANTAE','PLANTAE'),('RIO','RIO'),('VALLE','VALLE'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.'),('FLE','FLE'),('CENMA','CENMA'),('FINCA LA PASTORIA, S.A.','FINCA LA PASTORIA, S.A.'),('LA CARRETA “AMATITLAN”','LA CARRETA “AMATITLAN”'),('CATAGUANA/GUATEBERRIES','CATAGUANA/GUATEBERRIES')]
-    l_sale = [('','-'),('PLANTAE','PLANTAE'),('RIO','RIO'),('RIO','RIO'),('SEMILLAS','SEMILLAS'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.'),('FLE','FLE'),('CENMA','CENMA'),('SANDRA MARTINEZ','SANDRA MARTINEZ'),('FINCA LA PASTORIA, S.A.','FINCA LA PASTORIA, S.A.'),('LA CARRETA “AMATITLAN”','LA CARRETA “AMATITLAN”'),('CATAGUANA/GUATEBERRIES','CATAGUANA/GUATEBERRIES')]
+    l_entra = [('','-'),('PLANTAE','PLANTAE'),('RIO','RIO'),('VALLE','VALLE'),('SEMILLAS','SEMILLAS'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.'),('FLE','FLE'),('CENMA','CENMA'),('SANDRA MARTINEZ','SANDRA MARTINEZ'),('FINCA LA PASTORIA, S.A.','FINCA LA PASTORIA, S.A.'),('LA CARRETA “AMATITLAN”','LA CARRETA “AMATITLAN”'),('CATAGUANA/GUATEBERRIES','CATAGUANA/GUATEBERRIES')]
+    l_sale = [('','-'),('PLANTAE','PLANTAE'),('RIO','RIO'),('VALLE','VALLE'),('SEMILLAS','SEMILLAS'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.'),('FLE','FLE'),('CENMA','CENMA'),('SANDRA MARTINEZ','SANDRA MARTINEZ'),('FINCA LA PASTORIA, S.A.','FINCA LA PASTORIA, S.A.'),('LA CARRETA “AMATITLAN”','LA CARRETA “AMATITLAN”'),('CATAGUANA/GUATEBERRIES','CATAGUANA/GUATEBERRIES')]
     op_mov = [('','-'),('Entrega','Entrega'),('Recepción','Recepción')]
-    op_encargado = [('','-'),('Sandra Martínez','Sandra Martínez'),('Kimberly','Kimberly'),('Alfonso Samayoa','Alfonso Samayoa'),('Carlos Hernández','Carlos Hernández'),('Jhony Tecún','Jhony Tecún'),('Ariel Parada','Ariel Parada'),('Gonzalo Mayén','Gonzalo Mayén'),('Carlos Virula','Carlos Virula'),('Nolberto Morales','Nolberto Morales'),('Rita Florián','Rita Florian'),('Saul Ruano','Saul Ruano')]
+    op_encargado = [('','-'),('Sandra Martínez','Sandra Martínez'),('Kimberly','Kimberly'),('Alfonso Samayoa','Alfonso Samayoa'),('Carlos Hernández','Carlos Hernández'),('Jhony Tecún','Jhony Tecún'),('Ariel Parada','Ariel Parada'),('Gonzalo Mayén','Gonzalo Mayén'),('Carlos Virula','Carlos Virula'),('Crishanda Solares','Crishanda Solares'),('Saul Ruano','Saul Ruano')]
     # Fields
     cajas = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     lugar_entra = forms.ChoiceField(choices=l_entra, widget=forms.Select(attrs={'class': 'form-control'}))
