@@ -315,7 +315,7 @@ class contenedoresForm(forms.ModelForm):
 
     op_status = [('','-'),('Pendiente','-'),('Cerrado','Cerrado')]
     op_destino = [('','-'),('Jonestown','Jonestown'),('Lakeland','Lakeland'),('Laredo, Texas','Laredo, Texas'),('Miami','Miami')]
-    op_naviera = [('','-'),('SEABOARD','SEABOARD'),('CROWLEY','CROWLEY')]
+    op_naviera = [('','-'),('SEABOARD','SEABOARD'),('CROWLEY','CROWLEY'),('DOLE','DOLE')]
 
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
     eta = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
