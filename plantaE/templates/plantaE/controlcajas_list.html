@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
 
     <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 
     <style>
         td, th {
@@ -118,7 +119,16 @@
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-   
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
+    <script>
+        $('#myTable').DataTable({
+            scrollX: true,
+            autoWidth: false,
+            columnDefs: [
+                { width: "150px", targets: "_all" } // opcional, define ancho base
+            ]
+        });
+    </script>
 </body>
 </html>
