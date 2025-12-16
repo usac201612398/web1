@@ -49,13 +49,7 @@
 <body>
     <div class="container mt-4">
         <div class="d-flex justify-content-between align-items-center mb-3 p-3 bg-light rounded shadow-sm">
-            <h1 class="h3 m-0">📦 Cajas - Envíos</h1>
-            <a href="{% url 'controlcajas_create' %}" class="btn btn-success">
-                <i class="fas fa-plus"></i> Agregar Item
-            </a>
-            <a href="{% url 'controlcajas_inventario' %}" class="btn btn-success">
-                <i class="fas fa-plus"></i> Consultar - Inventario
-            </a>
+            <h1 class="h3 m-0">📦 Cajas - Reporte</h1>
         </div>
 
         <div class="table-container">
@@ -74,7 +68,7 @@
                         <td title="{{ registro.lugar }}">{{ registro.lugar }}</td>
                         <td title="{{ registro.item }}">{{ registro.item }}</td>
                         <td title="{{ registro.tipodecaja }}">{{ registro.tipodecaja }}</td>
-                        <td title="{{ registro.cajas }}">{{ registro.total__cajas }}</td>
+                        <td title="{{ registro.cajas }}">{{ registro.total_cajas }}</td>
                         
                     </tr>
                     {% endfor %}
