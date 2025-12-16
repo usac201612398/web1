@@ -5016,11 +5016,12 @@ def poraprovechamientosempger(request):
 
         # Calcular kg/m² con libras de aprovechamiento
         
-        clave_area = (orden, cultivo)
+        clave_area = (orden, cultivo, estructura, variedad)
         area_m2 = areas_sumadas.get(clave_area, 0)
 
         aprovechamiento_kg = datos['aprovechamiento_libras'] / 2.20462 if datos['aprovechamiento_libras'] else 0
         kg_m2 = round(aprovechamiento_kg / area_m2, 2) if area_m2 > 0 else 0
+        
 
         resultado.append({
             'proveedor': finca,
