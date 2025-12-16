@@ -169,6 +169,7 @@ urlpatterns = [
     path('pedidos/<int:pk>/edit/', views.pedidos_update, name='pedidos_update'),
 
     path("controlcajasmanual",views.controlcajas_list,name='controlcajas_list'),
+    path("controlcajasmanualinventario",views.controlcajas_inventario,name='controlcajas_inventario'),
     path('controlcajasmanual/new/', views.controlcajas_create, name='controlcajas_create'),
     path('controlcajasmanual/<int:pk>/edit/', views.controlcajas_update, name='controlcajas_update'),
     path('controlcajasmanual/<int:pk>/delete/', views.controlcajas_delete, name='controlcajas_delete'),

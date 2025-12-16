@@ -5,8 +5,8 @@ from openpyxl import Workbook
 from django.shortcuts import get_object_or_404, redirect
 from .models import Actpeso,pedidos,tipoCajas,controlcajas, proyecciones,paramenvlocales,enviosrec,AcumFrutaaux,salidacontenedores, inventarioProdTermAux,productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
 from .forms import boletasForm,controlcajasForm,pedidosForm,itemsForm, itemsenviosForm,salidacontenedoresForm,salidasFrutaForm, contenedoresForm,recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
-from django.db.models import Sum, Q, Max, Min,Value as V,F, ExpressionWrapper, FloatField
-
+from django.db.models import  Case, When,Sum, Q, Max, Min,Value as V,F, ExpressionWrapper, FloatField, IntegerField
+from django.db.models.functions import Abs, Trim
 from django.utils import timezone
 import matplotlib.pyplot as plt
 import datetime
@@ -5282,6 +5282,42 @@ def controlcajas_list(request):
     salidas = controlcajas.objects.all() # Excluye los que tienen status 'Cerrado'
     salidas = salidas.order_by('-registro')
     return render(request, 'plantaE/controlcajas_list.html', {'registros': salidas})
+
+def controlcajas_inventario(request):
+    resumen = (controlcajas.objects
+        .annotate(
+            # Lugar según el tipo de movimiento
+            lugar=Case(
+                When(tipomov='Recepción', then=Trim(F('lugar_entra'))),
+                When(tipomov='Entrega', then=Trim(F('lugar_sale'))),
+                default=V(''),
+            ),
+            # Item (SAP)
+            item=Trim(F('itemsapcode')),
+            # Cajas con signo según la regla de negocio
+            cajas_signo=Case(
+                When(tipomov='Recepción', then=Abs(F('cajas'))),
+                When(tipomov='Entrega', then=-Abs(F('cajas'))),
+                default=V(0),
+                output_field=IntegerField()
+            ),
+        )
+        .exclude(lugar__isnull=True).exclude(lugar__exact='')
+        .exclude(item__isnull=True).exclude(item__exact='')
+        .values('lugar', 'item', 'tipodecaja')   # puedes usar solo 'lugar', 'item'
+        .annotate(total_cajas=Sum('cajas_signo'))
+        .order_by('lugar', 'item', 'tipodecaja')
+    )
+
+    # Si además quieres un total general:
+    total_general = sum(row['total_cajas'] for row in resumen)
+
+    return render(
+        request,
+        'plantaE/controlcajas_inventario.html',
+        {'resumen': resumen, 'total_general': total_general})
+   
+
 
 def controlcajas_delete(request, pk):
 

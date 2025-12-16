@@ -62,39 +62,20 @@
             <table class="table table-striped table-hover" id="myTable">
                 <thead>
                     <tr>
-                        <th>Llave</th>
+                        <th>Sitio</th>
                         <th>ItemSAPCode</th>
-                        <th>ItemSAPName</th>
+                        <th>TipoCaja</th>
                         <th>Cantidad</th>
-                        <th>Lugar-Sale</th>
-                        <th>Lugar-Entra</th>
-                        <th>Tipo-Mov</th>
-                        <th>Fecha</th>
-                        <th>Editar</th>
-                        <th>Eliminar</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for registro in registros %}
+                    {% for registro in resumen %}
                     <tr>
-                        <td title="{{ registro.registro }}">{{ registro.registro }}</td>
-                        <td title="{{ registro.itemsapcode }}">{{ registro.itemsapcode }}</td>
+                        <td title="{{ registro.lugar }}">{{ registro.lugar }}</td>
+                        <td title="{{ registro.item }}">{{ registro.item }}</td>
                         <td title="{{ registro.tipodecaja }}">{{ registro.tipodecaja }}</td>
-                        <td title="{{ registro.cajas }}">{{ registro.cajas }}</td>
-                        <td title="{{ registro.lugar_sale }}">{{ registro.lugar_sale }}</td>
-                        <td title="{{ registro.lugar_entra }}">{{ registro.lugar_entra }}</td>
-                        <td title="{{ registro.tipomov }}">{{ registro.tipomov }}</td>
-                        <td title="{{ registro.fecha }}">{{ registro.fecha }}</td>
-                        <td class="action-icons">
-                            <a href="{% url 'controlcajas_update' registro.pk %}" title="Editar">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                        </td>
-                        <td class="action-icons">
-                            <a href="{% url 'controlcajas_delete' registro.pk %}" title="Eliminar">
-                                <i class="fas fa-trash-alt text-danger"></i>
-                            </a>
-                        </td>
+                        <td title="{{ registro.cajas }}">{{ registro.total__cajas }}</td>
+                        
                     </tr>
                     {% endfor %}
                 </tbody>
