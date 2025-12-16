@@ -5033,6 +5033,8 @@ def poraprovechamientosempger(request):
             'kilos_procesados': kilos_procesados,
             'kilos_pendientes': kilos_pendientes,
             'kg_m2': kg_m2,
+            'area':area_m2,
+            'libras':procesado_libras
         })
 
     registros_json = json.dumps(resultado, default=str)
