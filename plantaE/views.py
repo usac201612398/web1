@@ -4994,8 +4994,8 @@ def poraprovechamientosempger(request):
 
     
     
-    areas_sumadas_qs = detallesEstructuras.objects.values('orden', 'cultivo').annotate(total_area=Sum('area'))
-    areas_sumadas = {(a['orden'], a['cultivo']): a['total_area'] for a in areas_sumadas_qs}
+    areas_sumadas_qs = detallesEstructuras.objects.values('orden', 'cultivo','estructura','variedad').annotate(total_area=Sum('area'))
+    areas_sumadas = {(a['orden'], a['cultivo'], a['estructura'], a['variedad']): a['total_area'] for a in areas_sumadas_qs}
 
 
 
