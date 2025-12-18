@@ -109,7 +109,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 client_id = 'd27b7533-221a-4742-b79d-9450ff8ffe26'
-client_secret =  'MkX8Q~zPl8IQ-Aqgs3fwk9Qz7NcO_Y22clVRUbO7'
+client_secret =  '74.8Q~6zkOjadv6BXxHITL0Xg4VmP6seGUyegaaE'
 tenant_id = '2e932f25-355e-45b3-bd8b-764aaf3fd625'
 '''
 
