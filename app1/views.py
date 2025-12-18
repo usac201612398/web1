@@ -128,7 +128,7 @@ import paho.mqtt.client as mqtt
 
 
 def publicar_mqtt(accion):
-    MQTT_HOST = "127.0.0.1"
+    MQTT_HOST = "10.111.112.4"
     MQTT_PORT = 1883
     TOPIC = "esp32/led"
     USERNAME = "sdc-iot"         # tu usuario del passwd
