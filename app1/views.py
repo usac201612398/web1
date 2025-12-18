@@ -125,7 +125,7 @@ def logout_view(request):
 
 import paho.mqtt.client as mqtt
 
-MQTT_HOST = "10.111.112.4"
+MQTT_HOST = "localhost"
 MQTT_PORT = 1883
 TOPIC = "esp32/led"
 
