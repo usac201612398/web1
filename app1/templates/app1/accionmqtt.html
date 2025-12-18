@@ -21,38 +21,41 @@
     <button id="led-off">🌑 APAGAR</button>
 </div>
 
-<p id="estado-display">{% if estado %}Última acción: <b>{{ estado|upper }}</b>{% endif %}</p>
+<p id="estado-display">Última acción: <b>Ninguna</b></p>
 
 <!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
-    // Función para mostrar el estado en pantalla
+
     function mostrarEstado(estado) {
-        $("#estado-display").html("Última acción: <b>" + estado.toUpperCase() + "</b>");
+        $("#estado-display").html("Última acción: <b>" + (estado || "desconocida").toUpperCase() + "</b>");
     }
 
-    // Botón ENCENDER
+    function enviarAccion(accion) {
+        $.post("{% url 'enviarinstruccion' %}", {accion: accion})
+        .done(function(data) {
+            console.log("Respuesta servidor:", data);
+            mostrarEstado(data.accion_recibida);
+        })
+        .fail(function() {
+            alert("Error al enviar la acción al servidor");
+        });
+    }
+
     $("#led-on").click(function(e) {
         e.preventDefault();
-        $.get("{% url 'enviarinstruccion' %}?accion=on", function(data) {
-            const registros = JSON.parse(data.registros_json || '{}');
-            console.log("REGISTROS ENCENDER:", registros);
-            mostrarEstado(registros.estado);
-        });
+        enviarAccion("ON");
     });
 
-    // Botón APAGAR
     $("#led-off").click(function(e) {
         e.preventDefault();
-        $.get("{% url 'enviarinstruccion' %}?accion=off", function(data) {
-            const registros = JSON.parse(data.registros_json || '{}');
-            console.log("REGISTROS APAGAR:", registros);
-            mostrarEstado(registros.estado);
-        });
+        enviarAccion("OFF");
     });
+
 });
 </script>
 
 </body>
 </html>
+
