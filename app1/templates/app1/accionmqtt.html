@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Control ESP32</title>
+    <style>
+        button {
+            font-size: 20px;
+            padding: 15px 30px;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Control LED ESP32</h2>
+
+<form method="get">
+    <button type="submit" name="accion" value="on">
+        🔆 ENCENDER
+    </button>
+
+    <button type="submit" name="accion" value="off">
+        🌑 APAGAR
+    </button>
+</form>
+
+{% if estado %}
+<p>Última acción: <b>{{ estado|upper }}</b></p>
+{% endif %}
+
+</body>
+</html>

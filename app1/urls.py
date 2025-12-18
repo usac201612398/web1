@@ -28,4 +28,6 @@ urlpatterns = [
     path("registro/consulta",views.consultaRegistros,name='registroConsulta'),
 #    path("registro/consultaR",views.consultarR.as_view(), name = 'registroConsulta'),
     path('exportar_excel/', views.exportar_excel, name='exportar_excel'),
+    
+    path("iot/accion",views.enviarinstruccion,name='enviarinstruccion'),
 ]

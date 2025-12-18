@@ -123,6 +123,25 @@ def logout_view(request):
     logout(request)
     return redirect('homepage')
 
+MQTT_HOST = "localhost"   # IP del broker
+MQTT_PORT = 1883
+TOPIC = "esp32/led"
+
+import paho.mqtt.publish as publish
+
+def enviarinstruccion(request):
+    accion = request.GET.get("accion")
+
+    if accion == "on":
+        publish.single(TOPIC, payload="ON", hostname=MQTT_HOST, port=MQTT_PORT)
+
+    elif accion == "off":
+        publish.single(TOPIC, payload="OFF", hostname=MQTT_HOST, port=MQTT_PORT)
+
+    context = {
+        "estado": accion
+    }
+    return render(request, "app1/accionmqtt.html", context)
 #@csrf_exempt
 #@login_required
 def consultaRegistros(request):
