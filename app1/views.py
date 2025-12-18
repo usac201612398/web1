@@ -129,15 +129,15 @@ TOPIC = "esp32/led"
 
 import paho.mqtt.publish as publish
 
-
 def enviarinstruccion(request):
+
     if request.method == "POST":
         
         accion = request.POST.get("accion")
         print("📩 Acción recibida:", accion)
 
         # Publicar en MQTT
-        publish.single(TOPIC, payload=accion.upper(), hostname=MQTT_HOST, port=MQTT_PORT)
+        #publish.single(TOPIC, payload=accion.upper(), hostname=MQTT_HOST, port=MQTT_PORT)
 
         # Responder al frontend
         return JsonResponse({"status": "ok", "accion_recibida": accion})
