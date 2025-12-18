@@ -123,41 +123,29 @@ def logout_view(request):
     logout(request)
     return redirect('homepage')
 
-# views.py
 import paho.mqtt.client as mqtt
 
-# Configuración del broker MQTT
 MQTT_HOST = "10.111.112.4"
 MQTT_PORT = 1883
 TOPIC = "esp32/led"
 
-# Función para publicar en MQTT
 def publicar_mqtt(accion):
     try:
         client = mqtt.Client()
-        client.connect(MQTT_HOST, MQTT_PORT, 60)  # Conexión al broker
-        client.publish(TOPIC, accion.upper())     # Publicar mensaje
+        client.connect(MQTT_HOST, MQTT_PORT, 60)
+        client.publish(TOPIC, accion.upper())
         client.disconnect()
-        print(f"✅ Publicado en MQTT: {accion.upper()}")
+        print(f"✅ Publicado: {accion.upper()}")
     except Exception as e:
-        print(f"❌ Error al publicar en MQTT: {e}")
+        print(f"❌ Error al publicar: {e}")
 
-# Vista para manejar la acción desde el frontend
 def enviarinstruccion(request):
     if request.method == "POST":
         accion = request.POST.get("accion")
         print("📩 Acción recibida:", accion)
-
-        # Publicar en MQTT
         publicar_mqtt(accion)
-
-        # Responder al frontend con JSON
         return JsonResponse({"status": "ok", "accion_recibida": accion})
-
-    # Renderizar la plantilla si no es POST
     return render(request, "app1/accionmqtt.html")
-
-
 
 #@csrf_exempt
 #@login_required
