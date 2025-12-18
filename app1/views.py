@@ -123,31 +123,24 @@ def logout_view(request):
     logout(request)
     return redirect('homepage')
 
-MQTT_HOST = "10.111.112.4" #IP del broker
+MQTT_HOST = "10.111.112.4"  # IP del servidor donde corre Mosquitto
 MQTT_PORT = 1883
 TOPIC = "esp32/led"
 
 import paho.mqtt.publish as publish
 
 def enviarinstruccion(request):
-    accion = request.GET.get("accion")
+    if request.method == "POST":
+        accion = request.POST.get("accion")
+        print("📩 Petición POST recibida:", accion)  # Para debug en consola
 
-    if accion == "on":
-        publish.single(TOPIC, payload="ON", hostname=MQTT_HOST, port=MQTT_PORT)
+        # Publicar en MQTT (temporalmente puedes comentar si da timeout)
+        # publish.single("esp32/led", payload=accion.upper(), hostname="10.111.112.4", port=1883)
 
-    elif accion == "off":
-        publish.single(TOPIC, payload="OFF", hostname=MQTT_HOST, port=MQTT_PORT)
-
-    registros = {
-        "estado": accion,
-        "topic":TOPIC,
-        "host":MQTT_HOST,
-        "port":MQTT_PORT,
-    }
-    context = {
-        "registros_json": json.dumps(registros)
-    }
-    return render(request, "app1/accionmqtt.html", context)
+        # Responder con JSON
+        return JsonResponse({"status": "ok", "accion_recibida": accion})
+    else:
+        return JsonResponse({"status": "error", "mensaje": "Solo POST permitido"})
 
 #@csrf_exempt
 #@login_required
