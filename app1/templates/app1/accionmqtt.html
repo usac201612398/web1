@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html>
 <head>
     <title>Control ESP32</title>
@@ -7,6 +8,7 @@
             font-size: 20px;
             padding: 15px 30px;
             margin: 10px;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -14,32 +16,46 @@
 
 <h2>Control LED ESP32</h2>
 
-<form method="get">
-    <button type="submit" name="accion" value="on">
-        🔆 ENCENDER
-    </button>
+<div>
+    <button id="led-on">🔆 ENCENDER</button>
+    <button id="led-off">🌑 APAGAR</button>
+</div>
 
-    <button type="submit" name="accion" value="off">
-        🌑 APAGAR
-    </button>
-</form>
+<p id="estado-display"></p>
 
-{% if estado %}
-<p>Última acción: <b>{{ estado|upper }}</b></p>
-{% endif %}
-
-</body>
-{% load static %}
-
+<!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{% static 'lib/cookies.js' %}"></script>
-
 <script>
-    const registros = JSON.parse('{{ registros_json|escapejs }}');
-    console.log('REGISTROS:', registros);
+$(document).ready(function() {
+    // Función para actualizar estado en pantalla
+    function mostrarEstado(estado) {
+        $("#estado-display").text("Última acción: " + estado.toUpperCase());
+        alert("Última acción: " + estado.toUpperCase());
+    }
 
-    // Por ejemplo mostrar estado
-    alert("Última acción: " + registros.estado);
+    // Botón ENCENDER
+    $("#led-on").click(function(e) {
+        e.preventDefault();
+        $.get("{% url 'enviarinstruccion' %}?accion=on", function(data) {
+            const registros = JSON.parse(data.registros_json || '{}');
+            console.log("REGISTROS ENCENDER:", registros);
+            mostrarEstado(registros.estado);
+        });
+    });
+
+    // Botón APAGAR
+    $("#led-off").click(function(e) {
+        e.preventDefault();
+        $.get("{% url 'enviarinstruccion' %}?accion=off", function(data) {
+            const registros = JSON.parse(data.registros_json || '{}');
+            console.log("REGISTROS APAGAR:", registros);
+            mostrarEstado(registros.estado);
+        });
+    });
+});
 </script>
+</body>
 </html>
+
 
