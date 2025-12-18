@@ -29,4 +29,17 @@
 {% endif %}
 
 </body>
+{% load static %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'lib/cookies.js' %}"></script>
+
+<script>
+    const registros = JSON.parse('{{ registros_json|escapejs }}');
+    console.log('REGISTROS:', registros);
+
+    // Por ejemplo mostrar estado
+    alert("Última acción: " + registros.estado);
+</script>
 </html>
+

@@ -138,10 +138,17 @@ def enviarinstruccion(request):
     elif accion == "off":
         publish.single(TOPIC, payload="OFF", hostname=MQTT_HOST, port=MQTT_PORT)
 
+    registros = {
+        "estado": accion,
+        "topic":TOPIC,
+        "host":MQTT_HOST,
+        "port":MQTT_PORT,
+    }
     context = {
-        "estado": accion
+        "registros_json": json.dumps(registros)
     }
     return render(request, "app1/accionmqtt.html", context)
+
 #@csrf_exempt
 #@login_required
 def consultaRegistros(request):
