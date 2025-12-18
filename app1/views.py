@@ -130,12 +130,9 @@ TOPIC = "esp32/led"
 import paho.mqtt.publish as publish
 
 
-MQTT_HOST = "10.111.112.4"
-MQTT_PORT = 1883
-TOPIC = "esp32/led"
-
 def enviarinstruccion(request):
     if request.method == "POST":
+        
         accion = request.POST.get("accion")
         print("📩 Acción recibida:", accion)
 
@@ -144,7 +141,8 @@ def enviarinstruccion(request):
 
         # Responder al frontend
         return JsonResponse({"status": "ok", "accion_recibida": accion})
-    return JsonResponse({"status": "error", "mensaje": "Solo POST permitido"})
+
+    return render(request, "app1/accionmqtt.html")
 
 
 #@csrf_exempt
