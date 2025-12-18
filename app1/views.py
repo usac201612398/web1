@@ -123,7 +123,7 @@ def logout_view(request):
     logout(request)
     return redirect('homepage')
 
-MQTT_HOST = "localhost"   # IP del broker
+MQTT_HOST = "10.111.112.4" #IP del broker
 MQTT_PORT = 1883
 TOPIC = "esp32/led"
 
