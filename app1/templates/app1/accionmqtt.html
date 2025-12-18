@@ -21,17 +21,15 @@
     <button id="led-off">🌑 APAGAR</button>
 </div>
 
-<p id="estado-display"></p>
+<p id="estado-display">{% if estado %}Última acción: <b>{{ estado|upper }}</b>{% endif %}</p>
 
 <!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="{% static 'lib/cookies.js' %}"></script>
 <script>
 $(document).ready(function() {
-    // Función para actualizar estado en pantalla
+    // Función para mostrar el estado en pantalla
     function mostrarEstado(estado) {
-        $("#estado-display").text("Última acción: " + estado.toUpperCase());
-        alert("Última acción: " + estado.toUpperCase());
+        $("#estado-display").html("Última acción: <b>" + estado.toUpperCase() + "</b>");
     }
 
     // Botón ENCENDER
@@ -55,7 +53,6 @@ $(document).ready(function() {
     });
 });
 </script>
+
 </body>
 </html>
-
-
