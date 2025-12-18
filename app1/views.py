@@ -125,13 +125,14 @@ def logout_view(request):
 
 import paho.mqtt.client as mqtt
 
-MQTT_HOST = "127.0.0.1"
-MQTT_PORT = 1883
-TOPIC = "esp32/led"
-USERNAME = "sdc-iot"         # tu usuario del passwd
-PASSWORD = "nuevacontraseña" # tu contraseña
+
 
 def publicar_mqtt(accion):
+    MQTT_HOST = "127.0.0.1"
+    MQTT_PORT = 1883
+    TOPIC = "esp32/led"
+    USERNAME = "sdc-iot"         # tu usuario del passwd
+    PASSWORD = "nuevacontraseña" # tu contraseña
     try:
         client = mqtt.Client()
         client.username_pw_set(USERNAME, PASSWORD)
