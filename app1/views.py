@@ -133,15 +133,16 @@ import paho.mqtt.publish as publish
 def enviarinstruccion(request):
     if request.method == "POST":
         accion = request.POST.get("accion")
-        print("📩 Petición POST recibida:", accion)  # Debug en consola
+        print("📩 Petición POST recibida:", accion)
 
-        # Publicar MQTT (comenta si da timeout)
+        # Publicar MQTT si quieres
         # publish.single("esp32/led", payload=accion.upper(), hostname="10.111.112.4", port=1883)
 
-        # Responder con JSON
-        return JsonResponse({"status": "ok", "accion_recibida": accion})
+        return JsonResponse({
+            "status": "ok",
+            "accion_recibida": accion if accion else ""  # siempre devuelve algo
+        })
 
-    # Renderizar template por GET
     return render(request, "app1/accionmqtt.html")
 
 
