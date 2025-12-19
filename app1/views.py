@@ -125,16 +125,26 @@ def logout_view(request):
 
 import paho.mqtt.client as mqtt
 
-
-
 def publicar_mqtt(accion):
+    # Rutas relativas a la carpeta donde está views.py
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    CA_PATH = os.path.join(BASE_DIR, "AmazonRootCA1.pem")
+    CERT_PATH = os.path.join(BASE_DIR, "cert.pem.crt")
+    KEY_PATH = os.path.join(BASE_DIR, "private.pem.key")
+    
     MQTT_HOST = "a4810e38lk0oy-ats.iot.us-east-1.amazonaws.com"
     MQTT_PORT = 8883
     TOPIC = "esp32/led"
+    
     try:
         client = mqtt.Client()
+        # Configurar TLS con certificados
+        client.tls_set(ca_certs=CA_PATH, certfile=CERT_PATH, keyfile=KEY_PATH)
+        
         client.connect(MQTT_HOST, MQTT_PORT, 60)
+        client.loop_start()
         client.publish(TOPIC, accion.upper())
+        client.loop_stop()
         client.disconnect()
         print(f"✅ Publicado: {accion.upper()}")
     except Exception as e:
