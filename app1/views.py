@@ -137,13 +137,9 @@ def publicar_mqtt(accion):
     ca = os.path.join(APP_DIR, "AmazonRootCA1.pem")
     cert = os.path.join(APP_DIR, "cert.pem.crt")
     key = os.path.join(APP_DIR, "private.pem.key")
-    retorno = 'Esperando'
-    
+    retorno = "Esperando"
+    error = "No error"
     try:
-        print("Usando certificados:")
-        print(ca)
-        print(cert)
-        print(key)
 
         client = mqtt.Client(client_id=f"django-{uuid.uuid4()}")
 
@@ -170,12 +166,13 @@ def publicar_mqtt(accion):
         client.disconnect()
 
     except Exception as e:
-        print(e)
+        error = e
     return {
         "app_dir": APP_DIR,
         "ca": ca,
         "cert": cert,
         "key": key,
+        "error":error,
         "retorno":retorno
     }
 
@@ -189,6 +186,7 @@ def enviarinstruccion(request):
                             "ca": info["ca"],
                             "cert": info["cert"],
                             "key": info["key"],
+                            "error": info["error"],
                             "retorno": info["retorno"]})
 
     return render(request, "app1/accionmqtt.html")
