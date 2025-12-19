@@ -151,6 +151,7 @@ def publicar_mqtt(accion):
         client.connect(MQTT_HOST, MQTT_PORT, 60)
 
         client.loop_start()
+        
         time.sleep(1)
         
         result = client.publish(TOPIC, accion.upper(), qos=0)
@@ -165,7 +166,7 @@ def publicar_mqtt(accion):
         client.disconnect()
 
     except Exception as e:
-        JsonResponse(e)
+        retorno = f"Error MQTT: {str(e)}"
     return {
         "app_dir": APP_DIR,
         "ca": ca,
