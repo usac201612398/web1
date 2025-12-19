@@ -123,18 +123,20 @@ def logout_view(request):
     logout(request)
     return redirect('homepage')
 
-import os
+
 import paho.mqtt.client as mqtt
 import time
+
 def publicar_mqtt(accion):
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    #"BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     MQTT_HOST = "a4810e38lk0oy-ats.iot.us-east-1.amazonaws.com"
     MQTT_PORT = 8883
     TOPIC = "esp32/led"
 
-    ca = os.path.join(BASE_DIR, "AmazonRootCA1.pem")
-    cert = os.path.join(BASE_DIR, "cert.pem.crt")
-    key = os.path.join(BASE_DIR, "private.pem.key")
+    ca =  "AmazonRootCA1.pem"
+    cert = "cert.pem.crt"
+    key = "private.pem.key"
+
 
     try:
         client = mqtt.Client(client_id="django-publisher")
@@ -157,10 +159,10 @@ def publicar_mqtt(accion):
         client.loop_stop()
         client.disconnect()
 
-        print(f"✅ MQTT enviado correctamente: {accion}")
+        print(f"MQTT enviado correctamente: {accion}")
 
     except Exception as e:
-        print("❌ Error MQTT:", e)
+        print("Error MQTT:", e)
 
 def enviarinstruccion(request):
     if request.method == "POST":
