@@ -138,10 +138,6 @@ def publicar_mqtt(accion):
     key = os.path.join(APP_DIR, "private.pem.key")
 
     try:
-        print("Usando certificados:")
-        print(ca)
-        print(cert)
-        print(key)
 
         client = mqtt.Client(client_id="django-publisher")
 
@@ -154,13 +150,15 @@ def publicar_mqtt(accion):
         client.connect(MQTT_HOST, MQTT_PORT, 60)
 
         client.loop_start()
+        texto1 = "conexion TLS OK"
         time.sleep(1)
 
-        result = client.publish(TOPIC, accion.upper(), qos=0)
+        result = client.publish(TOPIC, accion.upper(), qos=1)
         result.wait_for_publish()
 
         time.sleep(0.5)
         client.loop_stop()
+
         client.disconnect()
 
         print("MQTT enviado correctamente:", accion)
@@ -171,7 +169,8 @@ def publicar_mqtt(accion):
         "app_dir": APP_DIR,
         "ca": ca,
         "cert": cert,
-        "key": key
+        "key": key,
+        "texto1":texto1
     }
 
 def enviarinstruccion(request):
@@ -183,7 +182,8 @@ def enviarinstruccion(request):
                             "app_dir": info["app_dir"],
                             "ca": info["ca"],
                             "cert": info["cert"],
-                            "key": info["key"],})
+                            "key": info["key"],
+                            "texto1": info["texto1"]})
 
     return render(request, "app1/accionmqtt.html")
 
