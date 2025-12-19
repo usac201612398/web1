@@ -123,12 +123,12 @@ def logout_view(request):
     logout(request)
     return redirect('homepage')
 
-
-import paho.mqtt.client as mqtt
 import time
+import paho.mqtt.client as mqtt
 
 def publicar_mqtt(accion):
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
     MQTT_HOST = "a4810e38lk0oy-ats.iot.us-east-1.amazonaws.com"
     MQTT_PORT = 8883
     TOPIC = "esp32/led"
@@ -137,8 +137,12 @@ def publicar_mqtt(accion):
     cert = os.path.join(BASE_DIR, "cert.pem.crt")
     key = os.path.join(BASE_DIR, "private.pem.key")
 
-
     try:
+        print("Usando certificados:")
+        print(ca)
+        print(cert)
+        print(key)
+
         client = mqtt.Client(client_id="django-publisher")
 
         client.tls_set(
@@ -149,17 +153,17 @@ def publicar_mqtt(accion):
 
         client.connect(MQTT_HOST, MQTT_PORT, 60)
 
-        client.loop_start()                 # 🔥 MUY IMPORTANTE
-        time.sleep(1)                       # 🔥 deja levantar TLS
+        client.loop_start()
+        time.sleep(1)
 
         result = client.publish(TOPIC, accion.upper(), qos=0)
-        result.wait_for_publish()           # 🔥 espera envío real
+        result.wait_for_publish()
 
-        time.sleep(0.5)                     # 🔥 margen de seguridad
+        time.sleep(0.5)
         client.loop_stop()
         client.disconnect()
 
-        print(f"MQTT enviado correctamente: {accion}")
+        print("MQTT enviado correctamente:", accion)
 
     except Exception as e:
         print("Error MQTT:", e)
@@ -167,9 +171,12 @@ def publicar_mqtt(accion):
 def enviarinstruccion(request):
     if request.method == "POST":
         accion = request.POST.get("accion")
+        print("Acción recibida:", accion)
         publicar_mqtt(accion)
         return JsonResponse({"status": "ok", "accion_recibida": accion})
+
     return render(request, "app1/accionmqtt.html")
+
 
 #@csrf_exempt
 #@login_required
