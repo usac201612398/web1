@@ -154,8 +154,9 @@ def publicar_mqtt(accion):
         client.connect(MQTT_HOST, MQTT_PORT, 60)
 
         client.loop_start()
-        time.sleep(1)
 
+        time.sleep(1)
+        
         result = client.publish(TOPIC, accion.upper(), qos=0)
         result.wait_for_publish()
 
@@ -163,15 +164,14 @@ def publicar_mqtt(accion):
         client.loop_stop()
         client.disconnect()
 
-        print("MQTT enviado correctamente:", accion)
-
     except Exception as e:
-        print("Error MQTT:", e)
+        error=e
     return {
         "app_dir": APP_DIR,
         "ca": ca,
         "cert": cert,
-        "key": key
+        "key": key,
+        "error":error
     }
 
 def enviarinstruccion(request):
@@ -183,7 +183,8 @@ def enviarinstruccion(request):
                             "app_dir": info["app_dir"],
                             "ca": info["ca"],
                             "cert": info["cert"],
-                            "key": info["key"],})
+                            "key": info["key"],
+                            "error": info["error"],})
 
     return render(request, "app1/accionmqtt.html")
 
