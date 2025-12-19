@@ -123,37 +123,38 @@ def logout_view(request):
     logout(request)
     return redirect('homepage')
 
+import os
 import paho.mqtt.client as mqtt
 
+
+
 def publicar_mqtt(accion):
-    # Rutas relativas a la carpeta donde está views.py
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    CA_PATH = os.path.join(BASE_DIR, "AmazonRootCA1.pem")
-    CERT_PATH = os.path.join(BASE_DIR, "cert.pem.crt")
-    KEY_PATH = os.path.join(BASE_DIR, "private.pem.key")
-    
     MQTT_HOST = "a4810e38lk0oy-ats.iot.us-east-1.amazonaws.com"
     MQTT_PORT = 8883
     TOPIC = "esp32/led"
-    
+
+    ca = os.path.join(BASE_DIR, "AmazonRootCA1.pem")
+    cert = os.path.join(BASE_DIR, "cert.pem.crt")
+    key = os.path.join(BASE_DIR, "private.pem.key")
+
     try:
         client = mqtt.Client()
-        # Configurar TLS con certificados
-        client.tls_set(ca_certs=CA_PATH, certfile=CERT_PATH, keyfile=KEY_PATH)
-        
+        client.tls_set(
+            ca_certs=ca,
+            certfile=cert,
+            keyfile=key
+        )
         client.connect(MQTT_HOST, MQTT_PORT, 60)
-        client.loop_start()
-        client.publish(TOPIC, accion.upper())
-        client.loop_stop()
+        client.publish(TOPIC, accion)
         client.disconnect()
-        print(f"✅ Publicado: {accion.upper()}")
+        print(f"✅ MQTT enviado: {accion}")
     except Exception as e:
-        print(f"❌ Error al publicar: {e}")
+        print("❌ Error MQTT:", e)
 
 def enviarinstruccion(request):
     if request.method == "POST":
         accion = request.POST.get("accion")
-        print("📩 Acción recibida:", accion)
         publicar_mqtt(accion)
         return JsonResponse({"status": "ok", "accion_recibida": accion})
     return render(request, "app1/accionmqtt.html")
