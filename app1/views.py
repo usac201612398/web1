@@ -154,9 +154,8 @@ def publicar_mqtt(accion):
         client.connect(MQTT_HOST, MQTT_PORT, 60)
 
         client.loop_start()
-        texto1="Conexion TLS OK"
         time.sleep(1)
-        
+
         result = client.publish(TOPIC, accion.upper(), qos=0)
         result.wait_for_publish()
 
@@ -172,8 +171,7 @@ def publicar_mqtt(accion):
         "app_dir": APP_DIR,
         "ca": ca,
         "cert": cert,
-        "key": key,
-        "texto1": texto1
+        "key": key
     }
 
 def enviarinstruccion(request):
@@ -185,8 +183,7 @@ def enviarinstruccion(request):
                             "app_dir": info["app_dir"],
                             "ca": info["ca"],
                             "cert": info["cert"],
-                            "key": info["key"],
-                            "texto1": info["texto1"],})
+                            "key": info["key"],})
 
     return render(request, "app1/accionmqtt.html")
 
