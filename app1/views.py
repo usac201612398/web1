@@ -167,13 +167,23 @@ def publicar_mqtt(accion):
 
     except Exception as e:
         print("Error MQTT:", e)
+    return {
+        "app_dir": APP_DIR,
+        "ca": ca,
+        "cert": cert,
+        "key": key
+    }
 
 def enviarinstruccion(request):
     if request.method == "POST":
         accion = request.POST.get("accion")
         print("Acción recibida:", accion)
-        publicar_mqtt(accion)
-        return JsonResponse({"status": "ok", "accion_recibida": accion})
+        info = publicar_mqtt(accion)
+        return JsonResponse({"status": "ok", "accion_recibida": accion,
+                            "app_dir": info["app_dir"],
+                            "ca": info["ca"],
+                            "cert": info["cert"],
+                            "key": info["key"],})
 
     return render(request, "app1/accionmqtt.html")
 
