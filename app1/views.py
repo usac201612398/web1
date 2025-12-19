@@ -125,6 +125,7 @@ def logout_view(request):
 
 import time
 import paho.mqtt.client as mqtt
+import uuid
 
 def publicar_mqtt(accion):
     APP_DIR = os.path.dirname(__file__)
@@ -136,15 +137,15 @@ def publicar_mqtt(accion):
     ca = os.path.join(APP_DIR, "AmazonRootCA1.pem")
     cert = os.path.join(APP_DIR, "cert.pem.crt")
     key = os.path.join(APP_DIR, "private.pem.key")
-    error= None
-    texto1 = None
+    retorno = 'Esperando'
+    
     try:
         print("Usando certificados:")
         print(ca)
         print(cert)
         print(key)
 
-        client = mqtt.Client(client_id="django-publisher")
+        client = mqtt.Client(client_id=f"django-{uuid.uuid4()}")
 
         client.tls_set(
             ca_certs=ca,
@@ -155,10 +156,10 @@ def publicar_mqtt(accion):
         client.connect(MQTT_HOST, MQTT_PORT, 60)
 
         client.loop_start()
-        texto1 = "Conexion TLS OK"
         time.sleep(1)
         
         result = client.publish(TOPIC, accion.upper(), qos=0)
+        retorno = str(result.rc)
         result.wait_for_publish()
 
         time.sleep(0.5)
@@ -166,14 +167,13 @@ def publicar_mqtt(accion):
         client.disconnect()
 
     except Exception as e:
-        error=e
+        print(e)
     return {
         "app_dir": APP_DIR,
         "ca": ca,
         "cert": cert,
         "key": key,
-        "error":error,
-        "texto1":texto1
+        "retorno":retorno
     }
 
 def enviarinstruccion(request):
@@ -186,8 +186,7 @@ def enviarinstruccion(request):
                             "ca": info["ca"],
                             "cert": info["cert"],
                             "key": info["key"],
-                            "error": info["error"],
-                            "texto1": info["texto1"],})
+                            "retorno": info["retorno"]})
 
     return render(request, "app1/accionmqtt.html")
 
