@@ -128,14 +128,11 @@ import paho.mqtt.client as mqtt
 
 
 def publicar_mqtt(accion):
-    MQTT_HOST = "10.111.112.4"
-    MQTT_PORT = 1883
+    MQTT_HOST = "a4810e38lk0oy-ats.iot.us-east-1.amazonaws.com"
+    MQTT_PORT = 8883
     TOPIC = "esp32/led"
-    USERNAME = "sdc-iot"         # tu usuario del passwd
-    PASSWORD = "nuevacontraseña" # tu contraseña
     try:
         client = mqtt.Client()
-        client.username_pw_set(USERNAME, PASSWORD)
         client.connect(MQTT_HOST, MQTT_PORT, 60)
         client.publish(TOPIC, accion.upper())
         client.disconnect()
