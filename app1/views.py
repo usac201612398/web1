@@ -128,14 +128,14 @@ import paho.mqtt.client as mqtt
 import time
 
 def publicar_mqtt(accion):
-    #"BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     MQTT_HOST = "a4810e38lk0oy-ats.iot.us-east-1.amazonaws.com"
     MQTT_PORT = 8883
     TOPIC = "esp32/led"
 
-    ca =  "AmazonRootCA1.pem"
-    cert = "cert.pem.crt"
-    key = "private.pem.key"
+    ca = os.path.join(BASE_DIR, "AmazonRootCA1.pem")
+    cert = os.path.join(BASE_DIR, "cert.pem.crt")
+    key = os.path.join(BASE_DIR, "private.pem.key")
 
 
     try:
