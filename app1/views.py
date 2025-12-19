@@ -125,9 +125,7 @@ def logout_view(request):
 
 import os
 import paho.mqtt.client as mqtt
-
-
-
+import time
 def publicar_mqtt(accion):
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     MQTT_HOST = "a4810e38lk0oy-ats.iot.us-east-1.amazonaws.com"
@@ -139,16 +137,28 @@ def publicar_mqtt(accion):
     key = os.path.join(BASE_DIR, "private.pem.key")
 
     try:
-        client = mqtt.Client()
+        client = mqtt.Client(client_id="django-publisher")
+
         client.tls_set(
             ca_certs=ca,
             certfile=cert,
             keyfile=key
         )
+
         client.connect(MQTT_HOST, MQTT_PORT, 60)
-        client.publish(TOPIC, accion)
+
+        client.loop_start()                 # 🔥 MUY IMPORTANTE
+        time.sleep(1)                       # 🔥 deja levantar TLS
+
+        result = client.publish(TOPIC, accion.upper(), qos=0)
+        result.wait_for_publish()           # 🔥 espera envío real
+
+        time.sleep(0.5)                     # 🔥 margen de seguridad
+        client.loop_stop()
         client.disconnect()
-        print(f"✅ MQTT enviado: {accion}")
+
+        print(f"✅ MQTT enviado correctamente: {accion}")
+
     except Exception as e:
         print("❌ Error MQTT:", e)
 
