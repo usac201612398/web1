@@ -136,7 +136,8 @@ def publicar_mqtt(accion):
     ca = os.path.join(APP_DIR, "AmazonRootCA1.pem")
     cert = os.path.join(APP_DIR, "cert.pem.crt")
     key = os.path.join(APP_DIR, "private.pem.key")
-
+    error= None
+    texto1 = None
     try:
         print("Usando certificados:")
         print(ca)
@@ -154,7 +155,7 @@ def publicar_mqtt(accion):
         client.connect(MQTT_HOST, MQTT_PORT, 60)
 
         client.loop_start()
-
+        texto1 = "Conexion TLS OK"
         time.sleep(1)
         
         result = client.publish(TOPIC, accion.upper(), qos=0)
@@ -171,7 +172,8 @@ def publicar_mqtt(accion):
         "ca": ca,
         "cert": cert,
         "key": key,
-        "error":error
+        "error":error,
+        "texto1":texto1
     }
 
 def enviarinstruccion(request):
@@ -184,7 +186,8 @@ def enviarinstruccion(request):
                             "ca": info["ca"],
                             "cert": info["cert"],
                             "key": info["key"],
-                            "error": info["error"],})
+                            "error": info["error"],
+                            "texto1": info["texto1"],})
 
     return render(request, "app1/accionmqtt.html")
 
