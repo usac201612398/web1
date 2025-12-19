@@ -159,7 +159,10 @@ def publicar_mqtt(accion):
         time.sleep(1)
         
         result = client.publish(TOPIC, accion.upper(), qos=0)
-        retorno = str(result.rc)
+        if result.rc == mqtt.MQTT_ERR_SUCCESS:
+            retorno = "Publicado con éxito"
+        else:
+            retorno = f"Error código {result.rc}"
         result.wait_for_publish()
 
         time.sleep(0.5)
