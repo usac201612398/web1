@@ -130,23 +130,25 @@ import uuid
 def publicar_mqtt(accion):
     APP_DIR = os.path.dirname(__file__)
 
-    MQTT_HOST = "a4810e38lk0oy-ats.iot.us-east-1.amazonaws.com"
-    MQTT_PORT = 8883
+    MQTT_HOST = "10.111.112.4"
+    MQTT_PORT = 1883
     TOPIC = "esp32/led"
+    MQTT_USER = "sdc-iot"       # <-- Aquí tu usuario
+    MQTT_PASS = "nuevacontraseña"    # <-- Aquí tu contraseña
 
-    ca = os.path.join(APP_DIR, "AmazonRootCA1.pem")
-    cert = os.path.join(APP_DIR, "cert.pem.crt")
-    key = os.path.join(APP_DIR, "private.pem.key")
+    #ca = os.path.join(APP_DIR, "AmazonRootCA1.pem")
+    #cert = os.path.join(APP_DIR, "cert.pem.crt")
+    #key = os.path.join(APP_DIR, "private.pem.key")
     retorno = "Esperando"
     try:
 
         client = mqtt.Client(client_id=f"django-{uuid.uuid4()}")
-
-        client.tls_set(
-            ca_certs=ca,
-            certfile=cert,
-            keyfile=key
-        )
+        client.username_pw_set(MQTT_USER, MQTT_PASS)
+        #client.tls_set(
+        #    ca_certs=ca,
+        #    certfile=cert,
+        #    keyfile=key
+        #)
 
         client.connect(MQTT_HOST, MQTT_PORT, 60)
 
@@ -169,9 +171,9 @@ def publicar_mqtt(accion):
         retorno = f"Error MQTT: {str(e)}"
     return {
         "app_dir": APP_DIR,
-        "ca": ca,
-        "cert": cert,
-        "key": key,
+        #"ca": ca,
+        #"cert": cert,
+        #"key": key,
         "retorno":retorno
     }
 
