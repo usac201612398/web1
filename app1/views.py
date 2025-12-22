@@ -169,6 +169,7 @@ def publicar_mqtt(accion):
 
     except Exception as e:
         retorno = f"Error MQTT: {str(e)}"
+
     return {
         "retorno":retorno
     }
@@ -179,10 +180,6 @@ def enviarinstruccion(request):
         print("Acción recibida:", accion)
         info = publicar_mqtt(accion)
         return JsonResponse({"status": "ok", "accion_recibida": accion,
-                            "app_dir": info["app_dir"],
-                            "ca": info["ca"],
-                            "cert": info["cert"],
-                            "key": info["key"],
                             "retorno": info["retorno"]})
 
     return render(request, "app1/accionmqtt.html")
