@@ -170,10 +170,6 @@ def publicar_mqtt(accion):
     except Exception as e:
         retorno = f"Error MQTT: {str(e)}"
     return {
-        "app_dir": APP_DIR,
-        #"ca": ca,
-        #"cert": cert,
-        #"key": key,
         "retorno":retorno
     }
 
