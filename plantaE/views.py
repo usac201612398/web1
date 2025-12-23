@@ -5024,11 +5024,17 @@ def kgm2_semanal_aprovechamiento(request):
             df,
             values='kg_m2',
             index=['finca', 'cultivo', 'orden', 'estructura', 'variedad'],
-            columns='semana',
+            columns=['anio', 'semana'],
             aggfunc='sum',
             fill_value=0
         )
-        tabla_pivote.columns = [f"Semana {c}" for c in tabla_pivote.columns]
+        tabla_pivote.columns = [
+            f"{sem}-{anio}"
+            for anio, sem in tabla_pivote.columns
+        ]
+        tabla_pivote = tabla_pivote.sort_index(axis=1)
+
+        #tabla_pivote.columns = [f"Semana {c}" for c in tabla_pivote.columns]
         tabla_pivote = tabla_pivote.replace(0, "")
 
         tabla_pivote = tabla_pivote.reset_index()
