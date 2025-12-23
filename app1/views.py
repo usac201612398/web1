@@ -184,7 +184,11 @@ def enviarinstruccion(request):
 
     return render(request, "app1/accionmqtt.html")
 
+from .models import SensorData
 
+def dashboard(request):
+    latest = SensorData.objects.order_by('-timestamp').first()
+    return render(request, 'app1/dashboard.html', {'latest': latest})
 #@csrf_exempt
 #@login_required
 def consultaRegistros(request):

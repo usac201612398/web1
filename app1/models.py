@@ -71,3 +71,12 @@ class tregistros(models.Model):
     id = models.BigAutoField(primary_key=True)
     correo = models.CharField(max_length=100, blank=True, null=True)
     area = models.CharField(max_length=50, blank=True, null=True)
+
+class SensorData(models.Model):
+    timestamp = models.DateTimeField(auto_now_add=True)
+    device_id = models.CharField(max_length=50)
+    temperature = models.FloatField()
+    humidity = models.FloatField()
+
+    def __str__(self):
+        return f"{self.device_id} - {self.temperature}°C / {self.humidity}%"
