@@ -5028,6 +5028,9 @@ def kgm2_semanal_aprovechamiento(request):
             aggfunc='sum',
             fill_value=0
         )
+        tabla_pivote.columns = [f"Semana {c}" for c in tabla_pivote.columns]
+        tabla_pivote = tabla_pivote.replace(0, "")
+
         tabla_html = tabla_pivote.to_html(
             classes="table table-striped",
             table_id="tabla-pivote"
