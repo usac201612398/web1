@@ -9,7 +9,7 @@ MQTT_HOST = "10.111.112.4"
 MQTT_PORT = 1883
 MQTT_USER = "sdc-iot"
 MQTT_PASS = "nuevacontraseña"
-TOPIC = "esp32/temperature"
+TOPIC = "esp32/temphum"
 
 
 class Command(BaseCommand):
