@@ -4942,6 +4942,104 @@ def poraprovechamientosger(request):
         'registros_json': registros_json,
     })
 
+def kgm2_semanal_aprovechamiento(request):
+    hoy = timezone.now().date()
+
+    ordenes_abiertas = datosProduccion.objects.filter(
+        status='Abierta'
+    ).values_list('orden', flat=True)
+
+    # Detalles de fruta (por semana)
+    detalles = AcumFrutaaux.objects.annotate(
+        semana=ExtractWeek('fecha'),
+        anio=ExtractYear('fecha')
+    ).filter(orden__in=ordenes_abiertas)
+
+    # Boletas para saber calidad
+    boleta_ids = detalles.values_list('boleta', flat=True).distinct()
+    boletas = Boletas.objects.filter(boleta__in=boleta_ids)
+    boletas_dict = {b.boleta: b for b in boletas}
+
+    # Áreas por estructura
+    areas_qs = detallesEstructuras.objects.values(
+        'orden', 'cultivo', 'estructura', 'variedad'
+    ).annotate(total_area=Sum('area'))
+
+    areas = {
+        (a['orden'], a['cultivo'], a['estructura'], a['variedad']): a['total_area']
+        for a in areas_qs
+    }
+
+    # Agrupar libras de aprovechamiento por semana
+    agrupados = defaultdict(float)
+
+    for d in detalles:
+        boleta = boletas_dict.get(d.boleta)
+        if not boleta:
+            continue
+
+        calidad = (boleta.calidad or '').lower()
+        if 'aprovechamiento' not in calidad:
+            continue
+
+        clave = (
+            d.finca,
+            d.cultivo,
+            d.orden,
+            d.estructura,
+            d.variedad,
+            d.anio,
+            d.semana
+        )
+
+        agrupados[clave] += d.libras or 0
+
+    # Armar resultado final
+    resultado = []
+
+    for clave, libras in agrupados.items():
+        finca, cultivo, orden, estructura, variedad, anio, semana = clave
+
+        area = areas.get((orden, cultivo, estructura, variedad), 0)
+        kg = libras / 2.20462
+        kg_m2 = round(kg / area, 2) if area > 0 else 0
+
+        resultado.append({
+            'finca': finca,
+            'cultivo': cultivo,
+            'orden': orden,
+            'estructura': estructura,
+            'variedad': variedad,
+            'anio': anio,
+            'semana': semana,
+            'kg_m2': kg_m2,
+            'area_m2': area
+        })
+
+    # DataFrame para tabla pivote
+    df = pd.DataFrame(resultado)
+
+    if not df.empty:
+        tabla_pivote = pd.pivot_table(
+            df,
+            values='kg_m2',
+            index=['finca', 'cultivo', 'orden', 'estructura', 'variedad'],
+            columns='semana',
+            aggfunc='sum',
+            fill_value=0
+        )
+        tabla_html = tabla_pivote.to_html(
+            classes="table table-striped",
+            table_id="tabla-pivote"
+        )
+    else:
+        tabla_html = "<p>No hay datos</p>"
+
+    return render(request, 'plantaE/salidasFruta_aprovechamientosempgersem.html', {
+        'tabla_html': tabla_html,
+        'registros_json': json.dumps(resultado, default=str),
+    })
+
 def poraprovechamientosempger(request):
     hoy = timezone.now().date()
 
