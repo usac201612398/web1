@@ -30,4 +30,5 @@ urlpatterns = [
     path('exportar_excel/', views.exportar_excel, name='exportar_excel'),
     
     path("iot/accion",views.enviarinstruccion,name='enviarinstruccion'),
+    path("iot/sensor",views.dashboard,name='sensor'),
 ]
