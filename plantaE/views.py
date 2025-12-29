@@ -5066,7 +5066,7 @@ def poraprovechamientosempger(request):
         semana=ExtractWeek('fecha'),
         anio=ExtractYear('fecha')
     ).values('finca', 'cultivo', 'orden', 'estructura', 'variedad'
-    ).annotate(total_libras=Sum('libras')).order_by()
+    ).annotate(total_libras=Sum('libras')).exclude(status="Anulado").order_by()
 
     recepciones_dict = {
         formar_clave2(r['finca'], r['cultivo'], r['orden'], r['estructura'], r['variedad']): r['total_libras']
@@ -5077,7 +5077,7 @@ def poraprovechamientosempger(request):
     detalles = AcumFrutaaux.objects.annotate(
         semana=ExtractWeek('fecha'),
         anio=ExtractYear('fecha')
-    ).filter(orden__in=ordenes_abiertas)
+    ).filter(orden__in=ordenes_abiertas).exclude(status="Anulado")
 
     boleta_ids = detalles.values_list('boleta', flat=True).distinct()
     boletas = Boletas.objects.filter(boleta__in=boleta_ids)
