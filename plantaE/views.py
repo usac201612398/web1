@@ -4953,7 +4953,7 @@ def kgm2_semanal_aprovechamiento(request):
     detalles = AcumFrutaaux.objects.annotate(
         semana=ExtractWeek('fecha'),
         anio=ExtractYear('fecha')
-    ).filter(orden__in=ordenes_abiertas)
+    ).filter(orden__in=ordenes_abiertas).exclude(status="Anulado")
 
     # Boletas para saber calidad
     boleta_ids = detalles.values_list('boleta', flat=True).distinct()
