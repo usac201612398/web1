@@ -2675,7 +2675,7 @@ def reporte_tabla_pivote(request):
     }
     ordenes_abiertas = datosProduccion.objects.filter(status='Abierta').values_list('orden', flat=True)
     
-    qs = AcumFruta.objects.filter(orden__in=ordenes_abiertas).exclude(finca="CIP").exclude(libras__isnull=True)
+    qs = AcumFruta.objects.filter(orden__in=ordenes_abiertas).exclude(finca="CIP").exclude(libras__isnull=True).exclude(status="Anulado")
 
     for campo, valor in filtros_get.items():
         if valor:
@@ -2761,7 +2761,7 @@ def reporte_tabla_pivote2(request):
     nombre_usuario = request.user.username
     ordenes_abiertas = datosProduccion.objects.filter(status='Abierta').values_list('orden', flat=True)
     
-    qs = AcumFruta.objects.filter(correo=nombre_usuario,orden__in=ordenes_abiertas).exclude(finca="CIP").exclude(libras__isnull=True)
+    qs = AcumFruta.objects.filter(correo=nombre_usuario,orden__in=ordenes_abiertas).exclude(finca="CIP").exclude(libras__isnull=True).exclude(status="Anulado")
 
     for campo, valor in filtros_get.items():
         if valor:
