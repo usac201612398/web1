@@ -11,51 +11,67 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/fixedcolumns/4.3.0/css/fixedColumns.dataTables.min.css">
 
-    
+    <style>
+        th, td {
+            white-space: nowrap;
+        }
+        .dataTables_wrapper {
+            width: 100%;
+        }
+    </style>
 
-<style>
-   th, td {
-    white-space: nowrap;
-    vertical-align: middle;
-}
+    <style>
+    th, td {
+        white-space: nowrap;
+        vertical-align: middle;
+    }
 
-.dataTables_wrapper {
-    width: 100%;
-}
+    /* Quitar bordes fuertes */
+    table.dataTable {
+        border-collapse: separate !important;
+        border-spacing: 0;
+    }
 
-/* Quitar TODOS los bordes */
-table.dataTable,
-table.dataTable th,
-table.dataTable td {
-    border: none !important;
-}
+    table.dataTable thead th {
+        background-color: #f8f9fa;
+        border-bottom: 2px solid #dee2e6;
+        font-weight: 600;
+    }
 
-/* Encabezado */
-table.dataTable thead th {
-    background-color: #f8f9fa;
-    font-weight: 600;
-}
+    table.dataTable tbody td {
+        border-top: 1px solid #f1f3f5;
+    }
 
-/* Zebra */
-table.dataTable tbody tr:nth-child(odd) {
-    background-color: #fcfcfd;
-}
+    /* Quitar bordes verticales */
+    table.dataTable td,
+    table.dataTable th {
+        border-right: none !important;
+        border-left: none !important;
+    }
 
-table.dataTable tbody tr:nth-child(even) {
-    background-color: #ffffff;
-}
+    /* Zebra más suave */
+    table.dataTable tbody tr:nth-child(odd) {
+        background-color: #fcfcfd;
+    }
 
-/* Hover (lo que tú recordabas) */
-table.dataTable tbody tr:hover {
-    background-color: #eef5ff !important;
-}
+    table.dataTable tbody tr:nth-child(even) {
+        background-color: #ffffff;
+    }
 
-/* Espaciado y tipografía */
-table.dataTable tbody td {
+    /* Hover elegante */
+    table.dataTable tbody tr:hover {
+        background-color: #eef5ff !important;
+    }
+
+    /* Encabezado fijo más limpio */
+    .dataTables_scrollHead {
+        border-bottom: none;
+    }
+
+    table.dataTable tbody td {
     padding: 0.45rem 0.6rem;
     font-size: 0.875rem;
 }
-
 </style>
 
 </head>
