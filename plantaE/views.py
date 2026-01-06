@@ -3210,7 +3210,7 @@ def contenedores_grafico_view(request):
         agrupado = (
             registros.annotate(
                 semana=ExtractWeek('fechasalcontenedor'),
-                anio=ExtractYear('fechasalcontenedor')
+                anio=ExtractIsoYear('fechasalcontenedor')
             )
             .values('anio', 'semana')
             .annotate(total=Count('contenedor', distinct=True))
@@ -3515,13 +3515,13 @@ def dashboard_acumfrutakgxm2(request):
 
     datos_agrupados = qs.annotate(
         semana=ExtractWeek('fecha'),
-        anio=ExtractYear('fecha')
+        anio=ExtractIsoYear('fecha')
     ).values('anio', 'semana').annotate(
         libras_totales=Sum('libras')
     ).order_by('anio', 'semana')
 
     ordenes_por_semana = defaultdict(set)
-    for record in qs.annotate(semana=ExtractWeek('fecha'), anio=ExtractYear('fecha')).values('anio', 'semana', 'orden'):
+    for record in qs.annotate(semana=ExtractWeek('fecha'), anio=ExtractIsoYear('fecha')).values('anio', 'semana', 'orden'):
         ordenes_por_semana[(record['anio'], record['semana'])].add(record['orden'])
 
     fechas = []
@@ -3635,7 +3635,7 @@ def dashboard_acumfruta(request):
     # Agrupación por semana
     datos = qs.annotate(
         semana=ExtractWeek('fecha'),
-        anio=ExtractYear('fecha')
+        anio=ExtractIsoYear('fecha')
     ).values('anio', 'semana').annotate(
         libras_totales=Sum('libras')
     ).order_by('anio', 'semana')
@@ -3692,7 +3692,7 @@ def dashboard_tecnicos(request):
     # Agrupación por semana
     datos = qs.annotate(
         semana=ExtractWeek('fecha'),
-        anio=ExtractYear('fecha')
+        anio=ExtractIsoYear('fecha')
     ).values('anio', 'semana').annotate(
         libras_totales=Sum('libras')
     ).order_by('anio', 'semana')
@@ -3840,7 +3840,7 @@ def aprovechamientos(request):
         fecha__lte=fecha_max
     ).annotate(
         semana=ExtractWeek('fecha'),
-        anio=ExtractYear('fecha')
+        anio=ExtractIsoYear('fecha')
     ).filter(
         semana=semana_actual,
         anio=anio_actual
@@ -3854,7 +3854,7 @@ def aprovechamientos(request):
     # 3. Filtrar distribuciones por semana actual
     detalles = detallerecaux.objects.annotate(
         semana=ExtractWeek('fechasalidafruta'),
-        anio=ExtractYear('fechasalidafruta')
+        anio=ExtractIsoYear('fechasalidafruta')
     ).filter(
         semana=semana_actual,
         anio=anio_actual
@@ -4512,7 +4512,7 @@ def poraprovechamientos(request):
     acumfrutadatos = AcumFruta.objects.filter(correo=nombre_usuario,orden__in=ordenes_abiertas
     ).annotate(
         semana=ExtractWeek('fecha'),
-        anio=ExtractYear('fecha')
+        anio=ExtractIsoYear('fecha')
     ).values('finca', 'cultivo', 'orden', 'estructura', 'variedad').annotate(total_libras=Sum('libras')).order_by()
 
     recepciones_dict = {
@@ -4522,7 +4522,7 @@ def poraprovechamientos(request):
     # Filtrar distribuciones desde AcumFrutaaux
     detalles = AcumFrutaaux.objects.annotate(
         semana=ExtractWeek('fecha'),
-        anio=ExtractYear('fecha')
+        anio=ExtractIsoYear('fecha')
     ).filter(correo=nombre_usuario,orden__in=ordenes_abiertas)
 
     boleta_ids = detalles.values_list('boleta', flat=True).distinct()
@@ -4597,7 +4597,7 @@ def semanalprodterm_pivot(request):
 
     inventario_datos = Boletas.objects.filter(ordenfinca__in=ordenes_abiertas).annotate(
         semana=ExtractWeek('fecha'),
-        anio=ExtractYear('fecha')
+        anio=ExtractIsoYear('fecha')
     ).values('itemsapname', 'categoria', 'cultivo', 'semana', 'anio').annotate(
         total_libras=Sum('libras')
     ).exclude(categoria="Devolución").order_by('anio', 'semana', 'itemsapname', 'categoria')
@@ -4685,7 +4685,7 @@ def semanalprodterm_pivot_productor(request):
     finca_usuario = datos[0]['finca']
     inventario_datos = Boletas.objects.filter(finca=finca_usuario,fecha__gt=fecha_limite).annotate(
         semana=ExtractWeek('fecha'),
-        anio=ExtractYear('fecha')
+        anio=ExtractIsoYear('fecha')
     ).values('itemsapname', 'categoria', 'cultivo', 'semana', 'anio').annotate(
         total_libras=Sum('libras'),total_cajas=Sum('cajas')
     ).order_by('anio', 'semana', 'itemsapname', 'categoria')
@@ -4776,7 +4776,7 @@ def reporte_tabla_pivote_produccionsem(request):
     finca_usuario = datos[0]['finca']
     inventario_datos = AcumFruta.objects.filter(finca=finca_usuario,fecha__gt=fecha_limite).annotate(
         semana=ExtractWeek('fecha'),
-        anio=ExtractYear('fecha')
+        anio=ExtractIsoYear('fecha')
     ).values('orden', 'estructura', 'variedad', 'cultivo', 'semana', 'anio').annotate(
         total_libras=Sum('libras'),total_cajas=Sum('cajas')
     ).order_by('anio', 'semana', 'cultivo', 'estructura')
@@ -4867,7 +4867,7 @@ def poraprovechamientosger(request):
     acumfrutadatos = AcumFruta.objects.filter(orden__in=ordenes_abiertas
     ).annotate(
         semana=ExtractWeek('fecha'),
-        anio=ExtractYear('fecha')
+        anio=ExtractIsoYear('fecha')
     ).values('finca', 'cultivo', 'orden', 'estructura', 'variedad').annotate(total_libras=Sum('libras')).order_by()
 
     recepciones_dict = {
@@ -4877,7 +4877,7 @@ def poraprovechamientosger(request):
     # Filtrar distribuciones desde AcumFrutaaux
     detalles = AcumFrutaaux.objects.annotate(
         semana=ExtractWeek('fecha'),
-        anio=ExtractYear('fecha')
+        anio=ExtractIsoYear('fecha')
     ).filter(orden__in=ordenes_abiertas)
 
     boleta_ids = detalles.values_list('boleta', flat=True).distinct()
@@ -4954,7 +4954,7 @@ def kgm2_semanal_aprovechamiento(request):
     # Detalles de fruta (por semana)
     detalles = AcumFrutaaux.objects.annotate(
         semana=ExtractWeek('fecha'),
-        anio=ExtractYear('fecha')
+        anio=ExtractIsoYear('fecha')
     ).filter(orden__in=ordenes_abiertas).exclude(status="Anulado")
 
     # Boletas para saber calidad
@@ -5066,7 +5066,7 @@ def poraprovechamientosempger(request):
     # Total de libras por variedad desde AcumFruta
     acumfrutadatos = AcumFruta.objects.filter(orden__in=ordenes_abiertas).annotate(
         semana=ExtractWeek('fecha'),
-        anio=ExtractYear('fecha')
+        anio=ExtractIsoYear('fecha')
     ).values('finca', 'cultivo', 'orden', 'estructura', 'variedad'
     ).annotate(total_libras=Sum('libras')).exclude(status="Anulado").order_by()
 
@@ -5078,7 +5078,7 @@ def poraprovechamientosempger(request):
     # Detalles por calidad
     detalles = AcumFrutaaux.objects.annotate(
         semana=ExtractWeek('fecha'),
-        anio=ExtractYear('fecha')
+        anio=ExtractIsoYear('fecha')
     ).filter(orden__in=ordenes_abiertas).exclude(status="Anulado")
 
     boleta_ids = detalles.values_list('boleta', flat=True).distinct()
@@ -5564,7 +5564,7 @@ def pedidos_list(request):
 
     salidas = pedidos.objects.annotate(
         mes=ExtractMonth('fechapedido'),
-        anio=ExtractYear('fechapedido'),
+        anio=ExtractIsoYear('fechapedido'),
     ).filter(
         mes=current_month,
         anio=current_year
@@ -5579,7 +5579,7 @@ def pedidos_list_historico(request):
 
     salidas = pedidos.objects.annotate(
         mes=ExtractMonth('fechapedido'),
-        anio=ExtractYear('fechapedido'),
+        anio=ExtractIsoYear('fechapedido'),
         libras_por_empaque=ExpressionWrapper(
             F('libras') / F('empaque'),
             output_field=FloatField()
