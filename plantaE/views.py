@@ -5042,6 +5042,7 @@ def kgm2_semanal_aprovechamiento(request):
         tabla_pivote = tabla_pivote.reset_index()
 
         tabla_html = tabla_pivote.to_html(
+            classes="table table-striped",
             table_id="tabla-pivote",
             index=False
         )
