@@ -2367,7 +2367,7 @@ def supervision_list(request):
     #today = timezone.now().date()
     #salidas = Recepciones.objects.filter(fecha=today)
     salidas= supervision.objects.all()
-    salidas = salidas.order_by('-id')
+    salidas = salidas.exclude(status='Anulado').order_by('-id')
      
     return render(request, 'plantaE/supervision_list.html', {'registros': salidas})
 
