@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="es">
+{% load static %}
+<head>
+  <meta charset="UTF-8" />
+  <title>Panel - Supervision</title>
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    body {
+      background-color: #f9f9f9;
+    }
+    .table-custom-header th {
+      background: linear-gradient(to right, #6c757d, #495057);
+      color: white !important;
+      font-weight: bold;
+      text-align: center;
+    }
+    .is-stretch {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .is-stretch > .field {
+      flex: 1;
+      min-width: 180px;
+    }
+    .content-controls {
+      margin-top: 2rem;
+    }
+    .mb-1 {
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+  <section class="section">
+    <div class="container">
+
+      <!-- HEADER -->
+      <section class="hero is-success is-small mb-5">
+        <div class="hero-body">
+          <div class="container has-text-centered">
+            <h1 class="title is-3 has-text-white">Panel de Control</h1>
+            <p class="subtitle is-6 has-text-white-ter">Evaluación de supervisión</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- FILTROS -->
+      <div class="filters">
+        <form id="filtros">
+          <div class="is-stretch">
+            <div class="field">
+              <label class="label" for="date">Fecha</label>
+              <input class="input" type="date" id="date" >
+            </div>
+
+            <div class="field">
+              <label class="label" for="Area">Area</label>
+              <div class="select is-fullwidth">
+                <select id="Area">
+                  <option value="">Seleccionar</option>
+                  <option value="RIO">RIO</option>
+                  <option value="VALLE">VALLE</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="Cul">Cultivo</label>
+              <div class="select is-fullwidth">
+                <select id="Cul">
+                  <option value="">Seleccionar</option>
+                  <option value="BLOCKY ORGANICO">BLOCKY ORGANICO</option>
+                  <option value="BLOCKY">BLOCKY</option>
+                  <option value="CHERRY">CHERRY</option>
+                  <option value="GRAPE">GRAPE</option>
+                  <option value="MEDLEY">MEDLEY</option>
+                  <option value="GRAPE ORGANICO">GRAPE ORGANICO</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="Estructura">Estructura</label>
+              <div class="select is-fullwidth">
+                <select id="Estructura">
+                  <option value="">Seleccionar</option>
+                  <option value="CM1">CM1</option>
+                  <option value="CM2">CM2</option>
+                  <option value="CM3">CM3</option>
+                  <option value="CM4">CM4</option>
+                  <option value="CM5">CM5</option>
+                  <option value="CM6">CM6</option>
+                  <option value="CM7">CM7</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="Sup">Supervisor</label>
+              <div class="select is-fullwidth">
+                <select id="Sup">
+                  <option value="">Seleccionar</option>
+                  <option value="Carlos Hernández">Carlos Hernández</option>
+                  <option value="Rita Florián">Rita Florián</option>
+                  <option value="Nolberto Morales">Nolberto Morales</option>
+                </select>
+              </div>
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+      <!-- TABLA -->
+      <div class="box">
+        <div class="table-container">
+            <table class="table is-bordered is-fullwidth is-hoverable" id="myTable">
+            
+            <thead class="table-custom-header">
+                <tr>
+                <th>No.</th>
+                <th>Actividad</th>
+                <th>Cumple</th>
+                <th>Observaciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+
+                <td>1</td>
+                <td>COSECHA</td>
+                <td>
+                    <label><input type="radio" name="act1" value="Si"> Sí</label>
+                    <label><input type="radio" name="act1" value="Parcial"> Parcial</label>
+                    <label><input type="radio" name="act1" value="No"> No</label>
+                </td>
+                <td><input class="input" type="text"></td>
+                </tr>
+
+                <tr>
+                <td>2</td>
+                <td>Deshoje una vez por semana (vuelta cada 7 días)</td>
+                <td>
+                    <label><input type="radio" name="act2" value="Si"> Sí</label>
+                    <label><input type="radio" name="act2" value="Parcial"> Parcial</label>
+                    <label><input type="radio" name="act2" value="No"> No</label>
+                </td>
+                <td><input class="input" type="text"></td>
+                </tr>
+
+                <tr>
+                <td>3</td>
+                <td>Desinfección continua de tijera (10,000 ppm Huwasan)</td>
+                <td>
+                    <label><input type="radio" name="act3" value="Si"> Sí</label>
+                    <label><input type="radio" name="act3" value="Parcial"> Parcial</label>
+                    <label><input type="radio" name="act3" value="No"> No</label>
+                </td>
+                <td><input class="input" type="text"></td>
+                </tr>
+
+                <tr>
+                <td>4</td>
+                <td>No dejar tronco para evitar botritis</td>
+                <td>
+                    <label><input type="radio" name="act4" value="Si"> Sí</label>
+                    <label><input type="radio" name="act4" value="Parcial"> Parcial</label>
+                    <label><input type="radio" name="act4" value="No"> No</label>
+                </td>
+                <td><input class="input" type="text"></td>
+                </tr>
+
+                <tr>
+                <td>5</td>
+                <td>10 hojas de agosto a octubre</td>
+                <td>
+                    <label><input type="radio" name="act5" value="Si"> Sí</label>
+                    <label><input type="radio" name="act5" value="Parcial"> Parcial</label>
+                    <label><input type="radio" name="act5" value="No"> No</label>
+                </td>
+                <td><input class="input" type="text"></td>
+                </tr>
+
+                <tr>
+                <td>6</td>
+                <td>12 hojas de noviembre a enero</td>
+                <td>
+                    <label><input type="radio" name="act6" value="Si"> Sí</label>
+                    <label><input type="radio" name="act6" value="Parcial"> Parcial</label>
+                    <label><input type="radio" name="act6" value="No"> No</label>
+                </td>
+                <td><input class="input" type="text"></td>
+                </tr>
+
+                <tr>
+                <td>7</td>
+                <td>14 hojas de febrero a abril</td>
+                <td>
+                    <label><input type="radio" name="act7" value="Si"> Sí</label>
+                    <label><input type="radio" name="act7" value="Parcial"> Parcial</label>
+                    <label><input type="radio" name="act7" value="No"> No</label>
+                </td>
+                <td><input class="input" type="text"></td>
+                </tr>
+
+                <tr>
+                <td>8</td>
+                <td>Cosecha 2 veces por semana</td>
+                <td>
+                    <label><input type="radio" name="act8" value="Si"> Sí</label>
+                    <label><input type="radio" name="act8" value="Parcial"> Parcial</label>
+                    <label><input type="radio" name="act8" value="No"> No</label>
+                </td>
+                <td><input class="input" type="text"></td>
+                </tr>
+
+                <tr>
+                <td>9</td>
+                <td>GRAPE cosechar grado 4</td>
+                <td>
+                    <label><input type="radio" name="act9" value="Si"> Sí</label>
+                    <label><input type="radio" name="act9" value="Parcial"> Parcial</label>
+                    <label><input type="radio" name="act9" value="No"> No</label>
+                </td>
+                <td><input class="input" type="text"></td>
+                </tr>
+
+                <tr>
+                <td>10</td>
+                <td>CHERRY cosechar según especificaciones de CARRETA</td>
+                <td>
+                    <label><input type="radio" name="act10" value="Si"> Sí</label>
+                    <label><input type="radio" name="act10" value="Parcial"> Parcial</label>
+                    <label><input type="radio" name="act10" value="No"> No</label>
+                </td>
+                <td><input class="input" type="text"></td>
+                </tr>
+
+                <tr>
+                <td>11</td>
+                <td>Tallos distribuidos uniformemente (importantísimo)</td>
+                <td>
+                    <label><input type="radio" name="act11" value="Si"> Sí</label>
+                    <label><input type="radio" name="act11" value="Parcial"> Parcial</label>
+                    <label><input type="radio" name="act11" value="No"> No</label>
+                </td>
+                <td><input class="input" type="text"></td>
+                </tr>
+
+                <tr>
+                <td>12</td>
+                <td>Evitar quebrar tallos al final de las camas</td>
+                <td>
+                    <label><input type="radio" name="act12" value="Si"> Sí</label>
+                    <label><input type="radio" name="act12" value="Parcial"> Parcial</label>
+                    <label><input type="radio" name="act12" value="No"> No</label>
+                </td>
+                <td><input class="input" type="text"></td>
+                </tr>
+
+                <tr>
+                <td>13</td>
+                <td>Limpieza completa fin de semana</td>
+                <td>
+                    <label><input type="radio" name="act13" value="Si"> Sí</label>
+                    <label><input type="radio" name="act13" value="Parcial"> Parcial</label>
+                    <label><input type="radio" name="act13" value="No"> No</label>
+                </td>
+                <td><input class="input" type="text"></td>
+                </tr>
+
+                <tr>
+                <td>14</td>
+                <td>Reporte de plagas y enfermedades a Fitosanidad</td>
+                <td>
+                    <label><input type="radio" name="act14" value="Si"> Sí</label>
+                    <label><input type="radio" name="act14" value="Parcial"> Parcial</label>
+                    <label><input type="radio" name="act14" value="No"> No</label>
+                </td>
+                <td><input class="input" type="text"></td>
+                </tr>
+
+                <tr>
+                <td>15</td>
+                <td>Descoronado, quitar coronas sin fruta</td>
+                <td>
+                    <label><input type="radio" name="act15" value="Si"> Sí</label>
+                    <label><input type="radio" name="act15" value="Parcial"> Parcial</label>
+                    <label><input type="radio" name="act15" value="No"> No</label>
+                </td>
+                <td><input class="input" type="text"></td>
+                </tr>
+
+                <tr>
+                <td>16</td>
+                <td>Manejo del cultivo (GRAPE y CHERRY)</td>
+                <td>
+                    <label><input type="radio" name="act16" value="Si"> Sí</label>
+                    <label><input type="radio" name="act16" value="Parcial"> Parcial</label>
+                    <label><input type="radio" name="act16" value="No"> No</label>
+                </td>
+                <td><input class="input" type="text"></td>
+                </tr>
+
+                <tr>
+                <td>17</td>
+                <td>Guiado una vez por semana</td>
+                <td>
+                    <label><input type="radio" name="act17" value="Si"> Sí</label>
+                    <label><input type="radio" name="act17" value="Parcial"> Parcial</label>
+                    <label><input type="radio" name="act17" value="No"> No</label>
+                </td>
+                <td><input class="input" type="text"></td>
+                </tr>
+
+                <tr>
+                <td>18</td>
+                <td>Quitar hijos que no sobrepasen los 10 cm</td>
+                <td>
+                    <label><input type="radio" name="act18" value="Si"> Sí</label>
+                    <label><input type="radio" name="act18" value="Parcial"> Parcial</label>
+                    <label><input type="radio" name="act18" value="No"> No</label>
+                </td>
+                <td><input class="input" type="text"></td>
+                </tr>
+
+                <tr>
+                <td>19</td>
+                <td>Dejar hijo bandera donde se indique</td>
+                <td>
+                    <label><input type="radio" name="act19" value="Si"> Sí</label>
+                    <label><input type="radio" name="act19" value="Parcial"> Parcial</label>
+                    <label><input type="radio" name="act19" value="No"> No</label>
+                </td>
+                <td><input class="input" type="text"></td>
+                </tr>
+
+                <tr>
+                <td>20</td>
+                <td>Desinfección con leche (3 veces al día)</td>
+                <td>
+                    <label><input type="radio" name="act20" value="Si"> Sí</label>
+                    <label><input type="radio" name="act20" value="Parcial"> Parcial</label>
+                    <label><input type="radio" name="act20" value="No"> No</label>
+                </td>
+                <td><input class="input" type="text"></td>
+                </tr>
+
+                <tr>
+                <td>21</td>
+                <td>Limpieza y desinfección de carro (1 vez por semana)</td>
+                <td>
+                    <label><input type="radio" name="act21" value="Si"> Sí</label>
+                    <label><input type="radio" name="act21" value="Parcial"> Parcial</label>
+                    <label><input type="radio" name="act21" value="No"> No</label>
+                </td>
+                <td><input class="input" type="text"></td>
+                </tr>
+
+                <tr>
+                <td>22</td>
+                <td>Recuperación de ejes (4.5 ejes/m²)</td>
+                <td>
+                    <label><input type="radio" name="act22" value="Si"> Sí</label>
+                    <label><input type="radio" name="act22" value="Parcial"> Parcial</label>
+                    <label><input type="radio" name="act22" value="No"> No</label>
+                </td>
+                <td><input class="input" type="text"></td>
+                </tr>
+
+                <tr>
+                <td>23</td>
+                <td>Bajado de plantas con inclinación vertical</td>
+                <td>
+                    <label><input type="radio" name="act23" value="Si"> Sí</label>
+                    <label><input type="radio" name="act23" value="Parcial"> Parcial</label>
+                    <label><input type="radio" name="act23" value="No"> No</label>
+                </td>
+                <td><input class="input" type="text"></td>
+                </tr>
+
+                <tr>
+                <td>24</td>
+                <td>Sacado de plantas con virus (diario)</td>
+                <td>
+                    <label><input type="radio" name="act24" value="Si"> Sí</label>
+                    <label><input type="radio" name="act24" value="Parcial"> Parcial</label>
+                    <label><input type="radio" name="act24" value="No"> No</label>
+                </td>
+                <td><input class="input" type="text"></td>
+                </tr>
+
+                <tr>
+                <td>25</td>
+                <td>Reporte de plagas y enfermedades a Fitosanidad</td>
+                <td>
+                    <label><input type="radio" name="act25" value="Si"> Sí</label>
+                    <label><input type="radio" name="act25" value="Parcial"> Parcial</label>
+                    <label><input type="radio" name="act25" value="No"> No</label>
+                </td>
+                <td><input class="input" type="text"></td>
+                </tr>
+
+                <tr>
+                <td>26</td>
+                <td>Terminar con el 90% de los ejes</td>
+                <td>
+                    <label><input type="radio" name="act26" value="Si"> Sí</label>
+                    <label><input type="radio" name="act26" value="Parcial"> Parcial</label>
+                    <label><input type="radio" name="act26" value="No"> No</label>
+                </td>
+                <td><input class="input" type="text"></td>
+                </tr>
+            </tbody>
+            </table>
+        </div>
+        </div>
+
+
+      <!-- BOTONES FINALES -->
+    <div class="columns content-controls">
+    <div class="column is-6">
+        <a href="{% url 'supervision_list' %}" class="button is-success is-medium is-fullwidth">
+        <span class="icon"><i class="fas fa-home"></i></span>
+        <span>Ir al Home</span>
+        </a>
+    </div>
+
+    <div class="column is-6 has-text-right">
+        <button type="button" class="button is-success is-medium is-fullwidth envio3">
+        <span class="icon"><i class="fas fa-paper-plane"></i></span>
+        <span>Enviar</span>
+        </button>
+    </div>
+    </div>
+  </section>
+
+<script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$(document).ready(function () {
+
+  $('.envio3').on('click', function () {
+
+    const boton = $(this);
+    boton.prop('disabled', true);
+
+    const fecha = $('#date').val();
+    const area = $('#Area').val();
+    const cultivo = $('#Cul').val();
+    const estructura = $('#Estructura').val();
+    const supervisor = $('#Sup').val();
+
+    let datos = [];
+
+    $('#myTable tbody tr').each(function () {
+
+      const regla = $(this).find('td').eq(1).text();
+
+      // radio seleccionado
+      const cumple = $(this).find('input[type="radio"]:checked').val() || '';
+
+      // observaciones
+      const observaciones = $(this).find('input[type="text"]').val();
+
+      // si no se marcó nada, no se guarda
+      if (cumple !== '') {
+        datos.push({
+          fecha: fecha,
+          regla: regla,
+          cumplimiento: cumple,
+          area: area,
+          estructura: estructura,
+          cultivo: cultivo,
+          supervisor: supervisor,
+          observaciones: observaciones,
+          status: 'Abierta'
+        });
+      }
+    });
+
+    console.log(datos);
+
+    if (datos.length === 0) {
+      alert("Debe marcar al menos una actividad");
+      boton.prop('disabled', false);
+      return;
+    }
+
+    $.ajax({
+      url: "{% url 'supervision_grabar' %}",
+      type: "POST",
+      contentType: "application/json",
+      headers: {
+        "X-CSRFToken": getCookie('csrftoken')
+      },
+      data: JSON.stringify({ array: datos }),
+      success: function (response) {
+        alert(response.msm);
+        boton.prop('disabled', false);
+      },
+      error: function () {
+        alert("Error al guardar");
+        boton.prop('disabled', false);
+      }
+    });
+  });
+
+});
+</script>

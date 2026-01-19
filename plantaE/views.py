@@ -3,7 +3,7 @@ from django.http import JsonResponse, HttpResponse
 from openpyxl import Workbook
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect
-from .models import Actpeso,pedidos,tipoCajas,controlcajas, proyecciones,paramenvlocales,enviosrec,AcumFrutaaux,salidacontenedores, inventarioProdTermAux,productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
+from .models import Actpeso,supervision,pedidos,tipoCajas,controlcajas, proyecciones,paramenvlocales,enviosrec,AcumFrutaaux,salidacontenedores, inventarioProdTermAux,productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
 from .forms import boletasForm,controlcajasForm,pedidosForm,itemsForm, itemsenviosForm,salidacontenedoresForm,salidasFrutaForm, contenedoresForm,recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
 from django.db.models import  Case, When,Sum, Q, Max, Min,Value as V,F, ExpressionWrapper, FloatField, IntegerField
 from django.db.models.functions import Abs, Trim
@@ -2345,24 +2345,54 @@ def inventarioProd_create(request):
         datos = productoTerm.objects.filter(cultivo=opcion1,categoria=opcion2).values('itemsapcode','itemsapname','calidad1')  # Ajusta los campos
         return JsonResponse({'datos': list(datos),'opcion1':opcion1,'opcion2':opcion2}, safe=False)
     return render(request, 'plantaE/inventarioProd_formPlantilla.html')
-'''
-def inventarioProd_create(request):
+
+def supervision_create(request):
+
+    return render(request, 'plantaE/supervision_formPlantilla.html')
+
+def supervision_delete(request, pk):
+
+    salidas = get_object_or_404(supervision, pk=pk)
+    
     if request.method == 'POST':
-        form = inventarioFrutaForm(request.POST)
-        if form.is_valid():
-            try:
-                form.save()
-            except Exception as e:
-                # Manejar excepciones específicas (por ejemplo, UniqueConstraintError)
-                return JsonResponse({'error': str(e)}, status=400)
-            return redirect('inventarioProd_list')
-        else:
-             # Imprimir errores para depuración
-            return JsonResponse({'errores': form.errors}, status=400)
-    else:
-        form = inventarioFrutaForm()
-    return render(request, 'plantaE/inventarioProd_form.html', {'form': form})
-'''
+        salidas.status = 'Anulado'
+        
+        return render(request, 'plantaE/supervision_confirm_delete.html', {
+            'alert_message': "El registro fue anulado correctamente.",
+            'redirect_url': reverse('supervision_list')
+        })
+    return render(request, 'plantaE/supervision_confirm_delete.html', {'registros': salidas})
+
+def supervision_list(request):
+    #today = timezone.now().date()
+    #salidas = Recepciones.objects.filter(fecha=today)
+    salidas= supervision.objects.all()
+    salidas = salidas.order_by('-id')
+     
+    return render(request, 'plantaE/supervision_list.html', {'registros': salidas})
+
+def supervision_grabar(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        filas = data.get('array', [])
+
+        for f in filas:
+            supervision.objects.create(
+                fecha=f['fecha'],
+                regla=f['regla'],
+                cumplimiento=f['cumplimiento'],
+                area=f['area'],
+                estructura=f['estructura'],
+                cultivo=f['cultivo'],
+                supervisor=f['supervisor'],
+                observaciones=f['observaciones'],
+                status=f['status']
+            )
+
+        return JsonResponse({
+            'msm': f'Se guardaron {len(filas)} registros correctamente'
+        })
+
 
 def inventarioProd_delete(request, pk):
     salidas = get_object_or_404(inventarioProdTerm, pk=pk)
