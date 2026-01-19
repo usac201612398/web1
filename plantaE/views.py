@@ -2356,6 +2356,7 @@ def supervision_delete(request, pk):
     
     if request.method == 'POST':
         salidas.status = 'Anulado'
+        salidas.save() 
         
         return render(request, 'plantaE/supervision_confirm_delete.html', {
             'alert_message': "El registro fue anulado correctamente.",
