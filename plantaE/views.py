@@ -2346,6 +2346,10 @@ def inventarioProd_create(request):
         return JsonResponse({'datos': list(datos),'opcion1':opcion1,'opcion2':opcion2}, safe=False)
     return render(request, 'plantaE/inventarioProd_formPlantilla.html')
 
+def supervisiontomates_create(request):
+
+    return render(request, 'plantaE/supervisiontomates_formPlantilla.html')
+
 def supervision_create(request):
 
     return render(request, 'plantaE/supervision_formPlantilla.html')

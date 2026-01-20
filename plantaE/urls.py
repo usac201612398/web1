@@ -133,6 +133,7 @@ urlpatterns = [
     path("supervision",views.supervision_list,name='supervision_list'),
     path('supervision/new/', views.supervision_create, name='supervision_create'),
     path("supervision/plantilla",views.supervision_grabar,name='supervision_grabar'),
+    path('supervisiontomates/new/', views.supervisiontomates_create, name='supervisiontomates_create'),
 
     path('ajax/load-contenedores/', views.load_contenedores, name='load_contenedores'),
     path("contenedores",views.contenedores_list,name='contenedores_list'),

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+{% load static %}
+<head>
+  <meta charset="UTF-8" />
+  <title>Panel - Supervision - Tomates</title>
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    body {
+      background-color: #f9f9f9;
+    }
+    .table-custom-header th {
+      background: linear-gradient(to right, #6c757d, #495057);
+      color: white !important;
+      font-weight: bold;
+      text-align: center;
+    }
+    .is-stretch {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .is-stretch > .field {
+      flex: 1;
+      min-width: 180px;
+    }
+    .content-controls {
+      margin-top: 2rem;
+    }
+    .mb-1 {
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+  <section class="section">
+    <div class="container">
+
+      <!-- HEADER -->
+      <section class="hero is-success is-small mb-5">
+        <div class="hero-body">
+          <div class="container has-text-centered">
+            <h1 class="title is-3 has-text-white">Panel de Control</h1>
+            <p class="subtitle is-6 has-text-white-ter">Evaluación de supervisión</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- FILTROS -->
+      <div class="filters">
+        <form id="filtros">
+          <div class="is-stretch">
+            <div class="field">
+              <label class="label" for="date">Fecha</label>
+              <input class="input" type="date" id="date" >
+            </div>
+
+            <div class="field">
+              <label class="label" for="Area">Area</label>
+              <div class="select is-fullwidth">
+                <select id="Area">
+                  <option value="">Seleccionar</option>
+                  <option value="RIO">RIO</option>
+                  <option value="VALLE">VALLE</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="Cul">Cultivo</label>
+              <div class="select is-fullwidth">
+                <select id="Cul">
+                  <option value="">Seleccionar</option>
+                  <option value="BLOCKY ORGANICO">BLOCKY ORGANICO</option>
+                  <option value="BLOCKY">BLOCKY</option>
+                  <option value="CHERRY">CHERRY</option>
+                  <option value="GRAPE">GRAPE</option>
+                  <option value="MEDLEY">MEDLEY</option>
+                  <option value="GRAPE ORGANICO">GRAPE ORGANICO</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="Estructura">Estructura</label>
+              <div class="select is-fullwidth">
+                <select id="Estructura">
+                  <option value="">Seleccionar</option>
+                  <option value="CM1">CM1</option>
+                  <option value="CM2">CM2</option>
+                  <option value="CM3">CM3</option>
+                  <option value="CM4">CM4</option>
+                  <option value="CM5">CM5</option>
+                  <option value="CM6">CM6</option>
+                  <option value="CM7">CM7</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="Sup">Supervisor</label>
+              <div class="select is-fullwidth">
+                <select id="Sup">
+                  <option value="">Seleccionar</option>
+                  <option value="Carlos Hernández">Carlos Hernández</option>
+                  <option value="Rita Florián">Rita Florián</option>
+                  <option value="Nolberto Morales">Nolberto Morales</option>
+                </select>
+              </div>
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+      <!-- TABLA -->
+      <div class="box">
+        <div class="table-container">
+            <table class="table is-bordered is-fullwidth is-hoverable" id="myTable">
+              <thead class="table-custom-header">
+                <tr>
+                  <th>Actividad</th>
+                  <th>Parámetro</th>
+                  <th>Excelente (4)</th>
+                  <th>Bueno (3)</th>
+                  <th>Regular (2)</th>
+                  <th>Malo (1)</th>
+                </tr>
+              </thead>
+
+              <tbody>
+
+                <!-- DESHOJE -->
+                <tr>
+                  <td>Deshoje</td>
+                  <td>12 hojas</td>
+                  <td class="has-text-centered"><input type="radio" name="row1" value="Excelente" data-puntaje="4"></td>
+                  <td class="has-text-centered"><input type="radio" name="row1" value="Bueno" data-puntaje="3"></td>
+                  <td class="has-text-centered"><input type="radio" name="row1" value="Regular" data-puntaje="2"></td>
+                  <td class="has-text-centered"><input type="radio" name="row1" value="Malo" data-puntaje="1"></td>
+                </tr>
+
+                <tr>
+                  <td>Deshoje</td>
+                  <td>Entre 12-14 hojas</td>
+                  <td class="has-text-centered"><input type="radio" name="row2" value="Excelente" data-puntaje="4"></td>
+                  <td class="has-text-centered"><input type="radio" name="row2" value="Bueno" data-puntaje="3"></td>
+                  <td class="has-text-centered"><input type="radio" name="row2" value="Regular" data-puntaje="2"></td>
+                  <td class="has-text-centered"><input type="radio" name="row2" value="Malo" data-puntaje="1"></td>
+                </tr>
+
+                <tr>
+                  <td>Deshoje</td>
+                  <td>Entre 10-11 hojas</td>
+                  <td class="has-text-centered"><input type="radio" name="row3" value="Excelente" data-puntaje="4"></td>
+                  <td class="has-text-centered"><input type="radio" name="row3" value="Bueno" data-puntaje="3"></td>
+                  <td class="has-text-centered"><input type="radio" name="row3" value="Regular" data-puntaje="2"></td>
+                  <td class="has-text-centered"><input type="radio" name="row3" value="Malo" data-puntaje="1"></td>
+                </tr>
+
+                <tr>
+                  <td>Deshoje</td>
+                  <td>Menos de 10 y más de 14 hojas</td>
+                  <td class="has-text-centered"><input type="radio" name="row4" value="Excelente" data-puntaje="4"></td>
+                  <td class="has-text-centered"><input type="radio" name="row4" value="Bueno" data-puntaje="3"></td>
+                  <td class="has-text-centered"><input type="radio" name="row4" value="Regular" data-puntaje="2"></td>
+                  <td class="has-text-centered"><input type="radio" name="row4" value="Malo" data-puntaje="1"></td>
+                </tr>
+
+                <!-- DISTRIBUCIÓN DE EJES -->
+                <tr>
+                  <td>Distribución de ejes</td>
+                  <td>Entre 15-17 ejes por gablete</td>
+                  <td class="has-text-centered"><input type="radio" name="row5" value="Excelente" data-puntaje="4"></td>
+                  <td class="has-text-centered"><input type="radio" name="row5" value="Bueno" data-puntaje="3"></td>
+                  <td class="has-text-centered"><input type="radio" name="row5" value="Regular" data-puntaje="2"></td>
+                  <td class="has-text-centered"><input type="radio" name="row5" value="Malo" data-puntaje="1"></td>
+                </tr>
+
+                <tr>
+                  <td>Distribución de ejes</td>
+                  <td>Entre 12-13 ejes por gablete</td>
+                  <td class="has-text-centered"><input type="radio" name="row6" value="Excelente" data-puntaje="4"></td>
+                  <td class="has-text-centered"><input type="radio" name="row6" value="Bueno" data-puntaje="3"></td>
+                  <td class="has-text-centered"><input type="radio" name="row6" value="Regular" data-puntaje="2"></td>
+                  <td class="has-text-centered"><input type="radio" name="row6" value="Malo" data-puntaje="1"></td>
+                </tr>
+
+                <tr>
+                  <td>Distribución de ejes</td>
+                  <td>Entre 10-11 ejes por gablete</td>
+                  <td class="has-text-centered"><input type="radio" name="row7" value="Excelente" data-puntaje="4"></td>
+                  <td class="has-text-centered"><input type="radio" name="row7" value="Bueno" data-puntaje="3"></td>
+                  <td class="has-text-centered"><input type="radio" name="row7" value="Regular" data-puntaje="2"></td>
+                  <td class="has-text-centered"><input type="radio" name="row7" value="Malo" data-puntaje="1"></td>
+                </tr>
+
+                <tr>
+                  <td>Distribución de ejes</td>
+                  <td>Ganchos juntos (mal distribuidos)</td>
+                  <td class="has-text-centered"><input type="radio" name="row8" value="Excelente" data-puntaje="4"></td>
+                  <td class="has-text-centered"><input type="radio" name="row8" value="Bueno" data-puntaje="3"></td>
+                  <td class="has-text-centered"><input type="radio" name="row8" value="Regular" data-puntaje="2"></td>
+                  <td class="has-text-centered"><input type="radio" name="row8" value="Malo" data-puntaje="1"></td>
+                </tr>
+
+                <!-- COSECHA -->
+                <tr>
+                  <td>Cosecha</td>
+                  <td>Grado 3-4 de maduración</td>
+                  <td class="has-text-centered"><input type="radio" name="row9" value="Excelente" data-puntaje="4"></td>
+                  <td class="has-text-centered"><input type="radio" name="row9" value="Bueno" data-puntaje="3"></td>
+                  <td class="has-text-centered"><input type="radio" name="row9" value="Regular" data-puntaje="2"></td>
+                  <td class="has-text-centered"><input type="radio" name="row9" value="Malo" data-puntaje="1"></td>
+                </tr>
+
+                <tr>
+                  <td>Cosecha</td>
+                  <td>Grado 3</td>
+                  <td class="has-text-centered"><input type="radio" name="row10" value="Excelente" data-puntaje="4"></td>
+                  <td class="has-text-centered"><input type="radio" name="row10" value="Bueno" data-puntaje="3"></td>
+                  <td class="has-text-centered"><input type="radio" name="row10" value="Regular" data-puntaje="2"></td>
+                  <td class="has-text-centered"><input type="radio" name="row10" value="Malo" data-puntaje="1"></td>
+                </tr>
+
+                <tr>
+                  <td>Cosecha</td>
+                  <td>Grado 1-2</td>
+                  <td class="has-text-centered"><input type="radio" name="row11" value="Excelente" data-puntaje="4"></td>
+                  <td class="has-text-centered"><input type="radio" name="row11" value="Bueno" data-puntaje="3"></td>
+                  <td class="has-text-centered"><input type="radio" name="row11" value="Regular" data-puntaje="2"></td>
+                  <td class="has-text-centered"><input type="radio" name="row11" value="Malo" data-puntaje="1"></td>
+                </tr>
+
+                <tr>
+                  <td>Cosecha</td>
+                  <td>Fruta pequeña, rajada, con cáliz y daños</td>
+                  <td class="has-text-centered"><input type="radio" name="row12" value="Excelente" data-puntaje="4"></td>
+                  <td class="has-text-centered"><input type="radio" name="row12" value="Bueno" data-puntaje="3"></td>
+                  <td class="has-text-centered"><input type="radio" name="row12" value="Regular" data-puntaje="2"></td>
+                  <td class="has-text-centered"><input type="radio" name="row12" value="Malo" data-puntaje="1"></td>
+                </tr>
+
+                <!-- DESCORONADO -->
+                <tr>
+                  <td>Descoronado</td>
+                  <td>Tallos con 1 corona</td>
+                  <td class="has-text-centered"><input type="radio" name="row13" value="Excelente" data-puntaje="4"></td>
+                  <td class="has-text-centered"><input type="radio" name="row13" value="Bueno" data-puntaje="3"></td>
+                  <td class="has-text-centered"><input type="radio" name="row13" value="Regular" data-puntaje="2"></td>
+                  <td class="has-text-centered"><input type="radio" name="row13" value="Malo" data-puntaje="1"></td>
+                </tr>
+
+                <tr>
+                  <td>Descoronado</td>
+                  <td>Tallos con 2 coronas</td>
+                  <td class="has-text-centered"><input type="radio" name="row14" value="Excelente" data-puntaje="4"></td>
+                  <td class="has-text-centered"><input type="radio" name="row14" value="Bueno" data-puntaje="3"></td>
+                  <td class="has-text-centered"><input type="radio" name="row14" value="Regular" data-puntaje="2"></td>
+                  <td class="has-text-centered"><input type="radio" name="row14" value="Malo" data-puntaje="1"></td>
+                </tr>
+
+                <tr>
+                  <td>Descoronado</td>
+                  <td>Tallos con 3 coronas</td>
+                  <td class="has-text-centered"><input type="radio" name="row15" value="Excelente" data-puntaje="4"></td>
+                  <td class="has-text-centered"><input type="radio" name="row15" value="Bueno" data-puntaje="3"></td>
+                  <td class="has-text-centered"><input type="radio" name="row15" value="Regular" data-puntaje="2"></td>
+                  <td class="has-text-centered"><input type="radio" name="row15" value="Malo" data-puntaje="1"></td>
+                </tr>
+
+                <tr>
+                  <td>Descoronado</td>
+                  <td>Tallos con 4 coronas</td>
+                  <td class="has-text-centered"><input type="radio" name="row16" value="Excelente" data-puntaje="4"></td>
+                  <td class="has-text-centered"><input type="radio" name="row16" value="Bueno" data-puntaje="3"></td>
+                  <td class="has-text-centered"><input type="radio" name="row16" value="Regular" data-puntaje="2"></td>
+                  <td class="has-text-centered"><input type="radio" name="row16" value="Malo" data-puntaje="1"></td>
+                </tr>
+
+              </tbody>
+            </table>
+
+        </div>
+        </div>
+
+
+      <!-- BOTONES FINALES -->
+    <div class="columns content-controls">
+    <div class="column is-6">
+        <a href="{% url 'supervision_list' %}" class="button is-success is-medium is-fullwidth">
+        <span class="icon"><i class="fas fa-home"></i></span>
+        <span>Ir al Home</span>
+        </a>
+    </div>
+
+    <div class="column is-6 has-text-right">
+        <button type="button" class="button is-success is-medium is-fullwidth envio3">
+        <span class="icon"><i class="fas fa-paper-plane"></i></span>
+        <span>Enviar</span>
+        </button>
+    </div>
+    </div>
+  </section>
+
+<script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$(document).ready(function () {
+
+  $('.envio3').on('click', function () {
+
+    const boton = $(this);
+    boton.prop('disabled', true);
+
+    const fecha = $('#date').val();
+    const area = $('#Area').val();
+    const cultivo = $('#Cul').val();
+    const estructura = $('#Estructura').val();
+    const supervisor = $('#Sup').val();
+
+    let datos = [];
+
+    $('#myTable tbody tr').each(function () {
+
+      const regla = $(this).find('td').eq(1).text();
+
+      // radio seleccionado
+      const cumple = $(this).find('input[type="radio"]:checked').val() || '';
+
+      // observaciones
+      const observaciones = $(this).find('input[type="text"]').val();
+
+      // si no se marcó nada, no se guarda
+      if (cumple !== '') {
+        datos.push({
+          fecha: fecha,
+          regla: regla,
+          cumplimiento: cumple,
+          area: area,
+          estructura: estructura,
+          cultivo: cultivo,
+          supervisor: supervisor,
+          observaciones: observaciones,
+          status: 'Abierta'
+        });
+      }
+    });
+
+    console.log(datos);
+
+    if (datos.length === 0) {
+      alert("Debe marcar al menos una actividad");
+      boton.prop('disabled', false);
+      return;
+    }
+
+    $.ajax({
+      url: "{% url 'supervision_grabar' %}",
+      type: "POST",
+      contentType: "application/json",
+      headers: {
+        "X-CSRFToken": getCookie('csrftoken')
+      },
+      data: JSON.stringify({ array: datos }),
+      success: function (response) {
+        alert(response.msm);
+        boton.prop('disabled', false);
+      },
+      error: function () {
+        alert("Error al guardar");
+        boton.prop('disabled', false);
+      }
+    });
+  });
+
+});
+</script>
