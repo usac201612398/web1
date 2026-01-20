@@ -43,8 +43,11 @@
 
     <div class="d-flex flex-wrap gap-2 mb-4 justify-content-between">
         
-        <a href="{% url 'supervision_create' %}" class="btn btn-success flex-fill text-center">
-            <i class="fas fa-plus"></i> Agregar viaje
+        <a href="{% url 'supervisiontomates_create' %}" class="btn btn-success flex-fill text-center">
+            <i class="fas fa-plus"></i> Agregar (Tomates)
+        </a>
+        <a href="{% url 'supervisionchiles_create' %}" class="btn btn-success flex-fill text-center">
+            <i class="fas fa-plus"></i> Agregar (Chiles)
         </a>
 
     </div>
@@ -107,7 +110,7 @@
                     <strong>Cultivo:</strong> {{ registro.cultivo }}<br>
                     <strong>Estructura:</strong> {{ registro.estructura }}<br>
                     <strong>Parametro:</strong> {{ registro.parametro }}<br>
-                    <strong>Puntaje:</strong> {{ <registro class="puntaje"></registro> }}<br>
+                    <strong>Puntaje:</strong> {{ registro.puntaje }}<br>
                     <strong>Class:</strong> {{ registro.clasificacion }}<br>
                     <strong>Obs:</strong> {{ registro.observaciones }}
                 </p>
