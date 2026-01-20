@@ -3,7 +3,7 @@ from django.http import JsonResponse, HttpResponse
 from openpyxl import Workbook
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect
-from .models import Actpeso,supervision,pedidos,tipoCajas,controlcajas, proyecciones,paramenvlocales,enviosrec,AcumFrutaaux,salidacontenedores, inventarioProdTermAux,productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
+from .models import Actpeso,supervision,supervisionproduccion,pedidos,tipoCajas,controlcajas, proyecciones,paramenvlocales,enviosrec,AcumFrutaaux,salidacontenedores, inventarioProdTermAux,productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
 from .forms import boletasForm,controlcajasForm,pedidosForm,itemsForm, itemsenviosForm,salidacontenedoresForm,salidasFrutaForm, contenedoresForm,recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
 from django.db.models import  Case, When,Sum, Q, Max, Min,Value as V,F, ExpressionWrapper, FloatField, IntegerField
 from django.db.models.functions import Abs, Trim
@@ -2350,6 +2350,10 @@ def supervisiontomates_create(request):
 
     return render(request, 'plantaE/supervisiontomates_formPlantilla.html')
 
+def supervisionchiles_create(request):
+
+    return render(request, 'plantaE/supervisionchiles_formPlantilla.html')
+
 def supervision_create(request):
 
     return render(request, 'plantaE/supervision_formPlantilla.html')
@@ -2376,6 +2380,14 @@ def supervision_list(request):
      
     return render(request, 'plantaE/supervision_list.html', {'registros': salidas})
 
+def supervisionproduccion_list(request):
+    #today = timezone.now().date()
+    #salidas = Recepciones.objects.filter(fecha=today)
+    salidas= supervisionproduccion.objects.all()
+    salidas = salidas.exclude(status='Anulado').order_by('-id')
+     
+    return render(request, 'plantaE/supervisionproduccion_list.html', {'registros': salidas})
+
 def supervision_grabar(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -2398,6 +2410,43 @@ def supervision_grabar(request):
             'msm': f'Se guardaron {len(filas)} registros correctamente'
         })
 
+def supervisionproduccion_delete(request, pk):
+
+    salidas = get_object_or_404(supervisionproduccion, pk=pk)
+    
+    if request.method == 'POST':
+        salidas.status = 'Anulado'
+        salidas.save() 
+        
+        return render(request, 'plantaE/supervisionproduccion_confirm_delete.html', {
+            'alert_message': "El registro fue anulado correctamente.",
+            'redirect_url': reverse('supervisionproduccion_list')
+        })
+    return render(request, 'plantaE/supervisionproduccion_confirm_delete.html', {'registros': salidas})
+
+def supervisionproduccion_grabar(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        filas = data.get('array', [])
+
+        for f in filas:
+
+            supervisionproduccion.objects.create(
+                fecha=f['fecha'],
+                regla=f['regla'],
+                cumplimiento=f['cumplimiento'],
+                finca=f['finca'],
+                area=f['area'],
+                estructura=f['estructura'],
+                cultivo=f['cultivo'],
+                supervisor=f['supervisor'],
+                observaciones=f['observaciones'],
+                status=f['status']
+            )
+
+        return JsonResponse({
+            'msm': f'Se guardaron {len(filas)} registros correctamente'
+        })
 
 def inventarioProd_delete(request, pk):
     salidas = get_object_or_404(inventarioProdTerm, pk=pk)

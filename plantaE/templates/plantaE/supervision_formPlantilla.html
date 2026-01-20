@@ -449,6 +449,8 @@
 <script>
 $(document).ready(function () {
 
+  const hoy = new Date().toISOString().split('T')[0];
+  $('#date').val(hoy);
   $('.envio3').on('click', function () {
 
     const boton = $(this);

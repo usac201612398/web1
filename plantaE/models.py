@@ -29,6 +29,29 @@ class supervision(models.Model):
     
     def __str__(self):
         return (str(self.fecha) + " | " + str(self.area)+ " | " + str(self.cultivo)+ " | " + str(self.estructura) )
+
+class supervisionproduccion(models.Model):
+
+    #op_finca = [('VALLE','VALLE'),('RIO','RIO'),('CIP', 'CIP'),('FLE','FLE'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.')]
+    #op_cultivo = [('AGUACATE','AGUACATE'),('PEPINO','PEPINO'),('CHERRY','CHERRY'),('ROMA','ROMA'),('MEDLEY','MEDLEY'),('BEEF','BEEF'),('SALADETTE','SALADETTE'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
+    #op_status = [('Abierta','Abierta'),('Cerrada','Cerrada')]
+    #op_temporada = [('Temp 2023-2024','Temp 2023-2024'),('Temp 2024-2025','Temp 2024-2025')]
+    id = models.AutoField(primary_key=True)
+    fecha = models.DateField(blank=True, null=True)
+    parametro = models.CharField(max_length=175,blank=True)
+    clasificacion = models.CharField(max_length=25,blank=True)
+    puntaje = models.IntegerField(blank=True, null=True)
+    actividad = models.CharField(max_length=25,blank=True)
+    finca = models.CharField(max_length=25,blank=True)
+    estructura = models.CharField(max_length=30,blank=True)
+    cultivo = models.CharField(max_length=35, blank=True)
+    supervisor = models.CharField(max_length=35, blank=True)
+    observaciones = models.CharField(max_length=100, blank=True)
+    status = models.CharField(max_length=35, blank=True)
+    
+    def __str__(self):
+        return (str(self.fecha) + " | " + str(self.finca)+ " | " + str(self.cultivo)+ " | " + str(self.estructura) )
+    
  
 class proyecciones(models.Model):
 
