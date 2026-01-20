@@ -445,12 +445,13 @@
 
 <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script>
+
 $(document).ready(function () {
 
   const hoy = new Date().toISOString().split('T')[0];
   $('#date').val(hoy);
+
   $('.envio3').on('click', function () {
 
     const boton = $(this);
@@ -463,7 +464,6 @@ $(document).ready(function () {
     const supervisor = $('#Sup').val();
 
     let datos = [];
-
     let incompletas = false;
 
     $('#myTable tbody tr').each(function () {
@@ -476,27 +476,21 @@ $(document).ready(function () {
         return false; // corta el recorrido
       }
 
-      const cumple = radio.val();
-      const observaciones = $(this).find('input[type="text"]').val();
-
       datos.push({
         fecha: fecha,
         regla: regla,
-        cumplimiento: cumple,
+        cumplimiento: radio.val(),
         area: area,
         estructura: estructura,
         cultivo: cultivo,
         supervisor: supervisor,
-        observaciones: observaciones,
+        observaciones: $(this).find('input[type="text"]').val(),
         status: 'Abierta'
       });
     });
 
-
-    console.log(datos);
-
-    if (datos.length === 0) {
-      alert("Debe marcar al menos una actividad");
+    if (incompletas) {
+      alert('Debe marcar una opción en TODAS las filas de la tabla');
       boton.prop('disabled', false);
       return;
     }
@@ -511,7 +505,9 @@ $(document).ready(function () {
       data: JSON.stringify({ array: datos }),
       success: function (response) {
         alert(response.msm);
-        boton.prop('disabled', false);
+
+        // ✅ REDIRECCIÓN DESPUÉS DE GUARDAR
+        window.location.href = "https://sdc-iot.popoyan.com.gt/plantaE/supervision";
       },
       error: function () {
         alert("Error al guardar");
