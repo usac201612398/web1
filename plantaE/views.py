@@ -2433,10 +2433,11 @@ def supervisionproduccion_grabar(request):
 
             supervisionproduccion.objects.create(
                 fecha=f['fecha'],
-                regla=f['regla'],
-                cumplimiento=f['cumplimiento'],
+                puntaje=f['puntaje'],
+                parametro=f['parametro'],
+                clasificacion=f['clasificacion'],
                 finca=f['finca'],
-                area=f['area'],
+                actividad=f['actividad'],
                 estructura=f['estructura'],
                 cultivo=f['cultivo'],
                 supervisor=f['supervisor'],

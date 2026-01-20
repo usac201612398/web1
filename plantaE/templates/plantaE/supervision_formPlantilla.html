@@ -464,31 +464,34 @@ $(document).ready(function () {
 
     let datos = [];
 
+    let incompletas = false;
+
     $('#myTable tbody tr').each(function () {
 
       const regla = $(this).find('td').eq(1).text();
+      const radio = $(this).find('input[type="radio"]:checked');
 
-      // radio seleccionado
-      const cumple = $(this).find('input[type="radio"]:checked').val() || '';
+      if (radio.length === 0) {
+        incompletas = true;
+        return false; // corta el recorrido
+      }
 
-      // observaciones
+      const cumple = radio.val();
       const observaciones = $(this).find('input[type="text"]').val();
 
-      // si no se marcó nada, no se guarda
-      if (cumple !== '') {
-        datos.push({
-          fecha: fecha,
-          regla: regla,
-          cumplimiento: cumple,
-          area: area,
-          estructura: estructura,
-          cultivo: cultivo,
-          supervisor: supervisor,
-          observaciones: observaciones,
-          status: 'Abierta'
-        });
-      }
+      datos.push({
+        fecha: fecha,
+        regla: regla,
+        cumplimiento: cumple,
+        area: area,
+        estructura: estructura,
+        cultivo: cultivo,
+        supervisor: supervisor,
+        observaciones: observaciones,
+        status: 'Abierta'
+      });
     });
+
 
     console.log(datos);
 
