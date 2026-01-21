@@ -22,6 +22,7 @@ from collections import defaultdict
 from django.db.models.functions import ExtractWeek, ExtractYear, ExtractIsoYear, ExtractMonth
 from django.views.decorators.http import require_GET
 from django.urls import reverse
+from django.db import transaction
 
 def vascula_monitor(request):
     return render(request, 'plantaE/vascula.html')
@@ -2641,21 +2642,19 @@ def packinglist_update(request, pk):
 
 
 def packinglist_delete(request, pk):
-    
+
     salidas = get_object_or_404(salidacontenedores, pk=pk)
 
-   # Buscar registros auxiliares vinculados al contenedor
-    relacionados = inventarioProdTermAux.objects.filter(salidacontenedores=salidas.registro)
+    # 1. Auxiliares relacionados (FK)
+    relacionados = salidas.auxiliares.select_related('inventarioreg')
 
-    # Buscar en inventarioProdTerm los registros asociados
-    relacionados2 = inventarioProdTerm.objects.filter(
-        registro__in=relacionados.values_list('inventarioreg', flat=True)
+    # 2. Inventario principal relacionado
+    inventarios = inventarioProdTerm.objects.filter(
+        auxiliares__salidacontenedores=salidas
     )
 
-    # Verificar si alguno tiene boleta asignada
-    tiene_boletas = relacionados2.filter(boleta__isnull=False).exclude(boleta=0).exists()
-
-    if tiene_boletas:
+    # 3. Validar boletas
+    if inventarios.filter(boleta__isnull=False).exclude(boleta=0).exists():
         return render(request, 'plantaE/inventarioProd_packinglist_confirm_delete.html', {
             'registros': salidas,
             'alert_message': "No se puede anular esta paleta porque tiene boletas asignadas.",
@@ -2663,18 +2662,24 @@ def packinglist_delete(request, pk):
         })
 
     if request.method == 'POST':
-        # Paso 1: Anular el contenedor
-        salidas.status = 'Anulado'
-        salidas.save()
+        with transaction.atomic():
 
-        # Paso 2: Anular los registros auxiliares
-        relacionados.update(status='Anulado')
+            # Paso 1: Anular contenedor
+            salidas.status = 'Anulado'
+            salidas.save()
 
-        # Paso 3: Obtener los inventarioreg únicos
-        inventario_codigos = relacionados.values_list('inventarioreg', flat=True).distinct()
+            # Paso 2: Anular auxiliares
+            relacionados.update(status='Anulado')
 
-        # Paso 4: Actualizar inventario principal
-        inventarioProdTerm.objects.filter(registro__in=inventario_codigos).exclude(status='Anulado').update(status=None)
+            # Paso 3: Restaurar inventario principal
+            inventarios.update(
+                status='Pendiente',
+                status2=None,
+                status3=None,
+                boleta=None,
+                reasignacion=None,
+                enviorec=None
+            )
 
         return render(request, 'plantaE/inventarioProd_packinglist_confirm_delete.html', {
             'registros': salidas,
@@ -2685,6 +2690,7 @@ def packinglist_delete(request, pk):
     return render(request, 'plantaE/inventarioProd_packinglist_confirm_delete.html', {
         'registros': salidas
     })
+
 
 def packinglist_delete(request, pk):
     salidas = get_object_or_404(salidacontenedores, pk=pk)
