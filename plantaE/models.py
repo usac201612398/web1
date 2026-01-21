@@ -505,7 +505,9 @@ class inventarioProdTermAux(models.Model):
     salidacontenedores = models.ForeignKey(
         salidacontenedores,
         on_delete=models.PROTECT,
-        related_name='auxiliares'
+        related_name='auxiliares',
+        null=True
+
     )
     inventarioreg = models.ForeignKey(
         inventarioProdTerm,
