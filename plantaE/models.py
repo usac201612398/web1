@@ -432,6 +432,7 @@ class inventarioProdTerm(models.Model):
     def __str__(self):
         return str(self.registro) + " | " + str(self.proveedor) + " | " + str(self.itemsapname)+ " | " + str(self.cultivo)
 
+
 class inventarioProdTermAux(models.Model):
     
     #op_proveedor = [('','-'),('FINCA LA PASTORIA, S.A.','FINCA LA PASTORIA, S.A.'),('INVERSIONES LA PASTORIA, S.A.','INVERSIONES LA PASTORIA, S.A.'),('SDC','SDC'),('AGROINDUSTRIAS SAN RAFAEL, S.A.','AGROINDUSTRIAS SAN RAFAEL, S.A.'),('INVERNADEROS TECNOLOGICOS S.A','INVERNADEROS TECNOLOGICOS S.A'),('HORTEX, S.A.','HORTEX, S.A.'),('DANIEL ESTUARDO GALICIA CARRERA','DANIEL ESTUARDO GALICIA CARRERA'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.')]
@@ -441,7 +442,7 @@ class inventarioProdTermAux(models.Model):
     #op_status = [('Pendiente','-'),('Cerrado','Cerrado'),('En proceso','En proceso')]
 
     registro = models.BigAutoField(primary_key=True)
-    #inventarioreg = models.BigIntegerField(blank=True, null = True)
+    inventarioreg = models.BigIntegerField(blank=True, null = True)
     fecha = models.DateField(blank=True, null=True)
     categoria = models.CharField(max_length=50,  blank=True, null=True)
     cultivo = models.CharField(max_length=50, blank=True, null=True)
@@ -465,16 +466,7 @@ class inventarioProdTermAux(models.Model):
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     op_sap = models.CharField(max_length=20,blank=True, null=True)
     boleta=models.BigIntegerField(blank=True, null=True)
-    salidacontenedores = models.ForeignKey(
-        salidacontenedores,
-        on_delete=models.PROTECT,
-        related_name='auxiliares'
-    )
-    inventarioreg = models.ForeignKey(
-        inventarioProdTerm,
-        on_delete=models.PROTECT,
-        related_name='auxiliares'
-    )  
+    salidacontenedores=models.CharField(max_length=20,blank=True,null=True)
     
     
     def __str__(self):
