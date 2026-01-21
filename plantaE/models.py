@@ -431,44 +431,7 @@ class inventarioProdTerm(models.Model):
     
     def __str__(self):
         return str(self.registro) + " | " + str(self.proveedor) + " | " + str(self.itemsapname)+ " | " + str(self.cultivo)
-class salidacontenedores(models.Model):
 
-    #op_status = [('Pendiente','-'),('Cerrado','Cerrado')]
-    #op_proveedor = [('','-'),('SDC','SDC'),('AGROINDUSTRIAS SAN RAFAEL, S.A.','AGROINDUSTRIAS SAN RAFAEL, S.A.'),('INVERNADEROS TECNOLOGICOS S.A','INVERNADEROS TECNOLOGICOS S.A'),('HORTEX, S.A.','HORTEX, S.A.'),('DANIEL ESTUARDO GALICIA CARRERA','DANIEL ESTUARDO GALICIA CARRERA'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.')]
-    #op_cultivo =   [('','-'),('ROMA','ROMA'),('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('BEEF','BEEF'),('SALADETTE','SALADETTE'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
-    #op_categoria = [('','-'),('Exportación','Exportación'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolución','Devolución')]
-    #op_empaque =   [('Cajas','Cajas'),('Libras','Libras')]
-
-    registro = models.BigAutoField(primary_key=True)
-    key = models.BigIntegerField(blank=True, null=True)
-    fecha = models.DateField(blank=True, null=True)
-    fechasalcontenedor =models.DateField(blank=True, null=True)
-    contenedor = models.CharField(max_length=50, blank=True, null=True)
-    categoria = models.CharField(max_length=50,  blank=True, null=True)
-    cultivo = models.CharField(max_length=50,  blank=True, null=True)
-    proveedor = models.CharField(max_length=75, blank=True, null=True)
-    #empaque = models.CharField(max_length=75, choices=op_empaque,blank=True, null=True)
-    itemsapcode = models.CharField(max_length=20, blank=True, null=True)
-    itemsapname = models.CharField(max_length=200, blank=True, null=True)
-    calidad1 = models.CharField(max_length=200, blank=True, null=True)
-    cajas = models.BigIntegerField(blank=True, null=True)
-    pesostdxcaja =  models.FloatField(blank=True, null=True)
-    lbsintara =  models.FloatField(blank=True, null=True)
-    pesostd = models.FloatField(blank=True, null=True)
-    merma =  models.FloatField(blank=True, null=True)
-    pesorxcaja =  models.FloatField(blank=True, null=True)
-    pesosinmerma = models.FloatField(blank=True, null=True)
-    orden=models.CharField(max_length=20,blank=True,null=True)
-    boleta=models.BigIntegerField(blank=True, null=True)
-    reasignacion=models.CharField(max_length=75,null=True, blank=True)
-    importe =models.FloatField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
-    status=models.CharField(max_length=25,blank=True,null=True)
-    palet = models.IntegerField(blank=True, null=True)
-    def __str__(self):
-        return str(self.registro) + " | " + str(self.contenedor) + " | " + str(self.proveedor) + " | " + str(self.itemsapname)+ " | " + str(self.cultivo)
-    
 class inventarioProdTermAux(models.Model):
     
     #op_proveedor = [('','-'),('FINCA LA PASTORIA, S.A.','FINCA LA PASTORIA, S.A.'),('INVERSIONES LA PASTORIA, S.A.','INVERSIONES LA PASTORIA, S.A.'),('SDC','SDC'),('AGROINDUSTRIAS SAN RAFAEL, S.A.','AGROINDUSTRIAS SAN RAFAEL, S.A.'),('INVERNADEROS TECNOLOGICOS S.A','INVERNADEROS TECNOLOGICOS S.A'),('HORTEX, S.A.','HORTEX, S.A.'),('DANIEL ESTUARDO GALICIA CARRERA','DANIEL ESTUARDO GALICIA CARRERA'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.')]
@@ -505,9 +468,7 @@ class inventarioProdTermAux(models.Model):
     salidacontenedores = models.ForeignKey(
         salidacontenedores,
         on_delete=models.PROTECT,
-        related_name='auxiliares',
-        null=True
-
+        related_name='auxiliares'
     )
     inventarioreg = models.ForeignKey(
         inventarioProdTerm,
@@ -550,7 +511,44 @@ class contenedores(models.Model):
     def __str__(self):
         return str(self.registro) + " | " + str(self.fecha)+ " | " + str(self.contenedor)
 
+class salidacontenedores(models.Model):
 
+    #op_status = [('Pendiente','-'),('Cerrado','Cerrado')]
+    #op_proveedor = [('','-'),('SDC','SDC'),('AGROINDUSTRIAS SAN RAFAEL, S.A.','AGROINDUSTRIAS SAN RAFAEL, S.A.'),('INVERNADEROS TECNOLOGICOS S.A','INVERNADEROS TECNOLOGICOS S.A'),('HORTEX, S.A.','HORTEX, S.A.'),('DANIEL ESTUARDO GALICIA CARRERA','DANIEL ESTUARDO GALICIA CARRERA'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.')]
+    #op_cultivo =   [('','-'),('ROMA','ROMA'),('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('BEEF','BEEF'),('SALADETTE','SALADETTE'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
+    #op_categoria = [('','-'),('Exportación','Exportación'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolución','Devolución')]
+    #op_empaque =   [('Cajas','Cajas'),('Libras','Libras')]
+
+    registro = models.BigAutoField(primary_key=True)
+    key = models.BigIntegerField(blank=True, null=True)
+    fecha = models.DateField(blank=True, null=True)
+    fechasalcontenedor =models.DateField(blank=True, null=True)
+    contenedor = models.CharField(max_length=50, blank=True, null=True)
+    categoria = models.CharField(max_length=50,  blank=True, null=True)
+    cultivo = models.CharField(max_length=50,  blank=True, null=True)
+    proveedor = models.CharField(max_length=75, blank=True, null=True)
+    #empaque = models.CharField(max_length=75, choices=op_empaque,blank=True, null=True)
+    itemsapcode = models.CharField(max_length=20, blank=True, null=True)
+    itemsapname = models.CharField(max_length=200, blank=True, null=True)
+    calidad1 = models.CharField(max_length=200, blank=True, null=True)
+    cajas = models.BigIntegerField(blank=True, null=True)
+    pesostdxcaja =  models.FloatField(blank=True, null=True)
+    lbsintara =  models.FloatField(blank=True, null=True)
+    pesostd = models.FloatField(blank=True, null=True)
+    merma =  models.FloatField(blank=True, null=True)
+    pesorxcaja =  models.FloatField(blank=True, null=True)
+    pesosinmerma = models.FloatField(blank=True, null=True)
+    orden=models.CharField(max_length=20,blank=True,null=True)
+    boleta=models.BigIntegerField(blank=True, null=True)
+    reasignacion=models.CharField(max_length=75,null=True, blank=True)
+    importe =models.FloatField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
+    status=models.CharField(max_length=25,blank=True,null=True)
+    palet = models.IntegerField(blank=True, null=True)
+    def __str__(self):
+        return str(self.registro) + " | " + str(self.contenedor) + " | " + str(self.proveedor) + " | " + str(self.itemsapname)+ " | " + str(self.cultivo)
+    
 class productoTerm(models.Model):
     
     #op_cultivo =   [('ROMA','ROMA'),('AGUACATE','AGUACATE'),('PITAYA','PITAYA'),('PEPINO','PEPINO'),('ARANDANO','ARANDANO'),('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('BEEF','BEEF'),('SALADETTE','SALADETTE'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
