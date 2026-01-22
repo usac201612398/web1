@@ -466,7 +466,7 @@ class inventarioProdTermAux(models.Model):
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     op_sap = models.CharField(max_length=20,blank=True, null=True)
     boleta=models.BigIntegerField(blank=True, null=True)
-    salidacontenedores=models.CharField(max_length=20,blank=True,null=True)
+    salidacontenedores=models.BigIntegerField(blank=True,null=True)
     
     
     def __str__(self):
