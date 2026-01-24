@@ -101,7 +101,16 @@
                 </select>
               </div>
             </div>
-
+            <div class="field">
+              <label class="label" for="Zona">Zona</label>
+              <div class="select is-fullwidth">
+                <select id="Zona">
+                  <option value="">Seleccionar</option>
+                  <option value="Z1">Z1</option>
+                  <option value="Z2">Z2</option>
+                </select>
+              </div>
+            </div>
             <div class="field">
               <label class="label" for="Sup">Supervisor</label>
               <div class="select is-fullwidth">
@@ -125,11 +134,8 @@
               <thead class="table-custom-header">
                 <tr>
                   <th>Actividad</th>
-                  <th>Parámetro</th>
-                  <th>Excelente (4)</th>
-                  <th>Bueno (3)</th>
-                  <th>Regular (2)</th>
-                  <th>Malo (1)</th>
+                  <th>Ref</th>
+                  <th>Cantidad</th>
                   <th>Observaciones</th>
                   
                 </tr>
@@ -140,166 +146,23 @@
                 <!-- DESHOJE -->
                 <tr>
                   <td>Deshoje</td>
-                  <td>12 hojas</td>
-                  <td class="has-text-centered"><input type="radio" name="row1" value="Excelente" data-puntaje="4"></td>
-                  <td class="has-text-centered"><input type="radio" name="row1" value="Bueno" data-puntaje="3"></td>
-                  <td class="has-text-centered"><input type="radio" name="row1" value="Regular" data-puntaje="2"></td>
-                  <td class="has-text-centered"><input type="radio" name="row1" value="Malo" data-puntaje="1"></td>
-                  <td></td>
+                  <td><input class="input" type="number"></td>
+                  <td><input class="input" type="number"></td>
+                  <td><input class="input" type="text"></td>
                 </tr>
-
                 <tr>
-                  <td>Deshoje</td>
-                  <td>Entre 12-14 hojas</td>
-                  <td class="has-text-centered"><input type="radio" name="row2" value="Excelente" data-puntaje="4"></td>
-                  <td class="has-text-centered"><input type="radio" name="row2" value="Bueno" data-puntaje="3"></td>
-                  <td class="has-text-centered"><input type="radio" name="row2" value="Regular" data-puntaje="2"></td>
-                  <td class="has-text-centered"><input type="radio" name="row2" value="Malo" data-puntaje="1"></td>
+                  <td>Ganchos</td>
                   <td></td>
+                  <td><input class="input" type="number"></td>
+                  <td><input class="input" type="text"></td>
                 </tr>
-
                 <tr>
-                  <td>Deshoje</td>
-                  <td>Entre 10-11 hojas</td>
-                  <td class="has-text-centered"><input type="radio" name="row3" value="Excelente" data-puntaje="4"></td>
-                  <td class="has-text-centered"><input type="radio" name="row3" value="Bueno" data-puntaje="3"></td>
-                  <td class="has-text-centered"><input type="radio" name="row3" value="Regular" data-puntaje="2"></td>
-                  <td class="has-text-centered"><input type="radio" name="row3" value="Malo" data-puntaje="1"></td>
+                  <td>Descorone</td>
                   <td></td>
+                  <td><input class="input" type="number"></td>
+                  <td><input class="input" type="text"></td>
                 </tr>
-
-                <tr>
-                  <td>Deshoje</td>
-                  <td>Menos de 10 y más de 14 hojas</td>
-                  <td class="has-text-centered"><input type="radio" name="row4" value="Excelente" data-puntaje="4"></td>
-                  <td class="has-text-centered"><input type="radio" name="row4" value="Bueno" data-puntaje="3"></td>
-                  <td class="has-text-centered"><input type="radio" name="row4" value="Regular" data-puntaje="2"></td>
-                  <td class="has-text-centered"><input type="radio" name="row4" value="Malo" data-puntaje="1"></td>
-                  <td></td>
-                </tr>
-
-                <!-- DISTRIBUCIÓN DE EJES -->
-                <tr>
-                  <td>Distribución de ejes</td>
-                  <td>Entre 15-17 ejes por gablete</td>
-                  <td class="has-text-centered"><input type="radio" name="row5" value="Excelente" data-puntaje="4"></td>
-                  <td class="has-text-centered"><input type="radio" name="row5" value="Bueno" data-puntaje="3"></td>
-                  <td class="has-text-centered"><input type="radio" name="row5" value="Regular" data-puntaje="2"></td>
-                  <td class="has-text-centered"><input type="radio" name="row5" value="Malo" data-puntaje="1"></td>
-                  <td></td>
-                </tr>
-
-                <tr>
-                  <td>Distribución de ejes</td>
-                  <td>Entre 12-13 ejes por gablete</td>
-                  <td class="has-text-centered"><input type="radio" name="row6" value="Excelente" data-puntaje="4"></td>
-                  <td class="has-text-centered"><input type="radio" name="row6" value="Bueno" data-puntaje="3"></td>
-                  <td class="has-text-centered"><input type="radio" name="row6" value="Regular" data-puntaje="2"></td>
-                  <td class="has-text-centered"><input type="radio" name="row6" value="Malo" data-puntaje="1"></td>
-                  <td></td>
-                </tr>
-
-                <tr>
-                  <td>Distribución de ejes</td>
-                  <td>Entre 10-11 ejes por gablete</td>
-                  <td class="has-text-centered"><input type="radio" name="row7" value="Excelente" data-puntaje="4"></td>
-                  <td class="has-text-centered"><input type="radio" name="row7" value="Bueno" data-puntaje="3"></td>
-                  <td class="has-text-centered"><input type="radio" name="row7" value="Regular" data-puntaje="2"></td>
-                  <td class="has-text-centered"><input type="radio" name="row7" value="Malo" data-puntaje="1"></td>
-                  <td></td>
-                </tr>
-
-                <tr>
-                  <td>Distribución de ejes</td>
-                  <td>Ganchos juntos (mal distribuidos)</td>
-                  <td class="has-text-centered"><input type="radio" name="row8" value="Excelente" data-puntaje="4"></td>
-                  <td class="has-text-centered"><input type="radio" name="row8" value="Bueno" data-puntaje="3"></td>
-                  <td class="has-text-centered"><input type="radio" name="row8" value="Regular" data-puntaje="2"></td>
-                  <td class="has-text-centered"><input type="radio" name="row8" value="Malo" data-puntaje="1"></td>
-                  <td></td>
-                </tr>
-
-                <!-- COSECHA -->
-                <tr>
-                  <td>Cosecha</td>
-                  <td>Grado 3-4 de maduración</td>
-                  <td class="has-text-centered"><input type="radio" name="row9" value="Excelente" data-puntaje="4"></td>
-                  <td class="has-text-centered"><input type="radio" name="row9" value="Bueno" data-puntaje="3"></td>
-                  <td class="has-text-centered"><input type="radio" name="row9" value="Regular" data-puntaje="2"></td>
-                  <td class="has-text-centered"><input type="radio" name="row9" value="Malo" data-puntaje="1"></td>
-                  <td></td>
-                </tr>
-
-                <tr>
-                  <td>Cosecha</td>
-                  <td>Grado 3</td>
-                  <td class="has-text-centered"><input type="radio" name="row10" value="Excelente" data-puntaje="4"></td>
-                  <td class="has-text-centered"><input type="radio" name="row10" value="Bueno" data-puntaje="3"></td>
-                  <td class="has-text-centered"><input type="radio" name="row10" value="Regular" data-puntaje="2"></td>
-                  <td class="has-text-centered"><input type="radio" name="row10" value="Malo" data-puntaje="1"></td>
-                  <td></td>
-                </tr>
-
-                <tr>
-                  <td>Cosecha</td>
-                  <td>Grado 1-2</td>
-                  <td class="has-text-centered"><input type="radio" name="row11" value="Excelente" data-puntaje="4"></td>
-                  <td class="has-text-centered"><input type="radio" name="row11" value="Bueno" data-puntaje="3"></td>
-                  <td class="has-text-centered"><input type="radio" name="row11" value="Regular" data-puntaje="2"></td>
-                  <td class="has-text-centered"><input type="radio" name="row11" value="Malo" data-puntaje="1"></td>
-                  <td></td>
-                </tr>
-
-                <tr>
-                  <td>Cosecha</td>
-                  <td>Fruta pequeña, rajada, con cáliz y daños</td>
-                  <td class="has-text-centered"><input type="radio" name="row12" value="Excelente" data-puntaje="4"></td>
-                  <td class="has-text-centered"><input type="radio" name="row12" value="Bueno" data-puntaje="3"></td>
-                  <td class="has-text-centered"><input type="radio" name="row12" value="Regular" data-puntaje="2"></td>
-                  <td class="has-text-centered"><input type="radio" name="row12" value="Malo" data-puntaje="1"></td>
-                  <td></td>
-                </tr>
-
-                <!-- DESCORONADO -->
-                <tr>
-                  <td>Descoronado</td>
-                  <td>Tallos con 1 corona</td>
-                  <td class="has-text-centered"><input type="radio" name="row13" value="Excelente" data-puntaje="4"></td>
-                  <td class="has-text-centered"><input type="radio" name="row13" value="Bueno" data-puntaje="3"></td>
-                  <td class="has-text-centered"><input type="radio" name="row13" value="Regular" data-puntaje="2"></td>
-                  <td class="has-text-centered"><input type="radio" name="row13" value="Malo" data-puntaje="1"></td>
-                  <td></td>
-                </tr>
-
-                <tr>
-                  <td>Descoronado</td>
-                  <td>Tallos con 2 coronas</td>
-                  <td class="has-text-centered"><input type="radio" name="row14" value="Excelente" data-puntaje="4"></td>
-                  <td class="has-text-centered"><input type="radio" name="row14" value="Bueno" data-puntaje="3"></td>
-                  <td class="has-text-centered"><input type="radio" name="row14" value="Regular" data-puntaje="2"></td>
-                  <td class="has-text-centered"><input type="radio" name="row14" value="Malo" data-puntaje="1"></td>
-                  <td></td>
-                </tr>
-
-                <tr>
-                  <td>Descoronado</td>
-                  <td>Tallos con 3 coronas</td>
-                  <td class="has-text-centered"><input type="radio" name="row15" value="Excelente" data-puntaje="4"></td>
-                  <td class="has-text-centered"><input type="radio" name="row15" value="Bueno" data-puntaje="3"></td>
-                  <td class="has-text-centered"><input type="radio" name="row15" value="Regular" data-puntaje="2"></td>
-                  <td class="has-text-centered"><input type="radio" name="row15" value="Malo" data-puntaje="1"></td>
-                  <td></td>
-                </tr>
-
-                <tr>
-                  <td>Descoronado</td>
-                  <td>Tallos con 4 coronas</td>
-                  <td class="has-text-centered"><input type="radio" name="row16" value="Excelente" data-puntaje="4"></td>
-                  <td class="has-text-centered"><input type="radio" name="row16" value="Bueno" data-puntaje="3"></td>
-                  <td class="has-text-centered"><input type="radio" name="row16" value="Regular" data-puntaje="2"></td>
-                  <td class="has-text-centered"><input type="radio" name="row16" value="Malo" data-puntaje="1"></td>
-                  <td></td>
-                </tr>
+    
 
               </tbody>
             </table>
@@ -346,6 +209,7 @@ $(document).ready(function () {
     const area = $('#finca').val();
     const cultivo = $('#Cul').val();
     const estructura = $('#Estructura').val();
+    const zona = $('#Zona').val();
     const supervisor = $('#Sup').val();
 
     // Validación básica
@@ -361,34 +225,33 @@ $(document).ready(function () {
     $('#myTable tbody tr').each(function () {
 
       const actividad = $(this).find('td').eq(0).text().trim();
-      const parametro = $(this).find('td').eq(1).text().trim();
 
-      const radio = $(this).find('input[type="radio"]:checked');
+      const inputsNumber = $(this).find('input[type="number"]');
 
-      if (radio.length === 0) {
+      const ref = inputsNumber.eq(0).length ? inputsNumber.eq(0).val() : null;
+      const cantidad = inputsNumber.eq(1).val();
+
+      const observaciones = $(this).find('input[type="text"]').val();
+
+      if (!cantidad || cantidad <= 0) {
         incompletas = true;
         return false; // corta el each
       }
 
-      const clasificacion = radio.val();              // Excelente | Bueno | Regular | Malo
-      const puntaje = radio.data('puntaje');           // 4 | 3 | 2 | 1
-      const observaciones = $(this).find('input[type="text"]').val();
-
       datos.push({
-        fecha: fecha,
-        area: area,
-        estructura: estructura,
-        cultivo: cultivo,
-        supervisor: supervisor,
-
-        actividad: actividad,
-        parametro: parametro,
-        clasificacion: clasificacion,
-        puntaje: puntaje,
-        observaciones: observaciones,
-
+        fecha,
+        area,
+        estructura,
+        zona,
+        cultivo,
+        supervisor,
+        actividad,
+        ref,
+        cantidad,
+        observaciones,
         status: 'Abierta'
       });
+
 
     });
 

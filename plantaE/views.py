@@ -1831,7 +1831,7 @@ def boletas_delete(request, pk):
         # Actualizar inventario relacionado
         invrelacionado = inventarioProdTerm.objects.exclude(status='Anulado').filter(boleta=salidas.boleta)
         invrelacionado.update(status3=None)
-
+        invrelacionado.update(boleta=None)
         # Obtener recepciones relacionadas
         recepciones_ids = detallerecaux.objects.exclude(status='Anulado') \
                                                .filter(boleta=salidas.boleta) \
