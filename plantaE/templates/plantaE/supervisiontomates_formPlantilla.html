@@ -198,7 +198,7 @@ function authUsuario() {
 
       // CULTIVO (limpiar y cargar)
       $('#Cul').empty();
-      $('#Cul').append('<option value="">Seleccionar cultivo</option>');
+      $('#Cul').append('<option value="">Seleccionar</option>');
 
       $.each(data.adicionales, function (index, item) {
         $('#Cul').append(
@@ -229,12 +229,40 @@ authUsuario();
     const zona = $('#Zona').val();
     const supervisor = $('#correo').val();
 
-    // Validación básica
-    if (!fecha || !area || !cultivo || !estructura || !supervisor) {
-      alert('Complete todos los filtros');
-      boton.prop('disabled', false);
-      return;
-    }
+    // VALIDACIÓN DE FILTROS
+if (!fecha) {
+  alert('Debe seleccionar una fecha');
+  boton.prop('disabled', false);
+  return;
+}
+
+if (!supervisor) {
+  alert('Supervisor no válido');
+  boton.prop('disabled', false);
+  return;
+}
+
+if (cultivo === "") {
+  alert('Debe seleccionar un cultivo');
+  $('#Cul').parent().addClass('is-danger');
+  boton.prop('disabled', false);
+  return;
+}
+
+if (estructura === "") {
+  alert('Debe seleccionar una estructura');
+  $('#Estructura').parent().addClass('is-danger');
+  boton.prop('disabled', false);
+  return;
+}
+
+if (zona === "") {
+  alert('Debe seleccionar una zona');
+  $('#Zona').parent().addClass('is-danger');
+  boton.prop('disabled', false);
+  return;
+}
+
 
     let datos = [];
     let incompletas = false;
