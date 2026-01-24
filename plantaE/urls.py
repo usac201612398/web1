@@ -133,6 +133,7 @@ urlpatterns = [
     path("supervision",views.supervision_list,name='supervision_list'),
     path('supervision/new/', views.supervision_create, name='supervision_create'),
     path("supervision/plantilla",views.supervision_grabar,name='supervision_grabar'),
+    path("supervisionproduccion/plantilla",views.supervisionproduccion_grabar,name='supervisionproduccion_grabar'),
     path('supervisiontomates/new/', views.supervisiontomates_create, name='supervisiontomates_create'),
     path('supervisionchiles/new/', views.supervisionchiles_create, name='supervisionchiles_create'),
     path("supervisionproducion/plantilla",views.supervisionproduccion_grabar,name='supervisionproduccion_grabar'),

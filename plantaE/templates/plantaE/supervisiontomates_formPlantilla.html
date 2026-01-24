@@ -324,7 +324,7 @@ if (zona === "") {
     console.log(datos);
 
     $.ajax({
-      url: "{% url 'supervision_grabar' %}",
+      url: "{% url 'supervisionproduccion_grabar' %}",
       type: "POST",
       contentType: "application/json",
       headers: {
