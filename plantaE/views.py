@@ -2417,19 +2417,32 @@ def supervision_grabar(request):
             'msm': f'Se guardaron {len(filas)} registros correctamente'
         })
 
-def supervisionproduccion_delete(request, pk):
-
-    salidas = get_object_or_404(supervisionproduccion, pk=pk)
-    
+def supervisionproduccion_anular(request):
     if request.method == 'POST':
-        salidas.status = 'Anulado'
-        salidas.save() 
-        
-        return render(request, 'plantaE/supervisionproduccion_confirm_delete.html', {
-            'alert_message': "El registro fue anulado correctamente.",
-            'redirect_url': reverse('supervisionproduccion_list')
+        data = request.POST  # o json.loads(request.body) si es AJAX
+        fecha = data.get('fecha')
+        zona = data.get('zona')
+        estructura = data.get('estructura')
+        supervisor = data.get('supervisor')
+        cultivo = data.get('cultivo')
+
+        # Filtramos todos los registros que coincidan con los criterios
+        registros = supervisionproduccion.objects.filter(
+            fecha=fecha,
+            zona=zona,
+            estructura=estructura,
+            supervisor=supervisor,
+            cultivo=cultivo
+        )
+
+        # Marcamos como 'Anulado'
+        count = registros.update(status='Anulado')
+
+        return JsonResponse({
+            'msm': f'Se anularon {count} registros correctamente'
         })
-    return render(request, 'plantaE/supervisionproduccion_confirm_delete.html', {'registros': salidas})
+
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
 
 def supervisionproduccion_grabar(request):
     if request.method == 'POST':
