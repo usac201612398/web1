@@ -241,42 +241,57 @@ authUsuario();
 
     $('#myTable tbody tr').each(function () {
 
-      const actividad = $(this).find('td').eq(0).text().trim();
+  const actividad = $(this).find('td').eq(0).text().trim();
+  const inputsNumber = $(this).find('input[type="number"]');
+  const inputText = $(this).find('input[type="text"]');
 
-      const inputsNumber = $(this).find('input[type="number"]');
+  let ref = null;
+  let cantidad = null;
 
-      const ref = inputsNumber.eq(0).length ? inputsNumber.eq(0).val() : null;
-      const cantidad = inputsNumber.eq(1).val();
+  // DESHOJE (tiene ref y cantidad)
+  if (actividad === 'Deshoje') {
+    ref = inputsNumber.eq(0).val();
+    cantidad = inputsNumber.eq(1).val();
 
-      const observaciones = $(this).find('input[type="text"]').val();
-
-      if (!cantidad || cantidad <= 0) {
-        incompletas = true;
-        return false; // corta el each
-      }
-
-      datos.push({
-        fecha,
-        area,
-        estructura,
-        zona,
-        cultivo,
-        supervisor,
-        actividad,
-        ref,
-        cantidad,
-        observaciones,
-        status: 'Abierta'
-      });
-
-
-    });
-
-    if (incompletas) {
-      alert('Debe evaluar todas las filas');
-      boton.prop('disabled', false);
-      return;
+    // VALIDACIÓN REF DESHOJE
+    if (!ref || ref <= 0) {
+      alert('Debe ingresar la referencia en Deshoje');
+      incompletas = true;
+      return false;
     }
+  } 
+  // OTRAS ACTIVIDADES (solo cantidad)
+  else {
+    cantidad = inputsNumber.eq(0).val();
+  }
+
+  // VALIDACIÓN CANTIDAD (todas)
+  if (!cantidad || cantidad <= 0) {
+    alert('Debe ingresar cantidad válida en todas las actividades');
+    incompletas = true;
+    return false;
+  }
+
+  const observaciones = inputText.val();
+
+  datos.push({
+    fecha,
+    area,
+    estructura,
+    zona,
+    cultivo,
+    supervisor,
+    actividad,
+    ref,
+    cantidad,
+    observaciones,
+    status: 'Abierta'
+  });
+
+});
+
+
+    
 
     console.log(datos);
 
@@ -302,4 +317,3 @@ authUsuario();
 
 });
 </script>
-
