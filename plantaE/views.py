@@ -2387,8 +2387,12 @@ def supervision_list(request):
 def supervisionproduccion_list(request):
     #today = timezone.now().date()
     #salidas = Recepciones.objects.filter(fecha=today)
-    salidas= supervisionproduccion.objects.all()
-    salidas = salidas.exclude(status='Anulado').order_by('-id')
+    nombre_usuario = request.user.username
+    
+    datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('encargado')
+    supervisor = list(datos)[0]['encargado']
+    salidas= supervision.objects.all()
+    salidas = salidas.filter(supervisor=supervisor).exclude(status='Anulado').order_by('-id')
      
     return render(request, 'plantaE/supervisionproduccion_list.html', {'registros': salidas})
 
