@@ -2390,7 +2390,7 @@ def supervisionproduccion_list(request):
     nombre_usuario = request.user.username
     datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('finca','encargado')
     supervisor = list(datos)[0]['encargado']
-    salidas= supervision.objects.all()
+    salidas= supervisionproduccion.objects.all()
     salidas = salidas.filter(supervisor=supervisor).exclude(status='Anulado').order_by('-id')
      
     return render(request, 'plantaE/supervisionproduccion_list.html', {'registros': salidas})
