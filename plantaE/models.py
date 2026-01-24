@@ -41,7 +41,7 @@ class supervisionproduccion(models.Model):
     cantidad = models.IntegerField(blank=True, null=True)
     ref = models.IntegerField(blank=True, null=True)
     actividad = models.CharField(max_length=25,blank=True)
-    zona = models.CharField(max_length=25,blank=True)
+    zona = models.IntegerField(blank=True, null=True)
     finca = models.CharField(max_length=25,blank=True)
     estructura = models.CharField(max_length=30,blank=True)
     cultivo = models.CharField(max_length=35, blank=True)
