@@ -2398,7 +2398,7 @@ def supervision_grabar(request):
                 fecha=f['fecha'],
                 zona=f['zona'],
                 cantidad=f['cantidad'],
-                area=f['area'],
+                actividad=f['area'],
                 estructura=f['estructura'],
                 cultivo=f['cultivo'],
                 supervisor=f['supervisor'],
