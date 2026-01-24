@@ -2430,19 +2430,32 @@ def supervisionproduccion_grabar(request):
         filas = data.get('array', [])
 
         for f in filas:
+            # Convertir cantidad y ref a enteros seguros
+            cantidad = f.get('cantidad')
+            ref = f.get('ref')
+
+            try:
+                cantidad = int(cantidad)
+            except (ValueError, TypeError):
+                cantidad = None  # o 0 según tu lógica
+
+            try:
+                ref = int(ref) if ref else None
+            except (ValueError, TypeError):
+                ref = None
 
             supervisionproduccion.objects.create(
-                fecha=f['fecha'],
-                cantidad=f['cantidad'],
-                ref=f.get('ref'),
-                zona=f['zona'],
-                finca=f['finca'],
-                actividad=f['actividad'],
-                estructura=f['estructura'],
-                cultivo=f['cultivo'],
-                supervisor=f['supervisor'],
-                observaciones=f['observaciones'],
-                status=f['status']
+                fecha=f.get('fecha'),
+                cantidad=cantidad,
+                ref=ref,
+                zona=f.get('zona'),
+                finca=f.get('area'),
+                actividad=f.get('actividad'),
+                estructura=f.get('estructura'),
+                cultivo=f.get('cultivo'),
+                supervisor=f.get('supervisor'),
+                observaciones=f.get('observaciones'),
+                status=f.get('status')
             )
 
         return JsonResponse({
