@@ -55,9 +55,15 @@
       <div class="filters">
         <form id="filtros">
           <div class="is-stretch">
+            
             <div class="field">
               <label class="label" for="date">Fecha</label>
               <input class="input" type="date" id="date" >
+            </div>
+            
+            <div class="field">
+              <label class="label" for="Sup">Supervisor</label>
+                <input class="form-control" id="correo" type="text" value="{{ usuario }}" readonly>
             </div>
 
             <div class="field">
@@ -111,17 +117,8 @@
                 </select>
               </div>
             </div>
-            <div class="field">
-              <label class="label" for="Sup">Supervisor</label>
-              <div class="select is-fullwidth">
-                <select id="Sup">
-                  <option value="">Seleccionar</option>
-                  <option value="Carlos Hernández">Carlos Hernández</option>
-                  <option value="Rita Florián">Rita Florián</option>
-                  <option value="Nolberto Morales">Nolberto Morales</option>
-                </select>
-              </div>
-            </div>
+            
+            
 
           </div>
         </form>
