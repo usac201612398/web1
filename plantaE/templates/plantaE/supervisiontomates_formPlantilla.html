@@ -197,28 +197,37 @@ $(document).ready(function () {
   const hoy = new Date().toISOString().split('T')[0];
   $('#date').val(hoy);
       
-  function authUsuario() {
-    $.ajax({
-      url: '{% url "obtener_nombre_usuario" %}',
-      data: { category_id: 'Consulta' },
-      success: function (data) {
-        $('#correo').val(data.username);
+function authUsuario() {
+  $.ajax({
+    url: '{% url "obtener_nombre_usuario" %}',
+    success: function (data) {
 
-        $('#Cul').html('<option value=""></option>');
-        $('#Cul').html('<option value="">Seleccionar cultivo</option>');
-        $.each(data.adicionales, function (index, product) {
-          $('#Cul').append(
-            $('<option>').text(product.cultivo.toString()).attr('value', product.cultivo.toString())
-          );
-        });
-      },
-      error: function (xhr, status, error) {
-        console.error('Error:', error);
-      },
-    });
-  }
+      // CORREO
+      $('#correo').val(data.encargado);
 
-  authUsuario();
+      // FINCA (AREA)
+      $('#finca').val(data.finca);
+
+      // CULTIVO (limpiar y cargar)
+      $('#Cul').empty();
+      $('#Cul').append('<option value="">Seleccionar cultivo</option>');
+
+      $.each(data.adicionales, function (index, item) {
+        $('#Cul').append(
+          $('<option>', {
+            value: item.cultivo,
+            text: item.cultivo
+          })
+        );
+      });
+    },
+    error: function (xhr, status, error) {
+      console.error('Error:', error);
+    }
+  });
+}
+
+authUsuario();
 
   $('.envio3').on('click', function () {
 
@@ -230,7 +239,7 @@ $(document).ready(function () {
     const cultivo = $('#Cul').val();
     const estructura = $('#Estructura').val();
     const zona = $('#Zona').val();
-    const supervisor = $('#Sup').val();
+    const supervisor = $('#correo').val();
 
     // Validación básica
     if (!fecha || !area || !cultivo || !estructura || !supervisor) {
