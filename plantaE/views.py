@@ -2396,9 +2396,9 @@ def supervision_grabar(request):
         for f in filas:
             supervision.objects.create(
                 fecha=f['fecha'],
-                zona=f['zona'],
-                cantidad=f['cantidad'],
-                actividad=f['area'],
+                regla=f['regla'],
+                cumplimiento=f['cumplimiento'],
+                area=f['area'],
                 estructura=f['estructura'],
                 cultivo=f['cultivo'],
                 supervisor=f['supervisor'],
@@ -2433,9 +2433,9 @@ def supervisionproduccion_grabar(request):
 
             supervisionproduccion.objects.create(
                 fecha=f['fecha'],
-                puntaje=f['puntaje'],
-                parametro=f['parametro'],
-                clasificacion=f['clasificacion'],
+                cantidad=f['cantidad'],
+                ref=f['ref'],
+                zona=f['zona'],
                 finca=f['finca'],
                 actividad=f['actividad'],
                 estructura=f['estructura'],

@@ -39,6 +39,7 @@ class supervisionproduccion(models.Model):
     id = models.AutoField(primary_key=True)
     fecha = models.DateField(blank=True, null=True)
     cantidad = models.IntegerField(blank=True, null=True)
+    ref = models.IntegerField(blank=True, null=True)
     actividad = models.CharField(max_length=25,blank=True)
     zona = models.CharField(max_length=25,blank=True)
     finca = models.CharField(max_length=25,blank=True)
