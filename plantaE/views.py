@@ -2429,14 +2429,26 @@ def supervisionproduccion_grabar(request):
         data = json.loads(request.body)
         filas = data.get('array', [])
 
+        guardados = 0
+
         for f in filas:
+            # Convertir cantidades a int, ref puede ser None
+            try:
+                cantidad = int(f['cantidad'])
+            except (ValueError, TypeError):
+                cantidad = None
+
+            try:
+                ref = int(f['ref']) if f.get('ref') is not None else None
+            except (ValueError, TypeError):
+                ref = None
 
             supervisionproduccion.objects.create(
-                fecha=f['fecha'],
-                cantidad=f['cantidad'],
-                ref=f.get('ref'),
-                zona=f['zona'],
-                finca=f['finca'],
+                fecha=f['fecha'],            # Django convierte string a DateField
+                cantidad=cantidad,
+                ref=ref,
+                zona=f['zona'],              # Z1/Z2
+                finca=f['area'],             # mapear 'area' a 'finca'
                 actividad=f['actividad'],
                 estructura=f['estructura'],
                 cultivo=f['cultivo'],
@@ -2444,10 +2456,14 @@ def supervisionproduccion_grabar(request):
                 observaciones=f['observaciones'],
                 status=f['status']
             )
+            guardados += 1
 
         return JsonResponse({
-            'msm': f'Se guardaron {len(filas)} registros correctamente'
+            'msm': f'Se guardaron {guardados} registros correctamente'
         })
+
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
+
 
 def inventarioProd_delete(request, pk):
     salidas = get_object_or_404(inventarioProdTerm, pk=pk)
