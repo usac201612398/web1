@@ -332,6 +332,8 @@ if (zona === "") {
       success: function (response) {
         alert(response.msm || 'Guardado correctamente');
         boton.prop('disabled', false);
+        
+        window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/supervisionproduccion');
       },
       error: function () {
         alert("Error al guardar");

@@ -59,14 +59,13 @@
                 <tr>
                     <th>Id</th>
                     <th>Fecha</th>
-                    <th>Encargado</th>
+                    <th>Supervisor</th>
                     <th>Finca</th>
                     <th>Actividad</th>
                     <th>Cultivo</th>
                     <th>Estructura</th>
-                    <th>Parámetro</th>
-                    <th>Puntaje</th>
-                    <th>clasificacion</th>
+                    <th>Zona</th>
+                    <th>Cantidad</th>
                     <th>Observaciones</th>
                     <th>Anular</th>
                 </tr>
@@ -81,9 +80,8 @@
                     <td>{{ registro.actividad }}</td>
                     <td>{{ registro.cultivo }}</td>
                     <td>{{ registro.estructura }}</td>
-                    <td>{{ registro.parametro }}</td>
-                    <td>{{ registro.puntaje }}</td>
-                    <td>{{ registro.clasificacion }}</td>
+                    <td>{{ registro.zona }}</td>
+                    <td>{{ registro.cantidad }}</td>
                     <td>{{ registro.observaciones }}</td>
                     <td class="text-center">
                         <a href="{% url 'supervisionproduccion_delete' registro.pk %}" class="text-danger">
@@ -104,14 +102,13 @@
                 <h5 class="card-title">Registro #{{ registro.id }}</h5>
                 <p class="card-text">
                     <strong>Fecha:</strong> {{ registro.fecha }}<br>
-                    <strong>Encargado:</strong> {{ registro.supervisor }}<br>
+                    <strong>Supervisor:</strong> {{ registro.supervisor }}<br>
                     <strong>Finca:</strong> {{ registro.finca }}<br>
                     <strong>Actividad:</strong> {{ registro.actividad }}<br>
                     <strong>Cultivo:</strong> {{ registro.cultivo }}<br>
                     <strong>Estructura:</strong> {{ registro.estructura }}<br>
-                    <strong>Parametro:</strong> {{ registro.parametro }}<br>
-                    <strong>Puntaje:</strong> {{ registro.puntaje }}<br>
-                    <strong>Class:</strong> {{ registro.clasificacion }}<br>
+                    <strong>Zona:</strong> {{ registro.zona }}<br>
+                    <strong>Cantidad:</strong> {{ registro.cantidad }}<br>
                     <strong>Obs:</strong> {{ registro.observaciones }}
                 </p>
                 <div class="d-flex justify-content-between">
