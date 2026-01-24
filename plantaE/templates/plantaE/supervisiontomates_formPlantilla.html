@@ -196,7 +196,37 @@ $(document).ready(function () {
   // Fecha de hoy
   const hoy = new Date().toISOString().split('T')[0];
   $('#date').val(hoy);
+      function authUsuario() {
+        $.ajax({
+            url: '{% url "obtener_nombre_usuario" %}',
+            data: { 'category_id': "Consulta" },
+            success: function (data) {
+                $('#date').val(data.fecha);
+                loadProducts(data.username);
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    }
 
+    function loadProducts(user) {
+        $.ajax({
+            url: '{% url "load_dataUsuario" %}',
+            data: { 'category_id': user },
+            success: function (data) {
+                data.datos.forEach(function (item) {
+                    $('#Lug').append(new Option(item.finca, item.finca));
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+
+    authUsuario();
+    
   $('.envio3').on('click', function () {
 
     const boton = $(this);
