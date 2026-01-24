@@ -2434,7 +2434,7 @@ def supervisionproduccion_grabar(request):
             supervisionproduccion.objects.create(
                 fecha=f['fecha'],
                 cantidad=f['cantidad'],
-                ref=f['ref'],
+                ref=f.get('ref'),
                 zona=f['zona'],
                 finca=f['finca'],
                 actividad=f['actividad'],
