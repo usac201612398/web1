@@ -2388,8 +2388,7 @@ def supervisionproduccion_list(request):
     #today = timezone.now().date()
     #salidas = Recepciones.objects.filter(fecha=today)
     nombre_usuario = request.user.username
-    
-    datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('encargado')
+    datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('finca','encargado')
     supervisor = list(datos)[0]['encargado']
     salidas= supervision.objects.all()
     salidas = salidas.filter(supervisor=supervisor).exclude(status='Anulado').order_by('-id')
