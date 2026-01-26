@@ -5169,6 +5169,114 @@ def kgm2_semanal_aprovechamiento(request):
         'registros_json': json.dumps(resultado, default=str),
     })
 
+
+def poraprovechamientosemp(request):
+    hoy = timezone.now().date()
+    nombre_usuario = request.user.username
+    datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('finca', 'encargado')
+
+    fecha_max = AcumFruta.objects.aggregate(max_fecha=Max('fecha'))['max_fecha']
+    if not fecha_max:
+        fecha_max = hoy
+
+    ordenes_abiertas = datosProduccion.objects.filter(status='Abierta').values_list('orden', flat=True)
+
+    # Total de libras por variedad desde AcumFruta
+    acumfrutadatos = AcumFruta.objects.filter(orden__in=ordenes_abiertas,correo=nombre_usuario).annotate(
+        semana=ExtractWeek('fecha'),
+        anio=ExtractIsoYear('fecha')
+    ).values('finca', 'cultivo', 'orden', 'estructura', 'variedad'
+    ).annotate(total_libras=Sum('libras')).exclude(status="Anulado").order_by()
+
+    recepciones_dict = {
+        formar_clave2(r['finca'], r['cultivo'], r['orden'], r['estructura'], r['variedad']): r['total_libras']
+        for r in acumfrutadatos
+    }
+
+    # Detalles por calidad
+    detalles = AcumFrutaaux.objects.annotate(
+        semana=ExtractWeek('fecha'),
+        anio=ExtractIsoYear('fecha')
+    ).filter(orden__in=ordenes_abiertas,correo=nombre_usuario).exclude(status="Anulado")
+
+    boleta_ids = detalles.values_list('boleta', flat=True).distinct()
+    boletas = Boletas.objects.filter(boleta__in=boleta_ids)
+    boletas_dict = {b.boleta: b for b in boletas}
+
+    agrupados = defaultdict(lambda: {
+        'aprovechamiento_libras': 0,
+        'total_distribuido_libras': 0,
+    })
+
+    for detalle in detalles:
+        boleta = boletas_dict.get(detalle.boleta)
+        if not boleta:
+            continue
+
+        clave = formar_clave2(detalle.finca, detalle.cultivo, detalle.orden, detalle.estructura, detalle.variedad)
+        calidad = (boleta.calidad or '').strip().lower()
+        libras = detalle.libras or 0
+
+        if 'aprovechamiento' in calidad:
+            agrupados[clave]['aprovechamiento_libras'] += libras
+
+        agrupados[clave]['total_distribuido_libras'] += libras
+
+    
+    
+    areas_sumadas_qs = detallesEstructuras.objects.values('orden', 'cultivo','estructura','variedad').annotate(total_area=Sum('area'))
+    areas_sumadas = {(a['orden'], a['cultivo'], a['estructura'], a['variedad']): a['total_area'] for a in areas_sumadas_qs}
+
+
+
+    # Armar resultado final
+    resultado = []
+    for clave, datos in agrupados.items():
+        finca, cultivo, orden, estructura, variedad = clave
+        recepcion_libras = recepciones_dict.get(clave, 0)
+        procesado_libras = datos['total_distribuido_libras']
+        pendiente_libras = recepcion_libras - procesado_libras
+        if pendiente_libras < 0:
+            pendiente_libras = 0
+
+        # Convertir libras a kilos
+        kilos_recibidos = round(recepcion_libras / 2.20462, 2)
+        kilos_procesados = round(procesado_libras / 2.20462, 2)
+        kilos_pendientes = round(pendiente_libras / 2.20462, 2)
+
+        # Calcular kg/m² con libras de aprovechamiento
+        
+        clave_area = (orden, cultivo, estructura, variedad)
+        area_m2 = areas_sumadas.get(clave_area, 0)
+
+        aprovechamiento_kg = datos['aprovechamiento_libras'] / 2.20462 if datos['aprovechamiento_libras'] else 0
+        kg_m2 = round(aprovechamiento_kg / area_m2, 2) if area_m2 > 0 else 0
+        
+
+        resultado.append({
+            'proveedor': finca,
+            'cultivo': cultivo,
+            'orden': orden,
+            'estructura': estructura,
+            'variedad': variedad,
+            'kilos_totales': kilos_recibidos,
+            'kilos_procesados': kilos_procesados,
+            'kilos_pendientes': kilos_pendientes,
+            'kg_m2': kg_m2,
+            'area':area_m2,
+            'libras':procesado_libras
+        })
+
+    registros_json = json.dumps(resultado, default=str)
+    df = pd.DataFrame(resultado)
+    tabla_html = df.to_html(classes="table table-striped", index=False)
+
+    return render(request, 'plantaE/salidasFruta_aprovechamientosemp.html', {
+        'registros': resultado,
+        'tabla_html': tabla_html,
+        'registros_json': registros_json,
+    })
+
 def poraprovechamientosempger(request):
     hoy = timezone.now().date()
 
