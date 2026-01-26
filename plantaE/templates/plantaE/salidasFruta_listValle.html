@@ -74,6 +74,11 @@
         <a href="{% url 'reporte_tabla_pivote_produccionsem' %}" class="btn btn-success flex-fill text-center">
             <i class="fas fa-chart-line"></i> Acumulado
         </a>
+
+        <a href="{% url 'supervisionproduccion' %}" class="btn btn-success flex-fill text-center">
+            <i class="fas fa-chart-line"></i> Supervision
+        </a>
+
         {% if user.username == "provalle@popoyan.com.gt" %}
             <a href="{% url 'boletasFruta_listproductor' %}" class="btn btn-success flex-fill text-center">
                 <i class="fas fa-chart-line"></i> Boletas
