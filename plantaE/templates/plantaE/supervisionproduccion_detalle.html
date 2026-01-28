@@ -1,40 +1,135 @@
-<h4>
-  {{ fecha }} | {{ cultivo }} | {{ estructura }} | {{ zona }}
-</h4>
+<!DOCTYPE html>
+<html lang="es">
+{% load static %}
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalle de Supervisión</title>
 
-{% for muestra, registros in muestras.items %}
-<div class="card mb-3">
-  <div class="card-header d-flex justify-content-between">
-    <strong>Muestra {{ muestra }}</strong>
+  <!-- Bootstrap & FontAwesome -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- pasa el pk de cualquier registro de la muestra -->
-    <a href="{% url 'supervisionproduccion_delete' registros.0.pk %}"
-       class="btn btn-sm btn-danger">
-       Anular muestra
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+
+    h4.detalle-lote {
+      margin: 1rem 0;
+      padding: 0.5rem;
+      background: linear-gradient(to right, #198754, #146c43);
+      color: white;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    .card-muestra {
+      border-left: 5px solid #198754;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .card-muestra .card-header {
+      background-color: #e9f7ef;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-muestra .btn {
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .table-sm th, .table-sm td {
+      padding: 0.3rem 0.5rem;
+      font-size: 0.875rem;
+      vertical-align: middle;
+    }
+
+    .table thead th {
+      background-color: #198754;
+      color: white;
+      text-align: center;
+    }
+
+    .table tbody td {
+      text-align: center;
+    }
+
+    .badge-completo {
+      background-color: #198754;
+      color: white;
+    }
+
+    .badge-proceso {
+      background-color: #ffc107;
+      color: black;
+    }
+  </style>
+</head>
+<body>
+<div class="container py-4">
+
+  <!-- Encabezado del lote -->
+  <h4 class="detalle-lote">
+    {{ fecha }} | {{ cultivo }} | {{ estructura }} | {{ zona }}
+  </h4>
+
+  <!-- Muestras -->
+  {% for muestra, registros in muestras.items %}
+  <div class="card card-muestra">
+    <div class="card-header">
+      <span>Muestra {{ muestra }}</span>
+
+      <!-- Botón anular muestra -->
+      <a href="{% url 'supervisionproduccion_delete' registros.0.pk %}" 
+         class="btn btn-sm btn-danger">
+         <i class="fas fa-trash-alt"></i> Anular
+      </a>
+    </div>
+
+    <div class="card-body p-2">
+      <div class="table-responsive">
+        <table class="table table-sm table-bordered mb-0">
+          <thead>
+            <tr>
+              <th>Actividad</th>
+              <th>Cantidad</th>
+              <th>Ref</th>
+              <th>Observaciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for r in registros %}
+            <tr>
+              <td>{{ r.actividad }}</td>
+              <td>{{ r.cantidad|default:"-" }}</td>
+              <td>{{ r.ref|default:"-" }}</td>
+              <td>{{ r.observaciones|default:"-" }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+
+  <!-- Botón volver -->
+  <div class="text-center mt-4">
+    <a href="{% url 'supervisionproduccion_list' %}" class="btn btn-success">
+      <i class="fas fa-arrow-left"></i> Volver al listado
     </a>
   </div>
 
-  <div class="card-body">
-    <table class="table table-sm">
-      <thead>
-        <tr>
-          <th>Actividad</th>
-          <th>Cantidad</th>
-          <th>Ref</th>
-          <th>Observaciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for r in registros %}
-        <tr>
-          <td>{{ r.actividad }}</td>
-          <td>{{ r.cantidad }}</td>
-          <td>{{ r.ref }}</td>
-          <td>{{ r.observaciones }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
 </div>
-{% endfor %}
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
