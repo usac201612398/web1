@@ -2385,15 +2385,28 @@ def supervision_list(request):
     return render(request, 'plantaE/supervision_list.html', {'registros': salidas})
 
 def supervisionproduccion_list(request):
-    #today = timezone.now().date()
-    #salidas = Recepciones.objects.filter(fecha=today)
-    nombre_usuario = request.user.username
-    datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('finca','encargado')
-    supervisor = list(datos)[0]['encargado']
-    salidas= supervisionproduccion.objects.all()
-    salidas = salidas.filter(supervisor=supervisor).exclude(status='Anulado').order_by('-id')
-     
-    return render(request, 'plantaE/supervisionproduccion_list.html', {'registros': salidas})
+
+    lotes = (
+        supervisionproduccion.objects
+        .filter(status='Abierta')
+        .values(
+            'fecha',
+            'finca',
+            'cultivo',
+            'estructura',
+            'zona'
+        )
+        .annotate(
+            total_muestras=Count('muestra', distinct=True),
+            ultima_muestra=Max('muestra')
+        )
+        .order_by('-fecha')
+    )
+
+    return render(request, 'plantaE/supervisionproduccion_list.html', {
+        'lotes': lotes
+    })
+
 
 def supervision_grabar(request):
     if request.method == 'POST':
@@ -2441,6 +2454,28 @@ def supervisionproduccion_delete(request, pk):
         })
     
     return render(request, 'plantaE/supervisionproduccion_confirm_delete.html', {'registros': salidas})
+
+def supervisionproduccion_detalle(request, fecha, cultivo, estructura, zona):
+
+    registros = supervisionproduccion.objects.filter(
+        fecha=fecha,
+        cultivo=cultivo,
+        estructura=estructura,
+        zona=zona,
+        status='Abierta'
+    ).order_by('muestra', 'actividad')
+
+    muestras = defaultdict(list)
+    for r in registros:
+        muestras[r.muestra].append(r)
+
+    return render(request, 'plantaE/supervisionproduccion_detalle.html', {
+        'fecha': fecha,
+        'cultivo': cultivo,
+        'estructura': estructura,
+        'zona': zona,
+        'muestras': dict(muestras)
+    })
 
 def supervisionproduccion_grabar(request):
     if request.method != 'POST':

@@ -350,8 +350,15 @@ if (zona === "") {
       success: function (response) {
         alert(response.msm || 'Guardado correctamente');
         boton.prop('disabled', false);
-        
-        window.location.replace('https://sdc-iot.popoyan.com.gt/plantaE/supervisionproduccion');
+        if (response.completo) {
+          alert('✅ Muestra 10 registrada. El lote está completo');
+          window.location.href = "{% url 'supervisionproduccion_list' %}";
+        } else {
+          alert('Muestra ' + response.muestra + ' registrada correctamente');
+          
+          // Limpia solo las cantidades para seguir capturando
+          $('#myTable input').val('');
+        }
       },
       error: function () {
         alert("Error al guardar");

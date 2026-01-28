@@ -55,68 +55,72 @@
     <!-- Tabla para escritorio -->
     <div class="table-responsive d-none d-md-block">
         <table class="table table-striped table-bordered" id="myTable" style="min-width: 1100px;">
-            <thead class="table-custom-header">
+            <thead>
                 <tr>
-                    <th>Id</th>
-                    <th>Fecha</th>
-                    <th>Supervisor</th>
-                    <th>Finca</th>
-                    <th>Actividad</th>
-                    <th>Cultivo</th>
-                    <th>Estructura</th>
-                    <th>Zona</th>
-                    <th>Cantidad</th>
-                    <th>Observaciones</th>
-                    <th>Anular</th>
+                <th>Fecha</th>
+                <th>Finca</th>
+                <th>Cultivo</th>
+                <th>Estructura</th>
+                <th>Zona</th>
+                <th>Muestras</th>
+                <th>Estado</th>
+                <th>Consultar</th>
                 </tr>
-            </thead>
-            <tbody>
-                {% for registro in registros %}
-                <tr>
-                    <td><a href="">{{ registro.id }}</a></td>
-                    <td>{{ registro.fecha }}</td>
-                    <td>{{ registro.supervisor }}</td>
-                    <td>{{ registro.finca }}</td>
-                    <td>{{ registro.actividad }}</td>
-                    <td>{{ registro.cultivo }}</td>
-                    <td>{{ registro.estructura }}</td>
-                    <td>{{ registro.zona }}</td>
-                    <td>{{ registro.cantidad }}</td>
-                    <td>{{ registro.observaciones }}</td>
-                    <td class="text-center">
-                        <a href="{% url 'supervisionproduccion_delete' registro.pk %}" class="text-danger">
-                            <i class="fas fa-trash-alt"></i>
-                        </a>
+                </thead>
+
+                <tbody>
+                    {% for l in lotes %}
+                    <tr class="{% if l.total_muestras == 10 %}table-success{% endif %}">
+                    <td>{{ l.fecha }}</td>
+                    <td>{{ l.finca }}</td>
+                    <td>{{ l.cultivo }}</td>
+                    <td>{{ l.estructura }}</td>
+                    <td>{{ l.zona }}</td>
+                    <td>{{ l.total_muestras }}/10</td>
+                    <td>
+                        {% if l.total_muestras == 10 %}
+                        <span class="badge bg-success">Completo</span>
+                        {% else %}
+                        <span class="badge bg-warning">En proceso</span>
+                        {% endif %}
                     </td>
-                </tr>
-                {% endfor %}
-            </tbody>
+                    <td>
+                    <a href="{% url 'supervisionproduccion_detalle' l.fecha l.cultivo l.estructura l.zona %}"
+                        class="btn btn-sm btn-info">
+                        Consultar
+                    </a>
+                    </td>
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
         </table>
     </div>
 
     <!-- Cards para móviles -->
     <div class="d-block d-md-none">
-        {% for registro in registros %}
-        <div class="card mb-3">
-            <div class="card-body">
-                <h5 class="card-title">Registro #{{ registro.id }}</h5>
-                <p class="card-text">
-                    <strong>Fecha:</strong> {{ registro.fecha }}<br>
-                    <strong>Supervisor:</strong> {{ registro.supervisor }}<br>
-                    <strong>Finca:</strong> {{ registro.finca }}<br>
-                    <strong>Actividad:</strong> {{ registro.actividad }}<br>
-                    <strong>Cultivo:</strong> {{ registro.cultivo }}<br>
-                    <strong>Estructura:</strong> {{ registro.estructura }}<br>
-                    <strong>Zona:</strong> {{ registro.zona }}<br>
-                    <strong>Cantidad:</strong> {{ registro.cantidad }}<br>
-                    <strong>Obs:</strong> {{ registro.observaciones }}
-                </p>
-                <div class="d-flex justify-content-between">
-                    <a href="{% url 'supervisionproduccion_delete' registro.pk %}" class="btn btn-sm btn-outline-danger">Anular</a>
-                </div>
-            </div>
+        {% for l in lotes %}
+        <div class="card mb-3 {% if l.total_muestras == 10 %}border-success{% endif %}">
+        <div class="card-body">
+            <h6 class="card-title">
+            {{ l.cultivo }} | {{ l.estructura }} | {{ l.zona }}
+            </h6>
+
+            <p class="card-text">
+            <strong>Fecha:</strong> {{ l.fecha }}<br>
+            <strong>Finca:</strong> {{ l.finca }}<br>
+            <strong>Muestras:</strong> {{ l.total_muestras }}/10
+            </p>
+
+            <a href="{% url 'supervisionproduccion_detalle' l.fecha l.cultivo l.estructura l.zona %}"
+            class="btn btn-sm btn-info w-100">
+            Consultar
+            </a>
+        </div>
         </div>
         {% endfor %}
+
     </div>
 
    

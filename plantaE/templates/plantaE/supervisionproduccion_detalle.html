@@ -1,0 +1,40 @@
+<h4>
+  {{ fecha }} | {{ cultivo }} | {{ estructura }} | {{ zona }}
+</h4>
+
+{% for muestra, registros in muestras.items %}
+<div class="card mb-3">
+  <div class="card-header d-flex justify-content-between">
+    <strong>Muestra {{ muestra }}</strong>
+
+    <!-- pasa el pk de cualquier registro de la muestra -->
+    <a href="{% url 'supervisionproduccion_delete' registros.0.pk %}"
+       class="btn btn-sm btn-danger">
+       Anular muestra
+    </a>
+  </div>
+
+  <div class="card-body">
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th>Actividad</th>
+          <th>Cantidad</th>
+          <th>Ref</th>
+          <th>Observaciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in registros %}
+        <tr>
+          <td>{{ r.actividad }}</td>
+          <td>{{ r.cantidad }}</td>
+          <td>{{ r.ref }}</td>
+          <td>{{ r.observaciones }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endfor %}
