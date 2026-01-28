@@ -38,9 +38,10 @@ class supervisionproduccion(models.Model):
     #op_temporada = [('Temp 2023-2024','Temp 2023-2024'),('Temp 2024-2025','Temp 2024-2025')]
     id = models.AutoField(primary_key=True)
     fecha = models.DateField(blank=True, null=True)
-    cantidad = models.IntegerField(blank=True, null=True)
-    ref = models.IntegerField(blank=True, null=True)
+    cantidad = models.FloatField(blank=True, null=True)
+    ref = models.FloatField(blank=True, null=True)
     actividad = models.CharField(max_length=25,blank=True, null=True)
+    muestra = models.IntegerField(blank=True, null=True)
     zona = models.CharField(max_length=25,blank=True, null=True)
     finca = models.CharField(max_length=25,blank=True, null=True)
     estructura = models.CharField(max_length=30,blank=True, null=True)

@@ -2427,7 +2427,8 @@ def supervisionproduccion_delete(request, pk):
             zona=salidas.zona,
             estructura=salidas.estructura,
             supervisor=salidas.supervisor,
-            cultivo=salidas.cultivo
+            cultivo=salidas.cultivo,
+            muestra=salidas.muestra
         )
 
         # Marcamos como 'Anulado'
@@ -2442,42 +2443,75 @@ def supervisionproduccion_delete(request, pk):
     return render(request, 'plantaE/supervisionproduccion_confirm_delete.html', {'registros': salidas})
 
 def supervisionproduccion_grabar(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        filas = data.get('array', [])
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
 
-        for f in filas:
-            # Convertir cantidad y ref a enteros seguros
-            cantidad = f.get('cantidad')
-            ref = f.get('ref')
+    data = json.loads(request.body)
+    filas = data.get('array', [])
 
-            try:
-                cantidad = int(cantidad)
-            except (ValueError, TypeError):
-                cantidad = None  # o 0 según tu lógica
+    if not filas:
+        return JsonResponse({'error': 'No se recibieron datos'}, status=400)
 
-            try:
-                ref = int(ref) if ref else None
-            except (ValueError, TypeError):
-                ref = None
+    # 🔑 Tomamos el primer registro para identificar el lote
+    base = filas[0]
 
-            supervisionproduccion.objects.create(
-                fecha=f.get('fecha'),
-                cantidad=cantidad,
-                ref=ref,
-                zona=f.get('zona'),
-                finca=f.get('area'),
-                actividad=f.get('actividad'),
-                estructura=f.get('estructura'),
-                cultivo=f.get('cultivo'),
-                supervisor=f.get('supervisor'),
-                observaciones=f.get('observaciones'),
-                status=f.get('status')
-            )
+    filtros_lote = {
+        'fecha': base.get('fecha'),
+        'zona': base.get('zona'),
+        'estructura': base.get('estructura'),
+        'cultivo': base.get('cultivo'),
+        'finca': base.get('finca'),
+        'status': 'Abierta'
+    }
 
+    # 🔢 ¿Cuántas muestras ya existen?
+    muestras_actuales = supervisionproduccion.objects.filter(
+        **filtros_lote
+    ).values('muestra').distinct().count()
+
+    if muestras_actuales >= 10:
         return JsonResponse({
-            'msm': f'Se guardaron {len(filas)} registros correctamente'
-        })
+            'error': 'Este lote ya cuenta con las 10 muestras completas'
+        }, status=400)
+
+    muestra_actual = muestras_actuales + 1
+
+    # 📝 Guardar registros
+    for f in filas:
+
+        # Cantidad (ya viene como promedio o valor único)
+        try:
+            cantidad = float(f.get('cantidad'))
+        except (ValueError, TypeError):
+            cantidad = None
+
+        # Ref solo aplica a Deshoje
+        try:
+            ref = int(f.get('ref')) if f.get('ref') else None
+        except (ValueError, TypeError):
+            ref = None
+
+        supervisionproduccion.objects.create(
+            fecha=f.get('fecha'),
+            muestra=muestra_actual,
+            cantidad=cantidad,
+            ref=ref,
+            zona=f.get('zona'),
+            finca=f.get('area'),
+            actividad=f.get('actividad'),
+            estructura=f.get('estructura'),
+            cultivo=f.get('cultivo'),
+            supervisor=f.get('supervisor'),
+            observaciones=f.get('observaciones'),
+            status='Abierta'
+        )
+
+    return JsonResponse({
+        'msm': f'Se registró correctamente la muestra {muestra_actual}',
+        'muestra': muestra_actual,
+        'completo': muestra_actual == 10
+    })
+
 
 def inventarioProd_delete(request, pk):
     salidas = get_object_or_404(inventarioProdTerm, pk=pk)

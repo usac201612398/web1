@@ -120,38 +120,49 @@
                 <tr>
                   <th>Actividad</th>
                   <th>Ref</th>
-                  <th>Cantidad</th>
+                  <th colspan="5">Cantidad (5 muestras)</th>
                   <th>Observaciones</th>
-                  
                 </tr>
               </thead>
 
               <tbody>
-
                 <!-- DESHOJE -->
                 <tr>
                   <td>Deshoje</td>
-                  <td><input class="input" type="number"></td>
-                  <td><input class="input" type="number"></td>
-                  <td><input class="input" type="text"></td>
+                  <td><input class="input ref" type="number"></td>
+
+                  <td><input class="input cant" type="number"></td>
+                  <td><input class="input cant" type="number"></td>
+                  <td><input class="input cant" type="number"></td>
+                  <td><input class="input cant" type="number"></td>
+                  <td><input class="input cant" type="number"></td>
+
+                  <td><input class="input obs" type="text"></td>
                 </tr>
+
+                <!-- GANCHOS -->
                 <tr>
                   <td>Ganchos</td>
                   <td></td>
-                  <td><input class="input" type="number"></td>
-                  <td><input class="input" type="text"></td>
+                  <td colspan="5"><input class="input cant-unica" type="number"></td>
+                  <td><input class="input obs" type="text"></td>
                 </tr>
+
+                <!-- DESCORONE -->
                 <tr>
                   <td>Descorone</td>
                   <td></td>
-                  <td><input class="input" type="number"></td>
-                  <td><input class="input" type="text"></td>
-                </tr>
-    
 
+                  <td><input class="input cant" type="number"></td>
+                  <td><input class="input cant" type="number"></td>
+                  <td><input class="input cant" type="number"></td>
+                  <td><input class="input cant" type="number"></td>
+                  <td><input class="input cant" type="number"></td>
+
+                  <td><input class="input obs" type="text"></td>
+                </tr>
               </tbody>
             </table>
-
         </div>
         </div>
 
@@ -184,7 +195,22 @@ $(document).ready(function () {
   // Fecha de hoy
   const hoy = new Date().toISOString().split('T')[0];
   $('#date').val(hoy);
-      
+
+function promedio(valores) {
+  let suma = 0;
+  let count = 0;
+
+  valores.each(function () {
+    const v = parseFloat($(this).val());
+    if (!isNaN(v)) {
+      suma += v;
+      count++;
+    }
+  });
+
+  return count > 0 ? (suma / count).toFixed(2) : null;
+}
+
 function authUsuario() {
   $.ajax({
     url: '{% url "obtener_nombre_usuario" %}',
@@ -267,57 +293,49 @@ if (zona === "") {
     let datos = [];
     let incompletas = false;
 
-    $('#myTable tbody tr').each(function () {
+    
+  $('#myTable tbody tr').each(function () {
 
-  const actividad = $(this).find('td').eq(0).text().trim();
-  const inputsNumber = $(this).find('input[type="number"]');
-  const inputText = $(this).find('input[type="text"]');
+    const actividad = $(this).find('td').eq(0).text().trim();
+    let cantidad = null;
+    let ref = null;
 
-  let ref = null;
-  let cantidad = null;
+    if (actividad === 'Deshoje') {
+      ref = $(this).find('.ref').val();
+      cantidad = promedio($(this).find('.cant'));
 
-  // DESHOJE (tiene ref y cantidad)
-  if (actividad === 'Deshoje') {
-    ref = inputsNumber.eq(0).val();
-    cantidad = inputsNumber.eq(1).val();
+      if (!ref || ref <= 0) {
+        alert('Debe ingresar referencia válida en Deshoje');
+        incompletas = true;
+        return false;
+      }
+    }
+    else if (actividad === 'Descorone') {
+      cantidad = promedio($(this).find('.cant'));
+    }
+    else {
+      cantidad = $(this).find('.cant-unica').val();
+    }
 
-    // VALIDACIÓN REF DESHOJE
-    if (!ref || ref <= 0) {
-      alert('Debe ingresar la referencia en Deshoje');
+    if (!cantidad || cantidad <= 0) {
+      alert('Cantidad inválida en ' + actividad);
       incompletas = true;
       return false;
     }
-  } 
-  // OTRAS ACTIVIDADES (solo cantidad)
-  else {
-    cantidad = inputsNumber.eq(0).val();
-  }
 
-  // VALIDACIÓN CANTIDAD (todas)
-  if (!cantidad || cantidad <= 0) {
-    alert('Debe ingresar cantidad válida en todas las actividades');
-    incompletas = true;
-    return false;
-  }
-
-  const observaciones = inputText.val();
-
-  datos.push({
-    fecha,
-    area,
-    estructura,
-    zona,
-    cultivo,
-    supervisor,
-    actividad,
-    ref,
-    cantidad,
-    observaciones,
-    status: 'Abierta'
+    datos.push({
+      fecha,
+      zona,
+      estructura,
+      cultivo,
+      supervisor,
+      actividad,
+      ref,
+      cantidad,
+      observaciones: $(this).find('.obs').val(),
+      status: 'Abierta'
+    });
   });
-
-});
-
 
     console.log(datos);
 
