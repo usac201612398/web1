@@ -2379,16 +2379,35 @@ def supervision_list(request):
     
     datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('encargado')
     supervisor = list(datos)[0]['encargado']
-    salidas= supervision.objects.all()
-    salidas = salidas.filter(supervisor=supervisor).exclude(status='Anulado').order_by('-id')
-     
+    hoy = timezone.now().date()
+
+    # Lunes de la semana actual
+    inicio_semana = hoy - datetime.timedelta(days=hoy.weekday())
+    # Domingo de la semana actual
+    fin_semana = inicio_semana + datetime.timedelta(days=6)
+    salidas = supervision.objects.filter(
+        supervisor=supervisor,
+        fecha__range=(inicio_semana, fin_semana)
+    ).exclude(
+        status='Anulado'
+    ).order_by('-id')
+
     return render(request, 'plantaE/supervision_list.html', {'registros': salidas})
 
 def supervisionproduccion_list(request):
 
+    hoy = timezone.now().date()
+
+    # Lunes de la semana actual
+    inicio_semana = hoy - datetime.timedelta(days=hoy.weekday())
+    # Domingo de la semana actual
+    fin_semana = inicio_semana + datetime.timedelta(days=6)
     lotes = (
         supervisionproduccion.objects
-        .filter(status='Abierta')
+        .filter(
+            status='Abierta',
+            fecha__range=(inicio_semana, fin_semana)
+        )
         .values(
             'fecha',
             'finca',
