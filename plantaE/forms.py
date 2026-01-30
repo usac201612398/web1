@@ -314,7 +314,7 @@ class inventarioFrutaForm(forms.ModelForm):
 class contenedoresForm(forms.ModelForm):
 
     op_status = [('','-'),('Pendiente','-'),('Cerrado','Cerrado')]
-    op_destino = [('','-'),('Jonestown','Jonestown'),('Lakeland','Lakeland'),('Laredo, Texas','Laredo, Texas'),('Miami','Miami')]
+    op_destino = [('','-'),('Jonestown','Jonestown'),('Lakeland','Lakeland'),('Laredo, Texas','Laredo, Texas'),('Miami','Miami'),('Livonia','Livonia'),('Apollo','Apollo'),('Galvestown','Galvestown')]
     op_naviera = [('','-'),('SEABOARD','SEABOARD'),('CROWLEY','CROWLEY'),('DOLE','DOLE')]
 
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
