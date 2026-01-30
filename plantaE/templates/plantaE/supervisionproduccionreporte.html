@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+{% load static %}
+<head>
+  <meta charset="UTF-8">
+  <title>Reporte Semanal Supervisión</title>
+
+  <!-- BULMA -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    body {
+      background-color: #f7f7f7;
+    }
+    .table thead th {
+      background: #363636;
+      color: white;
+      text-align: center;
+    }
+    .table td {
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<section class="section">
+  <div class="container">
+
+    <!-- HEADER -->
+    <section class="hero is-link is-small mb-5">
+      <div class="hero-body has-text-centered">
+        <h1 class="title is-4">Reporte Semanal de Supervisión</h1>
+        <p class="subtitle is-6">Semáforo por actividad</p>
+      </div>
+    </section>
+
+    <!-- FILTROS -->
+    <div class="box mb-5">
+      <div class="columns is-multiline">
+
+        <div class="column is-3">
+          <label class="label">Estructura</label>
+          <div class="select is-fullwidth">
+            <select id="Estructura">
+              <option value="">Seleccionar</option>
+              <option value="CM1">CM1</option>
+              <option value="CM2">CM2</option>
+              <option value="CM3">CM3</option>
+              <option value="CM4">CM4</option>
+              <option value="CM5">CM5</option>
+              <option value="CM6">CM6</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="column is-3">
+          <label class="label">Zona</label>
+          <div class="select is-fullwidth">
+            <select id="Zona">
+              <option value="">Seleccionar</option>
+              <option value="Z1">Z1</option>
+              <option value="Z2">Z2</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="column is-3 is-flex is-align-items-end">
+          <button class="button is-link is-fullwidth" onclick="cargarReporteSemanal()">
+            <span class="icon"><i class="fas fa-search"></i></span>
+            <span>Consultar</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TABLA REPORTE -->
+    <div class="box">
+      <div class="table-container">
+        <table class="table is-bordered is-fullwidth">
+          <thead>
+            <tr id="headerSemanas">
+              <th>Actividad</th>
+            </tr>
+          </thead>
+          <tbody id="bodyReporte">
+            <tr>
+              <td colspan="10">Seleccione estructura y zona</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- BOTÓN VOLVER -->
+    <div class="has-text-right mt-4">
+      <a href="{% url 'supervisionproduccion_list' %}" class="button is-dark">
+        <span class="icon"><i class="fas fa-arrow-left"></i></span>
+        <span>Volver</span>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+function cargarReporteSemanal() {
+
+  const estructura = $('#Estructura').val();
+  const zona = $('#Zona').val();
+
+  if (!estructura || !zona) {
+    alert('Debe seleccionar estructura y zona');
+    return;
+  }
+
+  $.get("{% url 'reporte_semanal_supervision' %}", {
+    estructura: estructura,
+    zona: zona
+  }, function (data) {
+
+    let semanas = new Set();
+
+    // Obtener semanas
+    Object.values(data).forEach(actividad => {
+      Object.keys(actividad).forEach(sem => semanas.add(sem));
+    });
+
+    semanas = Array.from(semanas).sort();
+
+    // HEADER
+    let header = '<th>Actividad</th>';
+    semanas.forEach(sem => {
+      header += `<th>${sem}</th>`;
+    });
+    $('#headerSemanas').html(header);
+
+    // BODY
+    let body = '';
+
+    Object.keys(data).forEach(actividad => {
+      body += `<tr><td>${actividad}</td>`;
+
+      semanas.forEach(sem => {
+        if (data[actividad][sem]) {
+          body += `
+            <td style="
+              background:${data[actividad][sem].color};
+              color:white;">
+              ${data[actividad][sem].letra}
+            </td>`;
+        } else {
+          body += `<td>-</td>`;
+        }
+      });
+
+      body += '</tr>';
+    });
+
+    $('#bodyReporte').html(body);
+
+  }).fail(function () {
+    alert('Error al cargar el reporte');
+  });
+}
+</script>
+
+</body>
+</html>

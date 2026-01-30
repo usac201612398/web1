@@ -5,7 +5,7 @@ from openpyxl import Workbook
 from django.shortcuts import get_object_or_404, redirect
 from .models import Actpeso,supervision,supervisionproduccion,pedidos,tipoCajas,controlcajas, proyecciones,paramenvlocales,enviosrec,AcumFrutaaux,salidacontenedores, inventarioProdTermAux,productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
 from .forms import boletasForm,controlcajasForm,pedidosForm,itemsForm, itemsenviosForm,salidacontenedoresForm,salidasFrutaForm, contenedoresForm,recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
-from django.db.models import  Case, When,Sum, Q, Max, Min,Value as V,F, ExpressionWrapper, FloatField, IntegerField
+from django.db.models import  Case, Count, Avg, When,Sum, Q, Max, Min,Value as V,F, ExpressionWrapper, FloatField, IntegerField
 from django.db.models.functions import Abs, Trim
 from django.utils import timezone
 import matplotlib.pyplot as plt
@@ -2426,6 +2426,81 @@ def supervisionproduccion_list(request):
         'lotes': lotes
     })
 
+def reporte_semanal_view(request):
+    return render(request, 'plantaE/supervisionproduccionreporte.html')
+
+def reporte_semanal_supervision(request):
+
+    def evaluar_deshoje(promedio, ref):
+        diff = abs(promedio - ref)
+        if diff <= 0.5:
+            return ('E', 'green')
+        elif diff <= 1:
+            return ('B', 'yellow')
+        elif diff <= 1.5:
+            return ('R', 'orange')
+        else:
+            return ('M', 'red')
+        
+    def evaluar_ganchos(prom):
+        if 14.5 <= prom <= 15.5:
+            return ('E', 'green')
+        elif 14.0 <= prom <= 14.4:
+            return ('B', 'yellow')
+        elif 13.5 <= prom <= 13.9:
+            return ('R', 'orange')
+        else:
+            return ('M', 'red')
+        
+    def evaluar_descoronado(prom):
+        if 0.5 <= prom <= 1.4:
+            return ('E', 'green')
+        elif 1.5 <= prom <= 2.4:
+            return ('B', 'yellow')
+        elif 2.5 <= prom <= 3.4:
+            return ('R', 'orange')
+        else:
+            return ('M', 'red')
+    estructura = request.GET.get('estructura')
+    zona = request.GET.get('zona')
+
+    qs = supervisionproduccion.objects.filter(
+        estructura=estructura,
+        zona=zona,
+        status='Cerrada'
+    ).annotate(
+        semana=ExtractWeek('fecha'),
+        anio=ExtractYear('fecha')
+    )
+
+    data = {}
+
+    for row in qs.values('actividad', 'semana', 'anio').annotate(
+        prom=Avg('cantidad'),
+        ref=Avg('ref')
+    ):
+        actividad = row['actividad']
+        semana = f"Semana {row['semana']}-{row['anio']}"
+        prom = round(row['prom'], 2)
+        ref = row['ref']
+
+        # evaluar letra
+        if actividad == 'Deshoje':
+            letra, color = evaluar_deshoje(prom, ref)
+        elif actividad == 'Ganchos':
+            letra, color = evaluar_ganchos(prom)
+        else:
+            letra, color = evaluar_descoronado(prom)
+
+        if actividad not in data:
+            data[actividad] = {}
+
+        data[actividad][semana] = {
+            'letra': letra,
+            'color': color
+        }
+
+    return JsonResponse(data)
 
 def supervision_grabar(request):
     if request.method == 'POST':

@@ -140,7 +140,16 @@ urlpatterns = [
     path("supervisionproduccion",views.supervisionproduccion_list,name='supervisionproduccion_list'),
     path("supervisionproduccion/<int:pk>/delete/",views.supervisionproduccion_delete,name='supervisionproduccion_delete'),
     path('supervisionproduccion/detalle/<str:fecha>/<str:cultivo>/<str:estructura>/<str:zona>/',views.supervisionproduccion_detalle,name='supervisionproduccion_detalle'),
-
+    path(
+        'supervision/reporte-semanal/',
+        views.reporte_semanal_supervision,
+        name='reporte_semanal_supervision'
+    ),
+    path(
+        'supervision/reporte-semanal/view',
+        views.reporte_semanal_view,
+        name='reporte_semanal_view'
+    ),
     path('ajax/load-contenedores/', views.load_contenedores, name='load_contenedores'),
     path("contenedores",views.contenedores_list,name='contenedores_list'),
     path('contenedores/new/', views.contenedores_create, name='contenedores_create'),
