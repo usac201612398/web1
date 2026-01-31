@@ -150,6 +150,11 @@ urlpatterns = [
         views.reporte_semanal_view,
         name='reporte_semanal_view'
     ),
+    path(
+        'supervision/reporte-semanal/seguimiento',
+        views.reporte_semanal_seguimiento,
+        name='reporte_semanal_seguimiento'
+    ),
     path('ajax/load-contenedores/', views.load_contenedores, name='load_contenedores'),
     path("contenedores",views.contenedores_list,name='contenedores_list'),
     path('contenedores/new/', views.contenedores_create, name='contenedores_create'),

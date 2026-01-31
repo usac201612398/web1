@@ -2429,6 +2429,9 @@ def supervisionproduccion_list(request):
 def reporte_semanal_view(request):
     return render(request, 'plantaE/supervisionproduccionreporte.html')
 
+def reporte_semanal_seguimiento(request):
+    return render(request, 'plantaE/supervisionproduccion_seguimiento.html')
+
 def reporte_semanal_supervision(request):
 
     # ===============================
