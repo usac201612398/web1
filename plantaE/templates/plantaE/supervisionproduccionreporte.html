@@ -83,10 +83,17 @@
       <div class="table-container">
         <table class="table is-bordered is-fullwidth">
           <thead>
-            <tr id="headerSemanas">
+            <tr>
               <th>Actividad</th>
+              <th>Finca</th>
+              <th>Zona</th>
+              <th>Cultivo</th>
+              <th>Estructura</th>
+              <th>Semana</th>
+              <th>Resultado</th>
             </tr>
           </thead>
+
           <tbody id="bodyReporte">
             <tr>
               <td colspan="10">Seleccione estructura y zona</td>
@@ -121,38 +128,27 @@ function cargarReporteSemanal() {
     zona: zona
   }, function (data) {
 
-    let semanas = new Set();
-
-    Object.values(data).forEach(actividad => {
-      Object.keys(actividad).forEach(sem => semanas.add(sem));
-    });
-
-    semanas = Array.from(semanas).sort();
-
-    let header = '<th>Actividad</th>';
-    semanas.forEach(sem => {
-      header += `<th>${sem}</th>`;
-    });
-    $('#headerSemanas').html(header);
-
     let body = '';
 
-    Object.keys(data).forEach(actividad => {
-      body += `<tr><td>${actividad}</td>`;
-
-      semanas.forEach(sem => {
-        if (data[actividad][sem]) {
-          body += `
-            <td style="background:${data[actividad][sem].color}; color:white;">
-              ${data[actividad][sem].letra}
-            </td>`;
-        } else {
-          body += `<td>-</td>`;
-        }
+    if (data.length === 0) {
+      body = `<tr><td colspan="7">No hay registros</td></tr>`;
+    } else {
+      data.forEach(row => {
+        body += `
+          <tr>
+            <td>${row.actividad}</td>
+            <td>${row.finca}</td>
+            <td>${row.zona}</td>
+            <td>${row.cultivo || '-'}</td>
+            <td>${row.estructura}</td>
+            <td>${row.semana}</td>
+            <td style="background:${row.color}; color:white;">
+              ${row.letra}
+            </td>
+          </tr>
+        `;
       });
-
-      body += '</tr>';
-    });
+    }
 
     $('#bodyReporte').html(body);
 
@@ -160,9 +156,11 @@ function cargarReporteSemanal() {
     alert('Error al cargar el reporte');
   });
 }
+
 $(document).ready(function () {
   cargarReporteSemanal();
 });
+
 </script>
 
 </body>

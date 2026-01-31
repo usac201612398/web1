@@ -2429,8 +2429,15 @@ def supervisionproduccion_list(request):
 def reporte_semanal_view(request):
     return render(request, 'plantaE/supervisionproduccionreporte.html')
 
+from django.http import JsonResponse
+from django.db.models import Avg
+from django.db.models.functions import ExtractWeek, ExtractYear
+
 def reporte_semanal_supervision(request):
 
+    # ===============================
+    # EVALUADORES
+    # ===============================
     def evaluar_deshoje(promedio, ref):
         diff = abs(promedio - ref)
         if diff <= 0.5:
@@ -2441,7 +2448,7 @@ def reporte_semanal_supervision(request):
             return ('R', 'orange')
         else:
             return ('M', 'red')
-        
+
     def evaluar_ganchos(prom):
         if 14.5 <= prom <= 15.5:
             return ('E', 'green')
@@ -2451,7 +2458,7 @@ def reporte_semanal_supervision(request):
             return ('R', 'orange')
         else:
             return ('M', 'red')
-        
+
     def evaluar_descoronado(prom):
         if 0.5 <= prom <= 1.4:
             return ('E', 'green')
@@ -2461,57 +2468,94 @@ def reporte_semanal_supervision(request):
             return ('R', 'orange')
         else:
             return ('M', 'red')
+
+    # ===============================
+    # PARÁMETROS
+    # ===============================
     estructura = request.GET.get('estructura')
     zona = request.GET.get('zona')
+
+    # ===============================
+    # USUARIO / SUPERVISOR
+    # ===============================
     usuario = usuariosAppFruta.objects.filter(
         correo=request.user.username
     ).first()
 
+    if not usuario:
+        return JsonResponse({}, safe=False)
+
+    # ===============================
+    # QUERY BASE
+    # ===============================
     qs = supervisionproduccion.objects.filter(
         status='Abierta',
         supervisor=usuario.encargado
     )
 
-    # 👉 SOLO filtrar si vienen valores
+    # ===============================
+    # FILTROS OPCIONALES
+    # ===============================
     if estructura:
         qs = qs.filter(estructura=estructura)
 
     if zona:
         qs = qs.filter(zona=zona)
 
+    # ===============================
+    # SEMANA / AÑO
+    # ===============================
     qs = qs.annotate(
         semana=ExtractWeek('fecha'),
         anio=ExtractYear('fecha')
     )
 
-    data = {}
+    # ===============================
+    # GROUP BY COMPLETO
+    # ===============================
+    group_fields = [
+        'actividad',
+        'estructura',
+        'zona',
+        'finca',
+        'semana',
+        'anio'
+    ]
 
-    for row in qs.values('actividad', 'semana', 'anio').annotate(
+    rows = qs.values(*group_fields).annotate(
         prom=Avg('cantidad'),
         ref=Avg('ref')
-    ):
-        actividad = row['actividad']
-        semana = f"Semana {row['semana']}-{row['anio']}"
+    )
+
+    # ===============================
+    # ARMAR JSON
+    # ===============================
+    data = []
+
+    for row in rows:
         prom = round(row['prom'], 2)
         ref = row['ref']
 
-        # evaluar letra
-        if actividad == 'Deshoje':
+        if row['actividad'] == 'Deshoje':
             letra, color = evaluar_deshoje(prom, ref)
-        elif actividad == 'Ganchos':
+        elif row['actividad'] == 'Ganchos':
             letra, color = evaluar_ganchos(prom)
         else:
             letra, color = evaluar_descoronado(prom)
 
-        if actividad not in data:
-            data[actividad] = {}
-
-        data[actividad][semana] = {
+        data.append({
+            'actividad': row['actividad'],
+            'finca': row['finca'],
+            'zona': row['zona'],
+            'cultivo': row.get('cultivo', ''),  # si existe el campo
+            'estructura': row['estructura'],
+            'semana': f"Semana {row['semana']}-{row['anio']}",
             'letra': letra,
             'color': color
-        }
+        })
 
-    return JsonResponse(data)
+    return JsonResponse(data, safe=False)
+
 
 def supervision_grabar(request):
     if request.method == 'POST':
