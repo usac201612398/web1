@@ -2467,7 +2467,7 @@ def reporte_semanal_supervision(request):
     qs = supervisionproduccion.objects.filter(
         estructura=estructura,
         zona=zona,
-        status='Cerrada'
+        status='Abierta'
     ).annotate(
         semana=ExtractWeek('fecha'),
         anio=ExtractYear('fecha')
