@@ -243,8 +243,7 @@ function authUsuario() {
 
 authUsuario();
 
-  $('.envio3').on('click', function () {
-
+$('.envio3').on('click', function () {
     const boton = $(this);
     boton.prop('disabled', true);
 
@@ -255,119 +254,110 @@ authUsuario();
     const zona = $('#Zona').val();
     const supervisor = $('#correo').val();
 
-    // VALIDACIÓN DE FILTROS
-if (!fecha) {
-  alert('Debe seleccionar una fecha');
-  boton.prop('disabled', false);
-  return;
-}
+    // ====== VALIDACIÓN DE FILTROS ======
+    if (!fecha) { alert('Debe seleccionar una fecha'); boton.prop('disabled', false); return; }
+    if (!supervisor) { alert('Supervisor no válido'); boton.prop('disabled', false); return; }
+    if (cultivo === "") { alert('Debe seleccionar un cultivo'); $('#Cul').parent().addClass('is-danger'); boton.prop('disabled', false); return; }
+    if (estructura === "") { alert('Debe seleccionar una estructura'); $('#Estructura').parent().addClass('is-danger'); boton.prop('disabled', false); return; }
+    if (zona === "") { alert('Debe seleccionar una zona'); $('#Zona').parent().addClass('is-danger'); boton.prop('disabled', false); return; }
 
-if (!supervisor) {
-  alert('Supervisor no válido');
-  boton.prop('disabled', false);
-  return;
-}
-
-if (cultivo === "") {
-  alert('Debe seleccionar un cultivo');
-  $('#Cul').parent().addClass('is-danger');
-  boton.prop('disabled', false);
-  return;
-}
-
-if (estructura === "") {
-  alert('Debe seleccionar una estructura');
-  $('#Estructura').parent().addClass('is-danger');
-  boton.prop('disabled', false);
-  return;
-}
-
-if (zona === "") {
-  alert('Debe seleccionar una zona');
-  $('#Zona').parent().addClass('is-danger');
-  boton.prop('disabled', false);
-  return;
-}
-
-
+    // ====== VALIDACIÓN DE TABLA ======
     let datos = [];
     let incompletas = false;
 
-    
-  $('#myTable tbody tr').each(function () {
+    $('#myTable tbody tr').each(function () {
+        const actividad = $(this).find('td').eq(0).text().trim();
+        let cantidad = null;
+        let ref = null;
 
-    const actividad = $(this).find('td').eq(0).text().trim();
-    let cantidad = null;
-    let ref = null;
+        if (actividad === 'Deshoje') {
+            // Validar ref
+            ref = $(this).find('.ref').val();
+            if (!ref || ref <= 0) {
+                alert('Debe ingresar referencia válida en Deshoje');
+                incompletas = true;
+                return false;
+            }
+            // Validar cada cantidad
+            let todosLlenos = true;
+            $(this).find('.cant').each(function () {
+                const v = parseFloat($(this).val());
+                if (isNaN(v) || v <= 0) {
+                    todosLlenos = false;
+                    return false;
+                }
+            });
+            if (!todosLlenos) { alert('Debe ingresar todas las cantidades de Deshoje'); incompletas = true; return false; }
+            cantidad = promedio($(this).find('.cant'));
 
-    if (actividad === 'Deshoje') {
-      ref = $(this).find('.ref').val();
-      cantidad = promedio($(this).find('.cant'));
+        } else if (actividad === 'Descorone') {
+            let todosLlenos = true;
+            $(this).find('.cant').each(function () {
+                const v = parseFloat($(this).val());
+                if (isNaN(v) || v <= 0) {
+                    todosLlenos = false;
+                    return false;
+                }
+            });
+            if (!todosLlenos) { alert('Debe ingresar todas las cantidades de Descorone'); incompletas = true; return false; }
+            cantidad = promedio($(this).find('.cant'));
 
-      if (!ref || ref <= 0) {
-        alert('Debe ingresar referencia válida en Deshoje');
-        incompletas = true;
-        return false;
-      }
-    }
-    else if (actividad === 'Descorone') {
-      cantidad = promedio($(this).find('.cant'));
-    }
-    else {
-      cantidad = $(this).find('.cant-unica').val();
-    }
+        } else if (actividad === 'Ganchos') {
+            const val = parseFloat($(this).find('.cant-unica').val());
+            if (isNaN(val) || val <= 0) {
+                alert('Debe ingresar cantidad válida en Ganchos');
+                incompletas = true;
+                return false;
+            }
+            cantidad = val;
+        }
 
-    if (!cantidad || cantidad <= 0) {
-      alert('Cantidad inválida en ' + actividad);
-      incompletas = true;
-      return false;
-    }
-
-    datos.push({
-      fecha,
-      area,
-      zona,
-      estructura,
-      cultivo,
-      supervisor,
-      actividad,
-      ref,
-      cantidad,
-      observaciones: $(this).find('.obs').val(),
-      status: 'Abierta'
+        datos.push({
+            fecha,
+            area,
+            zona,
+            estructura,
+            cultivo,
+            supervisor,
+            actividad,
+            ref,
+            cantidad,
+            observaciones: $(this).find('.obs').val(),
+            status: 'Abierta'
+        });
     });
-  });
 
+    if (incompletas) {
+        boton.prop('disabled', false);
+        return;
+    }
+
+    // ====== ENVÍO ======
     console.log(datos);
 
     $.ajax({
-      url: "{% url 'supervisionproduccion_grabar' %}",
-      type: "POST",
-      contentType: "application/json",
-      headers: {
-        "X-CSRFToken": getCookie('csrftoken')
-      },
-      data: JSON.stringify({ array: datos }),
-      success: function (response) {
-        alert(response.msm || 'Guardado correctamente');
-        boton.prop('disabled', false);
-        if (response.completo) {
-          alert('✅ Muestra 10 registrada. El lote está completo');
-          window.location.href = "{% url 'supervisionproduccion_list' %}";
-        } else {
-          alert('Muestra ' + response.muestra + ' registrada correctamente');
-          
-          // Limpia solo las cantidades para seguir capturando
-          $('#myTable input').val('');
+        url: "{% url 'supervisionproduccion_grabar' %}",
+        type: "POST",
+        contentType: "application/json",
+        headers: { "X-CSRFToken": getCookie('csrftoken') },
+        data: JSON.stringify({ array: datos }),
+        success: function (response) {
+            alert(response.msm || 'Guardado correctamente');
+            boton.prop('disabled', false);
+            if (response.completo) {
+                alert('✅ Muestra 10 registrada. El lote está completo');
+                window.location.href = "{% url 'supervisionproduccion_list' %}";
+            } else {
+                alert('Muestra ' + response.muestra + ' registrada correctamente');
+                $('#myTable input').val(''); // limpiar inputs
+            }
+        },
+        error: function () {
+            alert("Error al guardar");
+            boton.prop('disabled', false);
         }
-      },
-      error: function () {
-        alert("Error al guardar");
-        boton.prop('disabled', false);
-      }
     });
-
-  });
+});
 
 });
 </script>
