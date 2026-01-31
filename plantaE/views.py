@@ -2581,7 +2581,7 @@ def reporte_semanal_supervision(request):
     qs = qs.annotate(
         semana=ExtractWeek('fecha'),
         anio=ExtractYear('fecha')
-    )
+    ).order_by('estructura', 'zona', 'actividad')
 
     # ===============================
     # GROUP BY (AQUÍ ESTABA EL ERROR)
