@@ -2615,7 +2615,7 @@ def reporte_seguimiento_api(request):
     queryset = supervisionproduccion.objects.filter(
         finca=finca, estructura=estructura, zona=zona,
         actividad=actividad, cultivo=cultivo
-    ).annotate(semana=ExtractWeek('fecha'))
+    ).annotate(semana=ExtractWeek('fecha')).exclude(status='Anulado')
     
     if semana:
         queryset = queryset.filter(semana=semana)
