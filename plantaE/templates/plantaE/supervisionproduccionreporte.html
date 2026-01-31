@@ -179,7 +179,7 @@ function cargarReporteSemanal() {
 }
 
 function irSeguimiento(actividad, finca, zona, cultivo, estructura) {
-  let url = "{% url 'seguimiento_view' %}";
+  let url = "{% url 'reporte_semanal_seguimiento' %}";
 
   // Pasar filtros en query string
   url += `?actividad=${encodeURIComponent(actividad)}`
