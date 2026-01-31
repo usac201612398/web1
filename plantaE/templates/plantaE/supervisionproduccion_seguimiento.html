@@ -3,17 +3,25 @@
 {% load static %}
 <head>
   <meta charset="UTF-8">
-  <title>Reporte Semanal Supervisión - Seguimiento</title>
+  <title>Seguimiento Semanal</title>
 
-  <!-- BULMA -->
+  <!-- BULMA y FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
-    body { background-color: #f7f7f7; }
-    .table thead th { background: #363636; color: white; text-align: center; }
-    .table td { text-align: center; font-weight: bold; }
-    .table-container { overflow-x: auto; }
+    body {
+      background-color: #f7f7f7;
+    }
+    .table thead th {
+      background: #363636;
+      color: white;
+      text-align: center;
+    }
+    .table td {
+      text-align: center;
+      font-weight: bold;
+    }
   </style>
 </head>
 
@@ -24,77 +32,26 @@
     <!-- HEADER -->
     <section class="hero is-link is-small mb-5">
       <div class="hero-body has-text-centered">
-        <h1 class="title is-4">Reporte Semanal de Supervisión</h1>
-        <p class="subtitle is-6">Vista de seguimiento por semanas</p>
+        <h1 class="title is-4">Seguimiento Semanal de Supervisión</h1>
+        <p class="subtitle is-6">Semáforo por actividad</p>
       </div>
     </section>
 
-    <!-- FILTROS -->
-    <div class="box mb-5">
-      <div class="columns is-multiline">
-
-        <div class="column is-3">
-          <label class="label">Estructura</label>
-          <div class="select is-fullwidth">
-            <select id="Estructura">
-              <option value="">Todas</option>
-              <option value="CM1">CM1</option>
-              <option value="CM2">CM2</option>
-              <option value="CM3">CM3</option>
-              <option value="CM4">CM4</option>
-              <option value="CM5">CM5</option>
-              <option value="CM6">CM6</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="column is-3">
-          <label class="label">Zona</label>
-          <div class="select is-fullwidth">
-            <select id="Zona">
-              <option value="">Todas</option>
-              <option value="Z1">Z1</option>
-              <option value="Z2">Z2</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="column is-3">
-          <label class="label">Actividad</label>
-          <div class="select is-fullwidth">
-            <select id="Actividad">
-              <option value="">Todas</option>
-              <option value="Deshoje">Deshoje</option>
-              <option value="Ganchos">Ganchos</option>
-              <option value="Descoronado">Descoronado</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="column is-3 is-flex is-align-items-end">
-          <button class="button is-link is-fullwidth" onclick="cargarSeguimiento()">
-            <span class="icon"><i class="fas fa-search"></i></span>
-            <span>Consultar</span>
-          </button>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- TABLA REPORTE PIVOT -->
+    <!-- TABLA REPORTE -->
     <div class="box">
       <div class="table-container">
         <table class="table is-bordered is-fullwidth">
           <thead>
-            <tr id="headerPivot">
+            <tr id="headerSemanas">
               <th>Actividad</th>
               <th>Finca</th>
               <th>Zona</th>
               <th>Cultivo</th>
               <th>Estructura</th>
+              <!-- Semanas se agregan dinámicamente -->
             </tr>
           </thead>
-          <tbody id="bodyPivot">
+          <tbody id="bodyReporte">
             <tr>
               <td colspan="10">Cargando datos...</td>
             </tr>
@@ -116,86 +73,69 @@
 
 <!-- JS -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script>
-function cargarSeguimiento() {
-  const estructura = $('#Estructura').val();
-  const zona = $('#Zona').val();
-  const actividadFiltro = $('#Actividad').val();
-
-  $.get("{% url 'reporte_semanal_supervision' %}", {
-    estructura: estructura,
-    zona: zona,
-    actividad: actividadFiltro
-  }, function (data) {
-
-    let semanas = new Set();
-    let filas = {};
-
-    // Agrupar por fila única
-    data.forEach(r => {
-      semanas.add(r.semana);
-
-      const filaKey = [r.actividad, r.finca, r.zona, r.cultivo, r.estructura].join('|');
-
-      if (!filas[filaKey]) {
-        filas[filaKey] = {
-          actividad: r.actividad,
-          finca: r.finca || 'SIN FINCA',
-          zona: r.zona || '-',
-          cultivo: r.cultivo || '-',
-          estructura: r.estructura || '-',
-          semanas: {}
-        };
-      }
-
-      filas[filaKey].semanas[r.semana] = r;
-    });
-
-    semanas = Array.from(semanas).sort();
-
-    // HEADER
-    let header = `
-      <th>Actividad</th>
-      <th>Finca</th>
-      <th>Zona</th>
-      <th>Cultivo</th>
-      <th>Estructura</th>
-    `;
-    semanas.forEach(s => { header += `<th>${s}</th>`; });
-    $('#headerPivot').html(header);
-
-    // BODY
-    let body = '';
-    Object.values(filas).forEach(f => {
-      body += `
-        <tr>
-          <td>${f.actividad}</td>
-          <td>${f.finca}</td>
-          <td>${f.zona}</td>
-          <td>${f.cultivo}</td>
-          <td>${f.estructura}</td>
-      `;
-      semanas.forEach(s => {
-        if (f.semanas[s]) {
-          body += `<td style="background:${f.semanas[s].color}; color:white;">${f.semanas[s].letra}</td>`;
-        } else {
-          body += `<td>-</td>`;
-        }
-      });
-      body += '</tr>';
-    });
-
-    $('#bodyPivot').html(body);
-  }).fail(function () {
-    alert('Error al cargar el reporte');
-  });
-}
-
-// Ejecutar al cargar la página
-$(document).ready(function () {
-  cargarSeguimiento();
+$(document).ready(function() {
+    cargarSeguimiento();
 });
+
+function cargarSeguimiento() {
+    // Leer filtros de query string
+    const params = new URLSearchParams(window.location.search);
+    const actividad = params.get('actividad') || '';
+    const finca = params.get('finca') || '';
+    const zona = params.get('zona') || '';
+    const cultivo = params.get('cultivo') || '';
+    const estructura = params.get('estructura') || '';
+
+    $.get("{% url 'reporte_semanal_supervision' %}", {
+        actividad: actividad,
+        finca: finca,
+        zona: zona,
+        cultivo: cultivo,
+        estructura: estructura
+    }, function(data) {
+        let semanas = new Set();
+
+        data.forEach(row => {
+            semanas.add(row.semana);
+        });
+
+        semanas = Array.from(semanas).sort();
+
+        // HEADER
+        let header = '<th>Actividad</th><th>Finca</th><th>Zona</th><th>Cultivo</th><th>Estructura</th>';
+        semanas.forEach(sem => {
+            header += `<th>${sem}</th>`;
+        });
+        $('#headerSemanas').html(header);
+
+        // BODY
+        let body = '';
+        data.forEach(row => {
+            body += `<tr>
+                        <td>${row.actividad}</td>
+                        <td>${row.finca}</td>
+                        <td>${row.zona}</td>
+                        <td>${row.cultivo}</td>
+                        <td>${row.estructura}</td>`;
+
+            semanas.forEach(sem => {
+                if (row.semana === sem) {
+                    body += `<td style="background:${row.color}; color:white;">${row.letra}</td>`;
+                } else {
+                    body += `<td>-</td>`;
+                }
+            });
+
+            body += '</tr>';
+        });
+
+        $('#bodyReporte').html(body);
+
+    }).fail(function() {
+        alert('Error al cargar el reporte');
+    });
+}
 </script>
 
 </body>

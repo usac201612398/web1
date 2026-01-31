@@ -164,7 +164,6 @@ function cargarReporteSemanal() {
             <td>
               <button class="button is-small is-info" onclick="irSeguimiento('{{ fila.actividad }}','{{ fila.finca }}','{{ fila.zona }}','{{ fila.cultivo }}','{{ fila.estructura }}')">
                 <span class="icon"><i class="fas fa-chart-line"></i></span>
-                <span>Seguimiento</span>
               </button>
             </td>
           </tr>
@@ -180,8 +179,15 @@ function cargarReporteSemanal() {
 }
 
 function irSeguimiento(actividad, finca, zona, cultivo, estructura) {
-  let url = "{% url 'reporte_semanal_seguimiento' %}";
-  url += `?actividad=${actividad}&finca=${finca}&zona=${zona}&cultivo=${cultivo}&estructura=${estructura}`;
+  let url = "{% url 'seguimiento_view' %}";
+
+  // Pasar filtros en query string
+  url += `?actividad=${encodeURIComponent(actividad)}`
+      + `&finca=${encodeURIComponent(finca)}`
+      + `&zona=${encodeURIComponent(zona)}`
+      + `&cultivo=${encodeURIComponent(cultivo)}`
+      + `&estructura=${encodeURIComponent(estructura)}`;
+
   window.open(url, "_blank"); // abre en nueva pestaña
 }
 
