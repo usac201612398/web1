@@ -160,6 +160,11 @@ urlpatterns = [
         views.reporte_semanal_seguimiento,
         name='reporte_semanal_seguimiento'
     ),
+    path(
+        'supervisionproduccion/reporte-semanal/detalleseguimiento',
+        views.reporte_seguimiento_api,
+        name='reporte_seguimiento_api'
+    ),
     path('ajax/load-contenedores/', views.load_contenedores, name='load_contenedores'),
     path("contenedores",views.contenedores_list,name='contenedores_list'),
     path('contenedores/new/', views.contenedores_create, name='contenedores_create'),

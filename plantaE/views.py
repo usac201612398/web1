@@ -2432,26 +2432,28 @@ def reporte_semanal_view(request):
 def reporte_semanal_seguimiento(request):
     return render(request, 'plantaE/supervisionproduccion_seguimiento.html')
 
-def reporte_general(request):
-    # Funciones de semáforo
-    def evaluar_deshoje(promedio, ref):
+def evaluar_deshoje(promedio, ref):
         diff = abs(promedio - ref)
         if diff <= 0.5: return ('E', 'green')
         elif diff <= 1: return ('B', 'yellow')
         elif diff <= 1.5: return ('R', 'orange')
         else: return ('M', 'red')
 
-    def evaluar_ganchos(prom):
-        if 14.5 <= prom <= 15.5: return ('E', 'green')
-        elif 14.0 <= prom <= 14.4: return ('B', 'yellow')
-        elif 13.5 <= prom <= 13.9: return ('R', 'orange')
-        else: return ('M', 'red')
+def evaluar_ganchos(prom):
+    if 14.5 <= prom <= 15.5: return ('E', 'green')
+    elif 14.0 <= prom <= 14.4: return ('B', 'yellow')
+    elif 13.5 <= prom <= 13.9: return ('R', 'orange')
+    else: return ('M', 'red')
 
-    def evaluar_descoronado(prom):
-        if 0.5 <= prom <= 1.4: return ('E', 'green')
-        elif 1.5 <= prom <= 2.4: return ('B', 'yellow')
-        elif 2.5 <= prom <= 3.4: return ('R', 'orange')
-        else: return ('M', 'red')
+def evaluar_descoronado(prom):
+    if 0.5 <= prom <= 1.4: return ('E', 'green')
+    elif 1.5 <= prom <= 2.4: return ('B', 'yellow')
+    elif 2.5 <= prom <= 3.4: return ('R', 'orange')
+    else: return ('M', 'red')
+
+def reporte_general(request):
+    # Funciones de semáforo
+    
 
     # 👇 Filtros
     estructura = request.GET.get('estructura')
@@ -2504,39 +2506,6 @@ def reporte_general(request):
 
 def reporte_semanal_supervision(request):
 
-    # ===============================
-    # EVALUADORES
-    # ===============================
-    def evaluar_deshoje(promedio, ref):
-        diff = abs(promedio - ref)
-        if diff <= 0.5:
-            return ('E', 'green')
-        elif diff <= 1:
-            return ('B', 'yellow')
-        elif diff <= 1.5:
-            return ('R', 'orange')
-        else:
-            return ('M', 'red')
-
-    def evaluar_ganchos(prom):
-        if 14.5 <= prom <= 15.5:
-            return ('E', 'green')
-        elif 14.0 <= prom <= 14.4:
-            return ('B', 'yellow')
-        elif 13.5 <= prom <= 13.9:
-            return ('R', 'orange')
-        else:
-            return ('M', 'red')
-
-    def evaluar_descoronado(prom):
-        if 0.5 <= prom <= 1.4:
-            return ('E', 'green')
-        elif 1.5 <= prom <= 2.4:
-            return ('B', 'yellow')
-        elif 2.5 <= prom <= 3.4:
-            return ('R', 'orange')
-        else:
-            return ('M', 'red')
 
     # ===============================
     # PARÁMETROS
@@ -2627,6 +2596,24 @@ def reporte_semanal_supervision(request):
         })
 
     return JsonResponse(data, safe=False)
+
+def reporte_seguimiento_api(request):
+    finca = request.GET.get('finca')
+    estructura = request.GET.get('estructura')
+    zona = request.GET.get('zona')
+    actividad = request.GET.get('actividad')
+    cultivo = request.GET.get('cultivo')
+    semana = request.GET.get('semana')
+
+    muestras = list(supervisionproduccion.objects.filter(
+        finca=finca, estructura=estructura, zona=zona,
+        actividad=actividad, cultivo=cultivo
+    ).annotate(semana=ExtractWeek('fecha')).filter(semana=semana).order_by('fecha')[:10].values('muestra','cantidad','ref'))
+
+    promedio = sum(m['cantidad'] for m in muestras)/len(muestras) if muestras else 0
+
+
+    return JsonResponse({'muestras': muestras, 'promedio': promedio})
 
 def supervision_grabar(request):
     if request.method == 'POST':

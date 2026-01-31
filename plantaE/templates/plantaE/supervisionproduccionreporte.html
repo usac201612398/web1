@@ -162,10 +162,26 @@ function cargarReporteSemanal() {
               ${row.letra}
             </td>
             <td>
-              <button class="button is-small is-info" onclick="irSeguimiento('${row.actividad}', '${row.finca}', '${row.zona}', '${row.cultivo}', '${row.estructura}')"
->
-                <span class="icon"><i class="fas fa-chart-line"></i></span>
+              <button class="btn btn-sm btn-info seguimiento-btn" data-finca="{{ row.finca }}" 
+                      data-estructura="{{ row.estructura }}" data-zona="{{ row.zona }}"
+                      data-actividad="{{ row.actividad }}" data-cultivo="{{ row.cultivo }}"
+                      data-semana="{{ row.semana }}">
+                  Seguimiento
               </button>
+              <!-- Modal -->
+              <div class="modal fade" id="seguimientoModal" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Detalle de seguimiento</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div id="modalContent">Cargando...</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </td>
           </tr>
         `;
@@ -191,6 +207,27 @@ function irSeguimiento(actividad, finca, zona, cultivo, estructura) {
 
   window.open(url, "_blank"); // abre en nueva pestaña
 }
+
+$('.seguimiento-btn').click(function(){
+    const btn = $(this);
+    const data = btn.data();
+
+    $('#modalContent').html('Cargando...');
+    var modal = new bootstrap.Modal(document.getElementById('seguimientoModal'));
+    modal.show();
+
+    $.get("{% url 'reporte_seguimiento_api' %}", data, function(response){
+        let html = `<p>Promedio: <strong>${response.promedio}</strong> 
+                    <span style="color:${response.color}">(${response.letra})</span></p>`;
+        html += '<table class="table table-sm table-bordered"><tr><th>Muestra</th><th>Cantidad</th><th>Ref</th></tr>';
+        response.muestras.forEach(m => {
+            html += `<tr><td>${m.muestra}</td><td>${m.cantidad}</td><td>${m.ref}</td></tr>`;
+        });
+        html += '</table>';
+        $('#modalContent').html(html);
+    });
+});
+
 
 $(document).ready(function () {
   cargarReporteSemanal();
