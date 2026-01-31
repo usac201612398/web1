@@ -76,6 +76,12 @@
             <span>Consultar</span>
           </button>
         </div>
+        <div class="column is-3 is-flex is-align-items-end">
+          <button class="button is-primary is-fullwidth" onclick="imprimirTabla()">
+            <span class="icon"><i class="fas fa-print"></i></span>
+            <span>Imprimir</span>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -203,6 +209,30 @@ $(document).on('click', '.seguimiento-btn', function(){
         $('#modalContent').html('<p>Error al cargar los datos</p>');
     });
 });
+function imprimirTabla() {
+    // Selecciona la tabla
+    const tabla = document.querySelector('.table');
+    if (!tabla) { 
+        alert('No hay tabla para imprimir'); 
+        return; 
+    }
+
+    // Crear ventana nueva
+    const ventana = window.open('', '', 'width=1000,height=600');
+    ventana.document.write('<html><head><title>Imprimir Reporte Semanal</title>');
+    // Agregar estilos
+    ventana.document.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">');
+    ventana.document.write('<style>table {width: 100%; border-collapse: collapse;} th, td {border: 1px solid #363636; padding: 8px; text-align: center;} th {background: #363636; color: white;}</style>');
+    ventana.document.write('</head><body>');
+    ventana.document.write('<h3 style="text-align:center;">Reporte Semanal de Supervisión</h3>');
+    ventana.document.write(tabla.outerHTML);
+    ventana.document.write('</body></html>');
+
+    ventana.document.close();
+    ventana.focus();
+    ventana.print();
+    ventana.close();
+}
 
 $(document).ready(function () {
   cargarReporteSemanal();
