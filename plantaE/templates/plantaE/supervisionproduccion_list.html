@@ -71,16 +71,34 @@
 <body>
 <div class="container py-3">
 
-    <div class="d-flex flex-wrap gap-2 mb-4 justify-content-between">
-        
-        <a href="{% url 'supervisiontomates_create' %}" class="btn btn-success flex-fill text-center">
-            <i class="fas fa-plus"></i> Agregar (Tomates)
+   <div class="d-flex flex-wrap gap-2 mb-4 justify-content-between">
+
+        <!-- Crear Tomates -->
+        <a href="{% url 'supervisiontomates_create' %}" class="btn btn-success d-flex align-items-center gap-2 flex-fill text-center">
+            <i class="fas fa-plus"></i>
+            <span>Agregar Tomates</span>
         </a>
-        <a href="{% url 'supervisionchiles_create' %}" class="btn btn-success flex-fill text-center">
-            <i class="fas fa-plus"></i> Agregar (Chiles)
+
+        <!-- Crear Chiles -->
+        <a href="{% url 'supervisionchiles_create' %}" class="btn btn-success d-flex align-items-center gap-2 flex-fill text-center">
+            <i class="fas fa-plus"></i>
+            <span>Agregar Chiles</span>
+        </a>
+
+        <!-- Reporte Semanal General -->
+        <a href="{% url 'reporte_general_supervision' %}" class="btn btn-primary d-flex align-items-center gap-2 flex-fill text-center">
+            <i class="fas fa-chart-line"></i>
+            <span>Reporte Semanal</span>
+        </a>
+
+        <!-- Reporte Semana Actual -->
+        <a href="{% url 'reporte_semanal_view' %}" class="btn btn-primary d-flex align-items-center gap-2 flex-fill text-center">
+            <i class="fas fa-calendar-week"></i>
+            <span>Semana Actual</span>
         </a>
 
     </div>
+
 
     <!-- Tabla para escritorio -->
     <div class="table-responsive d-none d-md-block">
