@@ -215,55 +215,34 @@ $(document).on('click', '.seguimiento-btn', function(){
         $('#modalContent').html('<p>Error al cargar los datos</p>');
     });
 });
-function cargarReporteSemanal() {
-  const estructura = $('#Estructura').val();
-  const zona = $('#Zona').val();
-  const actividad = $('#Actividad').val();
+function imprimirTabla() {
+    const tabla = document.querySelector('.table');
+    if (!tabla) { alert('No hay tabla para imprimir'); return; }
 
-  $.get("{% url 'reporte_semanal_supervision' %}", {estructura, zona, actividad}, function(data) {
-    let body = '';
-    if (data.length === 0) {
-      body = `<tr><td colspan="8">No hay registros</td></tr>`;
-    } else {
-      data.forEach(row => {
-        // Forzar color según letra
-        let bgColor = '';
-        if(row.letra === 'E') bgColor = 'green';
-        else if(row.letra === 'B') bgColor = 'yellow';
-        else if(row.letra === 'R') bgColor = 'orange';
-        else if(row.letra === 'M') bgColor = 'red';
+    const ventana = window.open('', '', 'width=1000,height=600');
+    ventana.document.write('<html><head><title>Imprimir Reporte Semanal</title>');
 
-        let textColor = (bgColor === 'yellow') ? 'black' : 'white';
+    ventana.document.write(`
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+        <style>
+            table { width: 100%; border-collapse: collapse; }
+            th, td { border: 1px solid #363636; padding: 8px; text-align: center; font-weight: bold; }
+            th { background: #363636; color: white; }
+        </style>
+    `);
 
-        body += `
-          <tr>
-            <td>${row.finca}</td>
-            <td>${row.cultivo || '-'}</td>
-            <td>${row.estructura}</td>
-            <td>${row.zona}</td>
-            <td>${row.actividad}</td>
-            <td>${row.semana}</td>
-            <td style="background-color:${bgColor}; color:${textColor}; font-weight:bold;">
-              ${row.letra}
-            </td>
+    ventana.document.write('</head><body>');
+    ventana.document.write('<h3 style="text-align:center;">Reporte Semanal de Supervisión</h3>');
 
-            <td>
-              <button class="btn btn-sm btn-info seguimiento-btn"
-                data-finca="${row.finca}"
-                data-estructura="${row.estructura}"
-                data-zona="${row.zona}"
-                data-actividad="${row.actividad}"
-                data-cultivo="${row.cultivo || ''}"
-                data-semana="${row.semana_num || ''}">
-                Seguimiento
-              </button>
-            </td>
-          </tr>
-        `;
-      });
-    }
-    $('#bodyReporte').html(body);
-  }).fail(function() { alert('Error al cargar el reporte'); });
+    // Clonar tabla
+    const clone = tabla.cloneNode(true);
+    ventana.document.body.appendChild(clone);
+
+    ventana.document.write('</body></html>');
+    ventana.document.close();
+    ventana.focus();
+    ventana.print();
+    ventana.close();
 }
 
 $(document).ready(function () {
