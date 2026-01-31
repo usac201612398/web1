@@ -13,12 +13,18 @@
     body {
       background-color: #f9f9f9;
     }
+    .table-container table {
+    border-radius: 8px;
+    overflow: hidden;
+}
     .table-custom-header th {
-      background: linear-gradient(to right, #6c757d, #495057);
-      color: white !important;
-      font-weight: bold;
-      text-align: center;
+        background: linear-gradient(to right, #28a745, #218838);
+        color: #fff;
+        text-align: center;
     }
+    .table tbody tr:nth-child(even) {
+    background-color: #f3f7f3;
+}
     .is-stretch {
       display: flex;
       flex-wrap: wrap;
@@ -34,6 +40,16 @@
     .mb-1 {
       margin-bottom: 1rem;
     }
+    .button.is-success {
+    background: linear-gradient(90deg, #28a745, #218838);
+    border: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.button.is-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
   </style>
 </head>
 
@@ -42,75 +58,54 @@
     <div class="container">
 
       <!-- HEADER -->
-      <section class="hero is-success is-small mb-5">
+      <section class="hero is-medium mb-5" style="background: linear-gradient(90deg, #28a745, #218838);">
         <div class="hero-body">
           <div class="container has-text-centered">
-            <h1 class="title is-3 has-text-white">Panel de Control</h1>
-            <p class="subtitle is-6 has-text-white-ter">Evaluación de supervisión</p>
+            <h1 class="title is-2 has-text-white"><i class="fas fa-seedling"></i> Panel de Supervisión</h1>
+            <p class="subtitle is-5 has-text-white-ter">Evaluación de supervisión de cultivos</p>
           </div>
         </div>
       </section>
-
-      <!-- FILTROS -->
-      <div class="filters">
-        <form id="filtros">
-          <div class="is-stretch">
-
-            <div class="field">
-              <label class="label" for="date">Fecha</label>
-              <input class="input" type="date" id="date" >
-            </div>
-            
-            <div class="field">
-              <label class="label" for="Sup">Supervisor</label>
-                <input class="input" id="correo" type="text"  readonly>
-            </div>
-
-            <div class="field">
-              <label class="label" for="finca">Area</label>
-                <input class="input" id="finca" type="text"  readonly>
-            </div>
-
-            <div class="field">
-              <label class="label" for="Cul">Cultivo</label>
-              <div class="select is-fullwidth">
-                <select id="Cul">
-                  <option value="">Seleccionar</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="field">
-              <label class="label" for="Estructura">Estructura</label>
-              <div class="select is-fullwidth">
-                <select id="Estructura">
-                  <option value="">Seleccionar</option>
-                  <option value="CM1">CM1</option>
-                  <option value="CM2">CM2</option>
-                  <option value="CM3">CM3</option>
-                  <option value="CM4">CM4</option>
-                  <option value="CM5">CM5</option>
-                  <option value="CM6">CM6</option>
-                  <option value="CM7">CM7</option>
-                </select>
-              </div>
-            </div>
-            <div class="field">
-              <label class="label" for="Zona">Zona</label>
-              <div class="select is-fullwidth">
-                <select id="Zona">
-                  <option value="">Seleccionar</option>
-                  <option value="Z1">Z1</option>
-                  <option value="Z2">Z2</option>
-                </select>
-              </div>
-            </div>
-            
-            
-
-          </div>
-        </form>
+<div class="box">
+  <h2 class="title is-5">Filtros</h2>
+  <div class="columns is-multiline">
+    <div class="column is-one-quarter">
+      <div class="field">
+        <label class="label">Fecha</label>
+        <div class="control has-icons-left">
+          <input class="input" type="date" id="date">
+          <span class="icon is-small is-left">
+            <i class="fas fa-calendar-alt"></i>
+          </span>
+        </div>
       </div>
+    </div>
+    <div class="column is-one-quarter">
+      <div class="field">
+        <label class="label">Supervisor</label>
+        <input class="input" id="correo" type="text" readonly placeholder="Usuario asignado">
+      </div>
+    </div>
+    <div class="column is-one-quarter">
+      <div class="field">
+        <label class="label">Área</label>
+        <input class="input" id="finca" type="text" readonly placeholder="Área asignada">
+      </div>
+    </div>
+    <div class="column is-one-quarter">
+      <div class="field">
+        <label class="label">Cultivo</label>
+        <div class="control">
+          <div class="select is-fullwidth">
+            <select id="Cul">
+              <option value="">Seleccionar</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
       <!-- TABLA -->
       <div class="box">
