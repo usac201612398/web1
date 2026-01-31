@@ -2432,6 +2432,76 @@ def reporte_semanal_view(request):
 def reporte_semanal_seguimiento(request):
     return render(request, 'plantaE/supervisionproduccion_seguimiento.html')
 
+def reporte_general(request):
+    # Funciones de semáforo
+    def evaluar_deshoje(promedio, ref):
+        diff = abs(promedio - ref)
+        if diff <= 0.5: return ('E', 'green')
+        elif diff <= 1: return ('B', 'yellow')
+        elif diff <= 1.5: return ('R', 'orange')
+        else: return ('M', 'red')
+
+    def evaluar_ganchos(prom):
+        if 14.5 <= prom <= 15.5: return ('E', 'green')
+        elif 14.0 <= prom <= 14.4: return ('B', 'yellow')
+        elif 13.5 <= prom <= 13.9: return ('R', 'orange')
+        else: return ('M', 'red')
+
+    def evaluar_descoronado(prom):
+        if 0.5 <= prom <= 1.4: return ('E', 'green')
+        elif 1.5 <= prom <= 2.4: return ('B', 'yellow')
+        elif 2.5 <= prom <= 3.4: return ('R', 'orange')
+        else: return ('M', 'red')
+
+    # 👇 Filtros
+    estructura = request.GET.get('estructura')
+    zona = request.GET.get('zona')
+    actividad = request.GET.get('actividad')
+    finca = request.GET.get('finca')
+    cultivo = request.GET.get('cultivo')
+
+    # 👇 Queryset base
+    qs = supervisionproduccion.objects.filter(status='Abierta')
+
+    if estructura: qs = qs.filter(estructura=estructura)
+    if zona: qs = qs.filter(zona=zona)
+    if actividad: qs = qs.filter(actividad=actividad)
+    if finca: qs = qs.filter(finca=finca)
+    if cultivo: qs = qs.filter(cultivo=cultivo)
+
+    # 👇 Agregar semana y año
+    qs = qs.annotate(
+        semana=ExtractWeek('fecha'),
+        anio=ExtractYear('fecha')
+    ).order_by('estructura', 'zona', 'actividad')
+
+    # 👇 Construir lista de dicts para pivot
+    data = []
+    for row in qs.values('estructura','zona','actividad','finca','cultivo','semana','anio').annotate(
+        prom=Avg('cantidad'),
+        ref=Avg('ref')
+    ):
+        letra, color = ('','')
+        if row['actividad'] == 'Deshoje':
+            letra, color = evaluar_deshoje(row['prom'], row['ref'])
+        elif row['actividad'] == 'Ganchos':
+            letra, color = evaluar_ganchos(row['prom'])
+        else:
+            letra, color = evaluar_descoronado(row['prom'])
+
+        data.append({
+            'estructura': row['estructura'],
+            'zona': row['zona'],
+            'actividad': row['actividad'],
+            'finca': row['finca'],
+            'cultivo': row['cultivo'],
+            'semana': f"Semana {row['semana']}-{row['anio']}",
+            'letra': letra,
+            'color': color
+        })
+
+    return JsonResponse(data, safe=False)
+
 def reporte_semanal_supervision(request):
 
     # ===============================

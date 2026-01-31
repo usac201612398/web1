@@ -141,17 +141,22 @@ urlpatterns = [
     path("supervisionproduccion/<int:pk>/delete/",views.supervisionproduccion_delete,name='supervisionproduccion_delete'),
     path('supervisionproduccion/detalle/<str:fecha>/<str:cultivo>/<str:estructura>/<str:zona>/',views.supervisionproduccion_detalle,name='supervisionproduccion_detalle'),
     path(
-        'supervision/reporte-semanal/',
+        'supervisionproducion/reporte-semanal/',
         views.reporte_semanal_supervision,
         name='reporte_semanal_supervision'
     ),
     path(
-        'supervision/reporte-semanal/view',
+        'supervisionproduccion/reporte-semanal/view',
         views.reporte_semanal_view,
         name='reporte_semanal_view'
     ),
     path(
-        'supervision/reporte-semanal/seguimiento',
+        'supervisionproduccion/reporte-general/',
+        views.reporte_general,
+        name='reporte_general_supervision'
+    ),
+    path(
+        'supervisionproduccion/reporte-semanal/seguimiento',
         views.reporte_semanal_seguimiento,
         name='reporte_semanal_seguimiento'
     ),

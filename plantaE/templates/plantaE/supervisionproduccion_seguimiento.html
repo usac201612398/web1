@@ -2,141 +2,142 @@
 <html lang="es">
 {% load static %}
 <head>
-  <meta charset="UTF-8">
-  <title>Seguimiento Semanal</title>
-
-  <!-- BULMA y FontAwesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-  <style>
-    body {
-      background-color: #f7f7f7;
-    }
-    .table thead th {
-      background: #363636;
-      color: white;
-      text-align: center;
-    }
-    .table td {
-      text-align: center;
-      font-weight: bold;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Reporte General Semanal</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  body { background-color: #f7f7f7; }
+  .table thead th { background: #363636; color: white; text-align: center; }
+  .table td { text-align: center; font-weight: bold; }
+</style>
 </head>
-
 <body>
 <section class="section">
-  <div class="container">
+<div class="container">
 
-    <!-- HEADER -->
-    <section class="hero is-link is-small mb-5">
-      <div class="hero-body has-text-centered">
-        <h1 class="title is-4">Seguimiento Semanal de Supervisión</h1>
-        <p class="subtitle is-6">Semáforo por actividad</p>
+  <!-- HEADER -->
+  <section class="hero is-link is-small mb-5">
+    <div class="hero-body has-text-centered">
+      <h1 class="title is-4">Reporte General Semanal</h1>
+      <p class="subtitle is-6">Pivot por CM, Zona, Actividad y Semanas</p>
+    </div>
+  </section>
+
+  <!-- FILTROS -->
+  <div class="box mb-5">
+    <div class="columns is-multiline">
+      <div class="column is-2">
+        <label class="label">Estructura (CM)</label>
+        <input type="text" id="Estructura" class="input" placeholder="Ej. CM1">
       </div>
-    </section>
-
-    <!-- TABLA REPORTE -->
-    <div class="box">
-      <div class="table-container">
-        <table class="table is-bordered is-fullwidth">
-          <thead>
-            <tr id="headerSemanas">
-              <th>Actividad</th>
-              <th>Finca</th>
-              <th>Zona</th>
-              <th>Cultivo</th>
-              <th>Estructura</th>
-              <!-- Semanas se agregan dinámicamente -->
-            </tr>
-          </thead>
-          <tbody id="bodyReporte">
-            <tr>
-              <td colspan="10">Cargando datos...</td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="column is-2">
+        <label class="label">Zona</label>
+        <input type="text" id="Zona" class="input" placeholder="Ej. Z1">
+      </div>
+      <div class="column is-2">
+        <label class="label">Actividad</label>
+        <input type="text" id="Actividad" class="input" placeholder="Ej. Deshoje">
+      </div>
+      <div class="column is-2">
+        <label class="label">Finca</label>
+        <input type="text" id="Finca" class="input" placeholder="Ej. VALLE">
+      </div>
+      <div class="column is-2">
+        <label class="label">Cultivo</label>
+        <input type="text" id="Cultivo" class="input" placeholder="Ej. CHERRY">
+      </div>
+      <div class="column is-2 is-flex is-align-items-end">
+        <button class="button is-link is-fullwidth" onclick="cargarReporteGeneral()">
+          <span class="icon"><i class="fas fa-search"></i></span>
+          <span>Consultar</span>
+        </button>
       </div>
     </div>
-
-    <!-- BOTÓN VOLVER -->
-    <div class="has-text-right mt-4">
-      <a href="{% url 'supervisionproduccion_list' %}" class="button is-dark">
-        <span class="icon"><i class="fas fa-arrow-left"></i></span>
-        <span>Volver</span>
-      </a>
-    </div>
-
   </div>
+
+  <!-- TABLA REPORTE -->
+  <div class="box">
+    <div class="table-container">
+      <table class="table is-bordered is-fullwidth">
+        <thead>
+          <tr id="headerSemanas">
+            <th>CM</th>
+            <th>Zona</th>
+            <th>Actividad</th>
+            <th>Finca</th>
+            <th>Cultivo</th>
+          </tr>
+        </thead>
+        <tbody id="bodyReporte">
+          <tr><td colspan="10">Seleccione filtros y consulte</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
 </section>
 
-<!-- JS -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-$(document).ready(function() {
-    cargarSeguimiento();
-});
+function cargarReporteGeneral() {
+  const estructura = $('#Estructura').val();
+  const zona = $('#Zona').val();
+  const actividad = $('#Actividad').val();
+  const finca = $('#Finca').val();
+  const cultivo = $('#Cultivo').val();
 
-function cargarSeguimiento() {
-    // Leer filtros de query string
-    const params = new URLSearchParams(window.location.search);
-    const actividad = params.get('actividad') || '';
-    const finca = params.get('finca') || '';
-    const zona = params.get('zona') || '';
-    const cultivo = params.get('cultivo') || '';
-    const estructura = params.get('estructura') || '';
+  $.get("{% url 'reporte_general_supervision' %}", {
+    estructura, zona, actividad, finca, cultivo
+  }, function(data) {
 
-    $.get("{% url 'reporte_semanal_supervision' %}", {
-        actividad: actividad,
-        finca: finca,
-        zona: zona,
-        cultivo: cultivo,
-        estructura: estructura
-    }, function(data) {
-        let semanas = new Set();
+    // Detectar todas las semanas
+    let semanas = new Set();
+    data.forEach(row => semanas.add(row.semana));
+    semanas = Array.from(semanas).sort();
 
-        data.forEach(row => {
-            semanas.add(row.semana);
-        });
+    // HEADER
+    let header = '<th>CM</th><th>Zona</th><th>Actividad</th><th>Finca</th><th>Cultivo</th>';
+    semanas.forEach(sem => header += `<th>${sem}</th>`);
+    $('#headerSemanas').html(header);
 
-        semanas = Array.from(semanas).sort();
-
-        // HEADER
-        let header = '<th>Actividad</th><th>Finca</th><th>Zona</th><th>Cultivo</th><th>Estructura</th>';
-        semanas.forEach(sem => {
-            header += `<th>${sem}</th>`;
-        });
-        $('#headerSemanas').html(header);
-
-        // BODY
-        let body = '';
-        data.forEach(row => {
-            body += `<tr>
-                        <td>${row.actividad}</td>
-                        <td>${row.finca}</td>
-                        <td>${row.zona}</td>
-                        <td>${row.cultivo}</td>
-                        <td>${row.estructura}</td>`;
-
-            semanas.forEach(sem => {
-                if (row.semana === sem) {
-                    body += `<td style="background:${row.color}; color:white;">${row.letra}</td>`;
-                } else {
-                    body += `<td>-</td>`;
-                }
-            });
-
-            body += '</tr>';
-        });
-
-        $('#bodyReporte').html(body);
-
-    }).fail(function() {
-        alert('Error al cargar el reporte');
+    // BODY
+    let body = '';
+    // Agrupar por CM+Zona+Actividad+Finca+Cultivo
+    const groupMap = {};
+    data.forEach(row => {
+      const key = `${row.estructura}|${row.zona}|${row.actividad}|${row.finca}|${row.cultivo}`;
+      if (!groupMap[key]) groupMap[key] = { ...row, semanas: {} };
+      groupMap[key].semanas[row.semana] = { letra: row.letra, color: row.color };
     });
-}
-</script>
 
+    Object.values(groupMap).forEach(row => {
+      body += `<tr>
+        <td>${row.estructura}</td>
+        <td>${row.zona}</td>
+        <td>${row.actividad}</td>
+        <td>${row.finca}</td>
+        <td>${row.cultivo}</td>`;
+      semanas.forEach(sem => {
+        if (row.semanas[sem]) {
+          body += `<td style="background:${row.semanas[sem].color}; color:white;">${row.semanas[sem].letra}</td>`;
+        } else body += `<td>-</td>`;
+      });
+      body += `</tr>`;
+    });
+
+    $('#bodyReporte').html(body);
+
+  }).fail(function() {
+    alert('Error al cargar el reporte');
+  });
+}
+
+$(document).ready(function() {
+  cargarReporteGeneral(); // cargar al inicio con todos los datos
+});
+</script>
 </body>
 </html>
+
