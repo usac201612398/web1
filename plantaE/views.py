@@ -2463,12 +2463,23 @@ def reporte_semanal_supervision(request):
             return ('M', 'red')
     estructura = request.GET.get('estructura')
     zona = request.GET.get('zona')
+    usuario = usuariosAppFruta.objects.filter(
+        correo=request.user.username
+    ).first()
 
     qs = supervisionproduccion.objects.filter(
-        estructura=estructura,
-        zona=zona,
-        status='Abierta'
-    ).annotate(
+        status='Abierta',
+        supervisor=usuario.encargado
+    )
+
+    # 👉 SOLO filtrar si vienen valores
+    if estructura:
+        qs = qs.filter(estructura=estructura)
+
+    if zona:
+        qs = qs.filter(zona=zona)
+
+    qs = qs.annotate(
         semana=ExtractWeek('fecha'),
         anio=ExtractYear('fecha')
     )

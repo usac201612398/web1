@@ -116,11 +116,6 @@ function cargarReporteSemanal() {
   const estructura = $('#Estructura').val();
   const zona = $('#Zona').val();
 
-  if (!estructura || !zona) {
-    alert('Debe seleccionar estructura y zona');
-    return;
-  }
-
   $.get("{% url 'reporte_semanal_supervision' %}", {
     estructura: estructura,
     zona: zona
@@ -128,21 +123,18 @@ function cargarReporteSemanal() {
 
     let semanas = new Set();
 
-    // Obtener semanas
     Object.values(data).forEach(actividad => {
       Object.keys(actividad).forEach(sem => semanas.add(sem));
     });
 
     semanas = Array.from(semanas).sort();
 
-    // HEADER
     let header = '<th>Actividad</th>';
     semanas.forEach(sem => {
       header += `<th>${sem}</th>`;
     });
     $('#headerSemanas').html(header);
 
-    // BODY
     let body = '';
 
     Object.keys(data).forEach(actividad => {
@@ -151,9 +143,7 @@ function cargarReporteSemanal() {
       semanas.forEach(sem => {
         if (data[actividad][sem]) {
           body += `
-            <td style="
-              background:${data[actividad][sem].color};
-              color:white;">
+            <td style="background:${data[actividad][sem].color}; color:white;">
               ${data[actividad][sem].letra}
             </td>`;
         } else {
@@ -170,6 +160,9 @@ function cargarReporteSemanal() {
     alert('Error al cargar el reporte');
   });
 }
+$(document).ready(function () {
+  cargarReporteSemanal();
+});
 </script>
 
 </body>
