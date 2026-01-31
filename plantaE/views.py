@@ -2597,6 +2597,11 @@ def reporte_semanal_supervision(request):
 
     return JsonResponse(data, safe=False)
 
+from django.http import JsonResponse
+from django.db.models import Avg
+from django.db.models.functions import ExtractWeek
+from .models import supervisionproduccion
+
 def reporte_seguimiento_api(request):
     finca = request.GET.get('finca')
     estructura = request.GET.get('estructura')
@@ -2605,15 +2610,36 @@ def reporte_seguimiento_api(request):
     cultivo = request.GET.get('cultivo')
     semana = request.GET.get('semana')
 
-    muestras = list(supervisionproduccion.objects.filter(
+    # Convertir semana a entero
+    try:
+        semana = int(semana)
+    except (TypeError, ValueError):
+        semana = None
+
+    queryset = supervisionproduccion.objects.filter(
         finca=finca, estructura=estructura, zona=zona,
         actividad=actividad, cultivo=cultivo
-    ).annotate(semana=ExtractWeek('fecha')).filter(semana=semana).order_by('fecha')[:10].values('muestra','cantidad','ref'))
+    ).annotate(semana=ExtractWeek('fecha'))
 
-    promedio = sum(m['cantidad'] for m in muestras)/len(muestras) if muestras else 0
+    if semana:
+        queryset = queryset.filter(semana=semana)
 
+    muestras = list(queryset.order_by('fecha')[:10].values('muestra','cantidad','ref'))
 
-    return JsonResponse({'muestras': muestras, 'promedio': promedio})
+    promedio = queryset.aggregate(promedio=Avg('cantidad'))['promedio'] or 0
+
+    # Semáforo solo para deshoje
+    letra, color = ('','')
+    if actividad == 'Deshoje':
+        ref_avg = queryset.aggregate(ref_avg=Avg('ref'))['ref_avg'] or 0
+        diff = abs(promedio - ref_avg)
+        if diff <= 0.5: letra, color = 'E','green'
+        elif diff <= 1: letra, color = 'B','yellow'
+        elif diff <= 1.5: letra, color = 'R','orange'
+        else: letra, color = 'M','red'
+
+    return JsonResponse({'muestras': muestras, 'promedio': promedio, 'letra': letra, 'color': color})
+
 
 def supervision_grabar(request):
     if request.method == 'POST':
