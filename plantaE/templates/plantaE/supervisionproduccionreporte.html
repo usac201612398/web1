@@ -70,14 +70,13 @@
           </div>
         </div>
 
-        <div class="column is-3 is-flex is-align-items-end">
-          <button class="button is-link is-fullwidth" onclick="cargarReporteSemanal()">
+        <div class="column is-6 is-flex is-align-items-end">
+          <button class="button is-link mr-2" onclick="cargarReporteSemanal()">
             <span class="icon"><i class="fas fa-search"></i></span>
             <span>Consultar</span>
           </button>
-        </div>
-        <div class="column is-3 is-flex is-align-items-end">
-          <button class="button is-primary is-fullwidth" onclick="imprimirTabla()">
+
+          <button class="button is-primary" onclick="imprimirTabla()">
             <span class="icon"><i class="fas fa-print"></i></span>
             <span>Imprimir</span>
           </button>
@@ -210,7 +209,6 @@ $(document).on('click', '.seguimiento-btn', function(){
     });
 });
 function imprimirTabla() {
-    // Selecciona la tabla
     const tabla = document.querySelector('.table');
     if (!tabla) { 
         alert('No hay tabla para imprimir'); 
@@ -220,14 +218,31 @@ function imprimirTabla() {
     // Crear ventana nueva
     const ventana = window.open('', '', 'width=1000,height=600');
     ventana.document.write('<html><head><title>Imprimir Reporte Semanal</title>');
-    // Agregar estilos
-    ventana.document.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">');
-    ventana.document.write('<style>table {width: 100%; border-collapse: collapse;} th, td {border: 1px solid #363636; padding: 8px; text-align: center;} th {background: #363636; color: white;}</style>');
+
+    // Estilos
+    ventana.document.write(`
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+        <style>
+            table { width: 100%; border-collapse: collapse; }
+            th, td { border: 1px solid #363636; padding: 8px; text-align: center; font-weight: bold; }
+            th { background: #363636; color: white; }
+        </style>
+    `);
+
     ventana.document.write('</head><body>');
     ventana.document.write('<h3 style="text-align:center;">Reporte Semanal de Supervisión</h3>');
-    ventana.document.write(tabla.outerHTML);
-    ventana.document.write('</body></html>');
 
+    // Clonar tabla y conservar colores de celdas
+    const clone = tabla.cloneNode(true);
+    clone.querySelectorAll('td, th').forEach(td => {
+        const style = window.getComputedStyle(td);
+        td.style.background = style.backgroundColor;
+        td.style.color = style.color;
+    });
+
+    ventana.document.body.appendChild(clone);
+
+    ventana.document.write('</body></html>');
     ventana.document.close();
     ventana.focus();
     ventana.print();
