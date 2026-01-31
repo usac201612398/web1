@@ -2597,7 +2597,6 @@ def reporte_semanal_supervision(request):
 
     return JsonResponse(data, safe=False)
 
-
 def reporte_seguimiento_api(request):
     finca = request.GET.get('finca')
     estructura = request.GET.get('estructura')
@@ -2605,28 +2604,41 @@ def reporte_seguimiento_api(request):
     actividad = request.GET.get('actividad')
     cultivo = request.GET.get('cultivo')
     semana = request.GET.get('semana')
+    año = request.GET.get('anio')  # <-- Nuevo parámetro
 
-    # Convertir semana a entero
+    # Convertir semana y año a enteros
     try:
         semana = int(semana)
     except (TypeError, ValueError):
         semana = None
 
+    try:
+        año = int(año)
+    except (TypeError, ValueError):
+        año = None
+
     queryset = supervisionproduccion.objects.filter(
-        finca=finca, estructura=estructura, zona=zona,
-        actividad=actividad, cultivo=cultivo
-    ).annotate(semana=ExtractWeek('fecha')).exclude(status='Anulado')
-    
+        finca=finca,
+        estructura=estructura,
+        zona=zona,
+        actividad=actividad,
+        cultivo=cultivo
+    ).annotate(
+        semana=ExtractWeek('fecha'),
+        anio=ExtractYear('fecha')  # <-- Extraemos el año
+    ).exclude(status='Anulado')
+
+    # Filtrar por semana y año si se proporcionan
     if semana:
         queryset = queryset.filter(semana=semana)
+    if año:
+        queryset = queryset.filter(anio=año)
 
     muestras = list(queryset.order_by('fecha').values('muestra','cantidad','ref'))
-    # Filtrar solo cantidades válidas
-    cantidades_validas = [m['cantidad'] for m in muestras if m['cantidad'] is not None]
 
+    cantidades_validas = [m['cantidad'] for m in muestras if m['cantidad'] is not None]
     promedio = sum(cantidades_validas) / len(cantidades_validas) if cantidades_validas else 0
 
-    # Semáforo solo para deshoje
     letra, color = ('','')
     if actividad == 'Deshoje':
         ref_avg = queryset.aggregate(ref_avg=Avg('ref'))['ref_avg'] or 0
@@ -2637,7 +2649,6 @@ def reporte_seguimiento_api(request):
         else: letra, color = 'M','red'
 
     return JsonResponse({'muestras': muestras, 'promedio': promedio, 'letra': letra, 'color': color})
-
 
 def supervision_grabar(request):
     if request.method == 'POST':

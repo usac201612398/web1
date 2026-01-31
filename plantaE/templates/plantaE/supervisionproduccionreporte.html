@@ -180,6 +180,12 @@ $(document).on('click', '.seguimiento-btn', function(){
     const btn = $(this);
     const data = btn.data();
 
+    // Obtener año actual de la semana si quieres automático
+    const fechaHoy = new Date();
+    const anioActual = fechaHoy.getFullYear(); 
+
+    data.anio = anioActual;  // <-- enviar año
+
     $('#modalContent').html('Cargando...');
     var modal = new bootstrap.Modal(document.getElementById('seguimientoModal'));
     modal.show();
