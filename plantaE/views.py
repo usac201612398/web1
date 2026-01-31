@@ -2624,7 +2624,7 @@ def reporte_seguimiento_api(request):
     if semana:
         queryset = queryset.filter(semana=semana)
 
-    muestras = list(queryset.order_by('fecha')[:10].values('muestra','cantidad','ref'))
+    muestras = list(queryset.order_by('fecha').values('muestra','cantidad','ref'))
 
     promedio = queryset.aggregate(promedio=Avg('cantidad'))['promedio'] or 0
 
