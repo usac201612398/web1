@@ -19,42 +19,61 @@
   <!-- HEADER -->
   <section class="hero is-link is-small mb-5">
     <div class="hero-body has-text-centered">
-      <h1 class="title is-4">Reporte General Semanal</h1>
+      <h1 class="title is-4">Reporte General por Semana</h1>
       <p class="subtitle is-6">Pivot por CM, Zona, Actividad y Semanas</p>
     </div>
   </section>
 
   <!-- FILTROS -->
-  <div class="box mb-5">
-    <div class="columns is-multiline">
-      <div class="column is-2">
-        <label class="label">Estructura (CM)</label>
-        <input type="text" id="Estructura" class="input" placeholder="Ej. CM1">
-      </div>
-      <div class="column is-2">
-        <label class="label">Zona</label>
-        <input type="text" id="Zona" class="input" placeholder="Ej. Z1">
-      </div>
-      <div class="column is-2">
-        <label class="label">Actividad</label>
-        <input type="text" id="Actividad" class="input" placeholder="Ej. Deshoje">
-      </div>
-      <div class="column is-2">
-        <label class="label">Finca</label>
-        <input type="text" id="Finca" class="input" placeholder="Ej. VALLE">
-      </div>
-      <div class="column is-2">
-        <label class="label">Cultivo</label>
-        <input type="text" id="Cultivo" class="input" placeholder="Ej. CHERRY">
-      </div>
-      <div class="column is-2 is-flex is-align-items-end">
-        <button class="button is-link is-fullwidth" onclick="cargarReporteGeneral()">
-          <span class="icon"><i class="fas fa-search"></i></span>
-          <span>Consultar</span>
-        </button>
+    <div class="box mb-5">
+      <div class="columns is-multiline">
+        <div class="column is-3">
+          <label class="label">Actividad</label>
+          <div class="select is-fullwidth">
+            <select id="Actividad">
+              <option value="">Todas</option>
+              <option value="Deshoje">Deshoje</option>
+              <option value="Ganchos">Ganchos</option>
+              <option value="Descoronado">Descoronado</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="column is-3">
+          <label class="label">Estructura</label>
+          <div class="select is-fullwidth">
+            <select id="Estructura">
+              <option value="">Seleccionar</option>
+              <option value="CM1">CM1</option>
+              <option value="CM2">CM2</option>
+              <option value="CM3">CM3</option>
+              <option value="CM4">CM4</option>
+              <option value="CM5">CM5</option>
+              <option value="CM6">CM6</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="column is-3">
+          <label class="label">Zona</label>
+          <div class="select is-fullwidth">
+            <select id="Zona">
+              <option value="">Seleccionar</option>
+              <option value="Z1">Z1</option>
+              <option value="Z2">Z2</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="column is-3 is-flex is-align-items-end">
+          <button class="button is-link is-fullwidth" onclick="cargarReporteSemanal()">
+            <span class="icon"><i class="fas fa-search"></i></span>
+            <span>Consultar</span>
+          </button>
+        </div>
+
       </div>
     </div>
-  </div>
 
   <!-- TABLA REPORTE -->
   <div class="box">
