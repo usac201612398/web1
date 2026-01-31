@@ -2628,8 +2628,6 @@ def reporte_semanal_supervision(request):
 
     return JsonResponse(data, safe=False)
 
-
-
 def supervision_grabar(request):
     if request.method == 'POST':
         data = json.loads(request.body)

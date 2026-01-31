@@ -162,7 +162,8 @@ function cargarReporteSemanal() {
               ${row.letra}
             </td>
             <td>
-              <button class="button is-small is-info" onclick="irSeguimiento('{{ fila.actividad }}','{{ fila.finca }}','{{ fila.zona }}','{{ fila.cultivo }}','{{ fila.estructura }}')">
+              <button class="button is-small is-info" onclick="irSeguimiento('${row.actividad}', '${row.finca}', '${row.zona}', '${row.cultivo}', '${row.estructura}')"
+>
                 <span class="icon"><i class="fas fa-chart-line"></i></span>
               </button>
             </td>
