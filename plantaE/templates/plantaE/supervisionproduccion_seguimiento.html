@@ -148,7 +148,10 @@ function cargarReporteGeneral() {
         <td>${row.cultivo}</td>`;
       semanas.forEach(sem => {
         if (row.semanas[sem]) {
-          body += `<td style="background:${row.semanas[sem].color}; color:white;">${row.semanas[sem].letra}</td>`;
+          body += `<td style="background:${row.color}; color:${row.color === 'yellow' ? 'black' : 'white'};">
+  ${row.letra}
+</td>
+`;
         } else body += `<td>-</td>`;
       });
       body += `</tr>`;

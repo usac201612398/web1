@@ -152,7 +152,10 @@ function cargarReporteSemanal() {
             <td>${row.zona}</td>
             <td>${row.actividad}</td>
             <td>${row.semana}</td>
-            <td style="background:${row.color || 'white'}; color:white;">${row.letra || '-'}</td>
+            <td style="background:${row.color}; color:${row.color === 'yellow' ? 'black' : 'white'};">
+              ${row.letra}
+            </td>
+
             <td>
               <button class="btn btn-sm btn-info seguimiento-btn"
                 data-finca="${row.finca}"
