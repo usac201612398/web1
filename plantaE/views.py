@@ -2429,10 +2429,6 @@ def supervisionproduccion_list(request):
 def reporte_semanal_view(request):
     return render(request, 'plantaE/supervisionproduccionreporte.html')
 
-from django.http import JsonResponse
-from django.db.models import Avg
-from django.db.models.functions import ExtractWeek, ExtractYear
-
 def reporte_semanal_supervision(request):
 
     # ===============================
@@ -2474,16 +2470,17 @@ def reporte_semanal_supervision(request):
     # ===============================
     estructura = request.GET.get('estructura')
     zona = request.GET.get('zona')
+    actividad_filtro = request.GET.get('actividad')
 
     # ===============================
-    # USUARIO / SUPERVISOR
+    # USUARIO
     # ===============================
     usuario = usuariosAppFruta.objects.filter(
         correo=request.user.username
     ).first()
 
     if not usuario:
-        return JsonResponse({}, safe=False)
+        return JsonResponse([], safe=False)
 
     # ===============================
     # QUERY BASE
@@ -2502,6 +2499,9 @@ def reporte_semanal_supervision(request):
     if zona:
         qs = qs.filter(zona=zona)
 
+    if actividad_filtro:
+        qs = qs.filter(actividad=actividad_filtro)
+
     # ===============================
     # SEMANA / AÑO
     # ===============================
@@ -2511,24 +2511,23 @@ def reporte_semanal_supervision(request):
     )
 
     # ===============================
-    # GROUP BY COMPLETO
+    # GROUP BY (AQUÍ ESTABA EL ERROR)
     # ===============================
-    group_fields = [
+    rows = qs.values(
         'actividad',
-        'estructura',
-        'zona',
         'finca',
+        'zona',
+        'cultivo',
+        'estructura',
         'semana',
         'anio'
-    ]
-
-    rows = qs.values(*group_fields).annotate(
+    ).annotate(
         prom=Avg('cantidad'),
         ref=Avg('ref')
     )
 
     # ===============================
-    # ARMAR JSON
+    # JSON PLANO
     # ===============================
     data = []
 
@@ -2547,7 +2546,7 @@ def reporte_semanal_supervision(request):
             'actividad': row['actividad'],
             'finca': row['finca'],
             'zona': row['zona'],
-            'cultivo': row.get('cultivo', ''),  # si existe el campo
+            'cultivo': row['cultivo'],
             'estructura': row['estructura'],
             'semana': f"Semana {row['semana']}-{row['anio']}",
             'letra': letra,
@@ -2555,6 +2554,7 @@ def reporte_semanal_supervision(request):
         })
 
     return JsonResponse(data, safe=False)
+
 
 
 def supervision_grabar(request):
