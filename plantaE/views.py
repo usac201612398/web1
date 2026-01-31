@@ -2597,8 +2597,8 @@ def reporte_semanal_supervision(request):
 
     return JsonResponse(data, safe=False)
 
+
 def reporte_seguimiento_api(request):
-    # 👇 Obtener filtros
     finca = request.GET.get('finca')
     estructura = request.GET.get('estructura')
     zona = request.GET.get('zona')
@@ -2606,50 +2606,37 @@ def reporte_seguimiento_api(request):
     cultivo = request.GET.get('cultivo')
     semana = request.GET.get('semana')
 
-    # 👇 Query base
-    qs = supervisionproduccion.objects.filter(
-        finca=finca,
-        estructura=estructura,
-        zona=zona,
-        actividad=actividad,
-        cultivo=cultivo
-    ).annotate(semana=ExtractWeek('fecha')).filter(semana=semana).order_by('fecha')
+    # Convertir semana a entero
+    try:
+        semana = int(semana)
+    except (TypeError, ValueError):
+        semana = None
 
-    # 👇 Tomar solo los primeros 10 registros
-    muestras = list(qs.values('muestra', 'cantidad', 'ref')[:10])
+    queryset = supervisionproduccion.objects.filter(
+        finca=finca, estructura=estructura, zona=zona,
+        actividad=actividad, cultivo=cultivo
+    ).annotate(semana=ExtractWeek('fecha'))
+    
+    if semana:
+        queryset = queryset.filter(semana=semana)
 
-    # 👇 Filtrar cantidades válidas para promedio
+    muestras = list(queryset.order_by('fecha').values('muestra','cantidad','ref'))
+    # Filtrar solo cantidades válidas
     cantidades_validas = [m['cantidad'] for m in muestras if m['cantidad'] is not None]
 
-    promedio = round(sum(cantidades_validas) / len(cantidades_validas), 2) if cantidades_validas else 0
+    promedio = sum(cantidades_validas) / len(cantidades_validas) if cantidades_validas else 0
 
-    # 👇 Semáforo solo para Deshoje
-    letra, color = '', ''
+    # Semáforo solo para deshoje
+    letra, color = ('','')
     if actividad == 'Deshoje':
-        ref_prom = None
-        refs_validas = [m['ref'] for m in muestras if m['ref'] is not None]
-        if refs_validas:
-            ref_prom = sum(refs_validas) / len(refs_validas)
+        ref_avg = queryset.aggregate(ref_avg=Avg('ref'))['ref_avg'] or 0
+        diff = abs(promedio - ref_avg)
+        if diff <= 0.5: letra, color = 'E','green'
+        elif diff <= 1: letra, color = 'B','yellow'
+        elif diff <= 1.5: letra, color = 'R','orange'
+        else: letra, color = 'M','red'
 
-        if ref_prom is not None:
-            diff = abs(promedio - ref_prom)
-            if diff <= 0.5:
-                letra, color = 'E', 'green'
-            elif diff <= 1:
-                letra, color = 'B', 'yellow'
-            elif diff <= 1.5:
-                letra, color = 'R', 'orange'
-            else:
-                letra, color = 'M', 'red'
-
-    # 👇 Devolver JSON
-    return JsonResponse({
-        'muestras': muestras,
-        'promedio': promedio,
-        'letra': letra,
-        'color': color
-    })
-
+    return JsonResponse({'muestras': muestras, 'promedio': promedio, 'letra': letra, 'color': color})
 
 
 def supervision_grabar(request):
