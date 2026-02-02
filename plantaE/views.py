@@ -610,14 +610,13 @@ def guardar_plantillaValle(request):
 
     df = pd.DataFrame(mensaje,columns=['Encargado','Orden','Cultivo','Estructura','Variedad','Cajas','Blank','Finca','Viaje','Fecha','Correo'])
     
-    resultado = df.groupby(['Variedad','Orden','Cultivo'] ).agg({
+    resultado = df.groupby(['Orden','Cultivo','Variedad',] ).agg({
         'Encargado': 'first',  # O 'last', 'min', 'max', etc.
         'Finca': 'first',
         'Viaje': 'first',
         'Fecha': 'first',
         'Correo': 'first',
         'Cajas': 'sum'
-
     }).reset_index()
     resultado_lista = resultado.to_dict(orient='records')
      # Creación de registros en la base de datos
