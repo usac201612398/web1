@@ -1266,7 +1266,7 @@ def obtener_datos_empleado_post(request):
 # Create your views here.
 def operarios_list(request):
     #today = timezone.localtime(timezone.now()).date()
-    salidas = operariosApp.objects.all()
+    salidas = operariosApp.objects.exclude(status='Anulado')
     return render(request, 'sdcsemillas/operarios_list.html', {'registros': salidas})
 
 def operarios_detail(request, pk):
