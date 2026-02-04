@@ -136,6 +136,11 @@ const estructurasPorArea = {
   VALLE: ['CM1','CM2','CM3','CM4','CM5','CM6A','CM6B','CM7','CM8','INV1','INV2']
 };
 
+const zonasPorArea = {
+  RIO: ['Z1','Z2'],
+  VALLE: ['Z1','Z2','Z3','Z4']
+};
+
 /* ================= FUNCIONES ================= */
 function cargarEstructuras(area) {
   const select = $('#Estructura');
@@ -144,6 +149,17 @@ function cargarEstructuras(area) {
   if (!area || !estructurasPorArea[area]) return;
 
   estructurasPorArea[area].forEach(cm => {
+    select.append(`<option value="${cm}">${cm}</option>`);
+  });
+}
+
+function cargarZonas(area) {
+  const select = $('#Zona');
+  select.html('<option value="">Seleccionar</option>');
+
+  if (!area || !zonasPorArea[area]) return;
+
+  zonasPorArea[area].forEach(cm => {
     select.append(`<option value="${cm}">${cm}</option>`);
   });
 }
@@ -207,10 +223,14 @@ $(document).on('change', '#Area', function() {
   cargarEstructuras(this.value);
 });
 
+$(document).on('change', '#Area', function() {
+  cargarZonas(this.value);
+});
 /* ================= INIT ================= */
 $(document).ready(function() {
   const area = $('#Area').val();   // hidden o select
   cargarEstructuras(area);
+  cargarZonas(area);
   cargarReporteGeneral();
 });
 </script>
