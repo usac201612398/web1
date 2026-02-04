@@ -24,59 +24,78 @@
     </div>
   </section>
 <!-- FILTROS -->
-<div class="columns is-vcentered is-multiline">
-
-  {% if area_usuario == 'ALL' %}
-  <div class="column is-2">
-    <label class="label">Área</label>
-    <div class="select is-fullwidth">
-      <select id="Area">
-        <option value="">Seleccionar</option>
-        <option value="RIO">RIO</option>
-        <option value="VALLE">VALLE</option>
-      </select>
+    <div class="box mb-5">
+  <div class="columns is-vcentered is-multiline">
+    {% if area_usuario == 'ALL' %}
+    <div class="column is-2">
+      <label class="label">Área</label>
+      <div class="select is-fullwidth">
+        <select id="Area">
+          <option value="">Seleccionar</option>
+          <option value="RIO">RIO</option>
+          <option value="VALLE">VALLE</option>
+        </select>
+      </div>
     </div>
-  </div>
-  {% else %}
-  <input type="hidden" id="Area" value="{{ area_usuario }}">
-  {% endif %}
-
-  <div class="column is-2">
-    <label class="label">Actividad</label>
-    <div class="select is-fullwidth">
-      <select id="Actividad"> <option value="">Todas</option> <option value="Deshoje">Deshoje</option> <option value="Ganchos">Ganchos</option> <option value="Descoronado">Descoronado</option> </select>
+    {% else %}
+    <input type="hidden" id="Area" value="{{ area_usuario }}">
+    {% endif %}
+    <!-- Actividad -->
+    <div class="column is-2">
+      <label class="label">Actividad</label>
+      <div class="select is-fullwidth">
+        <select id="Actividad">
+          <option value="">Todas</option>
+          <option value="Deshoje">Deshoje</option>
+          <option value="Ganchos">Ganchos</option>
+          <option value="Descoronado">Descoronado</option>
+        </select>
+      </div>
     </div>
-  </div>
 
-  <div class="column is-2">
-    <label class="label">Estructura</label>
-      <div class="select is-fullwidth"> <select id="Estructura"> <option value="">Seleccionar</option>  </select>
-  </div>
-
-  <div class="column is-2">
-    <label class="label">Zona</label>
-    <div class="select is-fullwidth">
-      <select id="Zona"> 
-        <option value="">Seleccionar</option> <option value="Z1">Z1</option> <option value="Z2">Z2</option> <option value="Z3">Z3</option> <option value="Z4">Z4</option>
-      </select>
+    <!-- Estructura -->
+    <div class="column is-2">
+      <label class="label">Estructura</label>
+      <div class="select is-fullwidth">
+        <select id="Estructura">
+          <option value="">Seleccionar</option>
+          <option value="CM1">CM1</option>
+          <option value="CM2">CM2</option>
+          <option value="CM3">CM3</option>
+          <option value="CM4">CM4</option>
+          <option value="CM5">CM5</option>
+          <option value="CM6">CM6</option>
+        </select>
+      </div>
     </div>
+
+    <!-- Zona -->
+    <div class="column is-2">
+      <label class="label">Zona</label>
+      <div class="select is-fullwidth">
+        <select id="Zona">
+          <option value="">Seleccionar</option>
+          <option value="Z1">Z1</option>
+          <option value="Z2">Z2</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Botones -->
+    <div class="column is-6 is-flex is-justify-content-flex-end is-align-items-end">
+      <button class="button is-link mr-2" onclick="cargarReporteGeneral()">
+        <span class="icon"><i class="fas fa-search"></i></span>
+        <span>Consultar</span>
+      </button>
+
+      <button class="button is-primary" onclick="imprimirTabla()">
+        <span class="icon"><i class="fas fa-print"></i></span>
+        <span>Imprimir</span>
+      </button>
+    </div>
+
   </div>
-
-  <!-- BOTONES -->
-  <div class="column is-4 is-flex is-justify-content-flex-end is-align-items-end">
-    <button class="button is-link mr-2">
-      <span class="icon"><i class="fas fa-search"></i></span>
-      <span>Consultar</span>
-    </button>
-
-    <button class="button is-primary">
-      <span class="icon"><i class="fas fa-print"></i></span>
-      <span>Imprimir</span>
-    </button>
-  </div>
-
 </div>
-
 
   <!-- TABLA REPORTE -->
   <div class="box">
@@ -84,7 +103,7 @@
       <table class="table is-bordered is-fullwidth">
         <thead>
           <tr id="headerSemanas">
-            <th>Estructura</th>
+            <th>CM</th>
             <th>Zona</th>
             <th>Actividad</th>
             <th>Finca</th>
