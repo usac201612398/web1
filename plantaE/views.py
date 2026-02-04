@@ -2513,47 +2513,57 @@ def reporte_general(request):
     return JsonResponse(data, safe=False)
 
 def reporte_semanal_supervision(request):
-
+    # ===============================
+    # USUARIO Y ÁREA
+    # ===============================
+    user_email = request.user.username.lower().strip()
+    
+    if user_email == 'cosecha.rio@popoyan.com.gt':
+        area_usuario = 'RIO'
+    elif user_email == 'cosecha.valle@popoyan.com.gt':
+        area_usuario = 'VALLE'
+    else:
+        area_usuario = 'ALL'  # gerencial u otro usuario
 
     # ===============================
-    # PARÁMETROS
+    # PARÁMETROS FILTRO
     # ===============================
     estructura = request.GET.get('estructura')
     zona = request.GET.get('zona')
     actividad_filtro = request.GET.get('actividad')
 
     # ===============================
-    # USUARIO
-    # ===============================
-    usuario = usuariosAppFruta.objects.filter(
-        correo=request.user.username
-    ).first()
-
-    if not usuario:
-        return JsonResponse([], safe=False)
-
-    # ===============================
     # QUERY BASE
     # ===============================
-    qs = supervisionproduccion.objects.filter(
-        status='Abierta',
-        supervisor=usuario.encargado
-    )
+    qs = supervisionproduccion.objects.filter(status='Abierta')
 
     # ===============================
-    # FILTROS OPCIONALES
+    # FILTRO DINÁMICO SEGÚN USUARIO
+    # ===============================
+    if area_usuario in ['RIO', 'VALLE']:
+        # Para RIO o VALLE, solo mostrar supervisores asociados
+        # Intentamos obtener el encargado desde la base
+        from .models import usuariosAppFruta
+        usuario = usuariosAppFruta.objects.filter(correo=user_email).first()
+        if usuario:
+            qs = qs.filter(supervisor=usuario.encargado)
+        else:
+            # Si no está en la base de datos, no devolvemos nada
+            return JsonResponse([], safe=False)
+    # Si es ALL, no filtramos supervisores ni fincas
+
+    # ===============================
+    # FILTROS OPCIONALES DEL GET
     # ===============================
     if estructura:
         qs = qs.filter(estructura=estructura)
-
     if zona:
         qs = qs.filter(zona=zona)
-
     if actividad_filtro:
         qs = qs.filter(actividad=actividad_filtro)
 
     # ===============================
-    # SEMANA / AÑO
+    # CALCULAR SEMANA / AÑO
     # ===============================
     qs = qs.annotate(
         semana=ExtractWeek('fecha'),
@@ -2561,30 +2571,24 @@ def reporte_semanal_supervision(request):
     ).order_by('estructura', 'zona', 'actividad')
 
     # ===============================
-    # GROUP BY (AQUÍ ESTABA EL ERROR)
+    # AGRUPAR POR LOS CAMPOS DE REPORTE
     # ===============================
     rows = qs.values(
-        'actividad',
-        'finca',
-        'zona',
-        'cultivo',
-        'estructura',
-        'semana',
-        'anio'
+        'actividad', 'finca', 'zona', 'cultivo', 'estructura', 'semana', 'anio'
     ).annotate(
         prom=Avg('cantidad'),
         ref=Avg('ref')
     )
 
     # ===============================
-    # JSON PLANO
+    # CREAR JSON PLANO PARA TABLA
     # ===============================
     data = []
-
     for row in rows:
         prom = round(row['prom'], 2)
         ref = row['ref']
 
+        # Evaluar según actividad
         if row['actividad'] == 'Deshoje':
             letra, color = evaluar_deshoje(prom, ref)
         elif row['actividad'] == 'Ganchos':
