@@ -2429,7 +2429,7 @@ def reporte_semanal_view(request):
     return render(request, 'plantaE/supervisionproduccionreporte.html')
 
 def reporte_semanal_seguimiento(request):
-    user = request.user.email
+    user = request.user.username
 
     if user == 'cosecha.rio@popoyan.com.gt':
         area = 'RIO'
