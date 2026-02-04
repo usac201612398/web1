@@ -2438,7 +2438,7 @@ def reporte_semanal_seguimiento(request):
     else:
         area = 'ALL'  # gerencial
 
-    return render(request, 'plantaE/supervisionproduccion_seguimiento.html', {'area_usuario': area})
+    return render(request, 'plantaE/supervisionproduccion_seguimiento.html', {'area_usuario': area,'user':user})
 
 def evaluar_deshoje(promedio, ref):
         diff = abs(promedio - ref)
