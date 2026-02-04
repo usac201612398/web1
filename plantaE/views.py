@@ -2469,10 +2469,25 @@ def reporte_general(request):
     actividad = request.GET.get('actividad')
     finca = request.GET.get('finca')
     cultivo = request.GET.get('cultivo')
+    # ===============================
+    # DETERMINAR ÁREA SEGÚN USUARIO
+    # ===============================
+    user = request.user.username.lower() 
+    if user == 'cosecha.rio@popoyan.com.gt':
+        area = 'RIO'
+    elif user == 'cosecha.valle@popoyan.com.gt':
+        area = 'VALLE'
+    else:
+        area = 'ALL'
 
+    # ===============================
+    # QUERY BASE
+    # ===============================
     # 👇 Queryset base
     qs = supervisionproduccion.objects.filter(status='Abierta')
-
+    # Filtrar por área si no es ALL
+    if area != 'ALL':
+        qs = qs.filter(finca=area)  # Aquí se filtra por finca
     if estructura: qs = qs.filter(estructura=estructura)
     if zona: qs = qs.filter(zona=zona)
     if actividad: qs = qs.filter(actividad=actividad)

@@ -179,7 +179,7 @@ function cargarReporteGeneral() {
     data.forEach(row => semanas.add(row.semana));
     semanas = Array.from(semanas).sort();
 
-    let header = '<th>CM</th><th>Zona</th><th>Actividad</th><th>Finca</th><th>Cultivo</th>';
+    let header = '<th>Estructura</th><th>Zona</th><th>Actividad</th><th>Finca</th><th>Cultivo</th>';
     semanas.forEach(sem => header += `<th>${sem}</th>`);
     $('#headerSemanas').html(header);
 
