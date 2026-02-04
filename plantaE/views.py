@@ -2512,12 +2512,6 @@ def reporte_general(request):
 
     return JsonResponse(data, safe=False)
 
-from django.http import JsonResponse
-from django.db.models import Avg
-from django.db.models.functions import ExtractWeek, ExtractYear
-from .models import supervisionproduccion
-from .evaluaciones import evaluar_deshoje, evaluar_ganchos, evaluar_descoronado
-
 def reporte_semanal_supervision(request):
     # ===============================
     # USUARIO Y ÁREA
