@@ -2512,6 +2512,12 @@ def reporte_general(request):
 
     return JsonResponse(data, safe=False)
 
+from django.http import JsonResponse
+from django.db.models import Avg
+from django.db.models.functions import ExtractWeek, ExtractYear
+from .models import supervisionproduccion
+from .evaluaciones import evaluar_deshoje, evaluar_ganchos, evaluar_descoronado
+
 def reporte_semanal_supervision(request):
     # ===============================
     # USUARIO Y ÁREA
@@ -2523,10 +2529,10 @@ def reporte_semanal_supervision(request):
     elif user_email == 'cosecha.valle@popoyan.com.gt':
         area_usuario = 'VALLE'
     else:
-        area_usuario = 'ALL'  # gerencial u otro usuario
+        area_usuario = 'ALL'  # otros usuarios
 
     # ===============================
-    # PARÁMETROS FILTRO
+    # PARÁMETROS OPCIONALES
     # ===============================
     estructura = request.GET.get('estructura')
     zona = request.GET.get('zona')
@@ -2538,19 +2544,16 @@ def reporte_semanal_supervision(request):
     qs = supervisionproduccion.objects.filter(status='Abierta')
 
     # ===============================
-    # FILTRO DINÁMICO SEGÚN USUARIO
+    # FILTRO POR ÁREA
     # ===============================
+    estructuras_area = {
+        'RIO': ['CM1','CM2','CM3','CM4','CM5','CM6'],
+        'VALLE': ['CM1','CM2','CM3','CM4','CM5','CM6A','CM6B','CM7','CM8','INV1','INV2']
+    }
+
     if area_usuario in ['RIO', 'VALLE']:
-        # Para RIO o VALLE, solo mostrar supervisores asociados
-        # Intentamos obtener el encargado desde la base
-        from .models import usuariosAppFruta
-        usuario = usuariosAppFruta.objects.filter(correo=user_email).first()
-        if usuario:
-            qs = qs.filter(supervisor=usuario.encargado)
-        else:
-            # Si no está en la base de datos, no devolvemos nada
-            return JsonResponse([], safe=False)
-    # Si es ALL, no filtramos supervisores ni fincas
+        qs = qs.filter(estructura__in=estructuras_area[area_usuario])
+    # Si es ALL, no se filtra → verá todas las áreas
 
     # ===============================
     # FILTROS OPCIONALES DEL GET
@@ -2571,7 +2574,7 @@ def reporte_semanal_supervision(request):
     ).order_by('estructura', 'zona', 'actividad')
 
     # ===============================
-    # AGRUPAR POR LOS CAMPOS DE REPORTE
+    # AGRUPAR POR CAMPOS DE REPORTE
     # ===============================
     rows = qs.values(
         'actividad', 'finca', 'zona', 'cultivo', 'estructura', 'semana', 'anio'
@@ -2581,14 +2584,13 @@ def reporte_semanal_supervision(request):
     )
 
     # ===============================
-    # CREAR JSON PLANO PARA TABLA
+    # CREAR JSON PLANO
     # ===============================
     data = []
     for row in rows:
         prom = round(row['prom'], 2)
         ref = row['ref']
 
-        # Evaluar según actividad
         if row['actividad'] == 'Deshoje':
             letra, color = evaluar_deshoje(prom, ref)
         elif row['actividad'] == 'Ganchos':
