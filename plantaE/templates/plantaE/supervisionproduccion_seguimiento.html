@@ -26,7 +26,20 @@
 <!-- FILTROS -->
     <div class="box mb-5">
   <div class="columns is-vcentered is-multiline">
-
+    {% if area_usuario == 'ALL' %}
+    <div class="column is-2">
+      <label class="label">Área</label>
+      <div class="select is-fullwidth">
+        <select id="Area">
+          <option value="">Seleccionar</option>
+          <option value="RIO">RIO</option>
+          <option value="VALLE">VALLE</option>
+        </select>
+      </div>
+    </div>
+    {% else %}
+    <input type="hidden" id="Area" value="{{ area_usuario }}">
+    {% endif %}
     <!-- Actividad -->
     <div class="column is-2">
       <label class="label">Actividad</label>
@@ -200,10 +213,33 @@ function imprimirTabla() {
     ventana.focus();
     ventana.print();
     ventana.close();
+
 }
+const estructurasPorArea = {
+  RIO: ['CM1','CM2','CM3','CM4','CM5','CM6'],
+  VALLE: ['CM1','CM2','CM3','CM4','CM5','CM6A','CM6B','CM7','CM8','INV1','INV2']
+};
+function cargarEstructuras(area) {
+  const select = $('#Estructura');
+  select.html('<option value="">Seleccionar</option>');
+
+  if (!area || !estructurasPorArea[area]) return;
+
+  estructurasPorArea[area].forEach(cm => {
+    select.append(`<option value="${cm}">${cm}</option>`);
+  });
+}
+
+$('#Area').on('change', function() {
+  cargarEstructuras(this.value);
+});
 
 $(document).ready(function() {
   cargarReporteGeneral(); // cargar al inicio con todos los datos
+  
+  const area = $('#Area').val();
+  cargarEstructuras(area);
+  cargarReporteGeneral();
 });
 </script>
 </body>

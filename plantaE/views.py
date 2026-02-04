@@ -2429,7 +2429,16 @@ def reporte_semanal_view(request):
     return render(request, 'plantaE/supervisionproduccionreporte.html')
 
 def reporte_semanal_seguimiento(request):
-    return render(request, 'plantaE/supervisionproduccion_seguimiento.html')
+    user = request.user.email
+
+    if user == 'cosecha.rio@popoyan.com.gt':
+        area = 'RIO'
+    elif user == 'cosecha.valle@popoyan.com.gt':
+        area = 'VALLE'
+    else:
+        area = 'ALL'  # gerencial
+
+    return render(request, 'plantaE/supervisionproduccion_seguimiento.html', {'area_usuario': area})
 
 def evaluar_deshoje(promedio, ref):
         diff = abs(promedio - ref)
