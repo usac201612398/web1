@@ -27,7 +27,6 @@
     </div>
   </section>
 <!-- FILTROS -->
-<!-- FILTROS -->
 <div class="box mb-5">
   <div class="columns is-vcentered">
 
@@ -130,6 +129,7 @@
 </section>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script><script>
+
 /* ================= CONFIG ================= */
 const estructurasPorArea = {
   RIO: ['CM1','CM2','CM3','CM4','CM5','CM6'],
@@ -163,7 +163,35 @@ function cargarZonas(area) {
     select.append(`<option value="${cm}">${cm}</option>`);
   });
 }
+function imprimirTabla() {
+    const tabla = document.querySelector('.table');
+    if (!tabla) { alert('No hay tabla para imprimir'); return; }
 
+    const ventana = window.open('', '', 'width=1000,height=600');
+    ventana.document.write('<html><head><title>Imprimir Reporte Semanal</title>');
+
+    ventana.document.write(`
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+        <style>
+            table { width: 100%; border-collapse: collapse; }
+            th, td { border: 1px solid #363636; padding: 8px; text-align: center; font-weight: bold; }
+            th { background: #363636; color: white; }
+        </style>
+    `);
+
+    ventana.document.write('</head><body>');
+    ventana.document.write('<h3 style="text-align:center;">Reporte Semanal de Supervisión</h3>');
+
+    // Clonar tabla
+    const clone = tabla.cloneNode(true);
+    ventana.document.body.appendChild(clone);
+
+    ventana.document.write('</body></html>');
+    ventana.document.close();
+    ventana.focus();
+    ventana.print();
+    ventana.close();
+}
 function cargarReporteGeneral() {
   const estructura = $('#Estructura').val();
   const zona = $('#Zona').val();

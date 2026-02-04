@@ -29,9 +29,23 @@
       </div>
     </section>
 
-    <!-- FILTROS -->
     <div class="box mb-5">
-  <div class="columns is-vcentered is-multiline">
+  <div class="columns is-vcentered">
+
+    {% if area_usuario == 'ALL' %}
+    <div class="column is-2">
+      <label class="label">Área</label>
+      <div class="select is-fullwidth">
+        <select id="Area">
+          <option value="">Seleccionar</option>
+          <option value="RIO">RIO</option>
+          <option value="VALLE">VALLE</option>
+        </select>
+      </div>
+    </div>
+    {% else %}
+    <input type="hidden" id="Area" value="{{ area_usuario }}">
+    {% endif %}
 
     <!-- Actividad -->
     <div class="column is-2">
@@ -50,15 +64,7 @@
     <div class="column is-2">
       <label class="label">Estructura</label>
       <div class="select is-fullwidth">
-        <select id="Estructura">
-          <option value="">Seleccionar</option>
-          <option value="CM1">CM1</option>
-          <option value="CM2">CM2</option>
-          <option value="CM3">CM3</option>
-          <option value="CM4">CM4</option>
-          <option value="CM5">CM5</option>
-          <option value="CM6">CM6</option>
-        </select>
+        <select id="Estructura"></select>
       </div>
     </div>
 
@@ -70,13 +76,15 @@
           <option value="">Seleccionar</option>
           <option value="Z1">Z1</option>
           <option value="Z2">Z2</option>
+          <option value="Z3">Z3</option>
+          <option value="Z4">Z4</option>
         </select>
       </div>
     </div>
 
-    <!-- Botones -->
-    <div class="column is-6 is-flex is-justify-content-flex-end is-align-items-end">
-      <button class="button is-link mr-2" onclick="cargarReporteSemanal()">
+    <!-- BOTONES -->
+    <div class="column is-4 is-flex is-justify-content-flex-end is-align-items-flex-end">
+      <button class="button is-link mr-2" onclick="cargarReporteGeneral()">
         <span class="icon"><i class="fas fa-search"></i></span>
         <span>Consultar</span>
       </button>
@@ -89,7 +97,6 @@
 
   </div>
 </div>
-
 
     <!-- TABLA REPORTE -->
     <div class="box">
@@ -145,6 +152,42 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
+
+
+/* ================= CONFIG ================= */
+const estructurasPorArea = {
+  RIO: ['CM1','CM2','CM3','CM4','CM5','CM6'],
+  VALLE: ['CM1','CM2','CM3','CM4','CM5','CM6A','CM6B','CM7','CM8','INV1','INV2']
+};
+
+const zonasPorArea = {
+  RIO: ['Z1','Z2'],
+  VALLE: ['Z1','Z2','Z3','Z4']
+};
+
+/* ================= FUNCIONES ================= */
+function cargarEstructuras(area) {
+  const select = $('#Estructura');
+  select.html('<option value="">Seleccionar</option>');
+
+  if (!area || !estructurasPorArea[area]) return;
+
+  estructurasPorArea[area].forEach(cm => {
+    select.append(`<option value="${cm}">${cm}</option>`);
+  });
+}
+
+function cargarZonas(area) {
+  const select = $('#Zona');
+  select.html('<option value="">Seleccionar</option>');
+
+  if (!area || !zonasPorArea[area]) return;
+
+  zonasPorArea[area].forEach(cm => {
+    select.append(`<option value="${cm}">${cm}</option>`);
+  });
+}
+
 function cargarReporteSemanal() {
   const estructura = $('#Estructura').val();
   const zona = $('#Zona').val();
@@ -245,8 +288,21 @@ function imprimirTabla() {
     ventana.close();
 }
 
+/* ================= EVENTOS ================= */
+/* Delegado → funciona para select y hidden */
+$(document).on('change', '#Area', function() {
+  cargarEstructuras(this.value);
+});
+
+$(document).on('change', '#Area', function() {
+  cargarZonas(this.value);
+});
+
 $(document).ready(function () {
+  const area = $('#Area').val();   // hidden o select
   cargarReporteSemanal();
+  cargarEstructuras(area);
+  cargarZonas(area);
 });
 </script>
 </body>
