@@ -2579,6 +2579,11 @@ def reporte_semanal_supervision(request):
         semana=ExtractWeek('fecha'),
         anio=ExtractYear('fecha')
     ).order_by('estructura', 'zona', 'actividad')
+    # Obtener año máximo
+    max_anio = qs.aggregate(max_anio=Max('anio'))['max_anio']
+    # Luego semana máxima dentro de ese año
+    max_semana = qs.filter(anio=max_anio).aggregate(max_semana=Max('semana'))['max_semana']
+    qs = qs.filter(anio=max_anio, semana=max_semana)
 
     # ===============================
     # AGREGAR PROMEDIOS Y FORMATEAR JSON
