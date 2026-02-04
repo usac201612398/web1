@@ -2524,7 +2524,7 @@ def reporte_semanal_supervision(request):
     # ===============================
     # DETERMINAR ÁREA SEGÚN USUARIO
     # ===============================
-    user = request.user.email
+    user = request.user.username
     if user == 'cosecha.rio@popoyan.com.gt':
         area = 'RIO'
     elif user == 'cosecha.valle@popoyan.com.gt':
