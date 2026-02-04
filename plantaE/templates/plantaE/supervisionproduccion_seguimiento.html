@@ -126,8 +126,25 @@
 </div>
 </section>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script><script>
+/* ================= CONFIG ================= */
+const estructurasPorArea = {
+  RIO: ['CM1','CM2','CM3','CM4','CM5','CM6'],
+  VALLE: ['CM1','CM2','CM3','CM4','CM5','CM6A','CM6B','CM7','CM8','INV1','INV2']
+};
+
+/* ================= FUNCIONES ================= */
+function cargarEstructuras(area) {
+  const select = $('#Estructura');
+  select.html('<option value="">Seleccionar</option>');
+
+  if (!area || !estructurasPorArea[area]) return;
+
+  estructurasPorArea[area].forEach(cm => {
+    select.append(`<option value="${cm}">${cm}</option>`);
+  });
+}
+
 function cargarReporteGeneral() {
   const estructura = $('#Estructura').val();
   const zona = $('#Zona').val();
@@ -139,20 +156,17 @@ function cargarReporteGeneral() {
     estructura, zona, actividad, finca, cultivo
   }, function(data) {
 
-    // Detectar todas las semanas
     let semanas = new Set();
     data.forEach(row => semanas.add(row.semana));
     semanas = Array.from(semanas).sort();
 
-    // HEADER
     let header = '<th>CM</th><th>Zona</th><th>Actividad</th><th>Finca</th><th>Cultivo</th>';
     semanas.forEach(sem => header += `<th>${sem}</th>`);
     $('#headerSemanas').html(header);
 
-    // BODY
     let body = '';
-    // Agrupar por CM+Zona+Actividad+Finca+Cultivo
     const groupMap = {};
+
     data.forEach(row => {
       const key = `${row.estructura}|${row.zona}|${row.actividad}|${row.finca}|${row.cultivo}`;
       if (!groupMap[key]) groupMap[key] = { ...row, semanas: {} };
@@ -166,76 +180,33 @@ function cargarReporteGeneral() {
         <td>${row.actividad}</td>
         <td>${row.finca}</td>
         <td>${row.cultivo}</td>`;
+
       semanas.forEach(sem => {
         if (row.semanas[sem]) {
           body += `<td style="background:${row.color}; color:${row.color === 'yellow' ? 'black' : 'white'};">
-  ${row.letra}
-</td>
-`;
-        } else body += `<td>-</td>`;
+            ${row.letra}
+          </td>`;
+        } else {
+          body += `<td>-</td>`;
+        }
       });
+
       body += `</tr>`;
     });
 
     $('#bodyReporte').html(body);
-
-  }).fail(function() {
-    alert('Error al cargar el reporte');
-  });
-}
-function imprimirTabla() {
-    const tabla = document.querySelector('.table');
-    if (!tabla) { alert('No hay tabla para imprimir'); return; }
-
-    const ventana = window.open('', '', 'width=1000,height=600');
-    ventana.document.write('<html><head><title>Imprimir Reporte Semanal</title>');
-
-    ventana.document.write(`
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
-        <style>
-            table { width: 100%; border-collapse: collapse; }
-            th, td { border: 1px solid #363636; padding: 8px; text-align: center; font-weight: bold; }
-            th { background: #363636; color: white; }
-        </style>
-    `);
-
-    ventana.document.write('</head><body>');
-    ventana.document.write('<h3 style="text-align:center;">Reporte Semanal de Supervisión</h3>');
-
-    // Clonar tabla
-    const clone = tabla.cloneNode(true);
-    ventana.document.body.appendChild(clone);
-
-    ventana.document.write('</body></html>');
-    ventana.document.close();
-    ventana.focus();
-    ventana.print();
-    ventana.close();
-
-}
-const estructurasPorArea = {
-  RIO: ['CM1','CM2','CM3','CM4','CM5','CM6'],
-  VALLE: ['CM1','CM2','CM3','CM4','CM5','CM6A','CM6B','CM7','CM8','INV1','INV2']
-};
-function cargarEstructuras(area) {
-  const select = $('#Estructura');
-  select.html('<option value="">Seleccionar</option>');
-
-  if (!area || !estructurasPorArea[area]) return;
-
-  estructurasPorArea[area].forEach(cm => {
-    select.append(`<option value="${cm}">${cm}</option>`);
   });
 }
 
-$('#Area').on('change', function() {
+/* ================= EVENTOS ================= */
+/* Delegado → funciona para select y hidden */
+$(document).on('change', '#Area', function() {
   cargarEstructuras(this.value);
 });
 
+/* ================= INIT ================= */
 $(document).ready(function() {
-  cargarReporteGeneral(); // cargar al inicio con todos los datos
-  
-  const area = $('#Area').val();
+  const area = $('#Area').val();   // hidden o select
   cargarEstructuras(area);
   cargarReporteGeneral();
 });
