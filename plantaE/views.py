@@ -2489,9 +2489,7 @@ def reporte_general(request):
         area = 'ALL'
 
     # ===============================
-    # QUERY BASE
-    # ===============================
-    # 👇 Queryset base
+    # QUERY BASE n jnd  Queryset base
     qs = supervisionproduccion.objects.filter(status='Abierta')
     # Filtrar por área si no es ALL
     if area != 'ALL':
