@@ -24,8 +24,10 @@
     </div>
   </section>
 <!-- FILTROS -->
-    <div class="box mb-5">
-  <div class="columns is-vcentered is-multiline">
+<!-- FILTROS -->
+<div class="box mb-5">
+  <div class="columns is-vcentered">
+
     {% if area_usuario == 'ALL' %}
     <div class="column is-2">
       <label class="label">Área</label>
@@ -40,6 +42,7 @@
     {% else %}
     <input type="hidden" id="Area" value="{{ area_usuario }}">
     {% endif %}
+
     <!-- Actividad -->
     <div class="column is-2">
       <label class="label">Actividad</label>
@@ -57,15 +60,7 @@
     <div class="column is-2">
       <label class="label">Estructura</label>
       <div class="select is-fullwidth">
-        <select id="Estructura">
-          <option value="">Seleccionar</option>
-          <option value="CM1">CM1</option>
-          <option value="CM2">CM2</option>
-          <option value="CM3">CM3</option>
-          <option value="CM4">CM4</option>
-          <option value="CM5">CM5</option>
-          <option value="CM6">CM6</option>
-        </select>
+        <select id="Estructura"></select>
       </div>
     </div>
 
@@ -77,12 +72,14 @@
           <option value="">Seleccionar</option>
           <option value="Z1">Z1</option>
           <option value="Z2">Z2</option>
+          <option value="Z3">Z3</option>
+          <option value="Z4">Z4</option>
         </select>
       </div>
     </div>
 
-    <!-- Botones -->
-    <div class="column is-6 is-flex is-justify-content-flex-end is-align-items-end">
+    <!-- BOTONES -->
+    <div class="column is-4 is-flex is-justify-content-flex-end is-align-items-flex-end">
       <button class="button is-link mr-2" onclick="cargarReporteGeneral()">
         <span class="icon"><i class="fas fa-search"></i></span>
         <span>Consultar</span>
@@ -97,13 +94,14 @@
   </div>
 </div>
 
+
   <!-- TABLA REPORTE -->
   <div class="box">
     <div class="table-container">
       <table class="table is-bordered is-fullwidth">
         <thead>
           <tr id="headerSemanas">
-            <th>CM</th>
+            <th>Estructura</th>
             <th>Zona</th>
             <th>Actividad</th>
             <th>Finca</th>
