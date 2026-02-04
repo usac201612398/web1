@@ -2513,44 +2513,36 @@ def reporte_general(request):
     return JsonResponse(data, safe=False)
 
 def reporte_semanal_supervision(request):
-    # ===============================
-    # USUARIO Y ÁREA
-    # ===============================
-    user_email = request.user.username.lower().strip()
-    
-    if user_email == 'cosecha.rio@popoyan.com.gt':
-        area_usuario = 'RIO'
-    elif user_email == 'cosecha.valle@popoyan.com.gt':
-        area_usuario = 'VALLE'
-    else:
-        area_usuario = 'ALL'  # otros usuarios
 
     # ===============================
-    # PARÁMETROS OPCIONALES
+    # PARÁMETROS FILTROS
     # ===============================
     estructura = request.GET.get('estructura')
     zona = request.GET.get('zona')
     actividad_filtro = request.GET.get('actividad')
 
     # ===============================
+    # DETERMINAR ÁREA SEGÚN USUARIO
+    # ===============================
+    user = request.user.username
+    if user == 'cosecha.rio@popoyan.com.gt':
+        area = 'RIO'
+    elif user == 'cosecha.valle@popoyan.com.gt':
+        area = 'VALLE'
+    else:
+        area = 'ALL'
+
+    # ===============================
     # QUERY BASE
     # ===============================
     qs = supervisionproduccion.objects.filter(status='Abierta')
 
-    # ===============================
-    # FILTRO POR ÁREA
-    # ===============================
-    estructuras_area = {
-        'RIO': ['CM1','CM2','CM3','CM4','CM5','CM6'],
-        'VALLE': ['CM1','CM2','CM3','CM4','CM5','CM6A','CM6B','CM7','CM8','INV1','INV2']
-    }
-
-    if area_usuario in ['RIO', 'VALLE']:
-        qs = qs.filter(estructura__in=estructuras_area[area_usuario])
-    # Si es ALL, no se filtra → verá todas las áreas
+    # Filtrar por área si no es ALL
+    if area != 'ALL':
+        qs = qs.filter(finca=area)  # Aquí se filtra por finca
 
     # ===============================
-    # FILTROS OPCIONALES DEL GET
+    # FILTROS OPCIONALES
     # ===============================
     if estructura:
         qs = qs.filter(estructura=estructura)
@@ -2560,7 +2552,7 @@ def reporte_semanal_supervision(request):
         qs = qs.filter(actividad=actividad_filtro)
 
     # ===============================
-    # CALCULAR SEMANA / AÑO
+    # SEMANA / AÑO
     # ===============================
     qs = qs.annotate(
         semana=ExtractWeek('fecha'),
@@ -2568,7 +2560,7 @@ def reporte_semanal_supervision(request):
     ).order_by('estructura', 'zona', 'actividad')
 
     # ===============================
-    # AGRUPAR POR CAMPOS DE REPORTE
+    # AGREGAR PROMEDIOS Y FORMATEAR JSON
     # ===============================
     rows = qs.values(
         'actividad', 'finca', 'zona', 'cultivo', 'estructura', 'semana', 'anio'
@@ -2577,9 +2569,6 @@ def reporte_semanal_supervision(request):
         ref=Avg('ref')
     )
 
-    # ===============================
-    # CREAR JSON PLANO
-    # ===============================
     data = []
     for row in rows:
         prom = round(row['prom'], 2)
@@ -2594,7 +2583,7 @@ def reporte_semanal_supervision(request):
 
         data.append({
             'actividad': row['actividad'],
-            'finca': row['finca'],
+            'finca': row['finca'],  # Esto ahora corresponde a RIO o VALLE
             'zona': row['zona'],
             'cultivo': row['cultivo'],
             'estructura': row['estructura'],
