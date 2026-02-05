@@ -2346,8 +2346,18 @@ def inventarioProd_create(request):
     return render(request, 'plantaE/inventarioProd_formPlantilla.html')
 
 def supervisiontomates_create(request):
+    user = request.user.username
 
-    return render(request, 'plantaE/supervisiontomates_formPlantilla.html')
+    if user == 'cosecha.rio@popoyan.com.gt':
+        area = 'RIO'
+    elif user == 'cosecha.valle@popoyan.com.gt':
+        area = 'VALLE'
+    else:
+        area = 'ALL'  # gerencial
+
+    return render(request, 'plantaE/supervisiontomates_formPlantilla.html',{
+        'area_usuario': area,'user':user
+    })
 
 def supervisionchiles_create(request):
 
@@ -2391,11 +2401,22 @@ def supervision_list(request):
         status='Anulado'
     ).order_by('-id','estructura','cultivo','zona')
 
+    
+
     return render(request, 'plantaE/supervision_list.html', {'registros': salidas})
 
 def supervisionproduccion_list(request):
 
     hoy = timezone.now().date()
+
+    user = request.user.username
+
+    if user == 'cosecha.rio@popoyan.com.gt':
+        area = 'RIO'
+    elif user == 'cosecha.valle@popoyan.com.gt':
+        area = 'VALLE'
+    else:
+        area = 'ALL'  # gerencial
 
     # Lunes de la semana actual
     inicio_semana = hoy - datetime.timedelta(days=hoy.weekday())
@@ -2421,8 +2442,11 @@ def supervisionproduccion_list(request):
         .order_by('-fecha')
     )
 
+    if area != 'ALL':
+        lotes = lotes.filter(finca=area)
+
     return render(request, 'plantaE/supervisionproduccion_list.html', {
-        'lotes': lotes
+        'lotes': lotes,'area_usuario': area,'user':user
     })
 
 def reporte_semanal_view(request):
@@ -2469,8 +2493,6 @@ def evaluar_descoronado(prom):
 
 def reporte_general(request):
     # Funciones de semáforo
-    
-
     # 👇 Filtros
     estructura = request.GET.get('estructura')
     zona = request.GET.get('zona')
@@ -2720,13 +2742,14 @@ def supervisionproduccion_delete(request, pk):
     
     return render(request, 'plantaE/supervisionproduccion_confirm_delete.html', {'registros': salidas})
 
-def supervisionproduccion_detalle(request, fecha, cultivo, estructura, zona):
+def supervisionproduccion_detalle(request, fecha, cultivo, estructura, zona,finca):
 
     registros = supervisionproduccion.objects.filter(
         fecha=fecha,
         cultivo=cultivo,
         estructura=estructura,
         zona=zona,
+        finca=finca,
         status='Abierta'
     ).order_by('muestra', 'actividad')
 
@@ -2739,6 +2762,7 @@ def supervisionproduccion_detalle(request, fecha, cultivo, estructura, zona):
         'cultivo': cultivo,
         'estructura': estructura,
         'zona': zona,
+        'finca': finca,
         'muestras': dict(muestras)
     })
 

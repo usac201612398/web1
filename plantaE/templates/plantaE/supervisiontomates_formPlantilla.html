@@ -68,44 +68,61 @@
       </section>
 <div class="box">
   <h2 class="title is-5">Filtros</h2>
-  <div class="columns is-multiline">
-    <div class="column is-one-quarter">
-      <div class="field">
-        <label class="label">Fecha</label>
-        <div class="control has-icons-left">
-          <input class="input" type="date" id="date">
-          <span class="icon is-small is-left">
-            <i class="fas fa-calendar-alt"></i>
-          </span>
-        </div>
+
+  <div class="columns is-vcentered">
+    <!-- Fecha -->
+    <div class="column is-2">
+      <label class="label">Fecha</label>
+      <div class="control has-icons-left">
+        <input class="input" type="date" id="date">
+        <span class="icon is-small is-left">
+          <i class="fas fa-calendar-alt"></i>
+        </span>
       </div>
     </div>
-    <div class="column is-one-quarter">
-      <div class="field">
-        <label class="label">Supervisor</label>
-        <input class="input" id="correo" type="text" readonly placeholder="Usuario asignado">
+
+    <!-- Supervisor -->
+    <div class="column is-2">
+      <label class="label">Supervisor</label>
+      <input class="input" id="correo" type="text" readonly placeholder="Usuario asignado">
+    </div>
+
+    <!-- Área -->
+    <div class="column is-2">
+      <label class="label">Área</label>
+      <input class="input" id="finca" type="text" readonly placeholder="Área asignada">
+    </div>
+
+    <!-- Cultivo -->
+    <div class="column is-2">
+      <label class="label">Cultivo</label>
+      <div class="select is-fullwidth">
+        <select id="Cul">
+          <option value="">Seleccionar</option>
+        </select>
       </div>
     </div>
-    <div class="column is-one-quarter">
-      <div class="field">
-        <label class="label">Área</label>
-        <input class="input" id="finca" type="text" readonly placeholder="Área asignada">
+
+    <!-- Estructura -->
+    <div class="column is-2">
+      <label class="label">Estructura</label>
+      <div class="select is-fullwidth">
+        <select id="Estructura"></select>
       </div>
     </div>
-    <div class="column is-one-quarter">
-      <div class="field">
-        <label class="label">Cultivo</label>
-        <div class="control">
-          <div class="select is-fullwidth">
-            <select id="Cul">
-              <option value="">Seleccionar</option>
-            </select>
-          </div>
-        </div>
+
+    <!-- Zona -->
+    <div class="column is-2">
+      <label class="label">Zona</label>
+      <div class="select is-fullwidth">
+        <select id="Zona">
+          <option value="">Seleccionar</option>
+        </select>
       </div>
     </div>
   </div>
 </div>
+
 
       <!-- TABLA -->
       <div class="box">
@@ -184,7 +201,49 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-  
+
+/* ================= CONFIG ================= */
+const estructurasPorArea = {
+  RIO: ['CM1','CM2','CM3','CM4','CM5','CM6'],
+  VALLE: ['CM1','CM2','CM3','CM4','CM5','CM6A','CM6B','CM7','CM8','INV1','INV2']
+};
+
+const zonasPorArea = {
+  RIO: ['Z1','Z2'],
+  VALLE: ['Z1','Z2','Z3','Z4']
+};
+
+/* ================= FUNCIONES ================= */
+function cargarEstructuras(area) {
+  const select = $('#Estructura');
+  select.html('<option value="">Seleccionar</option>');
+
+  if (!area || !estructurasPorArea[area]) return;
+
+  estructurasPorArea[area].forEach(cm => {
+    select.append(`<option value="${cm}">${cm}</option>`);
+  });
+}
+
+function cargarZonas(area) {
+  const select = $('#Zona');
+  select.html('<option value="">Seleccionar</option>');
+
+  if (!area || !zonasPorArea[area]) return;
+
+  zonasPorArea[area].forEach(cm => {
+    select.append(`<option value="${cm}">${cm}</option>`);
+  });
+}
+/* ================= EVENTOS ================= */
+/* Delegado → funciona para select y hidden */
+$(document).on('change', '#Area', function() {
+  cargarEstructuras(this.value);
+});
+
+$(document).on('change', '#Area', function() {
+  cargarZonas(this.value);
+});
 $(document).ready(function () {
 
   // Fecha de hoy
@@ -353,6 +412,9 @@ $('.envio3').on('click', function () {
         }
     });
 });
+const area = $('#Area').val();   // hidden o selectconst area = $('#Area').val();   // hidden o select
+cargarEstructuras(area);
+cargarZonas(area);
 
 });
 </script>
