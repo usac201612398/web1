@@ -89,7 +89,7 @@
 
     <!-- Área -->
     <div class="column is-2">
-      <label class="label">Área</label>
+      <label class="label">Finca</label>
       <input class="input" id="finca" type="text" readonly placeholder="Área asignada">
     </div>
 
@@ -235,15 +235,7 @@ function cargarZonas(area) {
     select.append(`<option value="${cm}">${cm}</option>`);
   });
 }
-/* ================= EVENTOS ================= */
-/* Delegado → funciona para select y hidden */
-$(document).on('change', '#Area', function() {
-  cargarEstructuras(this.value);
-});
 
-$(document).on('change', '#Area', function() {
-  cargarZonas(this.value);
-});
 $(document).ready(function () {
 
   // Fecha de hoy
@@ -275,6 +267,9 @@ function authUsuario() {
 
       // FINCA (AREA)
       $('#finca').val(data.finca);
+
+      cargarEstructuras(data.finca);
+      cargarZonas(data.finca);
 
       // CULTIVO (limpiar y cargar)
       $('#Cul').empty();
@@ -412,7 +407,7 @@ $('.envio3').on('click', function () {
         }
     });
 });
-const area = $('#Area').val();   // hidden o selectconst area = $('#Area').val();   // hidden o select
+
 cargarEstructuras(area);
 cargarZonas(area);
 
