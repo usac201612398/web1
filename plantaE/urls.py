@@ -139,7 +139,7 @@ urlpatterns = [
     path('supervisionchiles/new/', views.supervisionchiles_create, name='supervisionchiles_create'),
     path("supervisionproduccion",views.supervisionproduccion_list,name='supervisionproduccion_list'),
     path("supervisionproduccion/<int:pk>/delete/",views.supervisionproduccion_delete,name='supervisionproduccion_delete'),
-    path('supervisionproduccion/detalle/<str:fecha>/<str:cultivo>/<str:estructura>/<str:zona>/',views.supervisionproduccion_detalle,name='supervisionproduccion_detalle'),
+    path('supervisionproduccion/detalle/<str:fecha>/<str:cultivo>/<str:estructura>/<str:zona>/<str:finca>/',views.supervisionproduccion_detalle,name='supervisionproduccion_detalle'),
     path(
         'supervisionproducion/reporte-semanal/',
         views.reporte_semanal_supervision,
