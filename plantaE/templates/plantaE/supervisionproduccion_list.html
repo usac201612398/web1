@@ -133,7 +133,7 @@
                         {% endif %}
                     </td>
                     <td>
-                    <a href="{% url 'supervisionproduccion_detalle' l.fecha l.cultivo l.estructura l.zona l.finca%}"
+                    <a href="{% url 'supervisionproduccion_detalle'  l.fecha|date:'Y-m-d' l.cultivo l.estructura l.zona l.finca%}"
                     class="btn btn-sm btn-outline-primary d-flex align-items-center justify-content-center gap-1">
                     <i class="fas fa-eye"></i>
                     <span></span>
