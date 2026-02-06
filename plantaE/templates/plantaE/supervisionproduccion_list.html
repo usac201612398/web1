@@ -162,7 +162,7 @@
             <strong>Muestras:</strong> {{ l.total_muestras }}/10
             </p>
 
-            <a href="{% url 'supervisionproduccion_detalle' l.fecha l.cultivo l.estructura l.zona %}"
+            <a href="{% url 'supervisionproduccion_detalle'  l.fecha|date:'Y-m-d' l.cultivo l.estructura l.zona l.finca% %}"
             class="btn btn-sm btn-info w-100">
             Consultar
             </a>
