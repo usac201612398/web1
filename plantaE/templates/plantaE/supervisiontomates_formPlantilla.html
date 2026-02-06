@@ -343,7 +343,7 @@ $('.envio3').on('click', function () {
             let todosLlenos = true;
             $(this).find('.cant').each(function () {
                 const v = parseFloat($(this).val());
-                if (isNaN(v) || v <= 0) {
+                if (isNaN(v) || v < 0) {
                     todosLlenos = false;
                     return false;
                 }
