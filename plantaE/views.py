@@ -2772,7 +2772,7 @@ def supervisionproduccion_grabar(request):
 
     data = json.loads(request.body)
     filas = data.get('array', [])
-
+    
     if not filas:
         return JsonResponse({'error': 'No se recibieron datos'}, status=400)
 
@@ -2784,7 +2784,7 @@ def supervisionproduccion_grabar(request):
         'zona': base.get('zona'),
         'estructura': base.get('estructura'),
         'cultivo': base.get('cultivo'),
-        'finca': base.get('finca'),
+        'finca': base.get('area'),
         'status': 'Abierta'
     }
 
