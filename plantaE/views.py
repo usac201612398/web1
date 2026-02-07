@@ -2549,6 +2549,8 @@ def reporte_general(request):
             'finca': row['finca'],
             'cultivo': row['cultivo'],
             'semana': f"Semana {row['semana']}-{row['anio']}",
+            'semana_num': row['semana'],
+            'anio': row['anio'],
             'letra': letra,
             'color': color
         })
@@ -2636,6 +2638,8 @@ def reporte_semanal_supervision(request):
             'cultivo': row['cultivo'],
             'estructura': row['estructura'],
             'semana': f"Semana {row['semana']}-{row['anio']}",
+            'semana_num': row['semana'],
+            'anio': row['anio'],
             'letra': letra,
             'color': color
         })
