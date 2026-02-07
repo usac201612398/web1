@@ -2508,7 +2508,10 @@ def reporte_general(request):
     elif user == 'cosecha.valle@popoyan.com.gt' or user =='cosecha.valle2@popoyan.com.gt' or user =='linday.solares@popoyan.com.gt':
         area = 'VALLE'
     else:
-        area = 'ALL'
+        if cultivo:
+            area=cultivo
+        else:
+            area = 'ALL'
 
     # ===============================
     # QUERY BASE n jnd  Queryset base
