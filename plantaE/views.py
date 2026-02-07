@@ -2526,15 +2526,24 @@ def reporte_general(request):
     qs = qs.annotate(
         semana=ExtractWeek('fecha'),
         anio=ExtractYear('fecha')
-    ).order_by('estructura', 'zona', 'actividad')
+    )
+
+    rows = qs.values(
+        'anio',
+        'semana',
+        'estructura',
+        'zona',
+        'actividad',
+        'finca',
+        'cultivo'
+    ).annotate(
+        prom=Avg('cantidad'),
+        ref=Avg('ref')
+    ).order_by('anio', 'semana')
 
     # 👇 Construir lista de dicts para pivot
     data = []
-    for row in qs.values('estructura','zona','actividad','finca','cultivo','semana','anio').annotate(
-        prom=Avg('cantidad'),
-        ref=Avg('ref')
-    ):
-        letra, color = ('','')
+    for row in rows:
         if row['actividad'] == 'Deshoje':
             letra, color = evaluar_deshoje(row['prom'], row['ref'])
         elif row['actividad'] == 'Ganchos':
@@ -2548,9 +2557,12 @@ def reporte_general(request):
             'actividad': row['actividad'],
             'finca': row['finca'],
             'cultivo': row['cultivo'],
+
+            # 🔑 clave para el pivot
             'semana': f"Semana {row['semana']}-{row['anio']}",
             'semana_num': row['semana'],
             'anio': row['anio'],
+
             'letra': letra,
             'color': color
         })

@@ -230,9 +230,12 @@ function cargarReporteGeneral() {
 
       semanas.forEach(sem => {
         if (row.semanas[sem]) {
-          body += `<td style="background:${row.color}; color:${row.color === 'yellow' ? 'black' : 'white'};">
-            ${row.letra}
-          </td>`;
+          const celda = row.semanas[sem];
+          body += `
+            <td style="background:${celda.color};
+                      color:${celda.color === 'yellow' ? 'black' : 'white'};">
+              ${celda.letra}
+            </td>`;
         } else {
           body += `<td>-</td>`;
         }
