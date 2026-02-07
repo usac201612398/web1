@@ -2411,7 +2411,7 @@ def supervisionproduccion_list(request):
 
     user = request.user.username
 
-    if user == 'cosecha.rio@popoyan.com.gt':
+    if user == 'cosecha.rio@popoyan.com.gt' or user=='jorge.cruz@popoyan.com.gt':
         area = 'RIO'
     elif user == 'cosecha.valle@popoyan.com.gt' or user =='cosecha.valle2@popoyan.com.gt' or user =='linday.solares@popoyan.com.gt':
         area = 'VALLE'
@@ -2452,7 +2452,7 @@ def supervisionproduccion_list(request):
 def reporte_semanal_view(request):
     user = request.user.username
 
-    if user == 'cosecha.rio@popoyan.com.gt':
+    if user == 'cosecha.rio@popoyan.com.gt' or user=='jorge.cruz@popoyan.com.gt':
         area = 'RIO'
     elif user == 'cosecha.valle@popoyan.com.gt' or user =='cosecha.valle2@popoyan.com.gt' or user =='linday.solares@popoyan.com.gt':
         area = 'VALLE'
@@ -2463,7 +2463,7 @@ def reporte_semanal_view(request):
 def reporte_semanal_seguimiento(request):
     user = request.user.username
 
-    if user == 'cosecha.rio@popoyan.com.gt':
+    if user == 'cosecha.rio@popoyan.com.gt' or user=='jorge.cruz@popoyan.com.gt':
         area = 'RIO'
     elif user == 'cosecha.valle@popoyan.com.gt' or user =='cosecha.valle2@popoyan.com.gt' or user =='linday.solares@popoyan.com.gt':
         area = 'VALLE'
@@ -2503,7 +2503,7 @@ def reporte_general(request):
     # DETERMINAR ÁREA SEGÚN USUARIO
     # ===============================
     user = request.user.username.lower() 
-    if user == 'cosecha.rio@popoyan.com.gt':
+    if user == 'cosecha.rio@popoyan.com.gt' or user=='jorge.cruz@popoyan.com.gt':
         area = 'RIO'
     elif user == 'cosecha.valle@popoyan.com.gt' or user =='cosecha.valle2@popoyan.com.gt' or user =='linday.solares@popoyan.com.gt':
         area = 'VALLE'
@@ -2585,7 +2585,7 @@ def reporte_semanal_supervision(request):
     # DETERMINAR ÁREA SEGÚN USUARIO
     # ===============================
     user = request.user.username.lower() 
-    if user == 'cosecha.rio@popoyan.com.gt':
+    if user == 'cosecha.rio@popoyan.com.gt' or user=='jorge.cruz@popoyan.com.gt':
         area = 'RIO'
     elif user == 'cosecha.valle@popoyan.com.gt' or user =='cosecha.valle2@popoyan.com.gt' or user =='linday.solares@popoyan.com.gt':
         area = 'VALLE'
