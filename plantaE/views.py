@@ -2577,6 +2577,9 @@ def reporte_semanal_supervision(request):
     estructura = request.GET.get('estructura')
     zona = request.GET.get('zona')
     actividad_filtro = request.GET.get('actividad')
+    cultivo = request.GET.get('cultivo')
+    
+    finca = request.GET.get('finca')
 
     # ===============================
     # DETERMINAR ÁREA SEGÚN USUARIO
@@ -2587,7 +2590,10 @@ def reporte_semanal_supervision(request):
     elif user == 'cosecha.valle@popoyan.com.gt' or user =='cosecha.valle2@popoyan.com.gt' or user =='linday.solares@popoyan.com.gt':
         area = 'VALLE'
     else:
-        area = 'ALL'
+        if finca:
+            area=finca
+        else:
+            area = 'ALL'
 
     # ===============================
     # QUERY BASE
@@ -2605,6 +2611,8 @@ def reporte_semanal_supervision(request):
         qs = qs.filter(estructura=estructura)
     if zona:
         qs = qs.filter(zona=zona)
+    if cultivo:
+        qs = qs.filter(cultivo=cultivo)
     if actividad_filtro:
         qs = qs.filter(actividad=actividad_filtro)
 
