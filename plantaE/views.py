@@ -2512,7 +2512,7 @@ def reporte_general(request):
 
     # ===============================
     # QUERY BASE n jnd  Queryset base
-    qs = supervisionproduccion.objects.filter(status='Abierta')
+    qs = supervisionproduccion.objects.exclude(status='Anulado')
     # Filtrar por área si no es ALL
     if area != 'ALL':
         qs = qs.filter(finca=area)  # Aquí se filtra por finca
@@ -2578,7 +2578,7 @@ def reporte_semanal_supervision(request):
     # ===============================
     # QUERY BASE
     # ===============================
-    qs = supervisionproduccion.objects.filter(status='Abierta')
+    qs = supervisionproduccion.objects.exclude(status='Anulado')
 
     # Filtrar por área si no es ALL
     if area != 'ALL':
