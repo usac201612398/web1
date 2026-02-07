@@ -2481,14 +2481,14 @@ def evaluar_deshoje(promedio, ref):
 
 def evaluar_ganchos(prom):
     if 14.5 <= prom <= 15.5: return ('E', 'green')
-    elif 14.0 <= prom <= 14.4: return ('B', 'yellow')
-    elif 13.5 <= prom <= 13.9: return ('R', 'orange')
+    elif 14.0 <= prom < 14.5: return ('B', 'yellow')
+    elif 13.5 <= prom < 13.99: return ('R', 'orange')
     else: return ('M', 'red')
 
 def evaluar_descoronado(prom):
-    if 0.5 <= prom <= 1.4: return ('E', 'green')
-    elif 1.5 <= prom <= 2.4: return ('B', 'yellow')
-    elif 2.5 <= prom <= 3.4: return ('R', 'orange')
+    if 0 < prom < 1.5: return ('E', 'green')
+    elif 1.5 <= prom < 2.5: return ('B', 'yellow')
+    elif 2.5 <= prom < 3.5: return ('R', 'orange')
     else: return ('M', 'red')
 
 def reporte_general(request):
