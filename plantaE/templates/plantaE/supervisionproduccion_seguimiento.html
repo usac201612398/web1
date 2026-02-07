@@ -27,7 +27,8 @@
     </div>
   </section>
 <!-- FILTROS -->
-<div class="box mb-5">
+
+    <div class="box mb-5">
   <div class="columns is-vcentered">
 
     {% if area_usuario == 'ALL' %}
@@ -66,6 +67,20 @@
       </div>
     </div>
 
+    <!-- Cultivo -->
+    <div class="column is-2">
+      <label class="label">Cultivo</label>
+      <div class="select is-fullwidth">
+        <select id="Cultivo">
+        <option value="">Seleccionar</option>
+          <option value="GRAPE">GRAPE</option>
+          <option value="GRAPE ORGANICO">GRAPE ORGANICO</option>
+          <option value="MEDLEY">MEDLEY</option>
+          <option value="CHERRY">CHERRY</option>
+        </select>
+      </div>
+    </div>
+
     <!-- Zona -->
     <div class="column is-2">
       <label class="label">Zona</label>
@@ -81,16 +96,18 @@
     </div>
 
     <!-- BOTONES -->
-    <div class="column is-4 is-flex is-justify-content-flex-end is-align-items-flex-end">
-      <button class="button is-link mr-2" onclick="cargarReporteGeneral()">
-        <span class="icon"><i class="fas fa-search"></i></span>
-        <span>Consultar</span>
-      </button>
+    <div class="column is-2 is-flex is-align-items-flex-end">
+      <div class="buttons">
+        <button class="button is-link" onclick="cargarReporteSemanal()">
+          <span class="icon"><i class="fas fa-search"></i></span>
+          <span>Consultar</span>
+        </button>
 
-      <button class="button is-primary" onclick="imprimirTabla()">
-        <span class="icon"><i class="fas fa-print"></i></span>
-        <span>Imprimir</span>
-      </button>
+        <button class="button is-primary" onclick="imprimirTabla()">
+          <span class="icon"><i class="fas fa-print"></i></span>
+          <span>.Imprimir</span>
+        </button>
+      </div>
     </div>
 
   </div>
