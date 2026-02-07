@@ -2749,9 +2749,8 @@ def supervisionproduccion_detalle(request, fecha, cultivo, estructura, zona,finc
         cultivo=cultivo,
         estructura=estructura,
         zona=zona,
-        finca=finca,
-        status='Abierta'
-    ).order_by('muestra', 'actividad')
+        finca=finca
+    ).exclude(status='Anulado').order_by('muestra', 'actividad')
 
     muestras = defaultdict(list)
     for r in registros:
