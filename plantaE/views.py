@@ -2641,7 +2641,8 @@ def reporte_semanal_supervision(request):
             'semana_num': row['semana'],
             'anio': row['anio'],
             'letra': letra,
-            'color': color
+            'color': color,
+            'promedio': prom
         })
 
     return JsonResponse(data, safe=False)
