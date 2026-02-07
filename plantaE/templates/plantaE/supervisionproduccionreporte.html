@@ -212,6 +212,7 @@ function cargarReporteSemanal() {
 
   $.get("{% url 'reporte_semanal_supervision' %}", {estructura, zona, actividad,finca}, function(data) {
     let body = '';
+    console.log('DATA ENVIADA A SEGUIMIENTO:', data);
     if (data.length === 0) {
       body = `<tr><td colspan="8">No hay registros</td></tr>`;
     } else {
@@ -251,7 +252,7 @@ function cargarReporteSemanal() {
 $(document).on('click', '.seguimiento-btn', function(){
     const btn = $(this);
     const data = btn.data();
-
+    console.log('DATA ENVIADA A SEGUIMIENTO:', data);
     $('#modalContent').html('Cargando...');
     var modal = new bootstrap.Modal(document.getElementById('seguimientoModal'));
     modal.show();
