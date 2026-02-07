@@ -120,11 +120,12 @@
       <table class="table is-bordered is-fullwidth">
         <thead>
           <tr id="headerSemanas">
-            <th>Estructura</th>
-            <th>Zona</th>
-            <th>Actividad</th>
+            
             <th>Finca</th>
+            <th>Actividad</th>
+            <th>Estructura</th>
             <th>Cultivo</th>
+            <th>Zona</th>
           </tr>
         </thead>
         <tbody id="bodyReporte">
@@ -239,11 +240,11 @@ function cargarReporteGeneral() {
 
     Object.values(groupMap).forEach(row => {
       body += `<tr>
-        <td>${row.estructura}</td>
-        <td>${row.zona}</td>
-        <td>${row.actividad}</td>
         <td>${row.finca}</td>
-        <td>${row.cultivo}</td>`;
+        <td>${row.actividad}</td>
+        <td>${row.estructura}</td>
+        <td>${row.cultivo}</td>
+        <td>${row.zona}</td>`;
 
       semanas.forEach(sem => {
         if (row.semanas[sem]) {

@@ -2508,10 +2508,7 @@ def reporte_general(request):
     elif user == 'cosecha.valle@popoyan.com.gt' or user =='cosecha.valle2@popoyan.com.gt' or user =='linday.solares@popoyan.com.gt':
         area = 'VALLE'
     else:
-        if cultivo:
-            area=cultivo
-        else:
-            area = 'ALL'
+        area = 'ALL'
 
     # ===============================
     # QUERY BASE n jnd  Queryset base
@@ -2707,7 +2704,7 @@ def reporte_seguimiento_api(request):
     if año:
         queryset = queryset.filter(anio=año)
 
-    muestras = list(queryset.order_by('fecha').values('muestra','cantidad','ref'))
+    muestras = list(queryset.order_by('fecha','muestra').values('muestra','cantidad','ref'))
 
     cantidades_validas = [m['cantidad'] for m in muestras if m['cantidad'] is not None]
     promedio = sum(cantidades_validas) / len(cantidades_validas) if cantidades_validas else 0
