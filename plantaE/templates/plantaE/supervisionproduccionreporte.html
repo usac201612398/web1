@@ -68,6 +68,20 @@
       </div>
     </div>
 
+    <!-- Cultivo -->
+    <div class="column is-2">
+      <label class="label">Cultivo</label>
+      <div class="select is-fullwidth">
+        <select id="Cultivo">
+        <option value="">Seleccionar</option>
+          <option value="GRAPE">GRAPE</option>
+          <option value="GRAPE ORGANICO">GRAPE ORGANICO</option>
+          <option value="MEDLEY">MEDLEY</option>
+          <option value="CHERRY">CHERRY</option>
+        </select>
+      </div>
+    </div>
+
     <!-- Zona -->
     <div class="column is-2">
       <label class="label">Zona</label>
@@ -83,16 +97,18 @@
     </div>
 
     <!-- BOTONES -->
-    <div class="column is-4 is-flex is-justify-content-flex-end is-align-items-flex-end">
-      <button class="button is-link mr-2" onclick="cargarReporteGeneral()">
-        <span class="icon"><i class="fas fa-search"></i></span>
-        <span>Consultar</span>
-      </button>
+    <div class="column is-2 is-flex is-align-items-flex-end">
+      <div class="buttons">
+        <button class="button is-link" onclick="cargarReporteSemanal()">
+          <span class="icon"><i class="fas fa-search"></i></span>
+          <span>Consultar</span>
+        </button>
 
-      <button class="button is-primary" onclick="imprimirTabla()">
-        <span class="icon"><i class="fas fa-print"></i></span>
-        <span>Imprimir</span>
-      </button>
+        <button class="button is-primary" onclick="imprimirTabla()">
+          <span class="icon"><i class="fas fa-print"></i></span>
+          <span>Imprimir</span>
+        </button>
+      </div>
     </div>
 
   </div>
@@ -192,8 +208,9 @@ function cargarReporteSemanal() {
   const estructura = $('#Estructura').val();
   const zona = $('#Zona').val();
   const actividad = $('#Actividad').val();
+  const finca = $('#Area').val();
 
-  $.get("{% url 'reporte_semanal_supervision' %}", {estructura, zona, actividad}, function(data) {
+  $.get("{% url 'reporte_semanal_supervision' %}", {estructura, zona, actividad,finca}, function(data) {
     let body = '';
     if (data.length === 0) {
       body = `<tr><td colspan="8">No hay registros</td></tr>`;
@@ -234,12 +251,6 @@ function cargarReporteSemanal() {
 $(document).on('click', '.seguimiento-btn', function(){
     const btn = $(this);
     const data = btn.data();
-
-    // Obtener año actual de la semana si quieres automático
-    const fechaHoy = new Date();
-    const anioActual = fechaHoy.getFullYear(); 
-
-    data.anio = anioActual;  // <-- enviar año
 
     $('#modalContent').html('Cargando...');
     var modal = new bootstrap.Modal(document.getElementById('seguimientoModal'));
