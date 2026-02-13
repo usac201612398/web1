@@ -2481,8 +2481,10 @@ def evaluar_deshoje(promedio, ref):
 
 def evaluar_ganchos(prom):
     if 14.5 <= prom <= 15.5: return ('E', 'green')
+    elif 15.5 <= prom < 16: return ('B', 'yellow')
     elif 14.0 <= prom < 14.5: return ('B', 'yellow')
     elif 13.5 <= prom < 14: return ('R', 'orange')
+    elif 16 <= prom < 16.5: return ('R', 'orange')
     else: return ('M', 'red')
 
 def evaluar_descoronado(prom):
