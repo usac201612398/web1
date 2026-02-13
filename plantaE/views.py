@@ -2488,7 +2488,7 @@ def evaluar_ganchos(prom):
     else: return ('M', 'red')
 
 def evaluar_descoronado(prom):
-    if 0 < prom < 1.5: return ('E', 'green')
+    if 0 <= prom < 1.5: return ('E', 'green')
     elif 1.5 <= prom < 2.5: return ('B', 'yellow')
     elif 2.5 <= prom < 3.5: return ('R', 'orange')
     else: return ('M', 'red')
