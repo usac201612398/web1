@@ -56,14 +56,14 @@ class Command(BaseCommand):
                 print("Error procesando mensaje:", e)
 
         client = mqtt.Client()
-'''
+        '''
         client.tls_set(
             ca_certs=ca,
             certfile=cert,
             keyfile=key,
             tls_version=ssl.PROTOCOL_TLSv1_2
         )
-''' 
+        ''' 
         client.username_pw_set(MQTT_USER, MQTT_PASS)
         client.on_connect = on_connect
         client.on_message = on_message
