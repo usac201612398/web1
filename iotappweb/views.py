@@ -73,9 +73,9 @@ def enviarinstruccion(request):
 def dashboard(request):
     # Últimos 50 registros
     data = m1Sensoresdata.objects.order_by('-timestamp')[:50][::-1]  # cronológico
-
+    latest = data[-1] if data else None
     context = {
-        'latest': data[-1] if data else None,
+        'latest': latest,
         'timestamps': json.dumps([d.timestamp.strftime("%H:%M:%S") for d in data]),
         'temperatura': json.dumps([d.temperatura for d in data]),
         'humedad_aire': json.dumps([d.humedad_aire for d in data]),
