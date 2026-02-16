@@ -6,6 +6,7 @@ import ssl
 import paho.mqtt.client as mqtt
 from django.core.management.base import BaseCommand
 from app1.models import SensorData
+from django.conf import settings
 
 MQTT_HOST = "a4810e38lk0oy-ats.iot.us-east-1.amazonaws.com"
 MQTT_PORT = 8883
@@ -16,11 +17,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+        BASE_DIR = settings.BASE_DIR
 
-        ca = os.path.join(BASE_DIR, "AmazonRootCA1.pem")
-        cert = os.path.join(BASE_DIR, "cert.pem.crt")
-        key = os.path.join(BASE_DIR, "private.pem.key")
+        ca = os.path.join(BASE_DIR, "certs/AmazonRootCA1.pem")
+        cert = os.path.join(BASE_DIR, "certs/cert.pem.crt")
+        key = os.path.join(BASE_DIR, "certs/private.pem.key")
 
         def on_connect(client, userdata, flags, rc):
             print("Conectado a AWS IoT con código:", rc)
