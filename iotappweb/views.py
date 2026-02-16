@@ -68,5 +68,5 @@ def enviarinstruccion(request):
     return render(request, "iotappweb/accionmqtt.html")
 
 def dashboard(request):
-    latest = SensorData.objects.order_by('-timestamp').first()
+    latest = m1Sensoresdata.objects.order_by('-timestamp').first()
     return render(request, 'iotappweb/dashboard.html', {'latest': latest})

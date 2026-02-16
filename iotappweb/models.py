@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 
 class m1Sensoresdata(models.Model):
+    registro = models.AutoField(primary_key=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     planta_id = models.CharField(max_length=50)
     temperatura = models.FloatField()
