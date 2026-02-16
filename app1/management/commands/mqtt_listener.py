@@ -17,7 +17,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         def on_connect(client, userdata, flags, rc):
-            print("Conectado a MQTT con código:", rc)
             client.subscribe(TOPIC)
 
         def on_message(client, userdata, msg):

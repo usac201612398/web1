@@ -8,8 +8,12 @@ from django.core.management.base import BaseCommand
 from app1.models import SensorData
 from django.conf import settings
 
-MQTT_HOST = "a4810e38lk0oy-ats.iot.us-east-1.amazonaws.com"
-MQTT_PORT = 8883
+#MQTT_HOST = "a4810e38lk0oy-ats.iot.us-east-1.amazonaws.com"
+#MQTT_PORT = 8883
+MQTT_PORT = 1883
+MQTT_HOST = "10.111.112.4"
+MQTT_USER = "sdc-iot"
+MQTT_PASS = "nuevacontraseña"
 TOPIC = "casa/planta01/data"
 
 class Command(BaseCommand):
@@ -17,14 +21,13 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        BASE_DIR = settings.BASE_DIR
+        #BASE_DIR = settings.BASE_DIR
 
-        ca = os.path.join(BASE_DIR, "certs/AmazonRootCA1.pem")
-        cert = os.path.join(BASE_DIR, "certs/cert.pem.crt")
-        key = os.path.join(BASE_DIR, "certs/private.pem.key")
+        #ca = os.path.join(BASE_DIR, "certs/AmazonRootCA1.pem")
+        #cert = os.path.join(BASE_DIR, "certs/cert.pem.crt")
+        #key = os.path.join(BASE_DIR, "certs/private.pem.key")
 
         def on_connect(client, userdata, flags, rc):
-            print("Conectado a AWS IoT con código:", rc)
             client.subscribe(TOPIC)
 
         def on_message(client, userdata, msg):
@@ -53,14 +56,15 @@ class Command(BaseCommand):
                 print("Error procesando mensaje:", e)
 
         client = mqtt.Client()
-
+'''
         client.tls_set(
             ca_certs=ca,
             certfile=cert,
             keyfile=key,
             tls_version=ssl.PROTOCOL_TLSv1_2
         )
-
+''' 
+        client.username_pw_set(MQTT_USER, MQTT_PASS)
         client.on_connect = on_connect
         client.on_message = on_message
 
