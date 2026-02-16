@@ -18,9 +18,9 @@ class Command(BaseCommand):
 
         BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
-        ca = os.path.join(BASE_DIR, "certs/AmazonRootCA1.pem")
-        cert = os.path.join(BASE_DIR, "certs/cert.pem.crt")
-        key = os.path.join(BASE_DIR, "certs/private.pem.key")
+        ca = os.path.join(BASE_DIR, "AmazonRootCA1.pem")
+        cert = os.path.join(BASE_DIR, "cert.pem.crt")
+        key = os.path.join(BASE_DIR, "private.pem.key")
 
         def on_connect(client, userdata, flags, rc):
             print("Conectado a AWS IoT con código:", rc)
