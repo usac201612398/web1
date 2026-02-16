@@ -121,7 +121,7 @@ function actualizarColores() {
 
 // Función para actualizar datos cada 60 segundos
 async function actualizarDatos() {
-    const response = await fetch("{% url 'dashboard' %}");
+    const response = await fetch("{% url 'sensor' %}");
     const html = await response.text();
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
