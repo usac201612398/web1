@@ -1,182 +1,192 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard de Planta</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Planta</title>
 
-<!-- Bootstrap 5 -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- Iconos (Opcional: Font Awesome) -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <!-- Iconos (Opcional: Font Awesome) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 
-<style>
-body {
-    background-color: #f4f6f9;
-}
-.card {
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    min-height: 120px;
-}
-.card .card-body {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-.card-icon {
-    font-size: 2.5rem;
-    opacity: 0.7;
-}
-.fs-value {
-    font-size: 1.8rem;
-    font-weight: bold;
-}
-</style>
+    <style>
+        body {
+            background-color: #f4f6f9;
+        }
+
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            min-height: 120px;
+        }
+
+        .card .card-body {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            opacity: 0.7;
+        }
+
+        .fs-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+    </style>
 </head>
+
 <body>
 
-<div class="container my-4">
-    <h1 class="text-center mb-4 fw-bold">🌱 Dashboard de Planta</h1>
+    <div class="container my-4">
+        <h1 class="text-center mb-4 fw-bold">Dashboard de Planta</h1>
+        <!-- Cards de variables -->
+        <div class="row g-4 justify-content-center text-white">
+            <div class="col-12 col-md-3">
+                <div id="cardTemp" class="card" style="background: linear-gradient(135deg,#2C3E50,#34495E);">
+                    <div class="card-body">
+                        <div>
+                            <div class="card-title">Temperatura</div>
+                            <div class="fs-value"><span id="temperatura">{{ latest.temperatura|floatformat:2 }}</span>
+                                °C</div>
+                        </div>
+                        <div class="card-icon"><i class="fas fa-thermometer-half"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-3">
+                <div id="cardHumedadA" class="card" style="background: linear-gradient(135deg,#34495E,#5D6D7E);">
+                    <div class="card-body">
+                        <div>
+                            <div class="card-title">Humedad Ambiente</div>
+                            <div class="fs-value"><span id="humedad_aire">{{ latest.humedad_aire|floatformat:2 }}</span>
+                                %</div>
+                        </div>
+                        <div class="card-icon"><i class="fas fa-tint"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-3">
+                <div id="cardHumedadS" class="card" style="background: linear-gradient(135deg,#1ABC9C,#16A085);">
+                    <div class="card-body">
+                        <div>
+                            <div class="card-title">Humedad Suelo</div>
+                            <div class="fs-value"><span id="humedad_suelo">{{ latest.humedad_suelo|floatformat:2
+                                    }}</span> %</div>
+                        </div>
+                        <div class="card-icon"><i class="fas fa-water"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-3">
+                <div id="cardPeso" class="card text-dark" style="background: linear-gradient(135deg,#F1C40F,#F39C12);">
+                    <div class="card-body">
+                        <div>
+                            <div class="card-title">Peso Planta</div>
+                            <div class="fs-value"><span id="peso">{{ latest.peso|floatformat:2 }}</span> kg</div>
+                        </div>
+                        <div class="card-icon"><i class="fas fa-weight-scale"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <!-- Cards de variables -->
-    <div class="row g-4 justify-content-center text-white">
-        <div class="col-12 col-md-3">
-            <div id="cardTemp" class="card" style="background: linear-gradient(135deg,#FF6B6B,#FF4C4C);">
-                <div class="card-body">
-                    <div>
-                        <div class="card-title">Temperatura</div>
-                        <div class="fs-value"><span id="temperatura">{{ latest.temperatura }}</span> °C</div>
-                    </div>
-                    <div class="card-icon"><i class="fas fa-thermometer-half"></i></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-md-3">
-            <div id="cardHumedadA" class="card" style="background: linear-gradient(135deg,#4C6EFF,#2A4FFF);">
-                <div class="card-body">
-                    <div>
-                        <div class="card-title">Humedad Ambiente</div>
-                        <div class="fs-value"><span id="humedad_aire">{{ latest.humedad_aire }}</span> %</div>
-                    </div>
-                    <div class="card-icon"><i class="fas fa-tint"></i></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-md-3">
-            <div id="cardHumedadS" class="card" style="background: linear-gradient(135deg,#28A745,#1E7E34);">
-                <div class="card-body">
-                    <div>
-                        <div class="card-title">Humedad Suelo</div>
-                        <div class="fs-value"><span id="humedad_suelo">{{ latest.humedad_suelo }}</span> %</div>
-                    </div>
-                    <div class="card-icon"><i class="fas fa-water"></i></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-md-3">
-            <div id="cardPeso" class="card" style="background: linear-gradient(135deg,#FFC107,#E0A800); color:#333;">
-                <div class="card-body">
-                    <div>
-                        <div class="card-title">Peso Planta</div>
-                        <div class="fs-value"><span id="peso">{{ latest.peso }}</span> kg</div>
-                    </div>
-                    <div class="card-icon"><i class="fas fa-weight-scale"></i></div>
-                </div>
-            </div>
+    </div>
+
+    <!-- Gráfica -->
+    <div class="container my-5">
+        <canvas id="sensoresChart" height="200"></canvas>
+        <div class="text-center text-muted my-2">
+            Última actualización: <span id="timestamp">{{ latest.timestamp }}</span>
         </div>
     </div>
-</div>
 
-<!-- Gráfica -->
-<div class="container my-5">
-    <canvas id="sensoresChart" height="200"></canvas>
-    <div class="text-center text-muted my-2">
-        Última actualización: <span id="timestamp">{{ latest.timestamp }}</span>
-    </div>
-</div>
+    <script>
+        // Datos iniciales desde Django
+        let timestamps = {{ timestamps| safe }};
+        let temperatura = {{ temperatura| safe }};
+        let humedad_aire = {{ humedad_aire| safe }};
+        let humedad_suelo = {{ humedad_suelo| safe }};
+        let peso = {{ peso| safe }};
 
-<script>
-// Datos iniciales desde Django
-let timestamps = {{ timestamps|safe }};
-let temperatura = {{ temperatura|safe }};
-let humedad_aire = {{ humedad_aire|safe }};
-let humedad_suelo = {{ humedad_suelo|safe }};
-let peso = {{ peso|safe }};
+        // Crear gráfica
+        const ctx = document.getElementById('sensoresChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: timestamps,
+                datasets: [
+                    { label: 'Temperatura (°C)', data: temperatura, borderColor: '#FF4C4C', backgroundColor: 'rgba(255,76,76,0.2)', tension: 0.3, yAxisID: 'y' },
+                    { label: 'Humedad Ambiente (%)', data: humedad_aire, borderColor: '#4C6EFF', backgroundColor: 'rgba(76,110,255,0.2)', tension: 0.3, yAxisID: 'y1' },
+                    { label: 'Humedad Suelo (%)', data: humedad_suelo, borderColor: '#28A745', backgroundColor: 'rgba(40,167,69,0.2)', tension: 0.3, yAxisID: 'y1' },
+                    { label: 'Peso (kg)', data: peso, borderColor: '#FFC107', backgroundColor: 'rgba(255,193,7,0.2)', tension: 0.3, yAxisID: 'y2' }
+                ]
+            },
+            options: {
+                responsive: true,
+                interaction: { mode: 'index', intersect: false },
+                plugins: { legend: { position: 'top' } },
+                scales: {
+                    y: { type: 'linear', display: true, position: 'left', title: { display: true, text: 'Temperatura (°C)' } },
+                    y1: { type: 'linear', display: true, position: 'right', title: { display: true, text: 'Humedad (%)' }, grid: { drawOnChartArea: false } },
+                    y2: { type: 'linear', display: true, position: 'right', title: { display: true, text: 'Peso (kg)' }, grid: { drawOnChartArea: false } }
+                }
+            }
+        });
 
-// Crear gráfica
-const ctx = document.getElementById('sensoresChart').getContext('2d');
-const chart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: timestamps,
-        datasets: [
-            { label: 'Temperatura (°C)', data: temperatura, borderColor: '#FF4C4C', backgroundColor: 'rgba(255,76,76,0.2)', tension: 0.3, yAxisID: 'y' },
-            { label: 'Humedad Ambiente (%)', data: humedad_aire, borderColor: '#4C6EFF', backgroundColor: 'rgba(76,110,255,0.2)', tension: 0.3, yAxisID: 'y1' },
-            { label: 'Humedad Suelo (%)', data: humedad_suelo, borderColor: '#28A745', backgroundColor: 'rgba(40,167,69,0.2)', tension: 0.3, yAxisID: 'y1' },
-            { label: 'Peso (kg)', data: peso, borderColor: '#FFC107', backgroundColor: 'rgba(255,193,7,0.2)', tension: 0.3, yAxisID: 'y2' }
-        ]
-    },
-    options: {
-        responsive: true,
-        interaction: { mode: 'index', intersect: false },
-        plugins: { legend: { position: 'top' } },
-        scales: {
-            y: { type: 'linear', display: true, position: 'left', title: { display: true, text: 'Temperatura (°C)' } },
-            y1: { type: 'linear', display: true, position: 'right', title: { display: true, text: 'Humedad (%)' }, grid: { drawOnChartArea: false } },
-            y2: { type: 'linear', display: true, position: 'right', title: { display: true, text: 'Peso (kg)' }, grid: { drawOnChartArea: false } }
+        // Colores dinámicos según rango
+        function actualizarColores() {
+            let temp = parseFloat(document.getElementById('temperatura').innerText);
+            let humS = parseFloat(document.getElementById('humedad_suelo').innerText);
+
+            let cardTemp = document.getElementById('cardTemp');
+            if (temp > 30) cardTemp.style.background = 'linear-gradient(135deg,#FF4C4C,#FF1F1F)';
+            else if (temp >= 25) cardTemp.style.background = 'linear-gradient(135deg,#FF9F43,#FF6B00)';
+            else cardTemp.style.background = 'linear-gradient(135deg,#4C6EFF,#2A4FFF)';
+
+            let cardHumS = document.getElementById('cardHumedadS');
+            if (humS < 40) cardHumS.style.background = 'linear-gradient(135deg,#FFC107,#E0A800)';
+            else if (humS <= 60) cardHumS.style.background = 'linear-gradient(135deg,#28A745,#1E7E34)';
+            else cardHumS.style.background = 'linear-gradient(135deg,#4C6EFF,#2A4FFF)';
         }
-    }
-});
 
-// Colores dinámicos según rango
-function actualizarColores() {
-    let temp = parseFloat(document.getElementById('temperatura').innerText);
-    let humS = parseFloat(document.getElementById('humedad_suelo').innerText);
+        // Actualización automática
+        async function actualizarDatos() {
+            const response = await fetch("{% url 'sensor' %}");
+            const html = await response.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
 
-    let cardTemp = document.getElementById('cardTemp');
-    if(temp > 30) cardTemp.style.background = 'linear-gradient(135deg,#FF4C4C,#FF1F1F)';
-    else if(temp >= 25) cardTemp.style.background = 'linear-gradient(135deg,#FF9F43,#FF6B00)';
-    else cardTemp.style.background = 'linear-gradient(135deg,#4C6EFF,#2A4FFF)';
+            // Actualizar valores
+            document.getElementById('temperatura').innerText = doc.getElementById('temperatura').innerText;
+            document.getElementById('humedad_aire').innerText = doc.getElementById('humedad_aire').innerText;
+            document.getElementById('humedad_suelo').innerText = doc.getElementById('humedad_suelo').innerText;
+            document.getElementById('peso').innerText = doc.getElementById('peso').innerText;
+            document.getElementById('timestamp').innerText = doc.getElementById('timestamp').innerText;
 
-    let cardHumS = document.getElementById('cardHumedadS');
-    if(humS < 40) cardHumS.style.background = 'linear-gradient(135deg,#FFC107,#E0A800)';
-    else if(humS <= 60) cardHumS.style.background = 'linear-gradient(135deg,#28A745,#1E7E34)';
-    else cardHumS.style.background = 'linear-gradient(135deg,#4C6EFF,#2A4FFF)';
-}
+            // Actualizar gráfica
+            chart.data.labels = JSON.parse(doc.querySelector('script').innerText.match(/timestamps = (.*);/)[1]);
+            chart.data.datasets[0].data = JSON.parse(doc.querySelector('script').innerText.match(/temperatura = (.*);/)[1]);
+            chart.data.datasets[1].data = JSON.parse(doc.querySelector('script').innerText.match(/humedad_aire = (.*);/)[1]);
+            chart.data.datasets[2].data = JSON.parse(doc.querySelector('script').innerText.match(/humedad_suelo = (.*);/)[1]);
+            chart.data.datasets[3].data = JSON.parse(doc.querySelector('script').innerText.match(/peso = (.*);/)[1]);
+            chart.update();
 
-// Actualización automática
-async function actualizarDatos() {
-    const response = await fetch("{% url 'sensor' %}");
-    const html = await response.text();
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
+            actualizarColores();
+        }
 
-    // Actualizar valores
-    document.getElementById('temperatura').innerText = doc.getElementById('temperatura').innerText;
-    document.getElementById('humedad_aire').innerText = doc.getElementById('humedad_aire').innerText;
-    document.getElementById('humedad_suelo').innerText = doc.getElementById('humedad_suelo').innerText;
-    document.getElementById('peso').innerText = doc.getElementById('peso').innerText;
-    document.getElementById('timestamp').innerText = doc.getElementById('timestamp').innerText;
-
-    // Actualizar gráfica
-    chart.data.labels = JSON.parse(doc.querySelector('script').innerText.match(/timestamps = (.*);/)[1]);
-    chart.data.datasets[0].data = JSON.parse(doc.querySelector('script').innerText.match(/temperatura = (.*);/)[1]);
-    chart.data.datasets[1].data = JSON.parse(doc.querySelector('script').innerText.match(/humedad_aire = (.*);/)[1]);
-    chart.data.datasets[2].data = JSON.parse(doc.querySelector('script').innerText.match(/humedad_suelo = (.*);/)[1]);
-    chart.data.datasets[3].data = JSON.parse(doc.querySelector('script').innerText.match(/peso = (.*);/)[1]);
-    chart.update();
-
-    actualizarColores();
-}
-
-actualizarColores();
-setInterval(actualizarDatos, 60000); // cada 1 minuto
-</script>
+        actualizarColores();
+        setInterval(actualizarDatos, 60000); // cada 1 minuto
+    </script>
 
 </body>
+
 </html>
