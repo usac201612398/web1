@@ -43,7 +43,7 @@ const chart = new Chart(ctx, {
 
 // Función para actualizar datos cada 60 segundos
 async function actualizarDatos() {
-    const response = await fetch("{% url 'dashboard' %}");
+    const response = await fetch("{% url 'sensor' %}");
     const html = await response.text();
 
     // Crear un DOM temporal para extraer los datos nuevos
