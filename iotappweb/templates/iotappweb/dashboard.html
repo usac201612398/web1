@@ -1,7 +1,71 @@
-<p>Dispositivo: {{ latest.planta_id }}</p>
-<p>Temperatura: {{ latest.temperatura }} °C</p>
-<p>Humedad-Ambiente: {{ latest.humedad_aire  }} %</p>
-<p>Humedad-Suelo: {{ latest.humedad_suelo  }} %</p>
-<p>Peso: {{ latest.peso  }} kg</p>
+<h2>Dispositivo: {{ latest.planta_id }}</h2>
+<p>Última actualización: <span id="timestamp">{{ latest.timestamp }}</span></p>
+<p>Temperatura: <span id="temperatura">{{ latest.temperatura }}</span> °C</p>
+<p>Humedad-Ambiente: <span id="humedad_aire">{{ latest.humedad_aire }}</span> %</p>
+<p>Humedad-Suelo: <span id="humedad_suelo">{{ latest.humedad_suelo }}</span> %</p>
+<p>Peso: <span id="peso">{{ latest.peso }}</span> kg</p>
 
-<p>Última actualización: {{ latest.timestamp }}</p>
+<canvas id="sensoresChart" width="800" height="400"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+let timestamps = {{ timestamps|safe }};
+let temperatura = {{ temperatura|safe }};
+let humedad_aire = {{ humedad_aire|safe }};
+let humedad_suelo = {{ humedad_suelo|safe }};
+let peso = {{ peso|safe }};
+
+// Crear gráfica
+const ctx = document.getElementById('sensoresChart').getContext('2d');
+const chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: timestamps,
+        datasets: [
+            { label: 'Temperatura (°C)', data: temperatura, borderColor: 'red', backgroundColor: 'rgba(255,0,0,0.2)', yAxisID: 'y' },
+            { label: 'Humedad Ambiente (%)', data: humedad_aire, borderColor: 'blue', backgroundColor: 'rgba(0,0,255,0.2)', yAxisID: 'y1' },
+            { label: 'Humedad Suelo (%)', data: humedad_suelo, borderColor: 'green', backgroundColor: 'rgba(0,255,0,0.2)', yAxisID: 'y1' },
+            { label: 'Peso (kg)', data: peso, borderColor: 'orange', backgroundColor: 'rgba(255,165,0,0.2)', yAxisID: 'y2' }
+        ]
+    },
+    options: {
+        responsive: true,
+        interaction: { mode: 'index', intersect: false },
+        stacked: false,
+        scales: {
+            y: { type: 'linear', display: true, position: 'left', title: { display: true, text: 'Temperatura (°C)' } },
+            y1: { type: 'linear', display: true, position: 'right', title: { display: true, text: 'Humedad (%)' }, grid: { drawOnChartArea: false } },
+            y2: { type: 'linear', display: true, position: 'right', title: { display: true, text: 'Peso (kg)' }, grid: { drawOnChartArea: false } }
+        }
+    }
+});
+
+// Función para actualizar datos cada 60 segundos
+async function actualizarDatos() {
+    const response = await fetch("{% url 'dashboard' %}");
+    const html = await response.text();
+
+    // Crear un DOM temporal para extraer los datos nuevos
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+
+    // Extraer últimos valores
+    document.getElementById('temperatura').innerText = doc.getElementById('temperatura').innerText;
+    document.getElementById('humedad_aire').innerText = doc.getElementById('humedad_aire').innerText;
+    document.getElementById('humedad_suelo').innerText = doc.getElementById('humedad_suelo').innerText;
+    document.getElementById('peso').innerText = doc.getElementById('peso').innerText;
+    document.getElementById('timestamp').innerText = doc.getElementById('timestamp').innerText;
+
+    // Actualizar gráfica
+    chart.data.labels = JSON.parse(doc.querySelector('script').innerText.match(/timestamps = (.*);/)[1]);
+    chart.data.datasets[0].data = JSON.parse(doc.querySelector('script').innerText.match(/temperatura = (.*);/)[1]);
+    chart.data.datasets[1].data = JSON.parse(doc.querySelector('script').innerText.match(/humedad_aire = (.*);/)[1]);
+    chart.data.datasets[2].data = JSON.parse(doc.querySelector('script').innerText.match(/humedad_suelo = (.*);/)[1]);
+    chart.data.datasets[3].data = JSON.parse(doc.querySelector('script').innerText.match(/peso = (.*);/)[1]);
+    chart.update();
+}
+
+// Actualizar cada 60 segundos
+setInterval(actualizarDatos, 60000);
+</script>

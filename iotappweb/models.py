@@ -12,4 +12,4 @@ class m1Sensoresdata(models.Model):
     peso = models.FloatField()
 
     def __str__(self):
-        return f"{self.planta_id} - {self.temperatura}°C / {self.humedad_aire}% - {self.humedad_suelo}% - {self.peso}g"
+        return f"{self.planta_id} - {self.temperatura}°C / {self.humedad_aire}% - {self.humedad_suelo}% - {self.peso}kg"

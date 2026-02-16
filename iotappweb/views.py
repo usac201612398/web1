@@ -6,6 +6,7 @@ import paho.mqtt.client as mqtt
 import uuid
 import os
 from django.http import JsonResponse
+import json
 
 
 def homepage(request):
@@ -70,5 +71,17 @@ def enviarinstruccion(request):
     return render(request, "iotappweb/accionmqtt.html")
 
 def dashboard(request):
-    latest = m1Sensoresdata.objects.order_by('-timestamp').first()
-    return render(request, 'iotappweb/dashboard.html', {'latest': latest})
+    # Últimos 50 registros
+    data = m1Sensoresdata.objects.order_by('-timestamp')[:50][::-1]  # cronológico
+
+    context = {
+        'latest': data[-1] if data else None,
+        'timestamps': json.dumps([d.timestamp.strftime("%H:%M:%S") for d in data]),
+        'temperatura': json.dumps([d.temperatura for d in data]),
+        'humedad_aire': json.dumps([d.humedad_aire for d in data]),
+        'humedad_suelo': json.dumps([d.humedad_suelo for d in data]),
+        'peso': json.dumps([d.peso for d in data]),
+    }
+
+    return render(request, 'iotappweb/dashboard.html', context)
+
