@@ -4,6 +4,8 @@ from .models import m1Sensoresdata
 import time
 import paho.mqtt.client as mqtt
 import uuid
+import os
+from django.http import JsonResponse
 
 
 def homepage(request):
@@ -26,7 +28,7 @@ def publicar_mqtt(accion,topic):
     try:
 
         client = mqtt.Client(client_id=f"django-{uuid.uuid4()}")
-        client.username_pw_set(MQTT_USER, MQTT_PASS)
+        #client.username_pw_set(MQTT_USER, MQTT_PASS)
         client.tls_set(
             ca_certs=ca,
             certfile=cert,
@@ -61,7 +63,7 @@ def enviarinstruccion(request):
     if request.method == "POST":
         accion = request.POST.get("accion")
         print("Acción recibida:", accion)
-        info = publicar_mqtt(accion)
+        info = publicar_mqtt(accion,"casa/tanque01/llenado/manual")
         return JsonResponse({"status": "ok", "accion_recibida": accion,
                             "retorno": info["retorno"]})
 
