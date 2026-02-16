@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 #    'django.contrib.sites',
     'app1',
     'ejemplo',
+    'iotappweb',
     'plantaE',
     'ips',
     'sdcsemillas',
