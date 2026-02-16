@@ -5,7 +5,7 @@ import json
 import ssl
 import paho.mqtt.client as mqtt
 from django.core.management.base import BaseCommand
-from app1.models import SensorData
+from iotappweb.models import m1Sensoresdata
 from django.conf import settings
 
 #MQTT_HOST = "a4810e38lk0oy-ats.iot.us-east-1.amazonaws.com"
