@@ -38,7 +38,7 @@ class Command(BaseCommand):
                 data = json.loads(payload)
 
                 planta_id = data.get("planta_id")
-                temperatura = float(data.get("hum_amb"))
+                temperatura = float(data.get("temp_amb"))
                 hum_aire = float(data.get("hum_amb"))
                 hum_suelo = float(data.get("hum_suelo"))
                 peso = float(data.get("peso"))
