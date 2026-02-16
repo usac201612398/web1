@@ -23,6 +23,7 @@ urlpatterns = [
     path('app1/',include('app1.urls')),
     path('ejemplo/',include('ejemplo.urls')),
     path('plantaE/',include('plantaE.urls')),
+    path('iotappweb/',include('iotappweb.urls')),
     path('ips/',include('ips.urls')),
     path('sdcsemillas/', include('sdcsemillas.urls')),
     path('scoresdc/',include('scorevalle.urls')),
