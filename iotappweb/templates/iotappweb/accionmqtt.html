@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Control ESP32</title>
+    <style>
+        button {
+            font-size: 20px;
+            padding: 15px 30px;
+            margin: 10px;
+            cursor: pointer;
+        }
+    </style>
+
+    <!-- Función para obtener CSRF token desde cookie -->
+    <script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+    </script>
+</head>
+<body>
+
+<h2>Control LED ESP32</h2>
+
+<div>
+    <button id="led-on">🔆 ENCENDER</button>
+    <button id="led-off">🌑 APAGAR</button>
+</div>
+
+<p id="estado-display">Última acción: <b>Ninguna</b></p>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+
+    // Función para actualizar el estado en pantalla
+    function mostrarEstado(estado) {
+        $("#estado-display").html("Última acción: <b>" + (estado || "desconocida").toUpperCase() + "</b>");
+    }
+
+    // Función para enviar la acción al servidor vía POST con CSRF
+    function enviarAccion(accion) {
+        $.ajax({
+            url: "{% url 'enviarinstruccion' %}",
+            type: "POST",
+            data: {accion: accion},
+            headers: {'X-CSRFToken': csrftoken},
+            success: function(data) {
+                console.log("Respuesta servidor:", data);
+                mostrarEstado(data.accion_recibida);
+            },
+            error: function(xhr, status, error) {
+                console.error("Error al enviar la acción:", error);
+                alert("❌ Error al enviar la acción al servidor");
+            }
+        });
+    }
+
+    // Botón ENCENDER
+    $("#led-on").click(function(e) {
+        e.preventDefault();
+        enviarAccion("ON");
+    });
+
+    // Botón APAGAR
+    $("#led-off").click(function(e) {
+        e.preventDefault();
+        enviarAccion("OFF");
+    });
+
+});
+</script>
+
+</body>
+</html>
