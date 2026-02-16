@@ -1,5 +1,5 @@
 from django.urls import path
-from app1 import views
+from iotappweb import views
 #from app1.views import *
 
 app_main ="iotappweb"
