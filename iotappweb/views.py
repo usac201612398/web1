@@ -124,7 +124,7 @@ def sensor_api(request):
     return JsonResponse(response)
 
 def tanquedashboard(request):
-    return render(request, "tanquedashboard.html")
+    return render(request, "iotappweb/tanquedashboard.html")
 
 def tanque_api(request):
     tanque_id = request.GET.get('tanque_id')
