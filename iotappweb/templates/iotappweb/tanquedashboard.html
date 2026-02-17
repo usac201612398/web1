@@ -108,9 +108,9 @@
                 <div class="card p-3">
                     <h5>Control Riego</h5>
                     <div class="btn-group my-2" role="group">
-                        <button class="btn btn-success" onclick="setRiego('Regando')">Regar</button>
-                        <button class="btn btn-danger" onclick="setRiego('En espera')">Detener</button>
-                        <button class="btn btn-primary" onclick="setRiego('Auto')">Auto</button>
+                        <button class="btn btn-success" onclick="enviarAccion('on')">Regar</button>
+                        <button class="btn btn-danger" onclick="enviarAccion('off')">Detener</button>
+                        <button class="btn btn-primary" onclick="enviarAccion('auto')">Auto</button>
 
                     </div>
                     <div class="mt-2">
@@ -127,9 +127,9 @@
                 <div class="card p-3">
                     <h5>Control Tanque</h5>
                     <div class="btn-group my-2" role="group">
-                        <button class="btn btn-success" onclick="setTanque('Llenando')">Llenar</button>
-                        <button class="btn btn-danger" onclick="setTanque('Detener')">Detener</button>
-                        <button class="btn btn-primary" onclick="setTanque('Auto')">Auto</button>
+                        <button class="btn btn-success" onclick="setTanque('on')">Llenar</button>
+                        <button class="btn btn-danger" onclick="setTanque('off')">Detener</button>
+                        <button class="btn btn-primary" onclick="setTanque('ato')">Auto</button>
                     </div>
                     <!-- Captions visibles -->
                     <div class="mt-2">
@@ -240,8 +240,8 @@
 
         function setRiego(accion) {
             switch (accion) {
-                case 'regando': estadoRiegoActual = 'Regando'; break;
-                case 'detener': estadoRiegoActual = 'En espera'; break;
+                case 'on': estadoRiegoActual = 'Regando'; break;
+                case 'off': estadoRiegoActual = 'En espera'; break;
                 case 'auto': estadoRiegoActual = 'Auto'; break;
             }
             document.getElementById('estadoRiego').innerText = estadoRiegoActual;
@@ -252,8 +252,8 @@
 
         function setTanque(accion) {
             switch (accion) {
-                case 'llenando': estadoTanqueActual = 'Llenando'; break;
-                case 'detener': estadoTanqueActual = 'En espera'; break;
+                case 'on': estadoTanqueActual = 'Llenando'; break;
+                case 'off': estadoTanqueActual = 'En espera'; break;
                 case 'auto': estadoTanqueActual = 'Auto'; break;
             }
             document.getElementById('estadoTanque').innerText = estadoTanqueActual;
@@ -270,6 +270,30 @@
         function setTanque(estado) {
             document.getElementById('estadoTanque').innerText = estado;
         }
+
+        function enviarAccion(accion, dispositivo) {
+            fetch("{% url 'enviarinstruccion' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: `accion=${accion}&dispositivo=${dispositivo}`
+            })
+                .then(res => res.json())
+                .then(data => {
+                    console.log("Respuesta MQTT:", data);
+                    if (dispositivo === "riego") {
+                        document.getElementById('estadoRiego').innerText = accion;
+                    } else if (dispositivo === "tanque") {
+                        document.getElementById('estadoTanque').innerText = accion;
+                    }
+                })
+                .catch(err => console.error("Error:", err));
+        }
+
+    </script>
+
 
     </script>
 </body>

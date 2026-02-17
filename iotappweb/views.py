@@ -11,68 +11,60 @@ from django.utils.dateparse import parse_datetime
 from django.db.models import Q
 from django.utils import timezone
 
-
+MQTT_HOST = "10.111.112.4"
+MQTT_PORT = 1883
+TOPIC = topic
+MQTT_USER = "sdc-iot"       
+MQTT_PASS = "nuevacontraseña"  
 
 def homepage(request):
     return render(request,'iotappweb/homepage.html')
 
-def publicar_mqtt(accion,topic):
-    APP_DIR = os.path.dirname(__file__)
-
-    MQTT_HOST = "a4810e38lk0oy-ats.iot.us-east-1.amazonaws.com"
-    MQTT_PORT = 8883
-    TOPIC = topic
-    #MQTT_USER = "sdc-iot"       # <-- Aquí tu usuario
-    #MQTT_PASS = "nuevacontraseña"    # <-- Aquí tu contraseña
-
-    ca = os.path.join(APP_DIR, "AmazonRootCA1.pem")
-    cert = os.path.join(APP_DIR, "cert.pem.crt")
-    key = os.path.join(APP_DIR, "private.pem.key")
-
+def publicar_mqtt(accion, topic):
+    """
+    Publica un mensaje MQTT en el topic dado.
+    """
     retorno = "Esperando"
     try:
-
         client = mqtt.Client(client_id=f"django-{uuid.uuid4()}")
-        #client.username_pw_set(MQTT_USER, MQTT_PASS)
-        client.tls_set(
-            ca_certs=ca,
-            certfile=cert,
-            keyfile=key
-        )
-
+        client.username_pw_set(MQTT_USER, MQTT_PASS)
         client.connect(MQTT_HOST, MQTT_PORT, 60)
-
         client.loop_start()
-        
-        time.sleep(1)
-        
-        result = client.publish(TOPIC, accion.upper(), qos=0)
+
+        result = client.publish(topic, accion.upper(), qos=0)
+        result.wait_for_publish()
+
         if result.rc == mqtt.MQTT_ERR_SUCCESS:
             retorno = "Publicado con éxito"
         else:
             retorno = f"Error código {result.rc}"
-        result.wait_for_publish()
 
-        time.sleep(0.5)
         client.loop_stop()
         client.disconnect()
-
     except Exception as e:
         retorno = f"Error MQTT: {str(e)}"
 
-    return {
-        "retorno":retorno
-    }
+    return retorno
 
 def enviarinstruccion(request):
+
     if request.method == "POST":
         accion = request.POST.get("accion")
-        print("Acción recibida:", accion)
-        info = publicar_mqtt(accion,"casa/tanque01/llenado/manual")
-        return JsonResponse({"status": "ok", "accion_recibida": accion,
-                            "retorno": info["retorno"]})
+        dispositivo = request.POST.get("dispositivo")
 
-    return render(request, "iotappweb/accionmqtt.html")
+        if dispositivo == "riego":
+            topic = "casa/tanque01/riego/manual"
+        elif dispositivo == "tanque":
+            topic = "casa/tanque01/llenado/manual"
+        else:
+            return JsonResponse({"status":"error","msg":"Dispositivo desconocido"})
+
+        retorno = publicar_mqtt(accion, topic)
+        return JsonResponse({"status":"ok","accion":accion,"dispositivo":dispositivo,"retorno":retorno})
+
+    return JsonResponse({"status":"error","msg":"Método no permitido"})
+
+    return render(request, "iotappweb/tanquedashboard.html")
 
 def plantadashboard(request):
     plantas = m1Sensoresdata.objects.values_list('planta_id', flat=True).distinct()
