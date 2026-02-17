@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Tanque</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .tanque-container { width: 150px; height: 300px; border: 2px solid #333; border-radius: 10px; position: relative; background: #eee; margin-bottom: 20px; }
+        .nivel { position: absolute; bottom: 0; width: 100%; text-align: center; color: white; font-weight: bold; border-radius: 8px 8px 0 0; }
+        .data-row { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<h1>Dashboard del Tanque</h1>
+
+<div class="data-row">
+    <div class="tanque-container">
+        <div id="nivelTanque" class="nivel" style="height: 50%; background: blue;">50%</div>
+    </div>
+</div>
+
+<div class="data-row">
+    <p>Temperatura: <span id="temperatura">0</span> °C</p>
+    <p>Caudal: <span id="caudal">0</span> L/min</p>
+    <p>Última actualización: <span id="timestamp"></span></p>
+</div>
+
+<!-- Checkbox para graficas -->
+<div class="data-row">
+    <label><input type="checkbox" id="chkTemp" checked> Temperatura</label>
+    <label><input type="checkbox" id="chkCaudal" checked> Caudal</label>
+</div>
+
+<canvas id="tanqueChart" height="200"></canvas>
+
+<script>
+const ctx = document.getElementById('tanqueChart').getContext('2d');
+const chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: [],
+        datasets: [
+            { label: 'Temperatura (°C)', data: [], borderColor: 'red', backgroundColor: 'rgba(255,0,0,0.2)', tension: 0.3, yAxisID: 'y1' },
+            { label: 'Caudal (L/min)', data: [], borderColor: 'green', backgroundColor: 'rgba(0,255,0,0.2)', tension: 0.3, yAxisID: 'y2' }
+        ]
+    },
+    options: {
+        responsive: true,
+        interaction: { mode: 'index', intersect: false },
+        scales: {
+            y1: { type: 'linear', position: 'left', title: { display: true, text: 'Temperatura (°C)' } },
+            y2: { type: 'linear', position: 'right', title: { display: true, text: 'Caudal (L/min)' }, grid: { drawOnChartArea: false } }
+        }
+    }
+});
+
+// Función para actualizar nivel visual del tanque
+function actualizarTanque(nivel) {
+    const tanque = document.getElementById('nivelTanque');
+    tanque.style.height = nivel + "%";
+
+    // Cambiar color según nivel
+    if (nivel >= 75) tanque.style.background = "blue";
+    else if (nivel >= 50) tanque.style.background = "green";
+    else if (nivel >= 25) tanque.style.background = "orange";
+    else tanque.style.background = "red";
+
+    tanque.innerText = nivel + "%";
+}
+
+// Función para cargar datos desde API
+async function cargarDatos() {
+    const response = await fetch('/api/tanque/?limite=50');
+    const data = await response.json();
+
+    // Actualizar datos
+    document.getElementById('temperatura').innerText = data.latest.temperatura;
+    document.getElementById('caudal').innerText = data.latest.caudal;
+    document.getElementById('timestamp').innerText = data.latest.timestamp;
+    actualizarTanque(data.latest.nivel);
+
+    // Actualizar gráfica
+    chart.data.labels = data.timestamps;
+    chart.data.datasets[0].data = data.temperatura;
+    chart.data.datasets[1].data = data.caudal;
+    chart.update();
+}
+
+// Checkboxes para mostrar/ocultar series
+document.getElementById('chkTemp').addEventListener('change', e => {
+    chart.data.datasets[0].hidden = !e.target.checked;
+    chart.update();
+});
+document.getElementById('chkCaudal').addEventListener('change', e => {
+    chart.data.datasets[1].hidden = !e.target.checked;
+    chart.update();
+});
+
+// Cargar inicialmente y actualizar cada 30s
+cargarDatos();
+setInterval(cargarDatos, 30000);
+</script>
+</body>
+</html>

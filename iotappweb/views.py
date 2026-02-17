@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import m1Sensoresdata
+from .models import m1Sensoresdata, m2Sensoresdata
 # Create your views here.
 import time
 import paho.mqtt.client as mqtt
@@ -123,4 +123,34 @@ def sensor_api(request):
 
     return JsonResponse(response)
 
+def tanque_dashboard(request):
+    return render(request, "tanquedashboard.html")
+
+def tanque_api(request):
+    tanque_id = request.GET.get('tanque_id')
+    limite = int(request.GET.get('limite', 50))
+
+    data = m2Sensoresdata.objects.all().order_by('-timestamp')
+    if tanque_id:
+        data = data.filter(tanque_id=tanque_id)
+    
+    data = data[:limite][::-1]  # invertir para que vaya cronológico
+
+    def round2(v):
+        return round(v, 2) if v is not None else 0
+
+    response = {
+        "timestamps": [d.timestamp.strftime("%H:%M:%S") for d in data],
+        "nivel": [round2(d.nivel) for d in data],
+        "temperatura": [round2(d.temperatura) for d in data],
+        "caudal": [round2(d.caudal) for d in data],
+        "latest": {
+            "nivel": round2(data[-1].nivel) if data else 0,
+            "temperatura": round2(data[-1].temperatura) if data else 0,
+            "caudal": round2(data[-1].caudal) if data else 0,
+            "timestamp": data[-1].timestamp.strftime("%Y-%m-%d %H:%M:%S") if data else ""
+        }
+    }
+
+    return JsonResponse(response)
 

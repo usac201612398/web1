@@ -14,7 +14,8 @@ MQTT_PORT = 1883
 MQTT_HOST = "10.111.112.4"
 MQTT_USER = "sdc-iot"
 MQTT_PASS = "nuevacontraseña"
-TOPIC = "casa/planta01/data"
+TOPIC_PLANTA "casa/planta01/data"
+TOPIC_TANQUE = "casa/tanque01/data"
 
 class Command(BaseCommand):
     help = "Listener MQTT que guarda datos en la base de datos"
@@ -28,29 +29,60 @@ class Command(BaseCommand):
         #key = os.path.join(BASE_DIR, "certs/private.pem.key")
 
         def on_connect(client, userdata, flags, rc):
-            client.subscribe(TOPIC)
+            client.subscribe(TOPIC_PLANTA)
 
         def on_message(client, userdata, msg):
             try:
                 payload = msg.payload.decode()
-                print("Mensaje recibido:", payload)
-
+                print("Mensaje recibido en", msg.topic, ":", payload)
                 data = json.loads(payload)
 
-                planta_id = data.get("planta_id")
-                temperatura = float(data.get("temp_amb"))
-                hum_aire = float(data.get("hum_amb"))
-                hum_suelo = float(data.get("hum_suelo"))
-                peso = float(data.get("peso"))
+                if msg.topic == TOPIC_PLANTA:
+                    # Guardar datos de planta
+                    m1Sensoresdata.objects.create(
+                        planta_id=data.get("planta_id"),
+                        temperatura=float(data.get("temp_amb", 0)),
+                        humedad_aire=float(data.get("hum_amb", 0)),
+                        humedad_suelo=float(data.get("hum_suelo", 0)),
+                        peso=float(data.get("peso", 0)),
+                    )
+                elif msg.topic == TOPIC_TANQUE:
+                    # Guardar datos de tanque
+                    m2Sensoresdata.objects.create(
+                        tanque_id=data.get("tanque_id"),
+                        temperatura=float(data.get("temp_agua", 0)),
+                        caudal=float(data.get("caudal", 0)),try:
+        payload = msg.payload.decode()
+        print("Mensaje recibido en", msg.topic, ":", payload)
+        data = json.loads(payload)
 
-                m1Sensoresdata.objects.create(
-                    planta_id=planta_id,
-                    temperatura=temperatura,
-                    humedad_aire=hum_aire,
-                    humedad_suelo=hum_suelo,
-                    peso=peso,
-                )
+        if msg.topic == TOPIC_PLANTA:
+            # Guardar datos de planta
+            m1Sensoresdata.objects.create(
+                planta_id=data.get("planta_id"),
+                temperatura=float(data.get("temp_amb", 0)),
+                humedad_aire=float(data.get("hum_amb", 0)),
+                humedad_suelo=float(data.get("hum_suelo", 0)),
+                peso=float(data.get("peso", 0)),
+            )
+        elif msg.topic == TOPIC_TANQUE:
+            # Guardar datos de tanque
+            m2Sensoresdata.objects.create(
+                tanque_id=data.get("tanque_id"),
+                temperatura=float(data.get("temp_agua", 0)),
+                caudal=float(data.get("caudal", 0)),
+                porcentaje_llenado=float(data.get("porcentaje_llenado", 0)),
+                nivel=float(data.get("nivel", 0)),
+            )
+        else:
+            print("Tópico desconocido:", msg.topic)
 
+    except Exception as e:
+        print("Error procesando mensaje:", e)
+                        nivel=float(data.get("nivel", 0)),
+                    )
+                else:
+                    print("Tópico desconocido:", msg.topic)
 
             except Exception as e:
                 print("Error procesando mensaje:", e)
