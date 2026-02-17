@@ -147,7 +147,8 @@ def tanque_api(request):
             "temperatura": round2(data[-1].temperatura) if data else 0,
             "caudal": round2(data[-1].caudal) if data else 0,
             "nivel": round2(data[-1].nivel) if data else 0,
-            "porcentaje_llenado": round2(data[-1].porcentaje_llenado if data else 0,
+            
+            "porcentaje_llenado": round2(data[-1].porcentaje_llenado) if data else 0,
             "timestamp": data[-1].timestamp.strftime("%Y-%m-%d %H:%M:%S") if data else ""
         }
     }
