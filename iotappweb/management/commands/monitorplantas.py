@@ -51,34 +51,8 @@ class Command(BaseCommand):
                     m2Sensoresdata.objects.create(
                         tanque_id=data.get("tanque_id"),
                         temperatura=float(data.get("temp_agua", 0)),
-                        caudal=float(data.get("caudal", 0)),try:
-        payload = msg.payload.decode()
-        print("Mensaje recibido en", msg.topic, ":", payload)
-        data = json.loads(payload)
-
-        if msg.topic == TOPIC_PLANTA:
-            # Guardar datos de planta
-            m1Sensoresdata.objects.create(
-                planta_id=data.get("planta_id"),
-                temperatura=float(data.get("temp_amb", 0)),
-                humedad_aire=float(data.get("hum_amb", 0)),
-                humedad_suelo=float(data.get("hum_suelo", 0)),
-                peso=float(data.get("peso", 0)),
-            )
-        elif msg.topic == TOPIC_TANQUE:
-            # Guardar datos de tanque
-            m2Sensoresdata.objects.create(
-                tanque_id=data.get("tanque_id"),
-                temperatura=float(data.get("temp_agua", 0)),
-                caudal=float(data.get("caudal", 0)),
-                porcentaje_llenado=float(data.get("porcentaje_llenado", 0)),
-                nivel=float(data.get("nivel", 0)),
-            )
-        else:
-            print("Tópico desconocido:", msg.topic)
-
-    except Exception as e:
-        print("Error procesando mensaje:", e)
+                        caudal=float(data.get("caudal", 0)),
+                        porcentaje_llenado=float(data.get("porcentaje_llenado", 0)),
                         nivel=float(data.get("nivel", 0)),
                     )
                 else:
@@ -86,6 +60,7 @@ class Command(BaseCommand):
 
             except Exception as e:
                 print("Error procesando mensaje:", e)
+                        
 
         client = mqtt.Client()
         '''
