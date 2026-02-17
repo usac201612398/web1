@@ -231,7 +231,7 @@
             const hasta = document.getElementById('hasta').value;
             const limite = document.getElementById('limite').value;
 
-            let url = `{% url 'sensor_api' %}?limite=${limite}`;
+            let url = `{% url 'planta_api' %}?limite=${limite}`;
 
             if (planta) url += `&planta_id=${planta}`;
             if (desde) url += `&desde=${desde}`;

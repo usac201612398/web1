@@ -8,7 +8,7 @@ urlpatterns = [
     path("homepage/", views.homepage, name="homepage"),
     path("iot/accion",views.enviarinstruccion,name='enviarinstruccion'),
     path("planta/",views.plantadashboard,name='plantadashboard'),
-    path('api/sensores/', views.sensor_api, name='sensor_api'),
+    path('api/planta/', views.planta_api, name='planta_api'),
     path('tanque/', views.tanquedashboard, name='tanquedashboard'),
     path('api/tanque/', views.tanque_api, name='tanque_api'),
 
