@@ -36,7 +36,7 @@
 <body>
 
     <div class="container my-5">
-        <h2 class="text-center mb-4 fw-bold">Dashboard del Tanque</h2>
+        <h2 class="text-center mb-4 fw-bold">Dasboard del Tanque</h2>
 
         <!-- Filtros -->
         <div class="row g-3 mb-3">
@@ -66,57 +66,53 @@
             </div>
         </div>
 
-        <!-- Contenedor principal con tanque a la izquierda -->
-        <div class="row align-items-start g-4">
-            <!-- Tanque visual a la izquierda -->
-            <div class="col-md-2 text-center">
-                <div id="nivelTanque">
-                    <div id="nivelFill"></div>
+        <!-- Cards -->
+        <div class="row g-4 justify-content-center text-white my-3">
+            <div class="col-md-3">
+                <div class="card" style="background: linear-gradient(135deg,#2C3E50,#34495E);">
+                    <div class="card-body">
+                        <div>
+                            <div class="card-title">Temperatura Agua</div>
+                            <div class="fs-value"><span id="tempAgua">0</span> °C</div>
+                        </div>
+                        <div class="card-icon"><i class="fas fa-thermometer-half"></i></div>
+                    </div>
                 </div>
-                <div class="fs-value mt-2"><span id="nivel">0</span>%</div>
-                <div class="text-muted mt-1">Última actualización: <span id="timestampTanque"></span></div>
             </div>
-
-            <!-- Cards a la derecha -->
-            <div class="col-md-10">
-                <div class="row g-4">
-                    <div class="col-md-3">
-                        <div class="card text-white" style="background: linear-gradient(135deg,#2C3E50,#34495E);">
-                            <div class="card-body">
-                                <div>
-                                    <div class="card-title">Temperatura Agua</div>
-                                    <div class="fs-value"><span id="tempAgua">0</span> °C</div>
-                                </div>
-                                <div class="card-icon"><i class="fas fa-thermometer-half"></i></div>
-                            </div>
+            <div class="col-md-3">
+                <div class="card" style="background: linear-gradient(135deg,#1ABC9C,#16A085);">
+                    <div class="card-body">
+                        <div>
+                            <div class="card-title">Caudal</div>
+                            <div class="fs-value"><span id="caudal">0</span> L/min</div>
                         </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card text-white" style="background: linear-gradient(135deg,#1ABC9C,#16A085);">
-                            <div class="card-body">
-                                <div>
-                                    <div class="card-title">Caudal</div>
-                                    <div class="fs-value"><span id="caudal">0</span> L/min</div>
-                                </div>
-                                <div class="card-icon"><i class="fas fa-water"></i></div>
-                            </div>
-                        </div>
+                        <div class="card-icon"><i class="fas fa-water"></i></div>
                     </div>
                 </div>
-
-                <!-- Checkboxes -->
-                <div class="my-3">
-                    <label class="me-2"><input type="checkbox" id="showNivel" checked> Nivel</label>
-                    <label class="me-2"><input type="checkbox" id="showTemp" checked> Temperatura</label>
-                    <label class="me-2"><input type="checkbox" id="showCaudal" checked> Caudal</label>
-                </div>
-
-                <!-- Gráfica -->
-                <canvas id="tanqueChart" height="200"></canvas>
             </div>
         </div>
-    </div>
 
+        <!-- Tanque visual -->
+        <div class="text-center my-4">
+            <div id="nivelTanque">
+                <div id="nivelFill"></div>
+            </div>
+            <div class="fs-value mt-2"><span id="nivel">0</span>%</div>
+            <div class="text-muted mt-1">Última actualización: <span id="timestampTanque"></span></div>
+        </div>
+
+        <!-- Checkboxes -->
+        <div class="my-3 text-center">
+            <label class="me-2"><input type="checkbox" id="showNivel" checked> Nivel</label>
+            <label class="me-2"><input type="checkbox" id="showTemp" checked> Temperatura</label>
+            <label class="me-2"><input type="checkbox" id="showCaudal" checked> Caudal</label>
+        </div>
+
+        <!-- Gráfica -->
+        <div class="container my-4">
+            <canvas id="tanqueChart" height="200"></canvas>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
