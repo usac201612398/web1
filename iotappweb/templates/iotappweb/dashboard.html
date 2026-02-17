@@ -55,7 +55,7 @@
                     <div class="card-body">
                         <div>
                             <div class="card-title">Temperatura</div>
-                            <div class="fs-value"><span id="temperatura">{{ latest.temperatura|floatformat:2 }}</span>
+                            <div class="fs-value"><span id="temperatura">0</span>
                                 °C</div>
                         </div>
                         <div class="card-icon"><i class="fas fa-thermometer-half"></i></div>
@@ -67,7 +67,7 @@
                     <div class="card-body">
                         <div>
                             <div class="card-title">Humedad Ambiente</div>
-                            <div class="fs-value"><span id="humedad_aire">{{ latest.humedad_aire|floatformat:2 }}</span>
+                            <div class="fs-value"><span id="humedad_aire">0</span>
                                 %</div>
                         </div>
                         <div class="card-icon"><i class="fas fa-tint"></i></div>
@@ -80,7 +80,7 @@
                         <div>
                             <div class="card-title">Humedad Suelo</div>
                             <div class="fs-value">
-                                <span id="humedad_suelo">{{ latest.humedad_suelo|floatformat:2 }}</span> %
+                                <span id="humedad_suelo">0</span> %
                             </div>
                         </div>
                         <div class="card-icon"><i class="fas fa-water"></i></div>
@@ -92,7 +92,7 @@
                     <div class="card-body">
                         <div>
                             <div class="card-title">Peso Planta</div>
-                            <div class="fs-value"><span id="peso">{{ latest.peso|floatformat:2 }}</span> kg</div>
+                            <div class="fs-value"><span id="peso">0</span> kg</div>
                         </div>
                         <div class="card-icon"><i class="fas fa-weight-scale"></i></div>
                     </div>
@@ -212,7 +212,7 @@
             const hasta = document.getElementById('hasta').value;
             const limite = document.getElementById('limite').value;
 
-            let url = `/api/sensores/?limite=${limite}`;
+            let url = `{% url 'sensor_api' %}?limite=${limite}`;
 
             if (planta) url += `&planta_id=${planta}`;
             if (desde) url += `&desde=${desde}`;
