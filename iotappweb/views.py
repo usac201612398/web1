@@ -143,6 +143,7 @@ def tanque_api(request):
         "temperatura": [round2(d.temperatura) for d in data],
         "caudal": [round2(d.caudal) for d in data],
         "nivel": [round2(d.nivel) for d in data],
+        "porcentaje_llenado": [round2(d.porcentaje_llenado) for d in data],
         "latest": {
             "temperatura": round2(data[-1].temperatura) if data else 0,
             "caudal": round2(data[-1].caudal) if data else 0,
