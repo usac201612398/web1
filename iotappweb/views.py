@@ -29,7 +29,7 @@ def publicar_mqtt(accion, topic):
         client.username_pw_set(MQTT_USER, MQTT_PASS)
         client.connect(MQTT_HOST, MQTT_PORT, 60)
         client.loop_start()
-
+        time.sleep(1)
         result = client.publish(topic, accion.upper(), qos=0)
         result.wait_for_publish()
 
@@ -40,6 +40,7 @@ def publicar_mqtt(accion, topic):
 
         client.loop_stop()
         client.disconnect()
+        
     except Exception as e:
         retorno = f"Error MQTT: {str(e)}"
 
