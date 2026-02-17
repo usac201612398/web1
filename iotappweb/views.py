@@ -7,6 +7,8 @@ import uuid
 import os
 from django.http import JsonResponse
 import json
+from django.utils.dateparse import parse_datetime
+from django.db.models import Q
 
 
 def homepage(request):
@@ -71,21 +73,49 @@ def enviarinstruccion(request):
     return render(request, "iotappweb/accionmqtt.html")
 
 def dashboard(request):
-    data = m1Sensoresdata.objects.order_by('-timestamp')[:50][::-1]
+    plantas = m1Sensoresdata.objects.values_list('planta_id', flat=True).distinct()
+    
+    return render(request, 'iotappweb/dashboard.html', {
+        'plantas': plantas
+    })
+    
+def sensor_api(request):
+    planta_id = request.GET.get('planta_id')
+    desde = request.GET.get('desde')
+    hasta = request.GET.get('hasta')
+    limite = request.GET.get('limite', 50)
 
-    latest = data[-1] if data else None
+    data = m1Sensoresdata.objects.all().order_by('-timestamp')
 
-    def round2(value):
-        return round(value, 2) if value is not None else 0
+    if planta_id:
+        data = data.filter(planta_id=planta_id)
 
-    context = {
-        'latest': latest,
-        'timestamps': json.dumps([d.timestamp.strftime("%H:%M:%S") for d in data]),
-        'temperatura': json.dumps([round2(d.temperatura) for d in data]),
-        'humedad_aire': json.dumps([round2(d.humedad_aire) for d in data]),
-        'humedad_suelo': json.dumps([round2(d.humedad_suelo) for d in data]),
-        'peso': json.dumps([round2(d.peso) for d in data]),
+    if desde:
+        data = data.filter(timestamp__gte=parse_datetime(desde))
+
+    if hasta:
+        data = data.filter(timestamp__lte=parse_datetime(hasta))
+
+    data = data[:int(limite)][::-1]
+
+    def round2(v):
+        return round(v, 2) if v else 0
+
+    response = {
+        "timestamps": [d.timestamp.strftime("%H:%M:%S") for d in data],
+        "temperatura": [round2(d.temperatura) for d in data],
+        "humedad_aire": [round2(d.humedad_aire) for d in data],
+        "humedad_suelo": [round2(d.humedad_suelo) for d in data],
+        "peso": [round2(d.peso) for d in data],
+        "latest": {
+            "temperatura": round2(data[-1].temperatura) if data else 0,
+            "humedad_aire": round2(data[-1].humedad_aire) if data else 0,
+            "humedad_suelo": round2(data[-1].humedad_suelo) if data else 0,
+            "peso": round2(data[-1].peso) if data else 0,
+            "timestamp": data[-1].timestamp.strftime("%Y-%m-%d %H:%M:%S") if data else ""
+        }
     }
 
-    return render(request, 'iotappweb/dashboard.html', context)
+    return JsonResponse(response)
+
 
