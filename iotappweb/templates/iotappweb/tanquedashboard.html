@@ -1,168 +1,190 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Tanque</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<style>
-body { background-color: #f4f6f9; }
-.card { border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-height:120px; }
-.card .card-body { display:flex; align-items:center; justify-content:space-between; }
-.card-icon { font-size:2.5rem; opacity:0.7; }
-.fs-value { font-size:1.8rem; font-weight:bold; }
-#nivelTanque { width: 50px; height: 200px; margin: 0 auto; background: #eee; border-radius: 8px; position: relative; }
-#nivelFill { position: absolute; bottom: 0; width: 100%; background: #FFC107; border-radius: 8px 8px 0 0; }
-</style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Tanque</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- CSS tanque visual -->
+    <style>
+        #nivelTanque {
+            width: 60px;
+            height: 180px;
+            border: 2px solid #333;
+            border-radius: 6px;
+            background-color: #e0e0e0;
+            position: relative;
+            overflow: hidden;
+            margin: auto;
+        }
+
+        #nivelFill {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: linear-gradient(135deg, #3498DB, #2980B9);
+            transition: height 0.5s ease-in-out;
+        }
+    </style>
+
 </head>
+
 <body>
 
-<div class="container my-4 text-center">
-    <h1>Dashboard del Tanque</h1>
+    <div class="container my-5">
+        <h2 class="text-center mb-4 fw-bold">Dasboard del Tanque</h2>
 
-    <!-- Filtros -->
-    <div class="row g-3 my-3 justify-content-center">
-        <div class="col-md-3">
-            <select id="tanqueSelect" class="form-select">
-                <option value="">Todos los tanques</option>
-                {% for t in tanques %}
-                <option value="{{ t }}">{{ t }}</option>
-                {% endfor %}
-            </select>
+        <!-- Filtros -->
+        <div class="row g-3 mb-3">
+            <div class="col-md-3">
+                <select id="tanqueSelect" class="form-select">
+                    <option value="">Todos los tanques</option>
+                    <option value="tanque01">Tanque 01</option>
+                    <option value="tanque02">Tanque 02</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <input type="datetime-local" id="desdeTanque" class="form-control">
+            </div>
+            <div class="col-md-3">
+                <input type="datetime-local" id="hastaTanque" class="form-control">
+            </div>
+            <div class="col-md-2">
+                <select id="limiteTanque" class="form-select">
+                    <option value="20">20</option>
+                    <option value="50" selected>50</option>
+                    <option value="100">100</option>
+                    <option value="200">200</option>
+                </select>
+            </div>
+            <div class="col-md-1">
+                <button class="btn btn-primary w-100" onclick="cargarDatosTanque()">OK</button>
+            </div>
         </div>
-        <div class="col-md-3"><input type="datetime-local" id="desde" class="form-control"></div>
-        <div class="col-md-3"><input type="datetime-local" id="hasta" class="form-control"></div>
-        <div class="col-md-2">
-            <select id="limite" class="form-select">
-                <option value="20">20</option>
-                <option value="50" selected>50</option>
-                <option value="100">100</option>
-                <option value="200">200</option>
-            </select>
-        </div>
-        <div class="col-md-1">
-            <button class="btn btn-primary w-100" onclick="cargarDatosTanque()">OK</button>
-        </div>
-    </div>
 
-    <!-- Cards -->
-    <div class="row g-4 justify-content-center text-white my-3">
-        <div class="col-md-3">
-            <div class="card" style="background: linear-gradient(135deg,#2C3E50,#34495E);">
-                <div class="card-body">
-                    <div>
-                        <div class="card-title">Temperatura Agua</div>
-                        <div class="fs-value"><span id="tempAgua">0</span> °C</div>
+        <!-- Cards -->
+        <div class="row g-4 justify-content-center text-white my-3">
+            <div class="col-md-3">
+                <div class="card" style="background: linear-gradient(135deg,#2C3E50,#34495E);">
+                    <div class="card-body">
+                        <div>
+                            <div class="card-title">Temperatura Agua</div>
+                            <div class="fs-value"><span id="tempAgua">0</span> °C</div>
+                        </div>
+                        <div class="card-icon"><i class="fas fa-thermometer-half"></i></div>
                     </div>
-                    <div class="card-icon"><i class="fas fa-thermometer-half"></i></div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card" style="background: linear-gradient(135deg,#1ABC9C,#16A085);">
-                <div class="card-body">
-                    <div>
-                        <div class="card-title">Caudal</div>
-                        <div class="fs-value"><span id="caudal">0</span> L/min</div>
+            <div class="col-md-3">
+                <div class="card" style="background: linear-gradient(135deg,#1ABC9C,#16A085);">
+                    <div class="card-body">
+                        <div>
+                            <div class="card-title">Caudal</div>
+                            <div class="fs-value"><span id="caudal">0</span> L/min</div>
+                        </div>
+                        <div class="card-icon"><i class="fas fa-water"></i></div>
                     </div>
-                    <div class="card-icon"><i class="fas fa-water"></i></div>
                 </div>
             </div>
         </div>
-        <div class="col-md-2">
-            <div class="card text-dark" style="background: linear-gradient(135deg,#FFC107,#F39C12);">
-                <div class="card-body flex-column align-items-center">
-                    <div class="card-title">Nivel Tanque</div>
-                    <div id="nivelTanque"><div id="nivelFill" style="height:0%"></div></div>
-                    <div class="fs-value mt-2"><span id="nivel">0</span>%</div>
-                </div>
+
+        <!-- Tanque visual -->
+        <div class="text-center my-4">
+            <div id="nivelTanque">
+                <div id="nivelFill"></div>
             </div>
+            <div class="fs-value mt-2"><span id="nivel">0</span>%</div>
+            <div class="text-muted mt-1">Última actualización: <span id="timestampTanque"></span></div>
+        </div>
+
+        <!-- Checkboxes -->
+        <div class="my-3 text-center">
+            <label class="me-2"><input type="checkbox" id="showNivel" checked> Nivel</label>
+            <label class="me-2"><input type="checkbox" id="showTemp" checked> Temperatura</label>
+            <label class="me-2"><input type="checkbox" id="showCaudal" checked> Caudal</label>
+        </div>
+
+        <!-- Gráfica -->
+        <div class="container my-4">
+            <canvas id="tanqueChart" height="200"></canvas>
         </div>
     </div>
 
-    <!-- Checkboxes -->
-    <div class="my-2">
-        <label><input type="checkbox" id="showTemp" checked> Temperatura</label>
-        <label><input type="checkbox" id="showCaudal" checked> Caudal</label>
-        <label><input type="checkbox" id="showNivel" checked> Nivel</label>
-    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+    <script>
+        const ctx = document.getElementById('tanqueChart').getContext('2d');
 
-    <!-- Gráfica de línea -->
-    <canvas id="tanqueChart" height="200"></canvas>
-</div>
+        const tanqueChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [
+                    { label: 'Temperatura (°C)', data: [], borderColor: '#FF4C4C', backgroundColor: 'rgba(255,76,76,0.2)', tension: 0.3, yAxisID: 'y' },
+                    { label: 'Caudal (L/min)', data: [], borderColor: '#4C6EFF', backgroundColor: 'rgba(76,110,255,0.2)', tension: 0.3, yAxisID: 'y1' },
+                    { label: 'Nivel (%)', data: [], borderColor: '#FFC107', backgroundColor: 'rgba(255,193,7,0.2)', tension: 0.3, yAxisID: 'y2' }
+                ]
+            },
+            options: {
+                responsive: true,
+                interaction: { mode: 'index', intersect: false },
+                scales: {
+                    x: { ticks: { maxTicksLimit: 10 } },
+                    y: { type: 'linear', display: true, position: 'left', title: { display: true, text: 'Temperatura (°C)' } },
+                    y1: { type: 'linear', display: true, position: 'right', title: { display: true, text: 'Caudal (L/min)' }, grid: { drawOnChartArea: false } },
+                    y2: { type: 'linear', display: true, position: 'right', title: { display: true, text: 'Nivel (%)' }, grid: { drawOnChartArea: false } }
+                }
+            }
+        });
 
-<script>
-const ctx = document.getElementById('tanqueChart').getContext('2d');
+        async function cargarDatosTanque() {
+            const tanque = document.getElementById('tanqueSelect').value;
+            const desde = document.getElementById('desde').value;
+            const hasta = document.getElementById('hasta').value;
+            const limite = document.getElementById('limite').value;
 
-const tanqueChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: [],
-        datasets: [
-            { label: 'Temperatura (°C)', data: [], borderColor:'#FF4C4C', backgroundColor:'rgba(255,76,76,0.2)', tension:0.3, yAxisID:'y' },
-            { label: 'Caudal (L/min)', data: [], borderColor:'#4C6EFF', backgroundColor:'rgba(76,110,255,0.2)', tension:0.3, yAxisID:'y1' },
-            { label: 'Nivel (%)', data: [], borderColor:'#FFC107', backgroundColor:'rgba(255,193,7,0.2)', tension:0.3, yAxisID:'y2' }
-        ]
-    },
-    options: {
-        responsive:true,
-        interaction:{mode:'index', intersect:false},
-        scales:{
-            x:{ticks:{maxTicksLimit:10}},
-            y:{type:'linear', display:true, position:'left', title:{display:true,text:'Temperatura (°C)'}},
-            y1:{type:'linear', display:true, position:'right', title:{display:true,text:'Caudal (L/min)'}, grid:{drawOnChartArea:false}},
-            y2:{type:'linear', display:true, position:'right', title:{display:true,text:'Nivel (%)'}, grid:{drawOnChartArea:false}}
+            let url = `{% url 'tanque_api' %}?limite=${limite}`;
+
+            if (tanque) url += `&tanque_id=${tanque}`;
+            if (desde) url += `&desde=${desde}`;
+            if (hasta) url += `&hasta=${hasta}`;
+
+            const response = await fetch(url);
+            const data = await response.json();
+
+            // actualizar cards
+            document.getElementById('tempAgua').innerText = data.latest.temperatura;
+            document.getElementById('caudal').innerText = data.latest.caudal;
+            document.getElementById('nivel').innerText = data.latest.nivel;
+            document.getElementById('nivelFill').style.height = data.latest.nivel + '%';
+
+            // actualizar gráfica
+            tanqueChart.data.labels = data.timestamps;
+            tanqueChart.data.datasets[0].data = data.temperatura;
+            tanqueChart.data.datasets[1].data = data.caudal;
+            tanqueChart.data.datasets[2].data = data.nivel;
+
+            // mostrar/ocultar series
+            tanqueChart.data.datasets[0].hidden = !document.getElementById('showTemp').checked;
+            tanqueChart.data.datasets[1].hidden = !document.getElementById('showCaudal').checked;
+            tanqueChart.data.datasets[2].hidden = !document.getElementById('showNivel').checked;
+
+            tanqueChart.update();
         }
-    }
-});
 
-async function cargarDatosTanque(){
-    const tanque = document.getElementById('tanqueSelect').value;
-    const desde = document.getElementById('desde').value;
-    const hasta = document.getElementById('hasta').value;
-    const limite = document.getElementById('limite').value;
+        // eventos checkbox
+        document.getElementById('showTemp').addEventListener('change', cargarDatosTanque);
+        document.getElementById('showCaudal').addEventListener('change', cargarDatosTanque);
+        document.getElementById('showNivel').addEventListener('change', cargarDatosTanque);
 
-    let url = `{% url 'tanque_api' %}?limite=${limite}`;
-
-    if(tanque) url += `&tanque_id=${tanque}`;
-    if(desde) url += `&desde=${desde}`;
-    if(hasta) url += `&hasta=${hasta}`;
-
-    const response = await fetch(url);
-    const data = await response.json();
-
-    // actualizar cards
-    document.getElementById('tempAgua').innerText = data.latest.temperatura;
-    document.getElementById('caudal').innerText = data.latest.caudal;
-    document.getElementById('nivel').innerText = data.latest.nivel;
-    document.getElementById('nivelFill').style.height = data.latest.nivel + '%';
-
-    // actualizar gráfica
-    tanqueChart.data.labels = data.timestamps;
-    tanqueChart.data.datasets[0].data = data.temperatura;
-    tanqueChart.data.datasets[1].data = data.caudal;
-    tanqueChart.data.datasets[2].data = data.nivel;
-
-    // mostrar/ocultar series
-    tanqueChart.data.datasets[0].hidden = !document.getElementById('showTemp').checked;
-    tanqueChart.data.datasets[1].hidden = !document.getElementById('showCaudal').checked;
-    tanqueChart.data.datasets[2].hidden = !document.getElementById('showNivel').checked;
-
-    tanqueChart.update();
-}
-
-// eventos checkbox
-document.getElementById('showTemp').addEventListener('change', cargarDatosTanque);
-document.getElementById('showCaudal').addEventListener('change', cargarDatosTanque);
-document.getElementById('showNivel').addEventListener('change', cargarDatosTanque);
-
-// actualizar cada minuto
-cargarDatosTanque();
-setInterval(cargarDatosTanque, 2000);
-</script>
+        // actualizar cada minuto
+        cargarDatosTanque();
+        setInterval(cargarDatosTanque, 2000);
+    </script>
 </body>
-</html>
 
+</html>
