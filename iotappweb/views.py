@@ -13,7 +13,6 @@ from django.utils import timezone
 
 MQTT_HOST = "10.111.112.4"
 MQTT_PORT = 1883
-TOPIC = topic
 MQTT_USER = "sdc-iot"       
 MQTT_PASS = "nuevacontraseña"  
 
