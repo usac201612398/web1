@@ -48,13 +48,13 @@
                 </select>
             </div>
             <div class="col-md-3">
-                <input type="datetime-local" id="desdeTanque" class="form-control">
+                <input type="datetime-local" id="desde" class="form-control">
             </div>
             <div class="col-md-3">
-                <input type="datetime-local" id="hastaTanque" class="form-control">
+                <input type="datetime-local" id="hasta" class="form-control">
             </div>
             <div class="col-md-2">
-                <select id="limiteTanque" class="form-select">
+                <select id="limite" class="form-select">
                     <option value="20">20</option>
                     <option value="50" selected>50</option>
                     <option value="100">100</option>
@@ -147,43 +147,49 @@
             const hasta = document.getElementById('hasta').value;
             const limite = document.getElementById('limite').value;
 
-            let url = `{% url 'tanque_api' %}?limite=${limite}`;
+            let url = `/api/tanque/?limite=${limite}`;
 
             if (tanque) url += `&tanque_id=${tanque}`;
             if (desde) url += `&desde=${desde}`;
             if (hasta) url += `&hasta=${hasta}`;
 
-            const response = await fetch(url);
-            const data = await response.json();
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
 
-            // actualizar cards
-            document.getElementById('tempAgua').innerText = data.latest.temperatura;
-            document.getElementById('caudal').innerText = data.latest.caudal;
-            document.getElementById('nivel').innerText = data.latest.nivel;
-            document.getElementById('nivelFill').style.height = data.latest.nivel + '%';
+                // actualizar cards
+                document.getElementById('tempAgua').innerText = data.latest.temperatura;
+                document.getElementById('caudal').innerText = data.latest.caudal;
+                document.getElementById('nivel').innerText = data.latest.nivel;
+                document.getElementById('nivelFill').style.height = data.latest.nivel + '%';
+                document.getElementById('timestampTanque').innerText = data.latest.timestamp;
 
-            // actualizar gráfica
-            tanqueChart.data.labels = data.timestamps;
-            tanqueChart.data.datasets[0].data = data.temperatura;
-            tanqueChart.data.datasets[1].data = data.caudal;
-            tanqueChart.data.datasets[2].data = data.nivel;
+                // actualizar gráfica
+                tanqueChart.data.labels = data.timestamps;
+                tanqueChart.data.datasets[0].data = data.temperatura;
+                tanqueChart.data.datasets[1].data = data.caudal;
+                tanqueChart.data.datasets[2].data = data.nivel;
 
-            // mostrar/ocultar series
-            tanqueChart.data.datasets[0].hidden = !document.getElementById('showTemp').checked;
-            tanqueChart.data.datasets[1].hidden = !document.getElementById('showCaudal').checked;
-            tanqueChart.data.datasets[2].hidden = !document.getElementById('showNivel').checked;
+                // mostrar/ocultar series según checkboxes
+                tanqueChart.data.datasets[0].hidden = !document.getElementById('showTemp').checked;
+                tanqueChart.data.datasets[1].hidden = !document.getElementById('showCaudal').checked;
+                tanqueChart.data.datasets[2].hidden = !document.getElementById('showNivel').checked;
 
-            tanqueChart.update();
+                tanqueChart.update();
+            } catch (err) {
+                console.error("Error cargando datos del tanque:", err);
+            }
         }
 
-        // eventos checkbox
+        // checkboxes
         document.getElementById('showTemp').addEventListener('change', cargarDatosTanque);
         document.getElementById('showCaudal').addEventListener('change', cargarDatosTanque);
         document.getElementById('showNivel').addEventListener('change', cargarDatosTanque);
 
-        // actualizar cada minuto
+        // actualizar cada 1/2 minuto
         cargarDatosTanque();
-        setInterval(cargarDatosTanque, 2000);
+        setInterval(cargarDatosTanque, 30000);
+
     </script>
 </body>
 
