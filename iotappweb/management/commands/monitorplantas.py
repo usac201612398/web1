@@ -30,9 +30,10 @@ class Command(BaseCommand):
 
         def on_connect(client, userdata, flags, rc):
             client.subscribe(TOPIC_PLANTA)
+            client.subscribe(TOPIC_TANQUE)
 
         def on_message(client, userdata, msg):
-            
+
             try:
                 payload = msg.payload.decode()
                 print("Mensaje recibido en", msg.topic, ":", payload)
