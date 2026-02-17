@@ -125,7 +125,7 @@ async function cargarDatosTanque(){
     const hasta = document.getElementById('hasta').value;
     const limite = document.getElementById('limite').value;
 
-    let url = `{% url 'planta_api' %}?limite=${limite}`;
+    let url = `{% url 'tanque_api' %}?limite=${limite}`;
 
     if(tanque) url += `&tanque_id=${tanque}`;
     if(desde) url += `&desde=${desde}`;
