@@ -144,6 +144,25 @@
 
     <!-- Gráfica -->
     <div class="container my-5">
+        <div class="container my-3">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="chkTemp" checked>
+                <label class="form-check-label" for="chkTemp">Temperatura</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="chkHumedadA" checked>
+                <label class="form-check-label" for="chkHumedadA">Humedad Ambiente</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="chkHumedadS" checked>
+                <label class="form-check-label" for="chkHumedadS">Humedad Suelo</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="chkPeso" checked>
+                <label class="form-check-label" for="chkPeso">Peso</label>
+            </div>
+        </div>
+
         <canvas id="sensoresChart" height="200"></canvas>
         <div class="text-center text-muted my-2">
             Última actualización: <span id="timestamp">{{ latest.timestamp }}</span>
@@ -151,7 +170,7 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
     <script>
-        
+
         // Crear gráfica
         const ctx = document.getElementById('sensoresChart').getContext('2d');
         const chart = new Chart(ctx, {
@@ -162,7 +181,7 @@
                     { label: 'Temperatura (°C)', data: [], borderColor: '#FF4C4C', backgroundColor: 'rgba(255,76,76,0.2)', tension: 0.3, yAxisID: 'y' },
                     { label: 'Humedad Ambiente (%)', data: [], borderColor: '#4C6EFF', backgroundColor: 'rgba(76,110,255,0.2)', tension: 0.3, yAxisID: 'y1' },
                     { label: 'Humedad Suelo (%)', data: [], borderColor: '#28A745', backgroundColor: 'rgba(40,167,69,0.2)', tension: 0.3, yAxisID: 'y1' },
-                    { label: 'Peso (kg)', data:  [], borderColor: '#FFC107', backgroundColor: 'rgba(255,193,7,0.2)', tension: 0.3, yAxisID: 'y2' }
+                    { label: 'Peso (kg)', data: [], borderColor: '#FFC107', backgroundColor: 'rgba(255,193,7,0.2)', tension: 0.3, yAxisID: 'y2' }
                 ]
             },
             options: {
@@ -241,6 +260,19 @@
             }
         }
 
+        function actualizarVisibilidad() {
+            chart.data.datasets[0].hidden = !document.getElementById('chkTemp').checked;
+            chart.data.datasets[1].hidden = !document.getElementById('chkHumedadA').checked;
+            chart.data.datasets[2].hidden = !document.getElementById('chkHumedadS').checked;
+            chart.data.datasets[3].hidden = !document.getElementById('chkPeso').checked;
+            chart.update();
+        }
+
+        // Detectar cambios en los checkboxes
+        document.getElementById('chkTemp').addEventListener('change', actualizarVisibilidad);
+        document.getElementById('chkHumedadA').addEventListener('change', actualizarVisibilidad);
+        document.getElementById('chkHumedadS').addEventListener('change', actualizarVisibilidad);
+        document.getElementById('chkPeso').addEventListener('change', actualizarVisibilidad);
 
         actualizarColores();
         setInterval(cargarDatos, 60000); // cada 1 minuto
