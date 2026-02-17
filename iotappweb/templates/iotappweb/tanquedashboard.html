@@ -101,6 +101,36 @@
             <div class="text-muted mt-1">Última actualización: <span id="timestampTanque"></span></div>
         </div>
 
+        <!-- Panel de control -->
+        <div class="row g-3 my-4">
+            <!-- Riego -->
+            <div class="col-md-6">
+                <div class="card p-3">
+                    <h5>Control Riego</h5>
+                    <div class="btn-group my-2" role="group">
+                        <button class="btn btn-success" onclick="setRiego('on')">ON</button>
+                        <button class="btn btn-danger" onclick="setRiego('off')">OFF</button>
+                        <button class="btn btn-primary" onclick="setRiego('auto')">AUTO</button>
+                    </div>
+                    <div>Estado: <span id="estadoRiego">En espera</span></div>
+                </div>
+            </div>
+
+            <!-- Tanque -->
+            <div class="col-md-6">
+                <div class="card p-3">
+                    <h5>Control Tanque</h5>
+                    <div class="btn-group my-2" role="group">
+                        <button class="btn btn-success" onclick="setTanque('llenando')">Llenar</button>
+                        <button class="btn btn-danger" onclick="setTanque('detener')">Detener</button>
+                        <button class="btn btn-primary" onclick="setTanque('auto')">AUTO</button>
+                    </div>
+                    <div>Estado: <span id="estadoTanque">En espera</span></div>
+                </div>
+            </div>
+        </div>
+
+
         <!-- Checkboxes -->
         <div class="my-3 text-center">
             <label class="me-2"><input type="checkbox" id="showNivel" checked> Nivel</label>
@@ -189,6 +219,33 @@
         // actualizar cada 1/2 minuto
         cargarDatosTanque();
         setInterval(cargarDatosTanque, 30000);
+        
+        let estadoRiegoActual = 'En espera';
+        let estadoTanqueActual = 'En espera';
+
+        function setRiego(accion) {
+            switch (accion) {
+                case 'on': estadoRiegoActual = 'Regando'; break;
+                case 'off': estadoRiegoActual = 'En espera'; break;
+                case 'auto': estadoRiegoActual = 'Auto'; break;
+            }
+            document.getElementById('estadoRiego').innerText = estadoRiegoActual;
+
+            // Aquí podrías hacer un fetch a tu API para enviar la acción real
+            console.log('Riego:', accion);
+        }
+
+        function setTanque(accion) {
+            switch (accion) {
+                case 'llenando': estadoTanqueActual = 'Llenando'; break;
+                case 'detener': estadoTanqueActual = 'En espera'; break;
+                case 'auto': estadoTanqueActual = 'Auto'; break;
+            }
+            document.getElementById('estadoTanque').innerText = estadoTanqueActual;
+
+            // Aquí podrías hacer un fetch a tu API para enviar la acción real
+            console.log('Tanque:', accion);
+        }
 
     </script>
 </body>
