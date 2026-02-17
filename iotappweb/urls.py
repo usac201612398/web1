@@ -7,9 +7,9 @@ app_main ="iotappweb"
 urlpatterns = [
     path("homepage/", views.homepage, name="homepage"),
     path("iot/accion",views.enviarinstruccion,name='enviarinstruccion'),
-    path("iot/sensor",views.dashboard,name='sensor'),
+    path("planta/",views.plantadashboard,name='plantadashboard'),
     path('api/sensores/', views.sensor_api, name='sensor_api'),
-    path('tanque/', views.tanque_dashboard, name='tanque_dashboard'),
+    path('tanque/', views.tanquedashboard, name='tanquedashboard'),
     path('api/tanque/', views.tanque_api, name='tanque_api'),
 
 ]

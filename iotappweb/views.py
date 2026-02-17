@@ -74,10 +74,10 @@ def enviarinstruccion(request):
 
     return render(request, "iotappweb/accionmqtt.html")
 
-def dashboard(request):
+def plantadashboard(request):
     plantas = m1Sensoresdata.objects.values_list('planta_id', flat=True).distinct()
     
-    return render(request, 'iotappweb/dashboard.html', {
+    return render(request, 'iotappweb/plantadashboard.html', {
         'plantas': plantas
     })
     
@@ -123,7 +123,7 @@ def sensor_api(request):
 
     return JsonResponse(response)
 
-def tanque_dashboard(request):
+def tanquedashboard(request):
     return render(request, "tanquedashboard.html")
 
 def tanque_api(request):
