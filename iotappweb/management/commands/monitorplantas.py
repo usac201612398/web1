@@ -14,7 +14,7 @@ MQTT_PORT = 1883
 MQTT_HOST = "10.111.112.4"
 MQTT_USER = "sdc-iot"
 MQTT_PASS = "nuevacontraseña"
-TOPIC_PLANTA "casa/planta01/data"
+TOPIC_PLANTA = "casa/planta01/data"
 TOPIC_TANQUE = "casa/tanque01/data"
 
 class Command(BaseCommand):
