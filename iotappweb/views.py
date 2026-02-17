@@ -9,7 +9,7 @@ from django.http import JsonResponse
 import json
 from django.utils.dateparse import parse_datetime
 from django.db.models import Q
-.from django.utils import timezonefrom
+.from django.utils import timezone
 
 
 def homepage(request):
