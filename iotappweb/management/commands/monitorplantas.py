@@ -32,6 +32,7 @@ class Command(BaseCommand):
             client.subscribe(TOPIC_PLANTA)
 
         def on_message(client, userdata, msg):
+            
             try:
                 payload = msg.payload.decode()
                 print("Mensaje recibido en", msg.topic, ":", payload)
