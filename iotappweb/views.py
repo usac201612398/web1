@@ -9,7 +9,6 @@ from django.http import JsonResponse
 import json
 from django.utils.dateparse import parse_datetime
 from django.db.models import Q
-.from django.utils import timezone
 
 
 def homepage(request):
@@ -79,9 +78,7 @@ def dashboard(request):
     return render(request, 'iotappweb/dashboard.html', {
         'plantas': plantas
     })
-
-
-
+    
 def sensor_api(request):
     planta_id = request.GET.get('planta_id')
     desde = request.GET.get('desde')
@@ -105,10 +102,7 @@ def sensor_api(request):
         return round(v, 2) if v else 0
 
     response = {
-        "timestamps": [
-            timezone.localtime(d.timestamp).strftime("%H:%M:%S")
-            for d in data
-        ],
+        "timestamps": [d.timestamp.strftime("%H:%M:%S") for d in data],
         "temperatura": [round2(d.temperatura) for d in data],
         "humedad_aire": [round2(d.humedad_aire) for d in data],
         "humedad_suelo": [round2(d.humedad_suelo) for d in data],
@@ -118,11 +112,10 @@ def sensor_api(request):
             "humedad_aire": round2(data[-1].humedad_aire) if data else 0,
             "humedad_suelo": round2(data[-1].humedad_suelo) if data else 0,
             "peso": round2(data[-1].peso) if data else 0,
-            "timestamp": timezone.localtime(data[-1].timestamp).strftime("%Y-%m-%d %H:%M:%S") if data else ""
+            "timestamp": data[-1].timestamp.strftime("%Y-%m-%d %H:%M:%S") if data else ""
         }
     }
 
     return JsonResponse(response)
-
 
 
