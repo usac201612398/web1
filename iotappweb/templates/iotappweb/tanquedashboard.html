@@ -272,6 +272,10 @@
         }
 
         function enviarAccion(accion, dispositivo) {
+            // Convertimos todo a minúsculas por seguridad
+            accion = accion.toLowerCase();
+            dispositivo = dispositivo.toLowerCase();
+
             fetch("{% url 'enviarinstruccion' %}", {
                 method: "POST",
                 headers: {
@@ -283,10 +287,24 @@
                 .then(res => res.json())
                 .then(data => {
                     console.log("Respuesta MQTT:", data);
-                    if (dispositivo === "riego") {
-                        document.getElementById('estadoRiego').innerText = accion;
-                    } else if (dispositivo === "tanque") {
-                        document.getElementById('estadoTanque').innerText = accion;
+
+                    let estadoTexto = '';
+                    switch (accion) {
+                        case 'on':
+                            estadoTexto = (dispositivo === 'riego') ? 'regando' : 'llenando';
+                            break;
+                        case 'off':
+                            estadoTexto = 'en espera';
+                            break;
+                        case 'auto':
+                            estadoTexto = 'auto';
+                            break;
+                    }
+
+                    if (dispositivo === 'riego') {
+                        document.getElementById('estadoRiego').innerText = estadoTexto;
+                    } else if (dispositivo === 'tanque') {
+                        document.getElementById('estadoTanque').innerText = estadoTexto;
                     }
                 })
                 .catch(err => console.error("Error:", err));
