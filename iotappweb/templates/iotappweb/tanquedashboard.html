@@ -147,7 +147,7 @@
             const hasta = document.getElementById('hasta').value;
             const limite = document.getElementById('limite').value;
 
-            let url = `/api/tanque/?limite=${limite}`;
+            let url = `{% url 'tanque_api' %}?limite=${limite}`;
 
             if (tanque) url += `&tanque_id=${tanque}`;
             if (desde) url += `&desde=${desde}`;
