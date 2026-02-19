@@ -205,7 +205,7 @@
                 // actualizar cards
                 document.getElementById('tempAgua').innerText = data.latest.temperatura;
                 document.getElementById('caudal').innerText = data.latest.caudal;
-                document.getElementById('nivel').innerText = data.latest.nivel;
+                document.getElementById('nivel').innerText = data.latest.porcentaje_llenado;
                 document.getElementById('nivelFill').style.height = data.latest.porcentaje_llenado + '%';
                 document.getElementById('timestampTanque').innerText = data.latest.timestamp;
 
