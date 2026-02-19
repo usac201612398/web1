@@ -92,21 +92,19 @@
             </div>
         </div>
 
+
         <!-- Tanque visual -->
         <div class="text-center my-4">
             <div id="nivelTanque">
                 <div id="nivelFill"></div>
             </div>
-            <!-- Tanque visual -->
-            <div class="text-center my-4">
-                <div id="nivelTanque">
-                    <div id="nivelFill"></div>
-                </div>
-                <div class="fs-value mt-2"><span id="nivel">0</span>%</div>
-                <div class="text-muted mt-1">Última actualización: <span id="timestampTanque"></span></div>
+            <div class="fs-value mt-2">
+                <span id="porcentaje">0</span>%
+                (<span id="nivelCm">0</span> cm)
             </div>
-
+            <div class="text-muted mt-1">Última actualización: <span id="timestampTanque"></span></div>
         </div>
+
 
         <!-- Panel de control -->
         <div class="row g-3 my-4">
@@ -214,7 +212,7 @@
                 // actualizar cards
                 document.getElementById('tempAgua').innerText = data.latest.temperatura;
                 document.getElementById('caudal').innerText = data.latest.caudal;
-                
+
                 // Seguridad por rango
                 porcentaje = Math.min(100, Math.max(0, porcentaje));
                 // Actualizamos visual tanque
