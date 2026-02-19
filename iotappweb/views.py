@@ -11,6 +11,7 @@ from django.utils.dateparse import parse_datetime
 from django.db.models import Q
 from django.utils import timezone
 
+
 MQTT_HOST = "10.111.112.4"
 MQTT_PORT = 1883
 MQTT_USER = "sdc-iot"       
@@ -52,6 +53,14 @@ def enviarinstruccion(request):
         accion = request.POST.get("accion")
         dispositivo = request.POST.get("dispositivo")
 
+        # Convertimos a estructura JSON
+        payload = {
+            "accion": accion
+        }
+
+        # Lo convertimos a string JSON
+        payload_json = json.dumps(payload)
+
         if dispositivo == "riego":
             topic = "casa/tanque01/riego/manual"
         elif dispositivo == "tanque":
@@ -59,12 +68,16 @@ def enviarinstruccion(request):
         else:
             return JsonResponse({"status":"error","msg":"Dispositivo desconocido"})
 
-        retorno = publicar_mqtt(accion, topic)
-        return JsonResponse({"status":"ok","accion":accion,"dispositivo":dispositivo,"retorno":retorno})
+        retorno = publicar_mqtt(payload_json, topic)
+
+        return JsonResponse({
+            "status": "ok",
+            "accion": payload,
+            "dispositivo": dispositivo,
+            "retorno": retorno
+        })
 
     return JsonResponse({"status":"error","msg":"Método no permitido"})
-
-    return render(request, "iotappweb/tanquedashboard.html")
 
 def plantadashboard(request):
     plantas = m1Sensoresdata.objects.values_list('planta_id', flat=True).distinct()
