@@ -152,7 +152,10 @@ def tanque_api(request):
         return round(v, 2) if v is not None else 0
 
     response = {
-        "timestamps": [d.timestamp.strftime("%H:%M:%S") for d in data],
+        "timestamps": [
+            timezone.localtime(d.timestamp).strftime("%H:%M:%S")
+            for d in data
+        ],
         "temperatura": [round2(d.temperatura) for d in data],
         "caudal": [round2(d.caudal) for d in data],
         "nivel": [round2(d.nivel) for d in data],
@@ -163,7 +166,7 @@ def tanque_api(request):
             "nivel": round2(data[-1].nivel) if data else 0,
             
             "porcentaje_llenado": round2(data[-1].porcentaje_llenado) if data else 0,
-            "timestamp": data[-1].timestamp.strftime("%Y-%m-%d %H:%M:%S") if data else ""
+            "timestamp": timezone.localtime(data[-1].timestamp).strftime("%Y-%m-%d %H:%M:%S") if data else ""
         }
     }
     return JsonResponse(response)
