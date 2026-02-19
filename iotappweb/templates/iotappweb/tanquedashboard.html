@@ -213,7 +213,7 @@
                 tanqueChart.data.labels = data.timestamps;
                 tanqueChart.data.datasets[0].data = data.temperatura;
                 tanqueChart.data.datasets[1].data = data.caudal;
-                tanqueChart.data.datasets[2].data = data.nivel;
+                tanqueChart.data.datasets[2].data = data.porcentaje_llenado;
 
                 // mostrar/ocultar series según checkboxes
                 tanqueChart.data.datasets[0].hidden = !document.getElementById('showTemp').checked;
@@ -260,15 +260,6 @@
 
             // Aquí podrías hacer un fetch a tu API para enviar la acción real
             console.log('Tanque:', accion);
-        }
-
-        // Funciones para actualizar los estados
-        function setRiego(estado) {
-            document.getElementById('estadoRiego').innerText = estado;
-        }
-
-        function setTanque(estado) {
-            document.getElementById('estadoTanque').innerText = estado;
         }
 
         function enviarAccion(accion, dispositivo) {
