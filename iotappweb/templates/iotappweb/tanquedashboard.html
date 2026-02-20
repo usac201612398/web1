@@ -225,7 +225,7 @@
             const payload = JSON.stringify({ accion: "REGAR", tiempo: tiempo });
             let topic = valvula === "tanque01" ? "casa/tanque01/riego/manual" : "casa/tanque02/riego/manual";
 
-            const response = await fetch("{% url 'enviar_instruccion' %}", {
+            const response = await fetch("{% url 'enviarinstruccion' %}", {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: `accion=${payload}&dispositivo=${valvula}`
