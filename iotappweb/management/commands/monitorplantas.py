@@ -60,27 +60,23 @@ class Command(BaseCommand):
                         nivel=float(data.get("nivel", 0)),
                     )
                 elif msg.topic == TOPIC_RIEGO:
-                        # Guardar trazabilidad completa, usando sensores de la planta asociada a la zona
                     zona = int(data.get("zona", 0))
 
                     # Mapeo zona -> planta
                     ZONA_TO_PLANTA = {
-                        1: "planta_0001",
-                        2: "planta_0002",
+                        1: "planta0001",
+                        2: "planta0002",
                         # agregar más si hay más zonas
                     }
                     planta_id = ZONA_TO_PLANTA.get(zona)
 
                     # Obtener último registro de esa planta
-                    try:
-                        planta_ultimo = m1Sensoresdata.objects.filter(planta_id=planta_id).latest('fecha') if planta_id else None
-                    except m1Sensoresdata.DoesNotExist:
-                        planta_ultimo = None
+                    planta_ultimo = m1Sensoresdata.objects.filter(planta_id=planta_id).order_by('-timestamp').first() if planta_id else None
 
                     riegoRegistro.objects.create(
                         zona=zona,
                         accion=data.get("accion", "UNKNOWN"),
-                        tiempo_segundos=int(data.get("tiempo_ms", 0)) // 1000,  # convertir ms a segundos
+                        tiempo_segundos=int(data.get("tiempo_ms", 0)) // 1000,
                         temp_amb=planta_ultimo.temperatura if planta_ultimo else None,
                         hum_amb=planta_ultimo.humedad_aire if planta_ultimo else None,
                         hum_suelo=planta_ultimo.humedad_suelo if planta_ultimo else None,
@@ -88,6 +84,7 @@ class Command(BaseCommand):
                         modo=data.get("modo", "AUTO" if not data.get("manual") else "MANUAL")
                     )
                     print(f"Riego registrado (zona {zona}) con datos de planta {planta_id}")
+
 
                 else:
                     print("Tópico desconocido:", msg.topic)
