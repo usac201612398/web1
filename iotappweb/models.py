@@ -25,3 +25,21 @@ class m2Sensoresdata(models.Model):
 
     def __str__(self):
         return f"{self.tanque_id} - {self.temperatura}°C / {self.caudal}L/min - {self.porcentaje_llenado}%  - {self.nivel}cm"
+    
+class riegoRegistro(models.Model):
+    registro = models.AutoField(primary_key=True)
+    fecha = models.DateTimeField(auto_now_add=True)
+    zona = models.IntegerField()
+    accion = models.CharField(max_length=10)  # ON / OFF
+    tiempo_segundos = models.IntegerField()
+    temp_amb = models.FloatField(null=True, blank=True)
+    hum_amb = models.FloatField(null=True, blank=True)
+    hum_suelo = models.FloatField(null=True, blank=True)
+    peso = models.FloatField(null=True, blank=True)
+    modo = models.CharField(max_length=15)
+
+    class Meta:
+        ordering = ['-fecha']
+
+    def __str__(self):
+        return f"Riego zona {self.zona} - {self.accion} - {self.fecha}"

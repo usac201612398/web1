@@ -5,7 +5,7 @@ import json
 import ssl
 import paho.mqtt.client as mqtt
 from django.core.management.base import BaseCommand
-from iotappweb.models import m1Sensoresdata, m2Sensoresdata
+from iotappweb.models import m1Sensoresdata, m2Sensoresdata, riegoRegistro
 from django.conf import settings
 
 #MQTT_HOST = "a4810e38lk0oy-ats.iot.us-east-1.amazonaws.com"
@@ -57,6 +57,19 @@ class Command(BaseCommand):
                         porcentaje_llenado=float(data.get("porcentaje_llenado", 0)),
                         nivel=float(data.get("nivel", 0)),
                     )
+                elif msg.topic == TOPIC_RIEGO:
+                # Guardar trazabilidad completa
+                    riegoRegistro.objects.create(
+                        zona=int(data.get("zona", 0)),
+                        accion=data.get("accion", "UNKNOWN"),
+                        tiempo_segundos=int(data.get("tiempo_ms", 0)) // 1000,  # convertir ms a segundos
+                        temp_amb=float(data.get("temp_amb", 0)),
+                        hum_amb=float(data.get("hum_amb", 0)),
+                        hum_suelo=float(data.get("hum_suelo", 0)),
+                        peso=float(data.get("peso", 0)),
+                        modo=data.get("modo", "AUTO" if not data.get("manual") else "MANUAL")
+                    )
+                    print(f"Riego registrado: {data}")
                 else:
                     print("Tópico desconocido:", msg.topic)
 
