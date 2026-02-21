@@ -47,37 +47,83 @@ def publicar_mqtt(accion, topic):
 
     return retorno
 
+from django.shortcuts import render
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+import datetime
+
+# Simulación de datos del tanque (normalmente lo traerías de tu DB o MQTT)
+TANQUE_DATOS = {
+    "latest": {
+        "nivel": 50.0,
+        "porcentaje_llenado": 50,
+        "temperatura": 25.0,
+        "caudal": 10.0,
+        "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    },
+    "timestamps": [],
+    "temperatura": [],
+    "caudal": [],
+    "porcentaje_llenado": []
+}
+
+def tanquedashboard(request):
+    """
+    Renderiza el dashboard del tanque.
+    """
+    return render(request, "iotappweb/tanquedashboard.html")
+
+
+def tanque_api(request):
+    """
+    Retorna datos del tanque en formato JSON para la gráfica.
+    """
+    # Parámetros opcionales
+    limite = int(request.GET.get("limite", 50))
+    tanque_id = request.GET.get("tanque_id")
+    desde = request.GET.get("desde")
+    hasta = request.GET.get("hasta")
+
+    # Aquí podrías filtrar tus datos reales según tanque_id y rango de fechas
+    # Por ahora devolvemos los datos simulados
+    response = TANQUE_DATOS.copy()
+    return JsonResponse(response)
+
+
+@csrf_exempt
 def enviarinstruccion(request):
-
+    """
+    Recibe instrucciones para riego o tanque.
+    Puede ser desde botones normales o desde modal de riego manual.
+    """
     if request.method == "POST":
-        accion = request.POST.get("accion")
-        dispositivo = request.POST.get("dispositivo")
+        try:
+            if request.content_type == "application/json":
+                # Riego manual con tiempo y válvula
+                data = json.loads(request.body)
+                accion = data.get("accion")
+                dispositivo = data.get("dispositivo")
+                valvula = data.get("valvula")
+                tiempo = data.get("tiempo")
+            else:
+                # Botones normales (on/off/auto)
+                accion = request.POST.get("accion")
+                dispositivo = request.POST.get("dispositivo")
+                valvula = None
+                tiempo = None
 
-        # Convertimos a estructura JSON
-        payload = {
-            "accion": accion
-        }
+            # Aquí va la lógica de MQTT o de control real
+            # Por ejemplo:
+            print(f"[INFO] Instrucción recibida -> Dispositivo: {dispositivo}, Acción: {accion}, Válvula: {valvula}, Tiempo: {tiempo}")
 
-        # Lo convertimos a string JSON
-        payload_json = json.dumps(payload)
+            # Simular respuesta
+            return JsonResponse({"status": "ok", "accion": accion, "dispositivo": dispositivo})
 
-        if dispositivo == "riego":
-            topic = "casa/tanque01/riego/manual"
-        elif dispositivo == "tanque":
-            topic = "casa/tanque01/llenado/manual"
-        else:
-            return JsonResponse({"status":"error","msg":"Dispositivo desconocido"})
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=400)
 
-        retorno = publicar_mqtt(payload_json, topic)
-
-        return JsonResponse({
-            "status": "ok",
-            "accion": payload,
-            "dispositivo": dispositivo,
-            "retorno": retorno
-        })
-
-    return JsonResponse({"status":"error","msg":"Método no permitido"})
+    return JsonResponse({"status": "error", "message": "Método no permitido"}, status=405)
 
 def plantadashboard(request):
     plantas = m1Sensoresdata.objects.values_list('planta_id', flat=True).distinct()
