@@ -32,6 +32,7 @@ class Command(BaseCommand):
         def on_connect(client, userdata, flags, rc):
             client.subscribe(TOPIC_PLANTA)
             client.subscribe(TOPIC_TANQUE)
+            client.subscribe(TOPIC_RIEGO) 
 
         def on_message(client, userdata, msg):
 
