@@ -172,8 +172,8 @@
             </select>
           </div>
           <div class="mb-3">
-            <label for="tiempo" class="form-label">Tiempo (minutos)</label>
-            <input type="number" class="form-control" id="tiempo" min="1" value="5">
+            <label for="tiempo" class="form-label">Tiempo (segundos)</label>
+            <input type="number" class="form-control" id="tiempo" min="1" value="20">
           </div>
         </form>
       </div>
@@ -330,7 +330,7 @@
         .then(res => res.json())
         .then(data => {
             console.log("Riego Manual:", data);
-            document.getElementById('estadoRiego').innerText = `Regando ${tiempo} min`;
+            document.getElementById('estadoRiego').innerText = `Regando ${tiempo} seg`;
             const modal = bootstrap.Modal.getInstance(document.getElementById('modalRiego'));
             modal.hide();
         })
