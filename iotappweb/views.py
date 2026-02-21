@@ -60,19 +60,19 @@ def enviarinstruccion(request):
             data = json.loads(request.body)
             accion = data.get("accion")
             dispositivo = data.get("dispositivo")
-            valvula = data.get("valvula")  # opcional
+            zona = data.get("valvula")  # opcional
             tiempo = data.get("tiempo")    # opcional
         else:
             # Botones normales (on/off/auto)
             accion = request.POST.get("accion")
             dispositivo = request.POST.get("dispositivo")
-            valvula = None
+            zona = None
             tiempo = None
 
         # Preparamos payload para MQTT
         payload = {"accion": accion}
-        if valvula:
-            payload["valvula"] = valvula
+        if zona:
+            payload["zona"] = zona
         if tiempo:
             payload["tiempo"] = tiempo
 
