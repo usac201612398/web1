@@ -16,6 +16,7 @@ MQTT_USER = "sdc-iot"
 MQTT_PASS = "nuevacontraseña"
 TOPIC_PLANTA = "casa/planta01/data"
 TOPIC_TANQUE = "casa/tanque01/data"
+TOPIC_RIEGO = "casa/tanque01/riego/historial"
 
 class Command(BaseCommand):
     help = "Listener MQTT que guarda datos en la base de datos"
