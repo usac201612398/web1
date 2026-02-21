@@ -65,8 +65,8 @@ class Command(BaseCommand):
 
                     # Mapeo zona -> planta
                     ZONA_TO_PLANTA = {
-                        1: "planta0001",
-                        2: "planta0002",
+                        1: "planta_0001",
+                        2: "planta_0002",
                         # agregar más si hay más zonas
                     }
                     planta_id = ZONA_TO_PLANTA.get(zona)
