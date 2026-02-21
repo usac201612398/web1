@@ -4,240 +4,339 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard de Planta</title>
-
-    <!-- Bootstrap 5 -->
+    <title>Dashboard Tanque</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Chart.js -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-
     <style>
-        body {
-            background-color: #f4f6f9;
+        #nivelTanque {
+            width: 60px;
+            height: 180px;
+            border: 2px solid #333;
+            border-radius: 6px;
+            background-color: #e0e0e0;
+            position: relative;
+            overflow: hidden;
+            margin: auto;
         }
 
-        .card {
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            min-height: 120px;
-        }
-
-        .card .card-body {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .card-icon {
-            font-size: 2.5rem;
-            opacity: 0.7;
-        }
-
-        .fs-value {
-            font-size: 1.8rem;
-            font-weight: bold;
+        #nivelFill {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: linear-gradient(135deg, #3498DB, #2980B9);
+            transition: height 0.5s ease-in-out;
         }
     </style>
 </head>
 
 <body>
 
-    <div class="container my-4">
-        <h1 class="text-center mb-4 fw-bold">Dashboard de Planta</h1>
+<div class="container my-5">
+    <h2 class="text-center mb-4 fw-bold">Dashboard del Tanque</h2>
 
-        <!-- Botón Riego Manual -->
-        <div class="text-center mb-3">
-            <button class="btn btn-success btn-lg" id="btnRiegoManual"><i class="fas fa-tint"></i> Riego Manual</button>
+    <!-- Filtros -->
+    <div class="row g-3 mb-3">
+        <div class="col-md-3">
+            <select id="tanqueSelect" class="form-select">
+                <option value="">Todos los tanques</option>
+                <option value="tanque01">Tanque 01</option>
+                <option value="tanque02">Tanque 02</option>
+            </select>
         </div>
+        <div class="col-md-3">
+            <input type="datetime-local" id="desde" class="form-control">
+        </div>
+        <div class="col-md-3">
+            <input type="datetime-local" id="hasta" class="form-control">
+        </div>
+        <div class="col-md-2">
+            <select id="limite" class="form-select">
+                <option value="20">20</option>
+                <option value="50" selected>50</option>
+                <option value="100">100</option>
+                <option value="200">200</option>
+            </select>
+        </div>
+        <div class="col-md-1">
+            <button class="btn btn-primary w-100" onclick="cargarDatosTanque()">OK</button>
+        </div>
+    </div>
 
-        <!-- Cards de variables -->
-        <div class="row g-4 justify-content-center text-white">
-            <div class="col-12 col-md-3">
-                <div id="cardTemp" class="card" style="background: linear-gradient(135deg,#2C3E50,#34495E);">
-                    <div class="card-body">
-                        <div>
-                            <div class="card-title">Temperatura</div>
-                            <div class="fs-value"><span id="temperatura">0</span> °C</div>
-                        </div>
-                        <div class="card-icon"><i class="fas fa-thermometer-half"></i></div>
+    <!-- Cards -->
+    <div class="row g-4 justify-content-center text-white my-3">
+        <div class="col-md-3">
+            <div class="card" style="background: linear-gradient(135deg,#2C3E50,#34495E);">
+                <div class="card-body">
+                    <div>
+                        <div class="card-title">Temperatura Agua</div>
+                        <div class="fs-value"><span id="tempAgua">0</span> °C</div>
                     </div>
+                    <div class="card-icon"><i class="fas fa-thermometer-half"></i></div>
                 </div>
             </div>
-            <div class="col-12 col-md-3">
-                <div id="cardHumedadA" class="card" style="background: linear-gradient(135deg,#34495E,#5D6D7E);">
-                    <div class="card-body">
-                        <div>
-                            <div class="card-title">Humedad Ambiente</div>
-                            <div class="fs-value"><span id="humedad_aire">0</span> %</div>
-                        </div>
-                        <div class="card-icon"><i class="fas fa-tint"></i></div>
+        </div>
+        <div class="col-md-3">
+            <div class="card" style="background: linear-gradient(135deg,#1ABC9C,#16A085);">
+                <div class="card-body">
+                    <div>
+                        <div class="card-title">Caudal</div>
+                        <div class="fs-value"><span id="caudal">0</span> L/min</div>
                     </div>
-                </div>
-            </div>
-            <div class="col-12 col-md-3">
-                <div id="cardHumedadS" class="card" style="background: linear-gradient(135deg,#1ABC9C,#16A085);">
-                    <div class="card-body">
-                        <div>
-                            <div class="card-title">Humedad Suelo</div>
-                            <div class="fs-value"><span id="humedad_suelo">0</span> %</div>
-                        </div>
-                        <div class="card-icon"><i class="fas fa-water"></i></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-md-3">
-                <div id="cardPeso" class="card text-dark" style="background: linear-gradient(135deg,#F1C40F,#F39C12);">
-                    <div class="card-body">
-                        <div>
-                            <div class="card-title">Peso Planta</div>
-                            <div class="fs-value"><span id="peso">0</span> kg</div>
-                        </div>
-                        <div class="card-icon"><i class="fas fa-weight-scale"></i></div>
-                    </div>
+                    <div class="card-icon"><i class="fas fa-water"></i></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal Riego Manual -->
-    <div class="modal fade" id="modalRiego" tabindex="-1" aria-labelledby="modalRiegoLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalRiegoLabel">Riego Manual</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+    <!-- Tanque visual -->
+    <div class="text-center my-4">
+        <div id="nivelTanque">
+            <div id="nivelFill"></div>
+        </div>
+        <div class="fs-value mt-2">
+            <span id="porcentaje">0</span>%
+            (<span id="nivelCm">0</span> cm)
+        </div>
+        <div class="text-muted mt-1">Última actualización: <span id="timestampTanque"></span></div>
+    </div>
+
+    <!-- Panel de control -->
+    <div class="row g-3 my-4">
+        <!-- Riego -->
+        <div class="col-md-6">
+            <div class="card p-3">
+                <h5>Control Riego</h5>
+                <div class="btn-group my-2" role="group">
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalRiego">Regar</button>
+                    <button class="btn btn-danger" onclick="enviarAccion('off','riego')">Detener</button>
+                    <button class="btn btn-primary" onclick="enviarAccion('auto','riego')">Auto</button>
                 </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="valvulaSelect" class="form-label">Seleccionar Válvula</label>
-                        <select id="valvulaSelect" class="form-select">
-                            <option value="tanque01">Tanque 01</option>
-                            <option value="tanque02">Tanque 02</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="tiempoRiego" class="form-label">Tiempo de Riego (minutos)</label>
-                        <input type="number" id="tiempoRiego" class="form-control" min="1" max="60" value="5">
-                    </div>
+                <div class="mt-2">
+                    <small class="text-muted me-3">Regando</small>
+                    <small class="text-muted me-3">En espera</small>
+                    <small class="text-muted">Auto</small>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-success" id="confirmarRiego">Regar</button>
-                </div>
+                <div class="mt-1 fw-bold">Estado actual: <span id="estadoRiego">En espera</span></div>
             </div>
         </div>
+
+        <!-- Tanque -->
+        <div class="col-md-6">
+            <div class="card p-3">
+                <h5>Control Tanque</h5>
+                <div class="btn-group my-2" role="group">
+                    <button class="btn btn-success" onclick="enviarAccion('on','tanque')">Llenar</button>
+                    <button class="btn btn-danger" onclick="enviarAccion('off','tanque')">Detener</button>
+                    <button class="btn btn-primary" onclick="enviarAccion('auto','tanque')">Auto</button>
+                </div>
+                <div class="mt-2">
+                    <small class="text-muted me-3">Llenando</small>
+                    <small class="text-muted me-3">En espera</small>
+                    <small class="text-muted">Auto</small>
+                </div>
+                <div class="mt-1 fw-bold">Estado actual: <span id="estadoTanque">En espera</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkboxes -->
+    <div class="my-3 text-center">
+        <label class="me-2"><input type="checkbox" id="showNivel" checked> Nivel</label>
+        <label class="me-2"><input type="checkbox" id="showTemp" checked> Temperatura</label>
+        <label class="me-2"><input type="checkbox" id="showCaudal" checked> Caudal</label>
     </div>
 
     <!-- Gráfica -->
-    <div class="container my-5">
-        <canvas id="sensoresChart" height="200"></canvas>
-        <div class="text-center text-muted my-2">
-            Última actualización: <span id="timestamp">{{ latest.timestamp }}</span>
-        </div>
+    <div class="container my-4">
+        <canvas id="tanqueChart" height="200"></canvas>
     </div>
+</div>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
-    <script>
-        // === Gráfica ===
-        const ctx = document.getElementById('sensoresChart').getContext('2d');
-        const chart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: [],
-                datasets: [
-                    { label: 'Temperatura (°C)', data: [], borderColor: '#FF4C4C', backgroundColor: 'rgba(255,76,76,0.2)', tension: 0.3, yAxisID: 'y' },
-                    { label: 'Humedad Ambiente (%)', data: [], borderColor: '#4C6EFF', backgroundColor: 'rgba(76,110,255,0.2)', tension: 0.3, yAxisID: 'y1' },
-                    { label: 'Humedad Suelo (%)', data: [], borderColor: '#28A745', backgroundColor: 'rgba(40,167,69,0.2)', tension: 0.3, yAxisID: 'y1' },
-                    { label: 'Peso (kg)', data: [], borderColor: '#FFC107', backgroundColor: 'rgba(255,193,7,0.2)', tension: 0.3, yAxisID: 'y2' }
-                ]
-            },
-            options: {
-                responsive: true,
-                interaction: { mode: 'index', intersect: false },
-                plugins: {
-                    zoom: { zoom: { wheel: { enabled: true }, pinch: { enabled: true }, mode: 'x' } }
-                },
-                scales: {
-                    x: { ticks: { maxTicksLimit: 10, autoSkip: true } },
-                    y: { type: 'linear', display: true, position: 'left', title: { display: true, text: 'Temperatura (°C)' } },
-                    y1: { type: 'linear', display: true, position: 'right', title: { display: true, text: 'Humedad (%)' }, grid: { drawOnChartArea: false } },
-                    y2: { type: 'linear', display: true, position: 'right', title: { display: true, text: 'Peso (kg)' }, grid: { drawOnChartArea: false } }
-                }
+<!-- Modal Riego Manual -->
+<div class="modal fade" id="modalRiego" tabindex="-1" aria-labelledby="modalRiegoLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalRiegoLabel">Riego Manual</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <form id="formRiegoManual">
+          <div class="mb-3">
+            <label for="valvula" class="form-label">Válvula</label>
+            <select id="valvula" class="form-select">
+              <option value="valvula1">Válvula 1</option>
+              <option value="valvula2">Válvula 2</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="tiempo" class="form-label">Tiempo (minutos)</label>
+            <input type="number" class="form-control" id="tiempo" min="1" value="5">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-success" onclick="enviarRiegoManual()">Iniciar Riego</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+<script>
+    const ctx = document.getElementById('tanqueChart').getContext('2d');
+
+    const tanqueChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [
+                { label: 'Temperatura (°C)', data: [], borderColor: '#FF4C4C', backgroundColor: 'rgba(255,76,76,0.2)', tension: 0.3, yAxisID: 'y' },
+                { label: 'Caudal (L/min)', data: [], borderColor: '#4C6EFF', backgroundColor: 'rgba(76,110,255,0.2)', tension: 0.3, yAxisID: 'y1' },
+                { label: 'Nivel (%)', data: [], borderColor: '#FFC107', backgroundColor: 'rgba(255,193,7,0.2)', tension: 0.3, yAxisID: 'y2' }
+            ]
+        },
+        options: {
+            responsive: true,
+            interaction: { mode: 'index', intersect: false },
+            scales: {
+                x: { ticks: { maxTicksLimit: 10 } },
+                y: { type: 'linear', display: true, position: 'left', title: { display: true, text: 'Temperatura (°C)' } },
+                y1: { type: 'linear', display: true, position: 'right', title: { display: true, text: 'Caudal (L/min)' }, grid: { drawOnChartArea: false } },
+                y2: { type: 'linear', display: true, position: 'right', title: { display: true, text: 'Nivel (%)' }, grid: { drawOnChartArea: false } }
             }
-        });
-
-        // === Funciones Tarjetas ===
-        function actualizarColores() {
-            let temp = parseFloat(document.getElementById('temperatura').innerText);
-            let humS = parseFloat(document.getElementById('humedad_suelo').innerText);
-
-            let cardTemp = document.getElementById('cardTemp');
-            if (temp > 30) cardTemp.style.background = 'linear-gradient(135deg,#FF4C4C,#FF1F1F)';
-            else if (temp >= 25) cardTemp.style.background = 'linear-gradient(135deg,#FF9F43,#FF6B00)';
-            else cardTemp.style.background = 'linear-gradient(135deg,#4C6EFF,#2A4FFF)';
-
-            let cardHumS = document.getElementById('cardHumedadS');
-            if (humS < 40) cardHumS.style.background = 'linear-gradient(135deg,#FFC107,#E0A800)';
-            else if (humS <= 60) cardHumS.style.background = 'linear-gradient(135deg,#28A745,#1E7E34)';
-            else cardHumS.style.background = 'linear-gradient(135deg,#4C6EFF,#2A4FFF)';
         }
+    });
 
-        async function cargarDatos() {
-            let url = `{% url 'planta_api' %}?limite=50`;
+    async function cargarDatosTanque() {
+        const tanque = document.getElementById('tanqueSelect').value;
+        const desde = document.getElementById('desde').value;
+        const hasta = document.getElementById('hasta').value;
+        const limite = document.getElementById('limite').value;
+
+        let url = `{% url 'tanque_api' %}?limite=${limite}`;
+        if (tanque) url += `&tanque_id=${tanque}`;
+        if (desde) url += `&desde=${desde}`;
+        if (hasta) url += `&hasta=${hasta}`;
+
+        try {
             const response = await fetch(url);
             const data = await response.json();
 
-            document.getElementById('temperatura').innerText = data.latest.temperatura;
-            document.getElementById('humedad_aire').innerText = data.latest.humedad_aire;
-            document.getElementById('humedad_suelo').innerText = data.latest.humedad_suelo;
-            document.getElementById('peso').innerText = data.latest.peso;
-            document.getElementById('timestamp').innerText = data.latest.timestamp;
+            let porcentaje = parseFloat(data.latest.porcentaje_llenado) || 0;
+            let nivelCm = parseFloat(data.latest.nivel) || 0;
 
-            chart.data.labels = data.timestamps;
-            chart.data.datasets[0].data = data.temperatura;
-            chart.data.datasets[1].data = data.humedad_aire;
-            chart.data.datasets[2].data = data.humedad_suelo;
-            chart.data.datasets[3].data = data.peso;
-            chart.update();
+            document.getElementById('tempAgua').innerText = data.latest.temperatura;
+            document.getElementById('caudal').innerText = data.latest.caudal;
+            porcentaje = Math.min(100, Math.max(0, porcentaje));
+            document.getElementById('nivelFill').style.height = porcentaje + '%';
+            document.getElementById('porcentaje').innerText = porcentaje.toFixed(0);
+            document.getElementById('nivelCm').innerText = nivelCm.toFixed(1);
+            document.getElementById('timestampTanque').innerText = data.latest.timestamp;
 
-            actualizarColores();
+            tanqueChart.data.labels = data.timestamps;
+            tanqueChart.data.datasets[0].data = data.temperatura;
+            tanqueChart.data.datasets[1].data = data.caudal;
+            tanqueChart.data.datasets[2].data = data.porcentaje_llenado;
+
+            tanqueChart.data.datasets[0].hidden = !document.getElementById('showTemp').checked;
+            tanqueChart.data.datasets[1].hidden = !document.getElementById('showCaudal').checked;
+            tanqueChart.data.datasets[2].hidden = !document.getElementById('showNivel').checked;
+
+            tanqueChart.update();
+        } catch (err) {
+            console.error("Error cargando datos del tanque:", err);
+        }
+    }
+
+    document.getElementById('showTemp').addEventListener('change', cargarDatosTanque);
+    document.getElementById('showCaudal').addEventListener('change', cargarDatosTanque);
+    document.getElementById('showNivel').addEventListener('change', cargarDatosTanque);
+
+    cargarDatosTanque();
+    setInterval(cargarDatosTanque, 30000);
+
+    let estadoRiegoActual = 'En espera';
+    let estadoTanqueActual = 'En espera';
+
+    function setRiego(accion) {
+        switch (accion) {
+            case 'on': estadoRiegoActual = 'Regando'; break;
+            case 'off': estadoRiegoActual = 'En espera'; break;
+            case 'auto': estadoRiegoActual = 'Auto'; break;
+        }
+        document.getElementById('estadoRiego').innerText = estadoRiegoActual;
+    }
+
+    function setTanque(accion) {
+        switch (accion) {
+            case 'on': estadoTanqueActual = 'Llenando'; break;
+            case 'off': estadoTanqueActual = 'En espera'; break;
+            case 'auto': estadoTanqueActual = 'Auto'; break;
+        }
+        document.getElementById('estadoTanque').innerText = estadoTanqueActual;
+    }
+
+    function enviarAccion(accion, dispositivo) {
+        accion = accion.toLowerCase();
+        dispositivo = dispositivo.toLowerCase();
+
+        fetch("{% url 'enviarinstruccion' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: `accion=${accion}&dispositivo=${dispositivo}`
+        })
+        .then(res => res.json())
+        .then(data => {
+            let estadoTexto = '';
+            switch (accion) {
+                case 'on': estadoTexto = (dispositivo === 'riego') ? 'regando' : 'llenando'; break;
+                case 'off': estadoTexto = 'en espera'; break;
+                case 'auto': estadoTexto = 'auto'; break;
+            }
+
+            if (dispositivo === 'riego') document.getElementById('estadoRiego').innerText = estadoTexto;
+            else if (dispositivo === 'tanque') document.getElementById('estadoTanque').innerText = estadoTexto;
+        })
+        .catch(err => console.error("Error:", err));
+    }
+
+    function enviarRiegoManual() {
+        const valvula = document.getElementById('valvula').value;
+        const tiempo = document.getElementById('tiempo').value;
+
+        if (!tiempo || tiempo <= 0) {
+            alert("Ingrese un tiempo válido");
+            return;
         }
 
-        setInterval(cargarDatos, 60000); // 1 minuto
-        cargarDatos();
+        const payload = { accion: 'on', valvula: valvula, tiempo: tiempo, dispositivo: 'riego' };
 
-        // === Modal Riego ===
-        document.getElementById('btnRiegoManual').addEventListener('click', () => {
-            let modal = new bootstrap.Modal(document.getElementById('modalRiego'));
-            modal.show();
-        });
-
-        document.getElementById('confirmarRiego').addEventListener('click', async () => {
-            const valvula = document.getElementById('valvulaSelect').value;
-            const tiempo = document.getElementById('tiempoRiego').value;
-
-            const payload = JSON.stringify({ accion: "REGAR", tiempo: tiempo });
-            let topic = valvula === "tanque01" ? "casa/tanque01/riego/manual" : "casa/tanque02/riego/manual";
-
-            const response = await fetch("{% url 'enviarinstruccion' %}", {
-                method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: `accion=${payload}&dispositivo=${valvula}`
-            });
-
-            const data = await response.json();
-            if (data.status === "ok") alert(`✅ Riego iniciado: ${tiempo} min en ${valvula}`);
-            else alert(`❌ Error: ${data.msg}`);
-
-            let modal = bootstrap.Modal.getInstance(document.getElementById('modalRiego'));
+        fetch("{% url 'enviarinstruccion' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log("Riego Manual:", data);
+            document.getElementById('estadoRiego').innerText = `Regando ${tiempo} min`;
+            const modal = bootstrap.Modal.getInstance(document.getElementById('modalRiego'));
             modal.hide();
-        });
-    </script>
+        })
+        .catch(err => console.error("Error:", err));
+    }
+
+</script>
 </body>
 </html>
