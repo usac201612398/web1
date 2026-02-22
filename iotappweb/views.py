@@ -8,7 +8,7 @@ import os
 from django.http import JsonResponse
 import json
 from django.utils.dateparse import parse_datetime
-from django.db.models import Q
+from django.db.models import Q, Avg, Max
 from django.utils import timezone
 from datetime import timedelta
 
@@ -106,65 +106,92 @@ def plantadashboard(request):
     })
 
 def planta_api(request):
-    planta_id = request.GET.get('planta_id')
-    desde = request.GET.get('desde')
-    hasta = request.GET.get('hasta')
-    limite = int(request.GET.get('limite', 50))
+    try:
+        planta_id = request.GET.get('planta_id')
+        desde = request.GET.get('desde')
+        hasta = request.GET.get('hasta')
+        limite = int(request.GET.get('limite', 50))
 
-    data = m1Sensoresdata.objects.all().order_by('-timestamp')
-    if planta_id:
-        data = data.filter(planta_id=planta_id)
-    if desde:
-        data = data.filter(timestamp__gte=parse_datetime(desde))
-    if hasta:
-        data = data.filter(timestamp__lte=parse_datetime(hasta))
+        # Traer todos los datos ordenados descendente
+        data = m1Sensoresdata.objects.all().order_by('-timestamp')
 
-    data = data[:limite][::-1]  # Para mostrar en orden cronológico
+        if planta_id:
+            data = data.filter(planta_id=planta_id)
 
-    def round2(v):
-        return round(v, 2) if v else 0
+        if desde:
+            dt_desde = parse_datetime(desde)
+            if dt_desde:
+                data = data.filter(timestamp__gte=dt_desde)
 
-    # Últimos registros por planta
-    latest_by_planta = {}
-    plantas = data.values_list('planta_id', flat=True).distinct()
-    for p in plantas:
-        last = m1Sensoresdata.objects.filter(planta_id=p).order_by('-timestamp').first()
-        if last:
-            latest_by_planta[p] = {
-                "temperatura": round2(last.temperatura),
-                "humedad_aire": round2(last.humedad_aire),
-                "humedad_suelo": round2(last.humedad_suelo),
-                "peso": round2(last.peso),
-                "timestamp": timezone.localtime(last.timestamp).strftime("%Y-%m-%d %H:%M:%S")
-            }
+        if hasta:
+            dt_hasta = parse_datetime(hasta)
+            if dt_hasta:
+                data = data.filter(timestamp__lte=dt_hasta)
 
-    # Promedio del día (desde 00:00 hoy)
-    hoy = timezone.localtime().replace(hour=0, minute=0, second=0, microsecond=0)
-    avg_today_qs = m1Sensoresdata.objects.filter(timestamp__gte=hoy)
-    if planta_id:
-        avg_today_qs = avg_today_qs.filter(planta_id=planta_id)
-    avg_today = avg_today_qs.aggregate(
-        temperatura=Avg('temperatura'),
-        humedad_aire=Avg('humedad_aire'),
-        humedad_suelo=Avg('humedad_suelo'),
-        peso=Avg('peso')
-    )
-    avg_today = {k: round2(v) for k, v in avg_today.items()}
+        # Solo últimos N registros
+        data = list(data[:limite][::-1])  # invertimos para ascendente
 
-    # Últimos registros para gráfico
-    timestamps = [timezone.localtime(d.timestamp).strftime("%H:%M:%S") for d in data]
-    response = {
-        "timestamps": timestamps,
-        "temperatura": [round2(d.temperatura) for d in data],
-        "humedad_aire": [round2(d.humedad_aire) for d in data],
-        "humedad_suelo": [round2(d.humedad_suelo) for d in data],
-        "peso": [round2(d.peso) for d in data],
-        "latest": latest_by_planta.get(planta_id) if planta_id else list(latest_by_planta.values())[0] if latest_by_planta else {},
-        "avg_today": avg_today,
-        "latest_by_planta": latest_by_planta
-    }
+        def round2(v):
+            return round(v, 2) if v is not None else 0
 
-    return JsonResponse(response)
+        # Fechas y valores para la gráfica
+        timestamps = [timezone.localtime(d.timestamp).strftime("%H:%M:%S") for d in data]
+        temperatura = [round2(d.temperatura) for d in data]
+        humedad_aire = [round2(d.humedad_aire) for d in data]
+        humedad_suelo = [round2(d.humedad_suelo) for d in data]
+        peso = [round2(d.peso) for d in data]
+
+        # Últimos datos por planta
+        latest_by_planta = {}
+        all_plantas = m1Sensoresdata.objects.values_list('planta_id', flat=True).distinct()
+        for planta in all_plantas:
+            last_entry = m1Sensoresdata.objects.filter(planta_id=planta).order_by('-timestamp').first()
+            if last_entry:
+                latest_by_planta[planta] = {
+                    "temperatura": round2(last_entry.temperatura),
+                    "humedad_aire": round2(last_entry.humedad_aire),
+                    "humedad_suelo": round2(last_entry.humedad_suelo),
+                    "peso": round2(last_entry.peso),
+                    "timestamp": timezone.localtime(last_entry.timestamp).strftime("%Y-%m-%d %H:%M:%S")
+                }
+
+        # Último dato general
+        latest = {}
+        if planta_id and planta_id in latest_by_planta:
+            latest = latest_by_planta[planta_id]
+        elif latest_by_planta:
+            latest = list(latest_by_planta.values())[0]
+
+        # Promedio del día en curso
+        today = timezone.localtime(timezone.now()).date()
+        avg_today_qs = m1Sensoresdata.objects.filter(timestamp__date=today)
+        if planta_id:
+            avg_today_qs = avg_today_qs.filter(planta_id=planta_id)
+
+        avg_today = {
+            "temperatura": round2(avg_today_qs.aggregate(Avg('temperatura'))['temperatura__avg']),
+            "humedad_aire": round2(avg_today_qs.aggregate(Avg('humedad_aire'))['humedad_aire__avg']),
+            "humedad_suelo": round2(avg_today_qs.aggregate(Avg('humedad_suelo'))['humedad_suelo__avg']),
+            "peso": round2(avg_today_qs.aggregate(Avg('peso'))['peso__avg']),
+        }
+
+        response = {
+            "timestamps": timestamps,
+            "temperatura": temperatura,
+            "humedad_aire": humedad_aire,
+            "humedad_suelo": humedad_suelo,
+            "peso": peso,
+            "latest": latest,
+            "avg_today": avg_today,
+            "latest_by_planta": latest_by_planta,
+        }
+
+        return JsonResponse(response)
+
+    except Exception as e:
+        # Devuelve error en JSON en lugar de HTML
+        return JsonResponse({"error": str(e)}, status=500)
+
 def tanquedashboard(request):
     return render(request, "iotappweb/tanquedashboard.html")
 
