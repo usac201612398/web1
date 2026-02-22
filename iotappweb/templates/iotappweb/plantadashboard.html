@@ -168,8 +168,10 @@
             Última actualización: <span id="timestamp">{{ latest.timestamp }}</span>
         </div>
     </div>
-    <div class="has-text-centered mt-5">
-      <a href="{% url 'riegoshistorial' %}" class="button is-light">← Volver</a>
+    <div class="text-center mt-5">
+        <a href="{% url 'riegoshistorial' %}" class="btn btn-success btn-lg rounded-pill">
+            <i class="fas fa-home me-2"></i>Home
+        </a>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
     <script>
