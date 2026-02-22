@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard de Planta</title>
+    <title>Dashboard - Plantas</title>
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -47,57 +47,78 @@
 <body>
 
     <div class="container my-4">
-        <h1 class="text-center mb-4 fw-bold">Dashboard de Planta</h1>
-        <!-- Cards de variables -->
-        <div class="row g-4 justify-content-center text-white">
+        <h1 class="text-center mb-4 fw-bold">Dashboard de Plantas</h1>
+        <!-- Cards de variables (Nuevo diseño moderno) -->
+        <div class="row g-4 justify-content-center">
+
+            <!-- Temperatura -->
             <div class="col-12 col-md-3">
-                <div id="cardTemp" class="card" style="background: linear-gradient(135deg,#2C3E50,#34495E);">
+                <div id="cardTemp" class="card card-modern border-start border-4 border-danger">
                     <div class="card-body">
                         <div>
-                            <div class="card-title">Temperatura</div>
-                            <div class="fs-value"><span id="temperatura">0</span>
-                                °C</div>
+                            <div class="card-label text-muted">Temperatura</div>
+                            <div class="card-value text-danger">
+                                <span id="temperatura">0</span> °C
+                            </div>
                         </div>
-                        <div class="card-icon"><i class="fas fa-thermometer-half"></i></div>
+                        <div class="icon-circle bg-danger-subtle text-danger">
+                            <i class="fas fa-thermometer-half"></i>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Humedad Ambiente -->
             <div class="col-12 col-md-3">
-                <div id="cardHumedadA" class="card" style="background: linear-gradient(135deg,#34495E,#5D6D7E);">
+                <div id="cardHumedadA" class="card card-modern border-start border-4 border-primary">
                     <div class="card-body">
                         <div>
-                            <div class="card-title">Humedad Ambiente</div>
-                            <div class="fs-value"><span id="humedad_aire">0</span>
-                                %</div>
+                            <div class="card-label text-muted">Humedad Ambiente</div>
+                            <div class="card-value text-primary">
+                                <span id="humedad_aire">0</span> %
+                            </div>
                         </div>
-                        <div class="card-icon"><i class="fas fa-tint"></i></div>
+                        <div class="icon-circle bg-primary-subtle text-primary">
+                            <i class="fas fa-wind"></i>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Humedad Suelo -->
             <div class="col-12 col-md-3">
-                <div id="cardHumedadS" class="card" style="background: linear-gradient(135deg,#1ABC9C,#16A085);">
+                <div id="cardHumedadS" class="card card-modern border-start border-4 border-success">
                     <div class="card-body">
                         <div>
-                            <div class="card-title">Humedad Suelo</div>
-                            <div class="fs-value">
+                            <div class="card-label text-muted">Humedad Suelo</div>
+                            <div class="card-value text-success">
                                 <span id="humedad_suelo">0</span> %
                             </div>
                         </div>
-                        <div class="card-icon"><i class="fas fa-water"></i></div>
+                        <div class="icon-circle bg-success-subtle text-success">
+                            <i class="fas fa-seedling"></i>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Peso -->
             <div class="col-12 col-md-3">
-                <div id="cardPeso" class="card text-dark" style="background: linear-gradient(135deg,#F1C40F,#F39C12);">
+                <div id="cardPeso" class="card card-modern border-start border-4 border-warning">
                     <div class="card-body">
                         <div>
-                            <div class="card-title">Peso Planta</div>
-                            <div class="fs-value"><span id="peso">0</span> kg</div>
+                            <div class="card-label text-muted">Peso Planta</div>
+                            <div class="card-value text-warning">
+                                <span id="peso">0</span> kg
+                            </div>
                         </div>
-                        <div class="card-icon"><i class="fas fa-weight-scale"></i></div>
+                        <div class="icon-circle bg-warning-subtle text-warning">
+                            <i class="fas fa-weight-scale"></i>
+                        </div>
                     </div>
                 </div>
             </div>
+
         </div>
 
     </div>
