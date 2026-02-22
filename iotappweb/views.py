@@ -249,17 +249,21 @@ def tanque_api(request):
     return JsonResponse(response)
 
 def consumo_acumulado(request):
+    """
+    Vista para mostrar consumo acumulado de agua por planta.
+    Solo muestra los días de la semana actual.
+    """
     hoy = datetime.now()
+    inicio_semana = hoy - timedelta(days=hoy.weekday())  # lunes de la semana actual
+    fin_semana = inicio_semana + timedelta(days=7)       # domingo
 
-    # Solo la semana actual (lunes a domingo)
-    inicio = hoy - timedelta(days=hoy.weekday())  # lunes de esta semana
-    fin = inicio + timedelta(days=7)  # domingo siguiente
-
+    # Traemos todos los riegos de la semana
     riegos = riegoRegistro.objects.filter(
-        timestamp__gte=inicio,
-        timestamp__lt=fin
+        timestamp__gte=inicio_semana,
+        timestamp__lt=fin_semana
     ).select_related('planta_reg', 'tanque_reg')
 
+    # Creamos la tabla de datos
     tabla = defaultdict(lambda: defaultdict(float))
     plantas_set = set()
 
@@ -270,18 +274,26 @@ def consumo_acumulado(request):
         planta_id = r.planta_reg.planta_id
         plantas_set.add(planta_id)
 
-        litros = (r.tiempo_segundos/60)* r.tanque_reg.caudal
+        # litros = caudal (L/min) * tiempo_segundos / 60
+        litros = r.tiempo_segundos * r.tanque_reg.caudal / 60.0
 
-        # Acumular por día
         fecha = r.timestamp.date()
         tabla[fecha][planta_id] += litros
 
     fechas = sorted(tabla.keys())
     plantas = sorted(list(plantas_set))
 
+    # Aplanamos la tabla para que sea compatible con Django template
+    fechas_plantas = []
+    for fecha in fechas:
+        fila = {"fecha": fecha}
+        for planta in plantas:
+            fila[planta] = tabla[fecha].get(planta, 0)
+        fechas_plantas.append(fila)
+
     context = {
-        "tabla": tabla,
-        "fechas": fechas,
+        "fechas_plantas": fechas_plantas,
         "plantas": plantas,
     }
+
     return render(request, "consumo_acumulado_modal.html", context)
