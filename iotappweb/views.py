@@ -249,16 +249,11 @@ def tanque_api(request):
     return JsonResponse(response)
 
 def consumo_acumulado(request):
-    periodo = request.GET.get("periodo", "mensual")  # "semanal" o "mensual"
     hoy = datetime.now()
 
-    if periodo == "semanal":
-        # Inicio de la semana actual (lunes)
-        inicio = hoy - timedelta(days=hoy.weekday())
-        fin = inicio + timedelta(days=7)
-    else:  # mensual
-        inicio = hoy.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-        fin = (inicio + timedelta(days=32)).replace(day=1)
+    # Solo la semana actual (lunes a domingo)
+    inicio = hoy - timedelta(days=hoy.weekday())  # lunes de esta semana
+    fin = inicio + timedelta(days=7)  # domingo siguiente
 
     riegos = riegoRegistro.objects.filter(
         timestamp__gte=inicio,
@@ -275,15 +270,11 @@ def consumo_acumulado(request):
         planta_id = r.planta_reg.planta_id
         plantas_set.add(planta_id)
 
-        litros = r.tiempo_segundos * r.tanque_reg.caudal
+        litros = (r.tiempo_segundos/60)* r.tanque_reg.caudal
 
-        if periodo == "semanal":
-            # Usamos lunes de la semana como clave
-            semana_inicio = r.timestamp.date() - timedelta(days=r.timestamp.weekday())
-            tabla[semana_inicio][planta_id] += litros
-        else:
-            fecha = r.timestamp.date()
-            tabla[fecha][planta_id] += litros
+        # Acumular por día
+        fecha = r.timestamp.date()
+        tabla[fecha][planta_id] += litros
 
     fechas = sorted(tabla.keys())
     plantas = sorted(list(plantas_set))
@@ -292,6 +283,5 @@ def consumo_acumulado(request):
         "tabla": tabla,
         "fechas": fechas,
         "plantas": plantas,
-        "periodo": periodo,
     }
     return render(request, "consumo_acumulado_modal.html", context)
