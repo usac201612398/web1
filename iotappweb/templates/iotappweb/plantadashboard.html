@@ -369,6 +369,9 @@
 
         actualizarColores();
         setInterval(cargarDatos, 60000); // cada 1 minuto
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarDatos();
+        });
     </script>
 
 </body>
