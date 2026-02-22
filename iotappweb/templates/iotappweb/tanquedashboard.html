@@ -35,35 +35,6 @@
 
     <div class="container my-5">
         <h2 class="text-center mb-4 fw-bold">Dashboard del Tanque</h2>
-
-        <!-- Filtros -->
-        <div class="row g-3 mb-3">
-            <div class="col-md-3">
-                <select id="tanqueSelect" class="form-select">
-                    <option value="">Todos los tanques</option>
-                    <option value="tanque01">Tanque 01</option>
-                    <option value="tanque02">Tanque 02</option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <input type="datetime-local" id="desde" class="form-control">
-            </div>
-            <div class="col-md-3">
-                <input type="datetime-local" id="hasta" class="form-control">
-            </div>
-            <div class="col-md-2">
-                <select id="limite" class="form-select">
-                    <option value="20">20</option>
-                    <option value="50" selected>50</option>
-                    <option value="100">100</option>
-                    <option value="200">200</option>
-                </select>
-            </div>
-            <div class="col-md-1">
-                <button class="btn btn-primary w-100" onclick="cargarDatosTanque()">OK</button>
-            </div>
-        </div>
-
         <!-- Cards -->
         <div class="row g-4 justify-content-center text-white my-3">
             <div class="col-md-3">
@@ -142,6 +113,33 @@
             </div>
         </div>
 
+        <!-- Filtros -->
+        <div class="row g-3 mb-3">
+            <div class="col-md-3">
+                <select id="tanqueSelect" class="form-select">
+                    <option value="">Todos los tanques</option>
+                    <option value="tanque01">Tanque 01</option>
+                    <option value="tanque02">Tanque 02</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <input type="datetime-local" id="desde" class="form-control">
+            </div>
+            <div class="col-md-3">
+                <input type="datetime-local" id="hasta" class="form-control">
+            </div>
+            <div class="col-md-2">
+                <select id="limite" class="form-select">
+                    <option value="20">20</option>
+                    <option value="50" selected>50</option>
+                    <option value="100">100</option>
+                    <option value="200">200</option>
+                </select>
+            </div>
+            <div class="col-md-1">
+                <button class="btn btn-primary w-100" onclick="cargarDatosTanque()">OK</button>
+            </div>
+        </div>
         <!-- Checkboxes -->
         <div class="my-3 text-center">
             <label class="me-2"><input type="checkbox" id="showNivel" checked> Nivel</label>
