@@ -158,7 +158,7 @@ def historial_riegos(request):
         fecha__gte=hace_7_dias
     ).select_related('planta_reg', 'tanque_reg').order_by('-registro')
 
-    return render(request, "historialderiegos.html", {
+    return render(request, "iotappweb/historialderiegos.html", {
         "riegos": riegos
     })
 
