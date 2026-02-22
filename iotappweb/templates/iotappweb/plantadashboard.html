@@ -195,7 +195,26 @@
 
         </div>
     </div>
-
+    <div class="container my-4">
+        <h3 class="fw-bold mb-3">Últimos Datos por Planta</h3>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered" id="tablaPlantas">
+                <thead class="table-light">
+                    <tr>
+                        <th>Planta</th>
+                        <th>Temperatura (°C)</th>
+                        <th>Humedad Ambiente (%)</th>
+                        <th>Humedad Suelo (%)</th>
+                        <th>Peso (kg)</th>
+                        <th>Última actualización</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Se llenará dinámicamente con JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
     <!-- Gráfica -->
     <div class="container my-5">
         <div class="container my-3">
@@ -300,10 +319,10 @@
             const data = await response.json();
 
             // Actualizar tarjetas
-            document.getElementById('temperatura').innerText = data.latest.temperatura;
-            document.getElementById('humedad_aire').innerText = data.latest.humedad_aire;
-            document.getElementById('humedad_suelo').innerText = data.latest.humedad_suelo;
-            document.getElementById('peso').innerText = data.latest.peso;
+            document.getElementById('temperatura').innerText = data.avg_today.temperatura;
+            document.getElementById('humedad_aire').innerText = data.avg_today.humedad_aire;
+            document.getElementById('humedad_suelo').innerText = data.avg_today.humedad_suelo;
+            document.getElementById('peso').innerText = data.avg_today.peso;
             document.getElementById('timestamp').innerText = data.latest.timestamp;
 
             // Actualizar gráfica
@@ -312,7 +331,22 @@
             chart.data.datasets[1].data = data.humedad_aire;
             chart.data.datasets[2].data = data.humedad_suelo;
             chart.data.datasets[3].data = data.peso;
+            // Llenar tabla de últimas lecturas por planta
+            const tbody = document.querySelector("#tablaPlantas tbody");
+            tbody.innerHTML = ""; // limpiar
 
+            for (const [planta, valores] of Object.entries(data.latest_by_planta)) {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${planta}</td>
+                    <td>${valores.temperatura}</td>
+                    <td>${valores.humedad_aire}</td>
+                    <td>${valores.humedad_suelo}</td>
+                    <td>${valores.peso}</td>
+                    <td>${valores.timestamp}</td>
+                `;
+                tbody.appendChild(tr);
+            }
             chart.update();
             if (data.latest.temperatura > 35) {
                 alert("⚠ Temperatura Crítica!");
