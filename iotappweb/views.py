@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import m1Sensoresdata, m2Sensoresdata
+from .models import m1Sensoresdata, m2Sensoresdata, riegoRegistro
 # Create your views here.
 import time
 import paho.mqtt.client as mqtt
@@ -10,6 +10,7 @@ import json
 from django.utils.dateparse import parse_datetime
 from django.db.models import Q
 from django.utils import timezone
+from datetime import timedelta
 
 
 MQTT_HOST = "10.111.112.4"
@@ -149,6 +150,18 @@ def planta_api(request):
 def tanquedashboard(request):
     return render(request, "iotappweb/tanquedashboard.html")
 
+def historial_riegos(request):
+    hoy = timezone.now()
+    hace_7_dias = hoy - timedelta(days=7)
+
+    riegos = riegoRegistro.objects.filter(
+        fecha__gte=hace_7_dias
+    ).select_related('planta_reg', 'tanque_reg').order_by('-registro')
+
+    return render(request, "historialderiegos.html", {
+        "riegos": riegos
+    })
+
 def tanque_api(request):
     tanque_id = request.GET.get('tanque_id')
     desde = request.GET.get('desde')
@@ -188,5 +201,4 @@ def tanque_api(request):
         }
     }
     return JsonResponse(response)
-
 

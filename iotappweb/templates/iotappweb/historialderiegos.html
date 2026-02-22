@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Registro de riegos</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
+
+    <style>
+        .table-custom-header th {
+            background: linear-gradient(to right, #6c757d, #495057);
+            color: white;
+            font-weight: 600;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 768px) {
+
+            .table td,
+            .table th {
+                font-size: 13px;
+                white-space: nowrap;
+            }
+
+            .btn {
+                font-size: 13px;
+            }
+        }
+
+        .card-text strong {
+            display: inline-block;
+            width: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container py-3">
+
+        <div class="d-flex flex-wrap gap-2 mb-4 justify-content-between">
+
+            <a href="{% url 'salidasFruta_aprovechamietos' %}" class="btn btn-success flex-fill text-center">
+                <i class="fas fa-chart-line"></i> Tanque y riego
+            </a>
+
+            <a href="{% url 'salidasFruta_poraprovechamietosemp' %}" class="btn btn-success flex-fill text-center">
+                <i class="fas fa-chart-line"></i> Plantas
+            </a>
+
+        </div>
+
+        <!-- Tabla para escritorio -->
+        <div class="table-responsive d-none d-md-block">
+            <table class="table table-striped table-bordered" id="myTable" style="min-width: 1100px;">
+                <thead class="table-custom-header">
+                    <tr>
+                        <th>Registro</th>
+                        <th>Fecha</th>
+                        <th>Zona</th>
+                        <th>Accion</th>
+                        <th>Tiempo</th>
+                        <th>PlantaReg</th>
+                        <th>TanqueReg</th>
+                        <th>Modo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for registro in riegos %}
+                    <tr data-bs-toggle="collapse" data-bs-target="#detalle{{ registro.registro }}"
+                        style="cursor:pointer;">
+                        <td>{{ registro.registro }}</td>
+                        <td>{{ registro.fecha }}</td>
+                        <td>{{ registro.zona }}</td>
+                        <td>{{ registro.accion }}</td>
+                        <td>{{ registro.tiempo_segundos }} s</td>
+                        <td>
+                            {% if registro.planta_reg %}
+                            {{ registro.planta_reg.registro }}
+                            {% else %} - {% endif %}
+                        </td>
+                        <td>
+                            {% if registro.tanque_reg %}
+                            {{ registro.tanque_reg.registro }}
+                            {% else %} - {% endif %}
+                        </td>
+                        <td>{{ registro.modo }}</td>
+                    </tr>
+
+                    <tr class="collapse" id="detalle{{ registro.registro }}">
+                        <td colspan="8">
+                            <div class="p-3 bg-light">
+
+                                {% if registro.planta_reg %}
+                                <h6>🌿 Datos Planta</h6>
+                                <ul>
+                                    <li><strong>ID:</strong> {{ registro.planta_reg.planta_id }}</li>
+                                    <li><strong>Temp:</strong> {{ registro.planta_reg.temperatura }} °C</li>
+                                    <li><strong>Humedad Aire:</strong> {{ registro.planta_reg.humedad_aire }} %</li>
+                                    <li><strong>Humedad Suelo:</strong> {{ registro.planta_reg.humedad_suelo }} %</li>
+                                    <li><strong>Peso:</strong> {{ registro.planta_reg.peso }} kg</li>
+                                    <li><strong>Fecha:</strong> {{ registro.planta_reg.timestamp }}</li>
+                                </ul>
+                                {% endif %}
+
+                                {% if registro.tanque_reg %}
+                                <h6>💧 Datos Tanque</h6>
+                                <ul>
+                                    <li><strong>ID:</strong> {{ registro.tanque_reg.tanque_id }}</li>
+                                    <li><strong>Temp Agua:</strong> {{ registro.tanque_reg.temperatura }} °C</li>
+                                    <li><strong>Caudal:</strong> {{ registro.tanque_reg.caudal }} L/min</li>
+                                    <li><strong>Llenado:</strong> {{ registro.tanque_reg.porcentaje_llenado }} %</li>
+                                    <li><strong>Nivel:</strong> {{ registro.tanque_reg.nivel }} cm</li>
+                                    <li><strong>Fecha:</strong> {{ registro.tanque_reg.timestamp }}</li>
+                                </ul>
+                                {% endif %}
+
+                            </div>
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                responsive: true,
+                autoWidth: false,
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
+                }
+            });
+
+            // Formato de números con separador de miles
+            document.querySelectorAll(".number-cell").forEach(cell => {
+                const value = parseFloat(cell.getAttribute("data-value"));
+                if (!isNaN(value)) {
+                    cell.textContent = value.toLocaleString("es-ES", { maximumFractionDigits: 0 });
+                }
+            });
+        });
+
+        // CLICK PLANTA
+        $(document).on("click", ".planta-link", function (e) {
+            e.preventDefault();
+            let id = $(this).data("id");
+
+            $.get("/planta/" + id + "/", function (data) {
+                $("#modalContent").html(`
+            <strong>Planta:</strong> ${data.planta_id}<br>
+            <strong>Fecha:</strong> ${data.timestamp}<br>
+            <strong>Temp:</strong> ${data.temperatura} °C<br>
+            <strong>Humedad Aire:</strong> ${data.humedad_aire}%<br>
+            <strong>Humedad Suelo:</strong> ${data.humedad_suelo}%<br>
+            <strong>Peso:</strong> ${data.peso} kg
+        `);
+                new bootstrap.Modal(document.getElementById('sensorModal')).show();
+            });
+        });
+
+        // CLICK TANQUE
+        $(document).on("click", ".tanque-link", function (e) {
+            e.preventDefault();
+            let id = $(this).data("id");
+
+            $.get("/tanque/" + id + "/", function (data) {
+                $("#modalContent").html(`
+            <strong>Tanque:</strong> ${data.tanque_id}<br>
+            <strong>Fecha:</strong> ${data.timestamp}<br>
+            <strong>Temp Agua:</strong> ${data.temperatura} °C<br>
+            <strong>Caudal:</strong> ${data.caudal} L/min<br>
+            <strong>Llenado:</strong> ${data.porcentaje_llenado}%<br>
+            <strong>Nivel:</strong> ${data.nivel} cm
+        `);
+                new bootstrap.Modal(document.getElementById('sensorModal')).show();
+            });
+        });
+    </script>
+</body>
+
+</html>
