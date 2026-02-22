@@ -166,7 +166,7 @@
         </div>
 
         <!-- Filtros -->
-        <div class="row g-3 mb-3 align-items-end">
+        <div class="row g-3 mb-3">
             <div class="col-md-3">
                 <select id="tanqueSelect" class="form-select">
                     <option value="">Todos los tanques</option>
@@ -188,13 +188,20 @@
                     <option value="200">200</option>
                 </select>
             </div>
-            <div class="col-md-3 d-flex gap-2">
-                <button class="btn btn-primary" onclick="cargarDatosTanque()">Consultar</button>
+            <div class="col-md-1">
+                <button class="btn btn-primary w-100" onclick="cargarDatosTanque()">Consultar</button>
                 <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalConsumo">
-                    <i class="fas fa-chart-column me-2"></i>Consumo
+                    <i class="fas fa-chart-column me-2"></i> Consumo
                 </button>
             </div>
+
         </div>
+        <div class="col-md-1">
+            <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalConsumo">
+                <i class="fas fa-chart-column me-2"></i> Consumo
+            </button>
+        </div>
+
         <!-- Checkboxes -->
         <div class="my-3 text-center">
             <label class="me-2"><input type="checkbox" id="showNivel" checked> Nivel</label>
