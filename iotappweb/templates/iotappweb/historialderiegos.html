@@ -138,16 +138,17 @@
                                                 {{ registro.tiempo_segundos }} s
                                             </div>
 
-                                            <div class="col-md-2">
+                                           
+
+                                            <div class="col-md-3 text-end text-muted">
+                                                <i class="fas fa-chevron-down rotate-icon"></i>
+                                            </div>
+                                             <div class="col-md-2">
                                                 {% if registro.modo == "AUTO" %}
                                                 <span class="badge bg-primary">AUTO</span>
                                                 {% else %}
                                                 <span class="badge bg-warning text-dark">MANUAL</span>
                                                 {% endif %}
-                                            </div>
-
-                                            <div class="col-md-3 text-end text-muted">
-                                                <i class="fas fa-chevron-down rotate-icon"></i>
                                             </div>
 
                                         </div>
