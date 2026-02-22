@@ -28,6 +28,37 @@
             background: linear-gradient(135deg, #3498DB, #2980B9);
             transition: height 0.5s ease-in-out;
         }
+
+        .indicador-container {
+            width: 60px;
+            height: 180px;
+            border: 2px solid #333;
+            border-radius: 6px;
+            background-color: #e9ecef;
+            position: relative;
+            margin: auto;
+            overflow: hidden;
+        }
+
+        .indicador-bar {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 0%;
+            transition: height 0.5s ease-in-out;
+        }
+
+        #nivelTanque {
+            width: 60px;
+            height: 180px;
+            border: 2px solid #333;
+            border-radius: 6px;
+            background-color: #e0e0e0;
+            position: relative;
+            overflow: hidden;
+            margin: auto;
+        }
+    </style>
     </style>
 </head>
 
@@ -35,42 +66,65 @@
 
     <div class="container my-5">
         <h2 class="text-center mb-4 fw-bold">Dashboard del Tanque</h2>
-        <!-- Cards -->
-        <div class="row g-4 justify-content-center text-white my-3">
-            <div class="col-md-3">
-                <div class="card" style="background: linear-gradient(135deg,#2C3E50,#34495E);">
-                    <div class="card-body">
-                        <div>
-                            <div class="card-title">Temperatura Agua</div>
-                            <div class="fs-value"><span id="tempAgua">0</span> °C</div>
-                        </div>
-                        <div class="card-icon"><i class="fas fa-thermometer-half"></i></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card" style="background: linear-gradient(135deg,#1ABC9C,#16A085);">
-                    <div class="card-body">
-                        <div>
-                            <div class="card-title">Caudal</div>
-                            <div class="fs-value"><span id="caudal">0</span> L/min</div>
-                        </div>
-                        <div class="card-icon"><i class="fas fa-water"></i></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!-- Indicadores principales -->
+        <div class="row g-4 justify-content-center text-center my-4">
 
-        <!-- Tanque visual -->
-        <div class="text-center my-4">
-            <div id="nivelTanque">
-                <div id="nivelFill"></div>
+            <!-- Temperatura -->
+            <div class="col-md-4">
+                <div class="card p-3 shadow-sm">
+                    <h6 class="fw-bold mb-3">
+                        <i class="fas fa-thermometer-half text-danger"></i> Temperatura
+                    </h6>
+
+                    <div class="indicador-container">
+                        <div class="indicador-bar bg-danger" id="tempBar"></div>
+                    </div>
+
+                    <div class="fs-4 mt-3">
+                        <span id="tempAgua">0</span> °C
+                    </div>
+                </div>
             </div>
-            <div class="fs-value mt-2">
-                <span id="porcentaje">0</span>%
-                (<span id="nivelCm">0</span> cm)
+
+            <!-- Caudal -->
+            <div class="col-md-4">
+                <div class="card p-3 shadow-sm">
+                    <h6 class="fw-bold mb-3">
+                        <i class="fas fa-water text-primary"></i> Caudal
+                    </h6>
+
+                    <div class="indicador-container">
+                        <div class="indicador-bar bg-primary" id="caudalBar"></div>
+                    </div>
+
+                    <div class="fs-4 mt-3">
+                        <span id="caudal">0</span> L/min
+                    </div>
+                </div>
             </div>
-            <div class="text-muted mt-1">Última actualización: <span id="timestampTanque"></span></div>
+
+            <!-- Nivel Tanque -->
+            <div class="col-md-4">
+                <div class="card p-3 shadow-sm">
+                    <h6 class="fw-bold mb-3">
+                        <i class="fas fa-droplet text-info"></i> Nivel Tanque
+                    </h6>
+
+                    <div id="nivelTanque">
+                        <div id="nivelFill"></div>
+                    </div>
+
+                    <div class="fs-5 mt-3">
+                        <span id="porcentaje">0</span>%
+                        (<span id="nivelCm">0</span> cm)
+                    </div>
+
+                    <div class="text-muted small mt-1">
+                        <span id="timestampTanque"></span>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <!-- Panel de control -->
