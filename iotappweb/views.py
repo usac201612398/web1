@@ -151,8 +151,8 @@ def tanquedashboard(request):
     return render(request, "iotappweb/tanquedashboard.html")
 
 def historial_riegos(request):
-    hoy = timezone.now()
-    hace_7_dias = hoy - timedelta(days=7)
+    
+    hace_7_dias = timezone.now() - timedelta(days=7)
 
     riegos = riegoRegistro.objects.filter(
         fecha__gte=hace_7_dias

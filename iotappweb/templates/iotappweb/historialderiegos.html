@@ -40,6 +40,35 @@
             width: 100px;
         }
     </style>
+
+    <style>
+        .accordion-button {
+            background-color: #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        .accordion-button:hover {
+            background-color: #f8f9fa;
+        }
+
+        .accordion-button:not(.collapsed) {
+            background: linear-gradient(90deg, #198754, #20c997);
+            color: white;
+        }
+
+        .accordion-button:not(.collapsed) .rotate-icon {
+            transform: rotate(180deg);
+            transition: transform 0.3s ease;
+        }
+
+        .rotate-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .accordion-body {
+            border-top: 3px solid #198754;
+        }
+    </style>
 </head>
 
 <body>
@@ -72,60 +101,104 @@
                         <th>Modo</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="accordion" id="riegoAccordion">
                     {% for registro in riegos %}
-                    <tr data-bs-toggle="collapse" data-bs-target="#detalle{{ registro.registro }}"
-                        style="cursor:pointer;">
-                        <td>{{ registro.registro }}</td>
-                        <td>{{ registro.fecha }}</td>
-                        <td>{{ registro.zona }}</td>
-                        <td>{{ registro.accion }}</td>
-                        <td>{{ registro.tiempo_segundos }} s</td>
-                        <td>
-                            {% if registro.planta_reg %}
-                            {{ registro.planta_reg.registro }}
-                            {% else %} - {% endif %}
-                        </td>
-                        <td>
-                            {% if registro.tanque_reg %}
-                            {{ registro.tanque_reg.registro }}
-                            {% else %} - {% endif %}
-                        </td>
-                        <td>{{ registro.modo }}</td>
-                    </tr>
+                    <tr class="accordion-item border-0">
 
-                    <tr class="collapse" id="detalle{{ registro.registro }}">
-                        <td colspan="8">
-                            <div class="p-3 bg-light">
+                        <td colspan="8" class="p-0">
+                            <div class="accordion-header" id="heading{{ registro.registro }}">
+                                <button class="accordion-button collapsed shadow-sm" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#collapse{{ registro.registro }}"
+                                    aria-expanded="false" aria-controls="collapse{{ registro.registro }}">
 
-                                {% if registro.planta_reg %}
-                                <h6>🌿 Datos Planta</h6>
-                                <ul>
-                                    <li><strong>ID:</strong> {{ registro.planta_reg.planta_id }}</li>
-                                    <li><strong>Temp:</strong> {{ registro.planta_reg.temperatura }} °C</li>
-                                    <li><strong>Humedad Aire:</strong> {{ registro.planta_reg.humedad_aire }} %</li>
-                                    <li><strong>Humedad Suelo:</strong> {{ registro.planta_reg.humedad_suelo }} %</li>
-                                    <li><strong>Peso:</strong> {{ registro.planta_reg.peso }} kg</li>
-                                    <li><strong>Fecha:</strong> {{ registro.planta_reg.timestamp }}</li>
-                                </ul>
-                                {% endif %}
+                                    <div class="container-fluid">
+                                        <div class="row w-100 text-center align-items-center">
 
-                                {% if registro.tanque_reg %}
-                                <h6>💧 Datos Tanque</h6>
-                                <ul>
-                                    <li><strong>ID:</strong> {{ registro.tanque_reg.tanque_id }}</li>
-                                    <li><strong>Temp Agua:</strong> {{ registro.tanque_reg.temperatura }} °C</li>
-                                    <li><strong>Caudal:</strong> {{ registro.tanque_reg.caudal }} L/min</li>
-                                    <li><strong>Llenado:</strong> {{ registro.tanque_reg.porcentaje_llenado }} %</li>
-                                    <li><strong>Nivel:</strong> {{ registro.tanque_reg.nivel }} cm</li>
-                                    <li><strong>Fecha:</strong> {{ registro.tanque_reg.timestamp }}</li>
-                                </ul>
-                                {% endif %}
+                                            <div class="col-md-1">
+                                                <strong>#{{ registro.registro }}</strong>
+                                            </div>
 
+                                            <div class="col-md-2">
+                                                {{ registro.fecha|date:"d/m/Y H:i" }}
+                                            </div>
+
+                                            <div class="col-md-1">
+                                                Zona {{ registro.zona }}
+                                            </div>
+
+                                            <div class="col-md-1">
+                                                {% if registro.accion == "ON" %}
+                                                <span class="badge bg-success">ON</span>
+                                                {% else %}
+                                                <span class="badge bg-danger">OFF</span>
+                                                {% endif %}
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                {{ registro.tiempo_segundos }} s
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                {% if registro.modo == "AUTO" %}
+                                                <span class="badge bg-primary">AUTO</span>
+                                                {% else %}
+                                                <span class="badge bg-warning text-dark">MANUAL</span>
+                                                {% endif %}
+                                            </div>
+
+                                            <div class="col-md-3 text-end text-muted">
+                                                <i class="fas fa-chevron-down rotate-icon"></i>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </button>
+                            </div>
+
+                            <div id="collapse{{ registro.registro }}" class="accordion-collapse collapse"
+                                data-bs-parent="#riegoAccordion">
+
+                                <div class="accordion-body bg-light">
+
+                                    <div class="row">
+
+                                        {% if registro.planta_reg %}
+                                        <div class="col-md-6 border-end">
+                                            <h6 class="text-success">
+                                                <i class="fas fa-leaf"></i> Sensor Planta
+                                            </h6>
+                                            <ul class="list-unstyled">
+                                                <li><strong>ID:</strong> {{ registro.planta_reg.planta_id }}</li>
+                                                <li>Temp: {{ registro.planta_reg.temperatura }} °C</li>
+                                                <li>Hum Aire: {{ registro.planta_reg.humedad_aire }} %</li>
+                                                <li>Hum Suelo: {{ registro.planta_reg.humedad_suelo }} %</li>
+                                                <li>Peso: {{ registro.planta_reg.peso }} kg</li>
+                                            </ul>
+                                        </div>
+                                        {% endif %}
+
+                                        {% if registro.tanque_reg %}
+                                        <div class="col-md-6">
+                                            <h6 class="text-primary">
+                                                <i class="fas fa-water"></i> Sensor Tanque
+                                            </h6>
+                                            <ul class="list-unstyled">
+                                                <li><strong>ID:</strong> {{ registro.tanque_reg.tanque_id }}</li>
+                                                <li>Temp Agua: {{ registro.tanque_reg.temperatura }} °C</li>
+                                                <li>Caudal: {{ registro.tanque_reg.caudal }} L/min</li>
+                                                <li>Llenado: {{ registro.tanque_reg.porcentaje_llenado }} %</li>
+                                                <li>Nivel: {{ registro.tanque_reg.nivel }} cm</li>
+                                            </ul>
+                                        </div>
+                                        {% endif %}
+
+                                    </div>
+
+                                </div>
                             </div>
                         </td>
                     </tr>
-
                     {% endfor %}
                 </tbody>
             </table>
