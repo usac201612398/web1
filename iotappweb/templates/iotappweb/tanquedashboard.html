@@ -190,6 +190,9 @@
             </div>
             <div class="col-md-1">
                 <button class="btn btn-primary w-100" onclick="cargarDatosTanque()">Consultar</button>
+                <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalConsumo">
+                    <i class="fas fa-chart-column me-2"></i>Consumo
+                </button>
             </div>
         </div>
         <!-- Checkboxes -->
@@ -234,6 +237,49 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="modal-header">
+        <h5 class="modal-title" id="modalConsumoLabel">
+            Historial de Consumo (L) - {{ periodo|title }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+    </div>
+
+    <div class="modal-body">
+        <div class="mb-3 text-end">
+            <label for="periodoSelect" class="form-label me-2">Período:</label>
+            <select id="periodoSelect" class="form-select d-inline-block w-auto" onchange="cambiarPeriodo()">
+                <option value="semanal" {% if periodo=='semanal' %}selected{% endif %}>Semanal</option>
+                <option value="mensual" {% if periodo=='mensual' %}selected{% endif %}>Mensual</option>
+            </select>
+        </div>
+
+        <table class="table table-striped table-bordered table-sm text-center">
+            <thead class="table-light">
+                <tr>
+                    <th>{% if periodo == 'semanal' %}Semana inicio{% else %}Fecha{% endif %}</th>
+                    {% for planta in plantas %}
+                    <th>{{ planta }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for fecha in fechas %}
+                <tr>
+                    <td>
+                        {% if periodo == 'semanal' %}
+                        {{ fecha|date:"d/m/Y" }}
+                        {% else %}
+                        {{ fecha|date:"d/m/Y" }}
+                        {% endif %}
+                    </td>
+                    {% for planta in plantas %}
+                    <td>{{ tabla[fecha].get(planta)|default:0|floatformat:1 }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
     <div class="text-center mt-5">
         <a href="{% url 'riegoshistorial' %}" class="btn btn-success btn-lg rounded-pill">
@@ -313,7 +359,7 @@
         document.getElementById('showNivel').addEventListener('change', cargarDatosTanque);
 
         cargarDatosTanque();
-        setInterval(cargarDatosTanque, 30000);
+        setInterval(cargarDatosTanque, 10000);
 
         let estadoRiegoActual = 'En espera';
         let estadoTanqueActual = 'En espera';
@@ -392,6 +438,19 @@
                 .catch(err => console.error("Error:", err));
         }
 
+    </script>
+    <script>
+        function cambiarPeriodo() {
+            const periodo = document.getElementById('periodoSelect').value;
+            // Recargamos el modal vía GET
+            fetch(`{% url 'consumo_acumulado' %}?periodo=${periodo}`)
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById('modalConsumo').innerHTML = html;
+                    const modal = new bootstrap.Modal(document.getElementById('modalConsumo'));
+                    modal.show();
+                });
+        }
     </script>
 </body>
 

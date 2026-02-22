@@ -74,7 +74,7 @@ class Command(BaseCommand):
                     riegoRegistro.objects.create(
                         zona=zona,
                         accion=data.get("accion", "UNKNOWN"),
-                        tiempo_segundos=int(data.get("tiempo_ms", 0)) // 1000,
+                        tiempo_segundos=int(data.get("tiempo", 0)),
                         planta_reg=planta_ultimo,
                         tanque_reg=tanque_ultimo,
                         modo=data.get("modo", "AUTO" if not data.get("manual") else "MANUAL")

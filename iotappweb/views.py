@@ -10,7 +10,8 @@ import json
 from django.utils.dateparse import parse_datetime
 from django.db.models import Q, Avg, Max
 from django.utils import timezone
-from datetime import timedelta
+from datetime import timedelta, datetime
+from collections import defaultdict
 
 
 MQTT_HOST = "10.111.112.4"
@@ -247,3 +248,50 @@ def tanque_api(request):
     }
     return JsonResponse(response)
 
+def consumo_acumulado(request):
+    periodo = request.GET.get("periodo", "mensual")  # "semanal" o "mensual"
+    hoy = datetime.now()
+
+    if periodo == "semanal":
+        # Inicio de la semana actual (lunes)
+        inicio = hoy - timedelta(days=hoy.weekday())
+        fin = inicio + timedelta(days=7)
+    else:  # mensual
+        inicio = hoy.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        fin = (inicio + timedelta(days=32)).replace(day=1)
+
+    riegos = riegoRegistro.objects.filter(
+        timestamp__gte=inicio,
+        timestamp__lt=fin
+    ).select_related('planta_reg', 'tanque_reg')
+
+    tabla = defaultdict(lambda: defaultdict(float))
+    plantas_set = set()
+
+    for r in riegos:
+        if not r.planta_reg or not r.tanque_reg:
+            continue
+
+        planta_id = r.planta_reg.planta_id
+        plantas_set.add(planta_id)
+
+        litros = r.tiempo_segundos * r.tanque_reg.caudal
+
+        if periodo == "semanal":
+            # Usamos lunes de la semana como clave
+            semana_inicio = r.timestamp.date() - timedelta(days=r.timestamp.weekday())
+            tabla[semana_inicio][planta_id] += litros
+        else:
+            fecha = r.timestamp.date()
+            tabla[fecha][planta_id] += litros
+
+    fechas = sorted(tabla.keys())
+    plantas = sorted(list(plantas_set))
+
+    context = {
+        "tabla": tabla,
+        "fechas": fechas,
+        "plantas": plantas,
+        "periodo": periodo,
+    }
+    return render(request, "consumo_acumulado_modal.html", context)
