@@ -11,7 +11,5 @@ urlpatterns = [
     path('api/planta/', views.planta_api, name='planta_api'),
     path('tanque/', views.tanquedashboard, name='tanquedashboard'),
     path('api/tanque/', views.tanque_api, name='tanque_api'),
-    path('riegos/historial', views.historial_riegos, name='riegoshistorial'),
-    path('planta/<int:registro_id>/', views.detalle_planta, name='detalle_planta'),
-    path('tanque/<int:registro_id>/', views.detalle_tanque, name='detalle_tanque'),
+    path('riegos/historial', views.historial_riegos, name='riegoshistorial')
 ]
