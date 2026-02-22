@@ -248,30 +248,37 @@ def tanque_api(request):
     }
     return JsonResponse(response)
 
-
 def consumo_acumulado(request):
+    """
+    Consumo acumulado por día para la semana actual, solo un tanque.
+    """
     hoy = datetime.now()
-    inicio = hoy.replace(hour=0, minute=0, second=0, microsecond=0)
-    fin = inicio + timedelta(days=1)
+    inicio_semana = hoy - timedelta(days=hoy.weekday())  # lunes
+    fin_semana = inicio_semana + timedelta(days=7)       # domingo
 
     riegos = riegoRegistro.objects.filter(
-        timestamp__gte=inicio,
-        timestamp__lt=fin,
+        timestamp__gte=inicio_semana,
+        timestamp__lt=fin_semana,
         tanque_reg__isnull=False
     )
 
     tabla = defaultdict(float)
 
     for r in riegos:
-        litros = (r.tiempo_segundos / 60) * r.tanque_reg.caudal  # L/min * tiempo_min
+        litros = (r.tiempo_segundos / 60.0) * r.tanque_reg.caudal  # L/min * tiempo_min
         fecha = r.timestamp.date()
         tabla[fecha] += litros
 
-    fechas = sorted(tabla.keys())
+    # Convertimos a lista de dicts para que el template pueda acceder fácilmente
+    fechas_litros = []
+    for fecha in sorted(tabla.keys()):
+        fechas_litros.append({
+            "fecha": fecha,
+            "litros": tabla[fecha]
+        })
 
     context = {
-        "tabla": tabla,
-        "fechas": fechas,
+        "fechas_litros": fechas_litros,
     }
 
     return render(request, "consumo_acumulado_modal.html", context)
