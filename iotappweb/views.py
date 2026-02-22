@@ -105,77 +105,66 @@ def plantadashboard(request):
         'plantas': plantas
     })
 
-from django.utils import timezone
-from django.http import JsonResponse
-from django.db.models import Avg
-from dateutil.parser import parse as parse_datetime
-from datetime import datetime
-
 def planta_api(request):
     planta_id = request.GET.get('planta_id')
     desde = request.GET.get('desde')
     hasta = request.GET.get('hasta')
     limite = int(request.GET.get('limite', 50))
 
-    # Query base
     data = m1Sensoresdata.objects.all().order_by('-timestamp')
-
     if planta_id:
         data = data.filter(planta_id=planta_id)
-
     if desde:
         data = data.filter(timestamp__gte=parse_datetime(desde))
     if hasta:
         data = data.filter(timestamp__lte=parse_datetime(hasta))
 
-    # Últimos N registros
-    data = list(data[:limite])[::-1]
+    data = data[:limite][::-1]  # Para mostrar en orden cronológico
 
-    # Último registro por planta
+    def round2(v):
+        return round(v, 2) if v else 0
+
+    # Últimos registros por planta
     latest_by_planta = {}
-    plantas = m1Sensoresdata.objects.values_list('planta_id', flat=True).distinct()
+    plantas = data.values_list('planta_id', flat=True).distinct()
     for p in plantas:
-        q = m1Sensoresdata.objects.filter(planta_id=p).order_by('-timestamp').first()
-        if q:
+        last = m1Sensoresdata.objects.filter(planta_id=p).order_by('-timestamp').first()
+        if last:
             latest_by_planta[p] = {
-                "temperatura": round(q.temperatura, 2),
-                "humedad_aire": round(q.humedad_aire, 2),
-                "humedad_suelo": round(q.humedad_suelo, 2),
-                "peso": round(q.peso, 2),
-                "timestamp": timezone.localtime(q.timestamp).strftime("%Y-%m-%d %H:%M:%S")
+                "temperatura": round2(last.temperatura),
+                "humedad_aire": round2(last.humedad_aire),
+                "humedad_suelo": round2(last.humedad_suelo),
+                "peso": round2(last.peso),
+                "timestamp": timezone.localtime(last.timestamp).strftime("%Y-%m-%d %H:%M:%S")
             }
 
-    # Promedio del día (desde 00:00 hasta ahora)
-    today_start = timezone.localtime(timezone.now()).replace(hour=0, minute=0, second=0, microsecond=0)
-    avg_today = m1Sensoresdata.objects.filter(timestamp__gte=today_start)
+    # Promedio del día (desde 00:00 hoy)
+    hoy = timezone.localtime().replace(hour=0, minute=0, second=0, microsecond=0)
+    avg_today_qs = m1Sensoresdata.objects.filter(timestamp__gte=hoy)
     if planta_id:
-        avg_today = avg_today.filter(planta_id=planta_id)
-
-    avg_data = avg_today.aggregate(
+        avg_today_qs = avg_today_qs.filter(planta_id=planta_id)
+    avg_today = avg_today_qs.aggregate(
         temperatura=Avg('temperatura'),
         humedad_aire=Avg('humedad_aire'),
         humedad_suelo=Avg('humedad_suelo'),
         peso=Avg('peso')
     )
+    avg_today = {k: round2(v) for k, v in avg_today.items()}
 
-    # Formatear
-    def round2(v):
-        return round(v, 2) if v else 0
-
-    avg_data = {k: round2(v) for k, v in avg_data.items()}
-
+    # Últimos registros para gráfico
+    timestamps = [timezone.localtime(d.timestamp).strftime("%H:%M:%S") for d in data]
     response = {
-        "timestamps": [timezone.localtime(d.timestamp).strftime("%H:%M:%S") for d in data],
+        "timestamps": timestamps,
         "temperatura": [round2(d.temperatura) for d in data],
         "humedad_aire": [round2(d.humedad_aire) for d in data],
         "humedad_suelo": [round2(d.humedad_suelo) for d in data],
         "peso": [round2(d.peso) for d in data],
-        "latest_by_planta": latest_by_planta,
-        "avg_today": avg_data
+        "latest": latest_by_planta.get(planta_id) if planta_id else list(latest_by_planta.values())[0] if latest_by_planta else {},
+        "avg_today": avg_today,
+        "latest_by_planta": latest_by_planta
     }
 
     return JsonResponse(response)
-
 def tanquedashboard(request):
     return render(request, "iotappweb/tanquedashboard.html")
 
