@@ -19,65 +19,65 @@
 
     table {
       white-space: nowrap;
-      /* evita que se partan las columnas */
     }
 
+    /* Header general */
     .table thead th {
-      background: #363636;
-      color: white;
+      background: #363636 !important;
+      color: white !important;
       text-align: center;
       position: sticky;
       top: 0;
-      z-index: 3;
+      z-index: 5;
     }
 
     .table td {
       text-align: center;
       font-weight: bold;
     }
-  </style>
-  <style>
+
     /* Columnas fijas izquierdas */
     .table th:nth-child(1),
     .table td:nth-child(1) {
       position: sticky;
       left: 0;
-      background: #fff;
-      z-index: 2;
+      z-index: 4;
     }
 
     .table th:nth-child(2),
     .table td:nth-child(2) {
       position: sticky;
       left: 120px;
-      background: #fff;
-      z-index: 2;
+      z-index: 4;
     }
 
     .table th:nth-child(3),
     .table td:nth-child(3) {
       position: sticky;
       left: 240px;
-      background: #fff;
-      z-index: 2;
+      z-index: 4;
     }
 
     .table th:nth-child(4),
     .table td:nth-child(4) {
       position: sticky;
       left: 360px;
-      background: #fff;
-      z-index: 2;
+      z-index: 4;
     }
 
     .table th:nth-child(5),
     .table td:nth-child(5) {
       position: sticky;
       left: 480px;
-      background: #fff;
-      z-index: 2;
+      z-index: 4;
+    }
+
+    /* Fondo blanco SOLO para celdas (no headers) */
+    .table td:nth-child(-n+5) {
+      background: white;
     }
   </style>
+
 </head>
 
 <body>
