@@ -2541,7 +2541,7 @@ def reporte_general(request):
     ).annotate(
         prom=Avg('cantidad'),
         ref=Avg('ref')
-    ).order_by('anio', 'semana')
+    ).order_by('anio', 'semana','estructura')
 
     # 👇 Construir lista de dicts para pivot
     data = []
@@ -2561,7 +2561,7 @@ def reporte_general(request):
             'cultivo': row['cultivo'],
 
             # 🔑 clave para el pivot
-            'semana': f"Semana {row['semana']}-{row['anio']}",
+            'semana': f"{row['semana']}-{str(row['anio'])[-2:]}",
             'semana_num': row['semana'],
             'anio': row['anio'],
 
