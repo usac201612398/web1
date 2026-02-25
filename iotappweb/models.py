@@ -12,7 +12,7 @@ class m1Sensoresdata(models.Model):
     peso = models.FloatField()
 
     def __str__(self):
-        return f"Reg: {self.registro} - {self.fecha} - {self.planta_id} - {self.temperatura}°C / {self.humedad_aire}% - {self.humedad_suelo}% - {self.peso}kg"
+        return f"Reg: {self.registro} - {self.timestamp} - {self.planta_id} - {self.temperatura}°C / {self.humedad_aire}% - {self.humedad_suelo}% - {self.peso}kg"
 
 class m2Sensoresdata(models.Model):
     registro = models.BigAutoField(primary_key=True)
@@ -24,7 +24,7 @@ class m2Sensoresdata(models.Model):
     nivel = models.FloatField()
 
     def __str__(self):
-        return f"Reg: {self.registro} - {self.fecha} - {self.tanque_id} - {self.temperatura}°C / {self.caudal}L/min - {self.porcentaje_llenado}%  - {self.nivel}cm"
+        return f"Reg: {self.registro} - {self.timestamp} - {self.tanque_id} - {self.temperatura}°C / {self.caudal}L/min - {self.porcentaje_llenado}%  - {self.nivel}cm"
     
 class riegoRegistro(models.Model):
     registro = models.BigAutoField(primary_key=True)
