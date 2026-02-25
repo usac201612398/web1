@@ -446,11 +446,24 @@
             const variable = document.getElementById("histVariable").value;
 
             let url = `{% url 'histograma_api' %}?planta_id=${planta}&variable=${variable}`;
-            const response = await fetch(url);
 
-            histChart.data.labels = data.bins;
-            histChart.data.datasets[0].data = data.counts;
-            histChart.update();
+            try {
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error("HTTP " + response.status);
+                }
+
+                const data = await response.json();
+
+                histChart.data.labels = data.bins;
+                histChart.data.datasets[0].data = data.counts;
+                histChart.update();
+
+            } catch (error) {
+                console.error("Error cargando histograma:", error);
+                alert("Error cargando histograma.");
+            }
         }
         actualizarColores();
         setInterval(cargarDatos, 60000); // cada 1 minuto
