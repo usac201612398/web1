@@ -17,7 +17,7 @@ MQTT_PASS = "nuevacontraseña"
 TOPIC_PLANTA = "casa/planta/+/data"
 TOPIC_TANQUE = "casa/tanque/1/data"
 TOPIC_RIEGO = "casa/tanque/1/riego/historial"
-TOPIC_RIEGO_RESUMEN = "casa/tanque/1/riego/registro"
+TOPIC_RIEGO_RESUMEN = "casa/tanque/1/riego_resumen"
 class Command(BaseCommand):
     help = "Listener MQTT que guarda datos en la base de datos"
 
