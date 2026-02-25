@@ -289,6 +289,7 @@ def consumo_acumulado(request):
 
     return render(request, "consumo_acumulado_modal.html", context)
 
+
 def histograma_api(request):
     
     planta = request.GET.get("planta_id")
@@ -299,12 +300,20 @@ def histograma_api(request):
     if planta:
         queryset = queryset.filter(planta_id=planta)
 
+    if variable not in ["temperatura", "humedad_aire", "humedad_suelo", "peso"]:
+        return JsonResponse({"error": "Variable inválida"}, status=400)
+
     valores = list(queryset.values_list(variable, flat=True))
 
-    # Crear bins automáticamente
+    if not valores:
+        return JsonResponse({
+            "bins": [],
+            "counts": []
+        })
+
     counts, bins = np.histogram(valores, bins=10)
 
     return JsonResponse({
-        "bins": bins[:-1].tolist(),
+        "bins": [round(b, 2) for b in bins[:-1]],
         "counts": counts.tolist()
     })
