@@ -290,7 +290,7 @@
                     <canvas id="histogramaChart" height="120"></canvas>
 
                 </div>
-
+                <div id="metricas" class="row text-center mt-4"></div>
                 <div class="modal-footer">
                     <button class="btn btn-primary" onclick="cargarHistograma()">Actualizar</button>
                 </div>
@@ -464,6 +464,40 @@
                 console.error("Error cargando histograma:", error);
                 alert("Error cargando histograma.");
             }
+            const metricasDiv = document.getElementById("metricas");
+
+            metricasDiv.innerHTML = `
+                <div class="col-md-2"><div class="card p-2 shadow-sm">
+                    <small>Media</small>
+                    <h5>${data.mean.toFixed(2)}</h5>
+                </div></div>
+
+                <div class="col-md-2"><div class="card p-2 shadow-sm">
+                    <small>Mediana</small>
+                    <h5>${data.median.toFixed(2)}</h5>
+                </div></div>
+
+                <div class="col-md-2"><div class="card p-2 shadow-sm">
+                    <small>Desv. Est.</small>
+                    <h5>${data.std.toFixed(2)}</h5>
+                </div></div>
+
+                <div class="col-md-2"><div class="card p-2 shadow-sm">
+                    <small>Mín</small>
+                    <h5>${data.min.toFixed(2)}</h5>
+                </div></div>
+
+                <div class="col-md-2"><div class="card p-2 shadow-sm">
+                    <small>Máx</small>
+                    <h5>${data.max.toFixed(2)}</h5>
+                </div></div>
+
+                <div class="col-md-2"><div class="card p-2 shadow-sm">
+                    <small>CV %</small>
+                    <h5>${data.cv.toFixed(1)}%</h5>
+                </div></div>
+                `;
+            
         }
         actualizarColores();
         setInterval(cargarDatos, 60000); // cada 1 minuto

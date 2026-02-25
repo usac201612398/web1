@@ -292,29 +292,32 @@ def consumo_acumulado(request):
 
 
 def histograma_api(request):
-
     planta = request.GET.get("planta_id")
     variable = request.GET.get("variable")
-
-    queryset = m1Sensoresdata.objects.all()
-
-    if planta:
-        queryset = queryset.filter(planta_id=planta)
 
     if variable not in ["temperatura", "humedad_aire", "humedad_suelo", "peso"]:
         return JsonResponse({"error": "Variable inválida"}, status=400)
 
-    valores = list(queryset.values_list(variable, flat=True))
+    queryset = m1Sensoresdata.objects.all()
+    if planta: queryset = queryset.filter(planta_id=planta)
 
-    if not valores:
-        return JsonResponse({
-            "bins": [],
-            "counts": []
-        })
+    valores = np.array(list(queryset.values_list(variable, flat=True)), dtype=float)
+    if valores.size == 0:
+        return JsonResponse({"bins": [], "counts": [], "media": 0, "mediana": 0, "std": 0, "min": 0, "max": 0})
 
     counts, bins = np.histogram(valores, bins=10)
+    media = float(np.mean(valores))
+    mediana = float(np.median(valores))
+    std = float(np.std(valores))
+    min_val = float(np.min(valores))
+    max_val = float(np.max(valores))
 
     return JsonResponse({
-        "bins": [round(b, 2) for b in bins[:-1]],
-        "counts": counts.tolist()
+        "bins": [round(b,2) for b in bins[:-1]],
+        "counts": counts.tolist(),
+        "media": round(media,2),
+        "mediana": round(mediana,2),
+        "std": round(std,2),
+        "min": round(min_val,2),
+        "max": round(max_val,2)
     })
