@@ -290,33 +290,24 @@ def consumo_acumulado(request):
 
     return render(request, "consumo_acumulado_modal.html", context)
 
-
 def histograma_api(request):
-    # Parámetros
+    
     planta = request.GET.get("planta_id")
     variable = request.GET.get("variable")
     desde = request.GET.get("desde")
     hasta = request.GET.get("hasta")
 
-    # Validación de variable
     if variable not in ["temperatura", "humedad_aire", "humedad_suelo", "peso"]:
         return JsonResponse({"error": "Variable inválida"}, status=400)
 
-    # Query inicial
     queryset = m1Sensoresdata.objects.all()
-
+    
     if planta:
         queryset = queryset.filter(planta_id=planta)
-
-    # Filtrado por rango de fechas si se proporcionan
     if desde:
-        dt_desde = parse_datetime(desde)
-        if dt_desde:
-            queryset = queryset.filter(timestamp__gte=dt_desde)
+        queryset = queryset.filter(timestamp__gte=desde)
     if hasta:
-        dt_hasta = parse_datetime(hasta)
-        if dt_hasta:
-            queryset = queryset.filter(timestamp__lte=dt_hasta)
+        queryset = queryset.filter(timestamp__lte=hasta)
 
     valores = np.array(list(queryset.values_list(variable, flat=True)), dtype=float)
 
@@ -329,7 +320,7 @@ def histograma_api(request):
             "std": 0,
             "min": 0,
             "max": 0,
-            "cv": 0
+            "total_mediciones": 0
         })
 
     counts, bins = np.histogram(valores, bins=10)
@@ -338,15 +329,15 @@ def histograma_api(request):
     std = float(np.std(valores))
     min_val = float(np.min(valores))
     max_val = float(np.max(valores))
-    cv = (std / media * 100) if media != 0 else 0
+    total_mediciones = valores.size
 
     return JsonResponse({
-        "bins": [round(b, 2) for b in bins[:-1]],
+        "bins": [round(b,2) for b in bins[:-1]],
         "counts": counts.tolist(),
-        "media": round(media, 2),
-        "mediana": round(mediana, 2),
-        "std": round(std, 2),
-        "min": round(min_val, 2),
-        "max": round(max_val, 2),
-        "cv": round(cv, 1)
+        "media": round(media,2),
+        "mediana": round(mediana,2),
+        "std": round(std,2),
+        "min": round(min_val,2),
+        "max": round(max_val,2),
+        "total_mediciones": total_mediciones
     })

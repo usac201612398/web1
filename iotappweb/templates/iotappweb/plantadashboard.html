@@ -268,10 +268,11 @@
 
                 <div class="modal-body">
 
-                    <!-- Selectores -->
+                    <!-- Selectores Planta y Variable -->
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <select id="histPlanta" class="form-select">
+                                <option value="">Todas las plantas</option>
                                 {% for planta in plantas %}
                                 <option value="{{ planta }}">{{ planta }}</option>
                                 {% endfor %}
@@ -286,28 +287,25 @@
                                 <option value="peso">Peso</option>
                             </select>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <input type="datetime-local" id="histDesde" class="form-control" placeholder="Desde">
-                            </div>
-                            <div class="col-md-4">
-                                <input type="datetime-local" id="histHasta" class="form-control" placeholder="Hasta">
-                            </div>
-                            <div class="col-md-4">
-                                <select id="histLimite" class="form-select">
-                                    <option value="10">10</option>
-                                    <option value="20" selected>20</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select>
-                            </div>
+                    </div>
+
+                    <!-- Filtro por rango de fechas -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <input type="datetime-local" id="histDesde" class="form-control" placeholder="Desde">
+                        </div>
+                        <div class="col-md-6">
+                            <input type="datetime-local" id="histHasta" class="form-control" placeholder="Hasta">
                         </div>
                     </div>
 
+                    <!-- Gráfico -->
                     <canvas id="histogramaChart" height="120"></canvas>
 
                 </div>
+
                 <div id="metricas" class="row text-center mt-4"></div>
+
                 <div class="modal-footer">
                     <button class="btn btn-primary" onclick="cargarHistograma()">Actualizar</button>
                 </div>
@@ -436,6 +434,7 @@
         document.getElementById('chkHumedadA').addEventListener('change', actualizarVisibilidad);
         document.getElementById('chkHumedadS').addEventListener('change', actualizarVisibilidad);
         document.getElementById('chkPeso').addEventListener('change', actualizarVisibilidad);
+
         const ctxHist = document.getElementById('histogramaChart').getContext('2d');
 
         const histChart = new Chart(ctxHist, {
@@ -456,15 +455,13 @@
                 }
             }
         });
-
         async function cargarHistograma() {
             const planta = document.getElementById("histPlanta").value;
             const variable = document.getElementById("histVariable").value;
             const desde = document.getElementById("histDesde").value;
             const hasta = document.getElementById("histHasta").value;
-            const limite = document.getElementById("histLimite").value;
 
-            let url = `{% url 'histograma_api' %}?variable=${variable}&limite=${limite}`;
+            let url = `{% url 'histograma_api' %}?variable=${variable}`;
             if (planta) url += `&planta_id=${planta}`;
             if (desde) url += `&desde=${desde}`;
             if (hasta) url += `&hasta=${hasta}`;
@@ -481,13 +478,14 @@
 
                 // Actualizar métricas
                 const metricasDiv = document.getElementById("metricas");
+                const cv = data.media ? (data.std / data.media) * 100 : 0;
                 metricasDiv.innerHTML = `
-        <div class="col-md-2"><div class="card p-2 shadow-sm"><small>Media</small><h5>${data.media.toFixed(2)}</h5></div></div>
-        <div class="col-md-2"><div class="card p-2 shadow-sm"><small>Mediana</small><h5>${data.mediana.toFixed(2)}</h5></div></div>
-        <div class="col-md-2"><div class="card p-2 shadow-sm"><small>Desv. Est.</small><h5>${data.std.toFixed(2)}</h5></div></div>
-        <div class="col-md-2"><div class="card p-2 shadow-sm"><small>Mín</small><h5>${data.min.toFixed(2)}</h5></div></div>
-        <div class="col-md-2"><div class="card p-2 shadow-sm"><small>Máx</small><h5>${data.max.toFixed(2)}</h5></div></div>
-        <div class="col-md-2"><div class="card p-2 shadow-sm"><small>CV %</small><h5>${data.cv.toFixed(1)}%</h5></div></div>
+            <div class="col-md-2"><div class="card p-2 shadow-sm"><small>Media</small><h5>${data.media.toFixed(2)}</h5></div></div>
+            <div class="col-md-2"><div class="card p-2 shadow-sm"><small>Mediana</small><h5>${data.mediana.toFixed(2)}</h5></div></div>
+            <div class="col-md-2"><div class="card p-2 shadow-sm"><small>Desv. Est.</small><h5>${data.std.toFixed(2)}</h5></div></div>
+            <div class="col-md-2"><div class="card p-2 shadow-sm"><small>Mín</small><h5>${data.min.toFixed(2)}</h5></div></div>
+            <div class="col-md-2"><div class="card p-2 shadow-sm"><small>Máx</small><h5>${data.max.toFixed(2)}</h5></div></div>
+            <div class="col-md-2"><div class="card p-2 shadow-sm"><small>Total Med.</small><h5>${data.total_mediciones}</h5></div></div>
         `;
             } catch (error) {
                 console.error("Error cargando histograma:", error);
