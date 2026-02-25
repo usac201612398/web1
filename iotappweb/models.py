@@ -41,3 +41,18 @@ class riegoRegistro(models.Model):
 
     def __str__(self):
         return f"Reg: {self.registro} - Riego zona {self.zona} - {self.accion} - {self.fecha}"
+
+class riegoResumen(models.Model):
+    registro = models.BigAutoField(primary_key=True)
+    fecha = models.DateTimeField(auto_now_add=True)
+
+    riego = models.OneToOneField(
+        riegoRegistro,
+        on_delete=models.CASCADE,
+        related_name="resumen"
+    )
+
+    litros_usados = models.FloatField()
+
+    def _str_(self):
+        return f"Reg: {self.registro} - Resumen zona {self.riego.zona} - {self.litros_usados} L"

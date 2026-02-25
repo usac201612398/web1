@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import m1Sensoresdata, m2Sensoresdata, riegoRegistro
+from .models import m1Sensoresdata, m2Sensoresdata, riegoRegistro, riegoResumen
 # Create your views here.
 import time
 import paho.mqtt.client as mqtt
@@ -82,9 +82,9 @@ def enviarinstruccion(request):
 
         # Selección de topic
         if dispositivo == "riego":
-            topic = "casa/tanque01/riego/manual"
+            topic = "casa/tanque/1/riego/manual"
         elif dispositivo == "tanque":
-            topic = "casa/tanque01/llenado/manual"
+            topic = "casa/tanque/1/llenado/manual"
         else:
             return JsonResponse({"status": "error", "msg": "Dispositivo desconocido"})
 
@@ -250,33 +250,39 @@ def tanque_api(request):
 
 def consumo_acumulado(request):
     """
-    Consumo acumulado por día para la semana actual, solo un tanque.
+    Consumo acumulado por día para la semana actual, separado por válvula.
     """
     hoy = datetime.now()
     inicio_semana = hoy - timedelta(days=hoy.weekday())  # lunes
     fin_semana = inicio_semana + timedelta(days=7)       # domingo
 
-    riegos = riegoRegistro.objects.filter(
-        timestamp__gte=inicio_semana,
-        timestamp__lt=fin_semana,
-        tanque_reg__isnull=False
+    resumenes = riegoResumen.objects.filter(
+        fecha__gte=inicio_semana,
+        fecha__lt=fin_semana
     )
 
-    tabla = defaultdict(float)
+    # Para almacenar el consumo acumulado separado por válvula y fecha
+    tabla = defaultdict(lambda: defaultdict(float))
 
-    for r in riegos:
-        litros = (r.tiempo_segundos / 60.0) * r.tanque_reg.caudal  # L/min * tiempo_min
-        fecha = r.timestamp.date()
-        tabla[fecha] += litros
+    for resumen in resumenes:
+        litros = resumen.litros_usados
+        fecha = resumen.fecha.date()
+        # Determinamos la válvula del riego (basado en el "zona" del riego)
+        zona = resumen.riego.zona  # Aquí obtenemos la zona de riego
+        valvula = 1 if zona == 1 else 2  # Asumimos que zona 1 es válvula 1 y zona 2 es válvula 2
+        
+        # Sumamos los litros consumidos por válvula y fecha
+        tabla[fecha][valvula] += litros
 
-    # Convertimos a lista de dicts para que el template pueda acceder fácilmente
+    # Preparamos los datos para mostrarlos en el template
     fechas_litros = []
     for fecha in sorted(tabla.keys()):
-        fechas_litros.append({
-            "fecha": fecha,
-            "litros": tabla[fecha]
-        })
+        fila = {"fecha": fecha}
+        fila["valvula_1"] = tabla[fecha].get(1, 0)
+        fila["valvula_2"] = tabla[fecha].get(2, 0)
+        fechas_litros.append(fila)
 
+    # Pasamos los datos al contexto para ser usados en el template
     context = {
         "fechas_litros": fechas_litros,
     }

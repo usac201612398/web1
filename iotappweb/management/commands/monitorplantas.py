@@ -5,7 +5,7 @@ import json
 import ssl
 import paho.mqtt.client as mqtt
 from django.core.management.base import BaseCommand
-from iotappweb.models import m1Sensoresdata, m2Sensoresdata, riegoRegistro
+from iotappweb.models import m1Sensoresdata, m2Sensoresdata, riegoRegistro, riegoResumen
 from django.conf import settings
 
 #MQTT_HOST = "a4810e38lk0oy-ats.iot.us-east-1.amazonaws.com"
@@ -14,10 +14,10 @@ MQTT_PORT = 1883
 MQTT_HOST = "10.111.112.4"
 MQTT_USER = "sdc-iot"
 MQTT_PASS = "nuevacontraseña"
-TOPIC_PLANTA = "casa/planta01/data"
-TOPIC_TANQUE = "casa/tanque01/data"
-TOPIC_RIEGO = "casa/tanque01/riego/historial"
-
+TOPIC_PLANTA = "casa/planta/1/data"
+TOPIC_TANQUE = "casa/tanque/1/data"
+TOPIC_RIEGO = "casa/tanque/1/riego/historial"
+TOPIC_RIEGO = "casa/tanque/1/riego/registro"
 class Command(BaseCommand):
     help = "Listener MQTT que guarda datos en la base de datos"
 
@@ -32,7 +32,8 @@ class Command(BaseCommand):
         def on_connect(client, userdata, flags, rc):
             client.subscribe(TOPIC_PLANTA)
             client.subscribe(TOPIC_TANQUE)
-            client.subscribe(TOPIC_RIEGO) 
+            client.subscribe(TOPIC_RIEGO)
+            client.subscribe(TOPIC_RIEGO_RESUMEN)
 
         def on_message(client, userdata, msg):
 
@@ -80,7 +81,29 @@ class Command(BaseCommand):
                         modo=data.get("modo", "AUTO" if not data.get("manual") else "MANUAL")
                     )
                     print(f"Riego registrado (zona {zona}) con datos de planta {planta_id}")
+                elif msg.topic == TOPIC_RIEGO_RESUMEN:
+                # Recibir el resumen de riego (litros)
+                    zona = int(data.get("zona", 0))
+                    litros_usados = float(data.get("litros_usados", 0))
 
+                    # Buscar el último riego para esta zona
+                    ultimo_riego = riegoRegistro.objects.filter(
+                        zona=zona, en_curso=True  # Solo riego en curso
+                    ).order_by('-fecha').first()
+
+                    if ultimo_riego:
+                        # Crear un resumen de riego con el último riego
+                        riegoResumen.objects.create(
+                            riego=ultimo_riego,
+                            litros_usados=litros_usados
+                        )
+                        # Terminar el riego (actualizando el campo 'en_curso' a False)
+                        ultimo_riego.en_curso = False
+                        ultimo_riego.save()
+
+                        print(f"Resumen de riego registrado para zona {zona} con {litros_usados} litros")
+                    else:
+                        print(f"No se encontró riego en curso para la zona {zona}")
 
                 else:
                     print("Tópico desconocido:", msg.topic)
