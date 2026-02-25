@@ -5,6 +5,7 @@ import time
 import paho.mqtt.client as mqtt
 import uuid
 import os
+import numpy
 from django.http import JsonResponse
 import json
 from django.utils.dateparse import parse_datetime
@@ -291,7 +292,7 @@ def consumo_acumulado(request):
 
 
 def histograma_api(request):
-    
+
     planta = request.GET.get("planta_id")
     variable = request.GET.get("variable")
 
