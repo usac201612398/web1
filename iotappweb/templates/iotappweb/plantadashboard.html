@@ -445,8 +445,8 @@
             const planta = document.getElementById("histPlanta").value;
             const variable = document.getElementById("histVariable").value;
 
-            const response = await fetch(`/api/histograma/?planta_id=${planta}&variable=${variable}`);
-            const data = await response.json();
+            let url = `{% url 'histograma_api' %}?planta_id=${planta}&variable=${variable}`;
+            const response = await fetch(url);
 
             histChart.data.labels = data.bins;
             histChart.data.datasets[0].data = data.counts;
