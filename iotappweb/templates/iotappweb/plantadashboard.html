@@ -286,6 +286,14 @@
                                 <option value="peso">Peso</option>
                             </select>
                         </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <input type="datetime-local" id="histDesde" class="form-control" placeholder="Desde">
+                            </div>
+                            <div class="col-md-4">
+                                <input type="datetime-local" id="histHasta" class="form-control" placeholder="Hasta">
+                            </div>
+                        </div>
                     </div>
 
                     <canvas id="histogramaChart" height="120"></canvas>
@@ -444,8 +452,13 @@
         async function cargarHistograma() {
             const planta = document.getElementById("histPlanta").value;
             const variable = document.getElementById("histVariable").value;
+            const desde = document.getElementById("histDesde").value;
+            const hasta = document.getElementById("histHasta").value;
+            const limite = document.getElementById("histLimite").value;
 
-            let url = `{% url 'histograma_api' %}?planta_id=${planta}&variable=${variable}`;
+            let url = `{% url 'histograma_api' %}?planta_id=${planta}&variable=${variable}&limite=${limite}`;
+            if (desde) url += `&desde=${desde}`;
+            if (hasta) url += `&hasta=${hasta}`;
 
             try {
                 const response = await fetch(url);
@@ -469,7 +482,6 @@
             <div class="col-md-2"><div class="card p-2 shadow-sm"><small>Máx</small><h5>${data.max.toFixed(2)}</h5></div></div>
             <div class="col-md-2"><div class="card p-2 shadow-sm"><small>CV %</small><h5>${cv.toFixed(1)}%</h5></div></div>
         `;
-
             } catch (error) {
                 console.error("Error cargando histograma:", error);
                 alert("Error cargando histograma.");

@@ -290,20 +290,52 @@ def consumo_acumulado(request):
 
     return render(request, "consumo_acumulado_modal.html", context)
 
-
 def histograma_api(request):
     planta = request.GET.get("planta_id")
     variable = request.GET.get("variable")
+    desde = request.GET.get("desde")
+    hasta = request.GET.get("hasta")
+    limite = int(request.GET.get("limite", 100))  # valor por defecto
 
     if variable not in ["temperatura", "humedad_aire", "humedad_suelo", "peso"]:
         return JsonResponse({"error": "Variable inválida"}, status=400)
 
     queryset = m1Sensoresdata.objects.all()
-    if planta: queryset = queryset.filter(planta_id=planta)
+
+    if planta:
+        queryset = queryset.filter(planta_id=planta)
+
+    # Filtrar por rango de fechas si se proporciona
+    if desde:
+        try:
+            desde_dt = datetime.fromisoformat(desde)
+            queryset = queryset.filter(timestamp__gte=desde_dt)
+        except ValueError:
+            return JsonResponse({"error": "Formato de fecha 'desde' inválido"}, status=400)
+
+    if hasta:
+        try:
+            hasta_dt = datetime.fromisoformat(hasta)
+            queryset = queryset.filter(timestamp__lte=hasta_dt)
+        except ValueError:
+            return JsonResponse({"error": "Formato de fecha 'hasta' inválido"}, status=400)
+
+    # Limitar cantidad de datos
+    queryset = queryset.order_by('timestamp')[:limite]
 
     valores = np.array(list(queryset.values_list(variable, flat=True)), dtype=float)
+
     if valores.size == 0:
-        return JsonResponse({"bins": [], "counts": [], "media": 0, "mediana": 0, "std": 0, "min": 0, "max": 0})
+        return JsonResponse({
+            "bins": [], 
+            "counts": [], 
+            "media": 0, 
+            "mediana": 0, 
+            "std": 0, 
+            "min": 0, 
+            "max": 0,
+            "cv": 0
+        })
 
     counts, bins = np.histogram(valores, bins=10)
     media = float(np.mean(valores))
@@ -311,13 +343,15 @@ def histograma_api(request):
     std = float(np.std(valores))
     min_val = float(np.min(valores))
     max_val = float(np.max(valores))
+    cv = (std / media * 100) if media != 0 else 0
 
     return JsonResponse({
         "bins": [round(b,2) for b in bins[:-1]],
         "counts": counts.tolist(),
-        "media": round(media,2),
-        "mediana": round(mediana,2),
+        "mean": round(media,2),
+        "median": round(mediana,2),
         "std": round(std,2),
         "min": round(min_val,2),
-        "max": round(max_val,2)
+        "max": round(max_val,2),
+        "cv": round(cv,1)
     })
