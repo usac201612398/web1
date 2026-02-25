@@ -219,9 +219,10 @@
             </table>
         </div>
     </div>
-
-    <div class="col-md-1">
-        <button class="btn btn-primary" onclick="cargarHistograma()">Actualizar</button>
+    <div class="text-center mt-3">
+        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#histogramaModal">
+            Histograma
+        </button>
     </div>
     <!-- Gráfica -->
     <div class="container my-5">
@@ -249,11 +250,7 @@
             Última actualización: <span id="timestamp">{{ latest.timestamp }}</span>
         </div>
     </div>
-    <div class="text-center mt-3">
-        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#histogramaModal">
-            Ver Histograma
-        </button>
-    </div>
+
     <div class="text-center mt-5">
         <a href="{% url 'riegoshistorial' %}" class="btn btn-success btn-lg rounded-pill">
             <i class="fas fa-home me-2"></i>Home
@@ -295,7 +292,9 @@
 
                 </div>
                 <div id="metricas" class="row text-center mt-4"></div>
-                
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="cargarHistograma()">Actualizar</button>
+                </div>
 
             </div>
         </div>
