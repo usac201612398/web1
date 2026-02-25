@@ -290,49 +290,44 @@ def consumo_acumulado(request):
 
     return render(request, "consumo_acumulado_modal.html", context)
 
+
 def histograma_api(request):
+    # Parámetros
     planta = request.GET.get("planta_id")
     variable = request.GET.get("variable")
     desde = request.GET.get("desde")
     hasta = request.GET.get("hasta")
-    limite = int(request.GET.get("limite", 100))  # valor por defecto
 
+    # Validación de variable
     if variable not in ["temperatura", "humedad_aire", "humedad_suelo", "peso"]:
         return JsonResponse({"error": "Variable inválida"}, status=400)
 
+    # Query inicial
     queryset = m1Sensoresdata.objects.all()
 
     if planta:
         queryset = queryset.filter(planta_id=planta)
 
-    # Filtrar por rango de fechas si se proporciona
+    # Filtrado por rango de fechas si se proporcionan
     if desde:
-        try:
-            desde_dt = datetime.fromisoformat(desde)
-            queryset = queryset.filter(timestamp__gte=desde_dt)
-        except ValueError:
-            return JsonResponse({"error": "Formato de fecha 'desde' inválido"}, status=400)
-
+        dt_desde = parse_datetime(desde)
+        if dt_desde:
+            queryset = queryset.filter(timestamp__gte=dt_desde)
     if hasta:
-        try:
-            hasta_dt = datetime.fromisoformat(hasta)
-            queryset = queryset.filter(timestamp__lte=hasta_dt)
-        except ValueError:
-            return JsonResponse({"error": "Formato de fecha 'hasta' inválido"}, status=400)
-
-    # Limitar cantidad de datos
-    queryset = queryset.order_by('timestamp')[:limite]
+        dt_hasta = parse_datetime(hasta)
+        if dt_hasta:
+            queryset = queryset.filter(timestamp__lte=dt_hasta)
 
     valores = np.array(list(queryset.values_list(variable, flat=True)), dtype=float)
 
     if valores.size == 0:
         return JsonResponse({
-            "bins": [], 
-            "counts": [], 
-            "media": 0, 
-            "mediana": 0, 
-            "std": 0, 
-            "min": 0, 
+            "bins": [],
+            "counts": [],
+            "media": 0,
+            "mediana": 0,
+            "std": 0,
+            "min": 0,
             "max": 0,
             "cv": 0
         })
@@ -346,12 +341,12 @@ def histograma_api(request):
     cv = (std / media * 100) if media != 0 else 0
 
     return JsonResponse({
-        "bins": [round(b,2) for b in bins[:-1]],
+        "bins": [round(b, 2) for b in bins[:-1]],
         "counts": counts.tolist(),
-        "mean": round(media,2),
-        "median": round(mediana,2),
-        "std": round(std,2),
-        "min": round(min_val,2),
-        "max": round(max_val,2),
-        "cv": round(cv,1)
+        "media": round(media, 2),
+        "mediana": round(mediana, 2),
+        "std": round(std, 2),
+        "min": round(min_val, 2),
+        "max": round(max_val, 2),
+        "cv": round(cv, 1)
     })

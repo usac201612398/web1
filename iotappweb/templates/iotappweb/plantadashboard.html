@@ -293,6 +293,14 @@
                             <div class="col-md-4">
                                 <input type="datetime-local" id="histHasta" class="form-control" placeholder="Hasta">
                             </div>
+                            <div class="col-md-4">
+                                <select id="histLimite" class="form-select">
+                                    <option value="10">10</option>
+                                    <option value="20" selected>20</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
 
@@ -456,7 +464,8 @@
             const hasta = document.getElementById("histHasta").value;
             const limite = document.getElementById("histLimite").value;
 
-            let url = `{% url 'histograma_api' %}?planta_id=${planta}&variable=${variable}&limite=${limite}`;
+            let url = `{% url 'histograma_api' %}?variable=${variable}&limite=${limite}`;
+            if (planta) url += `&planta_id=${planta}`;
             if (desde) url += `&desde=${desde}`;
             if (hasta) url += `&hasta=${hasta}`;
 
@@ -472,15 +481,13 @@
 
                 // Actualizar métricas
                 const metricasDiv = document.getElementById("metricas");
-                const cv = data.media ? (data.std / data.media) * 100 : 0;
-
                 metricasDiv.innerHTML = `
-            <div class="col-md-2"><div class="card p-2 shadow-sm"><small>Media</small><h5>${data.media.toFixed(2)}</h5></div></div>
-            <div class="col-md-2"><div class="card p-2 shadow-sm"><small>Mediana</small><h5>${data.mediana.toFixed(2)}</h5></div></div>
-            <div class="col-md-2"><div class="card p-2 shadow-sm"><small>Desv. Est.</small><h5>${data.std.toFixed(2)}</h5></div></div>
-            <div class="col-md-2"><div class="card p-2 shadow-sm"><small>Mín</small><h5>${data.min.toFixed(2)}</h5></div></div>
-            <div class="col-md-2"><div class="card p-2 shadow-sm"><small>Máx</small><h5>${data.max.toFixed(2)}</h5></div></div>
-            <div class="col-md-2"><div class="card p-2 shadow-sm"><small>CV %</small><h5>${cv.toFixed(1)}%</h5></div></div>
+        <div class="col-md-2"><div class="card p-2 shadow-sm"><small>Media</small><h5>${data.media.toFixed(2)}</h5></div></div>
+        <div class="col-md-2"><div class="card p-2 shadow-sm"><small>Mediana</small><h5>${data.mediana.toFixed(2)}</h5></div></div>
+        <div class="col-md-2"><div class="card p-2 shadow-sm"><small>Desv. Est.</small><h5>${data.std.toFixed(2)}</h5></div></div>
+        <div class="col-md-2"><div class="card p-2 shadow-sm"><small>Mín</small><h5>${data.min.toFixed(2)}</h5></div></div>
+        <div class="col-md-2"><div class="card p-2 shadow-sm"><small>Máx</small><h5>${data.max.toFixed(2)}</h5></div></div>
+        <div class="col-md-2"><div class="card p-2 shadow-sm"><small>CV %</small><h5>${data.cv.toFixed(1)}%</h5></div></div>
         `;
             } catch (error) {
                 console.error("Error cargando histograma:", error);
