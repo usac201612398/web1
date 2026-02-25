@@ -40,7 +40,7 @@ class riegoRegistro(models.Model):
         ordering = ['-fecha']
 
     def __str__(self):
-        return f"Reg: {self.registro} - {self.fecha}  - Riego zona {self.zona} - {self.accion} - {self.fecha}"
+        return f"Reg: {self.registro} - {self.fecha} - Riego zona {self.zona} - {self.accion} "
 
 class riegoResumen(models.Model):
     registro = models.BigAutoField(primary_key=True)
