@@ -288,3 +288,23 @@ def consumo_acumulado(request):
     }
 
     return render(request, "consumo_acumulado_modal.html", context)
+
+def histograma_api(request):
+    
+    planta = request.GET.get("planta_id")
+    variable = request.GET.get("variable")
+
+    queryset = m1Sensoresdata.objects.all()
+
+    if planta:
+        queryset = queryset.filter(planta_id=planta)
+
+    valores = list(queryset.values_list(variable, flat=True))
+
+    # Crear bins automáticamente
+    counts, bins = np.histogram(valores, bins=10)
+
+    return JsonResponse({
+        "bins": bins[:-1].tolist(),
+        "counts": counts.tolist()
+    })

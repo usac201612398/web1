@@ -245,10 +245,58 @@
             Última actualización: <span id="timestamp">{{ latest.timestamp }}</span>
         </div>
     </div>
+    <div class="text-center mt-3">
+        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#histogramaModal">
+            Ver Histograma
+        </button>
+    </div>
     <div class="text-center mt-5">
         <a href="{% url 'riegoshistorial' %}" class="btn btn-success btn-lg rounded-pill">
             <i class="fas fa-home me-2"></i>Home
         </a>
+    </div>
+    <!-- Modal Histograma -->
+    <div class="modal fade" id="histogramaModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Histograma de Sensores</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <!-- Selectores -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <select id="histPlanta" class="form-select">
+                                {% for planta in plantas %}
+                                <option value="{{ planta }}">{{ planta }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <select id="histVariable" class="form-select">
+                                <option value="temperatura">Temperatura</option>
+                                <option value="humedad_aire">Humedad Aire</option>
+                                <option value="humedad_suelo">Humedad Suelo</option>
+                                <option value="peso">Peso</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <canvas id="histogramaChart" height="120"></canvas>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="cargarHistograma()">Actualizar</button>
+                </div>
+
+            </div>
+        </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
     <script>
@@ -370,7 +418,39 @@
         document.getElementById('chkHumedadA').addEventListener('change', actualizarVisibilidad);
         document.getElementById('chkHumedadS').addEventListener('change', actualizarVisibilidad);
         document.getElementById('chkPeso').addEventListener('change', actualizarVisibilidad);
+        const ctxHist = document.getElementById('histogramaChart').getContext('2d');
 
+        const histChart = new Chart(ctxHist, {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Frecuencia',
+                    data: [],
+                    backgroundColor: 'rgba(54,162,235,0.6)'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: { title: { display: true, text: 'Rango' } },
+                    y: { title: { display: true, text: 'Frecuencia' } }
+                }
+            }
+        });
+
+        async function cargarHistograma() {
+
+            const planta = document.getElementById("histPlanta").value;
+            const variable = document.getElementById("histVariable").value;
+
+            const response = await fetch(`/api/histograma/?planta_id=${planta}&variable=${variable}`);
+            const data = await response.json();
+
+            histChart.data.labels = data.bins;
+            histChart.data.datasets[0].data = data.counts;
+            histChart.update();
+        }
         actualizarColores();
         setInterval(cargarDatos, 60000); // cada 1 minuto
         document.addEventListener('DOMContentLoaded', () => {
