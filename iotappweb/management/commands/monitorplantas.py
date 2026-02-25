@@ -42,7 +42,7 @@ class Command(BaseCommand):
                 print("Mensaje recibido en", msg.topic, ":", payload)
                 data = json.loads(payload)
 
-                if msg.topic == TOPIC_PLANTA:
+                if msg.topic.startswith("casa/planta/"):
                     # Guardar datos de planta
                     m1Sensoresdata.objects.create(
                         planta_id=data.get("planta_id"),
