@@ -88,7 +88,7 @@ class Command(BaseCommand):
 
                     # Buscar el último riego para esta zona
                     ultimo_riego = riegoRegistro.objects.filter(
-                        zona=zona, en_curso=True  # Solo riego en curso
+                        zona=zona # Solo riego en curso
                     ).order_by('-fecha').first()
 
                     if ultimo_riego:
