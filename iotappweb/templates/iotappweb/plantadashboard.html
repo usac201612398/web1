@@ -95,7 +95,7 @@
                         <div>
                             <div class="card-label text-muted">Temperatura</div>
                             <div class="card-value text-danger">
-                                <span id="temperatura">0</span> °C
+                                <span id="temperatura">0</span> °F
                             </div>
                         </div>
                         <div class="icon-circle bg-danger-subtle text-danger">
@@ -206,7 +206,7 @@
                 <thead class="table-light">
                     <tr>
                         <th>Planta</th>
-                        <th>Temperatura (°C)</th>
+                        <th>Temperatura (°F)</th>
                         <th>Humedad Ambiente (%)</th>
                         <th>Humedad Suelo (%)</th>
                         <th>Peso (kg)</th>
@@ -346,7 +346,7 @@
                     x: {
                         ticks: { maxTicksLimit: 10, autoSkip: true }  // Menos saturación
                     },
-                    y: { type: 'linear', display: true, position: 'left', title: { display: true, text: 'Temperatura (°C)' } },
+                    y: { type: 'linear', display: true, position: 'left', title: { display: true, text: 'Temperatura (°F)' } },
                     y1: { type: 'linear', display: true, position: 'right', title: { display: true, text: 'Humedad (%)' }, grid: { drawOnChartArea: false } },
                     y2: { type: 'linear', display: true, position: 'right', title: { display: true, text: 'Peso (kg)' }, grid: { drawOnChartArea: false } }
                 }
