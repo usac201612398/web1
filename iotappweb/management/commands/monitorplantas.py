@@ -18,6 +18,7 @@ TOPIC_PLANTA = "casa/planta/+/data"
 TOPIC_TANQUE = "casa/tanque/1/data"
 TOPIC_RIEGO = "casa/tanque/1/riego/historial"
 TOPIC_RIEGO_RESUMEN = "casa/tanque/1/riego_resumen"
+
 class Command(BaseCommand):
     help = "Listener MQTT que guarda datos en la base de datos"
 
@@ -88,7 +89,7 @@ class Command(BaseCommand):
 
                     # Buscar el último riego para esta zona
                     ultimo_riego = riegoRegistro.objects.filter(
-                        zona=zona # Solo riego en curso
+                        zona=zona 
                     ).order_by('-fecha').first()
 
                     if ultimo_riego:
@@ -97,7 +98,7 @@ class Command(BaseCommand):
                             riego=ultimo_riego,
                             litros_usados=litros_usados
                         )
-                        # Terminar el riego (actualizando el campo 'en_curso' a False)
+            
                         ultimo_riego.en_curso = False
                         ultimo_riego.save()
 
