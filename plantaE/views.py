@@ -1776,8 +1776,11 @@ def graficas(request):
 def boletas_list(request):
     #today = timezone.now().date()
     #salidas = Recepciones.objects.filter(fecha=today)
-    salidas= Boletas.objects.all()
-    salidas = salidas.order_by('-boleta')
+    salidas = Boletas.objects.filter(
+        Q(status='') | Q(status__isnull=True),
+        fecha__gte=date(2026, 1, 1)
+    ).order_by('-boleta')
+    #salidas = salidas.order_by('-boleta')
      
     return render(request, 'plantaE/boletas_list.html', {'registros': salidas})
 
