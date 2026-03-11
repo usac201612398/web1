@@ -245,7 +245,7 @@
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h5 class="modal-title">Catálogo de Lotes</h5>
+                    <h5 class="modal-title">Seleccionar Lote</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
 
@@ -253,19 +253,17 @@
 
                     <input type="text" id="buscarLote" class="form-control mb-3" placeholder="Buscar lote...">
 
-                    <table class="table table-striped">
+                    <table class="table table-hover">
                         <thead>
                             <tr>
                                 <th>Lote</th>
                                 <th>Variedad</th>
                                 <th>Ubicación</th>
-                                <th>Seleccionar</th>
+                                <th></th>
                             </tr>
                         </thead>
 
-                        <tbody id="tablaLotes">
-
-                        </tbody>
+                        <tbody id="tablaLotes"></tbody>
 
                     </table>
 
@@ -281,45 +279,68 @@
 
 <script>
 
-    const inputBusqueda = document.getElementById("buscarLote")
+    let todosLosLotes = []
+
     const tabla = document.getElementById("tablaLotes")
+    const buscador = document.getElementById("buscarLote")
 
-    inputBusqueda.addEventListener("keyup", function () {
+    // cargar lotes al abrir modal
+    document.getElementById('modalLotes').addEventListener('shown.bs.modal', function () {
 
-        fetch(`/buscar-lotes/?q=${this.value}`)
+        fetch("/lotes-en-proceso/")
             .then(response => response.json())
             .then(data => {
 
-                tabla.innerHTML = ""
-
-                data.forEach(lote => {
-
-                    tabla.innerHTML += `
-            <tr>
-                <td>${lote.lote_code}</td>
-                <td>${lote.variedad}</td>
-                <td>${lote.ubicacion}</td>
-                <td>
-                    <button class="btn btn-success btn-sm"
-                        onclick="seleccionarLote('${lote.lote_code}')">
-                        Seleccionar
-                    </button>
-                </td>
-            </tr>
-            `
-
-                })
+                todosLosLotes = data
+                mostrarLotes(data)
 
             })
 
     })
 
+    function mostrarLotes(lista) {
+
+        tabla.innerHTML = ""
+
+        lista.forEach(l => {
+
+            tabla.innerHTML += `
+        <tr>
+            <td>${l.lote_code}</td>
+            <td>${l.apodo_variedad ?? ""}</td>
+            <td>${l.ubicación ?? ""}</td>
+            <td>
+                <button class="btn btn-success btn-sm"
+                onclick="seleccionarLote('${l.lote_code}')">
+                Seleccionar
+                </button>
+            </td>
+        </tr>
+        `
+        })
+
+    }
+
+    // filtro en vivo
+    buscador.addEventListener("keyup", function () {
+
+        let texto = this.value.toLowerCase()
+
+        let filtrados = todosLosLotes.filter(l =>
+            (l.lote_code || "").toLowerCase().includes(texto) ||
+            (l.apodo_variedad || "").toLowerCase().includes(texto) ||
+            (l.ubicación || "").toLowerCase().includes(texto)
+        )
+
+        mostrarLotes(filtrados)
+
+    })
 
     function seleccionarLote(codigo) {
 
         document.getElementById("id_codigo_lote").value = codigo
 
-        var modal = bootstrap.Modal.getInstance(document.getElementById('modalLotes'))
+        var modal = bootstrap.Modal.getInstance(document.getElementById("modalLotes"))
         modal.hide()
 
     }
