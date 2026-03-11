@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
-    {% if modo == "actualizar" %}
+        {% if modo == "actualizar" %}
         Actualización
-    {% else %}
+        {% else %}
         Registro
-    {% endif %}
+        {% endif %}
     </title>
     <!-- Vincula a un archivo CSS de Bootstrap para una apariencia profesional -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -58,10 +59,13 @@
         .form-control {
             border-radius: 4px;
             border: 1px solid #ddd;
-            padding: 12px 15px;  /* Asegura que los campos tengan el mismo tamaño */
+            padding: 12px 15px;
+            /* Asegura que los campos tengan el mismo tamaño */
             font-size: 14px;
-            width: 100%;  /* Se asegura de que los campos usen el ancho completo disponible */
-            box-sizing: border-box; /* Asegura que el padding no afecte el ancho del campo */
+            width: 100%;
+            /* Se asegura de que los campos usen el ancho completo disponible */
+            box-sizing: border-box;
+            /* Asegura que el padding no afecte el ancho del campo */
         }
 
         .form-control:focus {
@@ -70,7 +74,8 @@
         }
 
         /* Estilos para campos no editables */
-        .form-control[readonly], .form-control[disabled] {
+        .form-control[readonly],
+        .form-control[disabled] {
             background-color: #f7f7f7;
             border-color: #ccc;
             color: #6c757d;
@@ -110,12 +115,15 @@
         /* Alineación de las etiquetas */
         .form-row {
             display: flex;
-            flex-direction: row; /* Los elementos estarán en fila */
-            align-items: center; /* Alinea verticalmente el contenido */
+            flex-direction: row;
+            /* Los elementos estarán en fila */
+            align-items: center;
+            /* Alinea verticalmente el contenido */
         }
 
         .form-label {
-            width: 150px; /* Definir un ancho fijo para las etiquetas */
+            width: 150px;
+            /* Definir un ancho fijo para las etiquetas */
             font-weight: 500;
         }
 
@@ -128,233 +136,329 @@
         /* Asegurando que los botones estén en una fila y centrados */
         .button-row {
             display: flex;
-            justify-content: center; /* Centra los botones */
-            gap: 20px; /* Da espacio entre los botones */
+            justify-content: center;
+            /* Centra los botones */
+            gap: 20px;
+            /* Da espacio entre los botones */
         }
 
         .button-row button {
-            width: auto; /* Asegura que los botones no se estiren */
+            width: auto;
+            /* Asegura que los botones no se estiren */
         }
 
         /* Garantiza que los botones no ocupen todo el espacio */
-        .button-row a, .button-row button {
-            width: auto; /* Ajusta los botones a su contenido */
-            padding: 10px 20px; /* Tamaño adecuado de botones */
+        .button-row a,
+        .button-row button {
+            width: auto;
+            /* Ajusta los botones a su contenido */
+            padding: 10px 20px;
+            /* Tamaño adecuado de botones */
         }
-
     </style>
 </head>
+
 <body>
 
-  <div class="container">
-    <h1>
-    {% if modo == "actualizar" %}
-        Actualización de registro
-    {% else %}
-        Nuevo Registro
-    {% endif %}
-    </h1>
-    <button type="button" class="btn btn-success" onclick="startScanner()">Escanear QR</button>
-    <div id="reader" style="width: 300px; margin-top: 20px;"></div>
-    <form method="post">
-        {% csrf_token %}
+    <div class="container">
+        <h1>
+            {% if modo == "actualizar" %}
+            Actualización de registro
+            {% else %}
+            Nuevo Registro
+            {% endif %}
+        </h1>
 
-        <!-- Mostrar los errores del formulario -->
-        {% if form.errors %}
+        <!-- Botones para abrir modales -->
+        <div class="button-row mb-3">
+            <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalLotes">
+                Buscar Lote
+            </button>
+            <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalEmpleados">
+                Buscar Empleado
+            </button>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+
+            <!-- Mostrar los errores del formulario -->
+            {% if form.errors %}
             <div class="alert alert-danger">
                 <ul>
                     {% for field in form %}
-                        {% for error in field.errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
+                    {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
                     {% endfor %}
                 </ul>
             </div>
-        {% endif %}
+            {% endif %}
 
-        <!-- Renderizar el formulario con etiquetas alineadas -->
-        <div class="form-group">
-            <div class="form-row">
-                <label for="codigo_lote" class="form-label">Código-Lote</label>
-                {{ form.codigo_lote }}
+            <!-- Renderizar el formulario con etiquetas alineadas -->
+            <div class="form-group">
+                <div class="form-row">
+                    <label for="codigo_lote" class="form-label">Código-Lote</label>
+                    {{ form.codigo_lote }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    <label for="apodo_lote" class="form-label">Variedad</label>
+                    {{ form.apodo_variedad }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    <label for="tipo_cultivo" class="form-label">Cultivo</label>
+                    {{ form.tipo_cultivo }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    <label for="ubicacion_lote" class="form-label">Ubicación</label>
+                    {{ form.ubicacion_lote}}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    <label for="estructura" class="form-label">Estructura</label>
+                    {{ form.estructura }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    <label for="genero" class="form-label">Género</label>
+                    {{ form.genero }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    <label for="fecha" class="form-label">Fecha</label>
+                    {{ form.fecha }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    <label for="supervisor_name" class="form-label">Supervisor</label>
+                    {{ form.supervisor_name }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    <label for="codigo_empleado" class="form-label">Código-Empleado</label>
+                    {{ form.codigo_empleado}}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    <label for="operario_name" class="form-label">Operario</label>
+                    {{ form.operario_name}}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    <label for="cama1" class="form-label">Cama 1</label>
+                    {{ form.cama1 }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    <label for="cama2" class="form-label">Cama 2</label>
+                    {{ form.cama2 }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    <label for="cama3" class="form-label">Cama 3</label>
+                    {{ form.cama3 }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    <label for="cama4" class="form-label">Cama 4</label>
+                    {{ form.cama4 }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    <label for="cama5" class="form-label">Cama 5</label>
+                    {{ form.cama5 }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    <label for="media" class="form-label">Media</label>
+                    {{ form.media }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    <label for="prom_area" class="form-label">Promedio-Area</label>
+                    {{ form.prom_area }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    <label for="prom_general" class="form-label">Promedio-general</label>
+                    {{ form.prom_general }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    <label for="status" class="form-label">Status</label>
+                    {{ form.status}}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-row">
+                    <label for="observaciones" class="form-label">Observaciones</label>
+                    {{ form.observaciones}}
+                </div>
+            </div>
+
+            <!-- Botones centrados en una fila -->
+            <div class="form-group button-row">
+                <button type="submit" class="btn btn-primary">{{ form.instance.pk|yesno:"Actualizar,Crear" }}</button>
+                <a href="{% url 'conteofrutosplan_list' %}" class="btn btn-secondary">Regresar</a>
+            </div>
+        </form>
+    </div>
+    <!-- Modal de lotes -->
+    <div class="modal fade" id="modalLotes" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Seleccionar Lote</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="buscarLote" class="form-control mb-3"
+                        placeholder="Buscar por lote, variedad, ubicación, estructura, status">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Lote</th>
+                                <th>Variedad</th>
+                                <th>Ubicación</th>
+                                <th>Estructura</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaLotes"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
+    </div>
 
-        <div class="form-group">
-            <div class="form-row">
-                <label for="apodo_lote" class="form-label">Variedad</label>
-                {{ form.apodo_variedad }}
+    <!-- Modal de empleados -->
+    <div class="modal fade" id="modalEmpleados" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Seleccionar Empleado</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="buscarEmpleado" class="form-control mb-3"
+                        placeholder="Buscar por código o nombre de operario">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaEmpleados"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="tipo_cultivo" class="form-label">Cultivo</label>
-                {{ form.tipo_cultivo }}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="ubicacion_lote" class="form-label">Ubicación</label>
-                {{ form.ubicacion_lote}}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="estructura" class="form-label">Estructura</label>
-                {{ form.estructura }}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="genero" class="form-label">Género</label>
-                {{ form.genero }}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="fecha" class="form-label">Fecha</label>
-                {{ form.fecha }}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="supervisor_name" class="form-label">Supervisor</label>
-                {{ form.supervisor_name }}
-            </div>
-        </div>
-
-        <button type="button" class="btn btn-success" onclick="startEmpleadoScanner()">Escanear Empleado</button>
-        <div id="reader-empleado" style="width: 300px; margin-top: 20px;"></div>
-        
-        <div class="form-group">
-            <div class="form-row">
-                <label for="codigo_empleado" class="form-label">Código-Empleado</label>
-                {{ form.codigo_empleado}}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="operario_name" class="form-label">Operario</label>
-                {{ form.operario_name}}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="cama1" class="form-label">Cama 1</label>
-                {{ form.cama1 }}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="cama2" class="form-label">Cama 2</label>
-                {{ form.cama2 }}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="cama3" class="form-label">Cama 3</label>
-                {{ form.cama3 }}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="cama4" class="form-label">Cama 4</label>
-                {{ form.cama4 }}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="cama5" class="form-label">Cama 5</label>
-                {{ form.cama5 }}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="media" class="form-label">Media</label>
-                {{ form.media }}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="prom_area" class="form-label">Promedio-Area</label>
-                {{ form.prom_area }}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="prom_general" class="form-label">Promedio-general</label>
-                {{ form.prom_general }}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="status" class="form-label">Status</label>
-                {{ form.status}}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="observaciones" class="form-label">Observaciones</label>
-                {{ form.observaciones}}
-            </div>
-        </div>
-
-        <!-- Botones centrados en una fila -->
-        <div class="form-group button-row">
-            <button type="submit" class="btn btn-primary">{{ form.instance.pk|yesno:"Actualizar,Crear" }}</button>
-            <a href="{% url 'conteofrutosplan_list' %}" class="btn btn-secondary">Regresar</a>
-        </div>
-    </form>
-  </div>
-
+    </div>
 </body>
 
 <!-- Script de Bootstrap -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
-<script>
-function startScanner() {
-    const html5QrCode = new Html5Qrcode("reader");
-    const qrConfig = { fps: 10, qrbox: { width: 125, height: 125 } };
-    html5QrCode.start(
-        { facingMode: "environment" },
-        qrConfig,
-        (decodedText) => {
-            html5QrCode.stop();
-            const codigoLote = decodedText.trim();
 
-            fetch('{% url "obtener_datos_lote" %}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-CSRFToken': getCookie('csrftoken')  // función getCookie que ya tienes
-                },
-                body: new URLSearchParams({
-                    'codigo_lote': codigoLote
-                })
-            })
-            .then(response => {
-                if (!response.ok) throw new Error('Lote no encontrado');
-                return response.json();
-            })
+<script>
+    let todosLosLotes = [];
+    let todosLosEmpleados = [];
+
+    // Lotes
+    document.getElementById('modalLotes').addEventListener('shown.bs.modal', function () {
+        fetch("{% url 'lotes_en_proceso' %}")
+            .then(resp => resp.json())
+            .then(data => {
+                todosLosLotes = data;
+                mostrarLotes(data);
+            });
+    });
+
+    function mostrarLotes(lista) {
+        const tabla = document.getElementById("tablaLotes");
+        tabla.innerHTML = "";
+        lista.forEach(l => {
+            tabla.innerHTML += `
+        <tr>
+            <td>${l.id}</td>
+            <td>${l.apodo_variedad || ""}</td>
+            <td>${l.ubicación || ""}</td>
+            <td>${l.estructura || ""}</td>
+            <td>${l.status || ""}</td>
+            <td>
+                <button class="btn btn-success btn-sm" onclick="seleccionarLote('${l.id}')">Seleccionar</button>
+            </td>
+        </tr>`;
+        });
+    }
+
+    document.getElementById("buscarLote").addEventListener("keyup", function () {
+        const texto = this.value.toLowerCase();
+        const filtrados = todosLosLotes.filter(l =>
+            String(l.id || "").toLowerCase().includes(texto) ||
+            (l.apodo_variedad || "").toLowerCase().includes(texto) ||
+            (l.ubicación || "").toLowerCase().includes(texto) ||
+            (l.estructura || "").toLowerCase().includes(texto) ||
+            (l.status || "").toLowerCase().includes(texto)
+        );
+        mostrarLotes(filtrados);
+    });
+
+    function seleccionarLote(codigo) {
+        fetch('{% url "obtener_datos_lote" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: new URLSearchParams({ 'codigo_lote': codigo })
+        }).then(response => {
+            if (!response.ok) throw new Error('Lote no encontrado');
+            return response.json();
+        })
             .then(data => {
                 document.getElementById("id_codigo_lote").value = data.codigo_lote;
                 document.getElementById("id_apodo_variedad").value = data.apodo_variedad;
@@ -362,87 +466,84 @@ function startScanner() {
                 document.getElementById("id_ubicacion_lote").value = data.ubicacion_lote;
                 document.getElementById("id_estructura").value = data.estructura;
                 document.getElementById("id_genero").value = data.genero;
-                if(document.getElementById("id_codigo_padre")) {
+                if (document.getElementById("id_codigo_padre")) {
                     document.getElementById("id_codigo_padre").value = data.codigo_padre;
                 }
-                if(document.getElementById("id_codigo_madre")) {
+                if (document.getElementById("id_codigo_madre")) {
                     document.getElementById("id_codigo_madre").value = data.codigo_madre;
                 }
+                bootstrap.Modal.getInstance(document.getElementById("modalLotes")).hide();
             })
             .catch(error => {
                 alert(error.message);
                 console.error(error);
             });
-        },
-        (errorMessage) => {
-            console.warn(errorMessage);
-        }
-    ).catch(err => {
-        console.error("Error al iniciar el escáner QR:", err);
-    });
-}
 
-</script>
-
-<script>
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.startsWith(name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
     }
-    return cookieValue;
-}
 
-function startEmpleadoScanner() {
-    const html5QrCode = new Html5Qrcode("reader-empleado");
-    const qrConfig = { fps: 10, qrbox: { width: 125, height: 125 } };
-
-    html5QrCode.start(
-        { facingMode: "environment" },
-        qrConfig,
-        (decodedText) => {
-            html5QrCode.stop();
-            const codigoEmpleado = decodedText.trim();
-            console.log("Código escaneado:", codigoEmpleado);
-
-            fetch('{% url "obtener_datos_empleado_post" %}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-CSRFToken': getCookie('csrftoken')
-                },
-                body: new URLSearchParams({
-                    'codigo_empleado': codigoEmpleado
-                })
-            })
-            .then(response => {
-                if (!response.ok) throw new Error('Empleado no encontrado');
-                return response.json();
-            })
+    // Empleados
+    document.getElementById('modalEmpleados').addEventListener('shown.bs.modal', function () {
+        fetch("{% url 'empleados_activos' %}")
+            .then(resp => resp.json())
             .then(data => {
-                console.log('Empleado:', data);
+                todosLosEmpleados = data;
+                mostrarEmpleados(data);
+            });
+    });
+
+    function mostrarEmpleados(lista) {
+        const tabla = document.getElementById("tablaEmpleados");
+        tabla.innerHTML = "";
+        lista.forEach(e => {
+            tabla.innerHTML += `
+        <tr>
+            <td>${e.codigo_empleado}</td>
+            <td>${e.nombre_operario}</td>
+            <td>
+                <button class="btn btn-success btn-sm" onclick="seleccionarEmpleado('${e.codigo_empleado}')">Seleccionar</button>
+            </td>
+        </tr>`;
+        });
+    }
+
+    document.getElementById("buscarEmpleado").addEventListener("keyup", function () {
+        const texto = this.value.toLowerCase();
+        const filtrados = todosLosEmpleados.filter(e =>
+            String(e.codigo_empleado || "").toLowerCase().includes(texto) ||
+            (e.nombre_operario || "").toLowerCase().includes(texto)
+        );
+        mostrarEmpleados(filtrados);
+    });
+
+    function seleccionarEmpleado(codigo) {
+        fetch('{% url "obtener_datos_empleado_post" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: new URLSearchParams({ 'codigo_empleado': codigo })
+        })
+            .then(r => r.json())
+            .then(data => {
                 document.getElementById("id_codigo_empleado").value = data.codigo_empleado;
                 document.getElementById("id_operario_name").value = data.nombre_operario;
-            })
-            .catch(error => {
-                alert(error.message);
-                console.error('Error:', error.message);
+                bootstrap.Modal.getInstance(document.getElementById("modalEmpleados")).hide();
             });
-        },
-        (errorMessage) => {
-            console.warn(errorMessage);
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            document.cookie.split(';').forEach(cookie => {
+                const c = cookie.trim();
+                if (c.startsWith(name + '=')) cookieValue = decodeURIComponent(c.substring(name.length + 1));
+            });
         }
-    ).catch(err => {
-        console.error("Error al iniciar el escáner de empleado:", err);
-    });
-}
+        return cookieValue;
+    }
 </script>
+
+
 
 </html>
