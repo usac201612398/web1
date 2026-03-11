@@ -344,7 +344,7 @@
         <tr>
             <td>${l.id}</td>
             <td>${l.apodo_variedad || ""}</td>
-            <td>${l.ubicacion || ""}</td>
+            <td>${l.ubicación || ""}</td>
             <td>${l.estructura || ""}</td>
             <td>${l.status || ""}</td>
             <td>
@@ -359,7 +359,7 @@
         const filtrados = todosLosLotes.filter(l =>
             String(l.id || "").toLowerCase().includes(texto) ||
             (l.apodo_variedad || "").toLowerCase().includes(texto) ||
-            (l.ubicacion || "").toLowerCase().includes(texto) ||
+            (l.ubicación || "").toLowerCase().includes(texto) ||
             (l.estructura || "").toLowerCase().includes(texto) ||
             (l.status || "").toLowerCase().includes(texto)
         );
