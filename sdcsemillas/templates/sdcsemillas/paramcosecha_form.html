@@ -365,13 +365,13 @@
         lista.forEach(l => {
             tabla.innerHTML += `
         <tr>
-            <td>${l.codigo_lote}</td>
+            <td>${l.id}</td>
             <td>${l.apodo_variedad || ""}</td>
-            <td>${l.ubicacion_lote || ""}</td>
+            <td>${l.ubicación || ""}</td>
             <td>${l.estructura || ""}</td>
-            <td>${l.statuslote || ""}</td>
+            <td>${l.status || ""}</td>
             <td>
-                <button class="btn btn-success btn-sm" onclick="seleccionarLote('${l.codigo_lote}')">Seleccionar</button>
+                <button class="btn btn-success btn-sm" onclick="seleccionarLote('${l.id}')">Seleccionar</button>
             </td>
         </tr>
         `;
@@ -382,11 +382,11 @@
     document.getElementById("buscarLote").addEventListener("keyup", function () {
         const texto = this.value.toLowerCase();
         const filtrados = todosLosLotes.filter(l =>
-            (l.codigo_lote || "").toLowerCase().includes(texto) ||
+            String(l.id || "").toLowerCase().includes(texto) ||
             (l.apodo_variedad || "").toLowerCase().includes(texto) ||
-            (l.ubicacion_lote || "").toLowerCase().includes(texto) ||
+            (l.ubicación || "").toLowerCase().includes(texto) ||
             (l.estructura || "").toLowerCase().includes(texto) ||
-            (l.statuslote || "").toLowerCase().includes(texto)
+            (l.status || "").toLowerCase().includes(texto)
         );
         mostrarLotes(filtrados);
     });
@@ -434,7 +434,7 @@
             });
     }
 
-    
+
 </script>
 
 <script>
