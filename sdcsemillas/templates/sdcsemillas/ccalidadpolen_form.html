@@ -439,11 +439,13 @@
                 if (document.getElementById("id_codigo_madre")) {
                     document.getElementById("id_codigo_madre").value = data.codigo_madre;
                 }
+                bootstrap.Modal.getInstance(document.getElementById("modalLotes")).hide();
             })
             .catch(error => {
                 alert(error.message);
                 console.error(error);
             });
+         
     }
 
     // Empleados
