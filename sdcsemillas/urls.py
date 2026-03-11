@@ -8,7 +8,7 @@ app_main = 'sdcsemillas'
 urlpatterns = [
 
     path('', views.sdcsemillashomepage, name='sdcsemillas_home'),  # Página principal
-    path('buscar-lotes/', views.buscar_lotes, name='buscar_lotes')
+    path('buscar-lotes/', views.buscar_lotes, name='buscar_lotes'),
     path("lotes",views.lotes_list,name='lotes_list'),
     path("lotesreporte",views.lotesreporte_list,name='lotesreporte_list'),
     path('lotes/<int:pk>/', views.lotes_detail, name='lotes_detail'),
