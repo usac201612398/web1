@@ -24,7 +24,7 @@ def consulta_list(request):
 
 def buscar_lotes(request):
 
-    lotes_qs = lotes.objects.filter(status="En proceso").values(
+    lotes_qs = lotes.objects.filter(status="En proceso").order_by("-id").values(
         "id",
         "lote_code",
         "apodo_variedad",
