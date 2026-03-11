@@ -34,7 +34,15 @@ def buscar_lotes(request):
     )
 
     return JsonResponse(list(lotes_qs), safe=False)
-
+    
+def empleados_activos(request):
+    """
+    Devuelve la lista de empleados activos para el modal.
+    """
+    empleados = Empleado.objects.filter(activo=True).values(
+        'codigo_empleado', 'nombre_operario'
+    )
+    return JsonResponse(list(empleados), safe=False)
 def lotesreporte_list(request):
 
     salidas = lotes.objects.all()
