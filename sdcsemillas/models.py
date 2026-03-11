@@ -78,6 +78,7 @@ class conteoplantas(models.Model):
     apodo_variedad = models.CharField(max_length= 50, blank = True, null =  True)
     tipo_cultivo = models.CharField(max_length= 20, blank = True, null =  True)
     codigo_madre = models.CharField(max_length= 30, blank = True, null =  True)
+    codigo_padre = models.CharField(max_length= 30, blank = True, null =  True)
     plantas_activas= models.IntegerField(blank = True, null = True)
     plantas_faltantes = models.IntegerField(blank = True, null = True)
     fecha = models.DateField(blank=True, null=True)

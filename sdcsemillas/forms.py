@@ -107,6 +107,9 @@ class conteoplantasForm(forms.ModelForm):
     genero = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'})) 
     #codigo_planta = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
     codigo_madre = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'})) 
+    codigo_padre = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'})) 
+    plantas_activas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
+    plantas_faltantes = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
     plantas_activas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
     plantas_faltantes = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
     fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','type': 'date'}))
@@ -121,7 +124,7 @@ class conteoplantasForm(forms.ModelForm):
     class Meta:
     
         model = conteoplantas
-        fields = ['codigo_lote','genero','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','codigo_madre','plantas_activas','plantas_faltantes','fecha','camas_completas','camas_incompletas','cocosxcamaincompleta', 'estructura', 'status','evento','observaciones']
+        fields = ['codigo_lote','genero','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','codigo_madre','codigo_padre','plantas_activas','plantas_faltantes','fecha','camas_completas','camas_incompletas','cocosxcamaincompleta', 'estructura', 'status','evento','observaciones']
    
     def __init__(self, *args, **kwargs):
 
