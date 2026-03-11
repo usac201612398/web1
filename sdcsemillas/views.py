@@ -22,7 +22,25 @@ def sdcsemillashomepage(request):
 def consulta_list(request):
     return render(request,'sdcsemillas/monitorear.html')
 
+def buscar_lotes(request):
+    q = request.GET.get('q','')
 
+    resultados = lotes.objects.filter(
+        lote_code__icontains=q
+    )[:20]
+
+    data = []
+
+    for l in resultados:
+        data.append({
+            'id': l.id,
+            'lote_code': l.lote_code,
+            'variedad': l.apodo_variedad,
+            'ubicacion': l.ubicación
+        })
+
+    return JsonResponse(data, safe=False)
+    
 def lotesreporte_list(request):
 
     salidas = lotes.objects.all()
