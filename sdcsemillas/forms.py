@@ -294,7 +294,7 @@ class etapasdeloteForm(forms.ModelForm):
     apodo_variedad = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     tipo_cultivo = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'})) 
     codigo_madre = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'})) 
-    codigo_padre = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'})) 
+    codigo_padre = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'})) 
     genero = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'})) 
     fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','type': 'date'}))
     estructura = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))  
