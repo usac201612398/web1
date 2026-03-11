@@ -335,7 +335,9 @@
         let filtrados = todosLosLotes.filter(l =>
             (l.lote_code || "").toLowerCase().includes(texto) ||
             (l.apodo_variedad || "").toLowerCase().includes(texto) ||
-            (l.ubicación || "").toLowerCase().includes(texto)
+            (l.ubicación || "").toLowerCase().includes(texto) ||
+            (l.estructura || "").toLowerCase().includes(texto) ||
+            (l.status || "").toLowerCase().includes(texto)
         )
 
         mostrarLotes(filtrados)
