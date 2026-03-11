@@ -259,6 +259,8 @@
                                 <th>Lote</th>
                                 <th>Variedad</th>
                                 <th>Ubicación</th>
+                                <th>Estructura</th>
+                                <th>Status</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -306,12 +308,15 @@
 
             tabla.innerHTML += `
         <tr>
-            <td>${l.lote_code}</td>
+            <td>${l.id}</td>
             <td>${l.apodo_variedad ?? ""}</td>
             <td>${l.ubicación ?? ""}</td>
+            <td>${l.estructura ?? ""}</td>
+            
+            <td>${l.status ?? ""}</td>
             <td>
                 <button class="btn btn-success btn-sm"
-                onclick="seleccionarLote('${l.lote_code}')">
+                onclick="seleccionarLote('${l.id}')">
                 Seleccionar
                 </button>
             </td>

@@ -28,7 +28,9 @@ def buscar_lotes(request):
         "id",
         "lote_code",
         "apodo_variedad",
-        "ubicación"
+        "ubicación",
+        "estructura",
+        "status"
     )
 
     return JsonResponse(list(lotes_qs), safe=False)
