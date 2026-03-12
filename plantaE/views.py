@@ -1861,47 +1861,73 @@ def boletas_detail(request, pk):
 def boletas_delete(request, pk):
 
     salidas = get_object_or_404(Boletas, pk=pk)
-    boletas_relacionadas = Boletas.objects.filter(boleta=salidas.boleta)
 
     if request.method == 'POST':
-        # Anular boletas relacionadas
-        boletas_relacionadas.update(status='Anulado')
 
-        # Actualizar inventario relacionado
-        invrelacionado = inventarioProdTerm.objects.exclude(status='Anulado').filter(boleta=salidas.boleta)
-        invrelacionado.update(status3=None)
-        invrelacionado.update(boleta=None)
-        # Obtener recepciones relacionadas
-        recepciones_ids = detallerecaux.objects.exclude(status='Anulado') \
-                                               .filter(boleta=salidas.boleta) \
-                                               .values_list('recepcion', flat=True).distinct()
+        with transaction.atomic():
 
-        for recepcion_id in recepciones_ids:
-            recepcion_aux = detallerecaux.objects.exclude(status='Anulado').filter(recepcion=recepcion_id)
-            recepcion_aux.update(status='En proceso')
+            #  Anular boletas
+            Boletas.objects.filter(
+                boleta=salidas.boleta
+            ).update(status='Anulado')
 
-            recepcion_detalle = detallerec.objects.exclude(status='Anulado').filter(recepcion=recepcion_id)
-            recepcion_detalle.update(status=None)
+            # Liberar inventario
+            inventarioProdTerm.objects.filter(
+                boleta=salidas.boleta
+            ).exclude(status='Anulado').update(
+                status3=None,
+                boleta=None
+            )
 
-        # Anular detalles auxiliares
-        detalleaux_anular = detallerecaux.objects.exclude(status='Anulado').filter(boleta=salidas.boleta)
-        detalleaux_anular.update(status='Anulado')
+            # Obtener recepciones relacionadas
+            recepciones_ids = list(
+                detallerecaux.objects.filter(
+                    boleta=salidas.boleta
+                ).exclude(status='Anulado')
+                .values_list('recepcion', flat=True)
+                .distinct()
+            )
 
-        # Procesar AcumFruta relacionados
-        acumfruta_ids = AcumFrutaaux.objects.exclude(status='Anulado') \
-                                            .filter(boleta=salidas.boleta) \
-                                            .values_list('acumfrutaid', flat=True).distinct()
+            # Reabrir recepciones
+            if recepciones_ids:
 
-        for acumfruta_id in acumfruta_ids:
-            acumfruta_aux = AcumFrutaaux.objects.exclude(status='Anulado').filter(acumfrutaid=acumfruta_id)
-            acumfruta_aux.update(status=None)
+                detallerec.objects.filter(
+                    recepcion__in=recepciones_ids
+                ).exclude(status='Anulado').update(status=None)
 
-            acumfruta_detalle = AcumFruta.objects.exclude(status='Anulado').filter(id=acumfruta_id)
-            acumfruta_detalle.update(status=None)
+                detallerecaux.objects.filter(
+                    recepcion__in=recepciones_ids
+                ).exclude(status='Anulado').update(status='En proceso')
 
-        # Anular acumfruta auxiliar
-        acumfruta_anular = AcumFrutaaux.objects.exclude(status='Anulado').filter(boleta=salidas.boleta)
-        acumfruta_anular.update(status='Anulado')
+            # Anular detalle auxiliar
+            detallerecaux.objects.filter(
+                boleta=salidas.boleta
+            ).exclude(status='Anulado').update(status='Anulado')
+
+            # Obtener AcumFruta relacionados
+            acumfruta_ids = list(
+                AcumFrutaaux.objects.filter(
+                    boleta=salidas.boleta
+                ).exclude(status='Anulado')
+                .values_list('acumfrutaid', flat=True)
+                .distinct()
+            )
+
+            # Liberar fruta
+            if acumfruta_ids:
+
+                AcumFruta.objects.filter(
+                    id__in=acumfruta_ids
+                ).exclude(status='Anulado').update(status=None)
+
+                AcumFrutaaux.objects.filter(
+                    acumfrutaid__in=acumfruta_ids
+                ).exclude(status='Anulado').update(status=None)
+
+            # Anular auxiliar
+            AcumFrutaaux.objects.filter(
+                boleta=salidas.boleta
+            ).exclude(status='Anulado').update(status='Anulado')
 
         messages.success(request, "Registro anulado correctamente.")
         return redirect('boletasFruta_list')
@@ -1911,49 +1937,74 @@ def boletas_delete(request, pk):
 def boletas_devolver(request, pk):
 
     salidas = get_object_or_404(Boletas, pk=pk)
-    boletas_relacionadas = Boletas.objects.filter(boleta=salidas.boleta)
 
     if request.method == 'POST':
-        # Anular boletas relacionadas
-        boletas_relacionadas.update(status='Anulado')
 
-        # Actualizar inventario relacionado
-        invrelacionado = inventarioProdTerm.objects.exclude(status='Anulado').filter(boleta=salidas.boleta)
-        invrelacionado.update(status3="Devuelto")
+        with transaction.atomic():
 
-        # Obtener recepciones relacionadas
-        recepciones_ids = detallerecaux.objects.exclude(status='Anulado') \
-                                               .filter(boleta=salidas.boleta) \
-                                               .values_list('recepcion', flat=True).distinct()
+            # Anular boletas relacionadas
+            Boletas.objects.filter(
+                boleta=salidas.boleta
+            ).update(status='Anulado')
 
-        for recepcion_id in recepciones_ids:
-            recepcion_aux = detallerecaux.objects.exclude(status='Anulado').filter(recepcion=recepcion_id)
-            recepcion_aux.update(status='En proceso')
+            # Marcar inventario como devuelto
+            inventarioProdTerm.objects.filter(
+                boleta=salidas.boleta
+            ).exclude(status='Anulado').update(
+                status3="Devuelto"
+            )
 
-            recepcion_detalle = detallerec.objects.exclude(status='Anulado').filter(recepcion=recepcion_id)
-            recepcion_detalle.update(status=None)
+            # Obtener recepciones relacionadas
+            recepciones_ids = list(
+                detallerecaux.objects.filter(
+                    boleta=salidas.boleta
+                ).exclude(status='Anulado')
+                .values_list('recepcion', flat=True)
+                .distinct()
+            )
 
-        # Anular detalles auxiliares
-        detalleaux_anular = detallerecaux.objects.exclude(status='Anulado').filter(boleta=salidas.boleta)
-        detalleaux_anular.update(status='Anulado')
+            # Reabrir recepciones
+            if recepciones_ids:
 
-        # Procesar AcumFruta relacionados
-        acumfruta_ids = AcumFrutaaux.objects.exclude(status='Anulado') \
-                                            .filter(boleta=salidas.boleta) \
-                                            .values_list('acumfrutaid', flat=True).distinct()
+                detallerec.objects.filter(
+                    recepcion__in=recepciones_ids
+                ).exclude(status='Anulado').update(status=None)
 
-        for acumfruta_id in acumfruta_ids:
-            acumfruta_aux = AcumFrutaaux.objects.exclude(status='Anulado').filter(acumfrutaid=acumfruta_id)
-            acumfruta_aux.update(status=None)
+                detallerecaux.objects.filter(
+                    recepcion__in=recepciones_ids
+                ).exclude(status='Anulado').update(status='En proceso')
 
-            acumfruta_detalle = AcumFruta.objects.exclude(status='Anulado').filter(id=acumfruta_id)
-            acumfruta_detalle.update(status=None)
+            # Anular detalle auxiliar
+            detallerecaux.objects.filter(
+                boleta=salidas.boleta
+            ).exclude(status='Anulado').update(status='Anulado')
 
-        # Anular acumfruta auxiliar
-        acumfruta_anular = AcumFrutaaux.objects.exclude(status='Anulado').filter(boleta=salidas.boleta)
-        acumfruta_anular.update(status='Anulado')
+            # Obtener AcumFruta relacionados
+            acumfruta_ids = list(
+                AcumFrutaaux.objects.filter(
+                    boleta=salidas.boleta
+                ).exclude(status='Anulado')
+                .values_list('acumfrutaid', flat=True)
+                .distinct()
+            )
 
-        messages.success(request, "Registro anulado correctamente.")
+            # Liberar fruta
+            if acumfruta_ids:
+
+                AcumFruta.objects.filter(
+                    id__in=acumfruta_ids
+                ).exclude(status='Anulado').update(status=None)
+
+                AcumFrutaaux.objects.filter(
+                    acumfrutaid__in=acumfruta_ids
+                ).exclude(status='Anulado').update(status=None)
+
+            # Anular auxiliares
+            AcumFrutaaux.objects.filter(
+                boleta=salidas.boleta
+            ).exclude(status='Anulado').update(status='Anulado')
+
+        messages.success(request, "Boleta devuelta correctamente.")
         return redirect('boletasFruta_list')
 
     return render(request, 'plantaE/boletas_confirm_devolver.html', {'registros': salidas})
