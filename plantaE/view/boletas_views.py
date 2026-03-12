@@ -221,7 +221,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.db import transaction
 from django.contrib import messages
 from django.urls import reverse_lazy
-from .models import Boletas, AcumFruta, AcumFrutaaux, detallerec, detallerecaux, inventarioProdTerm
+from plantaE.models import Boletas, AcumFruta, AcumFrutaaux, detallerec, detallerecaux, inventarioProdTerm
 from .forms import boletasForm
 import datetime
 
@@ -233,7 +233,6 @@ class BoletasListView(ListView):
 
     def get_queryset(self):
         return Boletas.objects.filter(status__isnull=True, fecha__gte=datetime.date(2026, 1, 1)).order_by('-boleta')
-
 
 class BoletasListProductorView(ListView):
     model = Boletas
