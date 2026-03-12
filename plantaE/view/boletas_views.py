@@ -1,4 +1,4 @@
-'''
+
 import datetime
 
 from django.shortcuts import render, redirect, get_object_or_404
@@ -16,7 +16,7 @@ from ..models import (
 )
 
 from ..forms import boletasForm
-
+'''
 def boletas_list(request):
     #today = timezone.now().date()
     #salidas = Recepciones.objects.filter(fecha=today)
@@ -217,12 +217,7 @@ def boletas_devolver(request, pk):
     return render(request, 'plantaE/boletas/boletas_confirm_devolver.html', {'registros': salidas})
 '''
 from django.views.generic import ListView, DetailView, UpdateView, View
-from django.shortcuts import get_object_or_404, redirect, render
-from django.db import transaction
-from django.contrib import messages
 from django.urls import reverse_lazy
-from plantaE.models import Boletas, AcumFruta, AcumFrutaaux, detallerec, detallerecaux, inventarioProdTerm
-from .forms import boletasForm
 import datetime
 
 # --- Listado de Boletas ---
