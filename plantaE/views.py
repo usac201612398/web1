@@ -22,6 +22,7 @@ from collections import defaultdict
 from django.db.models.functions import ExtractWeek, ExtractYear, ExtractIsoYear, ExtractMonth
 from django.views.decorators.http import require_GET
 from django.urls import reverse
+from django.db import transaction
 
 def vascula_monitor(request):
     return render(request, 'plantaE/vascula.html')
@@ -599,7 +600,8 @@ def cuadrar_ValleDia(request):
         return JsonResponse({'datos': list(registros_finales),'opcion1':opcion1,'opcion2':opcion2,'resumen':registros_finales2}, safe=False)
 
     return render(request, 'plantaE/salidasFruta_cuadreValle.html', {'registros': registros_finales, 'registros2': registros_finales2})
-    
+
+#API que crea registros para salidasFruta y acumFruta en cada viaje.
 def guardar_plantillaValle(request):
     data = json.loads(request.body)
     mensaje = data['array']
@@ -619,25 +621,53 @@ def guardar_plantillaValle(request):
         'Cajas': 'sum'
     }).reset_index()
     resultado_lista = resultado.to_dict(orient='records')
+    fecha = df['Fecha'].iloc[0]
+    viaje = df['Viaje'].iloc[0]
+
+    existe = salidasFruta.objects.filter(
+        fecha=fecha,
+        viaje=viaje
+    ).exclude(status='Anulado').exists()
+
+    if existe:
+        return JsonResponse({
+            'error': f'El {viaje} del día {fecha} ya fue cargado.'
+        }, status=400)
      # Creación de registros en la base de datos
-    for i in resultado_lista:
-        salidasFruta.objects.create(
-            fecha=i['Fecha'],       # Ajusta el nombre según tu modelo
-            finca=i['Finca'],
-            encargado=i['Encargado'],
-            cultivo=i['Cultivo'],
-            variedad=i['Variedad'],
-            cajas=i['Cajas'],
-            viaje=i['Viaje'],
-            orden=i['Orden'],
-            correo=i['Correo']
-        )
-    
-    for i in mensaje:
-        
-        AcumFruta.objects.create(fecha=i[9],finca=i[7],orden=i[1],cultivo=i[2],estructura=i[3],variedad=i[4],cajas=i[5],correo=i[10],viaje=i[8])
-    
-    
+    with transaction.atomic():
+        for i in resultado_lista:
+
+            salida = salidasFruta.objects.create(
+                fecha=i['Fecha'],
+                finca=i['Finca'],
+                encargado=i['Encargado'],
+                cultivo=i['Cultivo'],
+                variedad=i['Variedad'],
+                cajas=i['Cajas'],
+                viaje=i['Viaje'],
+                orden=i['Orden'],
+                correo=i['Correo']
+            )
+
+            registros = df[
+                (df['Orden'] == i['Orden']) &
+                (df['Cultivo'] == i['Cultivo']) &
+                (df['Variedad'] == i['Variedad'])
+            ]
+
+            for _, row in registros.iterrows():
+                AcumFruta.objects.create(
+                    fecha=row['Fecha'],
+                    finca=row['Finca'],
+                    orden=row['Orden'],
+                    cultivo=row['Cultivo'],
+                    estructura=row['Estructura'],
+                    variedad=row['Variedad'],
+                    cajas=row['Cajas'],
+                    correo=row['Correo'],
+                    viaje=row['Viaje'],
+                    nsalidafruta=salida.id
+                )
     return JsonResponse({'mensaje':resultado_lista})                  
 
 def article_create_plantilla(request):
@@ -1123,6 +1153,7 @@ def recepciones_list(request):
     return render(request, 'plantaE/recepciones_list.html', {'registros': salidas})
 
 def recepcionesFruta_delete(request, pk):
+
     salidas = get_object_or_404(detallerec, pk=pk)
 
     # Verificar si existen registros en detallerecaux con la misma recepción
@@ -1137,25 +1168,27 @@ def recepcionesFruta_delete(request, pk):
 
     if request.method == 'POST':
         # Anular detallerec
-        salidas.status = 'Anulado'
-        salidas.save()
+        with transaction.atomic():
 
-        # Anular Actpeso y Recepciones
-        Actpeso.objects.filter(recepcion=salidas.recepcion).exclude(status='Anulado').update(status='Anulado')
-        Recepciones.objects.filter(recepcion=salidas.recepcion).exclude(status='Anulado').update(status='Anulado')
+            salidas.status = 'Anulado'
+            salidas.save()
 
-        # Limpiar campos en AcumFruta y salidasFruta
-        AcumFruta.objects.filter(recepcion=salidas.recepcion).exclude(status='Anulado').update(
-            libras=None,
-            recepcion=None,
-            viaje=None,
-            nsalidafruta=None
-        )
-        salidasFruta.objects.filter(recepcion=salidas.recepcion).exclude(status='Anulado').update(
-            libras=None,
-            recepcion=None,
-            status=None
-        )
+            # Anular Actpeso y Recepciones
+            Actpeso.objects.filter(recepcion=salidas.recepcion).exclude(status='Anulado').update(status='Anulado')
+            Recepciones.objects.filter(recepcion=salidas.recepcion).exclude(status='Anulado').update(status='Anulado')
+
+            # Limpiar campos en AcumFruta y salidasFruta
+            AcumFruta.objects.filter(recepcion=salidas.recepcion).exclude(status='Anulado').update(
+                libras=None,
+                recepcion=None,
+                viaje=None,
+                nsalidafruta=None
+            )
+            salidasFruta.objects.filter(recepcion=salidas.recepcion).exclude(status='Anulado').update(
+                libras=None,
+                recepcion=None,
+                status=None
+            )
 
         return render(request, 'plantaE/recepciones_confirm_delete.html', {
             'registros': salidas,
