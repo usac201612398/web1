@@ -621,12 +621,15 @@ def guardar_plantillaValle(request):
         'Cajas': 'sum'
     }).reset_index()
     resultado_lista = resultado.to_dict(orient='records')
+    
     fecha = df['Fecha'].iloc[0]
     viaje = df['Viaje'].iloc[0]
+    correo = df['Correo'].iloc[0]
 
     existe = salidasFruta.objects.filter(
         fecha=fecha,
-        viaje=viaje
+        viaje=viaje,
+        correo = correo
     ).exclude(status='Anulado').exists()
 
     if existe:
