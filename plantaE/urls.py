@@ -86,6 +86,7 @@ urlpatterns = [
     path("salidasFrutaPublic/graficoPublic",views.recepciones_reportecurva2,name='recepcionesFruta_reportecurva2'),
     path("recepcionesFruta/reporteAcum/loadgrafico",views.graficas,name='load_grafico'),
 
+    #Urls de boletas
     path("boletasFruta",BoletasListView.as_view(),name='boletasFruta_list'),
     path('boletasFruta/<int:pk>/edit/', BoletasListProductorView.as_view(), name='boletas_update'),
     path('boletasFruta/<int:pk>/', BoletasDetailView.as_view(), name='boletas_detail'),

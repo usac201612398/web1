@@ -2712,7 +2712,7 @@ def supervisionproduccion_grabar(request):
         **filtros_lote
     ).values('muestra').distinct().count()
 
-    if muestras_actuales >= 10:
+    if muestras_actuales >= 5:
         return JsonResponse({
             'error': 'Este lote ya cuenta con las 10 muestras completas'
         }, status=400)
@@ -2752,7 +2752,7 @@ def supervisionproduccion_grabar(request):
     return JsonResponse({
         'msm': f'Se registró correctamente la muestra {muestra_actual}',
         'muestra': muestra_actual,
-        'completo': muestra_actual == 10
+        'completo': muestra_actual == 5
     })
 
 

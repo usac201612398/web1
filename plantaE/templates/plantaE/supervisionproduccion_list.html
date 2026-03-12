@@ -118,15 +118,15 @@
 
                 <tbody>
                     {% for l in lotes %}
-                    <tr class="{% if l.total_muestras == 10 %}table-success{% endif %}">
+                    <tr class="{% if l.total_muestras == 5 %}table-success{% endif %}">
                     <td>{{ l.fecha }}</td>
                     <td>{{ l.finca }}</td>
                     <td>{{ l.cultivo }}</td>
                     <td>{{ l.estructura }}</td>
                     <td>{{ l.zona }}</td>
-                    <td>{{ l.total_muestras }}/10</td>
+                    <td>{{ l.total_muestras }}/5</td>
                     <td>
-                        {% if l.total_muestras == 10 %}
+                        {% if l.total_muestras == 5 %}
                         <span class="badge bg-success">Completo</span>
                         {% else %}
                         <span class="badge bg-warning">En proceso</span>
@@ -159,7 +159,7 @@
             <p class="card-text">
             <strong>Fecha:</strong> {{ l.fecha }}<br>
             <strong>Finca:</strong> {{ l.finca }}<br>
-            <strong>Muestras:</strong> {{ l.total_muestras }}/10
+            <strong>Muestras:</strong> {{ l.total_muestras }}/5
             </p>
 
             <a href="{% url 'supervisionproduccion_detalle'  l.fecha|date:'Y-m-d' l.cultivo l.estructura l.zona l.finca%}"

@@ -394,7 +394,7 @@ $('.envio3').on('click', function () {
             alert(response.msm || 'Guardado correctamente');
             boton.prop('disabled', false);
             if (response.completo) {
-                alert('✅ Muestra 10 registrada. El lote está completo');
+                alert('✅ Muestra 5 registrada. El lote está completo');
                 window.location.href = "{% url 'supervisionproduccion_list' %}";
             } else {
                 alert('Muestra ' + response.muestra + ' registrada correctamente');
