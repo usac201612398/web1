@@ -1,6 +1,6 @@
 from django.urls import path
 from plantaE import views
-from .view.boletas_views import BoletasListView
+from .view.boletas_views import *
 #from app1.views import *
 
 app_main ="plantaE"
