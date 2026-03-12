@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.db import transaction
 from django.db.models import Q
-from ..models import (
+from plantaE.models import (
     Boletas,
     inventarioProdTerm,
     detallerec,
@@ -15,7 +15,7 @@ from ..models import (
     usuariosAppFruta
 )
 
-from ..forms import boletasForm
+from plantaE.forms import boletasForm
 '''
 def boletas_list(request):
     #today = timezone.now().date()
