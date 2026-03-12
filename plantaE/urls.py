@@ -92,14 +92,7 @@ urlpatterns = [
     path('boletasFruta/<int:pk>/delete/', BoletasDeleteView.as_view(), name='boletas_delete'),
     path('boletasFruta/<int:pk>/devolver/', BoletasDevolverView().as_view(), name='boletas_devolver'),
     path("boletasFruta/productor",BoletasListView.as_view(),name='boletasFruta_listproductor'),
-    '''
-    path("boletasFruta",views.boletas_list,name='boletasFruta_list'),
-    path('boletasFruta/<int:pk>/edit/', views.boletas_update, name='boletas_update'),
-    path('boletasFruta/<int:pk>/', views.boletas_detail, name='boletas_detail'),
-    path('boletasFruta/<int:pk>/delete/', views.boletas_delete, name='boletas_delete'),
-    path('boletasFruta/<int:pk>/devolver/', views.boletas_devolver, name='boletas_devolver'),
-    path("boletasFruta/productor",views.boletas_listproductor,name='boletasFruta_listproductor'),
-    '''
+    
     path("boletasFruta/reporterecepcion",views.boletas_reporterecepcion,name='boletasFruta_reporterecepcion'),
     path("boletasFruta/reportetraza",views.boletas_reportetraza,name='boletasFruta_reportetraza'),
     path("boletasFruta/reportetrazaexpo",views.boletas_reportetrazaexpo,name='boletasFruta_reportetrazaexpo'),
@@ -224,3 +217,12 @@ urlpatterns = [
     path('ajax/obtener-item/', views.obtener_items_relacionados, name='obtener_items'),
 
 ]
+
+'''
+    path("boletasFruta",views.boletas_list,name='boletasFruta_list'),
+    path('boletasFruta/<int:pk>/edit/', views.boletas_update, name='boletas_update'),
+    path('boletasFruta/<int:pk>/', views.boletas_detail, name='boletas_detail'),
+    path('boletasFruta/<int:pk>/delete/', views.boletas_delete, name='boletas_delete'),
+    path('boletasFruta/<int:pk>/devolver/', views.boletas_devolver, name='boletas_devolver'),
+    path("boletasFruta/productor",views.boletas_listproductor,name='boletasFruta_listproductor'),
+'''
