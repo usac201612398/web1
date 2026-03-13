@@ -79,7 +79,7 @@ class CcalidadUpdateAuxView(View):
             'causa_select': salidas.causarechazo,
             'causas': list(causa_rechazo)
         })
-        
+
 class CcalidadDeleteView(View):
 
     template_name = 'plantaE/ccalidad/ccalidad_confirm_delete.html'
@@ -119,6 +119,52 @@ class LoadCcalidadParamView(View):
 
         return JsonResponse({'datos': list(datos), 'valor': valor})
 
+class ObtenerLlaveRecepcionView(View):
+
+    def get(self, request, *args, **kwargs):
+
+        # Filtramos recepciones >= 2875
+        llave_recepcion = detallerec.objects.filter(recepcion__gte=2875).values('criterio').distinct()
+        llave_recepcion2 = detallerec.objects.filter(recepcion__gte=2875).values('recepcion').distinct()
+
+        # Sumas de porcentaje por llave en Ccalidad
+        suma_por_llave = Ccalidad.objects.values('llave').annotate(suma=Sum('porcentaje'))
+        suma_dict = {item['llave']: item['suma'] for item in suma_por_llave}
+
+        # Obtener registros de detallerec filtrando por recepcion
+        datos = detallerec.objects.filter(recepcion__gte=2875)
+
+        datos_modificados = []
+
+        for item in datos:
+            # Número de semana de fechasalidafruta
+            semana = item.fechasalidafruta.isocalendar()[1] if item.fechasalidafruta else None
+
+            # Concatenación condicional
+            clave = f"{semana} | {item.llave} | {item.cultivo}" if item.finca == "Productor" else f"{semana} | {item.finca} | {item.cultivo}"
+
+            datos_modificados.append(clave)
+
+        # Eliminar duplicados
+        datos_modificados = list(set(datos_modificados))
+
+        # Filtrar por suma de porcentaje < 1
+        datos_modificados = [clave for clave in datos_modificados if suma_dict.get(clave, 0) < 1]
+
+        # Obtener causas de rechazo
+        causa_rechazo = causasRechazo.objects.all().values('causa')
+
+        # Fecha actual
+        now = timezone.localtime(timezone.now()).date()
+        fecha_ = now.strftime("%Y-%m-%d")
+
+        return JsonResponse({
+            'llaves': "",
+            'causa': list(causa_rechazo),
+            'fecha': fecha_,
+            'llave': list(llave_recepcion2),
+            'datos_filtrados': datos_modificados
+        })
 '''
 def ccalidad_list(request):
     today = timezone.localtime(timezone.now()).date()
@@ -177,4 +223,75 @@ def ccalidad_delete(request, pk):
         
         messages.success(request, "Registro anulado correctamente.")
     return render(request, 'plantaE/ccalidad_confirm_delete.html', {'registros': salidas})
+
+def obtener_llave_recepcion(request):
+    # Obtén los criterios únicos filtrando por 'recepcion' mayor o igual a 2875
+    llave_recepcion = detallerec.objects.filter(recepcion__gte=2875).values('criterio').distinct()
+    llave_recepcion2 = detallerec.objects.filter(recepcion__gte=2875).values('recepcion').distinct()
+
+    # Crea un diccionario para almacenar las sumas de porcentaje por llave en Ccalidad
+    suma_por_llave = Ccalidad.objects.values('llave').annotate(suma=Sum('porcentaje'))
+
+    # Convierte el resultado a un diccionario para facilitar el acceso
+    suma_dict = {item['llave']: item['suma'] for item in suma_por_llave}
+
+    # Obtener los registros de detallerec filtrando por 'recepcion' y calculando la semana de 'fechasalidafruta'
+    datos = detallerec.objects.filter(recepcion__gte=2875)
+
+    # Lista para almacenar las concatenaciones de la semana, finca/llave y cultivo
+    datos_modificados = []
+
+    for item in datos:
+        # Extraer el número de semana de la fecha 'fechasalidafruta'
+        fecha = item.fechasalidafruta
+        if fecha:
+            semana = fecha.isocalendar()[1]  # Usamos isocalendar() para obtener el número de semana
+        else:
+            semana = None
+
+        # Realizar la concatenación condicional de 'finca' o 'llave' y 'cultivo'
+        if item.finca == "Productor":
+            clave = f"{semana} | {item.llave} | {item.cultivo}"
+        else:
+            clave = f"{semana} | {item.finca} | {item.cultivo}"
+
+        # Agregar la clave concatenada a la lista de datos modificados
+        datos_modificados.append(clave)
+
+    # Eliminar duplicados en la lista de concatenaciones
+    datos_modificados = list(set(datos_modificados))
+
+    # Filtrar los datos_modificados para mantener solo aquellos con suma de porcentaje menor a 1
+    datos_modificados = [
+        clave for clave in datos_modificados
+        if suma_dict.get(clave, 0) < 1  # Solo mantener claves cuyo porcentaje es menor que 1
+    ]
+
+    # Obtener las causas de rechazo
+    causa_rechazo = causasRechazo.objects.all().values('causa')
+
+    # Obtener la fecha actual en formato 'YYYY-MM-DD'
+    now = datetime.datetime.now()
+    fecha = now.date()
+    dia = fecha.day
+    mes = fecha.month
+    año = fecha.year
+
+    # Asegurarse de que el día y el mes tengan 2 dígitos
+    if mes < 10:
+        mes = "0" + str(mes)
+    if dia < 10:
+        dia = "0" + str(dia)
+    
+    # Formatear la fecha
+    fecha_ = f"{año}-{mes}-{dia}"
+
+    # Devolver los datos en formato JSON
+    return JsonResponse({
+        'llaves': "",
+        'causa': list(causa_rechazo),
+        'fecha': fecha_,
+        'llave': list(llave_recepcion2),
+        'datos_filtrados': datos_modificados  # Aquí se agregan las claves filtradas
+    })
 '''
