@@ -5426,63 +5426,6 @@ def escanearbarras(request):
     context = {'msm': 'Listo.'}
     return render(request, 'plantaE/escanearbarras.html',context)
 
-def contenedores_list(request):
-    salidas = contenedores.objects.exclude(status='Cerrado')  # Excluye los que tienen status 'Cerrado'
-    salidas = salidas.order_by('-created_at')
-    
-    return render(request, 'plantaE/contenedores_list.html', {'registros': salidas})
-
-def contenedores_delete(request, pk):
-    salidas = get_object_or_404(contenedores, pk=pk)
-    if request.method == 'POST':
-        salidas.delete()
-        return redirect('contenedores_list')
-    return render(request, 'plantaE/contenedores_confirm_delete.html', {'registros': salidas})
-
-def contenedores_create(request):
-    if request.method == 'POST':
-        form = contenedoresForm(request.POST)
-        if form.is_valid():
-            try:
-                form.save()
-            except Exception as e:
-                # Manejar excepciones específicas (por ejemplo, UniqueConstraintError)
-                return JsonResponse({'error': str(e)}, status=400)
-            return redirect('contenedores_list')
-        else:
-            # Imprimir errores para depuración
-            return JsonResponse({'errores': form.errors}, status=400)
-    else:
-        form = contenedoresForm()
-
-    # Obtener el último registro del contenedor
-    ultimo_contenedor = contenedores.objects.last()
-
-    # Si existe un último contenedor, pre-llenar el campo 'nombre' con el valor del último contenedor
-    initial_data = {}
-    if ultimo_contenedor:
-        initial_data['viaje'] = ultimo_contenedor.viaje + 1 # Cambia 'nombre' por el nombre del campo relevante
-
-    # Crear el formulario con los valores iniciales
-    form = contenedoresForm(initial=initial_data)
-
-    return render(request, 'plantaE/contenedores_form.html', {
-        'form': form,
-        'ultimo_contenedor': ultimo_contenedor,
-    })
-
-def contenedores_update(request, pk):
-    salidas = get_object_or_404(contenedores, pk=pk)
-    if request.method == 'POST':
-        form = contenedoresForm(request.POST, instance=salidas)
-        if form.is_valid():
-            form.save()
-            return redirect('contenedores_list')
-    else:
-        form = contenedoresForm(instance=salidas)
-    return render(request, 'plantaE/contenedores_form.html', {'form': form})
-
-
 def controlcajas_list(request):
     salidas = controlcajas.objects.all() # Excluye los que tienen status 'Cerrado'
     salidas = salidas.order_by('-registro')

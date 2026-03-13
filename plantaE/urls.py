@@ -7,6 +7,7 @@ from .view.itemsenvios_views import *
 from .view.itemsprodterm_views import *
 from .view.ccalidad_views import *
 from .view.envioslocal_views import *
+from .view.contenedores_views import *
 #from app1.views import *
 
 app_main ="plantaE"
@@ -133,6 +134,12 @@ urlpatterns = [
     path("envioslocal",views.EnviosLocalListView.as_view(),name='envioslocal_list'),
     path('envioslocal/<int:pk>/delete/', EnviosLocalDeleteView.as_view(), name='envioslocal_delete'),
     path('envioslocal/<int:pk>/', views.EnviosLocalDetailView.as_view(), name='envioslocal_detail'),
+
+    #Urls de contenedores
+    path("contenedores",ContenedoresListView.as_view(),name='contenedores_list'),
+    path('contenedores/new/', ContenedoresCreateView.as_view(), name='contenedores_create'),
+    path('contenedores/<int:pk>/edit/', ContenedoresUpdateView.as_view(), name='contenedores_update'),
+    path('contenedores/<int:pk>/delete/',ContenedoresDeleteView.as_view(), name='contenedores_delete'),
     
     path("boletasFruta/reporterecepcion",views.boletas_reporterecepcion,name='boletasFruta_reporterecepcion'),
     path("boletasFruta/reportetraza",views.boletas_reportetraza,name='boletasFruta_reportetraza'),
@@ -203,10 +210,7 @@ urlpatterns = [
         name='reporte_seguimiento_api'
     ),
     path('ajax/load-contenedores/', views.load_contenedores, name='load_contenedores'),
-    path("contenedores",views.contenedores_list,name='contenedores_list'),
-    path('contenedores/new/', views.contenedores_create, name='contenedores_create'),
-    path('contenedores/<int:pk>/edit/', views.contenedores_update, name='contenedores_update'),
-    path('contenedores/<int:pk>/delete/', views.contenedores_delete, name='contenedores_delete'),
+
     
     path('generate_packing_list_pdf/', views.generate_packing_list_pdf, name='generate_packing_list_pdf'),
     path('generate_packing_list_pdf2/', views.generate_packing_list_pdf2, name='generate_packing_list_pdf2'),
