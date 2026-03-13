@@ -8,7 +8,7 @@ from .view.itemsprodterm_views import *
 from .view.ccalidad_views import *
 from .view.envioslocal_views import *
 from .view.contenedores_views import *
-from view.controlcajas_views import *
+from .view.controlcajas_views import *
 #from app1.views import *
 
 app_main ="plantaE"
