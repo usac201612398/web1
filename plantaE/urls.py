@@ -126,7 +126,7 @@ urlpatterns = [
     #Ajax de ccalidad
     path('ajax/load-ccalidadaux/', CcalidadUpdateAuxView.as_view(), name='load_ccalidad_update_aux'),
     path('ajax/load-ccalidadparam/', LoadCcalidadParamView.as_view(), name='load_ccalidadparam'),
-    path('ajax/obtener-llave-recepcion/' ObtenerLlaveRecepcionView.as_view(), name='obtener_llave_recepcion'),
+    path('ajax/obtener-llave-recepcion/', ObtenerLlaveRecepcionView.as_view(), name='obtener_llave_recepcion'),
 
     path("boletasFruta/reporterecepcion",views.boletas_reporterecepcion,name='boletasFruta_reporterecepcion'),
     path("boletasFruta/reportetraza",views.boletas_reportetraza,name='boletasFruta_reportetraza'),
