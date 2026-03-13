@@ -388,7 +388,7 @@
 
     // Lotes
     document.getElementById('modalLotes').addEventListener('shown.bs.modal', function () {
-        fetch("{% url 'lotes_en_proceso' %}")
+        fetch("{% url 'lotes_en_proceso_madres' %}")
             .then(resp => resp.json())
             .then(data => {
                 todosLosLotes = data;

@@ -9,6 +9,7 @@ urlpatterns = [
 
     path('', views.sdcsemillashomepage, name='sdcsemillas_home'),  # Página principal
     path('lotes-en-proceso/', views.buscar_lotes, name='lotes_en_proceso'),
+    path('lotes-en-proceso/madres', views.buscar_lotesauxs, name='lotes_en_proceso_madres'),
     path('empleados_activos/', views.empleados_activos, name='empleados_activos'),
     path("lotes",views.lotes_list,name='lotes_list'),
     path("lotesreporte",views.lotesreporte_list,name='lotesreporte_list'),

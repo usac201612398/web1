@@ -35,6 +35,19 @@ def buscar_lotes(request):
 
     return JsonResponse(list(lotes_qs), safe=False)
 
+def buscar_lotes_auxs(request):
+
+    lotes_qs = lotes.objects.filter(status="En proceso",genero='Madre').order_by("-id").values(
+        "id",
+        "lote_code",
+        "apodo_variedad",
+        "ubicación",
+        "estructura",
+        "status"
+    )
+
+    return JsonResponse(list(lotes_qs), safe=False)
+
 def empleados_activos(request):
     """
     Devuelve la lista de empleados activos para el modal.
