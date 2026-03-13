@@ -148,7 +148,7 @@ urlpatterns = [
     path('controlcajasmanual/new/', ControlCajasCreateView.as_view(), name='controlcajas_create'),
     path('controlcajasmanual/<int:pk>/edit/', ControlCajasUpdateView.as_view(), name='controlcajas_update'),
     path('controlcajasmanual/<int:pk>/delete/', ControlCajasDeleteView.as_view(), name='controlcajas_delete'),
-    path('ajax/obtener-item/', ObtenerItemsRelacionadosView().as_view(), name='obtener_items'),
+    path('ajax/obtener-item/', ObtenerItemsRelacionadosView.as_view(), name='obtener_items'),
 
     path("boletasFruta/reporterecepcion",views.boletas_reporterecepcion,name='boletasFruta_reporterecepcion'),
     path("boletasFruta/reportetraza",views.boletas_reportetraza,name='boletasFruta_reportetraza'),
