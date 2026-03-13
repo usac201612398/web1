@@ -2,6 +2,7 @@ from django.urls import path
 from plantaE import views
 from .view.boletas_views import *
 from .view.recepciones_views import *
+from .view.actpeso_views import *
 #from app1.views import *
 
 app_main ="plantaE"
@@ -34,9 +35,7 @@ urlpatterns = [
     path('ajax/guardar-plantillaRio/', views.guardar_plantillaRio, name='guardar_plantillaRio'),
     path('ajax/guardar-plantillaValle/', views.guardar_plantillaValle, name='guardar_plantillaValle'),
     path('ajax/load-inventarioProdparam/', views.load_inventarioProdparam, name='load_inventarioProdparam'),
-    path("pesos",views.pesos_list,name='pesos_list'),
-    path('pesos/<int:pk>/', views.pesos_detail, name='pesos_detail'),
-    path('pesos/<int:pk>/delete/', views.pesos_delete, name='pesos_delete'),
+
 
     path('salidasFruta/<int:pk>/', views.article_detail, name='salidasFruta_detail'),
     path('salidasFruta2/<int:pk>/', views.salidasFruta_detail2, name='salidasFruta_detail2'),
@@ -99,6 +98,12 @@ urlpatterns = [
     path('boletasFruta/<int:pk>/devolver/', BoletasDevolverView.as_view(), name='boletas_devolver'),
     path("boletasFruta/productor",BoletasListProductorView.as_view(),name='boletasFruta_listproductor'),
     
+    #Urls de actpeso
+    path("pesos",PesosListView.as_view(),name='pesos_list'),
+    path('pesos/<int:pk>/', PesosDetailView.as_view(), name='pesos_detail'),
+    path('pesos/<int:pk>/delete/', PesosDeleteView.as_view(), name='pesos_delete'),
+
+
     path("boletasFruta/reporterecepcion",views.boletas_reporterecepcion,name='boletasFruta_reporterecepcion'),
     path("boletasFruta/reportetraza",views.boletas_reportetraza,name='boletasFruta_reportetraza'),
     path("boletasFruta/reportetrazaexpo",views.boletas_reportetrazaexpo,name='boletasFruta_reportetrazaexpo'),

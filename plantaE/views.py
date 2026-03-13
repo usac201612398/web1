@@ -293,16 +293,6 @@ def load_dataUsuario9(request):
         "cultivos": list(cultivos)
     })
 
-def pesos_list(request):
-    today = timezone.now().date()
-    salidas = Actpeso.objects.filter(fecha=today).exclude(status='Anulado')
-    salidas = salidas.order_by('created')
-    
-    return render(request, 'plantaE/pesos_list.html', {'registros': salidas})
-
-def pesos_detail(request, pk):
-    salidas = get_object_or_404(Actpeso, pk=pk)
-    return render(request, 'plantaE/pesos_detail.html', {'registros': salidas})
 
 def article_list(request):
 
@@ -324,26 +314,7 @@ def salidasFruta_list(request):
 
     return render(request, 'plantaE/salidasFruta_list2.html', {'registros': salidas})
 
-def pesos_delete(request, pk):
-    salidas = get_object_or_404(Actpeso, pk=pk)
-    recepcion = Recepciones.objects.filter(recepcion=salidas.recepcion)
-    # Validar si tiene recepción asignada
-    if recepcion.exists():
-        return render(request, 'plantaE/pesos_confirm_delete.html', {
-            'registros': salidas,
-            'alert_message': "No se puede anular este peso porque ya tiene una recepción asignada, anule la recepcion.",
-            'redirect_url': reverse('pesos_list')
-        })
 
-    if request.method == 'POST':
-        salidas.status = 'Anulado'
-        salidas.save()
-        return render(request, 'plantaE/pesos_confirm_delete.html', {
-            'alert_message': "El registro fue anulado correctamente.",
-            'redirect_url': reverse('pesos_list')
-        })
-
-    return render(request, 'plantaE/pesos_confirm_delete.html', {'registros': salidas})
 
 def article_listValle(request):
     
