@@ -6,6 +6,7 @@ from .view.actpeso_views import *
 from .view.itemsenvios_views import *
 from .view.itemsprodterm_views import *
 from .view.ccalidad_views import *
+from .view.envioslocal_views import *
 #from app1.views import *
 
 app_main ="plantaE"
@@ -128,6 +129,11 @@ urlpatterns = [
     path('ajax/load-ccalidadparam/', LoadCcalidadParamView.as_view(), name='load_ccalidadparam'),
     path('ajax/obtener-llave-recepcion/', ObtenerLlaveRecepcionView.as_view(), name='obtener_llave_recepcion'),
 
+    #Urls de enviolocal
+    path("envioslocal",views.EnviosLocalListView.as_view(),name='envioslocal_list'),
+    path('envioslocal/<int:pk>/delete/', EnviosLocalDeleteView.as_view(), name='envioslocal_delete'),
+    path('envioslocal/<int:pk>/', views.EnviosLocalDetailView.as_view(), name='envioslocal_detail'),
+    
     path("boletasFruta/reporterecepcion",views.boletas_reporterecepcion,name='boletasFruta_reporterecepcion'),
     path("boletasFruta/reportetraza",views.boletas_reportetraza,name='boletasFruta_reportetraza'),
     path("boletasFruta/reportetrazaexpo",views.boletas_reportetrazaexpo,name='boletasFruta_reportetrazaexpo'),
@@ -137,10 +143,6 @@ urlpatterns = [
     path("boletasFruta/constanciatrazaexpo",views.boletas_constanciatrazarexpo,name='boletasFruta_constanciatrazaexpo'),
     path("boletasFruta/constanciarecepcion",views.boletas_constanciarecepcion,name='boletasFruta_constanciarecepcion'),
 
-
-    path("envioslocal",views.envioslocal_list,name='envioslocal_list'),
-    path('envioslocal/<int:pk>/delete/', views.envioslocal_delete, name='envioslocal_delete'),
-    path('envioslocal/<int:pk>/', views.envioslocal_detail, name='envioslocal_detail'),
     path("inventarioProd/plantilla",views.inventarioProd_grabarplantilla,name='inventarioProd_grabar'),
     path("inventarioProd",views.inventarioProd_list,name='inventarioProd_list'),
     path('inventarioProd/<int:pk>/', views.inventarioProd_detail, name='inventarioProd_detail'),
