@@ -1129,79 +1129,6 @@ def procesarrecepcion(request):
     
     return JsonResponse({'mensaje':mensaje,'registros':registros})   
 
-def recepciones_list(request):
-
-    today = timezone.localtime(timezone.now()).date()
-    current_month = today.month
-    current_year = today.year
-    #salidas = Recepciones.objects.filter(fecha=today)
-    salidas= detallerec.objects.filter(fecha__year=current_year,fecha__month=current_month).order_by('-recepcion').exclude(status="Anulado")
-    
-    #for i in salidas:
-    #    cajasacum = salidas2.order_by('-created').filter(Q(status="En proceso") | Q(status="Cerrado"),recepcion=i.recepcion).aggregate(sumacajas=Sum('cajas'))['sumacajas']
-    #    librasacum = salidas2.order_by('-created').filter(Q(status="En proceso") | Q(status="Cerrado"),recepcion=i.recepcion).aggregate(sumalibras=Sum('libras'))['sumalibras']    
-    #    if librasacum != None and cajasacum != None:
-    #        i.cajas = i.cajas - int(cajasacum)
-    #        i.libras = i.libras - float(librasacum)
-        
-
-    #existenciaCajas = finca=list(salidas)[0]['cajas']
-    #existenciaLibras = finca=list(salidas)[0]['libras']
-    #rebajaCajas = finca=list(salidas2)[0]['cajas']
-    #rebajaLibras = finca=list(salidas2)[0]['libras']
-    #for i in len(salidas):
-    #    existenciaCajas 
-    #paginator = Paginator(salidas, 10)  # 10 registros por página (ajusta según prefieras)
-    #page_number = request.GET.get('page')  # Obtener el número de página de la URL
-    #page_obj = paginator.get_page(page_number)
-
-    return render(request, 'plantaE/recepciones_list.html', {'registros': salidas})
-
-def recepcionesFruta_delete(request, pk):
-
-    salidas = get_object_or_404(detallerec, pk=pk)
-
-    # Verificar si existen registros en detallerecaux con la misma recepción
-    existe_en_aux = detallerecaux.objects.filter(recepcion=salidas.recepcion).exclude(status="Anulado").exists()
-
-    if existe_en_aux:
-        return render(request, 'plantaE/recepciones_confirm_delete.html', {
-            'registros': salidas,
-            'alert_message': "No se puede anular esta recepción porque tiene registros relacionados en boletas.",
-            'redirect_url': reverse('recepcionesFruta_list')
-        })
-
-    if request.method == 'POST':
-        # Anular detallerec
-        with transaction.atomic():
-
-            salidas.status = 'Anulado'
-            salidas.save()
-
-            # Anular Actpeso y Recepciones
-            Actpeso.objects.filter(recepcion=salidas.recepcion).exclude(status='Anulado').update(status='Anulado')
-            Recepciones.objects.filter(recepcion=salidas.recepcion).exclude(status='Anulado').update(status='Anulado')
-
-            # Limpiar campos en AcumFruta y salidasFruta
-            AcumFruta.objects.filter(recepcion=salidas.recepcion).exclude(status='Anulado').update(
-                libras=None,
-                recepcion=None,
-                viaje=None,
-                nsalidafruta=None
-            )
-            salidasFruta.objects.filter(recepcion=salidas.recepcion).exclude(status='Anulado').update(
-                libras=None,
-                recepcion=None,
-                status=None
-            )
-
-        return render(request, 'plantaE/recepciones_confirm_delete.html', {
-            'registros': salidas,
-            'alert_message': "Registro anulado correctamente.",
-            'redirect_url': reverse('recepcionesFruta_list')
-        })
-
-    return render(request, 'plantaE/recepciones_confirm_delete.html', {'registros': salidas})
 
 def envioslocal_list(request):
 
@@ -1810,24 +1737,6 @@ def graficas(request):
             'variedad': mensaje[0][4],
             'dataframe': dataframe
         })
-
-def recepciones_detail(request, pk):
-    salidas = get_object_or_404(detallerec, pk=pk)
-
-    return render(request, 'plantaE/recepciones_detail.html', {'registros': salidas})
-
-def recepciones_update(request, pk):
-    salidas = get_object_or_404(detallerec, pk=pk)
-    if request.method == 'POST':
-        form = recepcionesForm(request.POST, instance=salidas)
-        if form.is_valid():
-            form.save()
-            return redirect('recepcionesFruta_list')
-        else:
-            return JsonResponse({'errores': form.errors}, status=400)
-    else:
-        form = recepcionesForm(instance=salidas)
-    return render(request, 'plantaE/recepciones_form.html', {'form': form})
 
 def ccalidad_list(request):
     today = timezone.localtime(timezone.now()).date()

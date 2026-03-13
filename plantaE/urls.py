@@ -1,6 +1,7 @@
 from django.urls import path
 from plantaE import views
 from .view.boletas_views import *
+from .view.recepciones_views import *
 #from app1.views import *
 
 app_main ="plantaE"
@@ -69,13 +70,11 @@ urlpatterns = [
     path('acumFruta2/<int:pk>/delete/', views.acumFruta_delete2, name='acumFruta_delete2'),
     path('acumFruta/consulta/', views.acumFruta_consulta, name='acumFruta_consulta'),
     path('acumFruta/consultaValle/', views.acumFruta_consultaValle, name='acumFruta_consultaValle'),
-    path('recepcionesFruta/<int:pk>/edit/', views.recepciones_update, name='recepcionesFruta_update'),
+    
     path("recepcionesFruta/process",views.procesarrecepcion,name='recepcionesFruta_process'),
     path("inventarioProd/process/",views.procesarinvprodconten,name='inventarioProd_contprocess'),
     path("inventarioProd/processv2/",views.procesarinvprodcontenv2,name='inventarioProd_contprocessv2'),
-    path("recepcionesFruta",views.recepciones_list,name='recepcionesFruta_list'),
-    path('recepcionesFruta/<int:pk>/delete/', views.recepcionesFruta_delete, name='recepcionesFruta_delete'),
-    path('recepcionesFruta/<int:pk>/', views.recepciones_detail, name='recepcionesFruta_detail'),
+    
     path("recepcionesFruta/reporteAcum",views.recepciones_reporteAcum,name='recepcionesFruta_reporteAcum'),
     path("recepcionesFruta/reporteAcumKgm2Orden",views.recepciones_reporteAcumKgm2Orden,name='recepcionesFruta_reporteAcumKgm2Orden'),
     path("recepcionesFruta/reporteAcumKgm2Estruc",views.recepciones_reporteAcumKgm2Estruc,name='recepcionesFruta_reporteAcumKgm2Estruc'),  
@@ -86,8 +85,14 @@ urlpatterns = [
     path("salidasFrutaPublic/graficoPublic",views.recepciones_reportecurva2,name='recepcionesFruta_reportecurva2'),
     path("recepcionesFruta/reporteAcum/loadgrafico",views.graficas,name='load_grafico'),
 
+    #Urls de recepciones
+    path('recepcionesFruta',RecepcionesListView.as_view(),name='recepcionesFruta_list'),
+    path('recepcionesFruta/<int:pk>/delete/', RecepcionesFrutaDeleteView.as_view(), name='recepcionesFruta_delete'),
+    path('recepcionesFruta/<int:pk>/', RecepcionesDetailView.as_view(), name='recepcionesFruta_detail'),
+    path('recepcionesFruta/<int:pk>/edit/', RecepcionesUpdateView.as_view(), name='recepcionesFruta_update'),
+
     #Urls de boletas
-    path("boletasFruta",BoletasListView.as_view(),name='boletasFruta_list'),
+    path('boletasFruta',BoletasListView.as_view(),name='boletasFruta_list'),
     path('boletasFruta/<int:pk>/edit/', BoletasUpdateView.as_view(), name='boletas_update'),
     path('boletasFruta/<int:pk>/', BoletasDetailView.as_view(), name='boletas_detail'),
     path('boletasFruta/<int:pk>/delete/', BoletasDeleteView.as_view(), name='boletas_delete'),
