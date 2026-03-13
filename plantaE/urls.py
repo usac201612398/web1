@@ -5,6 +5,7 @@ from .view.recepciones_views import *
 from .view.actpeso_views import *
 from .view.itemsenvios_views import *
 from .view.itemsprodterm_views import *
+from .view.ccalidad import *
 #from app1.views import *
 
 app_main ="plantaE"
@@ -32,7 +33,6 @@ urlpatterns = [
     path('ajax/obtener-fecha-invFruta/', views.obtenerfecha_invFruta, name='obtenerfecha_invFruta'),
     path('ajax/obtener-llave-recepcion/', views.obtener_llave_recepcion, name='obtener_llave_recepcion'),
     path('ajax/load-ccalidadparam/', views.load_ccalidadparam, name='load_ccalidadparam'),
-    path('ajax/load-ccalidadaux/', views.ccalidad_update_aux, name='load_ccalidad_update_aux'),
     path('ajax/guardar-plantilla/', views.guardar_plantilla, name='guardar_plantilla'),
     path('ajax/guardar-plantillaRio/', views.guardar_plantillaRio, name='guardar_plantillaRio'),
     path('ajax/guardar-plantillaValle/', views.guardar_plantillaValle, name='guardar_plantillaValle'),
@@ -117,6 +117,15 @@ urlpatterns = [
     path('itemsenvios/<int:pk>/edit/', ItemsEnviosUpdateView.as_view(), name='itemsenvios_update'),
     path('itemsenvios/<int:pk>/delete/', ItemsEnviosDeleteView.as_view(), name='itemsenvios_delete'),
 
+    #Urls de ccalidad
+    path("ccalidad",CcalidadListView.as_view(),name='ccalidad_list'),
+    path('ccalidad/<int:pk>/', CcalidadDetailView.as_view(), name='ccalidad_detail'),
+    path('ccalidad/new/', CcalidadCreateView.as_view(), name='ccalidad_create'),
+    path('ccalidad/<int:pk>/edit/', CcalidadUpdateView.as_view(), name='ccalidad_update'),
+    path('ccalidad/<int:pk>/delete/', CcalidadDeleteView.as_view(), name='ccalidad_delete'),
+    #Ajax de ccalidad
+    path('ajax/load-ccalidadaux/', CcalidadUpdateAuxView.as_view(), name='load_ccalidad_update_aux'),
+
     path("boletasFruta/reporterecepcion",views.boletas_reporterecepcion,name='boletasFruta_reporterecepcion'),
     path("boletasFruta/reportetraza",views.boletas_reportetraza,name='boletasFruta_reportetraza'),
     path("boletasFruta/reportetrazaexpo",views.boletas_reportetrazaexpo,name='boletasFruta_reportetrazaexpo'),
@@ -126,11 +135,7 @@ urlpatterns = [
     path("boletasFruta/constanciatrazaexpo",views.boletas_constanciatrazarexpo,name='boletasFruta_constanciatrazaexpo'),
     path("boletasFruta/constanciarecepcion",views.boletas_constanciarecepcion,name='boletasFruta_constanciarecepcion'),
 
-    path("ccalidad",views.ccalidad_list,name='ccalidad_list'),
-    path('ccalidad/<int:pk>/', views.ccalidad_detail, name='ccalidad_detail'),
-    path('ccalidad/new/', views.ccalidad_create, name='ccalidad_create'),
-    path('ccalidad/<int:pk>/edit/', views.ccalidad_update, name='ccalidad_update'),
-    path('ccalidad/<int:pk>/delete/', views.ccalidad_delete, name='ccalidad_delete'),
+
     path("envioslocal",views.envioslocal_list,name='envioslocal_list'),
     path('envioslocal/<int:pk>/delete/', views.envioslocal_delete, name='envioslocal_delete'),
     path('envioslocal/<int:pk>/', views.envioslocal_detail, name='envioslocal_detail'),

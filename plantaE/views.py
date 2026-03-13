@@ -1707,64 +1707,6 @@ def graficas(request):
             'dataframe': dataframe
         })
 
-def ccalidad_list(request):
-    today = timezone.localtime(timezone.now()).date()
-    current_month = today.month
-    current_year = today.year
-    salidas = Ccalidad.objects.filter(fecha__year=current_year,fecha__month=current_month).order_by('-registro').exclude(status="Anulado")
-    
-
-    return render(request, 'plantaE/ccalidad_list.html', {'registros': salidas})
-
-def ccalidad_detail(request, pk):
-    salidas = get_object_or_404(Ccalidad, pk=pk)
-    return render(request, 'plantaE/ccalidad_detail.html', {'registros': salidas})
-
-def ccalidad_create(request):
-    if request.method == 'POST':
-        form = ccalidadForm(request.POST)
-        if form.is_valid():
-            try:
-                form.save()
-            except Exception as e:
-                # Manejar excepciones específicas (por ejemplo, UniqueConstraintError)
-                return JsonResponse({'error': str(e)}, status=400)
-            return redirect('ccalidad_list')
-        else:
-             # Imprimir errores para depuración
-            return JsonResponse({'errores': form.errors}, status=400)
-    else:
-        form = ccalidadForm()
-    return render(request, 'plantaE/ccalidad_form.html', {'form': form,'modo':'crear'})
-
-def ccalidad_update(request, pk):
-    salidas = get_object_or_404(Ccalidad, pk=pk)
-    if request.method == 'POST':
-        form = ccalidadForm(request.POST, instance=salidas)
-        if form.is_valid():
-            form.save()
-            return redirect('ccalidad_list')
-    else:
-        form = ccalidadForm(instance=salidas)
-        
-    return render(request, 'plantaE/ccalidad_form_edit.html', {'form': form,'modo':'actualizar'})
-
-def ccalidad_update_aux(request):
-    pk = request.GET.get('pk')
-    salidas = get_object_or_404(Ccalidad, pk=pk)
-    causa_rechazo = causasRechazo.objects.all().values('causa')
-    return JsonResponse({'llave': salidas.llave,'recepcion':salidas.recepcion,'causa_select':salidas.causarechazo,'causas':list(causa_rechazo)})
-    
-def ccalidad_delete(request, pk):
-    salidas = get_object_or_404(Ccalidad, pk=pk)
-
-    if request.method == 'POST':
-        salidas.status = 'Anulado'
-        salidas.save()
-        
-        messages.success(request, "Registro anulado correctamente.")
-    return render(request, 'plantaE/ccalidad_confirm_delete.html', {'registros': salidas})
-
 def obtener_llave_recepcion(request):
     # Obtén los criterios únicos filtrando por 'recepcion' mayor o igual a 2875
     llave_recepcion = detallerec.objects.filter(recepcion__gte=2875).values('criterio').distinct()
