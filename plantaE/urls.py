@@ -9,6 +9,7 @@ from .view.ccalidad_views import *
 from .view.envioslocal_views import *
 from .view.contenedores_views import *
 from .view.controlcajas_views import *
+from .view.pedidoscarreta_views import *
 #from app1.views import *
 
 app_main ="plantaE"
@@ -148,7 +149,19 @@ urlpatterns = [
     path('controlcajasmanual/new/', ControlCajasCreateView.as_view(), name='controlcajas_create'),
     path('controlcajasmanual/<int:pk>/edit/', ControlCajasUpdateView.as_view(), name='controlcajas_update'),
     path('controlcajasmanual/<int:pk>/delete/', ControlCajasDeleteView.as_view(), name='controlcajas_delete'),
+    #Ajax
     path('ajax/obtener-item/', ObtenerItemsRelacionadosView.as_view(), name='obtener_items'),
+
+    #Urls de pedidocarreta
+    path('pedidos/<int:pk>/delete/', PedidosDeleteView.as_view(), name='pedidos_delete'),
+    path('pedidos/<int:pk>/cancel/', PedidosCancelView.as_view(), name='pedidos_cancel'),
+    path("pedidos",PedidosListView.as_view(),name='pedidos_list'),
+    path("pedidos/historico",PedidosHistoricoView.as_view(),name='pedidos_list_historico'),
+    path('pedidos/new/plantilla', PedidosCarretaView.as_view(), name='create_pedidos'),
+    path('pedidos/<int:pk>/edit/', PedidosUpdateView.as_view(), name='pedidos_update'),
+    #Ajax
+    path('ajax/guardar-pedido/', GuardarPedidoView.as_view(), name='guardar_pedido'),
+
 
     path("boletasFruta/reporterecepcion",views.boletas_reporterecepcion,name='boletasFruta_reporterecepcion'),
     path("boletasFruta/reportetraza",views.boletas_reportetraza,name='boletasFruta_reportetraza'),
@@ -238,16 +251,6 @@ urlpatterns = [
     path('reporte-pivote/tecnicos', views.reporte_tabla_pivote2, name='reporte_tabla_pivote2'),
     path('reporte-pivote/', views.reporte_tabla_pivote, name='reporte_tabla_pivote'),
     path('reporte-pivote/produccionsem', views.reporte_tabla_pivote_produccionsem, name='reporte_tabla_pivote_produccionsem'),
-
-    path('pedidos/<int:pk>/delete/', views.pedidos_delete, name='pedidos_delete'),
-    path('pedidos/<int:pk>/cancel/', views.pedidos_cancel, name='pedidos_cancel'),
-    path("pedidos",views.pedidos_list,name='pedidos_list'),
-    path("pedidos/historico",views.pedidos_list_historico,name='pedidos_list_historico'),
-    path('pedidos/new/plantilla', views.article_create_pedidos, name='create_pedidos'),
-    path('ajax/guardar-pedido/', views.guardar_pedido, name='guardar_pedido'),
-    path('pedidos/<int:pk>/edit/', views.pedidos_update, name='pedidos_update'),
-
-    
 
 ]
 
