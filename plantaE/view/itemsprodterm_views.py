@@ -11,7 +11,7 @@ from plantaE.forms import itemsForm
 
 class ItemsListView(ListView):
     model = productoTerm
-    template_name = 'plantaE/items_list.html'
+    template_name = 'plantaE/itemsprodterm/items_list.html'
     context_object_name = 'registros'
 
     def get_queryset(self):
@@ -20,7 +20,7 @@ class ItemsListView(ListView):
 class ItemsCreateView(CreateView):
     model = productoTerm
     form_class = itemsForm
-    template_name = 'plantaE/items_form.html'
+    template_name = 'plantaE/itemsprodterm/items_form.html'
     success_url = reverse_lazy('items_list')
 
     def form_invalid(self, form):
@@ -41,7 +41,7 @@ class ItemsCreateView(CreateView):
 class ItemsUpdateView(UpdateView):
     model = productoTerm
     form_class = itemsForm
-    template_name = 'plantaE/items_form.html'
+    template_name = 'plantaE/itemsprodterm/items_form.html'
     success_url = reverse_lazy('items_list')
 
     def get_context_data(self, **kwargs):
@@ -51,10 +51,10 @@ class ItemsUpdateView(UpdateView):
 
 class ItemsDeleteView(DeleteView):
     model = productoTerm
-    template_name = 'plantaE/items_confirm_delete.html'
+    template_name = 'plantaE/itemsprodterm/items_confirm_delete.html'
     context_object_name = 'registros'
     success_url = reverse_lazy('items_list')      
-     
+
 '''
 def items_list(request):
     salidas = productoTerm.objects.all() # Excluye los que tienen status 'Cerrado'
