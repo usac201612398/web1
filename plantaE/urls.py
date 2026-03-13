@@ -3,6 +3,8 @@ from plantaE import views
 from .view.boletas_views import *
 from .view.recepciones_views import *
 from .view.actpeso_views import *
+from .view.itemsenvios_views import *
+from .view.itemsprodterm_views import *
 #from app1.views import *
 
 app_main ="plantaE"
@@ -103,6 +105,17 @@ urlpatterns = [
     path('pesos/<int:pk>/', PesosDetailView.as_view(), name='pesos_detail'),
     path('pesos/<int:pk>/delete/', PesosDeleteView.as_view(), name='pesos_delete'),
 
+    #Urls de itemsprodterm
+    path("items",ItemsListView.as_view(),name='items_list'),
+    path('items/new/', ItemsCreateView.as_view(), name='items_create'),
+    path('items/<int:pk>/edit/', ItemsUpdateView.as_view(), name='items_update'),
+    path('items/<int:pk>/delete/', ItemsDeleteView.as_view, name='items_delete'),
+
+    #Urls de itemsenvios
+    path("itemsenvios",ItemsEnviosListView.as_view(),name='itemsenvios_list'),
+    path('itemsenvios/new/', ItemsEnviosCreateView.as_view(), name='itemsenvios_create'),
+    path('itemsenvios/<int:pk>/edit/', ItemsEnviosUpdateView.as_view(), name='itemsenvios_update'),
+    path('itemsenvios/<int:pk>/delete/', ItemsEnviosDeleteView.as_view(), name='itemsenvios_delete'),
 
     path("boletasFruta/reporterecepcion",views.boletas_reporterecepcion,name='boletasFruta_reporterecepcion'),
     path("boletasFruta/reportetraza",views.boletas_reportetraza,name='boletasFruta_reportetraza'),
@@ -185,10 +198,7 @@ urlpatterns = [
     path('contenedores/new/', views.contenedores_create, name='contenedores_create'),
     path('contenedores/<int:pk>/edit/', views.contenedores_update, name='contenedores_update'),
     path('contenedores/<int:pk>/delete/', views.contenedores_delete, name='contenedores_delete'),
-    path("items",views.items_list,name='items_list'),
-    path('items/new/', views.items_create, name='items_create'),
-    path('items/<int:pk>/edit/', views.items_update, name='items_update'),
-    path('items/<int:pk>/delete/', views.items_delete, name='items_delete'),
+    
     path('generate_packing_list_pdf/', views.generate_packing_list_pdf, name='generate_packing_list_pdf'),
     path('generate_packing_list_pdf2/', views.generate_packing_list_pdf2, name='generate_packing_list_pdf2'),
     path('escanearbarras/', views.escanearbarras, name='escanearbarras'),
@@ -206,11 +216,6 @@ urlpatterns = [
     path('reporte-pivote/tecnicos', views.reporte_tabla_pivote2, name='reporte_tabla_pivote2'),
     path('reporte-pivote/', views.reporte_tabla_pivote, name='reporte_tabla_pivote'),
     path('reporte-pivote/produccionsem', views.reporte_tabla_pivote_produccionsem, name='reporte_tabla_pivote_produccionsem'),
-
-    path("itemsenvios",views.itemsenvios_list,name='itemsenvios_list'),
-    path('itemsenvios/new/', views.itemsenvios_create, name='itemsenvios_create'),
-    path('itemsenvios/<int:pk>/edit/', views.itemsenvios_update, name='itemsenvios_update'),
-    path('itemsenvios/<int:pk>/delete/', views.itemsenvios_delete, name='itemsenvios_delete'),
 
     path('pedidos/<int:pk>/delete/', views.pedidos_delete, name='pedidos_delete'),
     path('pedidos/<int:pk>/cancel/', views.pedidos_cancel, name='pedidos_cancel'),

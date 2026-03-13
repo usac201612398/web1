@@ -314,8 +314,6 @@ def salidasFruta_list(request):
 
     return render(request, 'plantaE/salidasFruta_list2.html', {'registros': salidas})
 
-
-
 def article_listValle(request):
     
     today = timezone.localtime(timezone.now()).date()
@@ -5683,88 +5681,6 @@ def contenedores_update(request, pk):
     else:
         form = contenedoresForm(instance=salidas)
     return render(request, 'plantaE/contenedores_form.html', {'form': form})
-
-def items_list(request):
-    salidas = productoTerm.objects.all() # Excluye los que tienen status 'Cerrado'
-    salidas = salidas.order_by('-registro')
-    
-    return render(request, 'plantaE/items_list.html', {'registros': salidas})
-
-def items_delete(request, pk):
-    salidas = get_object_or_404(productoTerm, pk=pk)
-    if request.method == 'POST':
-        salidas.delete()
-        return redirect('items_list')
-    return render(request, 'plantaE/items_confirm_delete.html', {'registros': salidas})
-
-def items_create(request):
-    if request.method == 'POST':
-        form = itemsForm(request.POST)
-        if form.is_valid():
-            try:
-                form.save()
-            except Exception as e:
-                # Manejar excepciones específicas (por ejemplo, UniqueConstraintError)
-                return JsonResponse({'error': str(e)}, status=400)
-            return redirect('items_list')
-        else:
-             # Imprimir errores para depuración
-            return JsonResponse({'errores': form.errors}, status=400)
-    else:
-        form = itemsForm()
-    return render(request, 'plantaE/items_form.html', {'form': form,'modo':'crear'})
-
-def items_update(request, pk):
-    salidas = get_object_or_404(productoTerm, pk=pk)
-    if request.method == 'POST':
-        form = itemsForm(request.POST, instance=salidas)
-        if form.is_valid():
-            form.save()
-            return redirect('items_list')
-    else:
-        form = itemsForm(instance=salidas)
-    return render(request, 'plantaE/items_form.html', {'form': form,'modo':'actualizar'})
-
-def itemsenvios_list(request):
-    salidas = paramenvlocales.objects.all() # Excluye los que tienen status 'Cerrado'
-    salidas = salidas.order_by('-registro')
-    
-    return render(request, 'plantaE/itemsenvios_list.html', {'registros': salidas})
-
-def itemsenvios_delete(request, pk):
-    salidas = get_object_or_404(paramenvlocales, pk=pk)
-    if request.method == 'POST':
-        salidas.delete()
-        return redirect('itemsenvios_list')
-    return render(request, 'plantaE/itemsenvios_confirm_delete.html', {'registros': salidas})
-
-def itemsenvios_create(request):
-    if request.method == 'POST':
-        form = itemsenviosForm(request.POST)
-        if form.is_valid():
-            try:
-                form.save()
-            except Exception as e:
-                # Manejar excepciones específicas (por ejemplo, UniqueConstraintError)
-                return JsonResponse({'error': str(e)}, status=400)
-            return redirect('itemsenvios_list')
-        else:
-             # Imprimir errores para depuración
-            return JsonResponse({'errores': form.errors}, status=400)
-    else:
-        form = itemsenviosForm()
-    return render(request, 'plantaE/itemsenvios_form.html', {'form': form,'modo':'crear'})
-
-def itemsenvios_update(request, pk):
-    salidas = get_object_or_404(paramenvlocales, pk=pk)
-    if request.method == 'POST':
-        form = itemsenviosForm(request.POST, instance=salidas)
-        if form.is_valid():
-            form.save()
-            return redirect('itemsenvios_list')
-    else:
-        form = itemsenviosForm(instance=salidas)
-    return render(request, 'plantaE/itemsenvios_form.html', {'form': form,'modo':'actualizar'})
 
 
 def controlcajas_list(request):
