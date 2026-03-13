@@ -863,7 +863,7 @@ def etapasdelote_create(request):
         }
         form = etapasdeloteForm(initial=initial_data)
     
-    return render(request, 'sdcsemillas/etapasdelote_form.html', {'form': form,'modo':'crear'})
+    return render(request, 'sdcsemillas/etapasdelote_form.html', {'form': form,'modo    ':'crear'})
 
 def obtener_datos_lote(request):
     if request.method == 'POST':
@@ -891,7 +891,7 @@ def obtener_datos_lote(request):
             return JsonResponse(data)
 
         except lotes.DoesNotExist:
-            return JsonResponse({'error': 'Lote no encontrado'}, status=404)
+            return JsonResponse({'error': 'Lote no encontrado' }, status=404)
     else:
         return JsonResponse({'error': 'Método no permitido'}, status=405)
     
