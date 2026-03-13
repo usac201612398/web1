@@ -871,8 +871,8 @@ def obtener_datos_lote(request):
         codigo_lote = request.POST.get('codigo_lote') or json.loads(request.body).get('codigo_lote')
         codigo_lote = codigo_lote.strip()
         try:
-            lote = lotes.objects.get(id=int(codigo_lote))
-            variedad = variedades.objects.get(variedad_code=str(lote.variedad_code)).exclude(status='Anulado')
+            lote = lotes.objects.exclude(status='Anulado').get(id=int(codigo_lote))
+            variedad = variedades.objects.exclude(status='Anulado').get(variedad_code=str(lote.variedad_code))
 
             data = {
                 'codigo_lote': lote.id,
