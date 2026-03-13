@@ -107,6 +107,7 @@ class conteosemillas(models.Model):
     tipo_cultivo = models.CharField(max_length= 20, blank = True, null =  True)
     cantidad_frutos = models.IntegerField(blank = True, null = True)
     semillasxfruto = models.IntegerField(blank = True, null = True)
+    semillasxgramo = models.IntegerField(blank = True, null = True)
     prom_semillasxfruto = models.FloatField(blank = True, null = True)
     nsemana = models.IntegerField(blank = True, null = True)
     created = models.DateTimeField(auto_now_add=True, blank=True, null=True)

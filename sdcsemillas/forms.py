@@ -160,6 +160,7 @@ class conteosemillasForm(forms.ModelForm):
     genero = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'})) 
     cantidad_frutos = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
     semillasxfruto= forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
+    semillasxgramo= forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
     prom_semillasxfruto = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
     fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','type': 'date'}))
     estructura = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))  
@@ -170,7 +171,7 @@ class conteosemillasForm(forms.ModelForm):
     class Meta:
     
         model = conteosemillas
-        fields = ['codigo_lote','genero','codigo_empleado','operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','cantidad_frutos','semillasxfruto','prom_semillasxfruto','nsemana','fecha','estructura','status','clasificacion','observaciones']
+        fields = ['codigo_lote','genero','codigo_empleado','operario_name','supervisor_name','ubicacion_lote','apodo_variedad','tipo_cultivo','cantidad_frutos','semillasxfruto','semillasxgramo','prom_semillasxfruto','nsemana','fecha','estructura','status','clasificacion','observaciones']
     
     def __init__(self, *args, **kwargs):
 
@@ -182,6 +183,7 @@ class conteosemillasForm(forms.ModelForm):
         self.fields['observaciones'].required = False
         self.fields['codigo_empleado'].required = False
         self.fields['operario_name'].required = False
+        self.fields['semillasxgramo'].required = False
 
 class conteofrutosForm(forms.ModelForm):
 
