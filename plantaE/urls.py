@@ -32,7 +32,7 @@ urlpatterns = [
     path('ajax/obtener-nombre-usuario/', views.obtener_nombre_usuario, name='obtener_nombre_usuario'),
     path('ajax/obtener-fecha-invFruta/', views.obtenerfecha_invFruta, name='obtenerfecha_invFruta'),
     path('ajax/obtener-llave-recepcion/', views.obtener_llave_recepcion, name='obtener_llave_recepcion'),
-    path('ajax/load-ccalidadparam/', views.load_ccalidadparam, name='load_ccalidadparam'),
+
     path('ajax/guardar-plantilla/', views.guardar_plantilla, name='guardar_plantilla'),
     path('ajax/guardar-plantillaRio/', views.guardar_plantillaRio, name='guardar_plantillaRio'),
     path('ajax/guardar-plantillaValle/', views.guardar_plantillaValle, name='guardar_plantillaValle'),
@@ -125,7 +125,8 @@ urlpatterns = [
     path('ccalidad/<int:pk>/delete/', CcalidadDeleteView.as_view(), name='ccalidad_delete'),
     #Ajax de ccalidad
     path('ajax/load-ccalidadaux/', CcalidadUpdateAuxView.as_view(), name='load_ccalidad_update_aux'),
-
+    path('ajax/load-ccalidadparam/', LoadCcalidadParamView.as_view(), name='load_ccalidadparam'),
+    
     path("boletasFruta/reporterecepcion",views.boletas_reporterecepcion,name='boletasFruta_reporterecepcion'),
     path("boletasFruta/reportetraza",views.boletas_reportetraza,name='boletasFruta_reportetraza'),
     path("boletasFruta/reportetrazaexpo",views.boletas_reportetrazaexpo,name='boletasFruta_reportetrazaexpo'),

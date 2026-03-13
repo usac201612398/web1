@@ -5,9 +5,9 @@ from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.utils import timezone
 from django.contrib import messages
-
+from django.db.models import Sum
 # modelos
-from plantaE.models import Ccalidad, causasRechazo
+from plantaE.models import Ccalidad, causasRechazo, detallerec
 
 # formularios
 from plantaE.forms import ccalidadForm
@@ -79,7 +79,7 @@ class CcalidadUpdateAuxView(View):
             'causa_select': salidas.causarechazo,
             'causas': list(causa_rechazo)
         })
-
+        
 class CcalidadDeleteView(View):
 
     template_name = 'plantaE/ccalidad/ccalidad_confirm_delete.html'
@@ -98,6 +98,27 @@ class CcalidadDeleteView(View):
         messages.success(request, "Registro anulado correctamente.")
 
         return render(request, self.template_name, {'registros': salidas})
+
+class LoadCcalidadParamView(View):
+
+    def get(self, request, *args, **kwargs):
+        llave_recepcion = request.GET.get('category_id')
+
+        # Obtener recepciones distintas según criterio
+        datos = detallerec.objects.filter(
+            criterio=llave_recepcion
+        ).values('recepcion').distinct('recepcion')
+
+        # Sumar porcentaje de Ccalidad para esa llave
+        valor = Ccalidad.objects.filter(llave=llave_recepcion).aggregate(suma=Sum('porcentaje'))['suma']
+
+        if valor is not None:
+            valor = 1 - float(valor)
+        else:
+            valor = 1
+
+        return JsonResponse({'datos': list(datos), 'valor': valor})
+
 '''
 def ccalidad_list(request):
     today = timezone.localtime(timezone.now()).date()
