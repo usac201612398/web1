@@ -891,7 +891,7 @@ def obtener_datos_lote(request):
             return JsonResponse(data)
 
         except lotes.DoesNotExist:
-            return JsonResponse({'error': 'Lote no encontrado' }, status=404)
+            return JsonResponse({'error': 'Lote no encontrado' + f' {lote} Y {variedad}' }, status=404)
     else:
         return JsonResponse({'error': 'Método no permitido'}, status=405)
     
