@@ -866,35 +866,45 @@ def etapasdelote_create(request):
     return render(request, 'sdcsemillas/etapasdelote_form.html', {'form': form,'modo    ':'crear'})
 
 def obtener_datos_lote(request):
-    if request.method == 'POST':
-        # Asumiendo que recibes un JSON o form-urlencoded con 'codigo_lote'
-        codigo_lote = request.POST.get('codigo_lote') or json.loads(request.body).get('codigo_lote')
-        codigo_lote = codigo_lote.strip()
-        try:
-            lote = lotes.objects.get(id=int(codigo_lote))
-            variedad = variedades.objects.get(variedad_code=str(lote.variedad_code))
-
-            data = {
-                'codigo_lote': lote.id,
-                'codigo_variedad': variedad.variedad_code,
-                'pl': lote.lote_code,
-                'contrato': lote.harvest_code,
-                'apodo_variedad': lote.apodo_variedad,
-                'apodo_variedad': lote.apodo_variedad,
-                'tipo_cultivo': lote.cultivo,
-                'ubicacion_lote': lote.ubicación,
-                'estructura': lote.estructura,
-                'codigo_padre': variedad.cod_padre,
-                'codigo_madre': variedad.cod_madre,
-                'genero': lote.genero
-            }
-            return JsonResponse(data)
-
-        except lotes.DoesNotExist:
-            return JsonResponse({'error': 'Lote no encontrado' + f' {lote} Y {variedad}' }, status=404)
-    else:
+    if request.method != 'POST':
         return JsonResponse({'error': 'Método no permitido'}, status=405)
-    
+
+    try:
+        # Obtener código de lote
+        codigo_lote = request.POST.get('codigo_lote') or json.loads(request.body).get('codigo_lote')
+        codigo_lote = int(codigo_lote.strip())
+
+        # Buscar lote y variedad
+        lote = lotes.objects.get(id=codigo_lote)
+        variedad = variedades.objects.get(variedad_code=str(lote.variedad_code))
+
+        # Crear respuesta
+        data = {
+            'codigo_lote': lote.id,
+            'codigo_variedad': variedad.variedad_code,
+            'pl': lote.lote_code,
+            'contrato': lote.harvest_code,
+            'apodo_variedad': lote.apodo_variedad,
+            'tipo_cultivo': lote.cultivo,
+            'ubicacion_lote': getattr(lote, 'ubicacion', ''),  # sin acento
+            'estructura': lote.estructura,
+            'codigo_padre': variedad.cod_padre,
+            'codigo_madre': variedad.cod_madre,
+            'genero': lote.genero
+        }
+        return JsonResponse(data)
+
+    except lotes.DoesNotExist:
+        return JsonResponse({'error': 'Lote no encontrado'}, status=404)
+    except variedades.DoesNotExist:
+        return JsonResponse({'error': 'Variedad no encontrada'}, status=404)
+    except (ValueError, AttributeError, json.JSONDecodeError) as e:
+        # Esto captura errores de conversión o atributos faltantes
+        return JsonResponse({'error': 'Datos inválidos', 'detalle': str(e)}, status=400)
+    except Exception as e:
+        # Esto captura cualquier otro error que estaba generando 500
+        return JsonResponse({'error': 'Error interno del servidor', 'detalle': str(e)}, status=500)
+
 
 def obtener_semana_desde_polinizacion(request):
     if request.method == 'POST':
