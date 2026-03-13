@@ -31,17 +31,17 @@ def supervisiontomates_create(request):
     else:
         area = 'ALL'  # gerencial
 
-    return render(request, 'plantaE/supervisiontomates_formPlantilla.html',{
+    return render(request, 'plantaE/supervisioncultivos/supervisiontomates_formPlantilla.html',{
         'area_usuario': area,'user':user
     })
 
 def supervisionchiles_create(request):
 
-    return render(request, 'plantaE/supervisionchiles_formPlantilla.html')
+    return render(request, 'plantaE/supervisioncultivos/supervisionchiles_formPlantilla.html')
 
 def supervision_create(request):
 
-    return render(request, 'plantaE/supervision_formPlantilla.html')
+    return render(request, 'plantaE/supervisioncultivos/supervision_formPlantilla.html')
 
 def supervision_delete(request, pk):
 
@@ -51,11 +51,11 @@ def supervision_delete(request, pk):
         salidas.status = 'Anulado'
         salidas.save() 
         
-        return render(request, 'plantaE/supervision_confirm_delete.html', {
+        return render(request, 'plantaE/supervisioncultivos/supervision_confirm_delete.html', {
             'alert_message': "El registro fue anulado correctamente.",
             'redirect_url': reverse('supervision_list')
         })
-    return render(request, 'plantaE/supervision_confirm_delete.html', {'registros': salidas})
+    return render(request, 'plantaE/supervisioncultivos/supervision_confirm_delete.html', {'registros': salidas})
 
 def supervision_list(request):
     #today = timezone.now().date()
@@ -79,7 +79,7 @@ def supervision_list(request):
 
     
 
-    return render(request, 'plantaE/supervision_list.html', {'registros': salidas})
+    return render(request, 'plantaE/supervisioncultivos/supervision_list.html', {'registros': salidas})
 
 def supervisionproduccion_list(request):
 
@@ -121,7 +121,7 @@ def supervisionproduccion_list(request):
     if area != 'ALL':
         lotes = lotes.filter(finca=area)
 
-    return render(request, 'plantaE/supervisionproduccion_list.html', {
+    return render(request, 'plantaE/supervisioncultivos/supervisionproduccion_list.html', {
         'lotes': lotes,'area_usuario': area,'user':user
     })
 
@@ -134,7 +134,7 @@ def reporte_semanal_view(request):
         area = 'VALLE'
     else:
         area = 'ALL'  # gerencial
-    return render(request, 'plantaE/supervisionproduccionreporte.html', {'area_usuario': area,'user':user})
+    return render(request, 'plantaE/supervisioncultivos/supervisionproduccionreporte.html', {'area_usuario': area,'user':user})
 
 def reporte_semanal_seguimiento(request):
     user = request.user.username
@@ -146,7 +146,7 @@ def reporte_semanal_seguimiento(request):
     else:
         area = 'ALL'  # gerencial
 
-    return render(request, 'plantaE/supervisionproduccion_seguimiento.html', {'area_usuario': area,'user':user})
+    return render(request, 'plantaE/supervisioncultivos/supervisionproduccion_seguimiento.html', {'area_usuario': area,'user':user})
 
 def evaluar_deshoje(promedio, ref):
         diff = abs(promedio - ref)
@@ -438,12 +438,12 @@ def supervisionproduccion_delete(request, pk):
         count = registros.update(status='Anulado')
         
         
-        return render(request, 'plantaE/supervisionproduccion_confirm_delete.html', {
+        return render(request, 'plantaE/supervisioncultivos/supervisionproduccion_confirm_delete.html', {
             'alert_message': f'Se anularon {count} registros correctamente',
             'redirect_url': reverse('supervisionproduccion_list')
         })
     
-    return render(request, 'plantaE/supervisionproduccion_confirm_delete.html', {'registros': salidas})
+    return render(request, 'plantaE/supervisioncultivos/supervisionproduccion_confirm_delete.html', {'registros': salidas})
 
 def supervisionproduccion_detalle(request, fecha, cultivo, estructura, zona,finca):
 
@@ -459,7 +459,7 @@ def supervisionproduccion_detalle(request, fecha, cultivo, estructura, zona,finc
     for r in registros:
         muestras[r.muestra].append(r)
 
-    return render(request, 'plantaE/supervisionproduccion_detalle.html', {
+    return render(request, 'plantaE/supervisioncultivos/supervisionproduccion_detalle.html', {
         'fecha': fecha,
         'cultivo': cultivo,
         'estructura': estructura,
