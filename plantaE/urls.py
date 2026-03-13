@@ -88,11 +88,11 @@ urlpatterns = [
 
     #Urls de boletas
     path("boletasFruta",BoletasListView.as_view(),name='boletasFruta_list'),
-    path('boletasFruta/<int:pk>/edit/', BoletasListProductorView.as_view(), name='boletas_update'),
+    path('boletasFruta/<int:pk>/edit/', BoletasUpdateView.as_view(), name='boletas_update'),
     path('boletasFruta/<int:pk>/', BoletasDetailView.as_view(), name='boletas_detail'),
     path('boletasFruta/<int:pk>/delete/', BoletasDeleteView.as_view(), name='boletas_delete'),
     path('boletasFruta/<int:pk>/devolver/', BoletasDevolverView.as_view(), name='boletas_devolver'),
-    path("boletasFruta/productor",BoletasListView.as_view(),name='boletasFruta_listproductor'),
+    path("boletasFruta/productor",BoletasListProductorView.as_view(),name='boletasFruta_listproductor'),
     
     path("boletasFruta/reporterecepcion",views.boletas_reporterecepcion,name='boletasFruta_reporterecepcion'),
     path("boletasFruta/reportetraza",views.boletas_reportetraza,name='boletasFruta_reportetraza'),
