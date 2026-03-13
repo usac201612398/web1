@@ -5,7 +5,7 @@ from .view.recepciones_views import *
 from .view.actpeso_views import *
 from .view.itemsenvios_views import *
 from .view.itemsprodterm_views import *
-from .view.ccalidad import *
+from .view.ccalidad_views import *
 #from app1.views import *
 
 app_main ="plantaE"
