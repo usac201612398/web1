@@ -6,3 +6,4 @@ from .itemsprodterm_views import *
 from .ccalidad_views import *
 from .envioslocal_views import *
 from .contenedores_views import *
+from .controlcajas_views import *

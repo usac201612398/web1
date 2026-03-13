@@ -8,6 +8,7 @@ from .view.itemsprodterm_views import *
 from .view.ccalidad_views import *
 from .view.envioslocal_views import *
 from .view.contenedores_views import *
+from view.controlcajas_views import *
 #from app1.views import *
 
 app_main ="plantaE"
@@ -140,7 +141,15 @@ urlpatterns = [
     path('contenedores/new/', ContenedoresCreateView.as_view(), name='contenedores_create'),
     path('contenedores/<int:pk>/edit/', ContenedoresUpdateView.as_view(), name='contenedores_update'),
     path('contenedores/<int:pk>/delete/',ContenedoresDeleteView.as_view(), name='contenedores_delete'),
-    
+
+    #Urls de controlcajas
+    path("controlcajasmanual",ControlCajasListView.as_view(),name='controlcajas_list'),
+    path("controlcajasmanualinventario",ControlCajasInventarioView.as_view(),name='controlcajas_inventario'),
+    path('controlcajasmanual/new/', ControlCajasCreateView.as_view(), name='controlcajas_create'),
+    path('controlcajasmanual/<int:pk>/edit/', ControlCajasUpdateView.as_view(), name='controlcajas_update'),
+    path('controlcajasmanual/<int:pk>/delete/', ControlCajasDeleteView.as_view(), name='controlcajas_delete'),
+    path('ajax/obtener-item/', ObtenerItemsRelacionadosView().as_view(), name='obtener_items'),
+
     path("boletasFruta/reporterecepcion",views.boletas_reporterecepcion,name='boletasFruta_reporterecepcion'),
     path("boletasFruta/reportetraza",views.boletas_reportetraza,name='boletasFruta_reportetraza'),
     path("boletasFruta/reportetrazaexpo",views.boletas_reportetrazaexpo,name='boletasFruta_reportetrazaexpo'),
@@ -238,12 +247,7 @@ urlpatterns = [
     path('ajax/guardar-pedido/', views.guardar_pedido, name='guardar_pedido'),
     path('pedidos/<int:pk>/edit/', views.pedidos_update, name='pedidos_update'),
 
-    path("controlcajasmanual",views.controlcajas_list,name='controlcajas_list'),
-    path("controlcajasmanualinventario",views.controlcajas_inventario,name='controlcajas_inventario'),
-    path('controlcajasmanual/new/', views.controlcajas_create, name='controlcajas_create'),
-    path('controlcajasmanual/<int:pk>/edit/', views.controlcajas_update, name='controlcajas_update'),
-    path('controlcajasmanual/<int:pk>/delete/', views.controlcajas_delete, name='controlcajas_delete'),
-    path('ajax/obtener-item/', views.obtener_items_relacionados, name='obtener_items'),
+    
 
 ]
 
