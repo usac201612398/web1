@@ -14,6 +14,11 @@ from .view.supervisioncultivos_views import *
 from .view.salidasfruta_views import *
 from .view.cargacontenedor_views import *
 from .view.inventarioprodterm_views import *
+from .view.acumfruta_views import *
+from .view.reportetecnicos_views import *
+from .view.reportegerencial_views import *
+from .view.home_views import *
+
 #from app1.views import *
 
 app_main ="plantaE"
@@ -21,12 +26,12 @@ app_main ="plantaE"
 urlpatterns = [
 #    path("homepage/", views.homepage, name="homepage"),
 #    path('logout/', views.logout_view, name='logout'),
+
+    #Urls de home
     path("",views.plantaEhomepage,name='plantaE_home'),
     path("gerencial/",views.plantaEhomepageger,name='plantaE_homeger'),
 
-    path('mostrarvascula/', views.vascula_monitor, name='sensor_monitor'),
-    path('exportar_excel/', views.exportar_excel, name='exportar_excel'),
-    
+    #Urls de ajax
     path('ajax/load-dataUsuario/', views.load_dataUsuario, name='load_dataUsuario'),
     path('ajax/load-dataUsuario2/', views.load_dataUsuario2, name='load_dataUsuario2'),
     path('ajax/load-dataUsuario3/', views.load_dataUsuario3, name='load_dataUsuario3'),
@@ -36,48 +41,19 @@ urlpatterns = [
     path('ajax/load-dataUsuario7/', views.load_dataUsuario7, name='load_dataUsuario7'),
     path('ajax/load-dataUsuario8/', views.load_dataUsuario8, name='load_dataUsuario8'),
     path('ajax/load-dataUsuario9/', views.load_dataUsuario9, name='load_dataUsuario9'),
-
     path('ajax/obtener-nombre-usuario/', views.obtener_nombre_usuario, name='obtener_nombre_usuario'),
     path('ajax/obtener-fecha-invFruta/', views.obtenerfecha_invFruta, name='obtenerfecha_invFruta'),
-    
-
     path('ajax/guardar-plantilla/', views.guardar_plantilla, name='guardar_plantilla'),
     path('ajax/guardar-plantillaRio/', views.guardar_plantillaRio, name='guardar_plantillaRio'),
     path('ajax/guardar-plantillaValle/', views.guardar_plantillaValle, name='guardar_plantillaValle'),
     path('ajax/load-inventarioProdparam/', views.load_inventarioProdparam, name='load_inventarioProdparam'),
-
-    path('salidasFruta/consultaaprovechamientos', views.poraprovechamientos, name='salidasFruta_aprovechamietos'),
-    path('salidasFruta/consultaaprovechamientosger', views.poraprovechamientosger, name='salidasFruta_aprovechamietosger'),
-    path('salidasFruta/consultaaprovechamientosempger', views.poraprovechamientosempger, name='salidasFruta_aprovechamietosempger'),
-    path('salidasFruta/consultaaprovechamientosemp', views.poraprovechamientosemp, name='salidasFruta_poraprovechamietosemp'),
-    path('salidasFruta/consultaaprovechamientosempgersem', views.kgm2_semanal_aprovechamiento, name='salidasFruta_aprovechamietosempgersem'),
-   
-    path("acumFrutaView",views.acumFruta_list2,name='acumFruta_list2'),
-    path("acumFruta",views.acumFruta_list,name='acumFruta_list'),
-    path("acumFruta/Valle",views.acumFruta_list,name='acumFruta_listValle'),
-    path('acumFruta/<int:pk>/', views.acumFruta_detail, name='acumFruta_detail'),
-    path('acumFruta2/<int:pk>/', views.acumFruta_detail2, name='acumFruta_detail2'),
-    path('acumFruta/new/', views.acumFruta_create, name='acumFruta_create'),
-    path('acumFruta/<int:pk>/edit/', views.acumFruta_update, name='acumFruta_update'),
-    path('acumFruta/<int:pk>/delete/', views.acumFruta_delete, name='acumFruta_delete'),
-    path('acumFruta2/<int:pk>/delete/', views.acumFruta_delete2, name='acumFruta_delete2'),
-    path('acumFruta/consulta/', views.acumFruta_consulta, name='acumFruta_consulta'),
-    path('acumFruta/consultaValle/', views.acumFruta_consultaValle, name='acumFruta_consultaValle'),
+    path('api/ordenes/', views.get_ordenes_por_finca, name='api_ordenes_por_finca'),
+    path('api/estructuras/', views.get_estructuras_por_orden, name='api_estructuras_por_orden'),
+    path('api/variedad/', views.get_variedades_por_estructura, name='api_variedades_por_estructura'),
+    path('api/ordenes2/', views.get_ordenes_por_finca2, name='api_ordenes_por_finca2'),
+    path('api/estructuras2/', views.get_estructuras_por_orden2, name='api_estructuras_por_orden2'),
+    path('api/variedad2/', views.get_variedades_por_estructura2, name='api_variedades_por_estructura2'),
     
-    path("recepcionesFruta/process",views.procesarrecepcion,name='recepcionesFruta_process'),
-    path("inventarioProd/process/",views.procesarinvprodconten,name='inventarioProd_contprocess'),
-    path("inventarioProd/processv2/",views.procesarinvprodcontenv2,name='inventarioProd_contprocessv2'),
-    
-    path("recepcionesFruta/reporteAcum",views.recepciones_reporteAcum,name='recepcionesFruta_reporteAcum'),
-    path("recepcionesFruta/reporteAcumKgm2Orden",views.recepciones_reporteAcumKgm2Orden,name='recepcionesFruta_reporteAcumKgm2Orden'),
-    path("recepcionesFruta/reporteAcumKgm2Estruc",views.recepciones_reporteAcumKgm2Estruc,name='recepcionesFruta_reporteAcumKgm2Estruc'),  
-    path("recepcionesFruta/reporteAcumKgm2Variedad",views.recepciones_reporteAcumKgm2Variedad,name='recepcionesFruta_reporteAcumKgm2Variedad'),
-    path("salidasFrutaPublic/reporteAcum/semanal",views.recepciones_reporteAcumSemPublic,name='salidasFrutaPublic_reporteAcumSem'),
-    path("recepcionesFruta/reporteAcum/semanal",views.recepciones_reporteAcumSem,name='recepcionesFruta_reporteAcumSem'),
-    path("recepcionesFruta/reporteAcum/grafico",views.recepciones_reportecurva,name='recepcionesFruta_reportecurva'),
-    path("salidasFrutaPublic/graficoPublic",views.recepciones_reportecurva2,name='recepcionesFruta_reportecurva2'),
-    path("recepcionesFruta/reporteAcum/loadgrafico",views.graficas,name='load_grafico'),
-
     #Urls de recepciones
     path('recepcionesFruta',RecepcionesListView.as_view(),name='recepcionesFruta_list'),
     path('recepcionesFruta/<int:pk>/delete/', RecepcionesFrutaDeleteView.as_view(), name='recepcionesFruta_delete'),
@@ -168,7 +144,6 @@ urlpatterns = [
     path('supervisionproduccion/reporte-semanal/detalleseguimiento',views.reporte_seguimiento_api,name='reporte_seguimiento_api'),
 
     #Urls de salidasfruta
-    
     path('salidasFruta/<int:pk>/', views.article_detail, name='salidasFruta_detail'),
     path('salidasFruta2/<int:pk>/', views.salidasFruta_detail2, name='salidasFruta_detail2'),
     path("salidasFruta/cuadre",views.cuadrar_RioDia,name='salidasFruta_cuadre'),
@@ -193,6 +168,7 @@ urlpatterns = [
     path('inventarioProd/new/', views.inventarioProd_create, name='inventarioProd_create'),
     path('inventarioProd/<int:pk>/edit/', views.inventarioProd_update, name='inventarioProd_update'),
     path('inventarioProd/<int:pk>/delete/', views.inventarioProd_delete, name='inventarioProd_delete'),
+    path('inventarioProd/reporteInv', views.reporteInventario, name='reporte_inventario'),
 
     #Urls de cargacontenedor
     path("inventarioProd/cargacontenedor",views.cargacontenedores_list,name='inventarioProd_contenlist'),
@@ -205,9 +181,23 @@ urlpatterns = [
     path('ajax/load-contenedores/', views.load_contenedores, name='load_contenedores'),
     path('generate_packing_list_pdf/', views.generate_packing_list_pdf, name='generate_packing_list_pdf'),
     path('generate_packing_list_pdf2/', views.generate_packing_list_pdf2, name='generate_packing_list_pdf2'),
-    
+    path("inventarioProd/process/",views.procesarinvprodconten,name='inventarioProd_contprocess'),
+    path("inventarioProd/processv2/",views.procesarinvprodcontenv2,name='inventarioProd_contprocessv2'),
 
+    #Urls de Acumfruta
+    path("acumFrutaView",views.acumFruta_list2,name='acumFruta_list2'),
+    path("acumFruta",views.acumFruta_list,name='acumFruta_list'),
+    path("acumFruta/Valle",views.acumFruta_list,name='acumFruta_listValle'),
+    path('acumFruta/<int:pk>/', views.acumFruta_detail, name='acumFruta_detail'),
+    path('acumFruta2/<int:pk>/', views.acumFruta_detail2, name='acumFruta_detail2'),
+    path('acumFruta/new/', views.acumFruta_create, name='acumFruta_create'),
+    path('acumFruta/<int:pk>/edit/', views.acumFruta_update, name='acumFruta_update'),
+    path('acumFruta/<int:pk>/delete/', views.acumFruta_delete, name='acumFruta_delete'),
+    path('acumFruta2/<int:pk>/delete/', views.acumFruta_delete2, name='acumFruta_delete2'),
+    path('acumFruta/consulta/', views.acumFruta_consulta, name='acumFruta_consulta'),
+    path('acumFruta/consultaValle/', views.acumFruta_consultaValle, name='acumFruta_consultaValle'),
 
+    #Urls de reportes gerencial
     path("boletasFruta/reporterecepcion",views.boletas_reporterecepcion,name='boletasFruta_reporterecepcion'),
     path("boletasFruta/reportetraza",views.boletas_reportetraza,name='boletasFruta_reportetraza'),
     path("boletasFruta/reportetrazaexpo",views.boletas_reportetrazaexpo,name='boletasFruta_reportetrazaexpo'),
@@ -216,36 +206,39 @@ urlpatterns = [
     path("boletasFruta/constanciatraza",views.boletas_constanciatraza,name='boletasFruta_constanciatraza'),
     path("boletasFruta/constanciatrazaexpo",views.boletas_constanciatrazarexpo,name='boletasFruta_constanciatrazaexpo'),
     path("boletasFruta/constanciarecepcion",views.boletas_constanciarecepcion,name='boletasFruta_constanciarecepcion'),
-
     
     path("inventarioProd/inventariogeneral",views.inventariogeneral_list,name='inventarioProd_inventariogeneral'),
     path("inventarioProd/inventariogeneralger",views.inventariogeneralger_list,name='inventarioProd_inventariogeneralger'),
     path("gerencial/reportedemermas",views.reporte_mermas_view,name='gerencial_reportedemermas'),
     path("gerencial/graficocontenedores",views.contenedores_grafico_view,name='gerencial_graficocontenedores'),
     path("inventarioProd/inventariogeneralfruta",views.inventariogeneralfruta_list,name='inventarioProd_inventariogeneralfruta'),
-    path("inventarioProd/aprovechamientos",views.aprovechamientos,name='inventarioProd_aprovechamientos'),
-    path('inventarioProd/reporteInv', views.reporteInventario, name='reporte_inventario'),
     path('inventarioProd/reportesemanalprodterm_pivot', views.semanalprodterm_pivot, name='reporte_reportesemanalprodterm_pivot'),
-    path('inventarioProd/reportesemanalprodterm_pivot_productor', views.semanalprodterm_pivot_productor, name='reporte_reportesemanalprodterm_pivot_productor'),
-    
-    
-    
-    path('escanearbarras/', views.escanearbarras, name='escanearbarras'),
+    path('reporte-pivote/', views.reporte_tabla_pivote, name='reporte_tabla_pivote'),
     path('dashboard/', views.dashboard_acumfruta, name='dashboard_acumfruta'),
     path('dashboardkgxm2/', views.dashboard_acumfrutakgxm2, name='dashboard_acumfrutakgxm2'),
+    path('salidasFruta/consultaaprovechamientos', views.poraprovechamientos, name='salidasFruta_aprovechamietos'),
+    path('salidasFruta/consultaaprovechamientosger', views.poraprovechamientosger, name='salidasFruta_aprovechamietosger'),
+    path('salidasFruta/consultaaprovechamientosempger', views.poraprovechamientosempger, name='salidasFruta_aprovechamietosempger'),
+    path('salidasFruta/consultaaprovechamientosemp', views.poraprovechamientosemp, name='salidasFruta_poraprovechamietosemp'),
+    path('salidasFruta/consultaaprovechamientosempgersem', views.kgm2_semanal_aprovechamiento, name='salidasFruta_aprovechamietosempgersem'),
+    path("recepcionesFruta/reporteAcum/loadgrafico",views.graficas,name='load_grafico'),
+
+    #Urls de reportetecnicos
+    path('exportar_excel/', views.exportar_excel, name='exportar_excel'),
     path('dashboard/tecnicos', views.dashboard_tecnicos, name='dashboard_acumfruta2'),
-    path('api/ordenes/', views.get_ordenes_por_finca, name='api_ordenes_por_finca'),
-    path('api/estructuras/', views.get_estructuras_por_orden, name='api_estructuras_por_orden'),
-    path('api/variedad/', views.get_variedades_por_estructura, name='api_variedades_por_estructura'),
-
-    path('api/ordenes2/', views.get_ordenes_por_finca2, name='api_ordenes_por_finca2'),
-    path('api/estructuras2/', views.get_estructuras_por_orden2, name='api_estructuras_por_orden2'),
-    path('api/variedad2/', views.get_variedades_por_estructura2, name='api_variedades_por_estructura2'),
-    
+    path('inventarioProd/reportesemanalprodterm_pivot_productor', views.semanalprodterm_pivot_productor, name='reporte_reportesemanalprodterm_pivot_productor'),
+    path("recepcionesFruta/reporteAcum",views.recepciones_reporteAcum,name='recepcionesFruta_reporteAcum'),
+    path("recepcionesFruta/reporteAcumKgm2Orden",views.recepciones_reporteAcumKgm2Orden,name='recepcionesFruta_reporteAcumKgm2Orden'),
+    path("recepcionesFruta/reporteAcumKgm2Estruc",views.recepciones_reporteAcumKgm2Estruc,name='recepcionesFruta_reporteAcumKgm2Estruc'),  
+    path("recepcionesFruta/reporteAcumKgm2Variedad",views.recepciones_reporteAcumKgm2Variedad,name='recepcionesFruta_reporteAcumKgm2Variedad'),
+    path("recepcionesFruta/reporteAcum/semanal",views.recepciones_reporteAcumSem,name='recepcionesFruta_reporteAcumSem'),
+    path("salidasFrutaPublic/reporteAcum/semanal",views.recepciones_reporteAcumSemPublic,name='salidasFrutaPublic_reporteAcumSem'),
+    path("recepcionesFruta/reporteAcum/grafico",views.recepciones_reportecurva,name='recepcionesFruta_reportecurva'),
+    path("salidasFrutaPublic/graficoPublic",views.recepciones_reportecurva2,name='recepcionesFruta_reportecurva2'),
     path('reporte-pivote/tecnicos', views.reporte_tabla_pivote2, name='reporte_tabla_pivote2'),
-    path('reporte-pivote/', views.reporte_tabla_pivote, name='reporte_tabla_pivote'),
     path('reporte-pivote/produccionsem', views.reporte_tabla_pivote_produccionsem, name='reporte_tabla_pivote_produccionsem'),
-
+    path("inventarioProd/aprovechamientos",views.aprovechamientos,name='inventarioProd_aprovechamientos'),
+    
 ]
 
 '''

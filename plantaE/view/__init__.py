@@ -12,3 +12,7 @@ from .supervisioncultivos_views import *
 from .salidasfruta_views import *
 from .inventarioprodterm_views import *
 from .cargacontenedor_views import *
+from .acumfruta_views import *
+from .reportegerencial_views import *
+from .reportetecnicos_views import *
+from .home_views import *
