@@ -23,7 +23,7 @@ from django.db.models.functions import ExtractWeek, ExtractYear, ExtractIsoYear,
 from django.views.decorators.http import require_GET
 from django.urls import reverse
 from django.db import transaction
-from .view import *
+#from .view import *
 from django.db.models.functions import TruncDate
 
 def boletas_constanciarecepcion(request):
