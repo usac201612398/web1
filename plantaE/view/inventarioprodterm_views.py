@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.utils import timezone
 from django.urls import reverse
 
-from planaE.models import (
+from plantaE.models import (
     inventarioProdTerm,
     inventarioProdTermAux,
     productoTerm,
