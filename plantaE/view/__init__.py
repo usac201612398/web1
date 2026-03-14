@@ -9,4 +9,4 @@ from .contenedores_views import *
 from .controlcajas_views import *
 from .pedidoscarreta_views import *
 from .supervisioncultivos_views import *
-from .salidasFruta_views import *
+from .salidasfruta_views import *

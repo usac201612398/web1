@@ -27,7 +27,7 @@ def article_list(request):
     salidas = salidasFruta.objects.filter(fecha=today,correo=nombre_usuario, status__isnull=True)
     salidas = salidas.order_by('-created_at')
     
-    return render(request, 'plantaE/salidasFruta_list.html', {'registros': salidas})
+    return render(request, 'plantaE/salidasfruta/salidasFruta_list.html', {'registros': salidas})
 
 def salidasFruta_list(request):
     today = timezone.localtime(timezone.now()).date()
@@ -38,7 +38,7 @@ def salidasFruta_list(request):
         Q(fecha=today) | Q(status__isnull=True) | Q(status='')
     ).order_by('-created_at')
 
-    return render(request, 'plantaE/salidasFruta_list2.html', {'registros': salidas})
+    return render(request, 'plantaE/salidasfruta/salidasFruta_list2.html', {'registros': salidas})
 
 def article_listValle(request):
     
@@ -47,11 +47,11 @@ def article_listValle(request):
     salidas = salidasFruta.objects.filter(fecha=today,correo=nombre_usuario, status__isnull=True)
     salidas = salidas.order_by('-created_at')
     
-    return render(request, 'plantaE/salidasFruta_listValle.html', {'registros': salidas})
+    return render(request, 'plantaE/salidasfruta/salidasFruta_listValle.html', {'registros': salidas})
 
 def article_detail(request, pk):
     salidas = get_object_or_404(salidasFruta, pk=pk)
-    return render(request, 'plantaE/salidasFruta_detail.html', {'registros': salidas})
+    return render(request, 'plantaE/salidasfruta/salidasFruta_detail.html', {'registros': salidas})
 
 def guardar_plantilla(request):
     data = json.loads(request.body)
@@ -155,7 +155,7 @@ def cuadrar_RioDia(request):
         registros_finales2 = df_agrupado.to_dict(orient='records')
         return JsonResponse({'datos': list(registros_finales),'opcion1':opcion1,'opcion2':opcion2,'resumen':registros_finales2}, safe=False)
 
-    return render(request, 'plantaE/salidasFruta_cuadre.html', {'registros': registros_finales, 'registros2': registros_finales2})
+    return render(request, 'plantaE/salidasfruta/salidasFruta_cuadre.html', {'registros': registros_finales, 'registros2': registros_finales2})
 
 def cuadrar_ValleDia(request):
     
@@ -233,7 +233,7 @@ def cuadrar_ValleDia(request):
         registros_finales2 = df_agrupado.to_dict(orient='records')
         return JsonResponse({'datos': list(registros_finales),'opcion1':opcion1,'opcion2':opcion2,'resumen':registros_finales2}, safe=False)
 
-    return render(request, 'plantaE/salidasFruta_cuadreValle.html', {'registros': registros_finales, 'registros2': registros_finales2})
+    return render(request, 'plantaE/salidasfruta/salidasFruta_cuadreValle.html', {'registros': registros_finales, 'registros2': registros_finales2})
 
 #API que crea registros para salidasFruta y acumFruta en cada viaje.
 def guardar_plantillaValle(request):
@@ -332,7 +332,7 @@ def article_create_plantilla(request):
         'encargado': list(datos)[0]['encargado']
     }
     
-    return render(request, 'plantaE/salidasFruta_envio.html',context)
+    return render(request, 'plantaE/salidasfruta/salidasFruta_envio.html',context)
 
 def article_create_plantillaValle(request):
     
@@ -374,7 +374,7 @@ def article_create_plantillaValle(request):
         'encargado': list(datos)[0]['encargado']
     }
     
-    return render(request, 'plantaE/salidasFruta_envioValle.html',context)
+    return render(request, 'plantaE/salidasfruta/salidasFruta_envioValle.html',context)
 
 def article_create(request):
     if request.method == 'POST':
@@ -397,7 +397,7 @@ def article_create(request):
             'fecha': hoy
         }
         form = salidasFrutaForm(initial=initial_data)
-    return render(request, 'plantaE/salidasFruta_form.html', {'form': form})
+    return render(request, 'plantaE/salidasfruta/salidasFruta_form.html', {'form': form})
 
 def get_correos_por_encargado(request):
     encargado = request.GET.get('encargado')
@@ -446,7 +446,7 @@ def article_formPlantilla(request):
         'encargado': list(datos)[0]['encargado']
     }
     
-    return render(request, 'plantaE/salidasFruta_formplantilla.html',context)
+    return render(request, 'plantaE/salidasfruta/salidasFruta_formplantilla.html',context)
 
 def article_update(request, pk):
     salidas = get_object_or_404(salidasFruta, pk=pk)
@@ -457,7 +457,7 @@ def article_update(request, pk):
             return redirect('salidasFruta_list2')
     else:
         form = salidasFrutaForm(instance=salidas)
-    return render(request, 'plantaE/salidasFruta_form.html', {'form': form})
+    return render(request, 'plantaE/salidasfruta/salidasFruta_form.html', {'form': form})
 
 def article_delete(request, pk):
     salidas = get_object_or_404(salidasFruta, pk=pk)
@@ -469,7 +469,7 @@ def article_delete(request, pk):
 
     # Si ya tiene recepción, mostrar alerta y redireccionar
     if tiene_recepcion:
-        return render(request, 'plantaE/salidasFruta_confirm_delete.html', {
+        return render(request, 'plantaE/salidasfruta/salidasFruta_confirm_delete.html', {
             'alert_message': "No se puede anular este viaje porque ya tiene una recepción asignada. Anule la recepción primero.",
             'redirect_url': reverse('salidasFruta_list')
         })
@@ -491,7 +491,7 @@ def article_delete(request, pk):
             'alert_message': "El registro fue anulado correctamente.",
             'redirect_url': reverse('salidasFruta_list')
         })
-    return render(request, 'plantaE/salidasFruta_confirm_delete.html', {'registros': salidas})
+    return render(request, 'plantaE/salidasfruta/salidasFruta_confirm_delete.html', {'registros': salidas})
 
 def article_delete2(request, pk):
     salidas = get_object_or_404(salidasFruta, pk=pk)
@@ -504,7 +504,7 @@ def article_delete2(request, pk):
 
     # Si ya tiene recepción, mostrar alerta y redireccionar
     if tiene_recepcion:
-        return render(request, 'plantaE/salidasFruta_confirm_delete2.html', {
+        return render(request, 'plantaE/salidasfruta/salidasFruta_confirm_delete2.html', {
             'alert_message': "No se puede anular este viaje porque ya tiene una recepción asignada. Anule la recepción primero.",
             'redirect_url': reverse('salidasFruta_list2')
         })
@@ -525,13 +525,13 @@ def article_delete2(request, pk):
             status__isnull=True
         ).update(status='Anulado')
 
-        return render(request, 'plantaE/salidasFruta_confirm_delete2.html', {
+        return render(request, 'plantaE/salidasfruta/salidasFruta_confirm_delete2.html', {
             'alert_message': "El registro fue anulado correctamente.",
             'redirect_url': reverse('salidasFruta_list2')
         })
 
     # Si no hay recepción y aún no es POST, mostrar confirmación normal
-    return render(request, 'plantaE/salidasFruta_confirm_delete2.html', {
+    return render(request, 'plantaE/salidasfruta/salidasFruta_confirm_delete2.html', {
         'registros': salidas
     })
 
@@ -546,7 +546,7 @@ def article_deleteValle(request, pk):
     )
 
     if tiene_recepcion:
-        return render(request, 'plantaE/salidasFruta_confirm_deleteValle.html', {
+        return render(request, 'plantaE/salidasfruta/salidasFruta_confirm_deleteValle.html', {
             'alert_message': "No se puede anular este viaje porque ya tiene una recepción asignada. Anule la recepción primero.",
             'redirect_url': reverse('salidasFruta_listValle')
         })
@@ -564,7 +564,7 @@ def article_deleteValle(request, pk):
                 nsalidafruta=salidas.id
             ).exclude(status='Anulado').update(status='Anulado')
 
-        return render(request, 'plantaE/salidasFruta_confirm_deleteValle.html', {
+        return render(request, 'plantaE/salidasfruta/salidasFruta_confirm_deleteValle.html', {
             'alert_message': "El registro fue anulado correctamente.",
             'redirect_url': reverse('salidasFruta_listValle')
         })
@@ -573,5 +573,5 @@ def article_deleteValle(request, pk):
 
 def salidasFruta_detail2(request, pk):
     salidas = get_object_or_404(salidasFruta, pk=pk)
-    return render(request, 'plantaE/salidasFruta_detail2.html', {'registros': salidas})
+    return render(request, 'plantaE/salidasfruta/salidasFruta_detail2.html', {'registros': salidas})
 
