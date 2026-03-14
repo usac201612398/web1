@@ -18,11 +18,11 @@ def inventarioProd_list(request):
     today = timezone.localtime(timezone.now()).date()
     #salidas = Recepciones.objects.filter(fecha=today)
     salidas = inventarioProdTerm.objects.filter(fecha=today,categoria="Exportación").exclude(status='Anulado')
-    return render(request, 'plantaE/inventarioprodterm/inventarioProd_list.html', {'registros': salidas})
+    return render(request, 'plantaE/inventarioProdTerm/inventarioProd_list.html', {'registros': salidas})
 
 def inventarioProd_detail(request, pk):
     salidas = get_object_or_404(inventarioProdTerm, pk=pk)
-    return render(request, 'plantaE/inventarioprodterm/inventarioProd_detail.html', {'registros': salidas})
+    return render(request, 'plantaE/inventarioProdTerm/inventarioProd_detail.html', {'registros': salidas})
 
 def inventarioProd_grabarplantilla(request):
     data = json.loads(request.body)
@@ -93,7 +93,7 @@ def inventarioProd_create(request):
         # Filtra tus datos según la opción seleccionada
         datos = productoTerm.objects.filter(cultivo=opcion1,categoria=opcion2).values('itemsapcode','itemsapname','calidad1')  # Ajusta los campos
         return JsonResponse({'datos': list(datos),'opcion1':opcion1,'opcion2':opcion2}, safe=False)
-    return render(request, 'plantaE/inventarioprodterm/inventarioProd_formPlantilla.html')
+    return render(request, 'plantaE/inventarioProdTerm/inventarioProd_formPlantilla.html')
 
 def inventarioProd_delete(request, pk):
     salidas = get_object_or_404(inventarioProdTerm, pk=pk)
@@ -101,7 +101,7 @@ def inventarioProd_delete(request, pk):
 
     # Si tiene movimientos asociados, no se puede anular
     if salidasaux.exists():
-        return render(request, 'plantaE/inventarioprodterm/inventarioProd_confirm_delete.html', {
+        return render(request, 'plantaE/inventarioProdTerm/inventarioProd_confirm_delete.html', {
             'registros': salidas,
             'alert_message': "No se puede anular el registro porque tiene movimientos asociados.",
             'redirect_url': reverse('inventarioProd_list')
@@ -112,13 +112,13 @@ def inventarioProd_delete(request, pk):
         salidas.status3 = 'Anulado'
         salidas.save()
 
-        return render(request, 'plantaE/inventarioprodterm/inventarioProd_confirm_delete.html', {
+        return render(request, 'plantaE/inventarioProdTerm/inventarioProd_confirm_delete.html', {
             'registros': salidas,
             'alert_message': "Registro anulado correctamente.",
             'redirect_url': reverse('inventarioProd_list')
         })
 
-    return render(request, 'plantaE/inventarioprodterm/inventarioProd_confirm_delete.html', {'registros': salidas})
+    return render(request, 'plantaE/inventarioProdTerm/inventarioProd_confirm_delete.html', {'registros': salidas})
 
 def inventarioProd_update(request, pk):
     salidas = get_object_or_404(inventarioProdTerm, pk=pk)
@@ -130,7 +130,7 @@ def inventarioProd_update(request, pk):
     else:
         form = inventarioFrutaForm(instance=salidas)
         
-    return render(request, 'plantaE/inventarioprodterm/inventarioProd_form_edit.html', {'form': form})
+    return render(request, 'plantaE/inventarioProdTerm/inventarioProd_form_edit.html', {'form': form})
 
 def load_inventarioProdparam(request):
     cultivo_ = request.GET.get('campo1')
