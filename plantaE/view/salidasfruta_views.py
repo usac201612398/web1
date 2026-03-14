@@ -487,7 +487,7 @@ def article_delete(request, pk):
             correo = salidas.correo,
             status__isnull=True  # Solo los abiertos
         ).update(status='Anulado')
-        return render(request, 'plantaE/salidasFruta_confirm_delete.html', {
+        return render(request, 'plantaE/salidasfruta/salidasFruta_confirm_delete.html', {
             'alert_message': "El registro fue anulado correctamente.",
             'redirect_url': reverse('salidasFruta_list')
         })
@@ -569,7 +569,7 @@ def article_deleteValle(request, pk):
             'redirect_url': reverse('salidasFruta_listValle')
         })
 
-    return render(request, 'plantaE/salidasFruta_confirm_deleteValle.html', {'registros': salidas})
+    return render(request, 'plantaE/salidasfruta/salidasFruta_confirm_deleteValle.html', {'registros': salidas})
 
 def salidasFruta_detail2(request, pk):
     salidas = get_object_or_404(salidasFruta, pk=pk)
