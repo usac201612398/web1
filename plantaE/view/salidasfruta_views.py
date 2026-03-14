@@ -47,7 +47,7 @@ def article_listValle(request):
     salidas = salidasFruta.objects.filter(fecha=today,correo=nombre_usuario, status__isnull=True)
     salidas = salidas.order_by('-created_at')
     
-    return render(request, 'plantaE/salidasfruta/salidasFruta_listValle.html', {'registros': salidas})
+    return render(request, 'plantaE/salidasFruta_listValle.html', {'registros': salidas})
 
 def article_detail(request, pk):
     salidas = get_object_or_404(salidasFruta, pk=pk)
