@@ -11,6 +11,7 @@ from .view.contenedores_views import *
 from .view.controlcajas_views import *
 from .view.pedidoscarreta_views import *
 from .view.supervisioncultivos_views import *
+from .view.salidasfruta_views import *
 #from app1.views import *
 
 app_main ="plantaE"
@@ -43,28 +44,12 @@ urlpatterns = [
     path('ajax/guardar-plantillaValle/', views.guardar_plantillaValle, name='guardar_plantillaValle'),
     path('ajax/load-inventarioProdparam/', views.load_inventarioProdparam, name='load_inventarioProdparam'),
 
-
-    path('salidasFruta/<int:pk>/', views.article_detail, name='salidasFruta_detail'),
-    path('salidasFruta2/<int:pk>/', views.salidasFruta_detail2, name='salidasFruta_detail2'),
-    path("salidasFruta/cuadre",views.cuadrar_RioDia,name='salidasFruta_cuadre'),
-    path("salidasFruta/cuadreValle",views.cuadrar_ValleDia,name='salidasFruta_cuadreValle'),
-    path("salidasFrutaView",views.salidasFruta_list,name='salidasFruta_list2'),
-    path("salidasFruta",views.article_list,name='salidasFruta_list'),
-    path("salidasFrutaValle",views.article_listValle,name='salidasFruta_listValle'),
-    path('ajax/get_correos/', views.get_correos_por_encargado, name='get_correos_por_encargado'),
-    path('salidasFruta2/new/', views.article_create, name='salidasFruta_create2'),
-    path('salidasFruta/new/', views.article_formPlantilla, name='salidasFruta_create'),
-    path('salidasFruta/new/plantilla', views.article_create_plantilla, name='salidasFruta_create_plantilla'),
-    path('salidasFruta/new/plantillaValle', views.article_create_plantillaValle, name='salidasFruta_create_plantillaValle'),
-    path('salidasFruta/<int:pk>/edit/', views.article_update, name='salidasFruta_update'),
-    path('salidasFruta/<int:pk>/delete/', views.article_delete, name='salidasFruta_delete'),
-    path('salidasFruta2/<int:pk>/delete/', views.article_delete2, name='salidasFruta_delete2'),
-    path('salidasFruta/<int:pk>/delete/Valle', views.article_deleteValle, name='salidasFruta_deleteValle'),
     path('salidasFruta/consultaaprovechamientos', views.poraprovechamientos, name='salidasFruta_aprovechamietos'),
     path('salidasFruta/consultaaprovechamientosger', views.poraprovechamientosger, name='salidasFruta_aprovechamietosger'),
     path('salidasFruta/consultaaprovechamientosempger', views.poraprovechamientosempger, name='salidasFruta_aprovechamietosempger'),
     path('salidasFruta/consultaaprovechamientosemp', views.poraprovechamientosemp, name='salidasFruta_poraprovechamietosemp'),
     path('salidasFruta/consultaaprovechamientosempgersem', views.kgm2_semanal_aprovechamiento, name='salidasFruta_aprovechamietosempgersem'),
+   
     path("acumFrutaView",views.acumFruta_list2,name='acumFruta_list2'),
     path("acumFruta",views.acumFruta_list,name='acumFruta_list'),
     path("acumFruta/Valle",views.acumFruta_list,name='acumFruta_listValle'),
@@ -174,32 +159,31 @@ urlpatterns = [
     path("supervisionproduccion",views.supervisionproduccion_list,name='supervisionproduccion_list'),
     path("supervisionproduccion/<int:pk>/delete/",views.supervisionproduccion_delete,name='supervisionproduccion_delete'),
     path('supervisionproduccion/detalle/<str:fecha>/<str:cultivo>/<str:estructura>/<str:zona>/<str:finca>/',views.supervisionproduccion_detalle,name='supervisionproduccion_detalle'),
-    path(
-        'supervisionproducion/reporte-semanal/',
-        views.reporte_semanal_supervision,
-        name='reporte_semanal_supervision'
-    ),
-    path(
-        'supervisionproduccion/reporte-semanal/view',
-        views.reporte_semanal_view,
-        name='reporte_semanal_view'
-    ),
-    path(
-        'supervisionproduccion/reporte-general/',
-        views.reporte_general,
-        name='reporte_general_supervision'
-    ),
-    path(
-        'supervisionproduccion/reporte-semanal/seguimiento',
-        views.reporte_semanal_seguimiento,
-        name='reporte_semanal_seguimiento'
-    ),
-    path(
-        'supervisionproduccion/reporte-semanal/detalleseguimiento',
-        views.reporte_seguimiento_api,
-        name='reporte_seguimiento_api'
-    ),
+    path('supervisionproducion/reporte-semanal/', views.reporte_semanal_supervision,name='reporte_semanal_supervision'),
+    path('supervisionproduccion/reporte-semanal/view',views.reporte_semanal_view,name='reporte_semanal_view'),
+    path('supervisionproduccion/reporte-general/',views.reporte_general,name='reporte_general_supervision'),
+    path('supervisionproduccion/reporte-semanal/seguimiento',views.reporte_semanal_seguimiento,name='reporte_semanal_seguimiento'),
+    path('supervisionproduccion/reporte-semanal/detalleseguimiento',views.reporte_seguimiento_api,name='reporte_seguimiento_api'),
 
+    #Urls de salidasfruta
+    
+    path('salidasFruta/<int:pk>/', views.article_detail, name='salidasFruta_detail'),
+    path('salidasFruta2/<int:pk>/', views.salidasFruta_detail2, name='salidasFruta_detail2'),
+    path("salidasFruta/cuadre",views.cuadrar_RioDia,name='salidasFruta_cuadre'),
+    path("salidasFruta/cuadreValle",views.cuadrar_ValleDia,name='salidasFruta_cuadreValle'),
+    path("salidasFrutaView",views.salidasFruta_list,name='salidasFruta_list2'),
+    path("salidasFruta",views.article_list,name='salidasFruta_list'),
+    path("salidasFrutaValle",views.article_listValle,name='salidasFruta_listValle'),
+    path('ajax/get_correos/', views.get_correos_por_encargado, name='get_correos_por_encargado'),
+    path('salidasFruta2/new/', views.article_create, name='salidasFruta_create2'),
+    path('salidasFruta/new/', views.article_formPlantilla, name='salidasFruta_create'),
+    path('salidasFruta/new/plantilla', views.article_create_plantilla, name='salidasFruta_create_plantilla'),
+    path('salidasFruta/new/plantillaValle', views.article_create_plantillaValle, name='salidasFruta_create_plantillaValle'),
+    path('salidasFruta/<int:pk>/edit/', views.article_update, name='salidasFruta_update'),
+    path('salidasFruta/<int:pk>/delete/', views.article_delete, name='salidasFruta_delete'),
+    path('salidasFruta2/<int:pk>/delete/', views.article_delete2, name='salidasFruta_delete2'),
+    path('salidasFruta/<int:pk>/delete/Valle', views.article_deleteValle, name='salidasFruta_deleteValle'),
+    
     path("boletasFruta/reporterecepcion",views.boletas_reporterecepcion,name='boletasFruta_reporterecepcion'),
     path("boletasFruta/reportetraza",views.boletas_reportetraza,name='boletasFruta_reportetraza'),
     path("boletasFruta/reportetrazaexpo",views.boletas_reportetrazaexpo,name='boletasFruta_reportetrazaexpo'),
@@ -230,7 +214,6 @@ urlpatterns = [
     path('inventarioProd/reporteInv', views.reporteInventario, name='reporte_inventario'),
     path('inventarioProd/reportesemanalprodterm_pivot', views.semanalprodterm_pivot, name='reporte_reportesemanalprodterm_pivot'),
     path('inventarioProd/reportesemanalprodterm_pivot_productor', views.semanalprodterm_pivot_productor, name='reporte_reportesemanalprodterm_pivot_productor'),
-
     path('inventarioProd/validaroventa', views.validaroventa, name='inventarioProd_validaroventa'),
     
     
