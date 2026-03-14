@@ -4,8 +4,7 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from openpyxl import Workbook
 from django.shortcuts import get_object_or_404, redirect
-from .models import Actpeso,supervision,supervisionproduccion,pedidos,tipoCajas,controlcajas, proyecciones,paramenvlocales,enviosrec,AcumFrutaaux,salidacontenedores, inventarioProdTermAux,productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
-from .forms import boletasForm,controlcajasForm,pedidosForm,itemsForm, itemsenviosForm,salidacontenedoresForm,salidasFrutaForm, contenedoresForm,recepcionesForm, ccalidadForm, inventarioFrutaForm, acumFrutaForm
+from plantaE.models import Actpeso,supervision,supervisionproduccion,pedidos,tipoCajas,controlcajas, proyecciones,paramenvlocales,enviosrec,AcumFrutaaux,salidacontenedores, inventarioProdTermAux,productores,contenedores,Boletas, detallerecaux,detallerec,salidasFruta, usuariosAppFruta, datosProduccion, detallesProduccion, detallesEstructuras, Recepciones, Ccalidad,causasRechazo,inventarioProdTerm,productoTerm,cultivoxFinca,AcumFruta
 from django.db.models import  Case, Count, Avg, When,Sum, Q, Max, Min,Value as V,F, ExpressionWrapper, FloatField, IntegerField
 from django.db.models.functions import Abs, Trim
 from django.utils import timezone
@@ -24,7 +23,6 @@ from django.db.models.functions import ExtractWeek, ExtractYear, ExtractIsoYear,
 from django.views.decorators.http import require_GET
 from django.urls import reverse
 from django.db import transaction
-from .view import *
 from django.db.models.functions import TruncDate
 
 
