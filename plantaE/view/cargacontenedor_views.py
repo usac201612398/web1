@@ -245,7 +245,7 @@ def cargacontenedores_listv2(request):
     registros_agrupados = sorted(registros_agrupados, key=lambda x: x['proveedor'])
     registros_json = json.dumps(registros_agrupados, default=str)  # Usar default=str para evitar errores con objetos no serializables
 
-    return render(request, 'plantaE/carcacontenedor/inventarioProd_ccontenedor.html', {'registros': registros_agrupados, 'registros_json':registros_json})
+    return render(request, 'plantaE/cargacontenedor/inventarioProd_ccontenedor.html', {'registros': registros_agrupados, 'registros_json':registros_json})
 
 def cargacontenedores_list(request):
     today = timezone.now().date()
@@ -503,7 +503,7 @@ def generate_packing_list_pdf(request):
             infoconten.status = "Cerrado"
             infoconten.save()
         # Renderiza la plantilla HTML con los datos
-        return render(request, 'plantaE/packinglist_template.html', context)
+        return render(request, 'plantaE/cargacontenedor/packinglist_template.html', context)
    
     else:
         # Si no hay datos, devuelve una respuesta vacía o de error
@@ -568,7 +568,7 @@ def generate_packing_list_pdf2(request):
         'datos': datos
     }
 
-    return render(request, "plantaE/packinglist_template.html", context)
+    return render(request, "plantaE/cargacontenedor/packinglist_template.html", context)
 
 def load_contenedores(request):
     now = datetime.datetime.now()
