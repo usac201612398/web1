@@ -1,4 +1,4 @@
-
+from django.shortcuts import render
 
 def plantaEhomepage(request):
     return render(request,'plantaE/plantaE_home.html')
