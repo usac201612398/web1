@@ -5,14 +5,14 @@ from django.http import JsonResponse
 from django.utils import timezone
 from django.urls import reverse
 
-from .models import (
+from planaE.models import (
     inventarioProdTerm,
     inventarioProdTermAux,
     productoTerm,
     productores
 )
 
-from .forms import inventarioFrutaForm
+from plantaE.forms import inventarioFrutaForm
 
 def inventarioProd_list(request):
     today = timezone.localtime(timezone.now()).date()
