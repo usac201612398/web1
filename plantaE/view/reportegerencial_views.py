@@ -25,7 +25,7 @@ from django.urls import reverse
 from django.db import transaction
 #from .view import *
 from django.db.models.functions import TruncDate
-
+from .auxiliares import *
 def boletas_constanciarecepcion(request):
     if request.method == 'POST':
         fecha = request.POST.get('fecha')

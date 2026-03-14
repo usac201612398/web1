@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from django.utils import timezone
 from django.urls import reverse
 from django.db.models import Q
-
+from .auxiliares import *
 from plantaE.models import (
     AcumFruta,
     salidasFruta,

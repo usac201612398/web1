@@ -13,7 +13,7 @@ from plantaE.models import (
 )
 
 from plantaE.forms import inventarioFrutaForm
-
+from .auxiliares import *
 def inventarioProd_list(request):
     today = timezone.localtime(timezone.now()).date()
     #salidas = Recepciones.objects.filter(fecha=today)

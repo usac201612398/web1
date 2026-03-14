@@ -10,7 +10,7 @@ from collections import defaultdict
 import datetime
 import json
 from django.db import transaction
-
+from .auxiliares import *
 # modelos
 from plantaE.models import (
     supervision,

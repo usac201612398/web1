@@ -12,7 +12,7 @@ from django.db.models import Sum, Max
 from django.db.models.functions import ExtractWeek, ExtractIsoYear
 
 from openpyxl import Workbook
-
+from .auxiliares import *
 from plantaE.models import (
     AcumFruta,
     Recepciones,
