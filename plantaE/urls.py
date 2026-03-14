@@ -12,6 +12,8 @@ from .view.controlcajas_views import *
 from .view.pedidoscarreta_views import *
 from .view.supervisioncultivos_views import *
 from .view.salidasfruta_views import *
+from .view.cargacontenedor_views import *
+from .view.inventarioprodterm_views import *
 #from app1.views import *
 
 app_main ="plantaE"
@@ -184,6 +186,28 @@ urlpatterns = [
     path('salidasFruta2/<int:pk>/delete/', views.article_delete2, name='salidasFruta_delete2'),
     path('salidasFruta/<int:pk>/delete/Valle', views.article_deleteValle, name='salidasFruta_deleteValle'),
     
+    #Urls de inventarioprodterm
+    path("inventarioProd/plantilla",views.inventarioProd_grabarplantilla,name='inventarioProd_grabar'),
+    path("inventarioProd",views.inventarioProd_list,name='inventarioProd_list'),
+    path('inventarioProd/<int:pk>/', views.inventarioProd_detail, name='inventarioProd_detail'),
+    path('inventarioProd/new/', views.inventarioProd_create, name='inventarioProd_create'),
+    path('inventarioProd/<int:pk>/edit/', views.inventarioProd_update, name='inventarioProd_update'),
+    path('inventarioProd/<int:pk>/delete/', views.inventarioProd_delete, name='inventarioProd_delete'),
+
+    #Urls de cargacontenedor
+    path("inventarioProd/cargacontenedor",views.cargacontenedores_list,name='inventarioProd_contenlist'),
+    path("inventarioProd/cargacontenedorv2",views.cargacontenedores_listv2,name='inventarioProd_contenlistv2'),
+    path("inventarioProd/packinglist",views.contenedorpacking_list,name='inventarioProd_packinglist'),
+    path("inventarioProd/packinglist_detail",views.contenedorpacking_list_detail,name='inventarioProd_packinglist_detail'),
+    path('inventarioProd/packinglist_detail/<int:pk>/edit/', views.packinglist_update, name='inventarioProd_packinglist_update'),
+    path('inventarioProd/packinglist_detail/<int:pk>/delete/', views.packinglist_delete, name='inventarioProd_packinglist_delete'),
+    path('inventarioProd/validaroventa', views.validaroventa, name='inventarioProd_validaroventa'),
+    path('ajax/load-contenedores/', views.load_contenedores, name='load_contenedores'),
+    path('generate_packing_list_pdf/', views.generate_packing_list_pdf, name='generate_packing_list_pdf'),
+    path('generate_packing_list_pdf2/', views.generate_packing_list_pdf2, name='generate_packing_list_pdf2'),
+    
+
+
     path("boletasFruta/reporterecepcion",views.boletas_reporterecepcion,name='boletasFruta_reporterecepcion'),
     path("boletasFruta/reportetraza",views.boletas_reportetraza,name='boletasFruta_reportetraza'),
     path("boletasFruta/reportetrazaexpo",views.boletas_reportetrazaexpo,name='boletasFruta_reportetrazaexpo'),
@@ -193,18 +217,7 @@ urlpatterns = [
     path("boletasFruta/constanciatrazaexpo",views.boletas_constanciatrazarexpo,name='boletasFruta_constanciatrazaexpo'),
     path("boletasFruta/constanciarecepcion",views.boletas_constanciarecepcion,name='boletasFruta_constanciarecepcion'),
 
-    path("inventarioProd/plantilla",views.inventarioProd_grabarplantilla,name='inventarioProd_grabar'),
-    path("inventarioProd",views.inventarioProd_list,name='inventarioProd_list'),
-    path('inventarioProd/<int:pk>/', views.inventarioProd_detail, name='inventarioProd_detail'),
-    path('inventarioProd/new/', views.inventarioProd_create, name='inventarioProd_create'),
-    path('inventarioProd/<int:pk>/edit/', views.inventarioProd_update, name='inventarioProd_update'),
-    path('inventarioProd/<int:pk>/delete/', views.inventarioProd_delete, name='inventarioProd_delete'),
-    path("inventarioProd/cargacontenedor",views.cargacontenedores_list,name='inventarioProd_contenlist'),
-    path("inventarioProd/cargacontenedorv2",views.cargacontenedores_listv2,name='inventarioProd_contenlistv2'),
-    path("inventarioProd/packinglist",views.contenedorpacking_list,name='inventarioProd_packinglist'),
-    path("inventarioProd/packinglist_detail",views.contenedorpacking_list_detail,name='inventarioProd_packinglist_detail'),
-    path('inventarioProd/packinglist_detail/<int:pk>/edit/', views.packinglist_update, name='inventarioProd_packinglist_update'),
-    path('inventarioProd/packinglist_detail/<int:pk>/delete/', views.packinglist_delete, name='inventarioProd_packinglist_delete'),
+    
     path("inventarioProd/inventariogeneral",views.inventariogeneral_list,name='inventarioProd_inventariogeneral'),
     path("inventarioProd/inventariogeneralger",views.inventariogeneralger_list,name='inventarioProd_inventariogeneralger'),
     path("gerencial/reportedemermas",views.reporte_mermas_view,name='gerencial_reportedemermas'),
@@ -214,14 +227,9 @@ urlpatterns = [
     path('inventarioProd/reporteInv', views.reporteInventario, name='reporte_inventario'),
     path('inventarioProd/reportesemanalprodterm_pivot', views.semanalprodterm_pivot, name='reporte_reportesemanalprodterm_pivot'),
     path('inventarioProd/reportesemanalprodterm_pivot_productor', views.semanalprodterm_pivot_productor, name='reporte_reportesemanalprodterm_pivot_productor'),
-    path('inventarioProd/validaroventa', views.validaroventa, name='inventarioProd_validaroventa'),
     
     
     
-    path('ajax/load-contenedores/', views.load_contenedores, name='load_contenedores'),
-
-    path('generate_packing_list_pdf/', views.generate_packing_list_pdf, name='generate_packing_list_pdf'),
-    path('generate_packing_list_pdf2/', views.generate_packing_list_pdf2, name='generate_packing_list_pdf2'),
     path('escanearbarras/', views.escanearbarras, name='escanearbarras'),
     path('dashboard/', views.dashboard_acumfruta, name='dashboard_acumfruta'),
     path('dashboardkgxm2/', views.dashboard_acumfrutakgxm2, name='dashboard_acumfrutakgxm2'),
