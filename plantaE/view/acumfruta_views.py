@@ -62,7 +62,7 @@ def acumFruta_consulta(request):
         registros_finales2 = df_resumen_agrupado.to_dict(orient='records')
 
         return JsonResponse({'datos': registros_finales, 'opcion1': opcion1, 'opcion2': opcion2, 'resumen': registros_finales2, 'correo': nombre_usuario}, safe=False)
-    return render(request, 'plantaE/AcumFrutaDia_list.html')
+    return render(request, 'plantaE/acumFruta/AcumFrutaDia_list.html')
 
 def acumFruta_consultaValle(request):
     if request.method == 'POST':
@@ -116,7 +116,7 @@ def acumFruta_consultaValle(request):
             # Manejo de excepciones
             return JsonResponse({'error': str(e)}, status=500)
 
-    return render(request, 'plantaE/AcumFrutaDia_listValle.html')
+    return render(request, 'plantaE/acumFruta/AcumFrutaDia_listValle.html')
 
 def acumFruta_list(request):
     today = timezone.localtime(timezone.now()).date()
@@ -125,7 +125,7 @@ def acumFruta_list(request):
     
     salidas = salidas.order_by('-created_at')
     
-    return render(request, 'plantaE/AcumFrutaDia_list.html', {'registros': salidas})
+    return render(request, 'plantaE/acumFruta/AcumFrutaDia_list.html', {'registros': salidas})
 
 def acumFruta_list2(request):
     today = timezone.localtime(timezone.now()).date()
@@ -135,15 +135,15 @@ def acumFruta_list2(request):
         Q(fecha=today) | Q(status__isnull=True) | Q(status='')
     ).order_by('-created_at')
 
-    return render(request, 'plantaE/AcumFrutaDia_list2.html', {'registros': salidas})
+    return render(request, 'plantaE/acumFruta/AcumFrutaDia_list2.html', {'registros': salidas})
 
 def acumFruta_detail(request, pk):
     salidas = get_object_or_404(AcumFruta, pk=pk)
-    return render(request, 'plantaE/AcumFrutaDia_detail.html', {'registros': salidas})
+    return render(request, 'plantaE/acumFruta/AcumFrutaDia_detail.html', {'registros': salidas})
 
 def acumFruta_detail2(request, pk):
     salidas = get_object_or_404(AcumFruta, pk=pk)
-    return render(request, 'plantaE/AcumFrutaDia_detail2.html', {'registros': salidas})
+    return render(request, 'plantaE/acumFruta/AcumFrutaDia_detail2.html', {'registros': salidas})
 
 def  acumFruta_create(request):
     if request.method == 'POST':
@@ -167,7 +167,7 @@ def  acumFruta_create(request):
             'fecha': hoy
         }
         form = acumFrutaForm(initial=initial_data)
-    return render(request, 'plantaE/AcumFrutaDia_form.html', {'form': form})
+    return render(request, 'plantaE/acumFruta/AcumFrutaDia_form.html', {'form': form})
 
 def acumFruta_update(request, pk):
     salidas = get_object_or_404(AcumFruta, pk=pk)
@@ -178,7 +178,7 @@ def acumFruta_update(request, pk):
             return redirect('acumFruta_list2')
     else:
         form = acumFrutaForm(instance=salidas)
-    return render(request, 'plantaE/AcumFrutaDia_form.html', {'form': form})
+    return render(request, 'plantaE/acumFruta/AcumFrutaDia_form.html', {'form': form})
 
 def acumFruta_delete(request, pk):
 
@@ -193,7 +193,7 @@ def acumFruta_delete(request, pk):
 
     # Si ya tiene recepción, mostrar alerta y redireccionar
     if tiene_recepcion:
-        return render(request, 'plantaE/acumFruta_confirm_delete.html', {
+        return render(request, 'plantaE/acumFruta/acumFruta_confirm_delete.html', {
             'alert_message': "No se puede anular este viaje porque ya tiene una recepción asignada. Anule la recepción primero.",
             'redirect_url': reverse('acumFrutaDia_list')
         })
@@ -212,12 +212,12 @@ def acumFruta_delete(request, pk):
             status__isnull=True  # Solo los abiertos
         ).update(status='Anulado')
         
-        return render(request, 'plantaE/acumFruta_confirm_delete.html', {
+        return render(request, 'plantaE/acumFruta/acumFruta_confirm_delete.html', {
             'alert_message': "El registro fue anulado correctamente.",
             'redirect_url': reverse('acumFrutaDia_list')
         })
 
-    return render(request, 'plantaE/acumFruta_confirm_delete.html', {'registros': salidas})
+    return render(request, 'plantaE/acumFruta/acumFruta_confirm_delete.html', {'registros': salidas})
 
 def acumFruta_delete2(request, pk):
 
@@ -231,7 +231,7 @@ def acumFruta_delete2(request, pk):
 
     # Si ya tiene recepción, mostrar alerta y redireccionar
     if tiene_recepcion:
-        return render(request, 'plantaE/acumFruta_confirm_delete2.html', {
+        return render(request, 'plantaE/acumFruta/acumFruta_confirm_delete2.html', {
             'alert_message': "No se puede anular este viaje porque ya tiene una recepción asignada. Anule la recepción primero.",
             'redirect_url': reverse('acumFruta_list2')
         })
@@ -250,9 +250,9 @@ def acumFruta_delete2(request, pk):
             status__isnull=True  # Solo los abiertos
         ).update(status='Anulado')
         
-        return render(request, 'plantaE/acumFruta_confirm_delete2.html', {
+        return render(request, 'plantaE/acumFruta/acumFruta_confirm_delete2.html', {
             'alert_message': "El registro fue anulado correctamente.",
             'redirect_url': reverse('acumFruta_list2')
         })
     
-    return render(request, 'plantaE/acumFruta_confirm_delete2.html', {'registros': salidas})
+    return render(request, 'plantaE/acumFruta/acumFruta_confirm_delete2.html', {'registros': salidas})
