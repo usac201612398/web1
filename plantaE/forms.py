@@ -79,7 +79,7 @@ class acumFrutaForm(forms.ModelForm):
         ('Viaje 4', 'Viaje 4'), ('Viaje 5', 'Viaje 5'), ('Viaje 6', 'Viaje 6'),
         ('Viaje 7', 'Viaje 7'), ('Viaje 8', 'Viaje 8')
     ]
-    op_status = [('','-'),('Cerrado','Cerrado'),('En proceso','En proceso')('Cerrado','Cerrado'),('Anulado','Anulado'),('Cargado','Cargado')]
+    op_status = [('','-'),('Cerrado','Cerrado'),('En proceso','En proceso'),('Cerrado','Cerrado'),('Anulado','Anulado'),('Cargado','Cargado')]
     status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'form-control'}))
     viaje = forms.ChoiceField(choices=op_viajes, widget=forms.Select(attrs={'class': 'form-control'}))
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}))
