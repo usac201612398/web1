@@ -33,8 +33,6 @@ def salidasFruta_list(request):
     today = timezone.localtime(timezone.now()).date()
 
     salidas = salidasFruta.objects.filter(
-        id__gte=8688
-    ).filter(
         Q(fecha=today) | Q(status__isnull=True) | Q(status='')
     ).order_by('-created_at')
 
