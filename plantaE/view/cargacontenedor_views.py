@@ -17,7 +17,7 @@ from plantaE.models import (
 )
 
 from plantaE.forms import salidacontenedoresForm
-
+from .auxiliares import *
 
 def procesarinvprodcontenv2(request):
     data = json.loads(request.body)
