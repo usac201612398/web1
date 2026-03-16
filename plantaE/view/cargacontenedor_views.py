@@ -464,10 +464,12 @@ def generate_packing_list_pdf(request):
     df = pd.DataFrame(list(contenedores_a_imprimir))
     df['fechasalcontenedor'] = pd.to_datetime(df['fechasalcontenedor'], errors='coerce')
     df['semana_contenedor'] = df['fechasalcontenedor'].dt.isocalendar().week
-    df['semana_actual'] = semana_actual
 
-    # Filtra el DataFrame para que solo contenga los registros de la semana actual
-    df_filtrado = df[df['semana_contenedor'] == semana_actual]
+    # semana basada en el contenedor
+    semana_contenedor = infoconten.fecha.isocalendar()[1]
+
+    # filtrar por la semana del contenedor
+    df_filtrado = df[df['semana_contenedor'] == semana_contenedor]
 
     if not df_filtrado.empty:
         # Agrupar por 'itemsapcode', 'palet', 'proveedor' y calcular la suma de las cajas
