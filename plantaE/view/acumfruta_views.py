@@ -130,8 +130,6 @@ def acumFruta_list(request):
 def acumFruta_list2(request):
     today = timezone.localtime(timezone.now()).date()
     salidas = AcumFruta.objects.filter(
-        id__gte=10519
-    ).filter(
         Q(fecha=today) | Q(status__isnull=True) | Q(status='')
     ).order_by('-created_at')
 
