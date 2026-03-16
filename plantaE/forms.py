@@ -8,6 +8,8 @@ class salidasFrutaForm(forms.ModelForm):
 
     op_viajes = [('','---------'),('Viaje 1','Viaje 1'),('Viaje 2','Viaje 2'),('Viaje 3', 'Viaje 3'),('Viaje 4','Viaje 4'),('Viaje 5','Viaje 5'),('Viaje 6','Viaje 6'),('Viaje 7','Viaje 7'),('Viaje 8','Viaje 8')]
     #op_cultivo = [('','-'),('CHERRY','CHERRY'),('PEPINO','PEPINO'),('AGUACATE','AGUACATE'),('ROMA','ROMA'),('PITAYA','PITAYA'),('MEDLEY','MEDLEY'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
+    op_status = [('','-'),('En proceso','En proceso'),('Anulado','Anulado')]
+    status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'form-control'}))
     
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
     correo = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de correo electrónico
@@ -17,11 +19,11 @@ class salidasFrutaForm(forms.ModelForm):
     viaje = forms.ChoiceField(choices=op_viajes,widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de texto
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
     cultivo = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de texto
-    
+    libras = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
     class Meta:
     
         model = salidasFruta
-        fields = ['correo','fecha','viaje','encargado', 'orden', 'finca', 'cajas', 'cultivo','variedad']
+        fields = ['correo','fecha','viaje','encargado', 'orden', 'finca', 'cajas', 'cultivo','variedad','libras','status']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -92,7 +94,7 @@ class acumFrutaForm(forms.ModelForm):
     variedad = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'form-control'}))
     estructura = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'form-control'}))
     encargado = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'form-control'}))
-    libras = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
+    libras = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
 
     class Meta:
         model = AcumFruta
