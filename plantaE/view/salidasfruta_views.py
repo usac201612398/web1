@@ -292,6 +292,7 @@ def guardar_plantillaValle(request):
                     variedad=row['Variedad'],
                     cajas=row['Cajas'],
                     correo=row['Correo'],
+                    encargado=i['Encargado'],
                     viaje=row['Viaje'],
                     nsalidafruta=salida.id
                 )
