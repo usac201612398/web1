@@ -18,12 +18,13 @@ class salidasFrutaForm(forms.ModelForm):
     variedad = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de texto
     viaje = forms.ChoiceField(choices=op_viajes,widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de texto
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
+    recepcion = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
     cultivo = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de texto
     libras = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
     class Meta:
     
         model = salidasFruta
-        fields = ['correo','fecha','viaje','encargado', 'orden', 'finca', 'cajas', 'cultivo','variedad','libras','status']
+        fields = ['correo','fecha','recepcion','viaje','encargado', 'orden', 'finca', 'cajas', 'cultivo','variedad','libras','status']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -86,6 +87,7 @@ class acumFrutaForm(forms.ModelForm):
     viaje = forms.ChoiceField(choices=op_viajes, widget=forms.Select(attrs={'class': 'form-control'}))
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}))
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    recepcion = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     op_sap = forms.CharField( widget=forms.TextInput(attrs={'class': 'form-control'}))
     correo = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'form-control'}))
     finca = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'form-control'}))
@@ -98,7 +100,7 @@ class acumFrutaForm(forms.ModelForm):
 
     class Meta:
         model = AcumFruta
-        fields = ['correo', 'fecha', 'finca', 'cajas', 'orden', 'cultivo', 'variedad', 'estructura', 'viaje', 'encargado','status','op_sap','libras']
+        fields = ['correo', 'fecha', 'recepcion', 'finca', 'cajas', 'orden', 'cultivo', 'variedad', 'estructura', 'viaje', 'encargado','status','op_sap','libras']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
