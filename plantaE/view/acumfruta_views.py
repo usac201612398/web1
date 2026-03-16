@@ -16,6 +16,8 @@ from plantaE.models import (
 
 from plantaE.forms import acumFrutaForm
 
+from django.db import transaction
+
 def acumFruta_consulta(request):
     if request.method == 'POST':
         # Leer los datos JSON del cuerpo de la solicitud
@@ -218,39 +220,36 @@ def acumFruta_delete(request, pk):
     return render(request, 'plantaE/acumFruta/acumFruta_confirm_delete.html', {'registros': salidas})
 
 def acumFruta_delete2(request, pk):
-
-    salidas = get_object_or_404(AcumFruta, pk=pk)
+    salidas = get_object_or_404(acumFruta, pk=pk)
 
     # Verificamos si tiene una recepción activa
     tiene_recepcion = (
         salidas.recepcion and
-        Recepciones.objects.filter(recepcion=salidas.recepcion).exists()
+        Recepciones.objects.filter(recepcion=salidas.recepcion).exclude(status='Anulado').exists()
     )
 
-    # Si ya tiene recepción, mostrar alerta y redireccionar
     if tiene_recepcion:
         return render(request, 'plantaE/acumFruta/acumFruta_confirm_delete2.html', {
             'alert_message': "No se puede anular este viaje porque ya tiene una recepción asignada. Anule la recepción primero.",
             'redirect_url': reverse('acumFruta_list2')
         })
-    
+
     if request.method == 'POST':
-        salidas.status = 'Anulado'
-        salidas.save()
-        salidasFruta.objects.filter(
-            fecha=salidas.fecha,
-            finca=salidas.finca,
-            cultivo=salidas.cultivo,
-            variedad=salidas.variedad,
-            viaje=salidas.viaje,
-            correo = salidas.correo,
-            orden = salidas.orden,
-            status__isnull=True  # Solo los abiertos
-        ).update(status='Anulado')
-        
+
+        with transaction.atomic():
+
+            # anular salida
+            salidas.status = 'Anulado'
+            salidas.save()
+
+            # anular todos los acumFruta relacionados
+            salidasfruta.objects.filter(
+                nsalidafruta=salidas.id
+            ).exclude(status='Anulado').update(status='Anulado')
+
         return render(request, 'plantaE/acumFruta/acumFruta_confirm_delete2.html', {
             'alert_message': "El registro fue anulado correctamente.",
             'redirect_url': reverse('acumFruta_list2')
         })
-    
+
     return render(request, 'plantaE/acumFruta/acumFruta_confirm_delete2.html', {'registros': salidas})

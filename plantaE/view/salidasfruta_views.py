@@ -29,14 +29,6 @@ def article_list(request):
     
     return render(request, 'plantaE/salidasFruta/salidasFruta_list.html', {'registros': salidas})
 
-def salidasFruta_list(request):
-    today = timezone.localtime(timezone.now()).date()
-
-    salidas = salidasFruta.objects.filter(
-        Q(fecha=today) | Q(status__isnull=True) | Q(status='')
-    ).order_by('-created_at')
-
-    return render(request, 'plantaE/salidasFruta/salidasFruta_list2.html', {'registros': salidas})
 
 def article_listValle(request):
     
@@ -491,42 +483,49 @@ def article_delete(request, pk):
         })
     return render(request, 'plantaE/salidasFruta/salidasFruta_confirm_delete.html', {'registros': salidas})
 
+def salidasFruta_list(request):
+    today = timezone.localtime(timezone.now()).date()
+
+    salidas = salidasFruta.objects.filter(
+        Q(fecha=today) | Q(status__isnull=True) | Q(status='')
+    ).order_by('-created_at')
+
+    return render(request, 'plantaE/salidasFruta/salidasFruta_list2.html', {'registros': salidas})
+
 def article_delete2(request, pk):
+
     salidas = get_object_or_404(salidasFruta, pk=pk)
 
     # Verificamos si tiene una recepción activa
     tiene_recepcion = (
         salidas.recepcion and
-        Recepciones.objects.filter(recepcion=salidas.recepcion).exists()
+        Recepciones.objects.filter(recepcion=salidas.recepcion).exclude(status='Anulado').exists()
     )
 
-    # Si ya tiene recepción, mostrar alerta y redireccionar
     if tiene_recepcion:
-        return render(request, 'plantaE/salidasFruta/salidasFruta_confirm_delete2.html', {
+        return render(request, 'plantaE/salidasFruta/salidasFruta_confirm_deleteValle2.html', {
             'alert_message': "No se puede anular este viaje porque ya tiene una recepción asignada. Anule la recepción primero.",
             'redirect_url': reverse('salidasFruta_list2')
         })
 
-    # Si es POST, entonces anular
     if request.method == 'POST':
-        salidas.status = 'Anulado'
-        salidas.save()
 
-        AcumFruta.objects.filter(
-            fecha=salidas.fecha,
-            finca=salidas.finca,
-            cultivo=salidas.cultivo,
-            variedad=salidas.variedad,
-            viaje=salidas.viaje,
-            orden=salidas.orden,
-            correo=salidas.correo,
-            status__isnull=True
-        ).update(status='Anulado')
+        with transaction.atomic():
 
-        return render(request, 'plantaE/salidasFruta/salidasFruta_confirm_delete2.html', {
+            # anular salida
+            salidas.status = 'Anulado'
+            salidas.save()
+
+            # anular todos los acumFruta relacionados
+            AcumFruta.objects.filter(
+                nsalidafruta=salidas.id
+            ).exclude(status='Anulado').update(status='Anulado')
+
+        return render(request, 'plantaE/salidasFruta/salidasFruta_confirm_deleteValle2.html', {
             'alert_message': "El registro fue anulado correctamente.",
             'redirect_url': reverse('salidasFruta_list2')
         })
+
 
     # Si no hay recepción y aún no es POST, mostrar confirmación normal
     return render(request, 'plantaE/salidasFruta/salidasFruta_confirm_delete2.html', {

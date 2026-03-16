@@ -79,10 +79,12 @@ class acumFrutaForm(forms.ModelForm):
         ('Viaje 4', 'Viaje 4'), ('Viaje 5', 'Viaje 5'), ('Viaje 6', 'Viaje 6'),
         ('Viaje 7', 'Viaje 7'), ('Viaje 8', 'Viaje 8')
     ]
+    op_status = [('','-'),('Cerrado','Cerrado'),('En proceso','En proceso')('Cerrado','Cerrado'),('Anulado','Anulado'),('Cargado','Cargado')]
+    status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'form-control'}))
     viaje = forms.ChoiceField(choices=op_viajes, widget=forms.Select(attrs={'class': 'form-control'}))
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}))
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
-    
+    op_sap = forms.ChoiceField(choices=op_viajes, widget=forms.Select(attrs={'class': 'form-control'}))
     correo = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'form-control'}))
     finca = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'form-control'}))
     orden = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'form-control'}))
@@ -90,10 +92,11 @@ class acumFrutaForm(forms.ModelForm):
     variedad = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'form-control'}))
     estructura = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'form-control'}))
     encargado = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'form-control'}))
+    libras = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
 
     class Meta:
         model = AcumFruta
-        fields = ['correo', 'fecha', 'finca', 'cajas', 'orden', 'cultivo', 'variedad', 'estructura', 'viaje', 'encargado']
+        fields = ['correo', 'fecha', 'finca', 'cajas', 'orden', 'cultivo', 'variedad', 'estructura', 'viaje', 'encargado','status','op_sap','libras']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -154,7 +157,7 @@ class acumFrutaForm(forms.ModelForm):
 class recepcionesForm(forms.ModelForm):
 
     op_status = [('','-'),('Pendiente','-'),('En proceso','En proceso')]
-
+   
     recepcion = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
     finca = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  # Campo de texto
