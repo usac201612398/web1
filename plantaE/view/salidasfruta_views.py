@@ -489,7 +489,7 @@ def salidasFruta_list(request):
 
     salidas = salidasFruta.objects.filter(
         Q(fecha=today) | Q(status__isnull=True) | Q(status='')
-    ).order_by('-created_at')
+    ).exclude(status='Anulado').order_by('-created_at')
 
     return render(request, 'plantaE/salidasFruta/salidasFruta_list2.html', {'registros': salidas})
 
