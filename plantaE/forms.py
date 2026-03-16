@@ -84,7 +84,7 @@ class acumFrutaForm(forms.ModelForm):
     viaje = forms.ChoiceField(choices=op_viajes, widget=forms.Select(attrs={'class': 'form-control'}))
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}))
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
-    op_sap = forms.ChoiceField( widget=forms.Select(attrs={'class': 'form-control'}))
+    op_sap = forms.CharField( widget=forms.TextInput(attrs={'class': 'form-control'}))
     correo = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'form-control'}))
     finca = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'form-control'}))
     orden = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'form-control'}))
