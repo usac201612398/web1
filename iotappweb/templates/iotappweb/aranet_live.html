@@ -30,12 +30,25 @@ function fetchData() {
   fetch('/iotappweb/aranet-data-json/')
     .then(res => res.json())
     .then(data => {
-      console.log(data);
-      // actualizar tabla si quieres
+      const table = document.getElementById('aranet-table');
+      
+      // Borra todas las filas excepto la cabecera
+      table.querySelectorAll('tr:not(:first-child)').forEach(tr => tr.remove());
+      
+      // Añade nuevas filas
+      data.forEach(r => {
+        const row = table.insertRow();
+        row.insertCell(0).textContent = r.sensor;
+        row.insertCell(1).textContent = r.timestamp;
+        row.insertCell(2).textContent = r.co2;
+        row.insertCell(3).textContent = r.temperature;
+        row.insertCell(4).textContent = r.humidity;
+      });
     })
     .catch(err => console.error("Error:", err));
 }
 
+// Llamar cada 2 segundos
 setInterval(fetchData, 2000);
 </script>
 </body>
