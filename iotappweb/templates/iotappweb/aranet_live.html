@@ -8,11 +8,12 @@
     <ul id="sensor-data"></ul>
 
     <script>
-        const evtSource = new EventSource("/aranet-stream/"); // ruta SSE
+        const evtSource = new EventSource("/iotappweb/aranet-stream/");
         evtSource.onmessage = function(e) {
+            console.log("Datos recibidos:", e.data);
             const ul = document.getElementById("sensor-data");
             const li = document.createElement("li");
-            li.textContent = e.data;   // aquí verás el JSON completo
+            li.textContent = e.data;
             ul.appendChild(li);
         };
     </script>
