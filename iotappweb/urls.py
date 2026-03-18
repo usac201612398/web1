@@ -16,5 +16,5 @@ urlpatterns = [
     path('api/histograma/', views.histograma_api, name='histograma_api'),
     path('aranet-data/', views.aranet_data, name='aranet_data'),
     path('aranet-stream/', views.aranet_stream, name='aranet_stream'),
-    path('aranet-live/', views.aranet_live_page, name='aranet_live'),
+    path('aranet-live/', views.aranet_live_page, name='aranet_live')
 ]

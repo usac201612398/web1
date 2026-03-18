@@ -353,7 +353,8 @@ clients_data = []
 def aranet_data(request):
     if request.method == "POST":
         data = json.loads(request.body)
-        print("Datos recibidos:", data)  # <-- Se verá en la terminal del servidor
+        print("Datos recibidos:", data)  # Se verá en la terminal
+        clients_data.append(data)          # <-- AGREGAR A LA LISTA
         return JsonResponse({"status": "ok"})
     return JsonResponse({"status": "method not allowed", "method": request.method})
 
