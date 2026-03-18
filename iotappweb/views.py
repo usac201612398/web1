@@ -341,3 +341,18 @@ def histograma_api(request):
         "max": round(max_val,2),
         "total_mediciones": total_mediciones
     })
+
+
+
+def aranet_webhook(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            # Aquí puedes procesar los datos
+            print("Datos recibidos de Aranet:", json.dumps(data, indent=2))
+            # Ejemplo: guardar en base de datos o CSV
+            return JsonResponse({'status': 'ok'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    else:
+        return JsonResponse({'status': 'method not allowed'}, status=405)
