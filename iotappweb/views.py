@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import m1Sensoresdata, m2Sensoresdata, riegoRegistro, riegoResumen, AranetReading
+from .models import m1Sensoresdata, m2Sensoresdata, riegoRegistro, riegoResumen, SensorData
 # Create your views here.
 import time
 import paho.mqtt.client as mqtt
@@ -342,31 +342,63 @@ def histograma_api(request):
         "total_mediciones": total_mediciones
     })
 
-
+from datetime import datetime, timedelta
 from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
-def aranet_data(request):
-    if request.method == "POST":
+def aranet_webhook(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "only POST"}, status=405)
+
+    try:
         data = json.loads(request.body)
-        co2 = temperature = humidity = 0
-        for e in data.get("e", []):
-            if e.get("n") == "co2":
-                co2 = e.get("v")
-            elif e.get("n") == "temperature":
-                temperature = e.get("v")
-            elif e.get("n") == "humidity":
-                humidity = e.get("v")
-        AranetReading.objects.create(
-            sensor=data.get("bn", "unknown"),
-            timestamp=datetime.fromtimestamp(data.get("bt", 0)),
-            co2=co2,
-            temperature=temperature,
-            humidity=humidity,
-        )
-        return JsonResponse({"status": "ok"})
-    return JsonResponse({"status": "method not allowed", "method": request.method})
-    
+
+        base_name = None
+        base_time = None
+
+        objects_to_create = []
+
+        for record in data:
+
+            # Base fields (pueden venir solo una vez)
+            if "bn" in record:
+                base_name = record.get("bn")
+
+            if "bt" in record:
+                base_time = record.get("bt")
+
+            metric = record.get("n")
+            value = record.get("v")
+            unit = record.get("u")
+            time_offset = record.get("t", 0)
+
+            # Calcular timestamp real
+            if base_time:
+                timestamp = datetime.utcfromtimestamp(base_time + time_offset)
+            else:
+                timestamp = datetime.utcfromtimestamp(time_offset)
+
+            # Crear objeto (sin guardar aún)
+            obj = SensorData(
+                sensor=base_name or "unknown",
+                metric=metric,
+                value=value,
+                unit=unit,
+                timestamp=timestamp
+            )
+
+            objects_to_create.append(obj)
+
+        # 🔥 GUARDADO MASIVO (clave para rendimiento)
+        SensorData.objects.bulk_create(objects_to_create)
+
+        return JsonResponse({
+            "status": "ok",
+            "records_saved": len(objects_to_create)
+        })
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)
 
 def aranet_data_json(request):
     readings = AranetReading.objects.order_by('-timestamp')[:20]
