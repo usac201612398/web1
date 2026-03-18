@@ -343,6 +343,7 @@ def histograma_api(request):
     })
 
 from django.views.decorators.csrf import csrf_exempt
+
 @csrf_exempt
 def aranet_data(request):
     if request.method == "POST":
@@ -364,3 +365,7 @@ from .models import AranetReading
 def aranet_live_page(request):
     readings = AranetReading.objects.order_by('-timestamp')[:20]  # últimas 20 lecturas
     return render(request, "iotappweb/aranet_live.html", {"readings": readings})
+
+def aranet_data_json(request):
+    # Devuelve los datos acumulados en JSON
+    return JsonResponse(clients_data, safe=False)
