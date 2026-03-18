@@ -342,45 +342,37 @@ def histograma_api(request):
         "total_mediciones": total_mediciones
     })
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
 def aranet_webhook(request):
+
     if request.method != "POST":
         return JsonResponse({"error": "only POST"}, status=405)
 
     try:
         data = json.loads(request.body)
 
-        base_name = None
-        base_time = None
-
         objects_to_create = []
 
         for record in data:
 
-            # Base fields (pueden venir solo una vez)
-            if "bn" in record:
-                base_name = record.get("bn")
-
-            if "bt" in record:
-                base_time = record.get("bt")
-
+            sensor = record.get("bn", "unknown")
             metric = record.get("n")
             value = record.get("v")
             unit = record.get("u")
-            time_offset = record.get("t", 0)
+            bt = record.get("bt")
 
-            # Calcular timestamp real
-            if base_time:
-                timestamp = datetime.utcfromtimestamp(base_time + time_offset)
+            # ⏱️ Timestamp correcto
+            if bt:
+                timestamp = datetime.utcfromtimestamp(bt)
             else:
-                timestamp = datetime.utcfromtimestamp(time_offset)
+                # fallback si no viene tiempo
+                timestamp = datetime.utcnow()
 
-            # Crear objeto (sin guardar aún)
             obj = SensorData(
-                sensor=base_name or "unknown",
+                sensor=sensor,
                 metric=metric,
                 value=value,
                 unit=unit,
@@ -389,12 +381,11 @@ def aranet_webhook(request):
 
             objects_to_create.append(obj)
 
-        # 🔥 GUARDADO MASIVO (clave para rendimiento)
         SensorData.objects.bulk_create(objects_to_create)
 
         return JsonResponse({
             "status": "ok",
-            "records_saved": len(objects_to_create)
+            "saved": len(objects_to_create)
         })
 
     except Exception as e:
