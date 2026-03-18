@@ -342,6 +342,7 @@ def histograma_api(request):
         "total_mediciones": total_mediciones
     })
 
+from django.views.decorators.csrf import csrf_exempt
 
 clients_data = []
 
