@@ -342,31 +342,29 @@ def histograma_api(request):
         "total_mediciones": total_mediciones
     })
 
-def aranet_webhook(request):
-    print("Método recibido:", request.method)
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            print("Datos recibidos:", json.dumps(data, indent=2))
-            return JsonResponse({'status': 'ok'})
-        except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
-    else:
-        return JsonResponse({'status': 'method not allowed', 'method': request.method})
 
 from django.http import StreamingHttpResponse
+from django.views.decorators.csrf import csrf_exempt
 
-LAST_DATA = None
+clients_data = []
+
+# Para recibir SendML
+@csrf_exempt
+def aranet_data(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        print("Datos recibidos:", data)  # <-- Se verá en la terminal del servidor
+        return JsonResponse({"status": "ok"})
+    return JsonResponse({"status": "method not allowed", "method": request.method})
 
 def aranet_stream(request):
     def event_stream():
-        last_seen = None
-        global LAST_DATA
+        last_index = 0
         while True:
-            if LAST_DATA != last_seen:
-                last_seen = LAST_DATA
-                if last_seen:
-                    yield f"data: {json.dumps(last_seen)}\n\n"
+            if len(clients_data) > last_index:
+                for item in clients_data[last_index:]:
+                    yield f"data: {json.dumps(item)}\n\n"
+                last_index = len(clients_data)
             time.sleep(1)
     return StreamingHttpResponse(event_stream(), content_type='text/event-stream')
 

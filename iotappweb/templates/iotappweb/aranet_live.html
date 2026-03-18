@@ -4,17 +4,18 @@
     <title>Aranet Live Data</title>
 </head>
 <body>
-<h1>Datos de sensores Aranet</h1>
-<pre id="data">Esperando datos...</pre>
+    <h1>Datos de sensores Aranet</h1>
+    <ul id="sensor-data"></ul>
 
-<script>
-const evtSource = new EventSource("/iotappweb/aranet-stream/");
-
-evtSource.onmessage = function(event) {
-    const data = JSON.parse(event.data);
-    console.log("Datos recibidos:", data);
-    document.getElementById("data").textContent = JSON.stringify(data, null, 2);
-};
-</script>
+    <script>
+        const evtSource = new EventSource("/aranet-stream/"); // Creamos la ruta SSE
+        evtSource.onmessage = function(e) {
+            console.log("Datos recibidos:", e.data);
+            const ul = document.getElementById("sensor-data");
+            const li = document.createElement("li");
+            li.textContent = e.data;
+            ul.appendChild(li);
+        };
+    </script>
 </body>
 </html>
