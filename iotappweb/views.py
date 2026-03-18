@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import m1Sensoresdata, m2Sensoresdata, riegoRegistro, riegoResumen
+from .models import m1Sensoresdata, m2Sensoresdata, riegoRegistro, riegoResumen, AranetReading
 # Create your views here.
 import time
 import paho.mqtt.client as mqtt
@@ -343,7 +343,6 @@ def histograma_api(request):
     })
 
 from django.views.decorators.csrf import csrf_exempt
-from django.models import AranetReading
 @csrf_exempt
 def aranet_data(request):
     if request.method == "POST":
