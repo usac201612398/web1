@@ -342,19 +342,20 @@ def histograma_api(request):
         "total_mediciones": total_mediciones
     })
 
+# Guardaremos temporalmente los últimos datos
+LAST_DATA = []
+
 def aranet_webhook(request):
+    global LAST_DATA
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            # Mostrar en consola
-            print("Datos recibidos de Aranet:")
-            print(json.dumps(data, indent=2))
-            # También se devuelve en la respuesta para debug
-            return JsonResponse({
-                'status': 'ok',
-                'received_data': data
-            })
+            LAST_DATA = data  # Guardar temporalmente
+            return JsonResponse({'status': 'ok'})
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    elif request.method == 'GET':
+        # Mostrar los últimos datos recibidos
+        return JsonResponse({'status': 'ok', 'last_data': LAST_DATA})
     else:
         return JsonResponse({'status': 'method not allowed', 'method': request.method})
