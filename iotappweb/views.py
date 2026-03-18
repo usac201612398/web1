@@ -342,16 +342,18 @@ def histograma_api(request):
         "total_mediciones": total_mediciones
     })
 
-
-
 def aranet_webhook(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            # Aquí puedes procesar los datos
-            print("Datos recibidos de Aranet:", json.dumps(data, indent=2))
-            # Ejemplo: guardar en base de datos o CSV
-            return JsonResponse({'status': 'ok'})
+            # Mostrar en consola
+            print("Datos recibidos de Aranet:")
+            print(json.dumps(data, indent=2))
+            # También se devuelve en la respuesta para debug
+            return JsonResponse({
+                'status': 'ok',
+                'received_data': data
+            })
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
     else:
