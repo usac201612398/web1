@@ -343,33 +343,19 @@ def histograma_api(request):
     })
 
 
-from django.http import StreamingHttpResponse
-from django.views.decorators.csrf import csrf_exempt
-
 clients_data = []
-
-import logging
-logger = logging.getLogger(__name__)
 
 @csrf_exempt
 def aranet_data(request):
     if request.method == "POST":
         data = json.loads(request.body)
-        logger.info("Datos recibidos: %s", data)
-        clients_data.append(data) 
+        clients_data.append(data)  # guardamos en memoria
         return JsonResponse({"status": "ok"})
-    return JsonResponse({"status": "method not allowed", "method": request.method})
-
-def aranet_stream(request):
-    def event_stream():
-        last_index = 0
-        while True:
-            if len(clients_data) > last_index:
-                for item in clients_data[last_index:]:
-                    yield f"data: {json.dumps(item)}\n\n"
-                last_index = len(clients_data)
-            time.sleep(1)
-    return StreamingHttpResponse(event_stream(), content_type='text/event-stream')
+    return JsonResponse({"status": "method not allowed"}, status=405)
 
 def aranet_live_page(request):
     return render(request, "iotappweb/aranet_live.html")
+
+def aranet_data_json(request):
+    # endpoint para devolver todos los datos acumulados
+    return JsonResponse(clients_data, safe=False)
