@@ -1,5 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Lecturas Aranet</title>
+</head>
+<body>
 <h1>Lecturas Aranet</h1>
-<table border="1">
+<table border="1" id="aranet-table">
   <tr>
     <th>Sensor</th>
     <th>Timestamp</th>
@@ -17,3 +24,32 @@
   </tr>
   {% endfor %}
 </table>
+
+<script>
+function fetchData() {
+  fetch('/iotappweb/aranet-data-json/')
+    .then(res => res.json())
+    .then(data => {
+      const table = document.getElementById('aranet-table');
+      
+      // Limpiar filas anteriores, excepto encabezado
+      table.querySelectorAll('tr:not(:first-child)').forEach(tr => tr.remove());
+
+      // Agregar filas nuevas
+      data.forEach(r => {
+        const row = table.insertRow();
+        row.insertCell(0).textContent = r.sensor;
+        row.insertCell(1).textContent = new Date(r.timestamp * 1000).toLocaleString();
+        row.insertCell(2).textContent = r.co2;
+        row.insertCell(3).textContent = r.temperature;
+        row.insertCell(4).textContent = r.humidity;
+      });
+    })
+    .catch(err => console.error('Error al obtener datos:', err));
+}
+
+// Refrescar cada 2 segundos
+setInterval(fetchData, 2000);
+</script>
+</body>
+</html>

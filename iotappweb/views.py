@@ -348,24 +348,24 @@ from django.views.decorators.csrf import csrf_exempt
 def aranet_data(request):
     if request.method == "POST":
         data = json.loads(request.body)
-        # Guardamos cada medición
+        co2 = temperature = humidity = 0
         for e in data.get("e", []):
-            AranetReading.objects.create(
-                sensor=data.get("bn", "unknown"),
-                timestamp=datetime.fromtimestamp(data.get("bt", 0)),
-                co2=e.get("v") if e.get("n") == "co2" else 0,
-                temperature=e.get("v") if e.get("n") == "temperature" else 0,
-                humidity=e.get("v") if e.get("n") == "humidity" else 0,
-            )
+            if e.get("n") == "co2":
+                co2 = e.get("v")
+            elif e.get("n") == "temperature":
+                temperature = e.get("v")
+            elif e.get("n") == "humidity":
+                humidity = e.get("v")
+        AranetReading.objects.create(
+            sensor=data.get("bn", "unknown"),
+            timestamp=datetime.fromtimestamp(data.get("bt", 0)),
+            co2=co2,
+            temperature=temperature,
+            humidity=humidity,
+        )
         return JsonResponse({"status": "ok"})
     return JsonResponse({"status": "method not allowed", "method": request.method})
 
-from .models import AranetReading
-
-def aranet_live_page(request):
+def aranet_live_page(request):  
     readings = AranetReading.objects.order_by('-timestamp')[:20]  # últimas 20 lecturas
     return render(request, "iotappweb/aranet_live.html", {"readings": readings})
-
-def aranet_data_json(request):
-    # Devuelve los datos acumulados en JSON
-    return JsonResponse(clients_data, safe=False)
