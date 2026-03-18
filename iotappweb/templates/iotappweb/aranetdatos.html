@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Aranet Live Data</title>
+</head>
+<body>
+<h1>Aranet Sensor Live Data</h1>
+
+<script>
+// Función asincrónica que obtiene datos del endpoint Django
+async function fetchData() {
+    try {
+        const response = await fetch('/iotappweb/aranet-data/'); // GET
+        const json = await response.json();
+        if (json.last_data.length > 0) {
+            console.log("Nuevos datos recibidos:", json.last_data);
+        }
+    } catch (err) {
+        console.error("Error al obtener datos:", err);
+    }
+}
+
+// Ejecutamos cada 2 segundos
+setInterval(fetchData, 2000);
+</script>
+</body>
+</html>

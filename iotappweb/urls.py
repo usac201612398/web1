@@ -14,5 +14,6 @@ urlpatterns = [
     path('riegos/historial', views.historial_riegos, name='riegoshistorial'),
     path('consumo/', views.consumo_acumulado, name='consumo_acumulado'),
     path('api/histograma/', views.histograma_api, name='histograma_api'),
-    path('aranet-data/', views.aranet_webhook, name='aranet_webhook')
+    path('aranet-data/', views.aranet_webhook, name='aranet_webhook'),
+    path('aranet-live/', views.aranet_live_view, name='aranet_live'),  # Template con JS
 ]
