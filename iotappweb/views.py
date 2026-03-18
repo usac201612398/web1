@@ -343,7 +343,7 @@ def histograma_api(request):
     })
 
 from django.views.decorators.csrf import csrf_exempt
-
+from django.models import AranetReading
 @csrf_exempt
 def aranet_data(request):
     if request.method == "POST":
