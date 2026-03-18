@@ -360,4 +360,4 @@ def aranet_webhook(request):
         return JsonResponse({'status': 'method not allowed', 'method': request.method})
 
 def aranet_live_view(request):
-    return render(request, 'aranet_live.html')
+    return render(request, 'iotappweb/aranet_live.html')
