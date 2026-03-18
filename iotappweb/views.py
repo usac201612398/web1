@@ -348,13 +348,14 @@ from django.views.decorators.csrf import csrf_exempt
 
 clients_data = []
 
-# Para recibir SendML
+import logging
+logger = logging.getLogger(__name__)
+
 @csrf_exempt
 def aranet_data(request):
     if request.method == "POST":
         data = json.loads(request.body)
-        print("Datos recibidos:", data)  # Se verá en la terminal
-        clients_data.append(data)          # <-- AGREGAR A LA LISTA
+        logger.info("Datos recibidos: %s", data)
         return JsonResponse({"status": "ok"})
     return JsonResponse({"status": "method not allowed", "method": request.method})
 
