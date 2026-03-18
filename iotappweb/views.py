@@ -342,28 +342,45 @@ def histograma_api(request):
         "total_mediciones": total_mediciones
     })
 
+
 from django.views.decorators.csrf import csrf_exempt
+
 @csrf_exempt
 def aranet_data(request):
-    if request.method == "POST":
+    if request.method != "POST":
+        return JsonResponse({"status": "method not allowed", "method": request.method}, status=405)
+
+    try:
         data = json.loads(request.body)
-        co2 = temperature = humidity = 0
-        for e in data.get("e", []):
-            if e.get("n") == "co2":
-                co2 = e.get("v")
-            elif e.get("n") == "temperature":
-                temperature = e.get("v")
-            elif e.get("n") == "humidity":
-                humidity = e.get("v")
-        AranetReading.objects.create(
-            sensor=data.get("bn", "unknown"),
-            timestamp=datetime.fromtimestamp(data.get("bt", 0)),
-            co2=co2,
-            temperature=temperature,
-            humidity=humidity,
-        )
-        return JsonResponse({"status": "ok"})
-    return JsonResponse({"status": "method not allowed", "method": request.method})
+    except json.JSONDecodeError:
+        return JsonResponse({"status": "invalid JSON"}, status=400)
+
+    # Inicializa valores
+    co2 = temperature = humidity = 0
+
+    # Recorre las mediciones del JSON
+    for e in data.get("e", []):
+        if e.get("n") == "co2":
+            co2 = float(e.get("v", 0))
+        elif e.get("n") == "temperature":
+            temperature = float(e.get("v", 0))
+        elif e.get("n") == "humidity":
+            humidity = float(e.get("v", 0))
+
+    # Convierte timestamp a datetime
+    timestamp = datetime.fromtimestamp(data.get("bt", 0))
+
+    # Guarda en la base de datos
+    reading = AranetReading.objects.create(
+        sensor=data.get("bn", "unknown"),
+        timestamp=timestamp,
+        co2=co2,
+        temperature=temperature,
+        humidity=humidity
+    )
+
+    # Devuelve respuesta con el id del registro guardado
+    return JsonResponse({"status": "ok", "id": reading.id})
 
 def aranet_live_page(request):  
     readings = AranetReading.objects.order_by('-timestamp')[:20]  # últimas 20 lecturas
