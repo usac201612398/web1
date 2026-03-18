@@ -347,47 +347,38 @@ from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
 def aranet_data(request):
-    if request.method != "POST":
-        return JsonResponse({"status": "method not allowed", "method": request.method}, status=405)
-
-    try:
+    if request.method == "POST":
         data = json.loads(request.body)
-    except json.JSONDecodeError:
-        return JsonResponse({"status": "invalid JSON"}, status=400)
+        co2 = temperature = humidity = 0
+        for e in data.get("e", []):
+            if e.get("n") == "co2":
+                co2 = e.get("v")
+            elif e.get("n") == "temperature":
+                temperature = e.get("v")
+            elif e.get("n") == "humidity":
+                humidity = e.get("v")
+        AranetReading.objects.create(
+            sensor=data.get("bn", "unknown"),
+            timestamp=datetime.fromtimestamp(data.get("bt", 0)),
+            co2=co2,
+            temperature=temperature,
+            humidity=humidity,
+        )
+        return JsonResponse({"status": "ok"})
+    return JsonResponse({"status": "method not allowed", "method": request.method})
+    
 
-    # Inicializa valores
-    co2 = temperature = humidity = 0
-
-    # Recorre las mediciones del JSON
-    for e in data.get("e", []):
-        if e.get("n") == "co2":
-            co2 = float(e.get("v", 0))
-        elif e.get("n") == "temperature":
-            temperature = float(e.get("v", 0))
-        elif e.get("n") == "humidity":
-            humidity = float(e.get("v", 0))
-
-    # Convierte timestamp a datetime
-    timestamp = datetime.fromtimestamp(data.get("bt", 0))
-
-    # Guarda en la base de datos
-    reading = AranetReading.objects.create(
-        sensor=data.get("bn", "unknown"),
-        timestamp=timestamp,
-        co2=co2,
-        temperature=temperature,
-        humidity=humidity
-    )
-
-    # Devuelve respuesta con el id del registro guardado
-    return JsonResponse({"status": "ok", "id": reading.id})
+def aranet_data_json(request):
+    readings = AranetReading.objects.order_by('-timestamp')[:20]
+    data = [{
+        "sensor": r.sensor,
+        "timestamp": r.timestamp.strftime("%Y-%m-%d %H:%M:%S"),
+        "co2": r.co2,
+        "temperature": r.temperature,
+        "humidity": r.humidity
+    } for r in readings]
+    return JsonResponse(data, safe=False)
 
 def aranet_live_page(request):  
     readings = AranetReading.objects.order_by('-timestamp')[:20]  # últimas 20 lecturas
     return render(request, "iotappweb/aranet_live.html", {"readings": readings})
-
-def aranet_data_json(request):
-    # Devuelve las últimas 20 lecturas en formato JSON
-    readings = AranetReading.objects.order_by('-timestamp')[:20]  # últimas 20 lecturas
-    data = list(readings.values('sensor', 'timestamp', 'co2', 'temperature', 'humidity'))
-    return JsonResponse(data, safe=False)
