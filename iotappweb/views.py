@@ -353,3 +353,22 @@ def aranet_webhook(request):
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
     else:
         return JsonResponse({'status': 'method not allowed', 'method': request.method})
+
+from django.http import StreamingHttpResponse
+
+LAST_DATA = None
+
+def aranet_stream(request):
+    def event_stream():
+        last_seen = None
+        global LAST_DATA
+        while True:
+            if LAST_DATA != last_seen:
+                last_seen = LAST_DATA
+                if last_seen:
+                    yield f"data: {json.dumps(last_seen)}\n\n"
+            time.sleep(1)
+    return StreamingHttpResponse(event_stream(), content_type='text/event-stream')
+
+def aranet_live_page(request):
+    return render(request, "iotappweb/aranet_live.html")
