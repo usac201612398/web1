@@ -355,4 +355,4 @@ def aranet_webhook(request):
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
     else:
-        return JsonResponse({'status': 'method not allowed'}, status=405)
+        return JsonResponse({'status': 'method not allowed', 'method': request.method})
