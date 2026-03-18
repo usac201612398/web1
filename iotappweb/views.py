@@ -368,3 +368,9 @@ def aranet_data(request):
 def aranet_live_page(request):  
     readings = AranetReading.objects.order_by('-timestamp')[:20]  # últimas 20 lecturas
     return render(request, "iotappweb/aranet_live.html", {"readings": readings})
+
+def aranet_data_json(request):
+    # Devuelve las últimas 20 lecturas en formato JSON
+    readings = AranetReading.objects.order_by('-timestamp')[:20]  # últimas 20 lecturas
+    data = list(readings.values('sensor', 'timestamp', 'co2', 'temperature', 'humidity'))
+    return JsonResponse(data, safe=False)
