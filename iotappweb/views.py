@@ -342,22 +342,36 @@ def histograma_api(request):
         "total_mediciones": total_mediciones
     })
 
-LAST_DATA = []
+from django.http import JsonResponse, StreamingHttpResponse
 
-def aranet_webhook(request):
+LAST_DATA = None
+
+def aranet_data(request):
     global LAST_DATA
-    if request.method == 'POST':
+    if request.method == "POST":
         try:
             data = json.loads(request.body)
-            LAST_DATA = data  # Guardamos el último POST recibido
-            return JsonResponse({'status': 'ok'})
+            LAST_DATA = data
+            print("Datos recibidos:", data)
+            return JsonResponse({"status": "ok"})
         except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
-    elif request.method == 'GET':
-        # Retornamos los últimos datos
-        return JsonResponse({'status': 'ok', 'last_data': LAST_DATA})
+            return JsonResponse({"status": "error", "error": str(e)}, status=400)
     else:
-        return JsonResponse({'status': 'method not allowed', 'method': request.method})
+        return JsonResponse({"status": "method not allowed"}, status=405)
 
 def aranet_live_view(request):
     return render(request, 'iotappweb/aranetdatos.html')
+
+import time
+
+def aranet_stream(request):
+    def event_stream():
+        last_seen = None
+        global LAST_DATA
+        while True:
+            if LAST_DATA != last_seen:
+                last_seen = LAST_DATA
+                if last_seen:
+                    yield f"data: {json.dumps(last_seen)}\n\n"
+            time.sleep(1)  # solo para evitar sobrecargar CPU
+    return StreamingHttpResponse(event_stream(), content_type='text/event-stream')
