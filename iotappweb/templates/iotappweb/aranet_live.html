@@ -8,13 +8,15 @@
     <ul id="sensor-data"></ul>
 
     <script>
-        const evtSource = new EventSource("/iotappweb/aranet-stream/");
+        const evtSource = new EventSource("https://sdc-iot.popoyan.com.gt/iotappweb/aranet-stream/");
         evtSource.onmessage = function(e) {
-            console.log("Datos recibidos:", e.data);
             const ul = document.getElementById("sensor-data");
             const li = document.createElement("li");
-            li.textContent = e.data;
+            li.textContent = e.data;  // JSON completo que llega
             ul.appendChild(li);
+        };
+        evtSource.onerror = function(e) {
+            console.error("EventSource error:", e);
         };
     </script>
 </body>

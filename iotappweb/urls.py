@@ -14,7 +14,7 @@ urlpatterns = [
     path('riegos/historial', views.historial_riegos, name='riegoshistorial'),
     path('consumo/', views.consumo_acumulado, name='consumo_acumulado'),
     path('api/histograma/', views.histograma_api, name='histograma_api'),
-    path('aranet-data/', views.aranet_data, name='aranet_data'),
-    path('aranet-stream/', views.aranet_stream, name='aranet_stream'),
-    path('aranet-live/', views.aranet_live_page, name='aranet_live')
+    path('aranet-data/', views.aranet_data, name='aranet-data'),       # POST desde el sensor
+    path('aranet-stream/', views.aranet_stream, name='aranet-stream'), # SSE stream
+    path('aranet-live/', views.aranet_live_page, name='aranet-live')  # template HTML
 ]
