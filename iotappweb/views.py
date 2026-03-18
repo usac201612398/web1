@@ -342,11 +342,13 @@ def histograma_api(request):
         "total_mediciones": total_mediciones
     })
 
-from datetime import datetime
+
 from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
 def aranet_webhook(request):
+
+    print("🔥 ENTRÓ A ARANET")
 
     if request.method != "POST":
         return JsonResponse({"error": "only POST"}, status=405)
@@ -354,41 +356,24 @@ def aranet_webhook(request):
     try:
         data = json.loads(request.body)
 
-        objects_to_create = []
+        print("📦 DATA RECIBIDA:", data)
 
         for record in data:
-
-            sensor = record.get("bn", "unknown")
-            metric = record.get("n")
-            value = record.get("v")
-            unit = record.get("u")
-            bt = record.get("bt")
-
-            # ⏱️ Timestamp correcto
-            if bt:
-                timestamp = datetime.utcfromtimestamp(bt)
-            else:
-                # fallback si no viene tiempo
-                timestamp = datetime.utcnow()
-
             obj = SensorData(
-                sensor=sensor,
-                metric=metric,
-                value=value,
-                unit=unit,
-                timestamp=timestamp
+                sensor="test",
+                metric="test",
+                value=1,
+                unit="kg",
+                timestamp=datetime.utcnow()
             )
+            obj.save()   # 👈 IMPORTANTE: no bulk
 
-            objects_to_create.append(obj)
+        print("✅ GUARDADO CON SAVE()")
 
-        SensorData.objects.bulk_create(objects_to_create)
-
-        return JsonResponse({
-            "status": "ok",
-            "saved": len(objects_to_create)
-        })
+        return JsonResponse({"status": "ok"})
 
     except Exception as e:
+        print("❌ ERROR:", str(e))
         return JsonResponse({"error": str(e)}, status=400)
 
 def aranet_data_json(request):
