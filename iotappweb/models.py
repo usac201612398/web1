@@ -1,7 +1,15 @@
 from django.db import models
 
-# Create your models here.
+class AranetReading(models.Model):
+    sensor = models.CharField(max_length=50)        # sensor-1, sensor-2, etc.
+    timestamp = models.DateTimeField()             # cuando se tomó la lectura
+    co2 = models.FloatField()
+    temperature = models.FloatField()
+    humidity = models.FloatField()
 
+    def __str__(self):
+        return f"{self.sensor} @ {self.timestamp}"
+        
 class m1Sensoresdata(models.Model):
     registro = models.BigAutoField(primary_key=True)
     timestamp = models.DateTimeField(auto_now_add=True)

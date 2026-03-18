@@ -1,23 +1,19 @@
-<!-- iotappweb/aranet_live.html -->
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Aranet Live</title>
-</head>
-<body>
-    <h1>Datos recibidos</h1>
-    <pre id="data"></pre>
-
-    <script>
-        async function fetchData() {
-            const resp = await fetch("/iotappweb/aranet-data-json/");
-            const data = await resp.json();
-            document.getElementById("data").textContent = JSON.stringify(data, null, 2);
-        }
-
-        // actualizar cada 1 segundo
-        setInterval(fetchData, 1000);
-        fetchData();
-    </script>
-</body>
-</html>
+<h1>Lecturas Aranet</h1>
+<table border="1">
+  <tr>
+    <th>Sensor</th>
+    <th>Timestamp</th>
+    <th>CO2</th>
+    <th>Temperature</th>
+    <th>Humidity</th>
+  </tr>
+  {% for r in readings %}
+  <tr>
+    <td>{{ r.sensor }}</td>
+    <td>{{ r.timestamp }}</td>
+    <td>{{ r.co2 }}</td>
+    <td>{{ r.temperature }}</td>
+    <td>{{ r.humidity }}</td>
+  </tr>
+  {% endfor %}
+</table>
