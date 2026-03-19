@@ -349,6 +349,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
 def aranet_webhook(request):
+    print("REQUEST PATH:", request.path)
     print("🔥 ARANET REQUEST RECIBIDO")
 
     if request.method != "POST":
