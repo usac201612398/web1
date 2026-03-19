@@ -26,30 +26,25 @@
 </table>
 
 <script>
-function fetchData() {
-  fetch('/iotappweb/aranet-data-json/')
-    .then(res => res.json())
-    .then(data => {
-      const table = document.getElementById('aranet-table');
-      
-      // Borra todas las filas excepto la cabecera
-      table.querySelectorAll('tr:not(:first-child)').forEach(tr => tr.remove());
-      
-      // Añade nuevas filas
-      data.forEach(r => {
-        const row = table.insertRow();
-        row.insertCell(0).textContent = r.sensor;
-        row.insertCell(1).textContent = r.timestamp;
-        row.insertCell(2).textContent = r.co2;
-        row.insertCell(3).textContent = r.temperature;
-        row.insertCell(4).textContent = r.humidity;
-      });
-    })
-    .catch(err => console.error("Error:", err));
-}
+const socket = new WebSocket("wss://sdc-iot.popoyan.com.gt/ws/sensor_data/");
 
-// Llamar cada 2 segundos
-setInterval(fetchData, 2000);
+socket.onmessage = function(event) {
+    const data = JSON.parse(event.data);
+    console.log("📡 SENSOR EN VIVO:", data);
+
+    const table = document.getElementById('aranet-table');
+
+    // Insertar nueva fila arriba (debajo del header)
+    const row = table.insertRow(1);
+
+    row.insertCell(0).textContent = data.sensor;
+    row.insertCell(1).textContent = data.timestamp;
+
+    // Ajusta según tu métrica
+    row.insertCell(2).textContent = data.metric === "co2" ? data.value : "-";
+    row.insertCell(3).textContent = data.metric === "temperature" ? data.value : "-";
+    row.insertCell(4).textContent = data.metric === "humidity" ? data.value : "-";
+};
 </script>
 </body>
 </html>

@@ -352,8 +352,10 @@ def login_exempt(view_func):
         return view_func(*args, **kwargs)
     return wrapped_view
 
-ARANET_SECRET = "MiSecretoAranet123"
 
+ARANET_SECRET = "MiSecretoAranet123"
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 from django.views.decorators.csrf import csrf_exempt
 
 @login_exempt
@@ -374,6 +376,8 @@ def aranet_webhook(request):
         print("📦 DATA:", data)
 
         objects = []
+        channel_layer = get_channel_layer()
+
         for record in data:
             sensor = record.get("bn", "unknown").rstrip(":")
             metric = record.get("n")
@@ -381,12 +385,25 @@ def aranet_webhook(request):
             unit = record.get("u")
             bt = record.get("bt")
 
-            # Validación mínima
             if value is None or metric is None:
                 continue
 
-            # Timestamp
             timestamp = datetime.utcfromtimestamp(bt) if bt else datetime.utcnow()
+
+            # 👇 STREAM EN TIEMPO REAL
+            async_to_sync(channel_layer.group_send)(
+                "sensor_group",
+                {
+                    "type": "send_sensor_data",
+                    "data": {
+                        "sensor": sensor,
+                        "metric": metric,
+                        "value": value,
+                        "unit": unit,
+                        "timestamp": str(timestamp)
+                    }
+                }
+            )
 
             objects.append(
                 SensorData(
@@ -397,7 +414,6 @@ def aranet_webhook(request):
                     timestamp=timestamp
                 )
             )
-
         print(f"💾 Guardando {len(objects)} registros")
         SensorData.objects.bulk_create(objects)
         print("✅ GUARDADO OK")
