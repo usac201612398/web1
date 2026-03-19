@@ -83,7 +83,9 @@ MIDDLEWARE = [
 LOGIN_EXEMPT_URLS = [
     r'^/iotappweb/aranet-data/?$',   # webhook
     r'^/oauth2/login/?$',            # login ADFS
-    r'^/admin/login/?$',             # admin login
+    r'^/oauth2/callback/?$',         # callback de ADFS
+    r'^/oauth2/complete/.*$',        # cualquier ruta de redirección de django_auth_adfs
+    r'^/admin/login/?$',             # admin login si lo usas
 ]
 
 LOGIN_URL = '/oauth2/login'
