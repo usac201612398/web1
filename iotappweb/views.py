@@ -352,8 +352,7 @@ def login_exempt(view_func):
         return view_func(*args, **kwargs)
     return wrapped_view
 
-
-ARANET_SECRET = "MiSecretoAranet123"
+ARANET_SECRET = "wgm499gftypgcmx7wkrcspwsf5ykt4rg"
 from django.views.decorators.csrf import csrf_exempt
 
 @login_exempt
