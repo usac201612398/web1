@@ -2,18 +2,16 @@ import os
 from django.core.asgi import get_asgi_application
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
-from django.urls import re_path
-from plantaE import consumers
+from iotappweb.routing import websocket_urlpatterns  # Asegúrate de importar las URLs del WebSocket
+import django
 
+# Establecer la configuración de Django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'web1.settings')
-
-django_asgi_app = get_asgi_application()
+django.setup()
 
 application = ProtocolTypeRouter({
-    "http": django_asgi_app,
-    "websocket": AuthMiddlewareStack(
-        URLRouter([
-            re_path(r'ws/sensor_data/$', consumers.SensorDataConsumer.as_asgi()),
-        ])
+    "http": get_asgi_application(),  # Maneja solicitudes HTTP tradicionales
+    "websocket": AuthMiddlewareStack(  # Asegúrate de usar AuthMiddlewareStack para autenticar WebSockets si es necesario
+        URLRouter(websocket_urlpatterns)  # Aquí conectamos las rutas WebSocket
     ),
 })

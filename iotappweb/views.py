@@ -359,6 +359,14 @@ from asgiref.sync import async_to_sync
 from django.views.decorators.csrf import csrf_exempt
 
 @login_exempt
+@csrf_exemptfrom django.http import JsonResponse
+import json
+from datetime import datetime
+from django.views.decorators.csrf import csrf_exempt
+
+ARANET_SECRET = "MiSecretoAranet123"
+
+@login_exempt
 @csrf_exempt
 def aranet_webhook(request):
     print("REQUEST PATH:", request.path)
@@ -367,58 +375,18 @@ def aranet_webhook(request):
     if request.method != "POST":
         return JsonResponse({"error": "only POST"}, status=405)
 
-    token = request.headers.get("X-ARANET-KEY")  # debe coincidir con curl
+    # Verificamos el token
+    token = request.headers.get("X-ARANET-KEY")  # debe coincidir con el token que envías en el curl
     if token != ARANET_SECRET:
         return JsonResponse({"error": "Unauthorized"}, status=401)
 
     try:
+        # Intentamos cargar los datos JSON de la solicitud
         data = json.loads(request.body)
         print("📦 DATA:", data)
 
-        objects = []
-        channel_layer = get_channel_layer()
-
-        for record in data:
-            sensor = record.get("bn", "unknown").rstrip(":")
-            metric = record.get("n")
-            value = record.get("v")
-            unit = record.get("u")
-            bt = record.get("bt")
-
-            if value is None or metric is None:
-                continue
-
-            timestamp = datetime.utcfromtimestamp(bt) if bt else datetime.utcnow()
-
-            # 👇 STREAM EN TIEMPO REAL
-            async_to_sync(channel_layer.group_send)(
-                "sensor_group",
-                {
-                    "type": "send_sensor_data",
-                    "data": {
-                        "sensor": sensor,
-                        "metric": metric,
-                        "value": value,
-                        "unit": unit,
-                        "timestamp": str(timestamp)
-                    }
-                }
-            )
-
-            objects.append(
-                SensorData(
-                    sensor=sensor,
-                    metric=metric,
-                    value=value,
-                    unit=unit,
-                    timestamp=timestamp
-                )
-            )
-        print(f"💾 Guardando {len(objects)} registros")
-        SensorData.objects.bulk_create(objects)
-        print("✅ GUARDADO OK")
-
-        return JsonResponse({"status": "ok", "saved": len(objects)})
+        # Aquí devolvemos los datos tal cual para inspeccionarlos
+        return JsonResponse({"received_data": data}, status=200)
 
     except Exception as e:
         print("❌ ERROR:", str(e))
