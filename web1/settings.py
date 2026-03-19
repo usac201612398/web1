@@ -63,12 +63,7 @@ CHANNEL_LAYERS = {
         },
     },
 }
-LOGIN_URL = 'django_auth_adfs:login'
 
-# Rutas que no requieren login
-LOGIN_EXEMPT_URLS = [
-    r'^iotappweb/aranet-data/?$',  # sin la barra inicial
-]
 #SITE_ID = 1
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -84,6 +79,13 @@ MIDDLEWARE = [
     
 #    'web1.middleware.LoginRequiredMiddleware',
 ]
+# Rutas que no requieren login
+LOGIN_EXEMPT_URLS = [
+    r'^iotappweb/aranet-data/?$',  # sin la barra inicial
+]
+
+LOGIN_URL = '/oauth2/login'
+
 
 CUSTOM_FAILED_RESPONSE_VIEW = 'dot.path.to.custom.views.login_failed'
 ROOT_URLCONF = 'web1.urls'
