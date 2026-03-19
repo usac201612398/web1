@@ -63,6 +63,9 @@ CHANNEL_LAYERS = {
         },
     },
 }
+LOGIN_EXEMPT_URLS = [
+    r'^iotappweb/aranet-data/?$',  # permite con o sin barra
+]
 #SITE_ID = 1
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -229,9 +232,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LOGIN_URL = 'django_auth_adfs:login'
-LOGIN_EXEMPT_URLS = [
-    r'^iotappweb/aranet-data/?$',  # permite con o sin barra
-]
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 LOGIN_REDIRECT_URL = '/'
