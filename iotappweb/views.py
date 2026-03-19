@@ -14,6 +14,7 @@ from django.utils import timezone
 from datetime import timedelta, datetime
 from collections import defaultdict
 from django.views.decorators.csrf import csrf_exempt
+from functools import wraps
 
 MQTT_HOST = "10.111.112.4"
 MQTT_PORT = 1883
@@ -353,35 +354,43 @@ def login_exempt(view_func):
     return wrapped_view
 
 ARANET_SECRET = "wgm499gftypgcmx7wkrcspwsf5ykt4rg"
-from django.views.decorators.csrf import csrf_exempt
 
+# Vista para manejar el webhook de Aranet
 @login_exempt
 @csrf_exempt
 def aranet_webhook(request):
+    # Solo aceptamos POST
     if request.method != "POST":
         return JsonResponse({"error": "only POST"}, status=405)
 
+    # Verificar que la clave en los headers coincida con tu clave secreta
     token = request.headers.get("X-Aranet-Key")
     if token != ARANET_SECRET:
         return JsonResponse({"error": "Unauthorized"}, status=401)
 
     try:
+        # Parsear el cuerpo de la solicitud como JSON
         data = json.loads(request.body)
         objects = []
-        print("📦 DATA:", data)
+        print("📦 DATA RECIBIDA:", data)
 
+        # Iterar sobre cada registro recibido
         for record in data:
+            # Obtener los datos del registro
             sensor = record.get("bn", "unknown").rstrip(":")
             metric = record.get("n")
             value = record.get("v")
             unit = record.get("u")
             bt = record.get("bt")
-            timestamp = datetime.utcfromtimestamp(bt) if bt else datetime.utcnow()
 
             # Validación mínima
             if value is None or metric is None:
-                continue
+                continue  # Si no tiene valor o métrica, no lo guardamos
 
+            # Convertir el timestamp (en formato epoch) a datetime
+            timestamp = datetime.utcfromtimestamp(bt) if bt else datetime.utcnow()
+
+            # Crear el objeto SensorData para este registro
             objects.append(
                 SensorData(
                     sensor=sensor,
@@ -392,24 +401,35 @@ def aranet_webhook(request):
                 )
             )
 
-        # Guardar todos los registros en bulk (eficiente)
-        SensorData.objects.bulk_create(objects)
-        return JsonResponse({"status": "ok", "saved": len(objects)})
+        # Si tenemos objetos, guardarlos todos en un solo query para optimizar
+        if objects:
+            SensorData.objects.bulk_create(objects)
+            return JsonResponse({"status": "ok", "saved": len(objects)})
 
+        return JsonResponse({"status": "ok", "saved": 0})  # Si no hay datos válidos, no guardamos nada
+
+    except json.JSONDecodeError:
+        # Capturar errores de parseo de JSON
+        return JsonResponse({"error": "Invalid JSON format"}, status=400)
     except Exception as e:
+        # Capturar cualquier otro error
         return JsonResponse({"error": str(e)}, status=400)
 
+# Función para retornar los datos en formato JSON
 def aranet_data_json(request):
-    readings = AranetReading.objects.order_by('-timestamp')[:20]
+    # Obtener las últimas 20 lecturas de la base de datos
+    readings = SensorData.objects.order_by('-timestamp')[:20]
     data = [{
         "sensor": r.sensor,
         "timestamp": r.timestamp.strftime("%Y-%m-%d %H:%M:%S"),
-        "co2": r.co2,
-        "temperature": r.temperature,
-        "humidity": r.humidity
+        "metric": r.metric,
+        "value": r.value,
+        "unit": r.unit
     } for r in readings]
     return JsonResponse(data, safe=False)
 
-def aranet_live_page(request):  
-    readings = SensorData.objects.order_by('-timestamp')[:20]  # últimas 20 lecturas
+# Vista para mostrar los datos en tiempo real en la página web
+def aranet_live_page(request):
+    # Obtener las últimas 20 lecturas
+    readings = SensorData.objects.order_by('-timestamp')[:20]
     return render(request, "iotappweb/aranet_live.html", {"readings": readings})
