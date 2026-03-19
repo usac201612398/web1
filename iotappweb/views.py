@@ -346,9 +346,7 @@ def histograma_api(request):
 ARANET_SECRET = "MiSecretoAranet123"
 
 from django.views.decorators.csrf import csrf_exempt
-from django_auth_adfs.decorators import login_exempt
 
-@login_exempt
 @csrf_exempt
 def aranet_webhook(request):
     print("REQUEST PATH:", request.path)
