@@ -13,7 +13,7 @@ from django.db.models import Q, Avg, Max
 from django.utils import timezone
 from datetime import timedelta, datetime
 from collections import defaultdict
-
+from django.views.decorators.csrf import csrf_exempt
 
 MQTT_HOST = "10.111.112.4"
 MQTT_PORT = 1883
@@ -343,12 +343,10 @@ def histograma_api(request):
     })
 
 
-from django.views.decorators.csrf import csrf_exempt
-
 @csrf_exempt
 def aranet_webhook(request):
 
-    print("🔥 ENTRÓ A ARANET")
+    print("🔥 ARANET REQUEST RECIBIDO")
 
     if request.method != "POST":
         return JsonResponse({"error": "only POST"}, status=405)
@@ -356,21 +354,46 @@ def aranet_webhook(request):
     try:
         data = json.loads(request.body)
 
-        print("📦 DATA RECIBIDA:", data)
+        print("📦 DATA:", data)
+
+        objects = []
 
         for record in data:
-            obj = SensorData(
-                sensor="test",
-                metric="test",
-                value=1,
-                unit="kg",
-                timestamp=datetime.utcnow()
+
+            sensor = record.get("bn", "unknown").rstrip(":")
+            metric = record.get("n")
+            value = record.get("v")
+            unit = record.get("u")
+            bt = record.get("bt")
+
+            # Validación mínima
+            if value is None or metric is None:
+                continue
+
+            # Timestamp
+            if bt:
+                timestamp = datetime.utcfromtimestamp(bt)
+            else:
+                timestamp = datetime.utcnow()
+
+            objects.append(
+                SensorData(
+                    sensor=sensor,
+                    metric=metric,
+                    value=value,
+                    unit=unit,
+                    timestamp=timestamp
+                )
             )
-            obj.save()   # 👈 IMPORTANTE: no bulk
 
-        print("✅ GUARDADO CON SAVE()")
+        print(f"💾 Guardando {len(objects)} registros")
 
-        return JsonResponse({"status": "ok"})
+        # Guardado masivo
+        SensorData.objects.bulk_create(objects)
+
+        print("✅ GUARDADO OK")
+
+        return JsonResponse({"status": "ok", "saved": len(objects)})
 
     except Exception as e:
         print("❌ ERROR:", str(e))
