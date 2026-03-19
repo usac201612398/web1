@@ -369,6 +369,7 @@ def aranet_webhook(request):
     try:
         data = json.loads(request.body)
         objects = []
+        print("📦 DATA:", data)
 
         for record in data:
             sensor = record.get("bn", "unknown").rstrip(":")
