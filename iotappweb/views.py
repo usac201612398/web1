@@ -354,36 +354,49 @@ def login_exempt(view_func):
 
 
 ARANET_SECRET = "MiSecretoAranet123"
-from channels.layers import get_channel_layer
-from asgiref.sync import async_to_sync
 from django.views.decorators.csrf import csrf_exempt
-
-ARANET_SECRET = "MiSecretoAranet123"
 
 @login_exempt
 @csrf_exempt
 def aranet_webhook(request):
-    print("REQUEST PATH:", request.path)
-    print("🔥 ARANET REQUEST RECIBIDO")
-
     if request.method != "POST":
         return JsonResponse({"error": "only POST"}, status=405)
 
-    # Verificamos el token
-    token = request.headers.get("X-ARANET-KEY")  # debe coincidir con el token que envías en el curl
+    token = request.headers.get("X-Aranet-Key")
     if token != ARANET_SECRET:
         return JsonResponse({"error": "Unauthorized"}, status=401)
 
     try:
-        # Intentamos cargar los datos JSON de la solicitud
         data = json.loads(request.body)
-        print("📦 DATA:", data)
+        objects = []
 
-        # Aquí devolvemos los datos tal cual para inspeccionarlos
-        return JsonResponse({"received_data": data}, status=200)
+        for record in data:
+            sensor = record.get("bn", "unknown").rstrip(":")
+            metric = record.get("n")
+            value = record.get("v")
+            unit = record.get("u")
+            bt = record.get("bt")
+            timestamp = datetime.utcfromtimestamp(bt) if bt else datetime.utcnow()
+
+            # Validación mínima
+            if value is None or metric is None:
+                continue
+
+            objects.append(
+                SensorData(
+                    sensor=sensor,
+                    metric=metric,
+                    value=value,
+                    unit=unit,
+                    timestamp=timestamp
+                )
+            )
+
+        # Guardar todos los registros en bulk (eficiente)
+        SensorData.objects.bulk_create(objects)
+        return JsonResponse({"status": "ok", "saved": len(objects)})
 
     except Exception as e:
-        print("❌ ERROR:", str(e))
         return JsonResponse({"error": str(e)}, status=400)
 
 def aranet_data_json(request):
