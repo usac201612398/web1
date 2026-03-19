@@ -14,7 +14,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
-
+from .middleware import *
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -80,7 +80,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 #    'django.contrib.auth.middleware.AuthenticationMiddleware',
 #    'django.contrib.auth.middleware.RemoteUserMiddleware',
-    'django_auth_adfs.middleware.LoginRequiredMiddleware',
+    'web1.middleware.LoginRequiredMiddleware',
     
 #    'web1.middleware.LoginRequiredMiddleware',
 ]
