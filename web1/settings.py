@@ -64,7 +64,7 @@ CHANNEL_LAYERS = {
     },
 }
 LOGIN_EXEMPT_URLS = [
-    r'^iotappweb/aranet-data/?$',  # permite con o sin barra
+    r'^/iotappweb/aranet-data/?$',  # con slash inicial
 ]
 #SITE_ID = 1
 MIDDLEWARE = [
