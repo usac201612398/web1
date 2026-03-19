@@ -63,8 +63,11 @@ CHANNEL_LAYERS = {
         },
     },
 }
+LOGIN_URL = 'django_auth_adfs:login'
+
+# Rutas que no requieren login
 LOGIN_EXEMPT_URLS = [
-    r'^/iotappweb/aranet-data/?$',  # con slash inicial
+    r'^iotappweb/aranet-data/?$',  # sin la barra inicial
 ]
 #SITE_ID = 1
 MIDDLEWARE = [
@@ -231,7 +234,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LOGIN_URL = 'django_auth_adfs:login'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
