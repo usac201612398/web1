@@ -81,7 +81,9 @@ MIDDLEWARE = [
 ]
 # Rutas que no requieren login
 LOGIN_EXEMPT_URLS = [
-    r'^iotappweb/aranet-data/?$',  # sin la barra inicial
+    r'^/iotappweb/aranet-data/?$',   # webhook
+    r'^/oauth2/login/?$',            # login ADFS
+    r'^/admin/login/?$',             # admin login
 ]
 
 LOGIN_URL = '/oauth2/login'
