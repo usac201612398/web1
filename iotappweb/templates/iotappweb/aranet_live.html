@@ -27,7 +27,13 @@
 
 <script>
 const socket = new WebSocket("wss://sdc-iot.popoyan.com.gt/ws/sensor_data/");
+socket.onopen = function() {
+    console.log("✅ WebSocket conectado");
+};
 
+socket.onerror = function(error) {
+    console.error("❌ WebSocket error:", error);
+};
 socket.onmessage = function(event) {
     const data = JSON.parse(event.data);
     console.log("📡 SENSOR EN VIVO:", data);
