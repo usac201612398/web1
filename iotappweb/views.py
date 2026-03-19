@@ -358,12 +358,6 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.views.decorators.csrf import csrf_exempt
 
-@login_exempt
-@csrf_exemptfrom django.http import JsonResponse
-import json
-from datetime import datetime
-from django.views.decorators.csrf import csrf_exempt
-
 ARANET_SECRET = "MiSecretoAranet123"
 
 @login_exempt
