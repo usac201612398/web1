@@ -345,24 +345,25 @@ def histograma_api(request):
 
 ARANET_SECRET = "MiSecretoAranet123"
 
+from django.views.decorators.csrf import csrf_exempt
+
 @csrf_exempt
 def aranet_webhook(request):
-
     print("🔥 ARANET REQUEST RECIBIDO")
 
     if request.method != "POST":
         return JsonResponse({"error": "only POST"}, status=405)
-     token = request.headers.get("X-Aranet-Token")    if token != ARANET_SECRET:
+
+    token = request.headers.get("X-ARANET-KEY")  # debe coincidir con curl
+    if token != ARANET_SECRET:
         return JsonResponse({"error": "Unauthorized"}, status=401)
+
     try:
         data = json.loads(request.body)
-
         print("📦 DATA:", data)
 
         objects = []
-
         for record in data:
-
             sensor = record.get("bn", "unknown").rstrip(":")
             metric = record.get("n")
             value = record.get("v")
@@ -374,10 +375,7 @@ def aranet_webhook(request):
                 continue
 
             # Timestamp
-            if bt:
-                timestamp = datetime.utcfromtimestamp(bt)
-            else:
-                timestamp = datetime.utcnow()
+            timestamp = datetime.utcfromtimestamp(bt) if bt else datetime.utcnow()
 
             objects.append(
                 SensorData(
@@ -390,10 +388,7 @@ def aranet_webhook(request):
             )
 
         print(f"💾 Guardando {len(objects)} registros")
-
-        # Guardado masivo
         SensorData.objects.bulk_create(objects)
-
         print("✅ GUARDADO OK")
 
         return JsonResponse({"status": "ok", "saved": len(objects)})
