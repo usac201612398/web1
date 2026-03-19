@@ -345,8 +345,14 @@ def histograma_api(request):
 
 from functools import wraps
 
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from functools import wraps
+import json
+from datetime import datetime
+from .models import SensorData
+
 def login_exempt(view_func):
-    """Decora una view para que el middleware LoginRequiredMiddleware la ignore."""
     setattr(view_func, 'login_exempt', True)
     @wraps(view_func)
     def wrapped_view(*args, **kwargs):
@@ -355,42 +361,38 @@ def login_exempt(view_func):
 
 ARANET_SECRET = "wgm499gftypgcmx7wkrcspwsf5ykt4rg"
 
-# Vista para manejar el webhook de Aranet
 @login_exempt
 @csrf_exempt
 def aranet_webhook(request):
-    # Solo aceptamos POST
+    print("🔥 Webhook recibido")
+    print("Headers:", dict(request.headers))
+    print("Body raw:", request.body)
+
     if request.method != "POST":
         return JsonResponse({"error": "only POST"}, status=405)
 
-    # Verificar que la clave en los headers coincida con tu clave secreta
     token = request.headers.get("X-Aranet-Key")
     if token != ARANET_SECRET:
+        print("❌ API Key incorrecta:", token)
         return JsonResponse({"error": "Unauthorized"}, status=401)
 
     try:
-        # Parsear el cuerpo de la solicitud como JSON
         data = json.loads(request.body)
-        objects = []
-        print("📦 DATA RECIBIDA:", data)
+        print("📦 DATA parsed:", data)
 
-        # Iterar sobre cada registro recibido
+        objects = []
         for record in data:
-            # Obtener los datos del registro
             sensor = record.get("bn", "unknown").rstrip(":")
             metric = record.get("n")
             value = record.get("v")
             unit = record.get("u")
             bt = record.get("bt")
-
-            # Validación mínima
-            if value is None or metric is None:
-                continue  # Si no tiene valor o métrica, no lo guardamos
-
-            # Convertir el timestamp (en formato epoch) a datetime
             timestamp = datetime.utcfromtimestamp(bt) if bt else datetime.utcnow()
 
-            # Crear el objeto SensorData para este registro
+            if value is None or metric is None:
+                print("⚠️ Registro ignorado:", record)
+                continue
+
             objects.append(
                 SensorData(
                     sensor=sensor,
@@ -401,18 +403,16 @@ def aranet_webhook(request):
                 )
             )
 
-        # Si tenemos objetos, guardarlos todos en un solo query para optimizar
         if objects:
             SensorData.objects.bulk_create(objects)
-            return JsonResponse({"status": "ok", "saved": len(objects)})
+            print(f"✅ Guardados {len(objects)} registros")
+        else:
+            print("⚠️ No hay objetos para guardar")
 
-        return JsonResponse({"status": "ok", "saved": 0})  # Si no hay datos válidos, no guardamos nada
+        return JsonResponse({"status": "ok", "saved": len(objects)})
 
-    except json.JSONDecodeError:
-        # Capturar errores de parseo de JSON
-        return JsonResponse({"error": "Invalid JSON format"}, status=400)
     except Exception as e:
-        # Capturar cualquier otro error
+        print("❌ ERROR:", str(e))
         return JsonResponse({"error": str(e)}, status=400)
 
 # Función para retornar los datos en formato JSON
