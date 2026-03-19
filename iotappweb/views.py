@@ -342,11 +342,21 @@ def histograma_api(request):
         "total_mediciones": total_mediciones
     })
 
+from functools import wraps
+
+def login_exempt(view_func):
+    """Decora una view para que el middleware LoginRequiredMiddleware la ignore."""
+    setattr(view_func, 'login_exempt', True)
+    @wraps(view_func)
+    def wrapped_view(*args, **kwargs):
+        return view_func(*args, **kwargs)
+    return wrapped_view
 
 ARANET_SECRET = "MiSecretoAranet123"
 
 from django.views.decorators.csrf import csrf_exempt
 
+@login_exempt
 @csrf_exempt
 def aranet_webhook(request):
     print("REQUEST PATH:", request.path)
