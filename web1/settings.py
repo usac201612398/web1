@@ -230,7 +230,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LOGIN_URL = 'django_auth_adfs:login'
 LOGIN_EXEMPT_URLS = [
-    r'^iotappweb/aranet-data/.*$',
+    r'^iotappweb/aranet-data/?$',  # permite con o sin barra
 ]
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/

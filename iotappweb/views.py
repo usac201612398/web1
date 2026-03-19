@@ -343,6 +343,8 @@ def histograma_api(request):
     })
 
 
+ARANET_SECRET = "MiSecretoAranet123"
+
 @csrf_exempt
 def aranet_webhook(request):
 
@@ -350,7 +352,8 @@ def aranet_webhook(request):
 
     if request.method != "POST":
         return JsonResponse({"error": "only POST"}, status=405)
-
+     token = request.headers.get("X-Aranet-Token")    if token != ARANET_SECRET:
+        return JsonResponse({"error": "Unauthorized"}, status=401)
     try:
         data = json.loads(request.body)
 
