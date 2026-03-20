@@ -477,7 +477,7 @@ def evaluar_sensor(sensor_id):
         return None
 
     porcentaje_restante = (peso_actual / peso_base) * 100
-     porcentaje_perdida = 100 - porcentaje_restante
+    porcentaje_perdida = 100 - porcentaje_restante
     return {
         "sensor": sensor_id,
         "peso_actual": peso_actual,
