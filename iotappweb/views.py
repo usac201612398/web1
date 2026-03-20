@@ -403,9 +403,9 @@ def aranet_webhook(request):
                 for sensor in sensores:
                     resultado = evaluar_sensor(sensor)
 
-                    #if resultado and resultado["porcentaje_perdida"] > 3:
-                    #    print("🚨 ALERTA DISPARADA")
-                    enviar_alerta(resultado)
+                    if resultado and resultado["porcentaje_perdida"] > 8:
+                        print("🚨 ALERTA DISPARADA")
+                        enviar_alerta(resultado)
             else:
                 print("⚠️ No hay objetos para guardar")
 
