@@ -361,56 +361,58 @@ def aranet_webhook(request):
     print("Headers:", dict(request.headers))
     print("Body raw:", request.body)
 
-    if request.method != "POST":
-        return JsonResponse({"error": "only POST"}, status=405)
+    if request.method == "POST":
+        token = request.headers.get("X-Aranet-Key")
+        if token != ARANET_SECRET:
+            print("❌ API Key incorrecta:", token)
+            return JsonResponse({"error": "Unauthorized"}, status=401)
 
-    token = request.headers.get("X-Aranet-Key")
-    if token != ARANET_SECRET:
-        print("❌ API Key incorrecta:", token)
-        return JsonResponse({"error": "Unauthorized"}, status=401)
+        try:
+            data = json.loads(request.body)
+            print("📦 DATA parsed:", data)
 
-    try:
-        data = json.loads(request.body)
-        print("📦 DATA parsed:", data)
+            objects = []
+            for record in data:
+                sensor = record.get("bn", "unknown").rstrip(":")
+                metric = record.get("n")
+                value = record.get("v")
+                unit = record.get("u")
+                bt = record.get("bt")
+                timestamp = datetime.utcfromtimestamp(bt) if bt else datetime.utcnow()
 
-        objects = []
-        for record in data:
-            sensor = record.get("bn", "unknown").rstrip(":")
-            metric = record.get("n")
-            value = record.get("v")
-            unit = record.get("u")
-            bt = record.get("bt")
-            timestamp = datetime.utcfromtimestamp(bt) if bt else datetime.utcnow()
+                if value is None or metric is None:
+                    print("⚠️ Registro ignorado:", record)
+                    continue
 
-            if value is None or metric is None:
-                print("⚠️ Registro ignorado:", record)
-                continue
-
-            objects.append(
-                SensorData(
-                    sensor=sensor,
-                    metric=metric,
-                    value=value,
-                    unit=unit,
-                    timestamp=timestamp
+                objects.append(
+                    SensorData(
+                        sensor=sensor,
+                        metric=metric,
+                        value=value,
+                        unit=unit,
+                        timestamp=timestamp
+                    )
                 )
-            )
 
-        if objects:
-            SensorData.objects.bulk_create(objects)
-            print(f"✅ Guardados {len(objects)} registros")
-        else:
-            print("⚠️ No hay objetos para guardar")
+            if objects:
+                SensorData.objects.bulk_create(objects)
+                print(f"✅ Guardados {len(objects)} registros")
+            else:
+                print("⚠️ No hay objetos para guardar")
 
-        return JsonResponse({"status": "ok", "saved": len(objects)})
+            return JsonResponse({"status": "ok", "saved": len(objects)})
 
-    except Exception as e:
-        print("❌ ERROR:", str(e))
-        return JsonResponse({"error": str(e)}, status=400)
+        except Exception as e:
+            print("❌ ERROR:", str(e))
+            return JsonResponse({"error": str(e)}, status=400)
+    elif request.method == "GET":
+        # Solo para pruebas: responder un mensaje para ver si la URL está activa
+        return JsonResponse({"message": "GET method received, but expecting POST"}, status=200)
+    else:
+        return JsonResponse({"error": "Method Not Allowed"}, status=405)
 
-# Función para retornar los datos en formato JSON
+# Retorna los últimos 20 registros en JSON
 def aranet_data_json(request):
-    # Obtener las últimas 20 lecturas de la base de datos
     readings = SensorData.objects.order_by('-timestamp')[:20]
     data = [{
         "sensor": r.sensor,
@@ -421,8 +423,8 @@ def aranet_data_json(request):
     } for r in readings]
     return JsonResponse(data, safe=False)
 
-# Vista para mostrar los datos en tiempo real en la página web
+# Página web para mostrar los datos en tiempo real
 def aranet_live_page(request):
-    # Obtener las últimas 20 lecturas
+    # Se pueden mostrar los últimos 20 registros iniciales
     readings = SensorData.objects.order_by('-timestamp')[:20]
     return render(request, "iotappweb/aranet_live.html", {"readings": readings})
