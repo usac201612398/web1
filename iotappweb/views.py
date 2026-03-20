@@ -438,7 +438,7 @@ def aranet_resumen_json(request):
         pesos = [r.value for r in readings]
 
         peso_actual = pesos[0]
-        peso_base = max(pesos)
+        peso_base = 23
 
         if peso_base == 0:
             continue
@@ -458,7 +458,7 @@ def aranet_resumen_json(request):
 
 def aranet_resumen_page(request):
     return render(request, "iotappweb/aranet_resumen.html")
-    
+
 def evaluar_sensor(sensor_id):
     readings = SensorData.objects.filter(
         sensor=sensor_id,
