@@ -3,54 +3,57 @@
 <head>
   <meta charset="utf-8">
   <title>Lecturas Aranet</title>
+  <style>
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid black; padding: 4px; text-align: center; }
+  </style>
 </head>
 <body>
-<h1>Lecturas Aranet</h1>
-<table border="1" id="aranet-table">
+<h1>Lecturas Aranet en vivo</h1>
+<table id="aranet-table">
   <tr>
     <th>Sensor</th>
     <th>Timestamp</th>
-    <th>CO2</th>
-    <th>Temperature</th>
-    <th>Humidity</th>
+    <th>Métrica</th>
+    <th>Valor</th>
+    <th>Unidad</th>
   </tr>
   {% for r in readings %}
   <tr>
     <td>{{ r.sensor }}</td>
     <td>{{ r.timestamp }}</td>
-    <td>{{ r.co2 }}</td>
-    <td>{{ r.temperature }}</td>
-    <td>{{ r.humidity }}</td>
+    <td>{{ r.metric }}</td>
+    <td>{{ r.value }}</td>
+    <td>{{ r.unit }}</td>
   </tr>
   {% endfor %}
 </table>
 
 <script>
-const socket = new WebSocket("wss://sdc-iot.popoyan.com.gt/ws/sensor_data/");
-socket.onopen = function() {
-    console.log("✅ WebSocket conectado");
-};
+// Función que consulta el JSON y actualiza la tabla
+function fetchData() {
+    fetch('/iotappweb/aranet-data-json/')
+        .then(res => res.json())
+        .then(data => {
+            const table = document.getElementById('aranet-table');
+            // Borra todas las filas excepto la cabecera
+            table.querySelectorAll('tr:not(:first-child)').forEach(tr => tr.remove());
 
-socket.onerror = function(error) {
-    console.error("❌ WebSocket error:", error);
-};
-socket.onmessage = function(event) {
-    const data = JSON.parse(event.data);
-    console.log("📡 SENSOR EN VIVO:", data);
+            // Inserta filas nuevas
+            data.forEach(r => {
+                const row = table.insertRow();
+                row.insertCell(0).textContent = r.sensor;
+                row.insertCell(1).textContent = r.timestamp;
+                row.insertCell(2).textContent = r.metric;
+                row.insertCell(3).textContent = r.value;
+                row.insertCell(4).textContent = r.unit;
+            });
+        })
+        .catch(err => console.error("Error:", err));
+}
 
-    const table = document.getElementById('aranet-table');
-
-    // Insertar nueva fila arriba (debajo del header)
-    const row = table.insertRow(1);
-
-    row.insertCell(0).textContent = data.sensor;
-    row.insertCell(1).textContent = data.timestamp;
-
-    // Ajusta según tu métrica
-    row.insertCell(2).textContent = data.metric === "co2" ? data.value : "-";
-    row.insertCell(3).textContent = data.metric === "temperature" ? data.value : "-";
-    row.insertCell(4).textContent = data.metric === "humidity" ? data.value : "-";
-};
+// Actualiza cada 2 segundos
+setInterval(fetchData, 2000);
 </script>
 </body>
 </html>
