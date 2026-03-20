@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     'scorevalle',
     'django_auth_adfs',
     'channels', 
+
+    'corsheaders',
 ]
 ASGI_APPLICATION = "plantaE.asgi.application"
 
@@ -76,8 +78,13 @@ MIDDLEWARE = [
 #    'django.contrib.auth.middleware.AuthenticationMiddleware',
 #    'django.contrib.auth.middleware.RemoteUserMiddleware',
     'web1.middleware.LoginRequiredMiddleware',
+
+    'corsheaders.middleware.CorsMiddleware',
     
 #    'web1.middleware.LoginRequiredMiddleware',
+]
+CORS_ALLOWED_ORIGINS = [
+    "https://sdc-iot.popoyan.com.gt",  # Aranet Cloud
 ]
 # Rutas que no requieren login
 LOGIN_EXEMPT_URLS = [
