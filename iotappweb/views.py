@@ -405,7 +405,7 @@ def aranet_webhook(request):
                 for sensor in sensores:
                     resultado = evaluar_sensor(sensor)
 
-                    if resultado and resultado["porcentaje_restante"] < 8:
+                    if resultado and resultado["porcentaje_perdida"] > 3:
                         enviar_alerta(resultado)
             else:
                 print("⚠️ No hay objetos para guardar")
@@ -495,8 +495,8 @@ def enviar_alerta(sensor_data):
             f"Peso base: {sensor_data['peso_base']} kg\n"
             f"Nivel restante: {sensor_data['porcentaje_restante']:.2f}%"
         ),
-        from_email="tu_email@gmail.com",
-        recipient_list=["destino@gmail.com"],
+        from_email="brandon.portillo@popoyan.com.gt",
+        recipient_list=["3075926690603@ingenieria.usac.edu.gt"],
         fail_silently=False,
     )
 # Retorna los últimos 20 registros en JSON
