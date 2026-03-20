@@ -352,7 +352,8 @@ def login_exempt(view_func):
         return view_func(*args, **kwargs)
     return wrapped_view
 
-ARANET_SECRET = "wgm499gftypgcmx7wkrcspwsf5ykt4rg"
+#ARANET_SECRET = "wgm499gftypgcmx7wkrcspwsf5ykt4rg"
+ARANET_SECRET = "rphvcx8qe3dk5dwjfcw84na5vqz34jen"
 
 @login_exempt
 @csrf_exempt
