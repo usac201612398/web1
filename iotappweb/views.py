@@ -345,13 +345,6 @@ def histograma_api(request):
 
 from functools import wraps
 
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from functools import wraps
-import json
-from datetime import datetime
-from .models import SensorData
-
 def login_exempt(view_func):
     setattr(view_func, 'login_exempt', True)
     @wraps(view_func)
