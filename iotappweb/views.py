@@ -16,6 +16,8 @@ from collections import defaultdict
 from django.views.decorators.csrf import csrf_exempt
 from functools import wraps
 
+from django.core.mail import send_mail
+
 MQTT_HOST = "10.111.112.4"
 MQTT_PORT = 1883
 MQTT_USER = "sdc-iot"       
@@ -398,6 +400,13 @@ def aranet_webhook(request):
             if objects:
                 SensorData.objects.bulk_create(objects, batch_size=100)
                 print(f"✅ Guardados {len(objects)} registros")
+                sensores = set(obj.sensor for obj in objects)
+
+                for sensor in sensores:
+                    resultado = evaluar_sensor(sensor)
+
+                    if resultado and resultado["porcentaje_restante"] < 8:
+                        enviar_alerta(resultado)
             else:
                 print("⚠️ No hay objetos para guardar")
 
@@ -412,6 +421,84 @@ def aranet_webhook(request):
     else:
         return JsonResponse({"error": "Method Not Allowed"}, status=405)
 
+def aranet_resumen_json(request):
+    sensores = SensorData.objects.values_list('sensor', flat=True).distinct()
+
+    resultado = []
+
+    for sensor in sensores:
+        readings = SensorData.objects.filter(
+            sensor=sensor,
+            metric="weight"
+        ).order_by('-timestamp')[:50]
+
+        if not readings:
+            continue
+
+        pesos = [r.value for r in readings]
+
+        peso_actual = pesos[0]
+        peso_base = max(pesos)
+
+        if peso_base == 0:
+            continue
+
+        porcentaje_restante = (peso_actual / peso_base) * 100
+        porcentaje_perdida = 100 - porcentaje_restante
+
+        resultado.append({
+            "sensor": sensor,
+            "peso_actual": round(peso_actual, 3),
+            "peso_base": round(peso_base, 3),
+            "porcentaje_restante": round(porcentaje_restante, 2),
+            "porcentaje_perdida": round(porcentaje_perdida, 2),
+        })
+
+    return JsonResponse(resultado, safe=False)
+
+def aranet_resumen_page(request):
+    return render(request, "iotappweb/aranet_resumen.html")
+    
+def evaluar_sensor(sensor_id):
+    readings = SensorData.objects.filter(
+        sensor=sensor_id,
+        metric="weight"
+    ).order_by('-timestamp')[:50]  # últimas lecturas
+
+    if not readings:
+        return None
+
+    pesos = [r.value for r in readings]
+
+    peso_actual = pesos[0]
+    peso_base = max(pesos)  # asumimos que el mayor es después de riego
+
+    if peso_base == 0:
+        return None
+
+    porcentaje_restante = (peso_actual / peso_base) * 100
+
+    return {
+        "sensor": sensor_id,
+        "peso_actual": peso_actual,
+        "peso_base": peso_base,
+        "porcentaje_restante": porcentaje_restante
+    }
+
+
+def enviar_alerta(sensor_data):
+    send_mail(
+        subject=f"⚠️ Alerta de riego - {sensor_data['sensor']}",
+        message=(
+            f"El sensor {sensor_data['sensor']} está bajo nivel crítico.\n\n"
+            f"Peso actual: {sensor_data['peso_actual']} kg\n"
+            f"Peso base: {sensor_data['peso_base']} kg\n"
+            f"Nivel restante: {sensor_data['porcentaje_restante']:.2f}%"
+        ),
+        from_email="tu_email@gmail.com",
+        recipient_list=["destino@gmail.com"],
+        fail_silently=False,
+    )
 # Retorna los últimos 20 registros en JSON
 def aranet_data_json(request):
     readings = SensorData.objects.order_by('-timestamp')[:20]

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Resumen de Sensores</title>
+  <style>
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid black; padding: 6px; text-align: center; }
+
+    .ok { background-color: #c8f7c5; }
+    .warning { background-color: #fff3cd; }
+    .danger { background-color: #f8d7da; }
+  </style>
+</head>
+<body>
+
+<h1>🌱 Estado de Sensores (Riego)</h1>
+
+<table id="resumen-table">
+  <tr>
+    <th>Sensor</th>
+    <th>Peso actual (kg)</th>
+    <th>Peso base (kg)</th>
+    <th>% Restante</th>
+    <th>% Pérdida</th>
+  </tr>
+</table>
+
+<script>
+function getRowClass(porcentaje) {
+    if (porcentaje < 8) return "danger";     // crítico
+    if (porcentaje < 20) return "warning";   // medio
+    return "ok";                             // bien
+}
+
+function fetchResumen() {
+    fetch('/iotappweb/aranet-resumen-json/')
+        .then(res => res.json())
+        .then(data => {
+            const table = document.getElementById('resumen-table');
+            table.querySelectorAll('tr:not(:first-child)').forEach(tr => tr.remove());
+
+            data.forEach(r => {
+                const row = table.insertRow();
+
+                row.className = getRowClass(r.porcentaje_restante);
+
+                row.insertCell(0).textContent = r.sensor;
+                row.insertCell(1).textContent = r.peso_actual;
+                row.insertCell(2).textContent = r.peso_base;
+                row.insertCell(3).textContent = r.porcentaje_restante + " %";
+                row.insertCell(4).textContent = r.porcentaje_perdida + " %";
+            });
+        })
+        .catch(err => console.error("Error:", err));
+}
+
+// cada minuto (como pediste)
+setInterval(fetchResumen, 60000);
+
+// primera carga inmediata
+fetchResumen();
+</script>
+
+</body>
+</html>
