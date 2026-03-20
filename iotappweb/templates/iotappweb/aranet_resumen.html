@@ -27,10 +27,10 @@
 </table>
 
 <script>
-function getRowClass(porcentaje) {
-    if (porcentaje < 8) return "danger";     // crítico
-    if (porcentaje < 20) return "warning";   // medio
-    return "ok";                             // bien
+function getRowClass(perdida) {
+    if (perdida > 3) return "danger";   // 🔴 alerta
+    if (perdida > 1) return "warning";  // 🟡 leve
+    return "ok";                        // 🟢 normal
 }
 
 function fetchResumen() {
@@ -43,7 +43,7 @@ function fetchResumen() {
             data.forEach(r => {
                 const row = table.insertRow();
 
-                row.className = getRowClass(r.porcentaje_restante);
+                row.className = getRowClass(r.porcentaje_perdida);
 
                 row.insertCell(0).textContent = r.sensor;
                 row.insertCell(1).textContent = r.peso_actual;

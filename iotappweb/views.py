@@ -405,7 +405,7 @@ def aranet_webhook(request):
                 for sensor in sensores:
                     resultado = evaluar_sensor(sensor)
 
-                    if resultado and resultado["porcentaje_perdida"] > 3:
+                    if 3 < resultado["porcentaje_perdida"] < 3.5:
                         enviar_alerta(resultado)
             else:
                 print("⚠️ No hay objetos para guardar")
@@ -488,12 +488,14 @@ def evaluar_sensor(sensor_id):
 
 def enviar_alerta(sensor_data):
     send_mail(
-        subject=f"⚠️ Alerta de riego - {sensor_data['sensor']}",
+       subject=f"⚠️ Pérdida detectada - {sensor_data['sensor']}",
         message=(
-            f"El sensor {sensor_data['sensor']} está bajo nivel crítico.\n\n"
+            f"Sensor: {sensor_data['sensor']}\n"
             f"Peso actual: {sensor_data['peso_actual']} kg\n"
             f"Peso base: {sensor_data['peso_base']} kg\n"
-            f"Nivel restante: {sensor_data['porcentaje_restante']:.2f}%"
+            f"% restante: {sensor_data['porcentaje_restante']:.2f}%\n"
+            f"% pérdida: {sensor_data['porcentaje_perdida']:.2f}%\n\n"
+            f"⚠️ Se superó el 3% de pérdida"
         ),
         from_email="brandon.portillo@popoyan.com.gt",
         recipient_list=["3075926690603@ingenieria.usac.edu.gt"],
