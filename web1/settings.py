@@ -282,4 +282,4 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'brandrenz99@gmail.com'
-EMAIL_HOST_PASSWORD = 'yazo nnmb xtvh nbnb'
+EMAIL_HOST_PASSWORD = 'gxgp payx qwyd dgiy'
