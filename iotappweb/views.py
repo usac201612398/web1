@@ -345,8 +345,6 @@ def histograma_api(request):
         "total_mediciones": total_mediciones
     })
 
-from functools import wraps
-
 def login_exempt(view_func):
     setattr(view_func, 'login_exempt', True)
     @wraps(view_func)
@@ -405,7 +403,8 @@ def aranet_webhook(request):
                 for sensor in sensores:
                     resultado = evaluar_sensor(sensor)
 
-                    if 3 < resultado["porcentaje_perdida"] < 3.5:
+                    if resultado and resultado["porcentaje_perdida"] > 3:
+                        print("🚨 ALERTA DISPARADA")
                         enviar_alerta(resultado)
             else:
                 print("⚠️ No hay objetos para guardar")
