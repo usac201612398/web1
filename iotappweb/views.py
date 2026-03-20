@@ -470,7 +470,7 @@ def evaluar_sensor(sensor_id):
     pesos = [r.value for r in readings]
 
     peso_actual = pesos[0]
-    peso_base = max(pesos)  # asumimos que el mayor es después de riego
+    peso_base = 23 # asumimos que el mayor es después de riego
 
     if peso_base == 0:
         return None
