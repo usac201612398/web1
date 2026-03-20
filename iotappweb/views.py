@@ -396,7 +396,7 @@ def aranet_webhook(request):
                 )
 
             if objects:
-                SensorData.objects.bulk_create(objects)
+                SensorData.objects.bulk_create(objects, batch_size=100)
                 print(f"✅ Guardados {len(objects)} registros")
             else:
                 print("⚠️ No hay objetos para guardar")
