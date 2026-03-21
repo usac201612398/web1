@@ -11,6 +11,7 @@ from .view.contenedores_views import *
 from .view.controlcajas_views import *
 from .view.pedidoscarreta_views import *
 from .view.supervisioncultivos_views import *
+from .view.supervisionfito_views import *
 from .view.salidasfruta_views import *
 from .view.cargacontenedor_views import *
 from .view.inventarioprodterm_views import *
