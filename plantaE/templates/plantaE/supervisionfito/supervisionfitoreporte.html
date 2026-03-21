@@ -211,7 +211,7 @@ function cargarReporteSemanal() {
   const finca = $('#Area').val();
   const cultivo = $('#Cultivo').val();
 
-  $.get("{% url 'reporte_semanal_supervisionfito' %}", {estructura, zona, actividad,finca,cultivo}, function(data) {
+  $.get("{% url 'reporte_semanal_supervision_fito' %}", {estructura, zona, actividad,finca,cultivo}, function(data) {
     let body = '';
     console.log('DATA ENVIADA A SEGUIMIENTO:', data);
     if (data.length === 0) {
