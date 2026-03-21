@@ -146,7 +146,7 @@ urlpatterns = [
     
     #Urls de supervisionfito
     path('supervisionfitotomates/new/', views.supervisionfitotomates_create, name='supervisionfitotomates_create'),
-    path("supervisionfito",views.supervisionfito_list,name='supervisiofito_list'),
+    path("supervisionfito",views.supervisionfito_list,name='supervisionfito_list'),
     path("supervisionfito/<int:pk>/delete/",views.supervisionfito_delete,name='supervisionfito_delete'),
     path('supervisionfito/detalle/<str:fecha>/<str:cultivo>/<str:estructura>/<str:zona>/<str:finca>/',views.supervisionfito_detalle,name='supervisionfito_detalle'), 
     path('supervisionfito/reporte-general/',views.reporte_general_fito,name='reporte_general_supervision_fito'),
