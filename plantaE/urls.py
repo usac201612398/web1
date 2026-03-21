@@ -152,7 +152,8 @@ urlpatterns = [
     path('supervisionfito/reporte-general/',views.reporte_general_fito,name='reporte_general_supervision_fito'),
     path('supervisionfito/reporte-semana/detalleseguimiento',views.reporte_seguimiento_api,name='reporte_seguimiento_api_fito'),
     path('supervisionfito/reporte-semanal/', views.reporte_semanal_supervision_fito,name='reporte_semanal_supervision_fito'),
-
+    path("supervisionfito/plantilla",views.supervisionfito_grabar,name='supervisionfito_grabar'),
+    
     path('supervisionfito/reporte-semanal/view',views.reporte_semanal_view_fito,name='reporte_semanal_view_fito'),
     path('supervisionfito/reporte-semanal/seguimiento',views.reporte_semanal_seguimiento_fito,name='reporte_semanal_seguimiento_fito'),
     
