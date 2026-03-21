@@ -428,7 +428,7 @@ def supervisionfito_detalle(request, fecha, cultivo, estructura, zona,finca):
     })
 
 
-def reporte_semanal_view(request):
+def reporte_semanal_view_fito(request):
     user = request.user.username
 
     if user == 'cosecha.rio@popoyan.com.gt' or user=='jorge.cruz@popoyan.com.gt':
@@ -439,7 +439,7 @@ def reporte_semanal_view(request):
         area = 'ALL'  # gerencial
     return render(request, 'plantaE/supervisionfito/supervisionfitoreporte.html', {'area_usuario': area,'user':user})
 
-def reporte_semanal_seguimiento(request):
+def reporte_semanal_seguimiento_fito(request):
     user = request.user.username
 
     if user == 'cosecha.rio@popoyan.com.gt' or user=='jorge.cruz@popoyan.com.gt':

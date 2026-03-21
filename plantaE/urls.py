@@ -149,12 +149,12 @@ urlpatterns = [
     path("supervisionfito",views.supervisionfito_list,name='supervisiofito_list'),
     path("supervisionfito/<int:pk>/delete/",views.supervisionfito_delete,name='supervisionfito_delete'),
     path('supervisionfito/detalle/<str:fecha>/<str:cultivo>/<str:estructura>/<str:zona>/<str:finca>/',views.supervisionfito_detalle,name='supervisionfito_detalle'), 
-    path('supervisionproduccion/reporte-general-fito/',views.reporte_general_fito,name='reporte_general_supervision_fito'),
-    path('supervisionproduccion/reporte-semanal-fito/detalleseguimiento',views.reporte_seguimiento_api,name='reporte_seguimiento_api'),
-    path('supervisionproducion/reporte-semanal-fito/', views.reporte_semanal_supervision_fito,name='reporte_semanal_supervision_fito'),
-    
-    path('supervisionproduccion/reporte-semanal/view',views.reporte_semanal_view,name='reporte_semanal_view'),
-    path('supervisionproduccion/reporte-semanal/seguimiento',views.reporte_semanal_seguimiento,name='reporte_semanal_seguimiento'),
+    path('supervisionfito/reporte-general/',views.reporte_general_fito,name='reporte_general_supervision_fito'),
+    path('supervisionfito/reporte-semana/detalleseguimiento',views.reporte_seguimiento_api,name='reporte_seguimiento_api_fito'),
+    path('supervisionfito/reporte-semanal/', views.reporte_semanal_supervision_fito,name='reporte_semanal_supervision_fito'),
+
+    path('supervisionfito/reporte-semanal/view',views.reporte_semanal_view_fito,name='reporte_semanal_view_fito'),
+    path('supervisionfito/reporte-semanal/seguimiento',views.reporte_semanal_seguimiento_fito,name='reporte_semanal_seguimiento_fito'),
     
     #Urls de salidasfruta
     path('salidasFruta/<int:pk>/', views.article_detail, name='salidasFruta_detail'),
