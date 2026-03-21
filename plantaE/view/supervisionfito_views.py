@@ -104,7 +104,7 @@ def supervisionfito_delete(request, pk):
     return render(request, 'plantaE/supervisionfito/supervisionfito_confirm_delete.html', {'registros': salidas})
 
 @transaction.atomic
-def supervisionproduccion_grabar(request):
+def supervisionfito_grabar(request):
     if request.method != 'POST':
         return JsonResponse({'error': 'Método no permitido'}, status=405)
 
