@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="es">
+{% load static %}
+<head>
+  <meta charset="UTF-8">
+  <title>Reporte Semanal Supervisión</title>
+
+  <!-- BULMA -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body { background-color: #f7f7f7; }
+    .table thead th { background: #363636; color: white; text-align: center; }
+    .table td { text-align: center; font-weight: bold; }
+  </style>
+</head>
+
+<body>
+<section class="section">
+  <div class="container">
+
+    <!-- HEADER -->
+    <section class="hero is-link is-small mb-5">
+      <div class="hero-body has-text-centered">
+        <h1 class="title is-4">Reporte Semanal de Supervisión</h1>
+        <p class="subtitle is-6">Semáforo por actividad</p>
+      </div>
+    </section>
+
+    <div class="box mb-5">
+  <div class="columns is-vcentered">
+
+    {% if area_usuario == 'ALL' %}
+    <div class="column is-2">
+      <label class="label">Área</label>
+      <div class="select is-fullwidth">
+        <select id="Area">
+          <option value="">Seleccionar</option>
+          <option value="RIO">RIO</option>
+          <option value="VALLE">VALLE</option>
+        </select>
+      </div>
+    </div>
+    {% else %}
+    <input type="hidden" id="Area" value="{{ area_usuario }}">
+    {% endif %}
+
+    <!-- Actividad -->
+    <div class="column is-2">
+      <label class="label">Actividad</label>
+      <div class="select is-fullwidth">
+        <select id="Actividad">
+          <option value="">Todas</option>
+          <option value="Deshoje">Deshoje</option>
+          <option value="Ganchos">Ganchos</option>
+          <option value="Descoronado">Descoronado</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Estructura -->
+    <div class="column is-2">
+      <label class="label">Estructura</label>
+      <div class="select is-fullwidth">
+        <select id="Estructura"></select>
+      </div>
+    </div>
+
+    <!-- Cultivo -->
+    <div class="column is-2">
+      <label class="label">Cultivo</label>
+      <div class="select is-fullwidth">
+        <select id="Cultivo">
+        <option value="">Seleccionar</option>
+          <option value="GRAPE">GRAPE</option>
+          <option value="GRAPE ORGANICO">GRAPE ORGANICO</option>
+          <option value="MEDLEY">MEDLEY</option>
+          <option value="CHERRY">CHERRY</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Zona -->
+    <div class="column is-2">
+      <label class="label">Zona</label>
+      <div class="select is-fullwidth">
+        <select id="Zona">
+          <option value="">Seleccionar</option>
+          <option value="Z1">Z1</option>
+          <option value="Z2">Z2</option>
+          <option value="Z3">Z3</option>
+          <option value="Z4">Z4</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- BOTONES -->
+    <div class="column is-2 is-flex is-align-items-flex-end">
+      <div class="buttons">
+        <button class="button is-link" onclick="cargarReporteSemanal()">
+          <span class="icon"><i class="fas fa-search"></i></span>
+          <span>Consultar</span>
+        </button>
+
+        <button class="button is-primary" onclick="imprimirTabla()">
+          <span class="icon"><i class="fas fa-print"></i></span>
+          <span>.Imprimir</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+    <!-- TABLA REPORTE -->
+    <div class="box">
+      <div class="table-container">
+        <table class="table is-bordered is-fullwidth">
+          <thead>
+            <tr>
+              <th>Finca</th>
+              <th>Cultivo</th>
+              <th>Estructura</th>
+              <th>Zona</th>
+              <th>Actividad</th>
+              <th>Semana</th>
+              <th>Resultado</th>
+              <th>Ver</th>
+            </tr>
+          </thead>
+          <tbody id="bodyReporte">
+            <tr><td colspan="8">Seleccione estructura y zona</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- BOTÓN VOLVER -->
+    <div class="has-text-right mt-4">
+      <a href="{% url 'supervisionfito_list' %}" class="button is-dark">
+        <span class="icon"><i class="fas fa-arrow-left"></i></span>
+        <span>Volver</span>
+      </a>
+    </div>
+
+    <!-- MODAL SEGUIMIENTO -->
+    <div class="modal fade" id="seguimientoModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Detalle de seguimiento</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div id="modalContent">Cargando...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+
+/* ================= CONFIG ================= */
+const estructurasPorArea = {
+  RIO: ['CM1','CM2','CM3','CM4','CM5','CM6','CM7'],
+  VALLE: ['CM1','CM2-3','CM4','CM5','CM6A','CM6B','CM7','CM8','INV1','INV2']
+};
+
+const zonasPorArea = {
+  RIO: ['Z1','Z2'],
+  VALLE: ['Z1','Z2','Z3','Z4']
+};
+
+/* ================= FUNCIONES ================= */
+function cargarEstructuras(area) {
+  const select = $('#Estructura');
+  select.html('<option value="">Seleccionar</option>');
+
+  if (!area || !estructurasPorArea[area]) return;
+
+  estructurasPorArea[area].forEach(cm => {
+    select.append(`<option value="${cm}">${cm}</option>`);
+  });
+}
+
+function cargarZonas(area) {
+  const select = $('#Zona');
+  select.html('<option value="">Seleccionar</option>');
+
+  if (!area || !zonasPorArea[area]) return;
+
+  zonasPorArea[area].forEach(cm => {
+    select.append(`<option value="${cm}">${cm}</option>`);
+  });
+}
+
+function cargarReporteSemanal() {
+  const estructura = $('#Estructura').val();
+  const zona = $('#Zona').val();
+  const actividad = $('#Actividad').val();
+  const finca = $('#Area').val();
+  const cultivo = $('#Cultivo').val();
+
+  $.get("{% url 'reporte_semanal_supervisionfito' %}", {estructura, zona, actividad,finca,cultivo}, function(data) {
+    let body = '';
+    console.log('DATA ENVIADA A SEGUIMIENTO:', data);
+    if (data.length === 0) {
+      body = `<tr><td colspan="8">No hay registros</td></tr>`;
+    } else {
+      data.forEach(row => {
+        body += `
+          <tr>
+            <td>${row.finca}</td>
+            <td>${row.cultivo || '-'}</td>
+            <td>${row.estructura}</td>
+            <td>${row.zona}</td>
+            <td>${row.actividad}</td>
+            <td>${row.semana}</td>
+            <td style="background:${row.color}; color:${row.color === 'yellow' ? 'black' : 'white'};">
+              ${row.letra}
+            </td>
+
+            <td>
+              <button class="btn btn-sm btn-info seguimiento-btn"
+                data-finca="${row.finca}"
+                data-estructura="${row.estructura}"
+                data-zona="${row.zona}"
+                data-actividad="${row.actividad}"
+                data-cultivo="${row.cultivo || ''}"
+                data-semana="${row.semana_num || ''}">
+                Seguimiento
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+    $('#bodyReporte').html(body);
+  }).fail(function() { alert('Error al cargar el reporte'); });
+}
+
+// Delegación de eventos para botones dinámicos
+$(document).on('click', '.seguimiento-btn', function(){
+    const btn = $(this);
+    const data = btn.data();
+    console.log('DATA ENVIADA A SEGUIMIENTO:', data);
+    $('#modalContent').html('Cargando...');
+    var modal = new bootstrap.Modal(document.getElementById('seguimientoModal'));
+    modal.show();
+
+    $.get("{% url 'reporte_seguimiento_api_fito' %}", data, function(response){
+        let html = `<p>Promedio: <strong>${response.promedio}</strong> 
+                    <span style="color:${response.color || 'black'}">(${response.letra || '-'})</span></p>`;
+        html += '<table class="table table-sm table-bordered"><tr><th>Muestra</th><th>Cantidad</th><th>Ref</th></tr>';
+        response.muestras.forEach(m => {
+            html += `<tr><td>${m.muestra}</td><td>${m.cantidad}</td><td>${m.ref}</td></tr>`;
+        });
+        html += '</table>';
+        $('#modalContent').html(html);
+    }).fail(function(){
+        $('#modalContent').html('<p>Error al cargar los datos</p>');
+    });
+});
+function imprimirTabla() {
+    const tabla = document.querySelector('.table');
+    if (!tabla) { alert('No hay tabla para imprimir'); return; }
+
+    const ventana = window.open('', '', 'width=1000,height=600');
+    ventana.document.write('<html><head><title>Imprimir Reporte Semanal</title>');
+
+    ventana.document.write(`
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+        <style>
+            table { width: 100%; border-collapse: collapse; }
+            th, td { border: 1px solid #363636; padding: 8px; text-align: center; font-weight: bold; }
+            th { background: #363636; color: white; }
+        </style>
+    `);
+
+    ventana.document.write('</head><body>');
+    ventana.document.write('<h3 style="text-align:center;">Reporte Semanal de Supervisión</h3>');
+
+    // Clonar tabla
+    const clone = tabla.cloneNode(true);
+    ventana.document.body.appendChild(clone);
+
+    ventana.document.write('</body></html>');
+    ventana.document.close();
+    ventana.focus();
+    ventana.print();
+    ventana.close();
+}
+
+/* ================= EVENTOS ================= */
+/* Delegado → funciona para select y hidden */
+$(document).on('change', '#Area', function() {
+  cargarEstructuras(this.value);
+});
+
+$(document).on('change', '#Area', function() {
+  cargarZonas(this.value);
+});
+
+$(document).ready(function () {
+  const area = $('#Area').val();   // hidden o select
+  cargarReporteSemanal();
+  cargarEstructuras(area);
+  cargarZonas(area);
+});
+</script>
+</body>
+</html>

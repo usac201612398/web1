@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es">
+{% load static %}
+
+<head>
+  <meta charset="UTF-8">
+  <title>Reporte General Semanal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      background-color: #f7f7f7;
+    }
+
+    .table-container {
+      overflow-x: auto;
+      max-width: 100%;
+    }
+
+    table {
+      white-space: nowrap;
+    }
+
+    /* Header general */
+    .table thead th {
+      background: #363636 !important;
+      color: white !important;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    .table td {
+      text-align: center;
+      font-weight: bold;
+    }
+
+    /* Columnas fijas izquierdas */
+    .table th:nth-child(1),
+    .table td:nth-child(1) {
+      position: sticky;
+      left: 0;
+      z-index: 4;
+    }
+
+    .table th:nth-child(2),
+    .table td:nth-child(2) {
+      position: sticky;
+      left: 120px;
+      z-index: 4;
+    }
+
+    .table th:nth-child(3),
+    .table td:nth-child(3) {
+      position: sticky;
+      left: 240px;
+      z-index: 4;
+    }
+
+    .table th:nth-child(4),
+    .table td:nth-child(4) {
+      position: sticky;
+      left: 360px;
+      z-index: 4;
+    }
+
+    .table th:nth-child(5),
+    .table td:nth-child(5) {
+      position: sticky;
+      left: 480px;
+      z-index: 4;
+    }
+
+    /* Fondo blanco SOLO para celdas (no headers) */
+    .table td:nth-child(-n+5) {
+      background: white;
+    }
+  </style>
+
+</head>
+
+<body>
+  <section class="section">
+    <div class="container">
+
+      <!-- HEADER -->
+      <section class="hero is-link is-small mb-5">
+        <div class="hero-body has-text-centered">
+
+          <h1 class="title is-4">Reporte General por Semana</h1>
+          <p class="subtitle is-6">Pivot por CM, Zona, Actividad y Semanas</p>
+          <p><strong>DEBUG AREA:</strong> {{ area_usuario }}</p>
+          <p><strong>User:</strong> {{ user }}</p>
+        </div>
+      </section>
+      <!-- FILTROS -->
+
+      <div class="box mb-5">
+        <div class="columns is-vcentered">
+
+          {% if area_usuario == 'ALL' %}
+          <div class="column is-2">
+            <label class="label">Área</label>
+            <div class="select is-fullwidth">
+              <select id="Area">
+                <option value="">Seleccionar</option>
+                <option value="RIO">RIO</option>
+                <option value="VALLE">VALLE</option>
+              </select>
+            </div>
+          </div>
+          {% else %}
+          <input type="hidden" id="Area" value="{{ area_usuario }}">
+          {% endif %}
+
+          <!-- Actividad -->
+          <div class="column is-2">
+            <label class="label">Actividad</label>
+            <div class="select is-fullwidth">
+              <select id="Actividad">
+                <option value="">Todas</option>
+                <option value="Deshoje">Deshoje</option>
+                <option value="Ganchos">Ganchos</option>
+                <option value="Descoronado">Descoronado</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Estructura -->
+          <div class="column is-2">
+            <label class="label">Estructura</label>
+            <div class="select is-fullwidth">
+              <select id="Estructura"></select>
+            </div>
+          </div>
+
+          <!-- Cultivo -->
+          <div class="column is-2">
+            <label class="label">Cultivo</label>
+            <div class="select is-fullwidth">
+              <select id="Cultivo">
+                <option value="">Seleccionar</option>
+                <option value="GRAPE">GRAPE</option>
+                <option value="GRAPE ORGANICO">GRAPE ORGANICO</option>
+                <option value="MEDLEY">MEDLEY</option>
+                <option value="CHERRY">CHERRY</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Zona -->
+          <div class="column is-2">
+            <label class="label">Zona</label>
+            <div class="select is-fullwidth">
+              <select id="Zona">
+                <option value="">Seleccionar</option>
+                <option value="Z1">Z1</option>
+                <option value="Z2">Z2</option>
+                <option value="Z3">Z3</option>
+                <option value="Z4">Z4</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- BOTONES -->
+          <div class="column is-2 is-flex is-align-items-flex-end">
+            <div class="buttons">
+              <button class="button is-link" onclick="cargarReporteGeneral()">
+                <span class="icon"><i class="fas fa-search"></i></span>
+                <span>Consultar</span>
+              </button>
+
+              <button class="button is-primary" onclick="imprimirTabla()">
+                <span class="icon"><i class="fas fa-print"></i></span>
+                <span>.Imprimir</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+      <!-- TABLA REPORTE -->
+      <div class="box">
+        <div class="table-container">
+          <table class="table is-bordered is-fullwidth">
+            <thead>
+              <tr id="headerSemanas">
+
+                <th>Finca</th>
+                <th>Estructura</th>
+                <th>Cultivo</th>
+                <th>Actividad</th>
+                <th>Zona</th>
+              </tr>
+            </thead>
+            <tbody id="bodyReporte">
+              <tr>
+                <td colspan="10">Seleccione filtros y consulte</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- BOTÓN VOLVER -->
+      <div class="has-text-right mt-4">
+        <a href="{% url 'supervisionfito_list' %}" class="button is-dark">
+          <span class="icon"><i class="fas fa-arrow-left"></i></span>
+          <span>Volver</span>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+
+    /* ================= CONFIG ================= */
+    const estructurasPorArea = {
+      RIO: ['CM1', 'CM2', 'CM3', 'CM4', 'CM5', 'CM6', 'CM7'],
+      VALLE: ['CM1', 'CM2-2', 'CM4', 'CM5', 'CM6A', 'CM6B', 'CM7', 'CM8', 'INV1', 'INV2']
+    };
+
+    const zonasPorArea = {
+      RIO: ['Z1', 'Z2'],
+      VALLE: ['Z1', 'Z2', 'Z3', 'Z4']
+    };
+
+    /* ================= FUNCIONES ================= */
+    function cargarEstructuras(area) {
+      const select = $('#Estructura');
+      select.html('<option value="">Seleccionar</option>');
+
+      if (!area || !estructurasPorArea[area]) return;
+
+      estructurasPorArea[area].forEach(cm => {
+        select.append(`<option value="${cm}">${cm}</option>`);
+      });
+    }
+
+    function cargarZonas(area) {
+      const select = $('#Zona');
+      select.html('<option value="">Seleccionar</option>');
+
+      if (!area || !zonasPorArea[area]) return;
+
+      zonasPorArea[area].forEach(cm => {
+        select.append(`<option value="${cm}">${cm}</option>`);
+      });
+    }
+    function imprimirTabla() {
+      const tabla = document.querySelector('.table');
+      if (!tabla) { alert('No hay tabla para imprimir'); return; }
+
+      const ventana = window.open('', '', 'width=1000,height=600');
+      ventana.document.write('<html><head><title>Imprimir Reporte Semanal</title>');
+
+      ventana.document.write(`
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+        <style>
+            table { width: 100%; border-collapse: collapse; }
+            th, td { border: 1px solid #363636; padding: 8px; text-align: center; font-weight: bold; }
+            th { background: #363636; color: white; }
+        </style>
+    `);
+
+      ventana.document.write('</head><body>');
+      ventana.document.write('<h3 style="text-align:center;">Reporte Semanal de Supervisión</h3>');
+
+      // Clonar tabla
+      const clone = tabla.cloneNode(true);
+      ventana.document.body.appendChild(clone);
+
+      ventana.document.write('</body></html>');
+      ventana.document.close();
+      ventana.focus();
+      ventana.print();
+      ventana.close();
+    }
+    function cargarReporteGeneral() {
+      const estructura = $('#Estructura').val();
+      const zona = $('#Zona').val();
+      const actividad = $('#Actividad').val();
+      const finca = $('#Area').val();
+      const cultivo = $('#Cultivo').val();
+
+      $.get("{% url 'reporte_general_supervision_fito' %}", {
+        estructura, zona, actividad, finca, cultivo
+      }, function (data) {
+
+        let semanas = new Set();
+        data.forEach(row => semanas.add(row.semana));
+        semanas = Array.from(semanas).sort();
+
+        let header = '<th>Finca</th><th>Estructura</th><th>Cultivo</th><th>Actividad</th><th>Zona</th>';
+        semanas.forEach(sem => header += `<th>${sem}</th>`);
+        $('#headerSemanas').html(header);
+
+        let body = '';
+        const groupMap = {};
+
+        data.forEach(row => {
+          const key = `${row.estructura}|${row.zona}|${row.actividad}|${row.finca}|${row.cultivo}`;
+          if (!groupMap[key]) groupMap[key] = { ...row, semanas: {} };
+          groupMap[key].semanas[row.semana] = { letra: row.letra, color: row.color };
+        });
+
+        Object.values(groupMap).forEach(row => {
+          body += `<tr>
+        <td>${row.finca}</td>
+        <td>${row.estructura}</td>
+        <td>${row.cultivo}</td>        
+        <td>${row.actividad}</td>
+        <td>${row.zona}</td>`;
+
+          semanas.forEach(sem => {
+            if (row.semanas[sem]) {
+              const celda = row.semanas[sem];
+              body += `
+            <td style="background:${celda.color};
+                      color:${celda.color === 'yellow' ? 'black' : 'white'};">
+              ${celda.letra}
+            </td>`;
+            } else {
+              body += `<td>-</td>`;
+            }
+          });
+
+          body += `</tr>`;
+        });
+
+        $('#bodyReporte').html(body);
+      });
+    }
+
+    /* ================= EVENTOS ================= */
+    /* Delegado → funciona para select y hidden */
+    $(document).on('change', '#Area', function () {
+      cargarEstructuras(this.value);
+    });
+
+    $(document).on('change', '#Area', function () {
+      cargarZonas(this.value);
+    });
+    /* ================= INIT ================= */
+    $(document).ready(function () {
+      const area = $('#Area').val();   // hidden o select
+      cargarEstructuras(area);
+      cargarZonas(area);
+      cargarReporteGeneral();
+    });
+  </script>
+</body>
+
+</html>

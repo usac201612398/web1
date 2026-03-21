@@ -53,7 +53,29 @@ class supervisionproduccion(models.Model):
     def __str__(self):
         return (str(self.fecha) + " | " + str(self.finca)+ " | " + str(self.cultivo)+ " | " + str(self.estructura) )
     
- 
+class supervisionfito(models.Model):
+
+    #op_finca = [('VALLE','VALLE'),('RIO','RIO'),('CIP', 'CIP'),('FLE','FLE'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.')]
+    #op_cultivo = [('AGUACATE','AGUACATE'),('PEPINO','PEPINO'),('CHERRY','CHERRY'),('ROMA','ROMA'),('MEDLEY','MEDLEY'),('BEEF','BEEF'),('SALADETTE','SALADETTE'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
+    #op_status = [('Abierta','Abierta'),('Cerrada','Cerrada')]
+    #op_temporada = [('Temp 2023-2024','Temp 2023-2024'),('Temp 2024-2025','Temp 2024-2025')]
+    id = models.AutoField(primary_key=True)
+    fecha = models.DateField(blank=True, null=True)
+    cantidad = models.FloatField(blank=True, null=True)
+    ref = models.FloatField(blank=True, null=True)
+    actividad = models.CharField(max_length=25,blank=True, null=True)
+    muestra = models.IntegerField(blank=True, null=True)
+    zona = models.CharField(max_length=25,blank=True, null=True)
+    finca = models.CharField(max_length=25,blank=True, null=True)
+    estructura = models.CharField(max_length=30,blank=True, null=True)
+    cultivo = models.CharField(max_length=35, blank=True, null=True)
+    supervisor = models.CharField(max_length=35, blank=True, null=True)
+    observaciones = models.CharField(max_length=100, blank=True, null=True)
+    status = models.CharField(max_length=35, blank=True, null=True)
+    
+    def __str__(self):
+        return (str(self.fecha) + " | " + str(self.finca)+ " | " + str(self.cultivo)+ " | " + str(self.estructura) )
+    
 class proyecciones(models.Model):
 
     #op_finca = [('VALLE','VALLE'),('RIO','RIO'),('CIP', 'CIP'),('FLE','FLE'),('PRODUCTOS DEL VALLE, S.A.','PRODUCTOS DEL VALLE, S.A.')]

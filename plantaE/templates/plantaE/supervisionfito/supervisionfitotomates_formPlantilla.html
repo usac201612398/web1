@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="es">
+{% load static %}
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Panel - Fito - Tomates</title>
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    body {
+      background-color: #f9f9f9;
+    }
+
+    .table-container table {
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .table-custom-header th {
+      background: linear-gradient(to right, #28a745, #218838);
+      color: #fff;
+      text-align: center;
+    }
+
+    .table tbody tr:nth-child(even) {
+      background-color: #f3f7f3;
+    }
+
+    .is-stretch {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .is-stretch>.field {
+      flex: 1;
+      min-width: 180px;
+    }
+
+    .content-controls {
+      margin-top: 2rem;
+    }
+
+    .mb-1 {
+      margin-bottom: 1rem;
+    }
+
+    .button.is-success {
+      background: linear-gradient(90deg, #28a745, #218838);
+      border: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .button.is-success:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+
+<body>
+  <section class="section">
+    <div class="container">
+
+      <!-- HEADER -->
+      <section class="hero is-medium mb-5" style="background: linear-gradient(90deg, #28a745, #218838);">
+        <div class="hero-body">
+          <div class="container has-text-centered">
+            <h1 class="title is-2 has-text-white"><i class="fas fa-seedling"></i> Panel de Supervisión</h1>
+            <p class="subtitle is-5 has-text-white-ter">Evaluación de supervisión de fitosanidad</p>
+          </div>
+        </div>
+      </section>
+      <div class="box">
+        <h2 class="title is-5">Filtros</h2>
+
+        <div class="columns is-vcentered">
+          <!-- Fecha -->
+          <div class="column is-2">
+            <label class="label">Fecha</label>
+            <div class="control has-icons-left">
+              <input class="input" type="date" id="date">
+              <span class="icon is-small is-left">
+                <i class="fas fa-calendar-alt"></i>
+              </span>
+            </div>
+          </div>
+
+          <!-- Supervisor -->
+          <div class="column is-2">
+            <label class="label">Supervisor</label>
+            <input class="input" id="correo" type="text" readonly placeholder="Usuario asignado">
+          </div>
+
+          <!-- Área -->
+          <div class="column is-2">
+            <label class="label">Finca</label>
+            <input class="input" id="finca" type="text" readonly placeholder="Área asignada">
+          </div>
+
+          <!-- Cultivo -->
+          <div class="column is-2">
+            <label class="label">Cultivo</label>
+            <div class="select is-fullwidth">
+              <select id="Cul">
+                <option value="">Seleccionar</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Estructura -->
+          <div class="column is-2">
+            <label class="label">Estructura</label>
+            <div class="select is-fullwidth">
+              <select id="Estructura"></select>
+            </div>
+          </div>
+
+          <!-- Zona -->
+          <div class="column is-2">
+            <label class="label">Zona</label>
+            <div class="select is-fullwidth">
+              <select id="Zona">
+                <option value="">Seleccionar</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- TABLA -->
+      <div class="box">
+        <div class="table-container">
+          <table class="table is-bordered is-fullwidth is-hoverable" id="myTable">
+            <thead class="table-custom-header">
+              <tr>
+                <th>Actividad</th>
+                <th>Cantidad</th>
+                <th>Observaciones</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <!--  COBERTURA -->
+              <tr>
+                <td>
+                  Cobertura <br>
+                  <label class="checkbox">
+                    <input type="checkbox" class="manchaAzul">
+                    Mancha azul
+                  </label>
+                </td>
+                <td><input class="input cant" type="number"></td>
+                <td><input class="input obs" type="text"></td>
+              </tr>
+
+              <!-- TIZON -->
+              <tr>
+                <td>Tizon</td>
+                <td><input class="input cant" type="number"></td>
+                <td><input class="input obs" type="text"></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+
+      <!-- BOTONES FINALES -->
+      <div class="columns content-controls">
+        <div class="column is-6">
+          <a href="{% url 'supervisionfito_list' %}" class="button is-success is-medium is-fullwidth">
+            <span class="icon"><i class="fas fa-home"></i></span>
+            <span>Ir al Home</span>
+          </a>
+        </div>
+
+        <div class="column is-6 has-text-right">
+          <button type="button" class="button is-success is-medium is-fullwidth envio3">
+            <span class="icon"><i class="fas fa-paper-plane"></i></span>
+            <span>Enviar</span>
+          </button>
+        </div>
+      </div>
+  </section>
+
+  <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <script>
+
+    /* ================= CONFIG ================= */
+    const estructurasPorArea = {
+      RIO: ['CM1', 'CM2', 'CM3', 'CM4', 'CM5', 'CM6', 'CM7'],
+      VALLE: ['CM1', 'CM2-3', 'CM4', 'CM5', 'CM6A', 'CM6B', 'CM7', 'CM8', 'INV1', 'INV2']
+    };
+
+    const zonasPorArea = {
+      RIO: ['Z1', 'Z2'],
+      VALLE: ['Z1', 'Z2', 'Z3', 'Z4']
+    };
+
+    /* ================= FUNCIONES ================= */
+    function cargarEstructuras(area) {
+      const select = $('#Estructura');
+      select.html('<option value="">Seleccionar</option>');
+
+      if (!area || !estructurasPorArea[area]) return;
+
+      estructurasPorArea[area].forEach(cm => {
+        select.append(`<option value="${cm}">${cm}</option>`);
+      });
+    }
+
+    function cargarZonas(area) {
+      const select = $('#Zona');
+      select.html('<option value="">Seleccionar</option>');
+
+      if (!area || !zonasPorArea[area]) return;
+
+      zonasPorArea[area].forEach(cm => {
+        select.append(`<option value="${cm}">${cm}</option>`);
+      });
+    }
+
+    $(document).ready(function () {
+
+      // Fecha de hoy
+      const hoy = new Date().toISOString().split('T')[0];
+      $('#date').val(hoy);
+      // ===== MANCHA AZUL =====
+      $('#myTable').on('change', '.manchaAzul', function () {
+        const row = $(this).closest('tr');
+        const cantidadInput = row.find('.cant');
+
+        if ($(this).is(':checked')) {
+          cantidadInput.val(200);
+          cantidadInput.prop('disabled', true);
+        } else {
+          cantidadInput.val('');
+          cantidadInput.prop('disabled', false);
+        }
+      });
+      function promedio(valores) {
+        let suma = 0;
+        let count = 0;
+
+        valores.each(function () {
+          const v = parseFloat($(this).val());
+          if (!isNaN(v)) {
+            suma += v;
+            count++;
+          }
+        });
+
+        return count > 0 ? (suma / count).toFixed(2) : null;
+      }
+
+      function authUsuario() {
+        $.ajax({
+          url: '{% url "obtener_nombre_usuario" %}',
+          success: function (data) {
+
+            // CORREO
+            $('#correo').val(data.encargado);
+
+            // FINCA (AREA)
+            $('#finca').val(data.finca);
+
+            cargarEstructuras(data.finca);
+            cargarZonas(data.finca);
+
+            // CULTIVO (limpiar y cargar)
+            $('#Cul').empty();
+            $('#Cul').append('<option value="">Seleccionar</option>');
+
+            $.each(data.adicionales, function (index, item) {
+              $('#Cul').append(
+                $('<option>', {
+                  value: item.cultivo,
+                  text: item.cultivo
+                })
+              );
+            });
+          },
+          error: function (xhr, status, error) {
+            console.error('Error:', error);
+          }
+        });
+      }
+
+      authUsuario();
+
+      $('.envio3').on('click', function () {
+        const boton = $(this);
+        boton.prop('disabled', true);
+
+        const fecha = $('#date').val();
+        const area = $('#finca').val();
+        const cultivo = $('#Cul').val();
+        const estructura = $('#Estructura').val();
+        const zona = $('#Zona').val();
+        const supervisor = $('#correo').val();
+
+        // ====== VALIDACIÓN DE FILTROS ======
+        if (!fecha) { alert('Debe seleccionar una fecha'); boton.prop('disabled', false); return; }
+        if (!supervisor) { alert('Supervisor no válido'); boton.prop('disabled', false); return; }
+        if (cultivo === "") { alert('Debe seleccionar un cultivo'); $('#Cul').parent().addClass('is-danger'); boton.prop('disabled', false); return; }
+        if (estructura === "") { alert('Debe seleccionar una estructura'); $('#Estructura').parent().addClass('is-danger'); boton.prop('disabled', false); return; }
+        if (zona === "") { alert('Debe seleccionar una zona'); $('#Zona').parent().addClass('is-danger'); boton.prop('disabled', false); return; }
+
+        // ====== VALIDACIÓN DE TABLA ======
+        let datos = [];
+        let incompletas = false;
+
+        $('#myTable tbody tr').each(function () {
+          const actividad = $(this).find('td').eq(0).text().trim();
+          let cantidad = null;
+
+          if (actividad === 'Cobertura') {
+
+            const manchaAzul = $(this).find('.manchaAzul').is(':checked');
+
+            if (manchaAzul) {
+              cantidad = 200;
+            } else {
+              const val = parseFloat($(this).find('.cant').val());
+              if (isNaN(val) || val <= 0) {
+                alert('Debe ingresar cantidad válida en Cobertura o marcar Mancha Azul');
+                incompletas = true;
+                return false;
+              }
+              cantidad = val;
+            }
+
+          } else if (actividad === 'Tizón') {
+            const val = parseFloat($(this).find('.cant').val());
+            if (isNaN(val) || val <= 0) {
+              alert('Debe ingresar cantidad válida en Tizón');
+              incompletas = true;
+              return false;
+            }
+            cantidad = val;
+          }
+
+          datos.push({
+            fecha,
+            area,
+            zona,
+            estructura,
+            cultivo,
+            supervisor,
+            actividad,
+            ref,
+            cantidad,
+            manchaAzul: $(this).find('.manchaAzul').is(':checked'),
+            observaciones: $(this).find('.obs').val(),
+            status: 'Abierta'
+          });
+        });
+
+        if (incompletas) {
+          boton.prop('disabled', false);
+          return;
+        }
+
+        // ====== ENVÍO ======
+        console.log(datos);
+
+        $.ajax({
+          url: "{% url 'supervisionfito_grabar' %}",
+          type: "POST",
+          contentType: "application/json",
+          headers: { "X-CSRFToken": getCookie('csrftoken') },
+          data: JSON.stringify({ array: datos }),
+          success: function (response) {
+            alert(response.msm || 'Guardado correctamente');
+            boton.prop('disabled', false);
+            if (response.completo) {
+              alert('✅ Muestra 5 registrada. El lote está completo');
+              window.location.href = "{% url 'supervisionfito_list' %}";
+            } else {
+              alert('Muestra ' + response.muestra + ' registrada correctamente');
+              $('#myTable input').val(''); // limpiar inputs
+            }
+          },
+          error: function () {
+            alert("Error al guardar");
+            boton.prop('disabled', false);
+          }
+        });
+      });
+
+      cargarEstructuras(area);
+      cargarZonas(area);
+
+    });
+  </script>
