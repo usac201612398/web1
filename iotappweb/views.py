@@ -354,7 +354,7 @@ def login_exempt(view_func):
 
 
 def enviar_whatsapp(mensaje, numero):
-    client = Client("AC5964f3c0c7a0055b23f9c5f750e0e118", "b21fff04264e1200d42a3582dd12e390")
+    client = Client("AC5964f3c0c7a0055b23f9c5f750e0e118", "86ae449283a37034b118cfc12dc89af0")
 
     client.messages.create(
         body=mensaje,
