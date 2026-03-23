@@ -511,7 +511,7 @@ def enviar_alerta(sensor_data):
 
     for numero in numeros:
         try:
-            enviar_whatsapp(mensaje, numero)
+            enviar_whatsapp(message, numero)
         except Exception as e:
             print("❌ ERROR WhatsApp:", str(e))
     
