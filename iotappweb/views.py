@@ -351,7 +351,17 @@ def login_exempt(view_func):
     def wrapped_view(*args, **kwargs):
         return view_func(*args, **kwargs)
     return wrapped_view
+    
+from twilio.rest import Client
 
+def enviar_whatsapp(mensaje, numero):
+    client = Client("AC5964f3c0c7a0055b23f9c5f750e0e118", "b21fff04264e1200d42a3582dd12e390")
+
+    client.messages.create(
+        body=mensaje,
+        from_='whatsapp:+14155238886',
+        to=f'whatsapp:{numero}'
+    )
 #ARANET_SECRET = "wgm499gftypgcmx7wkrcspwsf5ykt4rg"
 ARANET_SECRET = "rphvcx8qe3dk5dwjfcw84na5vqz34jen"
 
@@ -403,7 +413,7 @@ def aranet_webhook(request):
                 for sensor in sensores:
                     resultado = evaluar_sensor(sensor)
 
-                    if resultado and resultado["porcentaje_perdida"] > 9:
+                    if resultado and resultado["porcentaje_perdida"] > 2:
                     #    print("🚨 ALERTA DISPARADA")
                         enviar_alerta(resultado)
             else:
@@ -497,9 +507,16 @@ def enviar_alerta(sensor_data):
             f"% pérdida: {sensor_data['porcentaje_perdida']:.2f}%\n\n"
             f"⚠️ Se superó el 3% de pérdida"
         ),
-        from_email="brandon.portillo@popoyan.com.gt",
-        recipient_list=["3075926690603@ingenieria.usac.edu.gt"],
-        fail_silently=False,
+        numeros = [
+            "+50230664716"
+        ]
+
+        for numero in numeros:
+            try:
+                enviar_whatsapp(mensaje, numero)
+            except Exception as e:
+                print("⚠️ WhatsApp falló, enviando SMS")
+                enviar_sms(mensaje, numero)
     )
 # Retorna los últimos 20 registros en JSON
 def aranet_data_json(request):
