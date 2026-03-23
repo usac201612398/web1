@@ -15,7 +15,7 @@ from datetime import timedelta, datetime
 from collections import defaultdict
 from django.views.decorators.csrf import csrf_exempt
 from functools import wraps
-
+from twilio.rest import Client
 from django.core.mail import send_mail
 
 MQTT_HOST = "10.111.112.4"
@@ -351,8 +351,7 @@ def login_exempt(view_func):
     def wrapped_view(*args, **kwargs):
         return view_func(*args, **kwargs)
     return wrapped_view
-    
-from twilio.rest import Client
+
 
 def enviar_whatsapp(mensaje, numero):
     client = Client("AC5964f3c0c7a0055b23f9c5f750e0e118", "b21fff04264e1200d42a3582dd12e390")
@@ -413,9 +412,9 @@ def aranet_webhook(request):
                 for sensor in sensores:
                     resultado = evaluar_sensor(sensor)
 
-                    if resultado and resultado["porcentaje_perdida"] > 2:
+                    #if resultado and resultado["porcentaje_perdida"] > 2:
                     #    print("🚨 ALERTA DISPARADA")
-                        enviar_alerta(resultado)
+                    enviar_alerta(resultado)
             else:
                 print("⚠️ No hay objetos para guardar")
 
