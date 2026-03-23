@@ -515,7 +515,6 @@ def enviar_alerta(sensor_data):
             enviar_whatsapp(mensaje, numero)
         except Exception as e:
             print("⚠️ WhatsApp falló, enviando SMS")
-            enviar_sms(mensaje, numero)
     
 # Retorna los últimos 20 registros en JSON
 def aranet_data_json(request):
