@@ -497,27 +497,26 @@ def evaluar_sensor(sensor_id):
 
 
 def enviar_alerta(sensor_data):
-    send_mail(
-       subject=f"⚠️ Pérdida detectada - {sensor_data['sensor']}",
-        message=(
-            f"Sensor: {sensor_data['sensor']}\n"
-            f"Peso actual: {sensor_data['peso_actual']} kg\n"
-            f"Peso base: {sensor_data['peso_base']} kg\n"
-            f"% restante: {sensor_data['porcentaje_restante']:.2f}%\n"
-            f"% pérdida: {sensor_data['porcentaje_perdida']:.2f}%\n\n"
-            f"⚠️ Se superó el 3% de pérdida"
-        ),
-        numeros = [
-            "+50230664716"
-        ]
-
-        for numero in numeros:
-            try:
-                enviar_whatsapp(mensaje, numero)
-            except Exception as e:
-                print("⚠️ WhatsApp falló, enviando SMS")
-                enviar_sms(mensaje, numero)
+    
+    message=(
+        f"Sensor: {sensor_data['sensor']}\n"
+        f"Peso actual: {sensor_data['peso_actual']} kg\n"
+        f"Peso base: {sensor_data['peso_base']} kg\n"
+        f"% restante: {sensor_data['porcentaje_restante']:.2f}%\n"
+        f"% pérdida: {sensor_data['porcentaje_perdida']:.2f}%\n\n"
+        f"⚠️ Se superó el 3% de pérdida"
     )
+    numeros = [
+        "+50230664716"
+    ]
+
+    for numero in numeros:
+        try:
+            enviar_whatsapp(mensaje, numero)
+        except Exception as e:
+            print("⚠️ WhatsApp falló, enviando SMS")
+            enviar_sms(mensaje, numero)
+    
 # Retorna los últimos 20 registros en JSON
 def aranet_data_json(request):
     readings = SensorData.objects.order_by('-timestamp')[:20]
