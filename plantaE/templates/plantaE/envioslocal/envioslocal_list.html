@@ -86,6 +86,7 @@
                         <th>Cant. Empaque</th>
                         <th>u/Emp</th>
                         <th>Creado</th>
+                        <th>Editar</th>
                         <th>Eliminar</th>
                     </tr>
                 </thead>
@@ -107,6 +108,11 @@
                         <td>{{ registro.empaque_cnt }}</td>
                         <td>{{ registro.empaque_tipo }}</td>
                         <td>{{ registro.created|date:"d-m-Y H:i" }}</td>
+                        <td class="action-icons">
+                            <a href="{% url 'envioslocal_update' registro.pk %}" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        </td>
                         <td class="action-icons text-center">
                             <a href="{% url 'envioslocal_delete' registro.pk %}" title="Eliminar">
                                 <i class="fas fa-trash-alt text-danger"></i>

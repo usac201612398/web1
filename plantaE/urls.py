@@ -101,6 +101,7 @@ urlpatterns = [
     path("envioslocal",views.EnviosLocalListView.as_view(),name='envioslocal_list'),
     path('envioslocal/<int:pk>/delete/', EnviosLocalDeleteView.as_view(), name='envioslocal_delete'),
     path('envioslocal/<int:pk>/', views.EnviosLocalDetailView.as_view(), name='envioslocal_detail'),
+    path('envioslocal/<int:pk>/edit/', EnviosLocalUpdateView.as_view(), name='envioslocal_update'),
 
     #Urls de contenedores
     path("contenedores",ContenedoresListView.as_view(),name='contenedores_list'),

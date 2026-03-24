@@ -5,6 +5,7 @@ from django.views.generic import ListView, DetailView
 from django.utils import timezone
 from django.db import transaction
 
+from plantaE.forms import enviosForm
 # modelos
 from plantaE.models import enviosrec, inventarioProdTerm, controlcajas
 
@@ -68,6 +69,12 @@ class EnviosLocalDeleteView(View):
             'alert_message': "El envío y todos los registros relacionados fueron anulados correctamente.",
             'redirect_url': reverse('envioslocal_list')
         })
+
+class EnviosLocalUpdateView(UpdateView):
+    model = enviorec
+    form_class = enviosForm
+    template_name = 'plantaE/envioslocal/envioslocal_form.html'
+    success_url = reverse_lazy('envioslocal_list')
 '''
 def envioslocal_list(request):
 

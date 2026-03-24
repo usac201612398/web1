@@ -1,5 +1,5 @@
 from django import forms
-from .models import Actpeso,tipoCajas,pedidos,controlcajas,usuariosAppFruta,detallerec, detallesEstructuras, causasRechazo,paramenvlocales,Boletas,salidacontenedores,salidasFruta, productoTerm,contenedores, Recepciones, Ccalidad, inventarioProdTerm,AcumFruta, enviosFrutaPlantilla
+from .models import Actpeso,tipoCajas,pedidos,controlcajas,usuariosAppFruta,detallerec, detallesEstructuras, causasRechazo,paramenvlocales,Boletas,salidacontenedores,salidasFruta, productoTerm,contenedores, Recepciones, Ccalidad, inventarioProdTerm,AcumFruta, enviosFrutaPlantilla, enviosrec
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Fieldset, Div
 from django.db.models import Sum
@@ -344,7 +344,9 @@ class contenedoresForm(forms.ModelForm):
         
         model = contenedores
         fields = ['fecha','destino','status','contenedor','transportista','viaje','piloto','temperatura', 'ventilacion', 'marchamo', 'placacamion','horasalida','eta','etd','bl','booking']
-
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['status'].required = False
 class itemsForm(forms.ModelForm):
 
     op_cultivo =   [('','-'),('ROMA','ROMA'),('AGUACATE','AGUACATE'),('PEPINO','PEPINO'),('PITAYA','PITAYA'),('ARANDANO','ARANDANO'),('CHERRY','CHERRY'),('MEDLEY','MEDLEY'),('BEEF','BEEF'),('SALADETTE','SALADETTE'),('GRAPE','GRAPE'),('GRAPE ORGANICO','GRAPE ORGANICO'),('CHERRY ORGANICO','CHERRY ORGANICO'),('BLOCKY','BLOCKY'),('BLOCKY ORGANICO','BLOCKY ORGANICO'),('MINI','MINI'),('MINI ORGANICO','MINI ORGANICO')]
@@ -384,6 +386,43 @@ class itemsForm(forms.ModelForm):
         
         self.fields['empaque'].required = False
 
+class enviosForm(forms.ModelForm):
+
+    op_clasificacion =   [('','-'),('EMPAQUE','EMPAQUE'),('FRUTA','FRUTA'),('FERRETERIA','FERRETERIA')]
+    op_almacen = [('','-'),('PH-0100','PH-0100'),('PH-0200','PH-0200'),('PH-0400','PH-0400'),('PH-0600','PH-0600'),('PH-0603','PH-0603'),('02','02')]
+    op_rubro =   [('','-'),('Empaque','Empaque'),('Fruta','Fruta'),('Insumos','Insumos'),('MAT.LIMPIEZA','MAT.LIMPIEZA')]
+    op_grupo =   [('','-'),('Empaque','Empaque'),('Fruta','Fruta'),('MAT.LIMPIEZA','MAT.LIMPIEZA'),('Insumos','Insumos')]
+    u_m =   [('','-'),('gl','gl'),('kg','kg'),('g','g'),('lb','lb'),('lt','lt'),('mil','mil'),('millar','millar'),('und','und'),('mts','mts'),('pie','pie'),('par','par'),('rl','rl')]
+
+    registro = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    envio = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    cantidad = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    u_m = forms.ChoiceField(choices=u_m, widget=forms.Select(attrs={'class': 'form-control'}))
+    itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    itemsapcode = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    calidad1 = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
+    destino = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    recibe = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    lugar = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    empaque_cnt = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    empaque_tipo = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    productor = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    libras = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    clasificacion = forms.ChoiceField(choices=op_clasificacion, widget=forms.Select(attrs={'class': 'form-control'}))
+    almacen = forms.ChoiceField(choices=op_almacen, widget=forms.Select(attrs={'class': 'form-control'}))
+    grupo = forms.ChoiceField(choices=op_grupo, widget=forms.Select(attrs={'class': 'form-control'}))
+    rubro = forms.ChoiceField(choices=op_rubro, widget=forms.Select(attrs={'class': 'form-control'}))
+    
+    class Meta:
+        
+        model = enviorec
+        fields = ['registro','envio','cantidad','u_m','itemsapcode','calidad1','fecha','destino','recibe','observaciones','lugar','empaque_cnt','empaque_tipo','itemsapname','productor','libras','clasificacion','almacen','grupo','rubro']
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['observaciones'].required = False
 class itemsenviosForm(forms.ModelForm):
 
     op_clasificacion =   [('','-'),('EMPAQUE','EMPAQUE'),('FRUTA','FRUTA'),('FERRETERIA','FERRETERIA')]
