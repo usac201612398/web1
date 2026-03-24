@@ -7,7 +7,7 @@ from plantaE.models import contenedores
 
 # formularios
 from plantaE.forms import contenedoresForm
-
+from django.utils import timezone
 class ContenedoresListView(ListView):
     model = contenedores
     template_name = 'plantaE/contenedores/contenedores_list.html'
@@ -16,13 +16,15 @@ class ContenedoresListView(ListView):
     def get_queryset(self):
         return contenedores.objects.exclude(status='Cerrado').order_by('-created_at')
 
+
+
 class ContenedoresListView2(ListView):
     model = contenedores
     template_name = 'plantaE/contenedores/contenedores_list2.html'
     context_object_name = 'registros'
 
-    today = timezone.localtime(timezone.now()).date()
     def get_queryset(self):
+        today = timezone.localtime(timezone.now()).date()
         return contenedores.objects.filter(
             fecha__year=today.year,
             fecha__month=today.month
