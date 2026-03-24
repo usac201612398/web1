@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views import View
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, UpdateView
 from django.utils import timezone
 from django.db import transaction
 from django.urls import reverse_lazy
@@ -70,11 +70,11 @@ class EnviosLocalDeleteView(View):
             'redirect_url': reverse('envioslocal_list')
         })
 
-class EnviosLocalUpdateView(View):
+class EnviosLocalUpdateView(UpdateView):
     model = enviosrec
     form_class = enviosForm
     template_name = 'plantaE/envioslocal/envioslocal_form.html'
-    success_url = reverse_lazy('envioslocal_update')
+    success_url = reverse_lazy('envioslocal_list')
 
 '''
 def envioslocal_list(request):

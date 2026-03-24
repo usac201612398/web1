@@ -423,6 +423,7 @@ class enviosForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['observaciones'].required = False
+        
 class itemsenviosForm(forms.ModelForm):
 
     op_clasificacion =   [('','-'),('EMPAQUE','EMPAQUE'),('FRUTA','FRUTA'),('FERRETERIA','FERRETERIA')]
