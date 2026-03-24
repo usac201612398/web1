@@ -71,7 +71,7 @@ class EnviosLocalDeleteView(View):
         })
 
 class EnviosLocalUpdateView(View):
-    model = enviorec
+    model = enviosrec
     form_class = enviosForm
     template_name = 'plantaE/envioslocal/envioslocal_form.html'
     success_url = reverse_lazy('envioslocal_list')
