@@ -398,8 +398,8 @@ class enviosForm(forms.ModelForm):
     envio = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     cantidad = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     u_m = forms.ChoiceField(choices=u_m, widget=forms.Select(attrs={'class': 'form-control'}))
-    itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
-    itemsapcode = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    itemsap_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    itemsap_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     calidad1 = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
     destino = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -412,18 +412,18 @@ class enviosForm(forms.ModelForm):
     libras = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     clasificacion = forms.ChoiceField(choices=op_clasificacion, widget=forms.Select(attrs={'class': 'form-control'}))
     almacen = forms.ChoiceField(choices=op_almacen, widget=forms.Select(attrs={'class': 'form-control'}))
-    grupo = forms.ChoiceField(choices=op_grupo, widget=forms.Select(attrs={'class': 'form-control'}))
+    grupoarticulos = forms.ChoiceField(choices=op_grupo, widget=forms.Select(attrs={'class': 'form-control'}))
     rubro = forms.ChoiceField(choices=op_rubro, widget=forms.Select(attrs={'class': 'form-control'}))
     
     class Meta:
         
         model = enviosrec
-        fields = ['registro','envio','cantidad','u_m','itemsapcode','calidad1','fecha','destino','recibe','observaciones','lugar','empaque_cnt','empaque_tipo','itemsapname','productor','libras','clasificacion','almacen','grupo','rubro']
+        fields = ['registro','envio','cantidad','u_m','itemsap_code','calidad1','fecha','destino','recibe','observaciones','lugar','empaque_cnt','empaque_tipo','itemsap_name','productor','libras','clasificacion','almacen','grupoarticulos','rubro']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['observaciones'].required = False
-        
+
 class itemsenviosForm(forms.ModelForm):
 
     op_clasificacion =   [('','-'),('EMPAQUE','EMPAQUE'),('FRUTA','FRUTA'),('FERRETERIA','FERRETERIA')]
