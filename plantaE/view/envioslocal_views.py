@@ -70,7 +70,7 @@ class EnviosLocalDeleteView(View):
             'redirect_url': reverse('envioslocal_list')
         })
 
-class EnviosLocalUpdateView(UpdateView):
+class EnviosLocalUpdateView(View):
     model = enviorec
     form_class = enviosForm
     template_name = 'plantaE/envioslocal/envioslocal_form.html'
