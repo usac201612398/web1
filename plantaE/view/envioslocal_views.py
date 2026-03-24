@@ -74,7 +74,8 @@ class EnviosLocalUpdateView(View):
     model = enviosrec
     form_class = enviosForm
     template_name = 'plantaE/envioslocal/envioslocal_form.html'
-    success_url = reverse_lazy('envioslocal_list')
+    success_url = reverse_lazy('envioslocal_update')
+
 '''
 def envioslocal_list(request):
 
