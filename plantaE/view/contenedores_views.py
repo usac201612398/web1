@@ -22,10 +22,11 @@ class ContenedoresListView2(ListView):
     context_object_name = 'registros'
 
     today = timezone.localtime(timezone.now()).date()
-    return contenedores.objects.filter(
-        fecha__year=today.year,
-        fecha__month=today.month
-    ).exclude(status="Anulado")
+    def get_queryset(self):
+        return contenedores.objects.filter(
+            fecha__year=today.year,
+            fecha__month=today.month
+        ).exclude(status="Anulado")
 
 class ContenedoresUpdateView2(UpdateView):
     model = contenedores
