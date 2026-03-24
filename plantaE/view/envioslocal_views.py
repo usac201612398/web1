@@ -4,7 +4,7 @@ from django.views import View
 from django.views.generic import ListView, DetailView
 from django.utils import timezone
 from django.db import transaction
-
+from django.urls import reverse_lazy
 from plantaE.forms import enviosForm
 # modelos
 from plantaE.models import enviosrec, inventarioProdTerm, controlcajas
