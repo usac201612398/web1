@@ -180,10 +180,13 @@ urlpatterns = [
     #Urls de inventarioprodterm
     path("inventarioProd/plantilla",views.inventarioProd_grabarplantilla,name='inventarioProd_grabar'),
     path("inventarioProd",views.inventarioProd_list,name='inventarioProd_list'),
+    path("inventarioProd2",views.inventarioProd_list2,name='inventarioProd_list2'),
     path('inventarioProd/<int:pk>/', views.inventarioProd_detail, name='inventarioProd_detail'),
     path('inventarioProd/new/', views.inventarioProd_create, name='inventarioProd_create'),
     path('inventarioProd/<int:pk>/edit/', views.inventarioProd_update, name='inventarioProd_update'),
     path('inventarioProd/<int:pk>/delete/', views.inventarioProd_delete, name='inventarioProd_delete'),
+    path('inventarioProd2/<int:pk>/edit/', views.inventarioProd_update2, name='inventarioProd_update2'),
+    path('inventarioProd2/<int:pk>/delete/', views.inventarioProd_delete2, name='inventarioProd_delete2'),
     path('inventarioProd/reporteInv', views.reporteInventario, name='reporte_inventario'),
 
     #Urls de cargacontenedor

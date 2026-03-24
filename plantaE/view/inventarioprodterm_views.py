@@ -14,11 +14,23 @@ from plantaE.models import (
 
 from plantaE.forms import inventarioFrutaForm
 from .auxiliares import *
+        
 def inventarioProd_list(request):
     today = timezone.localtime(timezone.now()).date()
     #salidas = Recepciones.objects.filter(fecha=today)
     salidas = inventarioProdTerm.objects.filter(fecha=today,categoria="Exportación").exclude(status='Anulado')
     return render(request, 'plantaE/inventarioProdTerm/inventarioProd_list.html', {'registros': salidas})
+
+def inventarioProd_list2(request):
+    #salidas = Recepciones.objects.filter(fecha=today)
+    today = timezone.localtime(timezone.now()).date()
+        
+    salidas = inventarioProdTerm.objects.exclude(status='Anulado')filter(
+            fecha__year=today.year,
+            fecha__month=today.month
+        )
+    return render(request, 'plantaE/inventarioProdTerm/inventarioProd_list2.html', {'registros': salidas})
+
 
 def inventarioProd_detail(request, pk):
     salidas = get_object_or_404(inventarioProdTerm, pk=pk)
@@ -131,6 +143,43 @@ def inventarioProd_update(request, pk):
         form = inventarioFrutaForm(instance=salidas)
         
     return render(request, 'plantaE/inventarioProdTerm/inventarioProd_form_edit.html', {'form': form})
+
+def inventarioProd_delete2(request, pk):
+    salidas = get_object_or_404(inventarioProdTerm, pk=pk)
+    salidasaux = inventarioProdTermAux.objects.filter(inventarioreg=salidas.registro)
+
+    # Si tiene movimientos asociados, no se puede anular
+    if salidasaux.exists():
+        return render(request, 'plantaE/inventarioProdTerm/inventarioProd_confirm_delete2.html', {
+            'registros': salidas,
+            'alert_message': "No se puede anular el registro porque tiene movimientos asociados.",
+            'redirect_url': reverse('inventarioProd_list2')
+        })
+
+    if request.method == 'POST':
+        salidas.status = 'Anulado'
+        salidas.status3 = 'Anulado'
+        salidas.save()
+
+        return render(request, 'plantaE/inventarioProdTerm/inventarioProd_confirm_delete2.html', {
+            'registros': salidas,
+            'alert_message': "Registro anulado correctamente.",
+            'redirect_url': reverse('inventarioProd_list2')
+        })
+
+    return render(request, 'plantaE/inventarioProdTerm/inventarioProd_confirm_delete2.html', {'registros': salidas})
+
+def inventarioProd_update2(request, pk):
+    salidas = get_object_or_404(inventarioProdTerm, pk=pk)
+    if request.method == 'POST':
+        form = inventarioFrutaForm(request.POST, instance=salidas)
+        if form.is_valid():
+            form.save()
+            return redirect('inventarioProd_list2')
+    else:
+        form = inventarioFrutaForm(instance=salidas)
+        
+    return render(request, 'plantaE/inventarioProdTerm/inventarioProd_form_edit2.html', {'form': form})
 
 def load_inventarioProdparam(request):
     cultivo_ = request.GET.get('campo1')
