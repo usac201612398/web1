@@ -16,6 +16,23 @@ class ContenedoresListView(ListView):
     def get_queryset(self):
         return contenedores.objects.exclude(status='Cerrado').order_by('-created_at')
 
+class ContenedoresListView2(ListView):
+    model = contenedores
+    template_name = 'plantaE/contenedores/contenedores_list2.html'
+    context_object_name = 'registros'
+
+    today = timezone.localtime(timezone.now()).date()
+    return contenedores.objects.filter(
+        fecha__year=today.year,
+        fecha__month=today.month
+    ).exclude(status="Anulado")
+
+class ContenedoresUpdateView2(UpdateView):
+    model = contenedores
+    form_class = contenedoresForm
+    template_name = 'plantaE/contenedores/contenedores_form2.html'
+    success_url = reverse_lazy('contenedores_list2')
+
 class ContenedoresCreateView(CreateView):
     model = contenedores
     form_class = contenedoresForm

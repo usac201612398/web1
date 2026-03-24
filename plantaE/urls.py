@@ -104,8 +104,10 @@ urlpatterns = [
 
     #Urls de contenedores
     path("contenedores",ContenedoresListView.as_view(),name='contenedores_list'),
+    path("contenedores2",ContenedoresListView2.as_view(),name='contenedores_list2'),
     path('contenedores/new/', ContenedoresCreateView.as_view(), name='contenedores_create'),
     path('contenedores/<int:pk>/edit/', ContenedoresUpdateView.as_view(), name='contenedores_update'),
+    path('contenedores2/<int:pk>/edit/', ContenedoresUpdateView2.as_view(), name='contenedores_update2'),
     path('contenedores/<int:pk>/delete/',ContenedoresDeleteView.as_view(), name='contenedores_delete'),
 
     #Urls de controlcajas

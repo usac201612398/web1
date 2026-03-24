@@ -320,7 +320,7 @@ class inventarioFrutaForm(forms.ModelForm):
 
 class contenedoresForm(forms.ModelForm):
 
-    op_status = [('','-'),('Pendiente','-'),('Cerrado','Cerrado')]
+    op_status = [('','Abierto'),('Cerrado','Cerrado')]
     op_destino = [('','-'),('Jonestown','Jonestown'),('Lakeland','Lakeland'),('Laredo, Texas','Laredo, Texas'),('Miami','Miami'),('Livonia','Livonia'),('Apollo','Apollo'),('Galvestown','Galvestown')]
     op_naviera = [('','-'),('SEABOARD','SEABOARD'),('CROWLEY','CROWLEY'),('DOLE','DOLE')]
 
@@ -339,11 +339,11 @@ class contenedoresForm(forms.ModelForm):
     marchamo = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     placacamion = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     horasalida = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'form-control'}))  # Campo numérico
-    
+    status = forms.ChoiceField(choices=op_status,widget=forms.Select(attrs={'class': 'form-control'}))
     class Meta:
         
         model = contenedores
-        fields = ['fecha','destino','contenedor','transportista','viaje','piloto','temperatura', 'ventilacion', 'marchamo', 'placacamion','horasalida','eta','etd','bl','booking']
+        fields = ['fecha','destino','status','contenedor','transportista','viaje','piloto','temperatura', 'ventilacion', 'marchamo', 'placacamion','horasalida','eta','etd','bl','booking']
 
 class itemsForm(forms.ModelForm):
 
