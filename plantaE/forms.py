@@ -417,7 +417,7 @@ class enviosForm(forms.ModelForm):
     
     class Meta:
         
-        model = enviorec
+        model = enviosrec
         fields = ['registro','envio','cantidad','u_m','itemsapcode','calidad1','fecha','destino','recibe','observaciones','lugar','empaque_cnt','empaque_tipo','itemsapname','productor','libras','clasificacion','almacen','grupo','rubro']
     
     def __init__(self, *args, **kwargs):
