@@ -260,8 +260,8 @@ class inventarioFrutaForm(forms.ModelForm):
     status = forms.ChoiceField(choices=op_status, required=False, widget=forms.Select(attrs={'class': 'form-control'}))
     proveedor = forms.ChoiceField(choices=op_proveedor, widget=forms.Select(attrs={'class': 'form-control'}))
 
-    itemsapcode = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
-    itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    itemsapcode = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     libras = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
