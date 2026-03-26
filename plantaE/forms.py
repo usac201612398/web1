@@ -365,8 +365,6 @@ class inventarioFrutaAuxForm(forms.ModelForm):
     calidad1 = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
-    libras = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
-
     lbsintara = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     pesostd = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     pesosinmerma = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
@@ -383,7 +381,7 @@ class inventarioFrutaAuxForm(forms.ModelForm):
         fields = [
             'registro', 'status', 'proveedor',
             'itemsapcode', 'itemsapname',
-            'cajas', 'libras',
+            'cajas', 
             'lbsintara', 'pesostd', 'pesostdxcaja',
             'pesorxcaja', 'merma', 'pesosinmerma',
             'orden','categoria','calidad1','tara','inventarioreg','salidacontenedores'
