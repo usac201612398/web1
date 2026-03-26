@@ -430,7 +430,7 @@ class enviosForm(forms.ModelForm):
         self.fields['observaciones'].required = False
         self.fields['u_m'].required = False
         self.fields['clasificacion'].required = False
-        self.fields['grupo'].required = False
+        self.fields['grupoarticulos'].required = False
         self.fields['rubro'].required = False
 
 class itemsenviosForm(forms.ModelForm):
