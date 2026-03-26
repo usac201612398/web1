@@ -253,7 +253,7 @@ class inventarioFrutaForm(forms.ModelForm):
         ('DANIEL ESTUARDO GALICIA CARRERA', 'DANIEL ESTUARDO GALICIA CARRERA'),
         ('PRODUCTOS DEL VALLE, S.A.', 'PRODUCTOS DEL VALLE, S.A.')
     ]
-
+    op_categoria = [('','-'),('Exportación','Exportación'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolución','Devolución')]
     op_status = [('', '-'), ('En proceso', 'En proceso'), ('Anulado', 'Anulado')]
 
     registro = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
@@ -272,7 +272,7 @@ class inventarioFrutaForm(forms.ModelForm):
     merma = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     pesostdxcaja = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     pesorxcaja = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
-
+    categoria = forms.ChoiceField(choices=op_categoria, widget=forms.Select(attrs={'class': 'form-control'}))
     orden = forms.CharField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
 
     class Meta:
@@ -283,12 +283,17 @@ class inventarioFrutaForm(forms.ModelForm):
             'cajas', 'libras',
             'lbsintara', 'pesostd', 'pesostdxcaja',
             'pesorxcaja', 'merma', 'pesosinmerma',
-            'orden'
+            'orden','categoria'
         ]
 
     def clean(self):
         cleaned_data = super().clean()
+        categoria = cleaned_data.get('categoria')
 
+        ref2 = productoTerm.objects.filter(
+            itemsapcode=itemsapcode,
+            categoria=categoria
+        ).first()
         itemsapcode = cleaned_data.get('itemsapcode')
         libras = cleaned_data.get('libras') or 0
         cajas = cleaned_data.get('cajas') or 0
