@@ -293,16 +293,16 @@ class inventarioFrutaForm(forms.ModelForm):
 
         
         itemsapcode = cleaned_data.get('itemsapcode')
-        ref2 = productoTerm.objects.filter(
-            itemsapcode=itemsapcode,
-            categoria=categoria
-        ).first()
+       
         libras = cleaned_data.get('libras') or 0
         cajas = cleaned_data.get('cajas') or 0
 
         # Obtener datos del producto
         try:
-            ref2 = productoTerm.objects.get(itemsapcode=itemsapcode)
+             ref2 = productoTerm.objects.filter(
+                itemsapcode=itemsapcode,
+                categoria=categoria
+            ).first()
             taraxcaja = ref2.taraxcaja or 0.0
             pesostdxcaja = ref2.pesostdxcaja or 0.0
         except productoTerm.DoesNotExist:
