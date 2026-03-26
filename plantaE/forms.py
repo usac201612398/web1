@@ -311,7 +311,7 @@ class inventarioFrutaForm(forms.ModelForm):
 
         # ---- Cálculos ----
         tara = taraxcaja * cajas
-        if categoria = "Exportación"
+        if categoria == "Exportación":
             lbsintara = libras - tara - 56  # Ajusta si ese 56 no siempre aplica
         else
             lbsintara = libras - tara 
