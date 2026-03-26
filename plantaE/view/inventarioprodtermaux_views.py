@@ -27,15 +27,29 @@ def inventarioProdAux_list(request):
 
 
 def inventarioProdAux_delete(request, pk):
-    salidas = get_object_or_404(inventarioProdTermAux, pk=pk)
-    salidasaux = inventarioProdTerm.objects.filter(registro=salidas.inventarioreg)
+    
+    salidasaux = get_object_or_404(inventarioProdTermAux, pk=pk)
 
-    # Si tiene movimientos asociados, no se puede anular
+    # Registros relacionados en inventarioProdTerm
+    salidas = inventarioProdTerm.objects.filter(registro=salidasaux.inventarioreg).exclude(status='Anulado')
 
     if request.method == 'POST':
-        salidas.status = 'Anulado'
-        salidas.status3 = 'Anulado'
-        salidas.save()
+
+        # 1. Anular el registro principal
+        salidasaux.status = 'Anulado'
+        salidasaux.status3 = 'Anulado'
+        salidasaux.save()
+
+        # 2. Verificar si alguno está en proceso
+        if salidas.filter(status='En proceso').exists():
+
+            # 3. Poner en NULL los que están en proceso
+            salidas.filter(status='En proceso').update(status=None)
+
+            # 4. También actualizar los auxiliares relacionados (excepto anulados)
+            inventarioProdTermAux.objects.filter(
+                inventarioreg=salidas.registro
+            ).exclude(status='Anulado').update(status=None)
 
         return render(request, 'plantaE/inventarioProdTermAux/inventarioProdAux_confirm_delete.html', {
             'registros': salidas,
@@ -43,8 +57,10 @@ def inventarioProdAux_delete(request, pk):
             'redirect_url': reverse('inventarioProdAux_list')
         })
 
-    return render(request, 'plantaE/inventarioProdTermAux/inventarioProdAux_confirm_delete.html', {'registros': salidas})
-
+    return render(request, 'plantaE/inventarioProdTermAux/inventarioProdAux_confirm_delete.html', {
+        'registros': salidas
+    })
+    
 def inventarioProdAux_update(request, pk):
     salidas = get_object_or_404(inventarioProdTerm, pk=pk)
     if request.method == 'POST':

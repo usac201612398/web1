@@ -339,7 +339,6 @@ class inventarioFrutaForm(forms.ModelForm):
 
             return cleaned_data    
         
-        
 class contenedoresForm(forms.ModelForm):
 
     op_status = [('','Abierto'),('Cerrado','Cerrado')]
