@@ -377,6 +377,7 @@ class inventarioFrutaAuxForm(forms.ModelForm):
     orden = forms.CharField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     tara = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     inventarioreg = forms.CharField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    salidacontenedores = forms.CharField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     class Meta:
         model = inventarioProdTerm
         fields = [
@@ -385,7 +386,7 @@ class inventarioFrutaAuxForm(forms.ModelForm):
             'cajas', 'libras',
             'lbsintara', 'pesostd', 'pesostdxcaja',
             'pesorxcaja', 'merma', 'pesosinmerma',
-            'orden','categoria','calidad1','tara','inventarioreg'
+            'orden','categoria','calidad1','tara','inventarioreg','salidacontenedores'
         ]
 
     def clean(self):
