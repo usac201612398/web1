@@ -19,7 +19,7 @@ def inventarioProdAux_list(request):
     #salidas = Recepciones.objects.filter(fecha=today)
     today = timezone.localtime(timezone.now()).date()
         
-    salidas = inventarioProdTerm.objects.exclude(status='Anulado').filter(
+    salidas = inventarioProdTermAux.objects.exclude(status='Anulado').filter(
             fecha__year=today.year,
             fecha__month=today.month
         )
