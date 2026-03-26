@@ -291,11 +291,12 @@ class inventarioFrutaForm(forms.ModelForm):
         cleaned_data = super().clean()
         categoria = cleaned_data.get('categoria')
 
+        
+        itemsapcode = cleaned_data.get('itemsapcode')
         ref2 = productoTerm.objects.filter(
             itemsapcode=itemsapcode,
             categoria=categoria
         ).first()
-        itemsapcode = cleaned_data.get('itemsapcode')
         libras = cleaned_data.get('libras') or 0
         cajas = cleaned_data.get('cajas') or 0
 
