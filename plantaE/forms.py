@@ -299,7 +299,7 @@ class inventarioFrutaForm(forms.ModelForm):
 
         # Obtener datos del producto
         try:
-             ref2 = productoTerm.objects.filter(
+            ref2 = productoTerm.objects.filter(
                 itemsapcode=itemsapcode,
                 categoria=categoria
             ).first()
