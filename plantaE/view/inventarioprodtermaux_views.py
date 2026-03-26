@@ -12,7 +12,7 @@ from plantaE.models import (
     productores
 )
 
-from plantaE.forms import inventarioFrutaForm
+from plantaE.forms import inventarioFrutaAuxForm
 from .auxiliares import *
 
 def inventarioProdAux_list(request):
@@ -60,15 +60,15 @@ def inventarioProdAux_delete(request, pk):
     return render(request, 'plantaE/inventarioProdTermAux/inventarioProdAux_confirm_delete.html', {
         'registros': salidas
     })
-    
+
 def inventarioProdAux_update(request, pk):
-    salidas = get_object_or_404(inventarioProdTerm, pk=pk)
+    salidas = get_object_or_404(inventarioProdTermAux, pk=pk)
     if request.method == 'POST':
-        form = inventarioFrutaForm(request.POST, instance=salidas)
+        form = inventarioFrutaAuxForm(request.POST, instance=salidas)
         if form.is_valid():
             form.save()
             return redirect('inventarioProdAux_list')
     else:
-        form = inventarioFrutaForm(instance=salidas)
+        form = inventarioFrutaAuxForm(instance=salidas)
         
     return render(request, 'plantaE/inventarioProdTermAux/inventarioProdAux_form_edit.html', {'form': form})

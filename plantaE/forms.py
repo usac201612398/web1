@@ -1,5 +1,5 @@
 from django import forms
-from .models import Actpeso,tipoCajas,pedidos,controlcajas,usuariosAppFruta,detallerec, detallesEstructuras, causasRechazo,paramenvlocales,Boletas,salidacontenedores,salidasFruta, productoTerm,contenedores, Recepciones, Ccalidad, inventarioProdTerm,AcumFruta, enviosFrutaPlantilla, enviosrec
+from .models import Actpeso,tipoCajas,pedidos,controlcajas,usuariosAppFruta,detallerec, detallesEstructuras, causasRechazo,paramenvlocales,Boletas,salidacontenedores,salidasFruta, productoTerm,contenedores, Recepciones, Ccalidad, inventarioProdTerm,inventarioProdTermAux,AcumFruta, enviosFrutaPlantilla, enviosrec
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Fieldset, Div
 from django.db.models import Sum
@@ -338,7 +338,107 @@ class inventarioFrutaForm(forms.ModelForm):
             cleaned_data['pesosinmerma'] = pesosinmerma
 
             return cleaned_data    
+
+class inventarioFrutaAuxForm(forms.ModelForm):
+
+    op_empaque = [('', '-'), ('Cajas', 'Cajas'), ('Libras', 'Libras')]
+    op_proveedor = [
+        ('', '-'),
+        ('FINCA LA PASTORIA, S.A.', 'FINCA LA PASTORIA, S.A.'),
+        ('INVERSIONES LA PASTORIA, S.A.', 'INVERSIONES LA PASTORIA, S.A.'),
+        ('SDC', 'SDC'),
+        ('AGROINDUSTRIAS SAN RAFAEL, S.A.', 'AGROINDUSTRIAS SAN RAFAEL, S.A.'),
+        ('INVERNADEROS TECNOLOGICOS S.A', 'INVERNADEROS TECNOLOGICOS S.A'),
+        ('HORTEX, S.A.', 'HORTEX, S.A.'),
+        ('DANIEL ESTUARDO GALICIA CARRERA', 'DANIEL ESTUARDO GALICIA CARRERA'),
+        ('PRODUCTOS DEL VALLE, S.A.', 'PRODUCTOS DEL VALLE, S.A.')
+    ]
+    op_categoria = [('','-'),('Exportación','Exportación'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolución','Devolución')]
+    op_status = [('', '-'), ('En proceso', 'En proceso'), ('Anulado', 'Anulado')]
+
+    registro = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    status = forms.ChoiceField(choices=op_status, required=False, widget=forms.Select(attrs={'class': 'form-control'}))
+    proveedor = forms.ChoiceField(choices=op_proveedor, widget=forms.Select(attrs={'class': 'form-control'}))
+
+    itemsapcode = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    calidad1 = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+
+    cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    libras = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+
+    lbsintara = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    pesostd = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    pesosinmerma = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    merma = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    pesostdxcaja = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    pesorxcaja = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    categoria = forms.ChoiceField(choices=op_categoria, widget=forms.Select(attrs={'class': 'form-control'}))
+    orden = forms.CharField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    tara = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    inventarioreg = forms.CharField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    class Meta:
+        model = inventarioProdTerm
+        fields = [
+            'registro', 'status', 'proveedor',
+            'itemsapcode', 'itemsapname',
+            'cajas', 'libras',
+            'lbsintara', 'pesostd', 'pesostdxcaja',
+            'pesorxcaja', 'merma', 'pesosinmerma',
+            'orden','categoria','calidad1','tara','inventarioreg'
+        ]
+
+    def clean(self):
+        cleaned_data = super().clean()
+        categoria = cleaned_data.get('categoria')
+
         
+        itemsapcode = cleaned_data.get('itemsapcode')
+       
+        tara = cleaned_data.get('tara')
+        libras = cleaned_data.get('libras') or 0
+        cajas = cleaned_data.get('cajas') or 0
+        if categoria == "Exportación":
+            # Obtener datos del producto
+            try:
+                ref2 = productoTerm.objects.filter(
+                    itemsapcode=itemsapcode,
+                    categoria=categoria
+                ).first()
+                taraxcaja = ref2.taraxcaja or 0.0
+                pesostdxcaja = ref2.pesostdxcaja or 0.0
+            except productoTerm.DoesNotExist:
+                taraxcaja = 0.0
+                pesostdxcaja = 0.0
+
+            # ---- Cálculos ----
+            tara = taraxcaja * cajas
+            lbsintara = libras - tara - 56  # Ajusta si ese 56 no siempre aplica
+        
+            if cajas > 0:
+                pesorxcaja = lbsintara / cajas
+            else:
+                pesorxcaja = 0
+
+            pesostd = pesostdxcaja * cajas
+
+            if lbsintara > pesostd:
+                merma = lbsintara - pesostd
+                pesosinmerma = lbsintara - merma
+            else:
+                merma = 0
+                pesosinmerma = lbsintara
+
+            # ---- Guardar resultados ----
+            cleaned_data['lbsintara'] = lbsintara
+            cleaned_data['pesorxcaja'] = pesorxcaja
+            cleaned_data['pesostd'] = pesostd
+            cleaned_data['pesostdxcaja'] = pesostdxcaja
+            cleaned_data['merma'] = merma
+            cleaned_data['pesosinmerma'] = pesosinmerma
+
+            return cleaned_data
+
 class contenedoresForm(forms.ModelForm):
 
     op_status = [('','Abierto'),('Cerrado','Cerrado')]
