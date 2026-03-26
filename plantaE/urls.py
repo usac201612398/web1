@@ -18,6 +18,8 @@ from .view.inventarioprodterm_views import *
 from .view.acumfruta_views import *
 from .view.reportetecnicos_views import *
 from .view.reportegerencial_views import *
+
+from .view.inventarioprodtermaux_views import *
 from .view.home_views import *
 
 #from app1.views import *
@@ -189,6 +191,11 @@ urlpatterns = [
     path('inventarioProd2/<int:pk>/edit/', views.inventarioProd_update2, name='inventarioProd_update2'),
     path('inventarioProd2/<int:pk>/delete/', views.inventarioProd_delete2, name='inventarioProd_delete2'),
     path('inventarioProd/reporteInv', views.reporteInventario, name='reporte_inventario'),
+
+    #Urls de inventarioprodterm
+    path("inventarioProdAux",views.inventarioProdAux_list,name='inventarioProdAux_list'),
+    path('inventarioProdAux/<int:pk>/edit/', views.inventarioProdAux_update, name='inventarioProdAux_update'),
+    path('inventarioProdAux/<int:pk>/delete/', views.inventarioProdAux_delete, name='inventarioProdAux_delete'),
 
     #Urls de cargacontenedor
     path("inventarioProd/cargacontenedor",views.cargacontenedores_list,name='inventarioProd_contenlist'),

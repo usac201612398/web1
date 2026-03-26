@@ -268,7 +268,9 @@ class inventarioFrutaForm(forms.ModelForm):
         
         model = inventarioProdTerm
         fields = ['registro','status','proveedor','itemsapcode','itemsapname','cajas','libras','lbsintara','pesostd','pesostdxcaja','pesorxcaja','merma','pesosinmerma','orden']
-    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['status'].required = False
     def clean(self):
         cleaned_data = super().clean()
 
@@ -426,6 +428,10 @@ class enviosForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['observaciones'].required = False
+        self.fields['u_m'].required = False
+        self.fields['clasificacion'].required = False
+        self.fields['grupo'].required = False
+        self.fields['rubro'].required = False
 
 class itemsenviosForm(forms.ModelForm):
 
