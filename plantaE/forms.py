@@ -311,8 +311,10 @@ class inventarioFrutaForm(forms.ModelForm):
 
         # ---- Cálculos ----
         tara = taraxcaja * cajas
-        lbsintara = libras - tara - 56  # Ajusta si ese 56 no siempre aplica
-
+        if categoria = "Exportación"
+            lbsintara = libras - tara - 56  # Ajusta si ese 56 no siempre aplica
+        else
+            lbsintara = libras - tara 
         if cajas > 0:
             pesorxcaja = lbsintara / cajas
         else:
