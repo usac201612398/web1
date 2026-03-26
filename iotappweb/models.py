@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 class SensorData(models.Model):
     sensor = models.CharField(max_length=100)
@@ -11,6 +12,13 @@ class SensorData(models.Model):
 
     def __str__(self):
         return f"{self.sensor} - {self.metric} - {self.value}"
+
+class SensorAlert(models.Model):
+    sensor = models.CharField(max_length=50)
+    tipo = models.CharField(max_length=20)  # "riego" o "exceso"
+    porcentaje_perdida = models.FloatField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    mensaje = models.TextField()
 
 class m1Sensoresdata(models.Model):
     registro = models.BigAutoField(primary_key=True)

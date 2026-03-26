@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import m1Sensoresdata, m2Sensoresdata, riegoRegistro, riegoResumen, SensorData
+from .models import m1Sensoresdata, m2Sensoresdata, riegoRegistro, riegoResumen, SensorData, SensorAlert
 # Create your views here.
 import time
 import paho.mqtt.client as mqtt
@@ -367,68 +367,54 @@ ARANET_SECRET = "rphvcx8qe3dk5dwjfcw84na5vqz34jen"
 @login_exempt
 @csrf_exempt
 def aranet_webhook(request):
-    print("🔥 Webhook recibido")
-    print("Headers:", dict(request.headers))
-    print("Body raw:", request.body)
-
-    if request.method == "POST":
-        token = request.headers.get("X-Aranet-Key")
-        if token != ARANET_SECRET:
-            print("❌ API Key incorrecta:", token)
-            return JsonResponse({"error": "Unauthorized"}, status=401)
-
-        try:
-            data = json.loads(request.body)
-            print("📦 DATA parsed:", data)
-
-            objects = []
-            for record in data:
-                sensor = record.get("bn", "unknown").rstrip(":")
-                metric = record.get("n")
-                value = record.get("v")
-                unit = record.get("u")
-                bt = record.get("bt")
-                timestamp = datetime.utcfromtimestamp(bt) if bt else datetime.utcnow()
-
-                if value is None or metric is None:
-                    print("⚠️ Registro ignorado:", record)
-                    continue
-
-                objects.append(
-                    SensorData(
-                        sensor=sensor,
-                        metric=metric,
-                        value=value,
-                        unit=unit,
-                        timestamp=timestamp
-                    )
-                )
-
-            if objects:
-                SensorData.objects.bulk_create(objects, batch_size=100)
-                print(f"✅ Guardados {len(objects)} registros")
-                sensores = set(obj.sensor for obj in objects)
-
-                for sensor in sensores:
-                    resultado = evaluar_sensor(sensor)
-
-                    #if resultado and resultado["porcentaje_perdida"] > 2:
-                    #    print("🚨 ALERTA DISPARADA")
-                    enviar_alerta(resultado)
-            else:
-                print("⚠️ No hay objetos para guardar")
-
-            return JsonResponse({"status": "ok", "saved": len(objects)})
-
-        except Exception as e:
-            print("❌ ERROR:", str(e))
-            return JsonResponse({"error": str(e)}, status=400)
-    elif request.method == "GET":
-        # Solo para pruebas: responder un mensaje para ver si la URL está activa
-        return JsonResponse({"message": "GET method received, but expecting POST"}, status=200)
-    else:
+    if request.method != "POST":
         return JsonResponse({"error": "Method Not Allowed"}, status=405)
 
+    token = request.headers.get("X-Aranet-Key")
+    if token != ARANET_SECRET:
+        return JsonResponse({"error": "Unauthorized"}, status=401)
+
+    try:
+        data = json.loads(request.body)
+        objects = []
+
+        for record in data:
+            sensor = record.get("bn")
+            metric = record.get("n")
+            value = record.get("v")
+            unit = record.get("u")
+            bt = record.get("bt")
+            timestamp = datetime.utcfromtimestamp(bt) if bt else datetime.utcnow()
+
+            # Ignorar registros inválidos
+            if not sensor or not metric or value is None:
+                continue
+
+            sensor = sensor.rstrip(":")
+            objects.append(
+                SensorData(
+                    sensor=sensor,
+                    metric=metric,
+                    value=value,
+                    unit=unit,
+                    timestamp=timestamp
+                )
+            )
+
+        if objects:
+            SensorData.objects.bulk_create(objects, batch_size=100)
+
+            sensores = set(obj.sensor for obj in objects)
+            for sensor in sensores:
+                resultado = evaluar_sensor(sensor)
+                if resultado:
+                    enviar_alerta(resultado)
+
+        return JsonResponse({"status": "ok", "saved": len(objects)})
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)
+        
 def aranet_resumen_json(request):
     sensores = SensorData.objects.values_list('sensor', flat=True).distinct()
 
@@ -471,50 +457,97 @@ def evaluar_sensor(sensor_id):
     readings = SensorData.objects.filter(
         sensor=sensor_id,
         metric="weight"
-    ).order_by('-timestamp')[:50]  # últimas lecturas
+    ).order_by('-timestamp')[:5]
 
-    if not readings:
+    if len(readings) < 2:
         return None
 
-    pesos = [r.value for r in readings]
+    peso_base = 23
 
-    peso_actual = pesos[0]
-    peso_base = 23 # asumimos que el mayor es después de riego
+    # calcular porcentajes
+    porcentajes = []
+    for r in readings:
+        porcentaje_restante = (r.value / peso_base) * 100
+        porcentaje_perdida = 100 - porcentaje_restante
+        porcentajes.append(porcentaje_perdida)
 
-    if peso_base == 0:
+    actual = porcentajes[0]
+    anterior = porcentajes[1]
+
+    cambio = actual - anterior
+
+    # 1. ignorar ruido (<2%)
+    if abs(cambio) < 2:
         return None
 
-    porcentaje_restante = (peso_actual / peso_base) * 100
-    porcentaje_perdida = 100 - porcentaje_restante
+    # 2. ignorar saltos bruscos (>5%)
+    if abs(cambio) > 5:
+        print("⚠️ Salto brusco:", cambio)
+        return None
+
+    # 3. validar tendencia progresiva
+    tendencia_subida = all(
+        porcentajes[i] >= porcentajes[i+1]
+        for i in range(len(porcentajes)-1)
+    )
+
+    tendencia_bajada = all(
+        porcentajes[i] <= porcentajes[i+1]
+        for i in range(len(porcentajes)-1)
+    )
+
+    if not (tendencia_subida or tendencia_bajada):
+        print("⚠️ Tendencia inconsistente")
+        return None
+
+    # 🚨 4. reglas de alerta
+    if actual > 9:
+        tipo = "riego"
+    elif actual < -9:
+        tipo = "exceso"
+    else:
+        return None
+
+    # resultado final
     return {
         "sensor": sensor_id,
-        "peso_actual": peso_actual,
+        "peso_actual": readings[0].value,
         "peso_base": peso_base,
-        "porcentaje_restante": porcentaje_restante,
-        "porcentaje_perdida": porcentaje_perdida
+        "porcentaje_perdida": actual,
+        "cambio": cambio,
+        "tipo": tipo
     }
 
+def enviar_alerta(data):
+    if data["tipo"] == "riego":
+        mensaje = (
+            f"🚨 NECESITA RIEGO\n"
+            f"Sensor: {data['sensor']}\n"
+            f"Pérdida: {data['porcentaje_perdida']:.2f}%"
+        )
+    elif data["tipo"] == "exceso":
+        mensaje = (
+            f"💧 EXCESO DE RIEGO\n"
+            f"Sensor: {data['sensor']}\n"
+            f"Exceso: {data['porcentaje_perdida']:.2f}%"
+        )
+    else:
+        return
 
-def enviar_alerta(sensor_data):
-    
-    message=(
-        f"Sensor: {sensor_data['sensor']}\n"
-        f"Peso actual: {sensor_data['peso_actual']} kg\n"
-        f"Peso base: {sensor_data['peso_base']} kg\n"
-        f"% restante: {sensor_data['porcentaje_restante']:.2f}%\n"
-        f"% pérdida: {sensor_data['porcentaje_perdida']:.2f}%\n\n"
-        f"⚠️ Se superó el 3% de pérdida"
+    # Guardar alerta en base de datos
+    SensorAlert.objects.create(
+        sensor=data['sensor'],
+        tipo=data['tipo'],
+        porcentaje_perdida=data['porcentaje_perdida'],
+        mensaje=mensaje
     )
-    numeros = [
-        "+50230664716"
-    ]
 
-    for numero in numeros:
+    # Enviar WhatsApp
+    for numero in ["+50230664716"]:
         try:
-            enviar_whatsapp(message, numero)
+            enviar_whatsapp(mensaje, numero)
         except Exception as e:
-            print("❌ ERROR WhatsApp:", str(e))
-    
+            print("❌ ERROR WhatsApp:", str(e)) 
 # Retorna los últimos 20 registros en JSON
 def aranet_data_json(request):
     readings = SensorData.objects.order_by('-timestamp')[:20]

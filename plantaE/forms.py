@@ -285,7 +285,7 @@ class inventarioFrutaForm(forms.ModelForm):
         cajas = cleaned_data.get('cajas')
         
         tara = taraxcaja*cajas
-        lbsintara = libras-tara
+        lbsintara = libras-tara-56
         pesorxcaja = lbsintara/cajas
         pesostd = pesostdxcaja*cajas
         if lbsintara - pesostd > 0:
