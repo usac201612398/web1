@@ -379,7 +379,7 @@ class inventarioFrutaAuxForm(forms.ModelForm):
     inventarioreg = forms.CharField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     salidacontenedores = forms.CharField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     class Meta:
-        model = inventarioProdTerm
+        model = inventarioProdTermAux
         fields = [
             'registro', 'status', 'proveedor',
             'itemsapcode', 'itemsapname',
