@@ -262,6 +262,7 @@ class inventarioFrutaForm(forms.ModelForm):
 
     itemsapcode = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    calidad1 = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     cajas = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     libras = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
@@ -283,7 +284,7 @@ class inventarioFrutaForm(forms.ModelForm):
             'cajas', 'libras',
             'lbsintara', 'pesostd', 'pesostdxcaja',
             'pesorxcaja', 'merma', 'pesosinmerma',
-            'orden','categoria'
+            'orden','categoria','calidad1'
         ]
 
     def clean(self):
