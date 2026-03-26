@@ -275,6 +275,7 @@ class inventarioFrutaForm(forms.ModelForm):
     pesorxcaja = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     categoria = forms.ChoiceField(choices=op_categoria, widget=forms.Select(attrs={'class': 'form-control'}))
     orden = forms.CharField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    tara = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
 
     class Meta:
         model = inventarioProdTerm
@@ -284,7 +285,7 @@ class inventarioFrutaForm(forms.ModelForm):
             'cajas', 'libras',
             'lbsintara', 'pesostd', 'pesostdxcaja',
             'pesorxcaja', 'merma', 'pesosinmerma',
-            'orden','categoria','calidad1'
+            'orden','categoria','calidad1','tara'
         ]
 
     def clean(self):
@@ -294,50 +295,51 @@ class inventarioFrutaForm(forms.ModelForm):
         
         itemsapcode = cleaned_data.get('itemsapcode')
        
+        tara = cleaned_data.get('tara')
         libras = cleaned_data.get('libras') or 0
         cajas = cleaned_data.get('cajas') or 0
-
-        # Obtener datos del producto
-        try:
-            ref2 = productoTerm.objects.filter(
-                itemsapcode=itemsapcode,
-                categoria=categoria
-            ).first()
-            taraxcaja = ref2.taraxcaja or 0.0
-            pesostdxcaja = ref2.pesostdxcaja or 0.0
-        except productoTerm.DoesNotExist:
-            taraxcaja = 0.0
-            pesostdxcaja = 0.0
-
-        # ---- Cálculos ----
-        tara = taraxcaja * cajas
         if categoria == "Exportación":
+            # Obtener datos del producto
+            try:
+                ref2 = productoTerm.objects.filter(
+                    itemsapcode=itemsapcode,
+                    categoria=categoria
+                ).first()
+                taraxcaja = ref2.taraxcaja or 0.0
+                pesostdxcaja = ref2.pesostdxcaja or 0.0
+            except productoTerm.DoesNotExist:
+                taraxcaja = 0.0
+                pesostdxcaja = 0.0
+
+            # ---- Cálculos ----
+            tara = taraxcaja * cajas
             lbsintara = libras - tara - 56  # Ajusta si ese 56 no siempre aplica
-        else:
-            lbsintara = libras - tara 
-        if cajas > 0:
-            pesorxcaja = lbsintara / cajas
-        else:
-            pesorxcaja = 0
+        
+            if cajas > 0:
+                pesorxcaja = lbsintara / cajas
+            else:
+                pesorxcaja = 0
 
-        pesostd = pesostdxcaja * cajas
+            pesostd = pesostdxcaja * cajas
 
-        if lbsintara > pesostd:
-            merma = lbsintara - pesostd
-            pesosinmerma = lbsintara - merma
-        else:
-            merma = 0
-            pesosinmerma = lbsintara
+            if lbsintara > pesostd:
+                merma = lbsintara - pesostd
+                pesosinmerma = lbsintara - merma
+            else:
+                merma = 0
+                pesosinmerma = lbsintara
 
-        # ---- Guardar resultados ----
-        cleaned_data['lbsintara'] = lbsintara
-        cleaned_data['pesorxcaja'] = pesorxcaja
-        cleaned_data['pesostd'] = pesostd
-        cleaned_data['pesostdxcaja'] = pesostdxcaja
-        cleaned_data['merma'] = merma
-        cleaned_data['pesosinmerma'] = pesosinmerma
+            # ---- Guardar resultados ----
+            cleaned_data['lbsintara'] = lbsintara
+            cleaned_data['pesorxcaja'] = pesorxcaja
+            cleaned_data['pesostd'] = pesostd
+            cleaned_data['pesostdxcaja'] = pesostdxcaja
+            cleaned_data['merma'] = merma
+            cleaned_data['pesosinmerma'] = pesosinmerma
 
-        return cleaned_data
+            return cleaned_data    
+        
+        
 class contenedoresForm(forms.ModelForm):
 
     op_status = [('','Abierto'),('Cerrado','Cerrado')]
