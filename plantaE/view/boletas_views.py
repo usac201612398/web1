@@ -227,7 +227,7 @@ class BoletasListView(ListView):
     context_object_name = 'registros'
 
     def get_queryset(self):
-        return Boletas.objects.filter(fecha__gte=datetime.date(2026, 1, 1)).order_by('-boleta').exclude(status='Cerrado')
+        return Boletas.objects.filter(status__isnull=True, fecha__gte=datetime.date(2026, 1, 1)).order_by('-boleta')
 
 class BoletasListProductorView(ListView):
     model = Boletas
