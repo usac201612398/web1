@@ -235,7 +235,7 @@ class BoletasListProductorView(ListView):
     context_object_name = 'registros'
 
     def get_queryset(self):
-        salidas = Boletas.objects.exclude(status="Anulado")
+        salidas = Boletas.objects.all()
         nombre_usuario = self.request.user.username
         datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('finca', 'encargado')
         fecha_limite = datetime.date(2025, 9, 30)
