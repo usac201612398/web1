@@ -259,12 +259,12 @@ $(document).on('click', '.seguimiento-btn', function(){
     modal.show();
 
     $.get("{% url 'reporte_seguimiento_api_fito' %}", data, function(response){
-       
+        console.log(response);
         let html = `<p>Promedio: <strong>${response.promedio.toFixed(2)}</strong> 
             <span style="color:${response.color || 'black'}">(${response.letra || '-'})</span></p>`;
         html += '<table class="table table-sm table-bordered"><tr><th>Muestra</th><th>Cantidad</th></tr>';
         response.muestras.forEach(m => {
-            console.log(m);
+           
             html += `<tr><td>${m.muestra}</td><td>${m.cantidad}</td></tr>`;
         });
         html += '</table>';
