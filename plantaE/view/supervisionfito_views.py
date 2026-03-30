@@ -173,13 +173,13 @@ def supervisionfito_grabar(request):
     if base.get('actividad') == 'Tizón':
         muestralimite = 5
     else:
-        muestralimite = 1
+        muestralimite = 2
 
     if base.get('actividad') == 'Tizón' and muestras_actuales >= 5 :
         return JsonResponse({
             'error': 'Este lote ya cuenta con las 5 muestras completas'
         }, status=400)
-    elif base.get('actividad') == 'Cobertura' and muestras_actuales >= 1 :
+    elif base.get('actividad') == 'Cobertura' and muestras_actuales >= 2 :
         return JsonResponse({
             'error': 'Este lote ya cuenta con la muestra completa'
         }, status=400)
