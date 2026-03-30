@@ -252,7 +252,7 @@ def evaluar_tizon(dato):
     elif dato > 2:
         return 'M', 'red'
     else:
-        return '-', 'secondary'  # 👈 clave
+        return '-', 'secondary'  # 
 
 def reporte_seguimiento_api_fito(request):
     finca = request.GET.get('finca')
@@ -291,7 +291,7 @@ def reporte_seguimiento_api_fito(request):
     if año:
         queryset = queryset.filter(anio=año)
 
-    muestras = list(queryset.order_by('fecha','muestra').values('muestra','cantidad','ref'))
+    muestras = list(queryset.order_by('fecha','muestra').values('muestra','cantidad'))
 
     cantidades_validas = [m['cantidad'] for m in muestras if m['cantidad'] is not None]
     promedio = sum(cantidades_validas) / len(cantidades_validas) if cantidades_validas else 0
