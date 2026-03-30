@@ -272,10 +272,7 @@ def reporte_seguimiento_api_fito(request):
 
     queryset = supervisionfito.objects.filter(
         finca=finca,
-        estructura=estructura,
-        zona=zona,
-        actividad__iexact=actividad,
-        cultivo=cultivo
+        
     ).annotate(
         semana=ExtractWeek('fecha'),
         anio=ExtractYear('fecha')  # <-- Extraemos el año
