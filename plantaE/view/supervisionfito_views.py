@@ -85,7 +85,13 @@ def supervisionfito_list(request):
         )
         .order_by('-fecha')
     )
-
+    for l in lotes:
+        if l.actividad == 'Tizón':
+            l.limite = 5
+        elif l.actividad == 'Cobertura':
+            l.limite = 1
+        else:
+            l.limite = 0
     if area != 'ALL':
         lotes = lotes.filter(finca=area)
 
