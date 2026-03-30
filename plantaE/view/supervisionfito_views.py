@@ -98,7 +98,7 @@ def supervisionfito_list(request):
             # 🔥 LÍMITE DINÁMICO
             limite=Case(
                 When(actividad='Tizón', then=Value(5)),
-                When(actividad='Cobertura', then=Value(1)),
+                When(actividad='Cobertura', then=Value(2)),
                 default=Value(0),
                 output_field=IntegerField()
             )
@@ -452,14 +452,15 @@ def reporte_semanal_supervision_fito(request):
 
     return JsonResponse(data, safe=False)
 
-def supervisionfito_detalle(request, fecha, cultivo, estructura, zona,finca):
+def supervisionfito_detalle(request, fecha, cultivo, estructura, actividad, zona,finca):
 
     registros = supervisionfito.objects.filter(
         fecha=fecha,
         cultivo=cultivo,
         estructura=estructura,
         zona=zona,
-        finca=finca
+        finca=finca,
+        actividad=actividad
     ).exclude(status='Anulado').order_by('muestra', 'actividad')
 
     muestras = defaultdict(list)
