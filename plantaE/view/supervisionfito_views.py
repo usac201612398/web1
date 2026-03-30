@@ -295,8 +295,15 @@ def reporte_seguimiento_api_fito(request):
 
     cantidades_validas = [m['cantidad'] for m in muestras if m['cantidad'] is not None]
     promedio = sum(cantidades_validas) / len(cantidades_validas) if cantidades_validas else 0
+    # Determinar letra y color según actividad
+    if actividad.lower() == 'cobertura':
+        letra, color = evaluar_cobertura(promedio)
+    elif actividad.lower() == 'tizón':
+        letra, color = evaluar_tizon(promedio)
+    else:
+        letra, color = '-', 'secondary'
 
-    return JsonResponse({'muestras': muestras, 'promedio': promedio})
+    return JsonResponse({'muestras': muestras, 'promedio': promedio, 'letra': letra, 'color': color})
 
 def reporte_general_fito(request):
     # Funciones de semáforo
