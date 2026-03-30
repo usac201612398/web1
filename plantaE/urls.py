@@ -150,7 +150,8 @@ urlpatterns = [
     path('supervisionproduccion/reporte-semanal/detalleseguimiento',views.reporte_seguimiento_api,name='reporte_seguimiento_api'),
     
     #Urls de supervisionfito
-    path('supervisionfitotomates/new/', views.supervisionfitotomates_create, name='supervisionfitotomates_create'),
+    path('supervisionfitotomatescob/new/', views.supervisionfitotomatescob_create, name='supervisionfitotomatescob_create'),
+    path('supervisionfitotomatestizon/new/', views.supervisionfitotomatestizon_create, name='supervisionfitotomatestizon_create'),
     path("supervisionfito",views.supervisionfito_list,name='supervisionfito_list'),
     path("supervisionfito/<int:pk>/delete/",views.supervisionfito_delete,name='supervisionfito_delete'),
     path('supervisionfito/detalle/<str:fecha>/<str:cultivo>/<str:estructura>/<str:zona>/<str:finca>/',views.supervisionfito_detalle,name='supervisionfito_detalle'), 

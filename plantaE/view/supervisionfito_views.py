@@ -20,7 +20,7 @@ from plantaE.models import (
 #from django.views.generic import TemplateView
 
   
-def supervisionfitotomates_create(request):
+def supervisionfitotomatescob_create(request):
     user = request.user.username
 
     if user == 'cosecha.rio@popoyan.com.gt':
@@ -30,7 +30,21 @@ def supervisionfitotomates_create(request):
     else:
         area = 'ALL'  # gerencial
 
-    return render(request, 'plantaE/supervisionfito/supervisionfitotomates_formPlantilla.html',{
+    return render(request, 'plantaE/supervisionfito/supervisionfitotomatescob_formPlantilla.html',{
+        'area_usuario': area,'user':user
+    })
+
+def supervisionfitotomatestizon_create(request):
+    user = request.user.username
+
+    if user == 'cosecha.rio@popoyan.com.gt':
+        area = 'RIO'
+    elif user == 'cosecha.valle@popoyan.com.gt' or user =='cosecha.valle2@popoyan.com.gt' or user =='linday.solares@popoyan.com.gt':
+        area = 'VALLE'
+    else:
+        area = 'ALL'  # gerencial
+
+    return render(request, 'plantaE/supervisionfito/supervisionfitotomatestizon_formPlantilla.html',{
         'area_usuario': area,'user':user
     })
 
@@ -131,9 +145,21 @@ def supervisionfito_grabar(request):
         **filtros_lote
     ).values('muestra').distinct().count()
 
-    if muestras_actuales >= 5:
+    muestras_actuales = supervisionfito.objects.filter(
+        **filtros_lote
+    ).values('muestra').distinct().count()
+    if base.get('actividad') == 'Tizón':
+        muestralimite = 5
+    else:
+        muestralimite = 1
+
+    if base.get('actividad') == 'Tizón' and muestras_actuales >= 5 :
         return JsonResponse({
-            'error': 'Este lote ya cuenta con las 10 muestras completas'
+            'error': 'Este lote ya cuenta con las 5 muestras completas'
+        }, status=400)
+    elif base.get('actividad') == 'Cobertura' and muestras_actuales >= 1 :
+        return JsonResponse({
+            'error': 'Este lote ya cuenta con la muestra completa'
         }, status=400)
 
     muestra_actual = muestras_actuales + 1
@@ -171,7 +197,7 @@ def supervisionfito_grabar(request):
     return JsonResponse({
         'msm': f'Se registró correctamente la muestra {muestra_actual}',
         'muestra': muestra_actual,
-        'completo': muestra_actual == 5
+        'completo': muestra_actual == muestralimite
     })
 
 def evaluar_cobertura(dato):

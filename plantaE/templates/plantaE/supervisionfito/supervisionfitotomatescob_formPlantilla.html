@@ -159,13 +159,6 @@
                 <td><input class="input obs" type="text"></td>
               </tr>
 
-              <!-- TIZON -->
-              <tr>
-                <td>Tizon</td>
-                <td><input class="input cant" type="number"></td>
-                <td><input class="input obs" type="text"></td>
-              </tr>
-
             </tbody>
           </table>
         </div>
@@ -202,7 +195,7 @@
     };
 
     const zonasPorArea = {
-      RIO: ['Z1', 'Z2'],
+      RIO: ['Z1', 'Z2', 'Z3'],
       VALLE: ['Z1', 'Z2', 'Z3', 'Z4']
     };
 
@@ -339,15 +332,7 @@
               cantidad = val;
             }
 
-          } else if (actividad === 'Tizón') {
-            const val = parseFloat($(this).find('.cant').val());
-            if (isNaN(val) || val <= 0) {
-              alert('Debe ingresar cantidad válida en Tizón');
-              incompletas = true;
-              return false;
-            }
-            cantidad = val;
-          }
+          } 
 
           datos.push({
             fecha,
@@ -383,7 +368,7 @@
             alert(response.msm || 'Guardado correctamente');
             boton.prop('disabled', false);
             if (response.completo) {
-              alert('✅ Muestra 5 registrada. El lote está completo');
+              alert('✅ Muestra registrada. El lote está completo');
               window.location.href = "{% url 'supervisionfito_list' %}";
             } else {
               alert('Muestra ' + response.muestra + ' registrada correctamente');
