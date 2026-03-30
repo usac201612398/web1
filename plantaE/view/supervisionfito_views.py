@@ -228,15 +228,13 @@ def evaluar_cobertura(dato):
         dato = float(dato)
     except (TypeError, ValueError):
         return '-', 'secondary'
-
-    if dato == 200:
-        return 'M', 'red'
-    elif 70 <= dato <= 100:
+        
+    if 70 <= dato <= 100:
         return 'E', 'green'
     elif 0 <= dato <= 30:
         return 'B', 'yellow'
     else:
-        return '-', 'secondary'  # 👈 clave
+        return 'M', 'red'  # 👈 clave
 
 def evaluar_tizon(dato):
 
@@ -255,6 +253,7 @@ def evaluar_tizon(dato):
         return '-', 'secondary'  # 
 
 def reporte_seguimiento_api_fito(request):
+
     finca = request.GET.get('finca')
     estructura = request.GET.get('estructura')
     zona = request.GET.get('zona')
@@ -264,6 +263,7 @@ def reporte_seguimiento_api_fito(request):
     año = request.GET.get('anio')  # <-- Nuevo parámetro
 
     # Convertir semana y año a enteros
+
     try:
         semana = int(semana)
     except (TypeError, ValueError):
