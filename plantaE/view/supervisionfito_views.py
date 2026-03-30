@@ -270,10 +270,7 @@ def reporte_seguimiento_api_fito(request):
     except (TypeError, ValueError):
         año = None
 
-    queryset = supervisionfito.objects.annotate(
-        semana=ExtractWeek('fecha'),
-        anio=ExtractYear('fecha')  # <-- Extraemos el año
-    ).exclude(status='Anulado')
+    queryset = supervisionfito.objects.all()
 
     # Filtrar por semana y año si se proporcionan
     #if semana:
