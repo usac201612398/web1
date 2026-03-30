@@ -313,7 +313,7 @@
 
           if (actividad === 'Tizón') {
             const val = parseFloat($(this).find('.cant').val());
-            if (isNaN(val) || val <= 0) {
+            if (isNaN(val) || val < 0) {
               alert('Debe ingresar cantidad válida en Tizón');
               incompletas = true;
               return false;
