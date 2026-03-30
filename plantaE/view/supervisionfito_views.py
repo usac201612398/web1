@@ -274,7 +274,7 @@ def reporte_seguimiento_api_fito(request):
         finca=finca,
         estructura=estructura,
         zona=zona,
-        actividad=actividad,
+        actividad__iexact=actividad,
         cultivo=cultivo
     ).annotate(
         semana=ExtractWeek('fecha'),
@@ -282,10 +282,10 @@ def reporte_seguimiento_api_fito(request):
     ).exclude(status='Anulado')
 
     # Filtrar por semana y año si se proporcionan
-    if semana:
-        queryset = queryset.filter(semana=semana)
-    if año:
-        queryset = queryset.filter(anio=año)
+    #if semana:
+    #    queryset = queryset.filter(semana=semana)
+    #if año:
+    #    queryset = queryset.filter(anio=año)
 
     muestras = list(queryset.order_by('fecha','muestra').values('muestra','cantidad'))
 
