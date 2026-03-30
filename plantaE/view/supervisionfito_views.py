@@ -326,15 +326,15 @@ def reporte_general_fito(request):
         ref=Avg('ref')
     ).order_by('anio', 'semana','estructura')
 
-    # 👇 Construir lista de dicts para pivot
+    # Construir lista de dicts para pivot
+
     data = []
+
     for row in rows:
-        if row['actividad'] == 'Deshoje':
-            letra, color = evaluar_deshoje(row['prom'], row['ref'])
-        elif row['actividad'] == 'Ganchos':
-            letra, color = evaluar_ganchos(row['prom'])
+        if row['actividad'] == 'Cobertura':
+            letra, color = evaluar_cobertura(row['prom'])
         else:
-            letra, color = evaluar_descoronado(row['prom'])
+            letra, color = evaluar_tizon(row['prom'])
 
         data.append({
             'estructura': row['estructura'],
