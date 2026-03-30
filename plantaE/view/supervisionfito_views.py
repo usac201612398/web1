@@ -8,6 +8,7 @@ from django.db.models import Avg, Max, Count
 from django.db.models.functions import ExtractWeek, ExtractYear
 from collections import defaultdict
 import datetime
+from django.db.models import Case, When, Value, IntegerField
 import json
 from django.db import transaction
 from .auxiliares import *
@@ -51,26 +52,37 @@ def supervisionfitotomatestizon_create(request):
 def supervisionfito_list(request):
 
     hoy = timezone.now().date()
-
     user = request.user.username
 
-    if user == 'cosecha.rio@popoyan.com.gt' or user=='jorge.cruz@popoyan.com.gt':
+    # ===== AREA POR USUARIO =====
+    if user in ['cosecha.rio@popoyan.com.gt', 'jorge.cruz@popoyan.com.gt']:
         area = 'RIO'
-    elif user == 'cosecha.valle@popoyan.com.gt' or user =='cosecha.valle2@popoyan.com.gt' or user =='linday.solares@popoyan.com.gt':
+    elif user in [
+        'cosecha.valle@popoyan.com.gt',
+        'cosecha.valle2@popoyan.com.gt',
+        'linday.solares@popoyan.com.gt'
+    ]:
         area = 'VALLE'
     else:
         area = 'ALL'  # gerencial
 
-    # Lunes de la semana actual
+    # ===== RANGO SEMANAL =====
     inicio_semana = hoy - datetime.timedelta(days=hoy.weekday())
-    # Domingo de la semana actual
     fin_semana = inicio_semana + datetime.timedelta(days=6)
+
+    # ===== QUERY BASE =====
+    lotes = supervisionfito.objects.filter(
+        status='Abierta',
+        fecha__range=(inicio_semana, fin_semana)
+    )
+
+    # ===== FILTRO POR AREA =====
+    if area != 'ALL':
+        lotes = lotes.filter(finca=area)
+
+    # ===== AGRUPACIÓN + CÁLCULOS =====
     lotes = (
-        supervisionfito.objects
-        .filter(
-            status='Abierta',
-            fecha__range=(inicio_semana, fin_semana)
-        )
+        lotes
         .values(
             'fecha',
             'finca',
@@ -81,22 +93,23 @@ def supervisionfito_list(request):
         )
         .annotate(
             total_muestras=Count('muestra', distinct=True),
-            ultima_muestra=Max('muestra')
+            ultima_muestra=Max('muestra'),
+
+            # 🔥 LÍMITE DINÁMICO
+            limite=Case(
+                When(actividad='Tizón', then=Value(5)),
+                When(actividad='Cobertura', then=Value(1)),
+                default=Value(0),
+                output_field=IntegerField()
+            )
         )
         .order_by('-fecha')
     )
-    for l in lotes:
-        if l.actividad == 'Tizón':
-            l.limite = 5
-        elif l.actividad == 'Cobertura':
-            l.limite = 1
-        else:
-            l.limite = 0
-    if area != 'ALL':
-        lotes = lotes.filter(finca=area)
 
     return render(request, 'plantaE/supervisionfito/supervisionfito_list.html', {
-        'lotes': lotes,'area_usuario': area,'user':user
+        'lotes': lotes,
+        'area_usuario': area,
+        'user': user
     })
 
 def supervisionfito_delete(request, pk):
