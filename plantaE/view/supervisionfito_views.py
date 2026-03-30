@@ -76,7 +76,8 @@ def supervisionfito_list(request):
             'finca',
             'cultivo',
             'estructura',
-            'zona'
+            'zona',
+            'actividad'
         )
         .annotate(
             total_muestras=Count('muestra', distinct=True),
