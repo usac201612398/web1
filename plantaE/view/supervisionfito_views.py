@@ -254,8 +254,10 @@ def reporte_seguimiento_api_fito(request):
     actividad = request.GET.get('actividad')
     cultivo = request.GET.get('cultivo')
     semana = request.GET.get('semana')
-    año = request.GET.get('anio')  # <-- Nuevo parámetro
-
+    
+    now = datetime.datetime.now()
+    fecha = now.date()
+    año= fecha.year
     # Convertir semana y año a enteros
 
     try:
@@ -289,7 +291,7 @@ def reporte_seguimiento_api_fito(request):
 
     cantidades_validas = [m['cantidad'] for m in muestras if m['cantidad'] is not None]
     promedio = sum(cantidades_validas) / len(cantidades_validas) if cantidades_validas else 0
-    
+
     # Determinar letra y color según actividad
     if actividad.lower() == 'cobertura':
         letra, color = evaluar_cobertura(promedio)
