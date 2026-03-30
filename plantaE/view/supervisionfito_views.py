@@ -383,7 +383,7 @@ def reporte_semanal_supervision_fito(request):
     # ===============================
     # QUERY BASE
     # ===============================
-    qs = supervisionproduccion.objects.exclude(status='Anulado')
+    qs = supervisionfito.objects.exclude(status='Anulado')
 
     # Filtrar por área si no es ALL
     if area != 'ALL':
@@ -429,12 +429,10 @@ def reporte_semanal_supervision_fito(request):
         prom = round(row['prom'], 2)
         ref = row['ref']
 
-        if row['actividad'] == 'Deshoje':
-            letra, color = evaluar_deshoje(prom, ref)
-        elif row['actividad'] == 'Ganchos':
-            letra, color = evaluar_ganchos(prom)
+        if row['actividad'] == 'Cobertura':
+            letra, color = evaluar_cobertura(prom)
         else:
-            letra, color = evaluar_descoronado(prom)
+            letra, color = evaluar_tizon(prom)
 
         data.append({
             'actividad': row['actividad'],
