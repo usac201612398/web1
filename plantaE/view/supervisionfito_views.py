@@ -260,15 +260,6 @@ def reporte_seguimiento_api_fito(request):
     año= fecha.year
     # Convertir semana y año a enteros
 
-    try:
-        semana = int(semana)
-    except (TypeError, ValueError):
-        semana = None
-
-    try:
-        año = int(año)
-    except (TypeError, ValueError):
-        año = None
 
     queryset = supervisionfito.objects.all()
 
