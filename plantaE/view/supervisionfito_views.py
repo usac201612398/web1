@@ -297,7 +297,7 @@ def reporte_general_fito(request):
 
     # ===============================
     # QUERY BASE n jnd  Queryset base
-    qs = supervisionproduccion.objects.exclude(status='Anulado')
+    qs = supervisionfito.objects.exclude(status='Anulado')
     # Filtrar por área si no es ALL
     if area != 'ALL':
         qs = qs.filter(finca=area)  # Aquí se filtra por finca
