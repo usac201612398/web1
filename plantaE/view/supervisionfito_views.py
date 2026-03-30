@@ -157,6 +157,7 @@ def supervisionfito_grabar(request):
         'estructura': base.get('estructura'),
         'cultivo': base.get('cultivo'),
         'finca': base.get('area'),
+        'actividad': base.get('actividad'),
         'status': 'Abierta'
     }
 
@@ -168,6 +169,7 @@ def supervisionfito_grabar(request):
     muestras_actuales = supervisionfito.objects.filter(
         **filtros_lote
     ).values('muestra').distinct().count()
+
     if base.get('actividad') == 'Tizón':
         muestralimite = 5
     else:
