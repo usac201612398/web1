@@ -223,15 +223,34 @@ def supervisionfito_grabar(request):
     })
 
 def evaluar_cobertura(dato):
-    if 70 <= dato <= 100: return ('E', 'green')
-    elif 0 <= dato <= 30: return ('B', 'yellow')
-    elif dato == 200: return ('M', 'red')
+    try:
+        dato = float(dato)
+    except (TypeError, ValueError):
+        return '-', 'secondary'
+
+    if dato == 200:
+        return 'M', 'red'
+    elif 70 <= dato <= 100:
+        return 'E', 'green'
+    elif 0 <= dato <= 30:
+        return 'B', 'yellow'
+    else:
+        return '-', 'secondary'  # 👈 clave
 
 def evaluar_tizon(dato):
-    if dato == 0: return ('E', 'green')
-    elif 1 <= dato <= 2: return ('B', 'yellow')
-    elif 3 <= dato <= 5: return ('M', 'red')
+    try:
+        dato = float(dato)
+    except (TypeError, ValueError):
+        return '-', 'secondary'
 
+    if dato == 0:
+        return 'E', 'green'
+    elif 1 <= dato <= 2:
+        return 'B', 'yellow'
+    elif 3 <= dato <= 5:
+        return 'M', 'red'
+    else:
+        return '-', 'secondary'  # 👈 clave
 def reporte_seguimiento_api_fito(request):
     finca = request.GET.get('finca')
     estructura = request.GET.get('estructura')
