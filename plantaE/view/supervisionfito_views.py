@@ -260,14 +260,32 @@ def reporte_seguimiento_api_fito(request):
     año= fecha.year
     # Convertir semana y año a enteros
 
+    try:
+        semana = int(semana)
+    except (TypeError, ValueError):
+        semana = None
 
-    queryset = supervisionfito.objects.all()
+    try:
+        año = int(año)
+    except (TypeError, ValueError):
+        año = None
+
+    queryset = supervisionfito.objects.filter(
+        finca=finca,
+        estructura=estructura,
+        zona=zona,
+        actividad=actividad,
+        cultivo=cultivo
+    ).annotate(
+        semana=ExtractWeek('fecha'),
+        anio=ExtractYear('fecha')  # <-- Extraemos el año
+    ).exclude(status='Anulado')
 
     # Filtrar por semana y año si se proporcionan
-    #if semana:
-    #    queryset = queryset.filter(semana=semana)
-    #if año:
-    #    queryset = queryset.filter(anio=año)
+    if semana:
+        queryset = queryset.filter(semana=semana)
+    if año:
+        queryset = queryset.filter(anio=año)
 
     muestras = list(queryset.order_by('fecha','muestra').values('muestra','cantidad'))
 
