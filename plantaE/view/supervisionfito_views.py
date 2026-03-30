@@ -195,17 +195,11 @@ def supervisionfito_grabar(request):
         except (ValueError, TypeError):
             cantidad = None
 
-        # Ref solo aplica a Deshoje
-        try:
-            ref = int(f.get('ref')) if f.get('ref') else None
-        except (ValueError, TypeError):
-            ref = None
 
         supervisionfito.objects.create(
             fecha=f.get('fecha'),
             muestra=muestra_actual,
             cantidad=cantidad,
-            ref=ref,
             zona=f.get('zona'),
             finca=f.get('area'),
             actividad=f.get('actividad'),
@@ -351,8 +345,8 @@ def reporte_general_fito(request):
         'finca',
         'cultivo'
     ).annotate(
-        prom=Avg('cantidad'),
-        ref=Avg('ref')
+        prom=Avg('cantidad')
+        
     ).order_by('anio', 'semana','estructura')
 
     # Construir lista de dicts para pivot
@@ -449,14 +443,12 @@ def reporte_semanal_supervision_fito(request):
     rows = qs.values(
         'actividad', 'finca', 'zona', 'cultivo', 'estructura', 'semana', 'anio'
     ).annotate(
-        prom=Avg('cantidad'),
-        ref=Avg('ref')
+        prom=Avg('cantidad')
     )
 
     data = []
     for row in rows:
         prom = round(row['prom'], 2)
-        ref = row['ref']
 
         if row['actividad'] == 'Cobertura':
             letra, color = evaluar_cobertura(prom)
