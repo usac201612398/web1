@@ -49,7 +49,7 @@ def procesarinvprodcontenv2(request):
             categoria="Exportación"
         ).filter(
             Q(status__isnull=True) | Q(status='')
-        )exclude(status='Anulado').order_by('fecha', 'registro')
+        ).exclude(status='Anulado').order_by('fecha', 'registro')
 
         usados = inventarioProdTermAux.objects.filter(
             proveedor=proveedor,
