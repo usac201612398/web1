@@ -46,14 +46,16 @@ def procesarinvprodcontenv2(request):
         disponibles = inventarioProdTerm.objects.filter(
             proveedor=proveedor,
             itemsapcode=itemsapcode,
-            categoria="Exportación",
+            categoria="Exportación"
+        ).filter(
             Q(status__isnull=True) | Q(status='')
-        ).exclude(status='Anulado').order_by('fecha', 'registro')
+        )exclude(status='Anulado').order_by('fecha', 'registro')
 
         usados = inventarioProdTermAux.objects.filter(
             proveedor=proveedor,
             itemsapcode=itemsapcode,
-            categoria="Exportación",
+            categoria="Exportación"
+        ).filter(
             Q(status__isnull=True) | Q(status='')
         ).exclude(status='Anulado').values('inventarioreg').annotate(
             cajas_usadas=Sum('cajas'),
