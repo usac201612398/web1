@@ -3,7 +3,7 @@ from django.utils import timezone
 
 class SensorDetalles(models.Model):
     id_sensor= models.BigAutoField(primary_key=True)
-    sensor = models.CharField(max_length=100, unique=True)
+    sensor = models.CharField(max_length=100)
     nombrearanet = models.CharField(max_length=100)
     tipo = models.CharField(max_length=20)  # "peso" o "temperatura", "etc"
     priva = models.CharField(max_length=20)  
