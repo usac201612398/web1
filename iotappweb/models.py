@@ -3,7 +3,7 @@ from django.utils import timezone
 
 class SensorDetalles(models.Model):
 
-    sensor = models.CharField(max_length=100)
+    sensorcode = models.CharField(max_length=100)
     nombrearanet = models.CharField(max_length=100)
     tipo = models.CharField(max_length=20)  # "peso" o "temperatura", "etc"
     priva = models.CharField(max_length=20)  
@@ -18,9 +18,10 @@ class SensorDetalles(models.Model):
 class SensorData(models.Model):
     sensor = models.ForeignKey(
         SensorDetalles,
-        to_field="sensor",
-        on_delete=models.CASCADE
+        to_field="sensorcode",
+        on_delete=models.CASCADE, null=True
     )
+    
     metric = models.CharField(max_length=50)
     value = models.FloatField()
     unit = models.CharField(max_length=20, null=True, blank=True)
@@ -37,7 +38,6 @@ class SensorAlert(models.Model):
     porcentaje_perdida = models.FloatField()
     timestamp = models.DateTimeField(auto_now_add=True)
     mensaje = models.TextField()
-
 
 
 class m1Sensoresdata(models.Model):

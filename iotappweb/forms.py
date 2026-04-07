@@ -8,7 +8,7 @@ class sensordetallesForm(forms.ModelForm):
     op_finca = [('','-'),('VALLE','VALLE'),('RIO','RIO'),('SL','SL')]
     op_status = [('En uso','En uso'),('Averiado','Averiado')]
     
-    sensor = forms.CharField(widget=forms.Select(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    sensorcode = forms.CharField(widget=forms.Select(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     nombrearanet = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de texto
     tipo = forms.CharField(widget=forms.Select(attrs={'class': 'form-control', 'readonly': 'readonly'}))  # Campo de texto
     set_point = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
@@ -20,4 +20,4 @@ class sensordetallesForm(forms.ModelForm):
     class Meta:
     
         model = SensorDetalles
-        fields = ['sensor','nombrearanet','tipo', 'set_point','priva','estructura','finca']
+        fields = ['sensorcode','nombrearanet','tipo', 'set_point','priva','estructura','finca']
