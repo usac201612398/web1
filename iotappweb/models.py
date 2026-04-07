@@ -20,6 +20,17 @@ class SensorAlert(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     mensaje = models.TextField()
 
+class SensorDetalles(models.Model):
+    id_sensor= models.BigAutoField(primary_key=True)
+    sensor = models.CharField(max_length=100)
+    nombrearanet = models.CharField(max_length=100)
+    tipo = models.CharField(max_length=20)  # "peso" o "temperatura", "etc"
+    timestamp = models.DateTimeField(auto_now_add=True)
+    priva = models.CharField(max_length=20)  
+    estructura = models.CharField(max_length=25)  
+    finca = models.CharField(max_length=30)
+
+
 class m1Sensoresdata(models.Model):
     registro = models.BigAutoField(primary_key=True)
     timestamp = models.DateTimeField(auto_now_add=True)
