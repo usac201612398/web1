@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import m1Sensoresdata, m2Sensoresdata, riegoRegistro, riegoResumen, SensorData, SensorAlert
+from .models import m1Sensoresdata, SensorDetalles,m2Sensoresdata, riegoRegistro, riegoResumen, SensorData, SensorAlert
 # Create your views here.
 import time
 import paho.mqtt.client as mqtt
@@ -17,6 +17,8 @@ from django.views.decorators.csrf import csrf_exempt
 from functools import wraps
 from twilio.rest import Client
 from django.core.mail import send_mail
+
+from .forms import sensordetallesForm
 
 MQTT_HOST = "10.111.112.4"
 MQTT_PORT = 1883
