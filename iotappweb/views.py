@@ -578,7 +578,6 @@ def detallesensores_list(request):
     return render(request, 'iotappweb/formsensores/detallesensores_list.html', {'registros': salidas})
 
 def detallesensores_create(request):
-    
     if request.method == 'POST':
         form = sensordetallesForm(request.POST)
         if form.is_valid():
@@ -589,12 +588,14 @@ def detallesensores_create(request):
                 return JsonResponse({'error': str(e)}, status=400)
             return redirect('detallesensores_list')
         else:
-             # Imprimir errores para depuración
+            # Imprimir errores para depuración
             return JsonResponse({'errores': form.errors}, status=400)
-    
-        
-    return render(request, 'iotappweb/formsensores/detallesensores_form.html', {'form': form,'modo':'crear'})
+    else:
+        # Inicializa el formulario vacío para GET
+        form = sensordetallesForm()
 
+    return render(request, 'iotappweb/formsensores/detallesensores_form.html', {'form': form, 'modo':'crear'})
+    
 def detallesensores_update(request, pk):
     salidas = get_object_or_404(SensorDetalles, pk=pk)
     if request.method == 'POST':
