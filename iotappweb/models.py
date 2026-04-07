@@ -25,7 +25,6 @@ class SensorDetalles(models.Model):
     sensor = models.CharField(max_length=100)
     nombrearanet = models.CharField(max_length=100)
     tipo = models.CharField(max_length=20)  # "peso" o "temperatura", "etc"
-    timestamp = models.DateTimeField(auto_now_add=True)
     priva = models.CharField(max_length=20)  
     estructura = models.CharField(max_length=25)  
     finca = models.CharField(max_length=30)
