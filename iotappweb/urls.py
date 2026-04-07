@@ -20,4 +20,10 @@ urlpatterns = [
     
     path('aranet-resumen-json/', views.aranet_resumen_json, name='aranet_resumen_json'),
     path('aranet-data-json/', views.aranet_data_json, name='aranet_data_json'),
+
+    path("detallesensores/",views.detallesensores_list,name='detallesensores_list'),
+    path('detallesensores/new/', views.detallesensores_create, name='detallesensores_create'),
+    path('detallesensores/<int:pk>/edit/', views.detallesensores_update, name='detallesensores_update'),
+    path('detallesensores/<int:pk>/delete/', views.detallesensores_delete, name='detallesensores_delete'),
+
 ]

@@ -390,10 +390,14 @@ def aranet_webhook(request):
             if not sensor or not metric or value is None:
                 continue
 
-            sensor = sensor.rstrip(":")
+            sensor_code = sensor.rstrip(":")
+
+            sensor_obj = SensorDetalles.objects.filter(sensor=sensor_code).first()
+            if not sensor_obj:
+                continue
             objects.append(
                 SensorData(
-                    sensor=sensor,
+                    sensor=sensor_obj,
                     metric=metric,
                     value=value,
                     unit=unit,
@@ -432,7 +436,7 @@ def aranet_resumen_json(request):
         pesos = [r.value for r in readings]
 
         peso_actual = pesos[0]
-        peso_base = 23
+        peso_base = readings[0].sensor.peso_base
 
         if peso_base == 0:
             continue
@@ -565,3 +569,49 @@ def aranet_live_page(request):
     # Se pueden mostrar los últimos 20 registros iniciales
     readings = SensorData.objects.order_by('-timestamp')[:20]
     return render(request, "iotappweb/aranet_live.html", {"readings": readings})
+
+def detallesensores_list(request):
+    #today = timezone.localtime(timezone.now()).date()
+    salidas = SensorDetalles.objects.exclude(status__in=["Averiado","Anulado", "Cerrado"])
+    return render(request, 'iotappweb/formsensores/detallesensores_list.html', {'registros': salidas})
+
+def detallesensores_create(request):
+    
+    if request.method == 'POST':
+        form = sensordetallesForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+            except Exception as e:
+                # Manejar excepciones específicas (por ejemplo, UniqueConstraintError)
+                return JsonResponse({'error': str(e)}, status=400)
+            return redirect('detallesensores_list')
+        else:
+             # Imprimir errores para depuración
+            return JsonResponse({'errores': form.errors}, status=400)
+    
+        
+    return render(request, 'iotappweb/formsensores/detallesensores_form.html', {'form': form,'modo':'crear'})
+
+def detallesensores_update(request, pk):
+    salidas = get_object_or_404(SensorDetalles, pk=pk)
+    if request.method == 'POST':
+        form = sensordetallesForm(request.POST, instance=salidas)
+        if form.is_valid():
+            form.save()
+            return redirect('detallesensores_list')
+    else:
+        form = sensordetallesForm(instance=salidas)
+    return render(request, 'iotappweb/formsensores/detallesensores_form.html', {'form': form,'modo':'actualizar'})
+
+def detallesensores_delete(request, pk):
+
+    salidas = get_object_or_404(SensorDetalles, pk=pk)
+
+    if request.method == 'POST':
+        salidas.status = 'Averiado'
+        salidas.save()
+        messages.success(request, "Sensor anulado correctamente.")
+        return redirect('detallesensores_list')
+    
+    return render(request, 'iotappweb/formsensores/detallesensores_confirm_delete.html', {'registros': salidas})
