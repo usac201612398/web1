@@ -14,14 +14,9 @@ class SensorDetalles(models.Model):
     
     def __str__(self):
         return f"{self.nombrearanet} ({self.sensor})"
-        
+
 class SensorData(models.Model):
-    sensor = models.ForeignKey(
-        SensorDetalles,
-        to_field="sensor",
-        on_delete=models.CASCADE,
-        null = True
-    )
+    sensor = models.CharField(max_length=100, unique=True)
     metric = models.CharField(max_length=50)
     value = models.FloatField()
     unit = models.CharField(max_length=20, null=True, blank=True)
