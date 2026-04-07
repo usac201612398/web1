@@ -8,9 +8,9 @@ class sensordetallesForm(forms.ModelForm):
     op_finca = [('','-'),('VALLE','VALLE'),('RIO','RIO'),('SL','SL')]
     op_status = [('En uso','En uso'),('Averiado','Averiado')]
     id_sensor = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
-    sensor = forms.CharField(widget=forms.Select(attrs={'class': 'form-control', 'readonly': 'readonly'}))
-    nombrearanet = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de texto
-    tipo = forms.CharField(widget=forms.Select(attrs={'class': 'form-control', 'readonly': 'readonly'}))  # Campo de texto
+    sensor = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    nombrearanet = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  # Campo de texto
+    tipo = forms.CharField(widget=forms.forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))  # Campo de texto
     set_point = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
     priva = forms.ChoiceField(choices=op_priva,widget=forms.Select(attrs={'class': 'form-control'}))
     estructura = forms.ChoiceField(choices=op_estructura,widget=forms.Select(attrs={'class': 'form-control'}))
