@@ -17,7 +17,7 @@ from django.views.decorators.csrf import csrf_exempt
 from functools import wraps
 from twilio.rest import Client
 from django.core.mail import send_mail
-
+from django.shortcuts import get_object_or_404
 from .forms import sensordetallesForm
 
 MQTT_HOST = "10.111.112.4"
