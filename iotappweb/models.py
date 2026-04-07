@@ -2,19 +2,16 @@ from django.db import models
 from django.utils import timezone
 
 class SensorDetalles(models.Model):
-    id_sensor= models.BigAutoField(primary_key=True)
-    sensor = models.CharField(max_length=100)
-    nombrearanet = models.CharField(max_length=100)
-    tipo = models.CharField(max_length=20)  # "peso" o "temperatura", "etc"
-    priva = models.CharField(max_length=20)  
-    estructura = models.CharField(max_length=25)  
-    finca = models.CharField(max_length=30)
-    set_point = models.FloatField(default=23)
-    status = models.CharField(max_length= 30, blank = True, null =  True)
-    
+    sensor = models.CharField(max_length=100, unique=True)  # aranet:50114A
+    nombrearanet = models.CharField(max_length=100)         # pesa CM4
+    tipo = models.CharField(max_length=20)                  # Peso
+    priva = models.CharField(max_length=20)                 # Priva 2
+    estructura = models.CharField(max_length=25)            # CM4
+    finca = models.CharField(max_length=30)                 # VALLE
+
     def __str__(self):
-        return f"{self.nombrearanet} ({self.sensor})"
-        
+        return f"{self.nombrearanet} - {self.sensor}"
+
 class SensorData(models.Model):
     sensor = models.ForeignKey(
         SensorDetalles,
