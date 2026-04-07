@@ -1,27 +1,13 @@
 from django.db import models
 from django.utils import timezone
 
-class SensorDetalles(models.Model):
-
-    sensorcode = models.CharField(max_length=100)
-    nombrearanet = models.CharField(max_length=100)
-    tipo = models.CharField(max_length=20)  # "peso" o "temperatura", "etc"
-    priva = models.CharField(max_length=20)  
-    estructura = models.CharField(max_length=25)  
-    finca = models.CharField(max_length=30)
-    set_point = models.FloatField(default=23)
-    status = models.CharField(max_length= 30, blank = True, null =  True)
-    
-    def __str__(self):
-        return f"{self.nombrearanet} ({self.sensor})"
-        
 class SensorData(models.Model):
     sensor = models.ForeignKey(
         SensorDetalles,
-        to_field="sensorcode",
-        on_delete=models.CASCADE, null=True
+        to_field="sensor",
+        on_delete=models.CASCADE,
+        null = True
     )
-    
     metric = models.CharField(max_length=50)
     value = models.FloatField()
     unit = models.CharField(max_length=20, null=True, blank=True)
@@ -39,6 +25,19 @@ class SensorAlert(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     mensaje = models.TextField()
 
+class SensorDetalles(models.Model):
+    id_sensor= models.BigAutoField(primary_key=True)
+    sensor = models.CharField(max_length=100, unique=True)
+    nombrearanet = models.CharField(max_length=100)
+    tipo = models.CharField(max_length=20)  # "peso" o "temperatura", "etc"
+    priva = models.CharField(max_length=20)  
+    estructura = models.CharField(max_length=25)  
+    finca = models.CharField(max_length=30)
+    set_point = models.FloatField(default=23)
+    status = models.CharField(max_length= 30, blank = True, null =  True)
+    
+    def __str__(self):
+        return f"{self.nombrearanet} ({self.sensor})"
 
 class m1Sensoresdata(models.Model):
     registro = models.BigAutoField(primary_key=True)

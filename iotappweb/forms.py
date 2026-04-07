@@ -7,8 +7,8 @@ class sensordetallesForm(forms.ModelForm):
     op_estructura = [('','-'),('CM1','CM1'),('CM2','CM2'),('CM3','CM3'),('CM4','CM4'),('CM5','CM5'),('CM6A','CM6A'),('CM6B','CM6B'),('CM7','CM7'),('CM8','CM8'),('INV1','INV1'),('INV2','INV2')]
     op_finca = [('','-'),('VALLE','VALLE'),('RIO','RIO'),('SL','SL')]
     op_status = [('En uso','En uso'),('Averiado','Averiado')]
-    
-    sensorcode = forms.CharField(widget=forms.Select(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    id_sensor = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
+    sensor = forms.CharField(widget=forms.Select(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     nombrearanet = forms.CharField(widget=forms.Select(attrs={'class': 'form-control'}))  # Campo de texto
     tipo = forms.CharField(widget=forms.Select(attrs={'class': 'form-control', 'readonly': 'readonly'}))  # Campo de texto
     set_point = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
@@ -20,4 +20,4 @@ class sensordetallesForm(forms.ModelForm):
     class Meta:
     
         model = SensorDetalles
-        fields = ['sensorcode','nombrearanet','tipo', 'set_point','priva','estructura','finca']
+        fields = ['id_sensor','sensor','nombrearanet','tipo', 'set_point','priva','estructura','finca']

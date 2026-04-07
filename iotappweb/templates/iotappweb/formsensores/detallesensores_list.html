@@ -73,6 +73,7 @@
             <table class="table table-striped table-hover" id="myTable">
                 <thead>
                     <tr>
+                        <th>Key</th>
                         <th>Sensor</th>
                         <th>Nombre-Aranet</th>
                         <th>Finca</th>
@@ -88,7 +89,8 @@
                     {% for registro in registros %}
                     <tr>
                         
-                        <td>{{ registro.sensorcode }}</td>
+                        <td>{{ registro.id_sensor }}</td>
+                        <td>{{ registro.sensor }}</td>
                         <td>{{ registro.nombrearanet }}</td>
                         <td>{{ registro.finca }}</td>
                         <td>{{ registro.priva }}</td>
