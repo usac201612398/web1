@@ -459,16 +459,16 @@ def aranet_resumen_json(request):
 def aranet_resumen_page(request):
     return render(request, "iotappweb/aranet_resumen.html")
 
-def evaluar_sensor(sensor_id):
+def evaluar_sensor(sensor_obj):
     readings = SensorData.objects.filter(
-        sensor=sensor_id,
+        sensor=sensor_obj,
         metric="weight"
     ).order_by('-timestamp')[:5]
 
     if len(readings) < 2:
         return None
 
-    peso_base = 23
+    peso_base = sensor_obj.peso_base 
 
     # calcular porcentajes
     porcentajes = []
@@ -516,7 +516,7 @@ def evaluar_sensor(sensor_id):
 
     # resultado final
     return {
-        "sensor": sensor_id,
+        "sensor": sensor_obj,
         "peso_actual": readings[0].value,
         "peso_base": peso_base,
         "porcentaje_perdida": actual,
@@ -549,7 +549,7 @@ def enviar_alerta(data):
     )
 
     # Enviar WhatsApp
-    for numero in ["+50230664716"]:
+    for numero in ["+50230664716","+50240304201"]:
         try:
             enviar_whatsapp(mensaje, numero)
         except Exception as e:
@@ -569,7 +569,7 @@ def aranet_data_json(request):
 # Página web para mostrar los datos en tiempo real
 def aranet_live_page(request):
     # Se pueden mostrar los últimos 20 registros iniciales
-    readings = SensorData.objects.order_by('-timestamp')[:20]
+    readings = SensorData.objects.order_by('-timestamp')[:14]
     return render(request, "iotappweb/aranet_live.html", {"readings": readings})
 
 def detallesensores_list(request):

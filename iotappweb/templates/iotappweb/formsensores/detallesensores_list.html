@@ -80,7 +80,9 @@
                         <th>Priva</th>
                         <th>Estructura</th>
                         <th>Tipo</th>
-                        <th>Referencia</th>
+                        <th>Referencia</th>                        
+                        <th>Lim-Min</th>
+                        <th>Lim-Max</th>
                         <th>Editar</th>
                         <th>Anular</th>
                     </tr>
@@ -88,7 +90,6 @@
                 <tbody>
                     {% for registro in registros %}
                     <tr>
-                        
                         <td>{{ registro.id_sensor }}</td>
                         <td>{{ registro.sensor }}</td>
                         <td>{{ registro.nombrearanet }}</td>
@@ -96,7 +97,9 @@
                         <td>{{ registro.priva }}</td>
                         <td>{{ registro.estructura }}</td>
                         <td>{{ registro.tipo }}</td>
-                        <td>{{ registro.set_point }}</td>
+                        <td>{{ registro.set_point }}</td>                        
+                        <td>{{ registro.umbral_min }}</td>
+                        <td>{{ registro.umbral_max }}</td>
                         <td class="action-icons">
                             <a href="{% url 'detallesensores_update' registro.pk %}" title="Editar">
                                 <i class="fas fa-edit"></i>

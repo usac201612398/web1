@@ -12,6 +12,8 @@ class sensordetallesForm(forms.ModelForm):
     nombrearanet = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  # Campo de texto
     tipo = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  # Campo de texto
     set_point = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
+    umbral_max = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
+    umbral_min = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
     priva = forms.ChoiceField(choices=op_priva,widget=forms.Select(attrs={'class': 'form-control'}))
     estructura = forms.ChoiceField(choices=op_estructura,widget=forms.Select(attrs={'class': 'form-control'}))
     finca = forms.ChoiceField(choices=op_finca,widget=forms.Select(attrs={'class': 'form-control'}))
@@ -20,4 +22,4 @@ class sensordetallesForm(forms.ModelForm):
     class Meta:
     
         model = SensorDetalles
-        fields = ['sensor','nombrearanet','tipo', 'set_point','priva','estructura','finca']
+        fields = ['sensor','umbral_min','umbral_max','nombrearanet','tipo', 'set_point','priva','estructura','finca']

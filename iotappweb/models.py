@@ -10,6 +10,8 @@ class SensorDetalles(models.Model):
     estructura = models.CharField(max_length=25)  
     finca = models.CharField(max_length=30)
     set_point = models.FloatField(default=23)
+    umbral_min = models.FloatField(default=9)
+    umbral_max = models.FloatField(default=-9)
     status = models.CharField(max_length= 30, blank = True, null =  True)
     
     def __str__(self):
