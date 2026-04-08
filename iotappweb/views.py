@@ -574,14 +574,19 @@ def enviar_alerta(data):
             print("❌ ERROR WhatsApp:", str(e)) 
 # Retorna los últimos 20 registros en JSON
 def aranet_data_json(request):
-    readings = SensorData.objects.order_by('-timestamp')[:20]
+    readings = SensorData.objects.select_related('sensor').order_by('-timestamp')[:20]
+
     data = [{
-        "sensor": r.sensor,
+        "finca": r.sensor.finca,
+        "priva": r.sensor.priva,
+        "estructura": r.sensor.estructura,
+        "sensor": str(r.sensor),  # o r.sensor.nombre si tienes
         "timestamp": r.timestamp.strftime("%Y-%m-%d %H:%M:%S"),
         "metric": r.metric,
         "value": r.value,
         "unit": r.unit
     } for r in readings]
+
     return JsonResponse(data, safe=False)
 
 # Página web para mostrar los datos en tiempo real
