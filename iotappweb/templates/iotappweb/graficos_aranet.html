@@ -25,9 +25,15 @@ body { padding:20px; background:#f5f6fa; }
 
 .filters {
     background:white;
-    padding:15px;
+    padding:20px;
     border-radius:10px;
     margin-bottom:20px;
+}
+
+.sensor-list {
+    max-height:120px;
+    overflow:auto;
+    font-size:12px;
 }
 
 .valley-dot {
@@ -47,7 +53,7 @@ body { padding:20px; background:#f5f6fa; }
 
 <!-- FILTROS -->
 <div class="filters">
-<div class="row">
+<div class="row g-3">
 
 <div class="col-md-2">
 <label>Tiempo</label>
@@ -71,7 +77,7 @@ body { padding:20px; background:#f5f6fa; }
 
 <div class="col-md-4">
 <label>Sensores</label>
-<div id="sensor-filters" style="max-height:100px; overflow:auto;"></div>
+<div id="sensor-filters" class="sensor-list"></div>
 </div>
 
 </div>
@@ -79,7 +85,7 @@ body { padding:20px; background:#f5f6fa; }
 
 <!-- CONTADOR -->
 <div class="card p-3 mb-3">
-<h5>🔴 Riegos detectados (valle → subida)</h5>
+<h5>🔴 Riegos detectados (valles)</h5>
 <div id="valley-counters"></div>
 </div>
 
@@ -123,12 +129,15 @@ function initFilters(){
     const cont = document.getElementById('sensor-filters');
     cont.innerHTML = '';
 
-    allData.forEach(d=>{
+    // 🔥 IMPORTANTE: usar index único
+    allData.forEach((d,i)=>{
         cont.innerHTML += `
-            <label>
-                <input type="checkbox" value="${d.sensor}" checked onchange="renderCharts()">
-                ${d.nombre || d.sensor}
-            </label><br>
+            <div>
+                <input type="checkbox" value="${d.sensor}" id="sensor_${i}" checked onchange="renderCharts()">
+                <label for="sensor_${i}">
+                    ${d.nombre || d.sensor}
+                </label>
+            </div>
         `;
     });
 
@@ -144,7 +153,7 @@ function filterTime(readings){
     return readings.filter(r => (now - new Date(r.timestamp)) <= h*3600000);
 }
 
-// 🔴 DETECTAR VALLES (inicio riego)
+// 🔴 DETECTAR VALLES
 function getValleys(data){
     let valleys=[];
     for(let i=1;i<data.length-1;i++){
@@ -230,7 +239,6 @@ function renderCharts(){
 
             const valleys = getValleys(dataPoints);
 
-            // 🔴 puntos rojos
             const pointColors = dataPoints.map(p=>{
                 return valleys.find(v=>v.x.getTime()===p.x.getTime()) ? 'red' : 'blue';
             });
@@ -240,7 +248,7 @@ function renderCharts(){
                     <span class="valley-dot"></span>
                     ${d.nombre || d.sensor}: ${valleys.length}
                     <button class="btn btn-sm btn-outline-primary"
-                        onclick='showModal("${d.nombre}", ${JSON.stringify(valleys)})'>
+                        onclick='showModal("${d.nombre || d.sensor}", ${JSON.stringify(valleys)})'>
                         ver
                     </button>
                 </div>
