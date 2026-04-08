@@ -434,6 +434,7 @@ def aranet_webhook(request):
         return JsonResponse({"error": str(e)}, status=400)
         
 def aranet_resumen_json(request):
+    # Obtener todos los sensores distintos
     sensores = SensorData.objects.values_list('sensor', flat=True).distinct()
 
     resultado = []
@@ -447,10 +448,8 @@ def aranet_resumen_json(request):
         if not readings:
             continue
 
-        pesos = [r.value for r in readings]
-
-        peso_actual = pesos[0]
-        peso_base = readings[0].sensor.set_point
+        peso_actual = readings[0].value
+        peso_base = readings[0].sensor.set_point  # aquí tu valor base
 
         if peso_base == 0:
             continue
@@ -458,8 +457,12 @@ def aranet_resumen_json(request):
         porcentaje_restante = (peso_actual / peso_base) * 100
         porcentaje_perdida = 100 - porcentaje_restante
 
+        # agregar finca, priva y estructura
         resultado.append({
-            "sensor": sensor,
+            "sensor": str(sensor),
+            "finca": readings[0].sensor.finca,
+            "priva": readings[0].sensor.priva,
+            "estructura": readings[0].sensor.estructura,
             "peso_actual": round(peso_actual, 3),
             "peso_base": round(peso_base, 3),
             "porcentaje_restante": round(porcentaje_restante, 2),

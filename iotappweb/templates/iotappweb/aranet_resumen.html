@@ -1,34 +1,67 @@
 <!DOCTYPE html>
 <html>
+{% load static %}
 <head>
-  <meta charset="utf-8">
-  <title>Resumen de Sensores</title>
-  <style>
-    table { border-collapse: collapse; width: 100%; }
-    th, td { border: 1px solid black; padding: 6px; text-align: center; }
+    <meta charset="UTF-8">
+    <title>Resumen de Sensores</title>
 
-    .ok { background-color: #c8f7c5; }
-    .warning { background-color: #fff3cd; }
-    .danger { background-color: #f8d7da; }
-  </style>
+    <!-- Bootstrap + Bulma -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+    <style>
+        td, th {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 180px;
+            text-align: center;
+        }
+
+        .ok { background-color: #c8f7c5 !important; }       /* verde */
+        .warning { background-color: #fff3cd !important; }  /* amarillo */
+        .danger { background-color: #f8d7da !important; }   /* rojo */
+
+        .table-container {
+            overflow-x: auto;
+        }
+    </style>
 </head>
+
 <body>
+<div class="container mt-4">
+    <h1 class="mb-3">🌱 Resumen de Sensores (Riego)</h1>
+    <div class="table-container">
+        <table id="resumen-table" class="table table-striped table-hover display nowrap">
+            <thead>
+                <tr>
+                    <th>Finca</th>
+                    <th>Priva</th>
+                    <th>Estructura</th>
+                    <th>Sensor</th>
+                    <th>Peso actual (kg)</th>
+                    <th>Peso base (kg)</th>
+                    <th>% Restante</th>
+                    <th>% Pérdida</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Se llenará con JS -->
+            </tbody>
+        </table>
+    </div>
+</div>
 
-<h1>🌱 Estado de Sensores (Riego)</h1>
-
-<table id="resumen-table">
-  <tr>
-    <th>Sensor</th>
-    <th>Peso actual (kg)</th>
-    <th>Peso base (kg)</th>
-    <th>% Restante</th>
-    <th>% Pérdida</th>
-  </tr>
-</table>
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
 <script>
 function getRowClass(perdida) {
-    if (perdida > 3) return "danger";   // 🔴 alerta
+    if (perdida > 9) return "danger";   // 🔴 alerta
     if (perdida > 1) return "warning";  // 🟡 leve
     return "ok";                        // 🟢 normal
 }
@@ -37,29 +70,40 @@ function fetchResumen() {
     fetch('/iotappweb/aranet-resumen-json/')
         .then(res => res.json())
         .then(data => {
-            const table = document.getElementById('resumen-table');
-            table.querySelectorAll('tr:not(:first-child)').forEach(tr => tr.remove());
+            const table = $('#resumen-table').DataTable();
+
+            table.clear(); // limpiar filas existentes
 
             data.forEach(r => {
-                const row = table.insertRow();
-
-                row.className = getRowClass(r.porcentaje_perdida);
-
-                row.insertCell(0).textContent = r.sensor;
-                row.insertCell(1).textContent = r.peso_actual;
-                row.insertCell(2).textContent = r.peso_base;
-                row.insertCell(3).textContent = r.porcentaje_restante + " %";
-                row.insertCell(4).textContent = r.porcentaje_perdida + " %";
+                table.row.add([
+                    r.finca,
+                    r.priva,
+                    r.estructura,
+                    r.sensor,
+                    r.peso_actual,
+                    r.peso_base,
+                    r.porcentaje_restante + " %",
+                    r.porcentaje_perdida + " %"
+                ]).nodes().to$().addClass(getRowClass(r.porcentaje_perdida));
             });
+
+            table.draw();
         })
         .catch(err => console.error("Error:", err));
 }
 
-// cada minuto (como pediste)
-setInterval(fetchResumen, 60000);
+$(document).ready(function () {
+    $('#resumen-table').DataTable({
+        scrollX: true,
+        autoWidth: false,
+        paging: false,       // sin paginación
+        searching: false,    // sin búsqueda
+        info: false          // sin info de filas
+    });
 
-// primera carga inmediata
-fetchResumen();
+    fetchResumen();              // carga inicial
+    setInterval(fetchResumen, 60000); // actualización cada minuto
+});
 </script>
 
 </body>
