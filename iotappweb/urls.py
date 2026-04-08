@@ -19,7 +19,7 @@ urlpatterns = [
     path('aranet-resumen/', views.aranet_resumen_page, name='aranet_resumen_page'),  # template HTML
      path('aranet-curvas/', views.aranet_resumen_grafica_page, name='aranet_resumen_grafica_page'),
 
-    path('aranet-curvas-json/', views.aranet_resumen_grafica_page, name='aranet_curvas'),
+    path('aranet-curvas-page/', views.aranet_resumen_grafica_page, name='aranet_curvas'),
     path('aranet-resumen-json/', views.aranet_curvas_json, name='aranet_resumen_json'),
 
     path('aranet-data-json/', views.aranet_data_json, name='aranet_data_json'),

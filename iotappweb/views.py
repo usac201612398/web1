@@ -610,10 +610,7 @@ def detallesensores_list(request):
     return render(request, 'iotappweb/formsensores/detallesensores_list.html', {'registros': salidas})
 
 def aranet_resumen_grafica_page(request):
-    """
-    Página web para mostrar la gráfica de curvas de sensores.
-    Los datos históricos se cargan vía fetch desde aranet_resumen_json.
-    """
+    
     return render(request, "iotappweb/graficos_aranet.html")
 
 
@@ -648,7 +645,7 @@ def aranet_curvas_json(request):
         })
 
     return JsonResponse(resultado, safe=False)
-    
+
 def detallesensores_create(request):
     if request.method == 'POST':
         form = sensordetallesForm(request.POST)
