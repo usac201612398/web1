@@ -3,69 +3,56 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Curvas Avanzadas de Sensores Aranet</title>
+    <title>Curvas de Peso y Picos de Riego - Aranet</title>
 
-    <!-- Chart.js -->
+    <!-- Chart.js y Moment.js para ejes de tiempo -->
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.1.0/dist/chartjs-adapter-moment.min.js"></script>
 
-    <!-- Bootstrap para estilos y filtros -->
+    <!-- Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+
     <style>
-        body {
-            padding: 20px;
-        }
-
-        #chart-container {
-            width: 100%;
-            height: 500px;
-        }
-
-        .filter-section {
-            margin-bottom: 20px;
-        }
-
-        .sensor-checkbox {
-            margin-right: 15px;
-        }
+        body { padding: 20px; }
+        #chart-container { width: 100%; height: 500px; }
+        .filter-section { margin-bottom: 20px; }
+        .sensor-checkbox { margin-right: 15px; }
+        .peak-dot { background-color: red; border-radius: 50%; width: 6px; height: 6px; display: inline-block; margin-right: 5px; }
     </style>
 </head>
-<!-- Moment.js -->
-<script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
 
-<!-- Chart.js Time Adapter -->
-<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.1.0/dist/chartjs-adapter-moment.min.js"></script>
-
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <body>
-    <h1>Curvas Avanzadas de Sensores Aranet</h1>
+    <h1>Curvas de Peso y Picos de Riego - Aranet</h1>
 
+    <!-- Filtros -->
     <div class="filter-section">
         <label>Filtrar sensores:</label><br>
         <div id="sensor-filters"></div>
     </div>
 
     <div class="filter-section">
-        <label>Filtrar por finca:</label>
-        <select id="finca-filter" class="form-select" style="width:200px; display:inline-block;">
-            <option value="">Todas</option>
-        </select>
+        <label>Finca:</label>
+        <select id="finca-filter" class="form-select" style="width:200px; display:inline-block;"><option value="">Todas</option></select>
 
-        <label style="margin-left:15px;">Filtrar por priva:</label>
-        <select id="priva-filter" class="form-select" style="width:200px; display:inline-block;">
-            <option value="">Todas</option>
-        </select>
+        <label style="margin-left:15px;">Priva:</label>
+        <select id="priva-filter" class="form-select" style="width:200px; display:inline-block;"><option value="">Todas</option></select>
 
-        <label style="margin-left:15px;">Filtrar por estructura:</label>
-        <select id="estructura-filter" class="form-select" style="width:200px; display:inline-block;">
-            <option value="">Todas</option>
-        </select>
+        <label style="margin-left:15px;">Estructura:</label>
+        <select id="estructura-filter" class="form-select" style="width:200px; display:inline-block;"><option value="">Todas</option></select>
     </div>
 
+    <!-- Contador de picos -->
+    <div class="filter-section">
+        <strong>Contador de picos (riego activado):</strong>
+        <div id="peak-counters"></div>
+    </div>
+
+    <!-- Gráfica -->
     <div id="chart-container">
         <canvas id="sensorChart"></canvas>
     </div>
-    
+
     <script>
         let allData = [];
         let chart;
@@ -88,30 +75,17 @@
             const privaSelect = document.getElementById('priva-filter');
             const estructuraSelect = document.getElementById('estructura-filter');
 
-            const fincas = new Set();
-            const privas = new Set();
-            const estructuras = new Set();
+            const fincas = new Set(), privas = new Set(), estructuras = new Set();
+            allData.forEach(d => { fincas.add(d.finca); privas.add(d.priva); estructuras.add(d.estructura); });
 
-            allData.forEach(d => {
-                fincas.add(d.finca);
-                privas.add(d.priva);
-                estructuras.add(d.estructura);
-            });
-
-            // llenar selects
             fincaSelect.innerHTML = '<option value="">Todas</option>' + [...fincas].map(f => `<option value="${f}">${f}</option>`).join('');
             privaSelect.innerHTML = '<option value="">Todas</option>' + [...privas].map(p => `<option value="${p}">${p}</option>`).join('');
             estructuraSelect.innerHTML = '<option value="">Todas</option>' + [...estructuras].map(e => `<option value="${e}">${e}</option>`).join('');
 
-            // checkboxes sensores
             allData.forEach(d => {
                 const cb = document.createElement('input');
-                cb.type = 'checkbox';
-                cb.checked = true;
-                cb.className = 'sensor-checkbox';
-                cb.value = d.sensor;
-                cb.id = `sensor-${d.sensor}`;
-                cb.onchange = updateChart;
+                cb.type = 'checkbox'; cb.checked = true; cb.className = 'sensor-checkbox';
+                cb.value = d.sensor; cb.id = `sensor-${d.sensor}`; cb.onchange = updateChart;
 
                 const label = document.createElement('label');
                 label.htmlFor = cb.id;
@@ -122,16 +96,36 @@
                 sensorContainer.appendChild(label);
             });
 
-            // onchange filters
             fincaSelect.onchange = updateChart;
             privaSelect.onchange = updateChart;
             estructuraSelect.onchange = updateChart;
         }
 
+        function countPeaks(dataPoints) {
+            let count = 0;
+            for(let i=1; i<dataPoints.length-1; i++){
+                if(dataPoints[i].y > dataPoints[i-1].y && dataPoints[i].y > dataPoints[i+1].y){
+                    count++;
+                    dataPoints[i].peak = true;
+                }
+            }
+            return count;
+        }
+
+        function updatePeakCounters(datasets) {
+            const container = document.getElementById('peak-counters');
+            container.innerHTML = '';
+            datasets.forEach(ds => {
+                const peakCount = countPeaks(ds.data);
+                const div = document.createElement('div');
+                div.innerHTML = `<span class="peak-dot"></span> ${ds.label}: ${peakCount} picos`;
+                container.appendChild(div);
+            });
+        }
+
         function updateChart() {
             const selectedSensors = Array.from(document.querySelectorAll('.sensor-checkbox'))
-                .filter(cb => cb.checked)
-                .map(cb => cb.value);
+                .filter(cb => cb.checked).map(cb => cb.value);
 
             const fincaFilter = document.getElementById('finca-filter').value;
             const privaFilter = document.getElementById('priva-filter').value;
@@ -147,11 +141,15 @@
                     data: d.readings.map(r => ({ x: r.timestamp, y: r.value })),
                     borderColor: getRandomColor(),
                     fill: false,
-                    tension: 0.2
+                    tension: 0.2,
+                    pointRadius: d.readings.map(r => 3), // marcador
+                    pointBackgroundColor: d.readings.map(r => r.peak ? 'red' : 'blue')
                 }));
 
+            updatePeakCounters(datasets);
+
             const ctx = document.getElementById('sensorChart').getContext('2d');
-            if (chart) chart.destroy();
+            if(chart) chart.destroy();
 
             chart = new Chart(ctx, {
                 type: 'line',
@@ -159,10 +157,7 @@
                 options: {
                     responsive: true,
                     interaction: { mode: 'nearest', axis: 'x', intersect: false },
-                    plugins: {
-                        tooltip: { mode: 'index', intersect: false },
-                        legend: { display: true, position: 'bottom' }
-                    },
+                    plugins: { tooltip: { mode: 'index', intersect: false }, legend: { display: true, position: 'bottom' } },
                     scales: {
                         x: { type: 'time', time: { parser: 'YYYY-MM-DD HH:mm:ss', tooltipFormat: 'DD MMM HH:mm' }, title: { display: true, text: 'Timestamp' } },
                         y: { title: { display: true, text: 'Peso (kg)' } }

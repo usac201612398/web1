@@ -616,12 +616,12 @@ def aranet_resumen_grafica_page(request):
     """
     return render(request, "iotappweb/graficos_aranet.html")
 
-def aranet_resumen_grafica_json(request):
+
+def aranet_curvas_json(request):
     """
-    Retorna los últimos 50 registros de peso de cada sensor,
-    incluyendo finca, priva y estructura, para graficar curvas.
+    Retorna los últimos 50 registros de peso por sensor
+    incluyendo finca, priva y estructura
     """
-    # Obtener sensores únicos
     sensores = SensorData.objects.select_related('sensor').values_list('sensor', flat=True).distinct()
     resultado = []
 
@@ -629,28 +629,26 @@ def aranet_resumen_grafica_json(request):
         readings = SensorData.objects.filter(
             sensor_id=sensor_id,
             metric="weight"
-        ).order_by('-timestamp')[:50]  # últimos 50 registros
+        ).order_by('-timestamp')[:50]
 
         if not readings:
             continue
 
         sensor_obj = readings[0].sensor
 
-        # Guardamos la info de ubicación y lecturas
         resultado.append({
             "sensor": str(sensor_obj.sensor),
             "finca": sensor_obj.finca,
             "priva": sensor_obj.priva,
             "estructura": sensor_obj.estructura,
             "readings": [
-                {
-                    "timestamp": r.timestamp.strftime("%Y-%m-%d %H:%M:%S"),
-                    "value": r.value
-                } for r in reversed(readings)  # de más antiguo a más reciente
+                {"timestamp": r.timestamp.strftime("%Y-%m-%d %H:%M:%S"), "value": r.value}
+                for r in reversed(readings)  # de más antiguo a reciente
             ]
         })
 
     return JsonResponse(resultado, safe=False)
+    
 def detallesensores_create(request):
     if request.method == 'POST':
         form = sensordetallesForm(request.POST)
