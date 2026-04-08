@@ -529,12 +529,18 @@ def enviar_alerta(data):
         mensaje = (
             f"🚨 NECESITA RIEGO\n"
             f"Sensor: {data['sensor']}\n"
+            f"Finca: {finca}\n"
+            f"Estructura: {estructura}\n"
+            f"Priva: {priva}\n"
             f"Pérdida: {data['porcentaje_perdida']:.2f}%"
         )
     elif data["tipo"] == "exceso":
         mensaje = (
             f"💧 EXCESO DE RIEGO\n"
             f"Sensor: {data['sensor']}\n"
+            f"Finca: {finca}\n"
+            f"Estructura: {estructura}\n"
+            f"Priva: {priva}\n"
             f"Exceso: {data['porcentaje_perdida']:.2f}%"
         )
     else:
@@ -549,7 +555,7 @@ def enviar_alerta(data):
     )
 
     # Enviar WhatsApp
-    for numero in ["+50230664716","+50240304201"]:
+    for numero in ["+50230664716","+50240304201","+50253050677"]:
         try:
             enviar_whatsapp(mensaje, numero)
         except Exception as e:
