@@ -386,7 +386,10 @@ def aranet_webhook(request):
             value = record.get("v")
             unit = record.get("u")
             bt = record.get("bt")
-            timestamp = datetime.utcfromtimestamp(bt) if bt else datetime.utcnow()
+            timestamp = (
+                datetime.fromtimestamp(bt, tz=timezone.utc)
+                if bt else timezone.now()
+            )
 
             # Ignorar registros inválidos
             if not sensor or not metric or value is None:
