@@ -616,36 +616,35 @@ def aranet_resumen_grafica_page(request):
 
 def aranet_curvas_json(request):
     """
-    Retorna los últimos 50 registros de peso por sensor
-    incluyendo finca, priva y estructura
+    Retorna los últimos 50 registros de peso por sensor.
+    Formato limpio para JS.
     """
-    sensores = SensorData.objects.select_related('sensor').values_list('sensor', flat=True).distinct()
+    sensores = SensorData.objects.filter(metric="weight").values_list('sensor', flat=True).distinct()
     resultado = []
 
     for sensor_id in sensores:
-        readings = SensorData.objects.filter(
-            sensor_id=sensor_id,
-            metric="weight"
-        ).order_by('-timestamp')[:50]
+        readings_qs = SensorData.objects.filter(sensor_id=sensor_id, metric="weight").order_by('-timestamp')[:50]
 
-        if not readings:
+        if not readings_qs.exists():
             continue
 
-        sensor_obj = readings[0].sensor
+        sensor_obj = readings_qs.first().sensor
+
+        # Creamos la lista de lecturas ordenadas de más antiguo a reciente
+        readings = [
+            {"timestamp": r.timestamp.strftime("%Y-%m-%d %H:%M:%S"), "value": r.value}
+            for r in reversed(readings_qs)
+        ]
 
         resultado.append({
             "sensor": str(sensor_obj.sensor),
             "finca": sensor_obj.finca,
             "priva": sensor_obj.priva,
             "estructura": sensor_obj.estructura,
-            "readings": [
-                {"timestamp": r.timestamp.strftime("%Y-%m-%d %H:%M:%S"), "value": r.value}
-                for r in reversed(readings)  # de más antiguo a reciente
-            ]
+            "readings": readings
         })
 
     return JsonResponse(resultado, safe=False)
-
 def detallesensores_create(request):
     if request.method == 'POST':
         form = sensordetallesForm(request.POST)
