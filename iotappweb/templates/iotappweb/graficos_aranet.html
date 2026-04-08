@@ -69,7 +69,7 @@
         // Obtener datos JSON del backend
         async function fetchData() {
             try {
-                const res = await fetch('/iotappweb/aranet-resumen-grafica-json/');
+                const res = await fetch('/iotappweb/aranet-curvas-json/');
                 allData = await res.json();
                 renderFilters();
                 updateChart();
