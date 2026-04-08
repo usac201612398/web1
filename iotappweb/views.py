@@ -409,8 +409,17 @@ def aranet_webhook(request):
 
         if objects:
             SensorData.objects.bulk_create(objects, batch_size=100)
+            ahora = timezone.now()
+            hace_10_min = ahora - timedelta(minutes=10)
+            datos_recientes = [
+                obj for obj in objects
+                if obj.timestamp >= hace_10_min
+            ]
+            if len(datos_recientes) < len(objects) * 0.3:
+                print("📦 Bulk histórico detectado → no se envían alertas")
+                return JsonResponse({"status": "bulk_saved_no_alerts"})
 
-            sensores = set(obj.sensor for obj in objects)
+            sensores = set(obj.sensor for obj in datos_recientes)
             for sensor in sensores:
                 resultado = evaluar_sensor(sensor)
                 if resultado:
