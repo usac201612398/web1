@@ -194,21 +194,23 @@
         }
 
         function renderCharts() {
-
+            // Destruir gráficos antiguos
             charts.forEach(c => c.destroy());
             charts = [];
 
             const finca = document.getElementById('finca-filter').value;
             const priva = document.getElementById('priva-filter').value;
 
-            const selected = Array.from(document.querySelectorAll('#sensor-filters input:checked'))
+            const selectedSensors = Array.from(document.querySelectorAll('#sensor-filters input:checked'))
                 .map(cb => cb.value);
 
-            let data = allData
-                .filter(d => selected.includes(d.sensor))
+            // Filtrar datos por sensores, finca y priva
+            const data = allData
+                .filter(d => selectedSensors.includes(d.sensor))
                 .filter(d => !finca || d.finca == finca)
                 .filter(d => !priva || d.priva == priva);
 
+            // Agrupar por estructura
             const grupos = {};
             data.forEach(d => {
                 if (!grupos[d.estructura]) grupos[d.estructura] = [];
@@ -221,10 +223,11 @@
             const valleyContainer = document.getElementById('valley-counters');
             valleyContainer.innerHTML = '';
 
-            Object.keys(grupos).forEach((estructura, i) => {
+            // Recorrer cada estructura
+            Object.keys(grupos).forEach((estructura, idx) => {
+                const canvasId = `chart_${idx}`;
 
-                const canvasId = "chart_" + i;
-
+                // Crear contenedor de la gráfica
                 container.innerHTML += `
             <div class="col-md-6 mb-3">
                 <div class="card p-2">
@@ -234,24 +237,16 @@
             </div>
         `;
 
-                const datasets = grupos[estructura]
-                    .map(d => {
+                // Preparar datasets para cada sensor dentro de esta estructura
+                const datasets = grupos[estructura].map(d => {
+                    const filtered = filterTime(d.readings);
+                    if (!filtered.length) return null;
 
-                        const filtered = filterTime(d.readings);
-                        if (!filtered.length) return null;
+                    const dataPoints = filtered.map(r => ({ x: new Date(r.timestamp), y: r.value }));
+                    const valleys = getValleys(dataPoints);
 
-                        const dataPoints = filtered.map(r => ({
-                            x: new Date(r.timestamp),
-                            y: r.value
-                        }));
-
-                        const valleys = getValleys(dataPoints);
-
-                        const pointColors = dataPoints.map(p => {
-                            return valleys.find(v => v.x.getTime() === p.x.getTime()) ? 'red' : 'blue';
-                        });
-
-                        valleyContainer.innerHTML += `
+                    // Mostrar valles en el contador
+                    valleyContainer.innerHTML += `
                 <div>
                     <span class="valley-dot"></span>
                     ${d.nombre || d.sensor}: ${valleys.length}
@@ -262,54 +257,43 @@
                 </div>
             `;
 
-                        return {
-                            label: d.nombre || d.sensor,
-                            data: dataPoints,
-                            borderColor: `hsl(${Math.random() * 360},70%,50%)`,
-                            tension: 0.3,
-                            pointRadius: 4,
-                            pointBackgroundColor: pointColors
-                        };
+                    const pointColors = dataPoints.map(p =>
+                        valleys.find(v => v.x.getTime() === p.x.getTime()) ? 'red' : 'blue'
+                    );
 
-                    }).filter(Boolean);
-
-                if (!datasets.length) {
-                    const ctx = document.getElementById(canvasId).getContext('2d');
-                    new Chart(ctx, {
-                        type: 'line',
-                        data: { datasets: [] },
-                        options: {
-                            plugins: {
-                                title: {
-                                    display: true,
-                                    text: 'Sin datos en este rango'
-                                }
-                            }
-                        }
-                    });
-                    return;
-                }
+                    return {
+                        label: d.nombre || d.sensor,
+                        data: dataPoints,
+                        borderColor: `hsl(${Math.random() * 360},70%,50%)`,
+                        tension: 0.3,
+                        pointRadius: 4,
+                        pointBackgroundColor: pointColors
+                    };
+                }).filter(Boolean);
 
                 const ctx = document.getElementById(canvasId).getContext('2d');
 
+                // Crear gráfico solo si hay datos
                 charts.push(new Chart(ctx, {
                     type: 'line',
                     data: { datasets },
                     options: {
                         responsive: true,
                         plugins: {
-                            legend: { display: true }
+                            legend: { display: true },
+                            title: {
+                                display: datasets.length === 0,
+                                text: 'Sin datos en este rango'
+                            }
                         },
                         scales: {
-                            x: { type: 'time' },
+                            x: { type: 'time', time: { tooltipFormat: 'dd LLL yyyy HH:mm' } },
                             y: { title: { display: true, text: 'kg' } }
                         }
                     }
                 }));
-
             });
         }
-
         fetchData();
     </script>
 
