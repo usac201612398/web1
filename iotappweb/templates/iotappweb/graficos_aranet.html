@@ -120,75 +120,16 @@
         async function fetchData() {
             const res = await fetch('/iotappweb/aranet-curvas-json/');
             allData = await res.json();
-            initFilters();
-            initCharts(); // crear canvases fijos
-            updateCharts(); // dibujar datos
+            initCharts();
+            updateCharts();
         }
 
-        function initFilters() {
-            const fincaSel = document.getElementById('finca-filter');
-            const privaSel = document.getElementById('priva-filter');
-
-            const fincas = [...new Set(allData.map(d => d.finca))];
-            const privas = [...new Set(allData.map(d => d.priva))];
-
-            fincaSel.innerHTML = `<option value="">Todas</option>` + fincas.map(f => `<option>${f}</option>`).join('');
-            privaSel.innerHTML = `<option value="">Todas</option>` + privas.map(p => `<option>${p}</option>`).join('');
-
-            const cont = document.getElementById('sensor-filters');
-            cont.innerHTML = '';
-
-            allData.forEach((d, i) => {
-                cont.innerHTML += `
-            <div>
-                <input type="checkbox" value="${d.sensor}" id="sensor_${i}" checked onchange="updateCharts()">
-                <label for="sensor_${i}">${d.nombre || d.sensor}</label>
-            </div>
-        `;
-            });
-
-            fincaSel.onchange = updateCharts;
-            privaSel.onchange = updateCharts;
-            document.getElementById('time-filter').onchange = updateCharts;
-        }
-
-        // filtro por rango de tiempo
-        function filterTime(readings) {
-            const h = document.getElementById('time-filter').value;
-            const now = new Date();
-            return readings.filter(r => (now - new Date(r.timestamp)) <= h * 3600000);
-        }
-
-        // detectar valles
-        function getValleys(data) {
-            let valleys = [];
-            for (let i = 1; i < data.length - 1; i++) {
-                if (data[i].y < data[i - 1].y && data[i].y < data[i + 1].y) valleys.push(data[i]);
-            }
-            return valleys;
-        }
-
-        // mostrar modal
-        function showModal(sensor, valleys) {
-            let html = "<b>Riegos detectados:</b><ul>";
-            valleys.forEach(v => html += `<li>${new Date(v.x).toLocaleString()}</li>`);
-            html += "</ul><b>Intervalos (min):</b><ul>";
-            for (let i = 1; i < valleys.length; i++) {
-                let diff = (new Date(valleys[i].x) - new Date(valleys[i - 1].x)) / 60000;
-                html += `<li>${diff.toFixed(1)} min</li>`;
-            }
-            html += "</ul>";
-            document.getElementById('modal-body').innerHTML = html;
-            new bootstrap.Modal(document.getElementById('modalValle')).show();
-        }
-
-        // inicializar canvases fijos por estructura
         function initCharts() {
             const container = document.getElementById('charts-container');
             container.innerHTML = '';
             const estructuras = [...new Set(allData.map(d => d.estructura))];
 
-            estructuras.forEach((estructura, idx) => {
+            estructuras.forEach((estructura) => {
                 const canvasId = `chart_${estructura}`;
                 container.innerHTML += `
             <div class="col-md-6 mb-3">
@@ -214,20 +155,42 @@
             });
         }
 
-        // actualizar datasets de los charts
+        function filterTime(readings) {
+            const h = document.getElementById('time-filter').value;
+            const now = new Date();
+            return readings.filter(r => (now - new Date(r.timestamp)) <= h * 3600000);
+        }
+
+        function getValleys(data) {
+            let valleys = [];
+            for (let i = 1; i < data.length - 1; i++) {
+                if (data[i].y < data[i - 1].y && data[i].y < data[i + 1].y) valleys.push(data[i]);
+            }
+            return valleys;
+        }
+
+        function showModal(sensor, valleys) {
+            let html = "<b>Riegos detectados:</b><ul>";
+            valleys.forEach(v => html += `<li>${new Date(v.x).toLocaleString()}</li>`);
+            html += "</ul><b>Intervalos (min):</b><ul>";
+            for (let i = 1; i < valleys.length; i++) {
+                html += `<li>${((new Date(valleys[i].x) - new Date(valleys[i - 1].x)) / 60000).toFixed(1)} min</li>`;
+            }
+            html += "</ul>";
+            document.getElementById('modal-body').innerHTML = html;
+            new bootstrap.Modal(document.getElementById('modalValle')).show();
+        }
+
         function updateCharts() {
             const finca = document.getElementById('finca-filter').value;
             const priva = document.getElementById('priva-filter').value;
-            const selectedSensors = Array.from(document.querySelectorAll('#sensor-filters input:checked'))
-                .map(cb => cb.value);
 
             const valleyContainer = document.getElementById('valley-counters');
             valleyContainer.innerHTML = '';
 
-            // agrupar por estructura
+            // Agrupar por estructura
             const grupos = {};
-            allData.filter(d => selectedSensors.includes(d.sensor))
-                .filter(d => !finca || d.finca == finca)
+            allData.filter(d => !finca || d.finca == finca)
                 .filter(d => !priva || d.priva == priva)
                 .forEach(d => {
                     if (!grupos[d.estructura]) grupos[d.estructura] = [];
@@ -273,6 +236,11 @@
                 chart.update();
             });
         }
+
+        // Llamadas iniciales
+        document.getElementById('finca-filter').onchange = updateCharts;
+        document.getElementById('priva-filter').onchange = updateCharts;
+        document.getElementById('time-filter').onchange = updateCharts;
 
         fetchData();
     </script>
