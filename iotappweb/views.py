@@ -468,7 +468,10 @@ def aranet_resumen_json(request):
             "porcentaje_restante": round(porcentaje_restante, 2),
             "porcentaje_perdida": round(porcentaje_perdida, 2),
         })
-
+    resultado_ordenado = sorted(
+        resultado,
+        key=lambda x: (x['estructura'], x['priva'])
+    )
     return JsonResponse(resultado, safe=False)
 
 def aranet_resumen_page(request):
@@ -589,7 +592,10 @@ def aranet_data_json(request):
         "value": r.value,
         "unit": r.unit
     } for r in readings]
-
+    resultado_ordenado = sorted(
+        data,
+        key=lambda x: (x['estructura'], x['priva'])
+    )
     return JsonResponse(data, safe=False)
 
 # Página web para mostrar los datos en tiempo real
