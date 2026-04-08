@@ -480,7 +480,7 @@ def evaluar_sensor(sensor_obj):
     if len(readings) < 2:
         return None
 
-    peso_base = sensor_obj.peso_base 
+    peso_base = sensor_obj.set_point
 
     # calcular porcentajes
     porcentajes = []
