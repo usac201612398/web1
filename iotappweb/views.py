@@ -450,7 +450,7 @@ def aranet_resumen_json(request):
         pesos = [r.value for r in readings]
 
         peso_actual = pesos[0]
-        peso_base = readings[0].sensor.peso_base
+        peso_base = readings[0].sensor.set_point
 
         if peso_base == 0:
             continue
