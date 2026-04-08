@@ -612,16 +612,17 @@ def detallesensores_list(request):
 def aranet_resumen_grafica_page(request):
     
     return render(request, "iotappweb/graficos_aranet.html")
-
+    
 def aranet_curvas_json(request):
     rango = request.GET.get('range', '1h')
-
     ahora = timezone.now()
 
     if rango == '1h':
         desde = ahora - timedelta(hours=1)
     elif rango == '6h':
         desde = ahora - timedelta(hours=6)
+    elif rango == '12h':
+        desde = ahora - timedelta(hours=12)
     elif rango == '24h':
         desde = ahora - timedelta(hours=24)
     else:
@@ -631,16 +632,13 @@ def aranet_curvas_json(request):
     resultado = []
 
     for sensor_id in sensores:
+        sensor_obj = Sensor.objects.get(id=sensor_id)  # o como accedes al modelo Sensor
+
         readings_qs = SensorData.objects.filter(
             sensor_id=sensor_id,
             metric="weight",
             timestamp__gte=desde
         ).order_by('timestamp')
-
-        if not readings_qs.exists():
-            continue
-
-        sensor_obj = readings_qs.first().sensor
 
         readings = [
             {
@@ -651,12 +649,12 @@ def aranet_curvas_json(request):
         ]
 
         resultado.append({
-            "sensor": str(sensor_obj.sensor),  # id real
-            "nombre": sensor_obj.nombrearanet, # nombre bonito
+            "sensor": str(sensor_obj.sensor),   # id real
+            "nombre": sensor_obj.nombrearanet,  # nombre bonito
             "finca": sensor_obj.finca,
             "priva": sensor_obj.priva,
             "estructura": sensor_obj.estructura,
-            "readings": readings
+            "readings": readings  # puede ser vacío
         })
 
     return JsonResponse(resultado, safe=False)
