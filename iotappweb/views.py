@@ -472,7 +472,7 @@ def aranet_resumen_json(request):
         resultado,
         key=lambda x: (x['estructura'], x['priva'])
     )
-    return JsonResponse(resultado, safe=False)
+    return JsonResponse(resultado_ordenado, safe=False)
 
 def aranet_resumen_page(request):
     return render(request, "iotappweb/aranet_resumen.html")
@@ -596,7 +596,7 @@ def aranet_data_json(request):
         data,
         key=lambda x: (x['estructura'], x['priva'])
     )
-    return JsonResponse(data, safe=False)
+    return JsonResponse(resultado_ordenado, safe=False)
 
 # Página web para mostrar los datos en tiempo real
 def aranet_live_page(request):
