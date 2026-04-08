@@ -459,7 +459,7 @@ def aranet_resumen_json(request):
 
         # agregar finca, priva y estructura
         resultado.append({
-            "sensor": str(sensor),
+            "sensor": str(readings[0].sensor.sensor),
             "finca": readings[0].sensor.finca,
             "priva": readings[0].sensor.priva,
             "estructura": readings[0].sensor.estructura,
