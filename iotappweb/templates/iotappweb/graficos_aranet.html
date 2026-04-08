@@ -130,8 +130,8 @@ function initFilters(){
     allData.forEach(d=>{
         cont.innerHTML += `
             <label>
-                <input type="checkbox" value="${d.sensor}" checked onchange="renderCharts()">
-                ${d.sensor}
+                <input type="checkbox" value="${d.nombre}" checked onchange="renderCharts()">
+                ${d.nombre}
             </label><br>
         `;
     });
@@ -193,7 +193,7 @@ function renderCharts(){
         .map(cb=>cb.value);
 
     let data = allData
-        .filter(d=>selected.includes(d.sensor))
+        .filter(d=>selected.includes(d.nombre))
         .filter(d=>!finca || d.finca==finca)
         .filter(d=>!priva || d.priva==priva);
 
@@ -236,16 +236,16 @@ function renderCharts(){
             peakContainer.innerHTML += `
                 <div>
                     <span class="peak-dot"></span>
-                    ${d.sensor}: ${peaks.length}
+                    ${d.nombre}: ${peaks.length}
                     <button class="btn btn-sm btn-outline-primary"
-                        onclick='showModal("${d.sensor}", ${JSON.stringify(peaks)})'>
+                        onclick='showModal("${d.nombre}", ${JSON.stringify(peaks)})'>
                         ver
                     </button>
                 </div>
             `;
 
             return {
-                label:d.sensor,
+                label:d.nombre,
                 data:dataPoints,
                 borderColor:`hsl(${Math.random()*360},70%,50%)`,
                 tension:0.3

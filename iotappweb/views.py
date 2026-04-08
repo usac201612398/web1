@@ -651,7 +651,8 @@ def aranet_curvas_json(request):
         ]
 
         resultado.append({
-            "sensor": str(sensor_obj.sensor),
+            "sensor": str(sensor_obj.sensor),  # id real
+            "nombre": sensor_obj.nombrearanet, # nombre bonito
             "finca": sensor_obj.finca,
             "priva": sensor_obj.priva,
             "estructura": sensor_obj.estructura,
