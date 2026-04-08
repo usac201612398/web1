@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Gráfica avanzada de Sensores Aranet</title>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { text-align: center; }
+        .controls { margin-bottom: 20px; text-align: center; }
+        .controls label { margin: 0 10px; cursor: pointer; }
+        canvas { max-width: 100%; }
+    </style>
+</head>
+<body>
+
+<h1>📈 Curvas Avanzadas de Sensores Aranet</h1>
+
+<div class="controls">
+    <div id="sensor-filters"></div>
+    <div style="margin-top:10px;">
+        Intervalo:
+        <select id="time-range">
+            <option value="30">Últimos 30 min</option>
+            <option value="60">Última 1h</option>
+            <option value="360">Últimas 6h</option>
+            <option value="1440">Últimas 24h</option>
+        </select>
+
+        <label>
+            <input type="checkbox" id="smooth-curve"> Suavizar (promedio móvil)
+        </label>
+    </div>
+</div>
+
+<canvas id="sensorChart"></canvas>
+
+<script>
+let chart;
+let sensorData = {};
+
+// Función para obtener datos JSON desde Django
+async function fetchData() {
+    const response = await fetch('/iotappweb/aranet-resumen-json/');
+    const data = await response.json();
+
+    // Agrupar por sensor
+    sensorData = {};
+    data.forEach(item => {
+        const key = item.sensor;
+        if (!sensorData[key]) sensorData[key] = [];
+        sensorData[key].push({
+            timestamp: item.timestamp ? new Date(item.timestamp) : new Date(),
+            value: item.peso_actual,
+            porcentaje: item.porcentaje_restante
+        });
+    });
+
+    createFilters();
+    updateChart();
+}
+
+// Crear checkboxes de sensores dinámicamente
+function createFilters() {
+    const container = document.getElementById('sensor-filters');
+    container.innerHTML = '';
+    Object.keys(sensorData).forEach(sensor => {
+        const label = document.createElement('label');
+        label.innerHTML = `<input type="checkbox" checked value="${sensor}"> ${sensor}`;
+        container.appendChild(label);
+    });
+
+    container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', updateChart);
+    });
+
+    document.getElementById('time-range').addEventListener('change', updateChart);
+    document.getElementById('smooth-curve').addEventListener('change', updateChart);
+}
+
+// Función para suavizar datos con promedio móvil
+function smooth(data, windowSize = 3) {
+    const smoothed = [];
+    for (let i = 0; i < data.length; i++) {
+        let sum = 0;
+        let count = 0;
+        for (let j = i - Math.floor(windowSize/2); j <= i + Math.floor(windowSize/2); j++) {
+            if (j >= 0 && j < data.length) {
+                sum += data[j].value;
+                count++;
+            }
+        }
+        smoothed.push(sum / count);
+    }
+    return smoothed;
+}
+
+// Crear gráfico inicial
+function createChart() {
+    const ctx = document.getElementById('sensorChart').getContext('2d');
+    chart = new Chart(ctx, {
+        type: 'line',
+        data: { labels: [], datasets: [] },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' },
+                title: { display: true, text: 'Peso de sensores en tiempo real' },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    callbacks: {
+                        label: function(context) {
+                            const item = context.raw;
+                            return `${context.dataset.label}: ${item.value} kg (${item.porcentaje.toFixed(1)}%)`;
+                        }
+                    }
+                }
+            },
+            interaction: { mode: 'nearest', axis: 'x', intersect: false },
+            scales: {
+                x: {
+                    type: 'time',
+                    time: { unit: 'minute', tooltipFormat: 'HH:mm:ss' },
+                    title: { display: true, text: 'Hora' }
+                },
+                y: {
+                    title: { display: true, text: 'Peso (kg)' }
+                }
+            }
+        }
+    });
+}
+
+// Actualizar gráfico según filtros, intervalo y suavizado
+function updateChart() {
+    if (!chart) createChart();
+
+    const selectedSensors = Array.from(document.querySelectorAll('#sensor-filters input[type="checkbox"]:checked'))
+        .map(cb => cb.value);
+
+    const intervalMinutes = parseInt(document.getElementById('time-range').value);
+    const smoothEnabled = document.getElementById('smooth-curve').checked;
+
+    chart.data.labels = [];
+    chart.data.datasets = [];
+
+    const colors = [
+        '#FF6384','#36A2EB','#FFCE56','#4BC0C0','#9966FF','#FF9F40',
+        '#66FF66','#FF6666','#66B2FF','#FF66FF','#33CC33','#FF9933','#6666FF','#CC3366'
+    ];
+    let colorIndex = 0;
+
+    const now = new Date();
+
+    selectedSensors.forEach(sensor => {
+        const rawValues = sensorData[sensor] || [];
+        const filtered = rawValues.filter(v => (now - v.timestamp) / 60000 <= intervalMinutes);
+
+        if (filtered.length === 0) return;
+
+        const values = smoothEnabled ? smooth(filtered) : filtered.map(v => v.value);
+        const dataset = {
+            label: sensor,
+            data: filtered.map((v, i) => ({ x: v.timestamp, value: values[i], porcentaje: v.porcentaje })),
+            borderColor: colors[colorIndex % colors.length],
+            backgroundColor: colors[colorIndex % colors.length],
+            fill: false,
+            tension: 0.3
+        };
+        chart.data.datasets.push(dataset);
+        colorIndex++;
+    });
+
+    chart.update();
+}
+
+// Primera carga
+fetchData();
+
+// Actualizar cada minuto
+setInterval(fetchData, 15000);
+</script>
+
+</body>
+</html>

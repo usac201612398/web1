@@ -609,6 +609,13 @@ def detallesensores_list(request):
     salidas = SensorDetalles.objects.exclude(status__in=["Averiado","Anulado", "Cerrado"])
     return render(request, 'iotappweb/formsensores/detallesensores_list.html', {'registros': salidas})
 
+def aranet_resumen_grafica_page(request):
+    """
+    Página web para mostrar la gráfica de curvas de sensores.
+    Los datos históricos se cargan vía fetch desde aranet_resumen_json.
+    """
+    return render(request, "iotappweb/graficos_aranet.html")
+
 def detallesensores_create(request):
     if request.method == 'POST':
         form = sensordetallesForm(request.POST)

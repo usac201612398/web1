@@ -17,7 +17,7 @@ urlpatterns = [
     path('aranet-data/', views.aranet_webhook, name='aranet-data'),       # POST desde el sensor
     path('aranet-live/', views.aranet_live_page, name='aranet-live'),  # template HTML
     path('aranet-resumen/', views.aranet_resumen_page, name='aranet_resumen_page'),  # template HTML
-    
+     path('aranet-resumen-grafica/', views.aranet_resumen_grafica_page, name='aranet_resumen_grafica_page'),
     path('aranet-resumen-json/', views.aranet_resumen_json, name='aranet_resumen_json'),
     path('aranet-data-json/', views.aranet_data_json, name='aranet_data_json'),
 
