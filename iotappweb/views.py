@@ -615,14 +615,13 @@ def aranet_resumen_grafica_page(request):
 
 def aranet_curvas_json(request):
     rango = request.GET.get('range', '1h')
+
     ahora = timezone.now()
 
     if rango == '1h':
         desde = ahora - timedelta(hours=1)
     elif rango == '6h':
         desde = ahora - timedelta(hours=6)
-    elif rango == '12h':
-        desde = ahora - timedelta(hours=12)
     elif rango == '24h':
         desde = ahora - timedelta(hours=24)
     else:
@@ -632,30 +631,32 @@ def aranet_curvas_json(request):
     resultado = []
 
     for sensor_id in sensores:
-        try:
-            sensor_obj = Sensor.objects.get(id=sensor_id)
-        except Sensor.DoesNotExist:
-            continue  # ignora sensores huérfanos
-
         readings_qs = SensorData.objects.filter(
             sensor_id=sensor_id,
             metric="weight",
             timestamp__gte=desde
         ).order_by('timestamp')
 
+        if not readings_qs.exists():
+            continue
+
+        sensor_obj = readings_qs.first().sensor
+
         readings = [
-            {"timestamp": timezone.localtime(r.timestamp).strftime("%Y-%m-%d %H:%M:%S"),
-             "value": r.value}
+            {
+                "timestamp": timezone.localtime(r.timestamp).strftime("%Y-%m-%d %H:%M:%S"),
+                "value": r.value
+            }
             for r in readings_qs
         ]
 
         resultado.append({
-            "sensor": str(sensor_obj.sensor),
-            "nombre": sensor_obj.nombrearanet,
+            "sensor": str(sensor_obj.sensor),  # id real
+            "nombre": sensor_obj.nombrearanet, # nombre bonito
             "finca": sensor_obj.finca,
             "priva": sensor_obj.priva,
             "estructura": sensor_obj.estructura,
-            "readings": readings  # puede estar vacío
+            "readings": readings
         })
 
     return JsonResponse(resultado, safe=False)
