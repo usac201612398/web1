@@ -29,7 +29,14 @@
         }
     </style>
 </head>
+<!-- Moment.js -->
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
 
+<!-- Chart.js Time Adapter -->
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.1.0/dist/chartjs-adapter-moment.min.js"></script>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <body>
     <h1>Curvas Avanzadas de Sensores Aranet</h1>
 
@@ -58,14 +65,7 @@
     <div id="chart-container">
         <canvas id="sensorChart"></canvas>
     </div>
-    <!-- Moment.js -->
-    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
-
-    <!-- Chart.js Time Adapter -->
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.1.0/dist/chartjs-adapter-moment.min.js"></script>
-
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <script>
         let allData = [];
         let chart;
