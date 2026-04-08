@@ -613,28 +613,41 @@ def aranet_resumen_grafica_page(request):
     
     return render(request, "iotappweb/graficos_aranet.html")
 
-
 def aranet_curvas_json(request):
-    """
-    Retorna los últimos 50 registros de peso por sensor.
-    Formato limpio para JS.
-    """
+    rango = request.GET.get('range', '1h')
+
+    ahora = timezone.now()
+
+    if rango == '1h':
+        desde = ahora - timedelta(hours=1)
+    elif rango == '6h':
+        desde = ahora - timedelta(hours=6)
+    elif rango == '24h':
+        desde = ahora - timedelta(hours=24)
+    else:
+        desde = ahora - timedelta(hours=1)
+
     sensores = SensorData.objects.filter(metric="weight").values_list('sensor', flat=True).distinct()
     resultado = []
 
     for sensor_id in sensores:
-        readings_qs = SensorData.objects.filter(sensor_id=sensor_id, metric="weight").order_by('-timestamp')[:50]
+        readings_qs = SensorData.objects.filter(
+            sensor_id=sensor_id,
+            metric="weight",
+            timestamp__gte=desde
+        ).order_by('timestamp')
 
         if not readings_qs.exists():
             continue
 
         sensor_obj = readings_qs.first().sensor
 
-        # Creamos la lista de lecturas ordenadas de más antiguo a reciente
         readings = [
-            {"timestamp": timezone.localtime(r.timestamp).strftime("%Y-%m-%d %H:%M:%S"), "value": r.value}
-            for r in reversed(readings_qs)
-            
+            {
+                "timestamp": timezone.localtime(r.timestamp).strftime("%Y-%m-%d %H:%M:%S"),
+                "value": r.value
+            }
+            for r in readings_qs
         ]
 
         resultado.append({
@@ -646,7 +659,6 @@ def aranet_curvas_json(request):
         })
 
     return JsonResponse(resultado, safe=False)
-
 def detallesensores_create(request):
     if request.method == 'POST':
         form = sensordetallesForm(request.POST)
