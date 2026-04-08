@@ -98,10 +98,7 @@
     </div>
 
     <!-- GRAFICAS -->
-    <div class="card p-2 mb-3">
-        <h5>📊 Curvas de Sensores</h5>
-        <canvas id="chart-main"></canvas>
-    </div>
+    <div class="row" id="charts-container"></div>
 
     <!-- MODAL -->
     <div class="modal fade" id="modalValle">
@@ -118,7 +115,7 @@
 
     <script>
         let allData = [];
-        let chartMain = null;
+        let charts = [];
 
         async function fetchData() {
             const res = await fetch('/iotappweb/aranet-curvas-json/');
@@ -137,93 +134,147 @@
             fincaSel.innerHTML = `<option value="">Todas</option>` + fincas.map(f => `<option>${f}</option>`).join('');
             privaSel.innerHTML = `<option value="">Todas</option>` + privas.map(p => `<option>${p}</option>`).join('');
 
+            const cont = document.getElementById('sensor-filters');
+            cont.innerHTML = '';
+
+            // 🔥 IMPORTANTE: usar index único
+            allData.forEach((d, i) => {
+                cont.innerHTML += `
+            <div>
+                <input type="checkbox" value="${d.sensor}" id="sensor_${i}" checked onchange="renderCharts()">
+                <label for="sensor_${i}">
+                    ${d.nombre || d.sensor}
+                </label>
+            </div>
+        `;
+            });
+
             fincaSel.onchange = renderCharts;
             privaSel.onchange = renderCharts;
             document.getElementById('time-filter').onchange = renderCharts;
         }
 
+        // filtro tiempo
         function filterTime(readings) {
             const h = document.getElementById('time-filter').value;
             const now = new Date();
             return readings.filter(r => (now - new Date(r.timestamp)) <= h * 3600000);
         }
 
+        // 🔴 DETECTAR VALLES
         function getValleys(data) {
             let valleys = [];
             for (let i = 1; i < data.length - 1; i++) {
-                if (data[i].y < data[i - 1].y && data[i].y < data[i + 1].y) valleys.push(data[i]);
+                if (data[i].y < data[i - 1].y && data[i].y < data[i + 1].y) {
+                    valleys.push(data[i]);
+                }
             }
             return valleys;
         }
 
+        // modal
         function showModal(sensor, valleys) {
             let html = "<b>Riegos detectados:</b><ul>";
-            valleys.forEach(v => html += `<li>${new Date(v.x).toLocaleString()}</li>`);
+
+            valleys.forEach(v => {
+                html += `<li>${new Date(v.x).toLocaleString()}</li>`;
+            });
+
             html += "</ul><b>Intervalos (min):</b><ul>";
+
             for (let i = 1; i < valleys.length; i++) {
-                html += `<li>${((new Date(valleys[i].x) - new Date(valleys[i - 1].x)) / 60000).toFixed(1)} min</li>`;
+                let diff = (new Date(valleys[i].x) - new Date(valleys[i - 1].x)) / 60000;
+                html += `<li>${diff.toFixed(1)} min</li>`;
             }
+
             html += "</ul>";
+
             document.getElementById('modal-body').innerHTML = html;
             new bootstrap.Modal(document.getElementById('modalValle')).show();
         }
 
         function renderCharts() {
+            // Destruir gráficos antiguos
+            charts.forEach(c => c.destroy());
+            charts = [];
+
             const finca = document.getElementById('finca-filter').value;
             const priva = document.getElementById('priva-filter').value;
 
             const selectedSensors = Array.from(document.querySelectorAll('#sensor-filters input:checked'))
                 .map(cb => cb.value);
 
+            // Filtrar datos por sensores, finca y priva
             const data = allData
                 .filter(d => selectedSensors.includes(d.sensor))
                 .filter(d => !finca || d.finca == finca)
                 .filter(d => !priva || d.priva == priva);
 
+            // Agrupar por estructura
+            const grupos = {};
+            data.forEach(d => {
+                if (!grupos[d.estructura]) grupos[d.estructura] = [];
+                grupos[d.estructura].push(d);
+            });
+
+            const container = document.getElementById('charts-container');
+            container.innerHTML = '';
+
             const valleyContainer = document.getElementById('valley-counters');
             valleyContainer.innerHTML = '';
 
-            // Generar datasets de todos los sensores
-            const datasets = data.map(d => {
-                const filtered = filterTime(d.readings);
-                if (!filtered.length) return null;
+            // Recorrer cada estructura
+            Object.keys(grupos).forEach((estructura, idx) => {
+                const canvasId = `chart_${idx}`;
 
-                const dataPoints = filtered.map(r => ({ x: new Date(r.timestamp), y: r.value }));
-                const valleys = getValleys(dataPoints);
-
-                // Contador de valles
-                valleyContainer.innerHTML += `
-            <div>
-                <span class="valley-dot"></span>
-                ${d.nombre || d.sensor}: ${valleys.length}
-                <button class="btn btn-sm btn-outline-primary"
-                    onclick='showModal("${d.nombre || d.sensor}", ${JSON.stringify(valleys)})'>
-                    ver
-                </button>
+                // Crear contenedor de la gráfica
+                container.innerHTML += `
+            <div class="col-md-6 mb-3">
+                <div class="card p-2">
+                    <h6>${estructura}</h6>
+                    <canvas id="${canvasId}"></canvas>
+                </div>
             </div>
         `;
 
-                const pointColors = dataPoints.map(p =>
-                    valleys.find(v => v.x.getTime() === p.x.getTime()) ? 'red' : 'blue'
-                );
+                // Preparar datasets para cada sensor dentro de esta estructura
+                const datasets = grupos[estructura].map(d => {
+                    const filtered = filterTime(d.readings);
+                    if (!filtered.length) return null;
 
-                return {
-                    label: `${d.estructura} - ${d.nombre || d.sensor}`,
-                    data: dataPoints,
-                    borderColor: `hsl(${Math.random() * 360},70%,50%)`,
-                    tension: 0.3,
-                    pointRadius: 4,
-                    pointBackgroundColor: pointColors
-                };
-            }).filter(Boolean);
+                    const dataPoints = filtered.map(r => ({ x: new Date(r.timestamp), y: r.value }));
+                    const valleys = getValleys(dataPoints);
 
-            const ctx = document.getElementById('chart-main').getContext('2d');
+                    // Mostrar valles en el contador
+                    valleyContainer.innerHTML += `
+                <div>
+                    <span class="valley-dot"></span>
+                    ${d.nombre || d.sensor}: ${valleys.length}
+                    <button class="btn btn-sm btn-outline-primary"
+                        onclick='showModal("${d.nombre || d.sensor}", ${JSON.stringify(valleys)})'>
+                        ver
+                    </button>
+                </div>
+            `;
 
-            if (chartMain) {
-                chartMain.data.datasets = datasets;
-                chartMain.update();
-            } else {
-                chartMain = new Chart(ctx, {
+                    const pointColors = dataPoints.map(p =>
+                        valleys.find(v => v.x.getTime() === p.x.getTime()) ? 'red' : 'blue'
+                    );
+
+                    return {
+                        label: d.nombre || d.sensor,
+                        data: dataPoints,
+                        borderColor: `hsl(${Math.random() * 360},70%,50%)`,
+                        tension: 0.3,
+                        pointRadius: 4,
+                        pointBackgroundColor: pointColors
+                    };
+                }).filter(Boolean);
+
+                const ctx = document.getElementById(canvasId).getContext('2d');
+
+                // Crear gráfico solo si hay datos
+                charts.push(new Chart(ctx, {
                     type: 'line',
                     data: { datasets },
                     options: {
@@ -240,10 +291,9 @@
                             y: { title: { display: true, text: 'kg' } }
                         }
                     }
-                });
-            }
+                }));
+            });
         }
-
         fetchData();
     </script>
 
