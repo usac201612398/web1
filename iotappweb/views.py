@@ -587,7 +587,7 @@ def aranet_data_json(request):
         "priva": r.sensor.priva,
         "estructura": r.sensor.estructura,
         "sensor": str(r.sensor),  # o r.sensor.nombre si tienes
-        "timestamp": r.timestamp.strftime("%Y-%m-%d %H:%M:%S"),
+        "timestamp": timezone.localtime(r.timestamp).strftime("%Y-%m-%d %H:%M:%S"),
         "metric": r.metric,
         "value": r.value,
         "unit": r.unit
@@ -632,8 +632,9 @@ def aranet_curvas_json(request):
 
         # Creamos la lista de lecturas ordenadas de más antiguo a reciente
         readings = [
-            {"timestamp": r.timestamp.strftime("%Y-%m-%d %H:%M:%S"), "value": r.value}
+            {"timestamp": timezone.localtime(r.timestamp).strftime("%Y-%m-%d %H:%M:%S"), "value": r.value}
             for r in reversed(readings_qs)
+            
         ]
 
         resultado.append({
@@ -645,6 +646,7 @@ def aranet_curvas_json(request):
         })
 
     return JsonResponse(resultado, safe=False)
+
 def detallesensores_create(request):
     if request.method == 'POST':
         form = sensordetallesForm(request.POST)
