@@ -94,7 +94,9 @@ $(document).ready(function () {
     table = $('#aranet-table').DataTable({
         scrollX: true,
         autoWidth: false,
-        order: [[4, "desc"]] // ordenar por timestamp
+        order: [[4, "desc"]], // ordenar por timestamp
+        paging: false,       // sin paginación
+        info: false
     });
 });
 
