@@ -79,33 +79,6 @@
             max-height: 300px;
             width: 100%;
         }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-                opacity: 1;
-            }
-
-            50% {
-                transform: scale(1.2);
-                opacity: 0.8;
-            }
-
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        /* Los puntos de riego se pueden animar si deseas */
-        .riegos-punto {
-            animation: pulse 2s infinite;
-        }
-
-        /* Mejorar visibilidad de los puntos en el gráfico */
-        canvas {
-            cursor: crosshair;
-        }
     </style>
 </head>
 
@@ -179,11 +152,8 @@
         let todosLosDatos = [];
         let charts = {};
 
-        // Cargar datos iniciales
         document.addEventListener('DOMContentLoaded', function () {
             cargarDatos();
-
-            // Event listeners
             document.getElementById('rangoTiempo').addEventListener('change', function () {
                 cargarDatos();
             });
@@ -197,34 +167,25 @@
 
         async function cargarDatos() {
             const rango = document.getElementById('rangoTiempo').value;
-
             mostrarLoading(true);
 
             try {
                 const response = await fetch(`/iotappweb/aranet-curvas-json/?range=${rango}h`);
                 todosLosDatos = await response.json();
-
                 console.log('Datos cargados:', todosLosDatos.length, 'sensores');
-                console.log('Estructuras:', [...new Set(todosLosDatos.map(s => s.estructura))]);
-
                 actualizarFiltros();
                 renderizarDashboard();
-
             } catch (error) {
-                console.error('Error cargando datos:', error);
+                console.error('Error:', error);
                 document.getElementById('contenedorSensores').innerHTML = `
-                <div class="alert alert-danger">
-                    Error al cargar los datos. Verifica que el servidor esté funcionando.
-                    <br>Detalle: ${error.message}
-                </div>
-            `;
+                    <div class="alert alert-danger">Error al cargar los datos: ${error.message}</div>
+                `;
             } finally {
                 mostrarLoading(false);
             }
         }
 
         function actualizarFiltros() {
-            // Actualizar filtro de estructuras
             const estructuras = [...new Set(todosLosDatos.map(s => s.estructura))].sort();
             const selectEstructura = document.getElementById('filtroEstructura');
             selectEstructura.innerHTML = '<option value="">Todas las estructuras</option>';
@@ -232,7 +193,6 @@
                 selectEstructura.innerHTML += `<option value="${est}">${est}</option>`;
             });
 
-            // Actualizar filtro de fincas
             const fincas = [...new Set(todosLosDatos.map(s => s.finca))].sort();
             const selectFinca = document.getElementById('filtroFinca');
             selectFinca.innerHTML = '<option value="">Todas las fincas</option>';
@@ -248,29 +208,33 @@
             const container = document.getElementById('contenedorSensores');
             if (container) {
                 container.innerHTML = `
-                <div class="loading">
-                    <div class="spinner-border text-primary" role="status"></div>
-                    <p>Cargando datos...</p>
-                </div>
-            `;
+                    <div class="loading">
+                        <div class="spinner-border text-primary" role="status"></div>
+                        <p>Cargando datos...</p>
+                    </div>
+                `;
             }
         }
 
+        // Función mejorada para detectar valles
         function detectarValles(datos) {
             const valles = [];
-            const sensibilidad = 0.5; // Ajusta este valor según necesites (menor = más sensible)
-
+            // Reducir la sensibilidad para que detecte más valles
+            const sensibilidad = 0.1; // Cambiado de 0.5 a 0.1
+            
+            console.log('Analizando datos para valles, total puntos:', datos.length);
+            
             for (let i = 1; i < datos.length - 1; i++) {
                 // Detectar valle (punto más bajo que sus vecinos)
-                const esValle = datos[i].y < datos[i - 1].y && datos[i].y < datos[i + 1].y;
-
+                const esValle = datos[i].y < datos[i-1].y && datos[i].y < datos[i+1].y;
+                
                 if (esValle) {
                     // Calcular profundidad del valle
-                    const profundidadIzq = datos[i - 1].y - datos[i].y;
-                    const profundidadDer = datos[i + 1].y - datos[i].y;
+                    const profundidadIzq = datos[i-1].y - datos[i].y;
+                    const profundidadDer = datos[i+1].y - datos[i].y;
                     const profundidad = Math.min(profundidadIzq, profundidadDer);
-
-                    // Solo considerar si la caída es significativa (evita ruido)
+                    
+                    // Solo considerar si la caída es significativa
                     if (profundidad >= sensibilidad) {
                         valles.push({
                             x: datos[i].x,
@@ -280,22 +244,26 @@
                     }
                 }
             }
-
+            
+            console.log('Valles detectados (sin filtrar):', valles.length);
+            
             // Eliminar valles duplicados muy cercanos (menos de 5 minutos)
             const vallesUnicos = [];
             for (let i = 0; i < valles.length; i++) {
                 if (i === 0) {
                     vallesUnicos.push(valles[i]);
                 } else {
-                    const diffMinutos = (valles[i].x - valles[i - 1].x) / 60000;
+                    const diffMinutos = (valles[i].x - valles[i-1].x) / 60000;
                     if (diffMinutos > 5) {
                         vallesUnicos.push(valles[i]);
                     }
                 }
             }
-
+            
+            console.log('Valles únicos:', vallesUnicos.length);
             return vallesUnicos;
         }
+
         function filtrarPorTiempo(readings, horas) {
             const ahora = new Date();
             const limite = ahora - (horas * 3600000);
@@ -311,7 +279,6 @@
             });
             charts = {};
 
-            // Aplicar filtros
             const estructuraFiltro = document.getElementById('filtroEstructura').value;
             const fincaFiltro = document.getElementById('filtroFinca').value;
             const horasRango = parseInt(document.getElementById('rangoTiempo').value);
@@ -324,10 +291,8 @@
 
             if (datosFiltrados.length === 0) {
                 document.getElementById('contenedorSensores').innerHTML = `
-            <div class="alert alert-info">
-                No hay sensores que coincidan con los filtros seleccionados.
-            </div>
-        `;
+                    <div class="alert alert-info">No hay sensores que coincidan con los filtros seleccionados.</div>
+                `;
                 return;
             }
 
@@ -339,27 +304,23 @@
                 grupos[estructura].push(sensor);
             });
 
-            // Renderizar
             const container = document.getElementById('contenedorSensores');
             container.innerHTML = '';
-
             const estructurasOrdenadas = Object.keys(grupos).sort();
 
             for (const estructura of estructurasOrdenadas) {
                 const sensores = grupos[estructura];
-
-                // Header de estructura
+                
                 const estructuraDiv = document.createElement('div');
                 estructuraDiv.className = 'estructura-group';
                 estructuraDiv.innerHTML = `
-            <div class="estructura-header">
-                <h4 class="mb-0">📁 ${estructura}</h4>
-                <small>${sensores.length} sensor(es)</small>
-            </div>
-        `;
+                    <div class="estructura-header">
+                        <h4 class="mb-0">📁 ${estructura}</h4>
+                        <small>${sensores.length} sensor(es)</small>
+                    </div>
+                `;
                 container.appendChild(estructuraDiv);
 
-                // Grid de sensores
                 const gridDiv = document.createElement('div');
                 gridDiv.className = 'row';
 
@@ -367,122 +328,106 @@
                     const colDiv = document.createElement('div');
                     colDiv.className = 'col-md-6 col-lg-4 mb-4';
 
-                    // Filtrar lecturas por tiempo
                     const lecturasFiltradas = filtrarPorTiempo(sensor.readings, horasRango);
 
                     if (lecturasFiltradas.length === 0) {
                         colDiv.innerHTML = `
-                    <div class="sensor-card">
-                        <div class="sensor-title">
-                            <h6 class="mb-0">⚠️ ${sensor.nombre}</h6>
-                            <small class="text-muted">ID: ${sensor.sensor_id}</small>
-                        </div>
-                        <div class="alert alert-warning mb-0">
-                            Sin datos en el rango seleccionado
-                        </div>
-                    </div>
-                `;
+                            <div class="sensor-card">
+                                <div class="sensor-title">
+                                    <h6 class="mb-0">⚠️ ${sensor.nombre}</h6>
+                                    <small class="text-muted">ID: ${sensor.sensor_id}</small>
+                                </div>
+                                <div class="alert alert-warning mb-0">Sin datos en el rango seleccionado</div>
+                            </div>
+                        `;
                         gridDiv.appendChild(colDiv);
                         continue;
                     }
 
-                    // Preparar datos para gráfico
                     const dataPoints = lecturasFiltradas.map(r => ({
                         x: new Date(r.timestamp),
                         y: r.value
                     }));
 
                     const valles = detectarValles(dataPoints);
+                    console.log(`Sensor ${sensor.nombre} - Valles detectados: ${valles.length}`);
 
-                    // Crear dataset especial para los valles (puntos)
-                    const puntosValles = valles.map(valle => ({
-                        x: valle.x,
-                        y: valle.y
-                    }));
-
-                    // Crear card del sensor
                     const chartId = `chart_${sensor.sensor_id.replace(/[^a-zA-Z0-9]/g, '_')}`;
 
                     colDiv.innerHTML = `
-                <div class="sensor-card">
-                    <div class="sensor-title" onclick="toggleChart('${chartId}')">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="mb-0">📊 ${sensor.nombre}</h6>
-                                <small class="text-muted">
-                                    ${sensor.finca} | ${sensor.priva}
-                                </small>
+                        <div class="sensor-card">
+                            <div class="sensor-title" onclick="toggleChart('${chartId}')">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-0">📊 ${sensor.nombre}</h6>
+                                        <small class="text-muted">${sensor.finca} | ${sensor.priva}</small>
+                                    </div>
+                                    <div>
+                                        <span class="valley-badge">💧 ${valles.length} riegos</span>
+                                        <button class="btn btn-sm btn-outline-info ms-2" 
+                                                onclick="event.stopPropagation(); mostrarDetalleRiegos('${sensor.nombre}', ${JSON.stringify(valles).replace(/"/g, '&quot;')})">
+                                            Ver detalles
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                            <div>
-                                <span class="valley-badge">💧 ${valles.length} riegos</span>
-                                <button class="btn btn-sm btn-outline-info ms-2" 
-                                        onclick="event.stopPropagation(); mostrarDetalleRiegos('${sensor.nombre}', ${JSON.stringify(valles).replace(/"/g, '&quot;')})">
-                                    Ver detalles
-                                </button>
+                            <div id="${chartId}" style="height: 300px;">
+                                <canvas id="canvas_${chartId}"></canvas>
+                            </div>
+                            <div class="mt-2 small text-muted">
+                                📈 Peso actual: ${dataPoints[dataPoints.length-1].y.toFixed(1)} kg | 
+                                📉 Mínimo: ${Math.min(...dataPoints.map(p => p.y)).toFixed(1)} kg
                             </div>
                         </div>
-                    </div>
-                    <div id="${chartId}" style="height: 300px;">
-                        <canvas id="canvas_${chartId}"></canvas>
-                    </div>
-                    <div class="mt-2 small text-muted">
-                        📈 Peso actual: ${dataPoints[dataPoints.length - 1].y.toFixed(1)} kg | 
-                        📉 Mínimo: ${Math.min(...dataPoints.map(p => p.y)).toFixed(1)} kg
-                    </div>
-                </div>
-            `;
+                    `;
 
                     gridDiv.appendChild(colDiv);
 
-                    // Crear gráfico después de agregar al DOM
                     setTimeout(() => {
                         const canvas = document.getElementById(`canvas_${chartId}`);
                         if (canvas) {
                             const ctx = canvas.getContext('2d');
-
+                            
                             // Configuración de datasets
                             const datasets = [
                                 {
-                                    // Línea continua SIN puntos
                                     label: 'Peso (kg)',
                                     data: dataPoints,
                                     borderColor: '#2196f3',
                                     backgroundColor: 'rgba(33, 150, 243, 0.05)',
                                     borderWidth: 2.5,
-                                    pointRadius: 0,        // Sin puntos
-                                    pointHoverRadius: 5,    // Punto al hacer hover
-                                    pointBorderWidth: 0,
+                                    pointRadius: 0,
+                                    pointHoverRadius: 5,
                                     tension: 0.3,
                                     fill: true,
                                     order: 2
                                 }
                             ];
 
-                            // Agregar dataset de valles SOLO si hay valles
-                            if (puntosValles.length > 0) {
+                            // Agregar puntos de valles si existen
+                            if (valles.length > 0) {
+                                const puntosValles = valles.map(v => ({ x: v.x, y: v.y }));
+                                console.log(`Agregando ${puntosValles.length} puntos de riego para ${sensor.nombre}`);
+                                
                                 datasets.push({
-                                    // Solo los puntos de valles (riegos)
                                     label: '💧 Riego detectado',
                                     data: puntosValles,
-                                    borderColor: '#ff5722',
+                                    type: 'scatter',
                                     backgroundColor: '#ff5722',
-                                    borderWidth: 0,
-                                    pointRadius: 6,         // Tamaño del punto
-                                    pointHoverRadius: 9,
+                                    borderColor: '#ff5722',
+                                    pointRadius: 8,
+                                    pointHoverRadius: 12,
                                     pointBackgroundColor: '#ff5722',
                                     pointBorderColor: '#ffffff',
                                     pointBorderWidth: 2,
-                                    showLine: false,        // Solo puntos, sin línea
-                                    type: 'scatter',
+                                    showLine: false,
                                     order: 1
                                 });
                             }
 
                             charts[chartId] = new Chart(ctx, {
                                 type: 'line',
-                                data: {
-                                    datasets: datasets
-                                },
+                                data: { datasets: datasets },
                                 options: {
                                     responsive: true,
                                     maintainAspectRatio: true,
@@ -501,12 +446,11 @@
                                         },
                                         tooltip: {
                                             callbacks: {
-                                                label: function (context) {
+                                                label: function(context) {
                                                     if (context.dataset.label === '💧 Riego detectado') {
                                                         return `💧 Riego: ${context.raw.y.toFixed(1)} kg`;
-                                                    } else {
-                                                        return `Peso: ${context.raw.y.toFixed(1)} kg`;
                                                     }
+                                                    return `Peso: ${context.raw.y.toFixed(1)} kg`;
                                                 }
                                             }
                                         }
@@ -516,41 +460,14 @@
                                             type: 'time',
                                             time: {
                                                 unit: 'hour',
-                                                displayFormats: {
-                                                    hour: 'HH:mm',
-                                                    minute: 'HH:mm'
-                                                },
+                                                displayFormats: { hour: 'HH:mm' },
                                                 tooltipFormat: 'dd/MM/yyyy HH:mm'
                                             },
-                                            title: {
-                                                display: true,
-                                                text: 'Hora',
-                                                font: { size: 12 }
-                                            },
-                                            grid: {
-                                                display: true,
-                                                color: '#e0e0e0'
-                                            }
+                                            title: { display: true, text: 'Hora' }
                                         },
                                         y: {
-                                            title: {
-                                                display: true,
-                                                text: 'Peso (kg)',
-                                                font: { size: 12 }
-                                            },
-                                            beginAtZero: false,
-                                            grid: {
-                                                display: true,
-                                                color: '#e0e0e0'
-                                            }
-                                        }
-                                    },
-                                    elements: {
-                                        point: {
-                                            radius: 0  // Por defecto sin puntos
-                                        },
-                                        line: {
-                                            borderWidth: 2.5
+                                            title: { display: true, text: 'Peso (kg)' },
+                                            beginAtZero: false
                                         }
                                     }
                                 }
@@ -558,10 +475,10 @@
                         }
                     }, 100);
                 }
-
                 estructuraDiv.appendChild(gridDiv);
             }
         }
+
         function toggleChart(chartId) {
             const chartDiv = document.getElementById(chartId);
             if (chartDiv) {
@@ -577,37 +494,37 @@
 
         function mostrarDetalleRiegos(nombreSensor, valles) {
             const modalBody = document.getElementById('modalRiegosBody');
-
+            
             if (valles.length === 0) {
                 modalBody.innerHTML = `
-                <div class="alert alert-success">
-                    No se detectaron riegos (valles) en el período seleccionado para <strong>${nombreSensor}</strong>.
-                </div>
-            `;
+                    <div class="alert alert-success">
+                        No se detectaron riegos (valles) en el período seleccionado para <strong>${nombreSensor}</strong>.
+                    </div>
+                `;
             } else {
                 let html = `<p><strong>Sensor: ${nombreSensor}</strong></p>`;
                 html += `<p>Total de riegos detectados: <span class="badge bg-danger">${valles.length}</span></p>`;
                 html += '<hr><h6>📅 Fechas y horas de los riegos:</h6><ul>';
-
+                
                 valles.forEach((valle, idx) => {
                     const fecha = new Date(valle.x).toLocaleString('es-ES');
                     html += `<li><strong>Riego ${idx + 1}:</strong> ${fecha} - Peso: ${valle.y.toFixed(1)} kg</li>`;
                 });
-
+                
                 html += '</ul>';
-
+                
                 if (valles.length > 1) {
                     html += '<hr><h6>⏱️ Intervalos entre riegos:</h6><ul>';
                     for (let i = 1; i < valles.length; i++) {
-                        const diffMinutos = (new Date(valles[i].x) - new Date(valles[i - 1].x)) / 60000;
+                        const diffMinutos = (new Date(valles[i].x) - new Date(valles[i-1].x)) / 60000;
                         html += `<li>Entre riego ${i} y ${i + 1}: ${diffMinutos.toFixed(0)} minutos</li>`;
                     }
                     html += '</ul>';
                 }
-
+                
                 modalBody.innerHTML = html;
             }
-
+            
             const modal = new bootstrap.Modal(document.getElementById('modalRiegos'));
             modal.show();
         }
