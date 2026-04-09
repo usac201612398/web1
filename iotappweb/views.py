@@ -526,9 +526,11 @@ def evaluar_sensor(sensor_obj):
 
     # 🚨 4. reglas de alerta
     if actual >= sensor_obj.umbral_min:
+        print("SE DEBE REGAR YA")
         tipo = "riego"
     elif actual <= sensor_obj.umbral_max:
         tipo = "exceso"
+        print("SE EXCEDIO EN RIEGOS")
     else:
         return None
 
