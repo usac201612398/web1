@@ -573,7 +573,8 @@ def enviar_alerta(data):
     )
 
     # Enviar WhatsApp
-    for numero in ["+50230664716","+50240304201","+50253050677"]:
+    #for numero in ["+50230664716","+50240304201","+50253050677"]:
+    for numero in ["+50230664716"]:
         try:
             enviar_whatsapp(mensaje, numero)
         except Exception as e:
