@@ -278,8 +278,9 @@ MEDIA_URL = '/media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'smtp.office365.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'brandrenz99@gmail.com'
+EMAIL_HOST_USER = 'brandon.portillo@popoyan.com.gt'
+EMAIL_HOST_PASSWORD = 'basica1M'
 EMAIL_HOST_PASSWORD = 'gxgp payx qwyd dgiy'

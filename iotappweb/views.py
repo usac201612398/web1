@@ -549,7 +549,7 @@ def enviar_alerta(data):
         porcentaje_perdida=data['porcentaje_perdida'],
         mensaje=mensaje
     )
-
+    enviar_correo(mensaje, "Alerta Sensores | " + str(sensor_obj.estructura))
     # Enviar WhatsApp
     #for numero in ["+50230664716","+50240304201","+50253050677"]:
     '''
@@ -560,6 +560,19 @@ def enviar_alerta(data):
             print("❌ ERROR WhatsApp:", str(e))
     '''
 # Retorna los últimos 20 registros en JSON
+
+def enviar_correo(mensaje, asunto="Alerta de sensor"):
+    try:
+        send_mail(
+            subject=asunto,
+            message=mensaje,
+            from_email=None,
+            recipient_list=["linday.solares@popoyan.com.gt","luis.quinonez@popoyan.com.gt"],
+            fail_silently=False,
+        )
+        print("📧 Correo enviado")
+    except Exception as e:
+        print("❌ ERROR correo:", str(e))
 
 def aranet_data_json(request):
     readings = SensorData.objects.select_related('sensor').order_by('-timestamp')[:20]
