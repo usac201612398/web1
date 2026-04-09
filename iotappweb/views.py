@@ -426,6 +426,7 @@ def aranet_webhook(request):
             for sensor in sensores:
                 resultado = evaluar_sensor(sensor)
                 if resultado:
+                    print("ALERTA ENVIADA")
                     enviar_alerta(resultado)
 
         return JsonResponse({"status": "ok", "saved": len(objects)})
