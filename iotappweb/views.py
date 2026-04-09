@@ -502,8 +502,8 @@ def evaluar_sensor(sensor_obj):
     cambio = actual - anterior
 
     # 1. ignorar ruido (<2%)
-    #if abs(cambio) < 2:
-    #    return None
+    if abs(cambio) < 1:
+        return None
 
     # 2. ignorar saltos bruscos (>5%)
     #if abs(cambio) > 5:
@@ -672,7 +672,7 @@ def aranet_curvas_json(request):
     resultado.sort(key=lambda x: (x['estructura'], x['nombre']))
     
     return JsonResponse(resultado, safe=False)
-    
+
 def detallesensores_create(request):
     if request.method == 'POST':
         form = sensordetallesForm(request.POST)
