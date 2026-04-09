@@ -477,65 +477,67 @@ def aranet_resumen_json(request):
 
 def aranet_resumen_page(request):
     return render(request, "iotappweb/aranet_resumen.html")
-
 def evaluar_sensor(sensor_obj):
     readings = SensorData.objects.filter(
         sensor=sensor_obj,
         metric="weight"
-    ).order_by('-timestamp')[:3]
+    ).order_by('-timestamp')[:5]  # usamos 5 para tener contexto
 
-    if len(readings) < 2:
+    if len(readings) < 3:
         return None
 
     peso_base = sensor_obj.set_point
+    if peso_base == 0:
+        return None
 
-    # calcular porcentajes
-    porcentajes = []
-    for r in readings:
-        porcentaje_restante = (r.value / peso_base) * 100
-        porcentaje_perdida = 100 - porcentaje_restante
-        porcentajes.append(porcentaje_perdida)
+    # calcular porcentajes de pérdida
+    porcentajes = [
+        100 - ((r.value / peso_base) * 100)
+        for r in readings
+    ]
 
     actual = porcentajes[0]
     anterior = porcentajes[1]
-
     cambio = actual - anterior
 
-    # 1. ignorar ruido (<2%)
+    # 🔹 1. ignorar ruido pequeño
     if abs(cambio) < 1:
         return None
 
-    # 2. ignorar saltos bruscos (>5%)
-    #if abs(cambio) > 5:
-    #    print("⚠️ Salto brusco:", cambio)
-    #    return None
+    # 🔹 2. ignorar saltos absurdos (sensor glitch)
+    if abs(cambio) > 8:
+        print(f"⚠️ Salto brusco ignorado: {cambio:.2f}%")
+        return None
 
-    # 3. validar tendencia progresiva
-    tendencia_subida = all(
+    # 🔹 3. validar tendencia flexible (no perfecta)
+    subidas = sum(
         porcentajes[i] >= porcentajes[i+1]
         for i in range(len(porcentajes)-1)
     )
 
-    tendencia_bajada = all(
+    bajadas = sum(
         porcentajes[i] <= porcentajes[i+1]
         for i in range(len(porcentajes)-1)
     )
 
-    if not (tendencia_subida or tendencia_bajada):
-        print("⚠️ Tendencia inconsistente")
+    # requerimos mayoría, no perfección
+    if subidas < 3 and bajadas < 3:
+        # opcional: quitar este print si ensucia logs
+        # print("⚠️ Tendencia inconsistente")
         return None
 
-    # 🚨 4. reglas de alerta
+    # 🔹 4. reglas de alerta
     if actual >= sensor_obj.umbral_min:
-        print("SE DEBE REGAR YA")
         tipo = "riego"
+        print(f"🚨 Riego requerido ({actual:.2f}%)")
+
     elif actual <= sensor_obj.umbral_max:
         tipo = "exceso"
-        print("SE EXCEDIO EN RIEGOS")
+        print(f"💧 Exceso de riego ({actual:.2f}%)")
+
     else:
         return None
 
-    # resultado final
     return {
         "sensor": sensor_obj,
         "peso_actual": readings[0].value,
