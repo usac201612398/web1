@@ -477,76 +477,45 @@ def aranet_resumen_json(request):
 
 def aranet_resumen_page(request):
     return render(request, "iotappweb/aranet_resumen.html")
+
 def evaluar_sensor(sensor_obj):
-    readings = SensorData.objects.filter(
+    reading = SensorData.objects.filter(
         sensor=sensor_obj,
         metric="weight"
-    ).order_by('-timestamp')[:5]  # usamos 5 para tener contexto
+    ).order_by('-timestamp').first()
 
-    if len(readings) < 3:
+    if not reading:
         return None
 
     peso_base = sensor_obj.set_point
     if peso_base == 0:
         return None
 
-    # calcular porcentajes de pérdida
-    porcentajes = [
-        100 - ((r.value / peso_base) * 100)
-        for r in readings
-    ]
+    # calcular porcentaje de pérdida actual
+    porcentaje_restante = (reading.value / peso_base) * 100
+    porcentaje_perdida = 100 - porcentaje_restante
 
-    actual = porcentajes[0]
-    anterior = porcentajes[1]
-    cambio = actual - anterior
-
-    # 🔹 1. ignorar ruido pequeño
-    if abs(cambio) < 1:
-        return None
-
-    # 🔹 2. ignorar saltos absurdos (sensor glitch)
-    if abs(cambio) > 8:
-        print(f"⚠️ Salto brusco ignorado: {cambio:.2f}%")
-        return None
-
-    # 🔹 3. validar tendencia flexible (no perfecta)
-    subidas = sum(
-        porcentajes[i] >= porcentajes[i+1]
-        for i in range(len(porcentajes)-1)
-    )
-
-    bajadas = sum(
-        porcentajes[i] <= porcentajes[i+1]
-        for i in range(len(porcentajes)-1)
-    )
-
-    # requerimos mayoría, no perfección
-    if subidas < 3 and bajadas < 3:
-        # opcional: quitar este print si ensucia logs
-        # print("⚠️ Tendencia inconsistente")
-        return None
-
-    # 🔹 4. reglas de alerta
-    if actual >= sensor_obj.umbral_min:
+    # 🚨 reglas simples
+    if porcentaje_perdida >= sensor_obj.umbral_min:
         tipo = "riego"
-        print(f"🚨 Riego requerido ({actual:.2f}%)")
+        print(f"🚨 Riego requerido ({porcentaje_perdida:.2f}%)")
 
-    elif actual <= sensor_obj.umbral_max:
+    elif porcentaje_perdida <= sensor_obj.umbral_max:
         tipo = "exceso"
-        print(f"💧 Exceso de riego ({actual:.2f}%)")
+        print(f"💧 Exceso de riego ({porcentaje_perdida:.2f}%)")
 
     else:
         return None
 
     return {
         "sensor": sensor_obj,
-        "peso_actual": readings[0].value,
+        "peso_actual": reading.value,
         "peso_base": peso_base,
-        "porcentaje_perdida": actual,
-        "cambio": cambio,
+        "porcentaje_perdida": porcentaje_perdida,
+        "cambio": 0,  # ya no calculamos cambio
         "tipo": tipo
     }
-
+    
 def enviar_alerta(data):
     if data["tipo"] == "riego":
         sensor_obj = data["sensor"]
