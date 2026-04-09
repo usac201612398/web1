@@ -3,145 +3,110 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard Aranet - Riegos</title>
+    <title>Dashboard Aranet - Ciclos de Riego</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.0/build/global/luxon.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.1.0"></script>
     <style>
-        body {
-            background: #f0f2f5;
-            padding: 20px;
-        }
-
-        .dashboard-header {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .filters-card {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .sensor-card {
-            background: white;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            padding: 15px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .sensor-title {
-            background: #e3f2fd;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            cursor: pointer;
-        }
-
-        .sensor-title:hover {
-            background: #bbdef5;
-        }
-
-        .valley-badge {
-            background: #ff5722;
-            color: white;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 50px;
-        }
-
-        .estructura-group {
-            margin-bottom: 30px;
-        }
-
-        .estructura-header {
-            background: #2c3e50;
-            color: white;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-
-        canvas {
-            max-height: 300px;
-            width: 100%;
-        }
+        body { background: #f0f2f5; padding: 20px; }
+        .dashboard-header, .filters-card, .sensor-card { background: white; border-radius: 10px; padding: 15px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .sensor-title { background: #e3f2fd; padding: 10px; border-radius: 5px; margin-bottom: 15px; cursor: pointer; }
+        .sensor-title:hover { background: #bbdef5; }
+        .riego-badge { background: #4caf50; color: white; padding: 3px 8px; border-radius: 12px; font-size: 12px; }
+        .loading { text-align: center; padding: 50px; }
+        .estructura-group { margin-bottom: 30px; }
+        .estructura-header { background: #2c3e50; color: white; padding: 12px; border-radius: 8px; margin-bottom: 15px; }
+        canvas { max-height: 300px; width: 100%; }
+        .config-panel { background: #e9ecef; padding: 15px; border-radius: 8px; margin-top: 10px; font-size: 13px; }
+        .config-panel input { width: 100px; display: inline-block; }
+        .info-text { font-size: 11px; color: #666; margin-top: 5px; }
+        .leyenda { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 5px; }
+        .leyenda-inicio { background: #ff9800; }
+        .leyenda-fin { background: #4caf50; }
     </style>
 </head>
 
 <body>
 
     <div class="container-fluid">
-        <!-- Header -->
         <div class="dashboard-header">
-            <h2>🌱 Dashboard de Riegos - Sensores Aranet</h2>
-            <p class="text-muted mb-0">Monitoreo de pesos y detección de riegos (valles)</p>
+            <h2>💧 Dashboard de Ciclos de Riego</h2>
+            <p class="text-muted mb-0">Detección de ciclos completos: Mínimo (inicio) → Máximo (fin del riego)</p>
         </div>
 
-        <!-- Filtros -->
         <div class="filters-card">
             <div class="row">
                 <div class="col-md-3">
                     <label class="form-label">Rango de tiempo</label>
                     <select id="rangoTiempo" class="form-select">
-                        <option value="1">Última hora</option>
                         <option value="6">Últimas 6 horas</option>
+                        <option value="12">Últimas 12 horas</option>
                         <option value="24" selected>Últimas 24 horas</option>
+                        <option value="48">Últimas 48 horas</option>
+                        <option value="168">Última semana</option>
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label">Filtrar por Estructura</label>
-                    <select id="filtroEstructura" class="form-select">
-                        <option value="">Todas las estructuras</option>
-                    </select>
+                    <label class="form-label">Estructura</label>
+                    <select id="filtroEstructura" class="form-select"><option value="">Todas</option></select>
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label">Filtrar por Finca</label>
-                    <select id="filtroFinca" class="form-select">
-                        <option value="">Todas las fincas</option>
-                    </select>
+                    <label class="form-label">Finca</label>
+                    <select id="filtroFinca" class="form-select"><option value="">Todas</option></select>
                 </div>
                 <div class="col-md-3">
                     <label class="form-label">&nbsp;</label>
-                    <button class="btn btn-primary w-100" onclick="cargarDatos()">
-                        🔄 Actualizar datos
-                    </button>
+                    <button class="btn btn-primary w-100" onclick="cargarDatos()">🔄 Actualizar</button>
+                </div>
+            </div>
+            
+            <div class="config-panel">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class="small">📊 Aumento mínimo (kg):</label>
+                        <input type="number" id="aumentoMin" value="1.5" step="0.5">
+                        <div class="info-text">Ganancia mínima para ciclo de riego</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="small">⏱️ Duración máxima (min):</label>
+                        <input type="number" id="duracionMax" value="120" step="15">
+                        <div class="info-text">Tiempo máximo del ciclo</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="small">🔇 Ruido (kg):</label>
+                        <input type="number" id="filtroRuido" value="0.3" step="0.1">
+                        <div class="info-text">Fluctuaciones ignoradas</div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="small">⏸️ Min entre ciclos:</label>
+                        <input type="number" id="minEntreCiclos" value="60" step="15">
+                        <div class="info-text">Tiempo entre riegos</div>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-12">
+                        <button class="btn btn-secondary btn-sm" onclick="reDetectar()">🎯 Re-detectar ciclos</button>
+                        <span class="ms-3 text-muted small">
+                            <span class="leyenda leyenda-inicio"></span> Inicio riego (mínimo) &nbsp;
+                            <span class="leyenda leyenda-fin"></span> Fin riego (máximo)
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Contenedor de sensores -->
-        <div id="contenedorSensores">
-            <div class="loading">
-                <div class="spinner-border text-primary" role="status"></div>
-                <p>Cargando datos de sensores...</p>
-            </div>
-        </div>
+        <div id="contenedorSensores"><div class="loading"><div class="spinner-border text-primary"></div><p>Cargando...</p></div></div>
     </div>
 
-    <!-- Modal para detalles de riegos -->
     <div class="modal fade" id="modalRiegos" tabindex="-1">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">📊 Detalle de Riegos</h5>
+                    <h5 class="modal-title">📋 Detalle de Ciclos de Riego</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body" id="modalRiegosBody">
-                </div>
+                <div class="modal-body" id="modalRiegosBody"></div>
             </div>
         </div>
     </div>
@@ -152,96 +117,153 @@
         let todosLosDatos = [];
         let charts = {};
 
-        // Cargar datos iniciales
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', () => {
             cargarDatos();
-
-            // Event listeners
-            document.getElementById('rangoTiempo').addEventListener('change', function () {
-                cargarDatos();
-            });
-            document.getElementById('filtroEstructura').addEventListener('change', function () {
-                renderizarDashboard();
-            });
-            document.getElementById('filtroFinca').addEventListener('change', function () {
-                renderizarDashboard();
-            });
+            document.getElementById('rangoTiempo').addEventListener('change', () => cargarDatos());
+            document.getElementById('filtroEstructura').addEventListener('change', () => renderizar());
+            document.getElementById('filtroFinca').addEventListener('change', () => renderizar());
         });
 
         async function cargarDatos() {
             const rango = document.getElementById('rangoTiempo').value;
-
-            mostrarLoading(true);
-
             try {
                 const response = await fetch(`/iotappweb/aranet-curvas-json/?range=${rango}h`);
                 todosLosDatos = await response.json();
-
-                console.log('Datos cargados:', todosLosDatos.length, 'sensores');
-                console.log('Estructuras:', [...new Set(todosLosDatos.map(s => s.estructura))]);
-
                 actualizarFiltros();
-                renderizarDashboard();
-
+                renderizar();
             } catch (error) {
-                console.error('Error cargando datos:', error);
-                document.getElementById('contenedorSensores').innerHTML = `
-                <div class="alert alert-danger">
-                    Error al cargar los datos. Verifica que el servidor esté funcionando.
-                    <br>Detalle: ${error.message}
-                </div>
-            `;
-            } finally {
-                mostrarLoading(false);
+                document.getElementById('contenedorSensores').innerHTML = `<div class="alert alert-danger">Error: ${error.message}</div>`;
             }
         }
 
-        function actualizarFiltros() {
-            // Actualizar filtro de estructuras
-            const estructuras = [...new Set(todosLosDatos.map(s => s.estructura))].sort();
-            const selectEstructura = document.getElementById('filtroEstructura');
-            selectEstructura.innerHTML = '<option value="">Todas las estructuras</option>';
-            estructuras.forEach(est => {
-                selectEstructura.innerHTML += `<option value="${est}">${est}</option>`;
-            });
+        function reDetectar() { renderizar(); }
 
-            // Actualizar filtro de fincas
-            const fincas = [...new Set(todosLosDatos.map(s => s.finca))].sort();
-            const selectFinca = document.getElementById('filtroFinca');
-            selectFinca.innerHTML = '<option value="">Todas las fincas</option>';
-            fincas.forEach(finca => {
-                if (finca && finca !== 'Sin finca') {
-                    selectFinca.innerHTML += `<option value="${finca}">${finca}</option>`;
+        // 🎯 DETECCIÓN DE CICLOS: Mínimo (inicio) → Máximo (fin)
+        function detectarCiclosRiego(datos) {
+            if (datos.length < 10) return [];
+            
+            const aumentoMin = parseFloat(document.getElementById('aumentoMin').value);
+            const duracionMaxMin = parseFloat(document.getElementById('duracionMax').value);
+            const filtroRuido = parseFloat(document.getElementById('filtroRuido').value);
+            const minEntreCiclos = parseFloat(document.getElementById('minEntreCiclos').value);
+            
+            // Suavizar datos
+            const datosSuav = suavizarDatos(datos, 5);
+            
+            // 1. Encontrar todos los mínimos locales (posibles inicios de riego)
+            const minimos = [];
+            for (let i = 5; i < datosSuav.length - 5; i++) {
+                let esMinimo = true;
+                for (let j = -5; j <= 5; j++) {
+                    if (j !== 0 && datosSuav[i+j].y <= datosSuav[i].y - filtroRuido) {
+                        esMinimo = false;
+                        break;
+                    }
                 }
-            });
-        }
-
-        function mostrarLoading(mostrar) {
-            if (!mostrar) return;
-            const container = document.getElementById('contenedorSensores');
-            if (container) {
-                container.innerHTML = `
-                <div class="loading">
-                    <div class="spinner-border text-primary" role="status"></div>
-                    <p>Cargando datos...</p>
-                </div>
-            `;
+                if (esMinimo) {
+                    minimos.push({ idx: i, x: datosSuav[i].x, y: datosSuav[i].y });
+                }
             }
-        }
-
-        function detectarValles(datos) {
-            const valles = [];
-            for (let i = 1; i < datos.length - 1; i++) {
-                if (datos[i].y < datos[i - 1].y && datos[i].y < datos[i + 1].y) {
-                    // Es un valle (posible riego)
-                    const profundidad = Math.min(datos[i - 1].y - datos[i].y, datos[i + 1].y - datos[i].y);
-                    valles.push({
-                        ...datos[i],
-                        profundidad: profundidad
+            
+            // 2. Para cada mínimo, buscar el máximo posterior que complete el ciclo
+            const ciclos = [];
+            
+            for (let i = 0; i < minimos.length; i++) {
+                const minimo = minimos[i];
+                let mejorMaximo = null;
+                let mejorAumento = 0;
+                
+                // Buscar máximos después de este mínimo
+                for (let j = minimo.idx + 2; j < Math.min(minimo.idx + 30, datosSuav.length - 2); j++) {
+                    // Verificar si es un máximo local
+                    let esMaximo = true;
+                    for (let k = -2; k <= 2; k++) {
+                        if (k !== 0 && datosSuav[j+k].y >= datosSuav[j].y + filtroRuido) {
+                            esMaximo = false;
+                            break;
+                        }
+                    }
+                    
+                    if (esMaximo) {
+                        const aumento = datosSuav[j].y - minimo.y;
+                        const duracion = (datosSuav[j].x - minimo.x) / 60000;
+                        
+                        // Verificar condiciones
+                        if (aumento >= aumentoMin && duracion <= duracionMaxMin) {
+                            if (aumento > mejorAumento) {
+                                mejorMaximo = { idx: j, x: datosSuav[j].x, y: datosSuav[j].y, aumento, duracion };
+                                mejorAumento = aumento;
+                            }
+                        }
+                    }
+                }
+                
+                if (mejorMaximo) {
+                    ciclos.push({
+                        inicio: minimo.x,
+                        fin: mejorMaximo.x,
+                        valorInicio: minimo.y,
+                        valorFin: mejorMaximo.y,
+                        aumento: mejorMaximo.aumento,
+                        duracionMinutos: mejorMaximo.duracion
                     });
                 }
             }
-            return valles;
+            
+            // 3. Filtrar ciclos superpuestos (quedarse con el de mayor aumento)
+            const ciclosUnicos = [];
+            for (let i = 0; i < ciclos.length; i++) {
+                let esUnico = true;
+                for (let j = 0; j < ciclosUnicos.length; j++) {
+                    const diffMin = Math.abs(ciclos[i].inicio - ciclosUnicos[j].inicio) / 60000;
+                    if (diffMin < minEntreCiclos) {
+                        if (ciclos[i].aumento <= ciclosUnicos[j].aumento) {
+                            esUnico = false;
+                            break;
+                        } else {
+                            ciclosUnicos.splice(j, 1);
+                            j--;
+                        }
+                    }
+                }
+                if (esUnico) ciclosUnicos.push(ciclos[i]);
+            }
+            
+            // Ordenar por tiempo
+            ciclosUnicos.sort((a, b) => a.inicio - b.inicio);
+            
+            console.log(`Ciclos detectados: ${ciclosUnicos.length}`);
+            return ciclosUnicos;
+        }
+
+        function suavizarDatos(datos, ventana) {
+            const suavizados = [];
+            for (let i = 0; i < datos.length; i++) {
+                let suma = 0, count = 0;
+                for (let j = -ventana; j <= ventana; j++) {
+                    const idx = i + j;
+                    if (idx >= 0 && idx < datos.length) {
+                        suma += datos[idx].y;
+                        count++;
+                    }
+                }
+                suavizados.push({ x: datos[i].x, y: suma / count });
+            }
+            return suavizados;
+        }
+
+        function marcarPuntosRiego(datos, ciclos) {
+            const puntos = [];
+            ciclos.forEach(ciclo => {
+                // Buscar punto exacto de inicio (mínimo)
+                const inicio = datos.find(p => Math.abs(p.x - ciclo.inicio) < 60000);
+                if (inicio) puntos.push({ x: inicio.x, y: inicio.y, tipo: 'inicio', aumento: ciclo.aumento });
+                
+                // Buscar punto exacto de fin (máximo)
+                const fin = datos.find(p => Math.abs(p.x - ciclo.fin) < 60000);
+                if (fin) puntos.push({ x: fin.x, y: fin.y, tipo: 'fin', aumento: ciclo.aumento });
+            });
+            return puntos;
         }
 
         function filtrarPorTiempo(readings, horas) {
@@ -250,16 +272,26 @@
             return readings.filter(r => new Date(r.timestamp) >= limite);
         }
 
-        function renderizarDashboard() {
-            // Destruir gráficos existentes
-            Object.values(charts).forEach(chart => {
-                if (chart && typeof chart.destroy === 'function') {
-                    chart.destroy();
+        function actualizarFiltros() {
+            const estructuras = [...new Set(todosLosDatos.map(s => s.estructura))].sort();
+            const selectEstructura = document.getElementById('filtroEstructura');
+            selectEstructura.innerHTML = '<option value="">Todas</option>';
+            estructuras.forEach(est => selectEstructura.innerHTML += `<option value="${est}">${est}</option>`);
+
+            const fincas = [...new Set(todosLosDatos.map(s => s.finca))].sort();
+            const selectFinca = document.getElementById('filtroFinca');
+            selectFinca.innerHTML = '<option value="">Todas</option>';
+            fincas.forEach(finca => {
+                if (finca && finca !== 'Sin finca') {
+                    selectFinca.innerHTML += `<option value="${finca}">${finca}</option>`;
                 }
             });
+        }
+
+        function renderizar() {
+            Object.values(charts).forEach(chart => chart.destroy());
             charts = {};
 
-            // Aplicar filtros
             const estructuraFiltro = document.getElementById('filtroEstructura').value;
             const fincaFiltro = document.getElementById('filtroFinca').value;
             const horasRango = parseInt(document.getElementById('rangoTiempo').value);
@@ -271,15 +303,10 @@
             });
 
             if (datosFiltrados.length === 0) {
-                document.getElementById('contenedorSensores').innerHTML = `
-            <div class="alert alert-info">
-                No hay sensores que coincidan con los filtros seleccionados.
-            </div>
-        `;
+                document.getElementById('contenedorSensores').innerHTML = '<div class="alert alert-info">No hay sensores</div>';
                 return;
             }
 
-            // Agrupar por estructura
             const grupos = {};
             datosFiltrados.forEach(sensor => {
                 const estructura = sensor.estructura;
@@ -287,280 +314,150 @@
                 grupos[estructura].push(sensor);
             });
 
-            // Renderizar
             const container = document.getElementById('contenedorSensores');
             container.innerHTML = '';
 
-            const estructurasOrdenadas = Object.keys(grupos).sort();
-
-            for (const estructura of estructurasOrdenadas) {
+            for (const estructura of Object.keys(grupos).sort()) {
                 const sensores = grupos[estructura];
-
-                // Header de estructura
+                
                 const estructuraDiv = document.createElement('div');
                 estructuraDiv.className = 'estructura-group';
-                estructuraDiv.innerHTML = `
-            <div class="estructura-header">
-                <h4 class="mb-0">📁 ${estructura}</h4>
-                <small>${sensores.length} sensor(es)</small>
-            </div>
-        `;
+                estructuraDiv.innerHTML = `<div class="estructura-header"><h4 class="mb-0">📁 ${estructura}</h4><small>${sensores.length} sensor(es)</small></div>`;
                 container.appendChild(estructuraDiv);
 
-                // Grid de sensores
                 const gridDiv = document.createElement('div');
                 gridDiv.className = 'row';
 
                 for (const sensor of sensores) {
+                    const lecturas = filtrarPorTiempo(sensor.readings, horasRango);
+                    if (lecturas.length === 0) continue;
+
+                    const dataPoints = lecturas.map(r => ({ x: new Date(r.timestamp), y: r.value }));
+                    const ciclos = detectarCiclosRiego(dataPoints);
+                    const puntosRiego = marcarPuntosRiego(dataPoints, ciclos);
+
+                    const chartId = `chart_${sensor.sensor_id.replace(/[^a-zA-Z0-9]/g, '_')}`;
+                    
                     const colDiv = document.createElement('div');
                     colDiv.className = 'col-md-6 col-lg-4 mb-4';
-
-                    // Filtrar lecturas por tiempo
-                    const lecturasFiltradas = filtrarPorTiempo(sensor.readings, horasRango);
-
-                    if (lecturasFiltradas.length === 0) {
-                        colDiv.innerHTML = `
-                    <div class="sensor-card">
-                        <div class="sensor-title">
-                            <h6 class="mb-0">⚠️ ${sensor.nombre}</h6>
-                            <small class="text-muted">ID: ${sensor.sensor_id}</small>
-                        </div>
-                        <div class="alert alert-warning mb-0">
-                            Sin datos en el rango seleccionado
-                        </div>
-                    </div>
-                `;
-                        gridDiv.appendChild(colDiv);
-                        continue;
-                    }
-
-                    // Preparar datos para gráfico
-                    const dataPoints = lecturasFiltradas.map(r => ({
-                        x: new Date(r.timestamp),
-                        y: r.value
-                    }));
-
-                    const valles = detectarValles(dataPoints);
-
-                    // Crear dataset especial para los valles (puntos)
-                    const puntosValles = valles.map(valle => ({
-                        x: valle.x,
-                        y: valle.y
-                    }));
-
-                    // Crear card del sensor
-                    const chartId = `chart_${sensor.sensor_id.replace(/[^a-zA-Z0-9]/g, '_')}`;
-
                     colDiv.innerHTML = `
-                <div class="sensor-card">
-                    <div class="sensor-title" onclick="toggleChart('${chartId}')">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="mb-0">📊 ${sensor.nombre}</h6>
-                                <small class="text-muted">
-                                    ${sensor.finca} | ${sensor.priva}
-                                </small>
+                        <div class="sensor-card">
+                            <div class="sensor-title" onclick="toggleChart('${chartId}')">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-0">📊 ${sensor.nombre}</h6>
+                                        <small>${sensor.finca} | ${sensor.priva}</small>
+                                    </div>
+                                    <div>
+                                        <span class="riego-badge">💧 ${ciclos.length} ciclos</span>
+                                        <button class="btn btn-sm btn-outline-info ms-2" 
+                                                onclick="event.stopPropagation(); mostrarDetalle('${sensor.nombre}', ${JSON.stringify(ciclos).replace(/"/g, '&quot;')})">
+                                            Ver detalles
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                            <div>
-                                <span class="valley-badge">💧 ${valles.length} riegos</span>
-                                <button class="btn btn-sm btn-outline-info ms-2" 
-                                        onclick="event.stopPropagation(); mostrarDetalleRiegos('${sensor.nombre}', ${JSON.stringify(valles).replace(/"/g, '&quot;')})">
-                                    Ver detalles
-                                </button>
+                            <div id="${chartId}" style="height: 300px;"><canvas id="canvas_${chartId}"></canvas></div>
+                            <div class="mt-2 small text-muted">
+                                💧 Agua por riego: ~${ciclos.length > 0 ? (ciclos.reduce((s, c) => s + c.aumento, 0) / ciclos.length).toFixed(1) : 0} kg promedio
                             </div>
                         </div>
-                    </div>
-                    <div id="${chartId}" style="height: 300px;">
-                        <canvas id="canvas_${chartId}"></canvas>
-                    </div>
-                    <div class="mt-2 small text-muted">
-                        📈 Peso actual: ${dataPoints[dataPoints.length - 1].y.toFixed(1)} kg | 
-                        📉 Mínimo: ${Math.min(...dataPoints.map(p => p.y)).toFixed(1)} kg
-                    </div>
-                </div>
-            `;
-
+                    `;
                     gridDiv.appendChild(colDiv);
 
-                    // Crear gráfico después de agregar al DOM
                     setTimeout(() => {
                         const canvas = document.getElementById(`canvas_${chartId}`);
                         if (canvas) {
-                            const ctx = canvas.getContext('2d');
-
-                            // Configuración de datasets
-                            const datasets = [
-                                {
-                                    // Línea continua SIN puntos
-                                    label: 'Peso (kg)',
-                                    data: dataPoints,
-                                    borderColor: '#2196f3',
-                                    backgroundColor: 'rgba(33, 150, 243, 0.05)',
-                                    borderWidth: 2.5,
-                                    pointRadius: 0,        // Sin puntos
-                                    pointHoverRadius: 5,    // Punto al hacer hover
-                                    pointBorderWidth: 0,
-                                    tension: 0.3,
-                                    fill: true,
-                                    order: 2
-                                }
-                            ];
-
-                            // Agregar dataset de valles SOLO si hay valles
-                            if (puntosValles.length > 0) {
+                            const datasets = [{
+                                label: 'Peso (kg)',
+                                data: dataPoints,
+                                borderColor: '#2196f3',
+                                borderWidth: 2,
+                                pointRadius: 0,
+                                tension: 0.3,
+                                fill: true,
+                                backgroundColor: 'rgba(33, 150, 243, 0.05)'
+                            }];
+                            
+                            if (puntosRiego.length > 0) {
                                 datasets.push({
-                                    // Solo los puntos de valles (riegos)
-                                    label: '💧 Riego detectado',
-                                    data: puntosValles,
-                                    borderColor: '#ff5722',
-                                    backgroundColor: '#ff5722',
-                                    borderWidth: 0,
-                                    pointRadius: 6,         // Tamaño del punto
-                                    pointHoverRadius: 9,
-                                    pointBackgroundColor: '#ff5722',
-                                    pointBorderColor: '#ffffff',
-                                    pointBorderWidth: 2,
-                                    showLine: false,        // Solo puntos, sin línea
+                                    label: '🚿 Ciclo de riego',
+                                    data: puntosRiego,
                                     type: 'scatter',
-                                    order: 1
+                                    backgroundColor: puntosRiego.map(p => p.tipo === 'inicio' ? '#ff9800' : '#4caf50'),
+                                    borderColor: '#fff',
+                                    pointRadius: 7,
+                                    pointHoverRadius: 10,
+                                    pointBorderWidth: 2,
+                                    showLine: false
                                 });
                             }
-
-                            charts[chartId] = new Chart(ctx, {
+                            
+                            charts[chartId] = new Chart(canvas.getContext('2d'), {
                                 type: 'line',
-                                data: {
-                                    datasets: datasets
-                                },
+                                data: { datasets },
                                 options: {
                                     responsive: true,
                                     maintainAspectRatio: true,
-                                    interaction: {
-                                        mode: 'index',
-                                        intersect: false
-                                    },
                                     plugins: {
-                                        legend: {
-                                            display: true,
-                                            position: 'top',
-                                            labels: {
-                                                usePointStyle: true,
-                                                boxWidth: 10
-                                            }
-                                        },
+                                        legend: { position: 'top' },
                                         tooltip: {
                                             callbacks: {
-                                                label: function (context) {
-                                                    if (context.dataset.label === '💧 Riego detectado') {
-                                                        return `💧 Riego: ${context.raw.y.toFixed(1)} kg`;
-                                                    } else {
-                                                        return `Peso: ${context.raw.y.toFixed(1)} kg`;
+                                                label: (ctx) => {
+                                                    if (ctx.dataset.label === '🚿 Ciclo de riego') {
+                                                        const tipo = ctx.raw.tipo === 'inicio' ? '🌱 Inicio riego' : '✅ Fin riego';
+                                                        return `${tipo}: ${ctx.raw.y.toFixed(1)} kg`;
                                                     }
+                                                    return `Peso: ${ctx.raw.y.toFixed(1)} kg`;
                                                 }
                                             }
                                         }
                                     },
                                     scales: {
-                                        x: {
-                                            type: 'time',
-                                            time: {
-                                                unit: 'hour',
-                                                displayFormats: {
-                                                    hour: 'HH:mm',
-                                                    minute: 'HH:mm'
-                                                },
-                                                tooltipFormat: 'dd/MM/yyyy HH:mm'
-                                            },
-                                            title: {
-                                                display: true,
-                                                text: 'Hora',
-                                                font: { size: 12 }
-                                            },
-                                            grid: {
-                                                display: true,
-                                                color: '#e0e0e0'
-                                            }
-                                        },
-                                        y: {
-                                            title: {
-                                                display: true,
-                                                text: 'Peso (kg)',
-                                                font: { size: 12 }
-                                            },
-                                            beginAtZero: false,
-                                            grid: {
-                                                display: true,
-                                                color: '#e0e0e0'
-                                            }
-                                        }
-                                    },
-                                    elements: {
-                                        point: {
-                                            radius: 0  // Por defecto sin puntos
-                                        },
-                                        line: {
-                                            borderWidth: 2.5
-                                        }
+                                        x: { type: 'time', time: { unit: 'hour' }, title: { display: true, text: 'Hora' } },
+                                        y: { title: { display: true, text: 'Peso (kg)' }, beginAtZero: false }
                                     }
                                 }
                             });
                         }
                     }, 100);
                 }
-
                 estructuraDiv.appendChild(gridDiv);
             }
         }
+
         function toggleChart(chartId) {
-            const chartDiv = document.getElementById(chartId);
-            if (chartDiv) {
-                if (chartDiv.style.height === '300px') {
-                    chartDiv.style.height = '0px';
-                    chartDiv.style.overflow = 'hidden';
-                } else {
-                    chartDiv.style.height = '300px';
-                    chartDiv.style.overflow = 'visible';
-                }
-            }
+            const div = document.getElementById(chartId);
+            if (div) div.style.height = div.style.height === '300px' ? '0px' : '300px';
         }
 
-        function mostrarDetalleRiegos(nombreSensor, valles) {
+        function mostrarDetalle(nombreSensor, ciclos) {
             const modalBody = document.getElementById('modalRiegosBody');
-
-            if (valles.length === 0) {
-                modalBody.innerHTML = `
-                <div class="alert alert-success">
-                    No se detectaron riegos (valles) en el período seleccionado para <strong>${nombreSensor}</strong>.
-                </div>
-            `;
+            if (ciclos.length === 0) {
+                modalBody.innerHTML = `<div class="alert alert-success">No se detectaron ciclos de riego para <strong>${nombreSensor}</strong></div>`;
             } else {
-                let html = `<p><strong>Sensor: ${nombreSensor}</strong></p>`;
-                html += `<p>Total de riegos detectados: <span class="badge bg-danger">${valles.length}</span></p>`;
-                html += '<hr><h6>📅 Fechas y horas de los riegos:</h6><ul>';
-
-                valles.forEach((valle, idx) => {
-                    const fecha = new Date(valle.x).toLocaleString('es-ES');
-                    html += `<li><strong>Riego ${idx + 1}:</strong> ${fecha} - Peso: ${valle.y.toFixed(1)} kg</li>`;
+                let html = `<h6>📊 ${nombreSensor}</h6><p>Total de ciclos: <span class="badge bg-success">${ciclos.length}</span></p>`;
+                html += '<div class="table-responsive"><table class="table table-sm">';
+                html += '<thead><tr><th>#</th><th>🌱 Inicio</th><th>✅ Fin</th><th>💧 Agua (kg)</th><th>⏱️ Duración</th></tr></thead><tbody>';
+                
+                ciclos.forEach((ciclo, idx) => {
+                    html += `<tr>
+                        <td>${idx + 1}</td>
+                        <td>${new Date(ciclo.inicio).toLocaleString()}</td>
+                        <td>${new Date(ciclo.fin).toLocaleString()}</td>
+                        <td class="text-success">+${ciclo.aumento.toFixed(1)} kg</td>
+                        <td>${ciclo.duracionMinutos.toFixed(0)} min</td>
+                    </tr>`;
                 });
-
-                html += '</ul>';
-
-                if (valles.length > 1) {
-                    html += '<hr><h6>⏱️ Intervalos entre riegos:</h6><ul>';
-                    for (let i = 1; i < valles.length; i++) {
-                        const diffMinutos = (new Date(valles[i].x) - new Date(valles[i - 1].x)) / 60000;
-                        html += `<li>Entre riego ${i} y ${i + 1}: ${diffMinutos.toFixed(0)} minutos</li>`;
-                    }
-                    html += '</ul>';
-                }
-
+                
+                const aguaTotal = ciclos.reduce((s, c) => s + c.aumento, 0);
+                html += `<tr class="table-info"><td colspan="3"><strong>Total agua aplicada:</strong></td><td colspan="2"><strong>${aguaTotal.toFixed(1)} kg</strong></td></tr>`;
+                html += '</tbody></table></div>';
                 modalBody.innerHTML = html;
             }
-
-            const modal = new bootstrap.Modal(document.getElementById('modalRiegos'));
-            modal.show();
+            new bootstrap.Modal(document.getElementById('modalRiegos')).show();
         }
     </script>
-
 </body>
 
 </html>
