@@ -283,4 +283,3 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'brandon.portillo@popoyan.com.gt'
 EMAIL_HOST_PASSWORD = 'basica1M'
-EMAIL_HOST_PASSWORD = 'gxgp payx qwyd dgiy'
