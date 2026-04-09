@@ -120,7 +120,6 @@
         async function fetchData() {
             const res = await fetch('/iotappweb/aranet-curvas-json/');
             allData = await res.json();
-            console.log('Datos cargados:', allData);
             initFilters();
             renderCharts();
         }
@@ -129,62 +128,40 @@
             const fincaSel = document.getElementById('finca-filter');
             const privaSel = document.getElementById('priva-filter');
 
-            const fincas = [...new Set(allData.map(d => d.finca).filter(f => f))];
-            const privas = [...new Set(allData.map(d => d.priva).filter(p => p))];
+            const fincas = [...new Set(allData.map(d => d.finca))];
+            const privas = [...new Set(allData.map(d => d.priva))];
 
-            fincaSel.innerHTML = '<option value="">Todas</option>' + fincas.map(f => '<option value="' + f + '">' + f + '</option>').join('');
-            privaSel.innerHTML = '<option value="">Todas</option>' + privas.map(p => '<option value="' + p + '">' + p + '</option>').join('');
+            fincaSel.innerHTML = `<option value="">Todas</option>` + fincas.map(f => `<option>${f}</option>`).join('');
+            privaSel.innerHTML = `<option value="">Todas</option>` + privas.map(p => `<option>${p}</option>`).join('');
 
             const cont = document.getElementById('sensor-filters');
             cont.innerHTML = '';
 
-            const sensoresOrdenados = [...allData].sort((a, b) => {
-                if (a.estructura === b.estructura) {
-                    return (a.nombre || a.sensor).localeCompare(b.nombre || b.sensor);
-                }
-                return (a.estructura || '').localeCompare(b.estructura || '');
-            });
-
-            sensoresOrdenados.forEach((d, i) => {
+            // 🔥 IMPORTANTE: usar index único
+            allData.forEach((d, i) => {
                 cont.innerHTML += `
-                <div>
-                    <input type="checkbox" value="${d.sensor}" id="sensor_${i}" checked onchange="renderCharts()">
-                    <label for="sensor_${i}">
-                        <strong>${d.estructura || 'Sin estructura'}</strong> - ${d.nombre || d.sensor}
-                    </label>
-                </div>
-            `;
+            <div>
+                <input type="checkbox" value="${d.sensor}" id="sensor_${i}" checked onchange="renderCharts()">
+                <label for="sensor_${i}">
+                    ${d.nombre || d.sensor}
+                </label>
+            </div>
+        `;
             });
 
-            fincaSel.onchange = function () {
-                const fincaSeleccionada = fincaSel.value;
-                if (fincaSeleccionada) {
-                    const privasDisponibles = [...new Set(allData
-                        .filter(function (d) { return d.finca === fincaSeleccionada; })
-                        .map(function (d) { return d.priva; })
-                        .filter(function (p) { return p; }))];
-                    privaSel.innerHTML = '<option value="">Todas</option>' +
-                        privasDisponibles.map(function (p) { return '<option value="' + p + '">' + p + '</option>'; }).join('');
-                } else {
-                    privaSel.innerHTML = '<option value="">Todas</option>' +
-                        privas.map(function (p) { return '<option value="' + p + '">' + p + '</option>'; }).join('');
-                }
-                renderCharts();
-            };
-
+            fincaSel.onchange = renderCharts;
             privaSel.onchange = renderCharts;
             document.getElementById('time-filter').onchange = renderCharts;
         }
 
+        // filtro tiempo
         function filterTime(readings) {
             const h = document.getElementById('time-filter').value;
             const now = new Date();
-            const horas = parseInt(h);
-            return readings.filter(function (r) {
-                return (now - new Date(r.timestamp)) <= horas * 3600000;
-            });
+            return readings.filter(r => (now - new Date(r.timestamp)) <= h * 3600000);
         }
 
+        // 🔴 DETECTAR VALLES
         function getValleys(data) {
             let valleys = [];
             for (let i = 1; i < data.length - 1; i++) {
@@ -195,225 +172,131 @@
             return valleys;
         }
 
+        // modal
         function showModal(sensor, valleys) {
-            let html = '<h6>Sensor: ' + sensor + '</h6>';
-            html += '<b>Riegos detectados:</b><ul>';
+            let html = "<b>Riegos detectados:</b><ul>";
 
-            valleys.forEach(function (v) {
-                html += '<li>' + new Date(v.x).toLocaleString() + '</li>';
+            valleys.forEach(v => {
+                html += `<li>${new Date(v.x).toLocaleString()}</li>`;
             });
 
-            if (valleys.length === 0) {
-                html += '<li>No se detectaron riegos</li>';
+            html += "</ul><b>Intervalos (min):</b><ul>";
+
+            for (let i = 1; i < valleys.length; i++) {
+                let diff = (new Date(valleys[i].x) - new Date(valleys[i - 1].x)) / 60000;
+                html += `<li>${diff.toFixed(1)} min</li>`;
             }
 
-            html += '</ul>';
-
-            if (valleys.length > 1) {
-                html += '<b>Intervalos entre riegos (min):</b><ul>';
-                for (let i = 1; i < valleys.length; i++) {
-                    let diff = (new Date(valleys[i].x) - new Date(valleys[i - 1].x)) / 60000;
-                    html += '<li>' + diff.toFixed(1) + ' min</li>';
-                }
-                html += '</ul>';
-            }
+            html += "</ul>";
 
             document.getElementById('modal-body').innerHTML = html;
             new bootstrap.Modal(document.getElementById('modalValle')).show();
         }
 
         function renderCharts() {
-            charts.forEach(function (c) {
-                if (c && typeof c.destroy === 'function') {
-                    c.destroy();
-                }
-            });
+            // Destruir gráficos antiguos
+            charts.forEach(c => c.destroy());
             charts = [];
 
             const finca = document.getElementById('finca-filter').value;
             const priva = document.getElementById('priva-filter').value;
-            const horasFiltro = document.getElementById('time-filter').value;
 
             const selectedSensors = Array.from(document.querySelectorAll('#sensor-filters input:checked'))
-                .map(function (cb) { return cb.value; });
+                .map(cb => cb.value);
 
-            console.log('Sensores seleccionados:', selectedSensors);
+            // Filtrar datos por sensores, finca y priva
+            const data = allData
+                .filter(d => selectedSensors.includes(d.sensor))
+                .filter(d => !finca || d.finca == finca)
+                .filter(d => !priva || d.priva == priva);
 
-            let data = allData.filter(function (d) {
-                return selectedSensors.includes(d.sensor);
-            });
-            data = data.filter(function (d) {
-                return !finca || d.finca === finca;
-            });
-            data = data.filter(function (d) {
-                return !priva || d.priva === priva;
-            });
-
-            console.log('Datos después de filtros:', data.length);
-
-            if (data.length === 0) {
-                const container = document.getElementById('charts-container');
-                container.innerHTML = '<div class="alert alert-warning">No hay datos para los filtros seleccionados</div>';
-                document.getElementById('valley-counters').innerHTML = '';
-                return;
-            }
-
+            // Agrupar por estructura
             const grupos = {};
-            data.forEach(function (d) {
-                const estructura = d.estructura || 'Sin estructura';
-                if (!grupos[estructura]) grupos[estructura] = [];
-                grupos[estructura].push(d);
+            data.forEach(d => {
+                if (!grupos[d.estructura]) grupos[d.estructura] = [];
+                grupos[d.estructura].push(d);
             });
-
-            console.log('Estructuras encontradas:', Object.keys(grupos));
 
             const container = document.getElementById('charts-container');
             container.innerHTML = '';
 
             const valleyContainer = document.getElementById('valley-counters');
-            valleyContainer.innerHTML = '<h6>📊 Resumen de riegos por sensor:</h6>';
+            valleyContainer.innerHTML = '';
 
-            let graficosCreados = 0;
-            const estructurasOrdenadas = Object.keys(grupos).sort();
+            // Recorrer cada estructura
+            Object.keys(grupos).forEach((estructura, idx) => {
+                const canvasId = `chart_${idx}`;
 
-            for (let idx = 0; idx < estructurasOrdenadas.length; idx++) {
-                const estructura = estructurasOrdenadas[idx];
-                const sensoresEnEstructura = grupos[estructura];
-                console.log('Estructura ' + estructura + ': ' + sensoresEnEstructura.length + ' sensores');
-
-                const canvasId = 'chart_' + estructura.replace(/\s+/g, '_') + '_' + idx;
-
+                // Crear contenedor de la gráfica
                 container.innerHTML += `
-                <div class="col-md-6 mb-3">
-                    <div class="card p-2">
-                        <h6>📈 ${estructura} (${sensoresEnEstructura.length} sensor/es)</h6>
-                        <canvas id="${canvasId}" style="height: 300px; width: 100%;"></canvas>
-                    </div>
+            <div class="col-md-6 mb-3">
+                <div class="card p-2">
+                    <h6>${estructura}</h6>
+                    <canvas id="${canvasId}"></canvas>
+                </div>
+            </div>
+        `;
+
+                // Preparar datasets para cada sensor dentro de esta estructura
+                const datasets = grupos[estructura].map(d => {
+                    const filtered = filterTime(d.readings);
+                    if (!filtered.length) return null;
+
+                    const dataPoints = filtered.map(r => ({ x: new Date(r.timestamp), y: r.value }));
+                    const valleys = getValleys(dataPoints);
+
+                    // Mostrar valles en el contador
+                    valleyContainer.innerHTML += `
+                <div>
+                    <span class="valley-dot"></span>
+                    ${d.nombre || d.sensor}: ${valleys.length}
+                    <button class="btn btn-sm btn-outline-primary"
+                        onclick='showModal("${d.nombre || d.sensor}", ${JSON.stringify(valleys)})'>
+                        ver
+                    </button>
                 </div>
             `;
 
-                const datasets = [];
+                    const pointColors = dataPoints.map(p =>
+                        valleys.find(v => v.x.getTime() === p.x.getTime()) ? 'red' : 'blue'
+                    );
 
-                for (let s = 0; s < sensoresEnEstructura.length; s++) {
-                    const d = sensoresEnEstructura[s];
-                    const filteredReadings = filterTime(d.readings);
-
-                    if (filteredReadings.length === 0) {
-                        console.log('Sensor ' + (d.nombre || d.sensor) + ' sin datos en el rango de ' + horasFiltro + 'h');
-                        continue;
-                    }
-
-                    const dataPoints = filteredReadings.map(function (r) {
-                        return {
-                            x: new Date(r.timestamp),
-                            y: r.value
-                        };
-                    });
-
-                    const valleys = getValleys(dataPoints);
-
-                    valleyContainer.innerHTML += `
-                    <div class="mb-1">
-                        <span class="valley-dot"></span>
-                        <strong>${estructura}</strong> - ${d.nombre || d.sensor}: 
-                        <span class="badge bg-danger">${valleys.length} riegos</span>
-                        <button class="btn btn-sm btn-outline-primary ms-2"
-                            onclick='showModal("${(d.nombre || d.sensor).replace(/'/g, "\\'")}", ${JSON.stringify(valleys)})'>
-                            📋 detalles
-                        </button>
-                    </div>
-                `;
-
-                    const pointColors = dataPoints.map(function (p) {
-                        return valleys.some(function (v) {
-                            return v.x.getTime() === p.x.getTime();
-                        }) ? 'red' : '#36A2EB';
-                    });
-
-                    const hue = (datasets.length * 137.5) % 360;
-
-                    datasets.push({
+                    return {
                         label: d.nombre || d.sensor,
                         data: dataPoints,
-                        borderColor: 'hsl(' + hue + ', 70%, 50%)',
-                        backgroundColor: 'hsl(' + hue + ', 70%, 50%, 0.1)',
+                        borderColor: `hsl(${Math.random() * 360},70%,50%)`,
                         tension: 0.3,
                         pointRadius: 4,
-                        pointHoverRadius: 6,
-                        pointBackgroundColor: pointColors,
-                        pointBorderColor: pointColors.map(function (c) { return c === 'red' ? 'darkred' : 'darkblue'; }),
-                        fill: false
-                    });
-                }
+                        pointBackgroundColor: pointColors
+                    };
+                }).filter(Boolean);
 
-                if (datasets.length === 0) {
-                    console.log('No hay datasets para estructura ' + estructura);
-                    continue;
-                }
+                const ctx = document.getElementById(canvasId).getContext('2d');
 
-                const canvas = document.getElementById(canvasId);
-                if (!canvas) {
-                    console.error('Canvas ' + canvasId + ' no encontrado');
-                    continue;
-                }
-
-                const ctx = canvas.getContext('2d');
-
-                const chart = new Chart(ctx, {
+                // Crear gráfico solo si hay datos
+                charts.push(new Chart(ctx, {
                     type: 'line',
-                    data: { datasets: datasets },
+                    data: { datasets },
                     options: {
                         responsive: true,
-                        maintainAspectRatio: true,
                         plugins: {
-                            legend: {
-                                display: true,
-                                position: 'top',
-                                labels: { font: { size: 11 } }
-                            },
-                            tooltip: {
-                                mode: 'index',
-                                intersect: false
+                            legend: { display: true },
+                            title: {
+                                display: datasets.length === 0,
+                                text: 'Sin datos en este rango'
                             }
                         },
                         scales: {
-                            x: {
-                                type: 'time',
-                                time: {
-                                    tooltipFormat: 'dd/MM/yyyy HH:mm',
-                                    displayFormats: {
-                                        hour: 'HH:mm',
-                                        minute: 'HH:mm'
-                                    }
-                                },
-                                title: { display: true, text: 'Fecha/Hora' }
-                            },
-                            y: {
-                                title: { display: true, text: 'Peso (kg)' },
-                                beginAtZero: false
-                            }
-                        },
-                        interaction: {
-                            mode: 'nearest',
-                            axis: 'x',
-                            intersect: false
+                            x: { type: 'time', time: { tooltipFormat: 'dd LLL yyyy HH:mm' } },
+                            y: { title: { display: true, text: 'kg' } }
                         }
                     }
-                });
-
-                charts.push(chart);
-                graficosCreados++;
-            }
-
-            if (graficosCreados === 0) {
-                container.innerHTML = '<div class="alert alert-info">No hay datos para mostrar en el rango seleccionado</div>';
-            }
-
-            console.log('Total de gráficos creados: ' + graficosCreados);
+                }));
+            });
         }
-
         fetchData();
     </script>
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
