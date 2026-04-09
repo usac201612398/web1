@@ -502,13 +502,13 @@ def evaluar_sensor(sensor_obj):
     cambio = actual - anterior
 
     # 1. ignorar ruido (<2%)
-    if abs(cambio) < 2:
-        return None
+    #if abs(cambio) < 2:
+    #    return None
 
     # 2. ignorar saltos bruscos (>5%)
-    if abs(cambio) > 5:
-        print("⚠️ Salto brusco:", cambio)
-        return None
+    #if abs(cambio) > 5:
+    #    print("⚠️ Salto brusco:", cambio)
+    #    return None
 
     # 3. validar tendencia progresiva
     tendencia_subida = all(
@@ -547,22 +547,26 @@ def evaluar_sensor(sensor_obj):
 
 def enviar_alerta(data):
     if data["tipo"] == "riego":
+        sensor_obj = data["sensor"]
+
         mensaje = (
             f"🚨 NECESITA RIEGO\n"
-            f"Sensor: {data['sensor']}\n"
-            f"Finca: {finca}\n"
-            f"Estructura: {estructura}\n"
-            f"Priva: {priva}\n"
+            f"Sensor: {sensor_obj.sensor}\n"
+            f"Finca: {sensor_obj.finca}\n"
+            f"Estructura: {sensor_obj.estructura}\n"
+            f"Priva: {sensor_obj.priva}\n"
             f"Pérdida: {data['porcentaje_perdida']:.2f}%"
         )
     elif data["tipo"] == "exceso":
+        sensor_obj = data["sensor"]
+
         mensaje = (
             f"💧 EXCESO DE RIEGO\n"
-            f"Sensor: {data['sensor']}\n"
-            f"Finca: {finca}\n"
-            f"Estructura: {estructura}\n"
-            f"Priva: {priva}\n"
-            f"Exceso: {data['porcentaje_perdida']:.2f}%"
+            f"Sensor: {sensor_obj.sensor}\n"
+            f"Finca: {sensor_obj.finca}\n"
+            f"Estructura: {sensor_obj.estructura}\n"
+            f"Priva: {sensor_obj.priva}\n"
+            f"Pérdida: {data['porcentaje_perdida']:.2f}%"
         )
     else:
         return
