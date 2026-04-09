@@ -515,7 +515,7 @@ def evaluar_sensor(sensor_obj):
         "cambio": 0,  # ya no calculamos cambio
         "tipo": tipo
     }
-    
+
 def enviar_alerta(data):
     if data["tipo"] == "riego":
         sensor_obj = data["sensor"]
@@ -552,12 +552,15 @@ def enviar_alerta(data):
 
     # Enviar WhatsApp
     #for numero in ["+50230664716","+50240304201","+50253050677"]:
+    '''
     for numero in ["+50230664716"]:
         try:
             enviar_whatsapp(mensaje, numero)
         except Exception as e:
-            print("❌ ERROR WhatsApp:", str(e)) 
+            print("❌ ERROR WhatsApp:", str(e))
+    '''
 # Retorna los últimos 20 registros en JSON
+
 def aranet_data_json(request):
     readings = SensorData.objects.select_related('sensor').order_by('-timestamp')[:20]
 
