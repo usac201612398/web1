@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard Aranet - Ciclos de Riego</title>
+    <title>Dashboard Aranet - Riegos Precisos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.0/build/global/luxon.min.js"></script>
@@ -24,6 +24,7 @@
         .leyenda { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 5px; }
         .leyenda-inicio { background: #ff9800; }
         .leyenda-fin { background: #4caf50; }
+        .alert-warning { background: #fff3cd; padding: 5px 10px; border-radius: 5px; font-size: 12px; }
     </style>
 </head>
 
@@ -32,7 +33,7 @@
     <div class="container-fluid">
         <div class="dashboard-header">
             <h2>💧 Dashboard de Ciclos de Riego</h2>
-            <p class="text-muted mb-0">Detección de ciclos completos: Mínimo (inicio) → Máximo (fin del riego)</p>
+            <p class="text-muted mb-0">Detección precisa de ciclos completos: Mínimo (inicio) → Máximo (fin del riego)</p>
         </div>
 
         <div class="filters-card">
@@ -65,32 +66,33 @@
                 <div class="row">
                     <div class="col-md-3">
                         <label class="small">📊 Aumento mínimo (kg):</label>
-                        <input type="number" id="aumentoMin" value="1.5" step="0.5">
-                        <div class="info-text">Ganancia mínima para ciclo de riego</div>
+                        <input type="number" id="aumentoMin" value="1.2" step="0.2">
+                        <div class="info-text">Mínimo para considerar riego</div>
                     </div>
                     <div class="col-md-3">
                         <label class="small">⏱️ Duración máxima (min):</label>
-                        <input type="number" id="duracionMax" value="120" step="15">
-                        <div class="info-text">Tiempo máximo del ciclo</div>
+                        <input type="number" id="duracionMax" value="90" step="10">
+                        <div class="info-text">Tiempo máximo del riego</div>
                     </div>
                     <div class="col-md-3">
-                        <label class="small">🔇 Ruido (kg):</label>
-                        <input type="number" id="filtroRuido" value="0.3" step="0.1">
+                        <label class="small">🔇 Filtro ruido (kg):</label>
+                        <input type="number" id="filtroRuido" value="0.5" step="0.1">
                         <div class="info-text">Fluctuaciones ignoradas</div>
                     </div>
                     <div class="col-md-3">
-                        <label class="small">⏸️ Min entre ciclos:</label>
-                        <input type="number" id="minEntreCiclos" value="60" step="15">
+                        <label class="small">⏸️ Min entre riegos:</label>
+                        <input type="number" id="minEntreRiegos" value="45" step="15">
                         <div class="info-text">Tiempo entre riegos</div>
                     </div>
                 </div>
                 <div class="row mt-2">
                     <div class="col-md-12">
-                        <button class="btn btn-secondary btn-sm" onclick="reDetectar()">🎯 Re-detectar ciclos</button>
+                        <button class="btn btn-secondary btn-sm" onclick="reDetectar()">🎯 Re-detectar</button>
                         <span class="ms-3 text-muted small">
-                            <span class="leyenda leyenda-inicio"></span> Inicio riego (mínimo) &nbsp;
-                            <span class="leyenda leyenda-fin"></span> Fin riego (máximo)
+                            <span class="leyenda leyenda-inicio"></span> Inicio riego &nbsp;
+                            <span class="leyenda leyenda-fin"></span> Fin riego
                         </span>
+                        <span class="ms-3 text-warning small">⚠️ Ajusta el "Aumento mínimo" si detecta muchos falsos riegos</span>
                     </div>
                 </div>
             </div>
@@ -138,130 +140,150 @@
 
         function reDetectar() { renderizar(); }
 
-        // 🎯 DETECCIÓN DE CICLOS: Mínimo (inicio) → Máximo (fin)
-        function detectarCiclosRiego(datos) {
-            if (datos.length < 10) return [];
+        // 🎯 DETECCIÓN PRECISA DE RIEGOS - Versión mejorada
+        function detectarRiegosReales(datos) {
+            if (datos.length < 20) return [];
             
             const aumentoMin = parseFloat(document.getElementById('aumentoMin').value);
             const duracionMaxMin = parseFloat(document.getElementById('duracionMax').value);
             const filtroRuido = parseFloat(document.getElementById('filtroRuido').value);
-            const minEntreCiclos = parseFloat(document.getElementById('minEntreCiclos').value);
+            const minEntreRiegos = parseFloat(document.getElementById('minEntreRiegos').value);
             
-            // Suavizar datos
-            const datosSuav = suavizarDatos(datos, 5);
+            // 1. Suavizado fuerte para eliminar ruido
+            const datosSuav = suavizarDatos(datos, 7);
             
-            // 1. Encontrar todos los mínimos locales (posibles inicios de riego)
-            const minimos = [];
-            for (let i = 5; i < datosSuav.length - 5; i++) {
+            // 2. Detectar tendencias: donde hay subidas significativas
+            const tendencias = [];
+            let i = 5;
+            
+            while (i < datosSuav.length - 10) {
+                // Buscar inicio de posible riego (mínimo local)
+                let inicioCiclo = null;
+                let valorInicio = null;
+                
+                // Verificar si estamos en un mínimo local
                 let esMinimo = true;
-                for (let j = -5; j <= 5; j++) {
+                for (let j = -3; j <= 3; j++) {
                     if (j !== 0 && datosSuav[i+j].y <= datosSuav[i].y - filtroRuido) {
                         esMinimo = false;
                         break;
                     }
                 }
-                if (esMinimo) {
-                    minimos.push({ idx: i, x: datosSuav[i].x, y: datosSuav[i].y });
-                }
-            }
-            
-            // 2. Para cada mínimo, buscar el máximo posterior que complete el ciclo
-            const ciclos = [];
-            
-            for (let i = 0; i < minimos.length; i++) {
-                const minimo = minimos[i];
-                let mejorMaximo = null;
-                let mejorAumento = 0;
                 
-                // Buscar máximos después de este mínimo
-                for (let j = minimo.idx + 2; j < Math.min(minimo.idx + 30, datosSuav.length - 2); j++) {
-                    // Verificar si es un máximo local
-                    let esMaximo = true;
-                    for (let k = -2; k <= 2; k++) {
-                        if (k !== 0 && datosSuav[j+k].y >= datosSuav[j].y + filtroRuido) {
-                            esMaximo = false;
-                            break;
-                        }
-                    }
+                if (esMinimo) {
+                    inicioCiclo = datosSuav[i];
+                    valorInicio = inicioCiclo.y;
                     
-                    if (esMaximo) {
-                        const aumento = datosSuav[j].y - minimo.y;
-                        const duracion = (datosSuav[j].x - minimo.x) / 60000;
+                    // Buscar el máximo posterior (fin del riego)
+                    let mejorMaximo = null;
+                    let mejorAumento = 0;
+                    let mejorIndice = i;
+                    
+                    // Mirar hacia adelante hasta duracionMaxMin minutos
+                    const maxPuntos = Math.min(i + Math.floor(duracionMaxMin / 3), datosSuav.length - 5);
+                    
+                    for (let j = i + 2; j < maxPuntos; j++) {
+                        // Verificar si es un máximo local
+                        let esMaximo = true;
+                        for (let k = -2; k <= 2; k++) {
+                            if (k !== 0 && datosSuav[j+k].y >= datosSuav[j].y + filtroRuido) {
+                                esMaximo = false;
+                                break;
+                            }
+                        }
                         
-                        // Verificar condiciones
-                        if (aumento >= aumentoMin && duracion <= duracionMaxMin) {
-                            if (aumento > mejorAumento) {
-                                mejorMaximo = { idx: j, x: datosSuav[j].x, y: datosSuav[j].y, aumento, duracion };
-                                mejorAumento = aumento;
+                        if (esMaximo) {
+                            const aumento = datosSuav[j].y - valorInicio;
+                            const duracion = (datosSuav[j].x - inicioCiclo.x) / 60000;
+                            
+                            // Condiciones para ser un riego real
+                            if (aumento >= aumentoMin && duracion <= duracionMaxMin && duracion >= 5) {
+                                // Verificar que después del máximo hay una meseta o descenso suave
+                                let tieneMeseta = true;
+                                let puntosPost = 0;
+                                for (let k = j + 1; k < Math.min(j + 10, datosSuav.length); k++) {
+                                    const diferencia = Math.abs(datosSuav[k].y - datosSuav[j].y);
+                                    if (diferencia > filtroRuido * 2) {
+                                        puntosPost++;
+                                    }
+                                    if (puntosPost > 5) {
+                                        tieneMeseta = false;
+                                        break;
+                                    }
+                                }
+                                
+                                if (tieneMeseta && aumento > mejorAumento) {
+                                    mejorMaximo = { idx: j, x: datosSuav[j].x, y: datosSuav[j].y, aumento, duracion };
+                                    mejorAumento = aumento;
+                                    mejorIndice = j;
+                                }
                             }
                         }
                     }
-                }
-                
-                if (mejorMaximo) {
-                    ciclos.push({
-                        inicio: minimo.x,
-                        fin: mejorMaximo.x,
-                        valorInicio: minimo.y,
-                        valorFin: mejorMaximo.y,
-                        aumento: mejorMaximo.aumento,
-                        duracionMinutos: mejorMaximo.duracion
-                    });
-                }
-            }
-            
-            // 3. Filtrar ciclos superpuestos (quedarse con el de mayor aumento)
-            const ciclosUnicos = [];
-            for (let i = 0; i < ciclos.length; i++) {
-                let esUnico = true;
-                for (let j = 0; j < ciclosUnicos.length; j++) {
-                    const diffMin = Math.abs(ciclos[i].inicio - ciclosUnicos[j].inicio) / 60000;
-                    if (diffMin < minEntreCiclos) {
-                        if (ciclos[i].aumento <= ciclosUnicos[j].aumento) {
-                            esUnico = false;
-                            break;
-                        } else {
-                            ciclosUnicos.splice(j, 1);
-                            j--;
-                        }
+                    
+                    if (mejorMaximo) {
+                        tendencias.push({
+                            inicio: inicioCiclo.x,
+                            fin: mejorMaximo.x,
+                            valorInicio: valorInicio,
+                            valorFin: mejorMaximo.y,
+                            aumento: mejorMaximo.aumento,
+                            duracionMinutos: mejorMaximo.duracion
+                        });
+                        i = mejorIndice + 10; // Saltar para no detectar el mismo
+                        continue;
                     }
                 }
-                if (esUnico) ciclosUnicos.push(ciclos[i]);
+                i++;
             }
             
-            // Ordenar por tiempo
-            ciclosUnicos.sort((a, b) => a.inicio - b.inicio);
+            // 3. Filtrar riegos demasiado cercanos
+            const riegosFiltrados = [];
+            for (let i = 0; i < tendencias.length; i++) {
+                if (i === 0) {
+                    riegosFiltrados.push(tendencias[i]);
+                } else {
+                    const diffMinutos = (tendencias[i].inicio - tendencias[i-1].inicio) / 60000;
+                    if (diffMinutos >= minEntreRiegos) {
+                        riegosFiltrados.push(tendencias[i]);
+                    } else if (tendencias[i].aumento > tendencias[i-1].aumento) {
+                        // Reemplazar si el nuevo es más significativo
+                        riegosFiltrados[riegosFiltrados.length - 1] = tendencias[i];
+                    }
+                }
+            }
             
-            console.log(`Ciclos detectados: ${ciclosUnicos.length}`);
-            return ciclosUnicos;
+            console.log(`Riegos detectados: ${riegosFiltrados.length} (de ${tendencias.length} candidatos)`);
+            return riegosFiltrados;
         }
 
         function suavizarDatos(datos, ventana) {
             const suavizados = [];
             for (let i = 0; i < datos.length; i++) {
                 let suma = 0, count = 0;
-                for (let j = -ventana; j <= ventana; j++) {
-                    const idx = i + j;
-                    if (idx >= 0 && idx < datos.length) {
-                        suma += datos[idx].y;
-                        count++;
-                    }
+                const inicio = Math.max(0, i - ventana);
+                const fin = Math.min(datos.length, i + ventana + 1);
+                for (let j = inicio; j < fin; j++) {
+                    suma += datos[j].y;
+                    count++;
                 }
                 suavizados.push({ x: datos[i].x, y: suma / count });
             }
             return suavizados;
         }
 
-        function marcarPuntosRiego(datos, ciclos) {
+        function marcarPuntosRiego(datos, riegos) {
             const puntos = [];
-            ciclos.forEach(ciclo => {
-                // Buscar punto exacto de inicio (mínimo)
-                const inicio = datos.find(p => Math.abs(p.x - ciclo.inicio) < 60000);
-                if (inicio) puntos.push({ x: inicio.x, y: inicio.y, tipo: 'inicio', aumento: ciclo.aumento });
+            riegos.forEach(riego => {
+                // Buscar punto exacto de inicio
+                let inicio = datos.find(p => Math.abs(p.x - riego.inicio) < 120000);
+                if (!inicio) inicio = datos.reduce((prev, curr) => Math.abs(curr.x - riego.inicio) < Math.abs(prev.x - riego.inicio) ? curr : prev);
+                if (inicio) puntos.push({ x: inicio.x, y: inicio.y, tipo: 'inicio', aumento: riego.aumento });
                 
-                // Buscar punto exacto de fin (máximo)
-                const fin = datos.find(p => Math.abs(p.x - ciclo.fin) < 60000);
-                if (fin) puntos.push({ x: fin.x, y: fin.y, tipo: 'fin', aumento: ciclo.aumento });
+                // Buscar punto exacto de fin
+                let fin = datos.find(p => Math.abs(p.x - riego.fin) < 120000);
+                if (!fin) fin = datos.reduce((prev, curr) => Math.abs(curr.x - riego.fin) < Math.abs(prev.x - riego.fin) ? curr : prev);
+                if (fin) puntos.push({ x: fin.x, y: fin.y, tipo: 'fin', aumento: riego.aumento });
             });
             return puntos;
         }
@@ -333,10 +355,13 @@
                     if (lecturas.length === 0) continue;
 
                     const dataPoints = lecturas.map(r => ({ x: new Date(r.timestamp), y: r.value }));
-                    const ciclos = detectarCiclosRiego(dataPoints);
-                    const puntosRiego = marcarPuntosRiego(dataPoints, ciclos);
+                    const riegos = detectarRiegosReales(dataPoints);
+                    const puntosRiego = marcarPuntosRiego(dataPoints, riegos);
 
                     const chartId = `chart_${sensor.sensor_id.replace(/[^a-zA-Z0-9]/g, '_')}`;
+                    
+                    const aguaPromedio = riegos.length > 0 ? (riegos.reduce((s, c) => s + c.aumento, 0) / riegos.length).toFixed(1) : 0;
+                    const aguaTotal = riegos.reduce((s, c) => s + c.aumento, 0).toFixed(1);
                     
                     const colDiv = document.createElement('div');
                     colDiv.className = 'col-md-6 col-lg-4 mb-4';
@@ -349,9 +374,9 @@
                                         <small>${sensor.finca} | ${sensor.priva}</small>
                                     </div>
                                     <div>
-                                        <span class="riego-badge">💧 ${ciclos.length} ciclos</span>
+                                        <span class="riego-badge">💧 ${riegos.length} riegos</span>
                                         <button class="btn btn-sm btn-outline-info ms-2" 
-                                                onclick="event.stopPropagation(); mostrarDetalle('${sensor.nombre}', ${JSON.stringify(ciclos).replace(/"/g, '&quot;')})">
+                                                onclick="event.stopPropagation(); mostrarDetalle('${sensor.nombre}', ${JSON.stringify(riegos).replace(/"/g, '&quot;')})">
                                             Ver detalles
                                         </button>
                                     </div>
@@ -359,7 +384,7 @@
                             </div>
                             <div id="${chartId}" style="height: 300px;"><canvas id="canvas_${chartId}"></canvas></div>
                             <div class="mt-2 small text-muted">
-                                💧 Agua por riego: ~${ciclos.length > 0 ? (ciclos.reduce((s, c) => s + c.aumento, 0) / ciclos.length).toFixed(1) : 0} kg promedio
+                                💧 Agua por riego: ~${aguaPromedio} kg | Total: ${aguaTotal} kg
                             </div>
                         </div>
                     `;
@@ -374,7 +399,7 @@
                                 borderColor: '#2196f3',
                                 borderWidth: 2,
                                 pointRadius: 0,
-                                tension: 0.3,
+                                tension: 0.2,
                                 fill: true,
                                 backgroundColor: 'rgba(33, 150, 243, 0.05)'
                             }];
@@ -386,8 +411,8 @@
                                     type: 'scatter',
                                     backgroundColor: puntosRiego.map(p => p.tipo === 'inicio' ? '#ff9800' : '#4caf50'),
                                     borderColor: '#fff',
-                                    pointRadius: 7,
-                                    pointHoverRadius: 10,
+                                    pointRadius: 8,
+                                    pointHoverRadius: 12,
                                     pointBorderWidth: 2,
                                     showLine: false
                                 });
@@ -406,7 +431,7 @@
                                                 label: (ctx) => {
                                                     if (ctx.dataset.label === '🚿 Ciclo de riego') {
                                                         const tipo = ctx.raw.tipo === 'inicio' ? '🌱 Inicio riego' : '✅ Fin riego';
-                                                        return `${tipo}: ${ctx.raw.y.toFixed(1)} kg`;
+                                                        return `${tipo}: ${ctx.raw.y.toFixed(1)} kg (+${ctx.raw.aumento?.toFixed(1)} kg)`;
                                                     }
                                                     return `Peso: ${ctx.raw.y.toFixed(1)} kg`;
                                                 }
@@ -414,7 +439,7 @@
                                         }
                                     },
                                     scales: {
-                                        x: { type: 'time', time: { unit: 'hour' }, title: { display: true, text: 'Hora' } },
+                                        x: { type: 'time', time: { unit: 'hour', displayFormats: { hour: 'HH:mm' } }, title: { display: true, text: 'Hora' } },
                                         y: { title: { display: true, text: 'Peso (kg)' }, beginAtZero: false }
                                     }
                                 }
@@ -431,26 +456,26 @@
             if (div) div.style.height = div.style.height === '300px' ? '0px' : '300px';
         }
 
-        function mostrarDetalle(nombreSensor, ciclos) {
+        function mostrarDetalle(nombreSensor, riegos) {
             const modalBody = document.getElementById('modalRiegosBody');
-            if (ciclos.length === 0) {
+            if (riegos.length === 0) {
                 modalBody.innerHTML = `<div class="alert alert-success">No se detectaron ciclos de riego para <strong>${nombreSensor}</strong></div>`;
             } else {
-                let html = `<h6>📊 ${nombreSensor}</h6><p>Total de ciclos: <span class="badge bg-success">${ciclos.length}</span></p>`;
+                let html = `<h6>📊 ${nombreSensor}</h6><p>Total de riegos: <span class="badge bg-success">${riegos.length}</span></p>`;
                 html += '<div class="table-responsive"><table class="table table-sm">';
                 html += '<thead><tr><th>#</th><th>🌱 Inicio</th><th>✅ Fin</th><th>💧 Agua (kg)</th><th>⏱️ Duración</th></tr></thead><tbody>';
                 
-                ciclos.forEach((ciclo, idx) => {
+                riegos.forEach((riego, idx) => {
                     html += `<tr>
                         <td>${idx + 1}</td>
-                        <td>${new Date(ciclo.inicio).toLocaleString()}</td>
-                        <td>${new Date(ciclo.fin).toLocaleString()}</td>
-                        <td class="text-success">+${ciclo.aumento.toFixed(1)} kg</td>
-                        <td>${ciclo.duracionMinutos.toFixed(0)} min</td>
+                        <td>${new Date(riego.inicio).toLocaleString()}</td>
+                        <td>${new Date(riego.fin).toLocaleString()}</td>
+                        <td class="text-success">+${riego.aumento.toFixed(1)} kg</td>
+                        <td>${riego.duracionMinutos.toFixed(0)} min</td>
                     </tr>`;
                 });
                 
-                const aguaTotal = ciclos.reduce((s, c) => s + c.aumento, 0);
+                const aguaTotal = riegos.reduce((s, c) => s + c.aumento, 0);
                 html += `<tr class="table-info"><td colspan="3"><strong>Total agua aplicada:</strong></td><td colspan="2"><strong>${aguaTotal.toFixed(1)} kg</strong></td></tr>`;
                 html += '</tbody></table></div>';
                 modalBody.innerHTML = html;
