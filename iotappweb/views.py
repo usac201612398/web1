@@ -622,8 +622,7 @@ def aranet_resumen_grafica_page(request):
     return render(request, "iotappweb/graficos_aranet.html")
 
 def aranet_curvas_json(request):
-    rango = request.GET.get('range', '1h')
-
+    rango = request.GET.get('range', '24h')
     ahora = timezone.now()
 
     if rango == '1h':
@@ -635,6 +634,7 @@ def aranet_curvas_json(request):
     else:
         desde = ahora - timedelta(hours=1)
 
+    # Obtener todos los sensores con metric weight
     sensores = SensorData.objects.filter(metric="weight").values_list('sensor', flat=True).distinct()
     resultado = []
 
@@ -653,21 +653,26 @@ def aranet_curvas_json(request):
         readings = [
             {
                 "timestamp": timezone.localtime(r.timestamp).strftime("%Y-%m-%d %H:%M:%S"),
-                "value": r.value
+                "value": float(r.value)  # Asegurar que es número
             }
             for r in readings_qs
         ]
 
         resultado.append({
-            "sensor": str(sensor_obj.sensor),  # id real
-            "nombre": sensor_obj.nombrearanet, # nombre bonito
-            "finca": sensor_obj.finca,
-            "priva": sensor_obj.priva,
-            "estructura": sensor_obj.estructura,
-            "readings": readings
+            "sensor_id": str(sensor_obj.sensor),
+            "nombre": sensor_obj.nombrearanet if sensor_obj.nombrearanet else str(sensor_obj.sensor),
+            "finca": sensor_obj.finca if sensor_obj.finca else "Sin finca",
+            "priva": sensor_obj.priva if sensor_obj.priva else "Sin priva",
+            "estructura": sensor_obj.estructura if sensor_obj.estructura else "Sin estructura",
+            "readings": readings,
+            "total_lecturas": len(readings)
         })
 
+    # Ordenar por estructura y nombre
+    resultado.sort(key=lambda x: (x['estructura'], x['nombre']))
+    
     return JsonResponse(resultado, safe=False)
+    
 def detallesensores_create(request):
     if request.method == 'POST':
         form = sensordetallesForm(request.POST)
