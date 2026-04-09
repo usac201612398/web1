@@ -482,7 +482,7 @@ def evaluar_sensor(sensor_obj):
     readings = SensorData.objects.filter(
         sensor=sensor_obj,
         metric="weight"
-    ).order_by('-timestamp')[:5]
+    ).order_by('-timestamp')[:3]
 
     if len(readings) < 2:
         return None
