@@ -566,7 +566,7 @@ def enviar_correo(mensaje, asunto="Alerta de sensor"):
         send_mail(
             subject=asunto,
             message=mensaje,
-            from_email="brandon.portillo@popoyan.com.gt",,
+            from_email="brandon.portillo@popoyan.com.gt",
             recipient_list=["linday.solares@popoyan.com.gt","luis.quinonez@popoyan.com.gt"],
             fail_silently=False,
         )
