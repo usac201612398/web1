@@ -347,6 +347,32 @@ def histograma_api(request):
         "total_mediciones": total_mediciones
     })
 
+
+def obtener_hpa(temperatura):
+    """
+    temperatura: float (ej 23.47)
+    """
+    temp_redondeada = Decimal(temperatura).quantize(
+        Decimal("0.1"),
+        rounding=ROUND_DOWN
+    )
+
+    registro = VaporSaturacion.objects.filter(
+        temperatura=temp_redondeada
+    ).first()
+
+    return float(registro.presion_hpa) if registro else None
+
+
+def calcular_dh(temperatura, humedad):
+    hpa = obtener_hpa(temperatura)
+    if hpa is None:
+        return None
+
+    dh = abs(hpa * ((humedad / 100) - 1)) * 217 / (temperatura + 273.15)
+    return round(dh, 2)
+
+
 def login_exempt(view_func):
     setattr(view_func, 'login_exempt', True)
     @wraps(view_func)
