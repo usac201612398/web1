@@ -466,7 +466,7 @@ def aranet_webhook(request):
 
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
-        
+
 def aranet_resumen_json(request):
     sensores = SensorData.objects.values_list('sensor', flat=True).distinct()
 
@@ -533,7 +533,6 @@ def aranet_resumen_json(request):
     )
 
     return JsonResponse(resultado_ordenado, safe=False)
-
 def aranet_resumen_page(request):
     return render(request, "iotappweb/aranet_resumen.html")
 
