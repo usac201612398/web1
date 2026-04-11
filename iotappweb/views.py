@@ -468,22 +468,23 @@ def aranet_webhook(request):
         return JsonResponse({"error": str(e)}, status=400)
         
 def aranet_resumen_json(request):
-    # Obtener todos los sensores distintos
     sensores = SensorData.objects.values_list('sensor', flat=True).distinct()
-
     resultado = []
 
     for sensor in sensores:
-        readings = SensorData.objects.filter(
-            sensor=sensor,
-            metric="weight"
-        ).order_by('-timestamp')[:50]
-
-        if not readings:
+        sensor_obj = SensorDetalles.objects.filter(sensor=sensor).first()
+        if not sensor_obj:
             continue
 
-        peso_actual = readings[0].value
-        peso_base = readings[0].sensor.set_point  # aquí tu valor base
+        weight = get_last_value(sensor, "weight")
+        temp = get_last_value(sensor, "temperature")
+        hum = get_last_value(sensor, "humidity")
+
+        if not weight:
+            continue
+
+        peso_actual = weight.value
+        peso_base = sensor_obj.set_point
 
         if peso_base == 0:
             continue
@@ -491,23 +492,29 @@ def aranet_resumen_json(request):
         porcentaje_restante = (peso_actual / peso_base) * 100
         porcentaje_perdida = 100 - porcentaje_restante
 
-        # agregar finca, priva y estructura
+        # calcular DH
+        dh = None
+        if temp and hum:
+            dh = calcular_dh(temp.value, hum.value)
+
         resultado.append({
-            "sensor": str(readings[0].sensor.sensor),
-            "finca": readings[0].sensor.finca,
-            "priva": readings[0].sensor.priva,
-            "estructura": readings[0].sensor.estructura,
+            "sensor": sensor,
+            "finca": sensor_obj.finca,
+            "priva": sensor_obj.priva,
+            "estructura": sensor_obj.estructura,
+
             "peso_actual": round(peso_actual, 3),
             "peso_base": round(peso_base, 3),
+
             "porcentaje_restante": round(porcentaje_restante, 2),
             "porcentaje_perdida": round(porcentaje_perdida, 2),
-        })
-    resultado_ordenado = sorted(
-        resultado,
-        key=lambda x: (x['estructura'], x['priva'])
-    )
-    return JsonResponse(resultado_ordenado, safe=False)
 
+            "temperatura": temp.value if temp else None,
+            "humedad": hum.value if hum else None,
+            "dh": dh
+        })
+
+    return JsonResponse(sorted(resultado, key=lambda x: (x['estructura'], x['priva'])), safe=False)
 def aranet_resumen_page(request):
     return render(request, "iotappweb/aranet_resumen.html")
 

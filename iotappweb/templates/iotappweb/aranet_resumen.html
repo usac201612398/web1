@@ -46,6 +46,9 @@
                     <th>Peso base (kg)</th>
                     <th>% Restante</th>
                     <th>% Pérdida</th>
+                    <th>Temp (°C)</th>
+                    <th>Humedad (%)</th>
+                    <th>DH</th>
                 </tr>
             </thead>
             <tbody>
@@ -83,7 +86,10 @@ function fetchResumen() {
                     r.peso_actual,
                     r.peso_base,
                     r.porcentaje_restante + " %",
-                    r.porcentaje_perdida + " %"
+                    r.porcentaje_perdida + " %",
+                    r.temperatura,
+                    r.humedad,
+                    r.dh
                 ]).nodes().to$().addClass(getRowClass(r.porcentaje_perdida));
             });
 
