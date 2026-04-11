@@ -423,7 +423,7 @@ def aranet_webhook(request):
             metric = record.get("n")
             value = record.get("v")
             unit = record.get("u")
-            print("DEBUG:", current_sensor, metric, value, current_timestamp)
+            
             # Validación
             if not current_sensor or not current_timestamp or not metric or value is None:
                 continue
@@ -515,6 +515,7 @@ def aranet_resumen_json(request):
         })
 
     return JsonResponse(sorted(resultado, key=lambda x: (x['estructura'], x['priva'])), safe=False)
+
 def aranet_resumen_page(request):
     return render(request, "iotappweb/aranet_resumen.html")
 
