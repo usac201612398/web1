@@ -58,9 +58,10 @@ function safe(v) {
 function getRowClass(dh) {
     dh = parseFloat(dh || 0);
 
-    if (dh > 3) return "danger";     // estrés alto
-    if (dh > 1.5) return "warning";  // moderado
-    return "ok";                     // normal
+    if (dh < 0.4) return "warning";   // exceso humedad (hongos)
+    if (dh < 1.2) return "ok";        // óptimo
+    if (dh < 2.0) return "warning";   // estrés leve
+    return "danger";                  // estrés crítico
 }
 
 function fetchClima() {
