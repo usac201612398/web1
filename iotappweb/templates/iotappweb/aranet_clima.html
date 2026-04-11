@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Clima Sensores</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+    <style>
+        td, th {
+            white-space: nowrap;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .ok { background-color: #c8f7c5 !important; }
+        .warning { background-color: #fff3cd !important; }
+        .danger { background-color: #f8d7da !important; }
+    </style>
+</head>
+
+<body>
+
+<div class="container mt-4">
+    <h1 class="mb-3">🌡️ Resumen Clima (Temperatura / Humedad / DH)</h1>
+
+    <table id="clima-table" class="table table-striped table-hover display nowrap">
+        <thead>
+            <tr>
+                <th>Finca</th>
+                <th>Priva</th>
+                <th>Estructura</th>
+                <th>Sensor</th>
+                <th>Temperatura (°C)</th>
+                <th>Humedad (%)</th>
+                <th>DH</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<!-- JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+<script>
+
+let table;
+
+function safe(v) {
+    return (v === null || v === undefined) ? "-" : v;
+}
+
+// 🔥 semáforo basado en DH (estrés atmosférico)
+function getRowClass(dh) {
+    dh = parseFloat(dh || 0);
+
+    if (dh > 3) return "danger";     // estrés alto
+    if (dh > 1.5) return "warning";  // moderado
+    return "ok";                     // normal
+}
+
+function fetchClima() {
+    fetch('/iotappweb/aranet-clima-json/')
+        .then(res => res.json())
+        .then(data => {
+
+            table.clear();
+
+            data.forEach(r => {
+
+                const dh = r.dh ?? 0;
+
+                table.row.add([
+                    safe(r.finca),
+                    safe(r.priva),
+                    safe(r.estructura),
+                    safe(r.sensor),
+                    safe(r.temperatura),
+                    safe(r.humedad),
+                    safe(dh)
+                ]).nodes().to$().addClass(getRowClass(dh));
+            });
+
+            table.draw();
+        })
+        .catch(err => console.error("Error:", err));
+}
+
+$(document).ready(function () {
+
+    table = $('#clima-table').DataTable({
+        scrollX: true,
+        autoWidth: false,
+        paging: false,
+        info: false
+    });
+
+    fetchClima();
+    setInterval(fetchClima, 15000);
+});
+
+</script>
+
+</body>
+</html>

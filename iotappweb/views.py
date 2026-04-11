@@ -508,9 +508,49 @@ def aranet_resumen_json(request):
     )
     return JsonResponse(resultado_ordenado, safe=False)
 
+def aranet_clima_json(request):
+
+    sensores = SensorDetalles.objects.all()
+
+    resultado = []
+
+    for sensor_obj in sensores:
+
+        def last(metric):
+            obj = SensorData.objects.filter(
+                sensor=sensor_obj,
+                metric=metric
+            ).order_by('-timestamp').first()
+            return obj.value if obj else None
+
+        temp = last("temperature")
+        hum = last("humidity")
+
+        if temp is None and hum is None:
+            continue
+
+        dh = calcular_dh(temp, hum) if temp and hum else None
+
+        resultado.append({
+            "sensor": sensor_obj.sensor,
+            "finca": sensor_obj.finca,
+            "priva": sensor_obj.priva,
+            "estructura": sensor_obj.estructura,
+
+            "temperatura": round(temp, 1) if temp else None,
+            "humedad": round(hum, 1) if hum else None,
+            "dh": dh
+        })
+
+    resultado = sorted(resultado, key=lambda x: (x['estructura'], x['priva']))
+
+    return JsonResponse(resultado, safe=False)
+
 def aranet_resumen_page(request):
     return render(request, "iotappweb/aranet_resumen.html")
-
+    
+def aranet_clima_page(request):
+    return render(request, "iotappweb/aranet_clima.html")
 def evaluar_sensor(sensor_obj):
     reading = SensorData.objects.filter(
         sensor=sensor_obj,
