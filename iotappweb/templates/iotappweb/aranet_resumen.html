@@ -5,11 +5,9 @@
     <meta charset="UTF-8">
     <title>Resumen de Sensores</title>
 
-    <!-- Bootstrap + Bulma -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
 
-    <!-- DataTables -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 
     <style>
@@ -21,9 +19,9 @@
             text-align: center;
         }
 
-        .ok { background-color: #c8f7c5 !important; }       /* verde */
-        .warning { background-color: #fff3cd !important; }  /* amarillo */
-        .danger { background-color: #f8d7da !important; }   /* rojo */
+        .ok { background-color: #c8f7c5 !important; }
+        .warning { background-color: #fff3cd !important; }
+        .danger { background-color: #f8d7da !important; }
 
         .table-container {
             overflow-x: auto;
@@ -34,6 +32,7 @@
 <body>
 <div class="container mt-4">
     <h1 class="mb-3">🌱 Resumen de Sensores (Riego)</h1>
+
     <div class="table-container">
         <table id="resumen-table" class="table table-striped table-hover display nowrap">
             <thead>
@@ -51,9 +50,7 @@
                     <th>DH</th>
                 </tr>
             </thead>
-            <tbody>
-                <!-- Se llenará con JS -->
-            </tbody>
+            <tbody></tbody>
         </table>
     </div>
 </div>
@@ -63,34 +60,49 @@
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
 <script>
+let table;
+
 function getRowClass(perdida) {
-    if (perdida > 10) return "danger";   // 🔴 alerta
-    if (perdida > 5) return "warning";  // 🟡 leve
-    return "ok";                        // 🟢 normal
+    if (perdida > 10) return "danger";
+    if (perdida > 5) return "warning";
+    return "ok";
+}
+
+// 🔥 función segura para evitar undefined/null
+function safe(v, fallback = "-") {
+    return (v === null || v === undefined || v === "") ? fallback : v;
 }
 
 function fetchResumen() {
     fetch('/iotappweb/aranet-resumen-json/')
         .then(res => res.json())
         .then(data => {
-            const table = $('#resumen-table').DataTable();
 
-            table.clear(); // limpiar filas existentes
+            table.clear();
 
             data.forEach(r => {
-                table.row.add([
-                    r.finca,
-                    r.priva,
-                    r.estructura,
-                    r.sensor,
-                    r.peso_actual,
-                    r.peso_base,
-                    r.porcentaje_restante + " %",
-                    r.porcentaje_perdida + " %",
-                    r.temperatura,
-                    r.humedad,
-                    r.dh
-                ]).nodes().to$().addClass(getRowClass(r.porcentaje_perdida));
+
+                const perdida = parseFloat(r.porcentaje_perdida ?? 0);
+
+                const row = [
+                    safe(r.finca),
+                    safe(r.priva),
+                    safe(r.estructura),
+                    safe(r.sensor),
+                    safe(r.peso_actual, 0),
+                    safe(r.peso_base, 0),
+                    (r.porcentaje_restante ?? 0) + " %",
+                    perdida + " %",
+                    safe(r.temperatura),
+                    safe(r.humedad),
+                    safe(r.dh)
+                ];
+
+                table.row
+                    .add(row)
+                    .nodes()
+                    .to$()
+                    .addClass(getRowClass(perdida));
             });
 
             table.draw();
@@ -98,20 +110,19 @@ function fetchResumen() {
         .catch(err => console.error("Error:", err));
 }
 
-let table;
-
 $(document).ready(function () {
+
     table = $('#resumen-table').DataTable({
         scrollX: true,
         autoWidth: false,
         paging: false,
-        info: false
+        info: false,
+        destroy: true   // 🔥 evita conflictos si recarga
     });
 
     fetchResumen();
     setInterval(fetchResumen, 15000);
 });
-
 </script>
 
 </body>
