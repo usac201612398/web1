@@ -469,51 +469,36 @@ def aranet_webhook(request):
 
 def aranet_resumen_json(request):
 
-    sensores = SensorData.objects.select_related('sensor').values_list(
-        'sensor', flat=True
-    ).distinct()
+    sensores = SensorDetalles.objects.all()
 
     resultado = []
 
-    for sensor_id in sensores:
+    for sensor_obj in sensores:
 
-        sensor_obj = SensorDetalles.objects.filter(id=sensor_id).first()
-        if not sensor_obj:
+        def last(metric):
+            obj = SensorData.objects.filter(
+                sensor=sensor_obj,
+                metric=metric
+            ).order_by('-timestamp').first()
+            return obj.value if obj else None
+
+        peso_actual = last("weight")
+        temp = last("temperature")
+        hum = last("humidity")
+
+        if peso_actual is None:
             continue
 
-        # 🔥 weight
-        weight = SensorData.objects.filter(
-            sensor=sensor_obj,
-            metric="weight"
-        ).order_by('-timestamp').first()
-
-        if not weight:
-            continue
-
-        peso_actual = weight.value
         peso_base = sensor_obj.set_point
-
-        if peso_base == 0:
+        if not peso_base:
             continue
 
         porcentaje_restante = (peso_actual / peso_base) * 100
         porcentaje_perdida = 100 - porcentaje_restante
 
-        # 🌡️ temperatura (IMPORTANTE: usa sensor_obj)
-        temp = SensorData.objects.filter(
-            sensor=sensor_obj,
-            metric="temperature"
-        ).order_by('-timestamp').first()
-
-        # 💧 humedad
-        hum = SensorData.objects.filter(
-            sensor=sensor_obj,
-            metric="humidity"
-        ).order_by('-timestamp').first()
-
         dh = None
-        if temp and hum:
-            dh = calcular_dh(temp.value, hum.value)
+        if temp is not None and hum is not None:
+            dh = calcular_dh(temp, hum)
 
         resultado.append({
             "sensor": sensor_obj.sensor,
@@ -526,15 +511,14 @@ def aranet_resumen_json(request):
             "porcentaje_restante": round(porcentaje_restante, 2),
             "porcentaje_perdida": round(porcentaje_perdida, 2),
 
-            "temperatura": temp.value if temp else None,
-            "humedad": hum.value if hum else None,
+            "temperatura": round(temp, 1) if temp else None,
+            "humedad": round(hum, 1) if hum else None,
             "dh": dh
         })
 
-    return JsonResponse(
-        sorted(resultado, key=lambda x: (x['estructura'], x['priva'])),
-        safe=False
-    )
+    resultado = sorted(resultado, key=lambda x: (x['estructura'], x['priva']))
+
+    return JsonResponse(resultado, safe=False)
     
 def aranet_resumen_page(request):
     return render(request, "iotappweb/aranet_resumen.html")
