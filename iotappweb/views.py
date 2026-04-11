@@ -381,6 +381,15 @@ def calcular_dh(temperatura, humedad):
     except:
         return None
 
+def es_horario_valido():
+    ahora = timezone.localtime().time()
+
+    ventanas = [
+        (time(7, 0), time(9, 0)),    # mañana
+        (time(19, 0), time(20, 0)),  # noche
+    ]
+
+    return any(inicio <= ahora <= fin for inicio, fin in ventanas)
 
 def login_exempt(view_func):
     setattr(view_func, 'login_exempt', True)
@@ -598,6 +607,9 @@ def evaluar_sensor(sensor_obj):
     }
 
 def enviar_alerta(data):
+    if not es_horario_valido():
+        return
+        
     if data["tipo"] == "riego":
         sensor_obj = data["sensor"]
 
