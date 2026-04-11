@@ -98,17 +98,20 @@ function fetchResumen() {
         .catch(err => console.error("Error:", err));
 }
 
+let table;
+
 $(document).ready(function () {
-    $('#resumen-table').DataTable({
+    table = $('#resumen-table').DataTable({
         scrollX: true,
         autoWidth: false,
-        paging: false,       // sin paginación
-        info: false          // sin info de filas
+        paging: false,
+        info: false
     });
 
-    fetchResumen();              // carga inicial
-    setInterval(fetchResumen, 15000); // actualización cada minuto
+    fetchResumen();
+    setInterval(fetchResumen, 15000);
 });
+
 </script>
 
 </body>
