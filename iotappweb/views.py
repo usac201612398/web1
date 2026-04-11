@@ -19,6 +19,7 @@ from twilio.rest import Client
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect
 from .forms import sensordetallesForm
+from decimal import Decimal, ROUND_DOWN
 
 MQTT_HOST = "10.111.112.4"
 MQTT_PORT = 1883
@@ -548,7 +549,7 @@ def aranet_clima_json(request):
 
 def aranet_resumen_page(request):
     return render(request, "iotappweb/aranet_resumen.html")
-    
+
 def aranet_clima_page(request):
     return render(request, "iotappweb/aranet_clima.html")
 def evaluar_sensor(sensor_obj):
