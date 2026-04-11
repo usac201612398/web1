@@ -406,33 +406,40 @@ def aranet_webhook(request):
         data = json.loads(request.body)
         objects = []
 
+        current_sensor = None
+        current_timestamp = None
+        sensores_map = {
+            s.sensor: s for s in SensorDetalles.objects.all()
+        }
         for record in data:
-            sensor = record.get("bn")
+            # Actualizar contexto si viene
+            if "bn" in record:
+                current_sensor = record.get("bn").rstrip(":")
+
+            if "bt" in record:
+                bt = record.get("bt")
+                current_timestamp = datetime.fromtimestamp(bt, tz=timezone.utc)
+
             metric = record.get("n")
             value = record.get("v")
             unit = record.get("u")
-            bt = record.get("bt")
-            timestamp = (
-                datetime.fromtimestamp(bt, tz=timezone.utc)
-                if bt else timezone.now()
-            )
-
-            # Ignorar registros inválidos
-            if not sensor or not metric or value is None:
+            print("DEBUG:", current_sensor, metric, value, current_timestamp)
+            # Validación
+            if not current_sensor or not current_timestamp or not metric or value is None:
                 continue
 
-            sensor_code = sensor.rstrip(":")
-
-            sensor_obj = SensorDetalles.objects.filter(sensor=sensor_code).first()
+            
+            sensor_obj = sensores_map.get(current_sensor)
             if not sensor_obj:
                 continue
+            
             objects.append(
                 SensorData(
                     sensor=sensor_obj,
                     metric=metric,
                     value=value,
                     unit=unit,
-                    timestamp=timestamp
+                    timestamp=current_timestamp
                 )
             )
 
