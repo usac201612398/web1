@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import m1Sensoresdata, SensorDetalles,m2Sensoresdata, riegoRegistro, riegoResumen, SensorData, SensorAlert
+from .models import m1Sensoresdata, SensorDetalles,VaporSaturacion,m2Sensoresdata, riegoRegistro, riegoResumen, SensorData, SensorAlert
 # Create your views here.
 import time
 import paho.mqtt.client as mqtt
@@ -20,7 +20,6 @@ from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect
 from .forms import sensordetallesForm
 from decimal import Decimal, ROUND_DOWN
-
 MQTT_HOST = "10.111.112.4"
 MQTT_PORT = 1883
 MQTT_USER = "sdc-iot"       
@@ -350,10 +349,10 @@ def histograma_api(request):
 
 
 def obtener_hpa(temperatura):
-    """
-    temperatura: float (ej 23.47)
-    """
-    temp_redondeada = Decimal(temperatura).quantize(
+    if temperatura is None:
+        return None
+
+    temp_redondeada = Decimal(str(temperatura)).quantize(
         Decimal("0.1"),
         rounding=ROUND_DOWN
     )
@@ -362,16 +361,25 @@ def obtener_hpa(temperatura):
         temperatura=temp_redondeada
     ).first()
 
-    return float(registro.presion_hpa) if registro else None
+    if not registro:
+        return None
+
+    return float(registro.presion_hpa)
 
 
 def calcular_dh(temperatura, humedad):
+    if temperatura is None or humedad is None:
+        return None
+
     hpa = obtener_hpa(temperatura)
     if hpa is None:
         return None
 
-    dh = abs(hpa * ((humedad / 100) - 1)) * 217 / (temperatura + 273.15)
-    return round(dh, 2)
+    try:
+        dh = abs(hpa * ((humedad / 100) - 1)) * 217 / (temperatura + 273.15)
+        return round(dh, 2)
+    except:
+        return None
 
 
 def login_exempt(view_func):
@@ -512,7 +520,6 @@ def aranet_resumen_json(request):
 def aranet_clima_json(request):
 
     sensores = SensorDetalles.objects.all()
-
     resultado = []
 
     for sensor_obj in sensores:
@@ -522,6 +529,7 @@ def aranet_clima_json(request):
                 sensor=sensor_obj,
                 metric=metric
             ).order_by('-timestamp').first()
+
             return obj.value if obj else None
 
         temp = last("temperature")
@@ -530,23 +538,22 @@ def aranet_clima_json(request):
         if temp is None and hum is None:
             continue
 
-        dh = calcular_dh(temp, hum) if temp and hum else None
+        dh = calcular_dh(temp, hum)
 
         resultado.append({
             "sensor": sensor_obj.sensor,
             "finca": sensor_obj.finca,
             "priva": sensor_obj.priva,
             "estructura": sensor_obj.estructura,
-
-            "temperatura": round(temp, 1) if temp else None,
-            "humedad": round(hum, 1) if hum else None,
+            "temperatura": round(temp, 1) if temp is not None else None,
+            "humedad": round(hum, 1) if hum is not None else None,
             "dh": dh
         })
 
-    resultado = sorted(resultado, key=lambda x: (x['estructura'], x['priva']))
-
-    return JsonResponse(resultado, safe=False)
-
+    return JsonResponse(
+        sorted(resultado, key=lambda x: (x['estructura'], x['priva'])),
+        safe=False
+    )
 def aranet_resumen_page(request):
     return render(request, "iotappweb/aranet_resumen.html")
 
