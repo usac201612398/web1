@@ -26,7 +26,7 @@ class EnvioCreateAutoView(View):
 
     def post(self, request):
 
-        ultimo = envioccajas.objects.order_by('-id').first()
+        ultimo = envioccajas.objects.order_by('-id').exclude(status=Anulado).first()
         nuevo_id = (ultimo.id + 1) if ultimo else 1
 
         envio = envioccajas.objects.create(
@@ -117,7 +117,7 @@ class ControlCajasCreateView(CreateView):
 
         # 🔥 IMPORTANTE: volver al workspace, no al list
         return redirect('envio_workspace', envio_id=self.envio_id)
-        
+
 class ControlCajasUpdateView(UpdateView):
     model = controlcajas
     form_class = controlcajasForm
