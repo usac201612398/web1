@@ -45,21 +45,14 @@ def anular_caja(request, pk):
     return redirect('envio_workspace', envio_id=caja.envio)
 class ControlCajasPrintView(View):
 
-    def get(self, request, envio_id):
+    def get(self, request, pk):
+        registro = get_object_or_404(controlcajas, pk=pk)
 
-        envio = get_object_or_404(envioccajas, id=envio_id)
-
-        cajas = controlcajas.objects.filter(
-            envio=envio_id
-        ).exclude(status="Anulado")
-
-        total = sum(c.cajas or 0 for c in cajas)
-
-        return render(request, "plantaE/controlcajas/controlcajas_print.html", {
-            "envio": envio,
-            "cajas": cajas,
-            "total": total
-        })
+        return render(
+            request,
+            'plantaE/controlcajas/controlcajas_print.html',
+            {'registro': registro}
+        )
 class EnvioCreateAutoView(View):
 
     def post(self, request):
