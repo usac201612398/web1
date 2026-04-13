@@ -30,7 +30,6 @@ def cerrar_envio(request, envio_id):
         envio.destino = destino
         envio.recibe = recibe
         envio.observaciones = observaciones
-        envio.status = "Cerrado"
         envio.save()
 
         return redirect('controlcajas_list')
