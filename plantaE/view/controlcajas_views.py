@@ -48,7 +48,7 @@ class EnvioWorkspaceView(View):
 
         total = sum([c.cajas or 0 for c in cajas])
 
-        return render(request, "plantaE/envio_workspace.html", {
+        return render(request, "plantaE/controlcajas_workspace.html", {
             "envio": envio,
             "cajas": cajas,
             "total": total
@@ -60,7 +60,7 @@ class ControlCajasListView(ListView):
     context_object_name = 'registros'
 
     def get_queryset(self):
-        return controlcajas.objects.all().order_by('-registro')
+        return controlcajas.objects.exclude(tipomov="Recepción").order_by('-registro')
 
 class ControlCajasInventarioView(View):
 

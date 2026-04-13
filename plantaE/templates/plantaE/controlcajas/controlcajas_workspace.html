@@ -1,0 +1,32 @@
+<h2>ENVÍO #{{ envio.id }}</h2>
+
+<p><b>Destino:</b> {{ envio.destino }}</p>
+<p><b>Recibe:</b> {{ envio.recibe }}</p>
+
+<hr>
+
+<h4>Cajas agregadas</h4>
+
+<table border="1" width="100%">
+    <tr>
+        <th>Item</th>
+        <th>Tipo</th>
+        <th>Cantidad</th>
+    </tr>
+
+    {% for c in cajas %}
+    <tr>
+        <td>{{ c.itemsapcode }}</td>
+        <td>{{ c.tipodecaja }}</td>
+        <td>{{ c.cajas }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h3>Total: {{ total }}</h3>
+
+<hr>
+
+<input type="hidden" name="envio_id" value="{{ envio.id }}">
+
+<button onclick="abrirFormulario()">➕ Agregar caja</button>
