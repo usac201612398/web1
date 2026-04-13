@@ -5,7 +5,7 @@ from django.views.generic import ListView, CreateView, UpdateView
 from django.http import JsonResponse
 from django.db.models import Sum, Case, When, Value as V, F, IntegerField
 from django.db.models.functions import Trim, Abs
-import timezone
+from django.utils import timezone
 # modelos
 from plantaE.models import controlcajas, tipoCajas, envioccajas
 
