@@ -12,7 +12,17 @@ from plantaE.models import controlcajas, tipoCajas
 # formularios
 from plantaE.forms import controlcajasForm
 
+class ControlCajasPrintView(View):
 
+    def get(self, request, pk):
+        registro = get_object_or_404(controlcajas, pk=pk)
+
+        return render(
+            request,
+            'plantaE/controlcajas/controlcajas_print.html',
+            {'registro': registro}
+        )
+        
 class ControlCajasListView(ListView):
     model = controlcajas
     template_name = 'plantaE/controlcajas/controlcajas_list.html'

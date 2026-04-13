@@ -20,6 +20,8 @@ from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect
 from .forms import sensordetallesForm
 from decimal import Decimal, ROUND_DOWN
+from datetime import timezone as dt_timezone
+
 MQTT_HOST = "10.111.112.4"
 MQTT_PORT = 1883
 MQTT_USER = "sdc-iot"       
@@ -380,7 +382,7 @@ def calcular_dh(temperatura, humedad):
         return round(dh, 2)
     except:
         return None
-'''
+
 def es_horario_valido():
     ahora = timezone.localtime().time()
 
@@ -390,7 +392,7 @@ def es_horario_valido():
     ]
 
     return any(inicio <= ahora <= fin for inicio, fin in ventanas)
-'''
+
 def login_exempt(view_func):
     setattr(view_func, 'login_exempt', True)
     @wraps(view_func)
@@ -436,7 +438,7 @@ def aranet_webhook(request):
 
             if "bt" in record:
                 bt = record.get("bt")
-                current_timestamp = datetime.fromtimestamp(bt, tz=timezone.utc)
+                current_timestamp = datetime.fromtimestamp(bt, tz=dt_timezone.utc)
 
             metric = record.get("n")
             value = record.get("v")
@@ -607,10 +609,10 @@ def evaluar_sensor(sensor_obj):
     }
 
 def enviar_alerta(data):
-    '''
+    
     if not es_horario_valido():
         return
-    '''
+    
     if data["tipo"] == "riego":
         sensor_obj = data["sensor"]
 

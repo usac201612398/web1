@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 {% load static %}
+
 <head>
     <meta charset="UTF-8">
     <title>Cajas - Envíos</title>
@@ -16,7 +17,8 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 
     <style>
-        td, th {
+        td,
+        th {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -35,15 +37,17 @@
         }
 
         .header-actions {
-    display: flex;
-    align-items: center;
-    gap: 6px;          /* ← controla qué tan juntos quedan */
-}
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            /* ← controla qué tan juntos quedan */
+        }
 
-.header-actions .btn {
-    margin: 0 !important;   /* ← elimina márgenes raros */
-    white-space: nowrap;
-}
+        .header-actions .btn {
+            margin: 0 !important;
+            /* ← elimina márgenes raros */
+            white-space: nowrap;
+        }
 
         .action-icons i {
             margin: 0 5px;
@@ -62,7 +66,7 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1 class="h4 mb-0">📦 Cajas - Envíos</h1>
             <div class="header-actions">
-                
+
                 <a href="{% url 'controlcajas_create' %}" class="btn btn-success btn-sm">
                     <i class="fas fa-plus"></i> Agregar
                 </a>
@@ -85,6 +89,7 @@
                         <th>Lugar-Entra</th>
                         <th>Tipo-Mov</th>
                         <th>Fecha</th>
+                        <th>Imprimir</th>
                         <th>Editar</th>
                         <th>Eliminar</th>
                     </tr>
@@ -100,6 +105,11 @@
                         <td title="{{ registro.lugar_entra }}">{{ registro.lugar_entra }}</td>
                         <td title="{{ registro.tipomov }}">{{ registro.tipomov }}</td>
                         <td title="{{ registro.fecha }}">{{ registro.fecha }}</td>
+                        <td class="action-icons">
+                            <a href="{% url 'controlcajas_print' registro.pk %}" target="_blank" title="Imprimir">
+                                <i class="fas fa-print text-primary"></i>
+                            </a>
+                        </td>
                         <td class="action-icons">
                             <a href="{% url 'controlcajas_update' registro.pk %}" title="Editar">
                                 <i class="fas fa-edit"></i>
@@ -131,4 +141,5 @@
         });
     </script>
 </body>
+
 </html>

@@ -114,6 +114,7 @@ urlpatterns = [
     path('contenedores/<int:pk>/delete/',ContenedoresDeleteView.as_view(), name='contenedores_delete'),
 
     #Urls de controlcajas
+    path('controlcajas/print/<int:pk>/', ControlCajasPrintView.as_view(), name='controlcajas_print'),
     path("controlcajasmanual",ControlCajasListView.as_view(),name='controlcajas_list'),
     path("controlcajasmanualinventario",ControlCajasInventarioView.as_view(),name='controlcajas_inventario'),
     path('controlcajasmanual/new/', ControlCajasCreateView.as_view(), name='controlcajas_create'),
