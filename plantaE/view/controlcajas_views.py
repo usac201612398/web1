@@ -215,11 +215,8 @@ class ControlCajasDeleteView(View):
         # 🔥 ANULAR CABECERA
         envioccajas.objects.filter(id=envio_id).update(status="Anulado")
 
-        return render(request, self.template_name, {
-            'alert_message': "El envío fue anulado correctamente.",
-            'redirect_url': reverse('envio_workspace', args=[envio_id])
-        })
-        
+        return redirect('controlcajas_list')
+
 class ObtenerItemsRelacionadosView(View):
 
     def get(self, request):
