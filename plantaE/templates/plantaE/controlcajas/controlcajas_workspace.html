@@ -27,41 +27,44 @@
 
 <div class="container">
 
-    <!-- 🔥 FORM PRINCIPAL (EDITAR + FINALIZAR) -->
-    <form method="POST" action="{% url 'cerrar_envio' envio_id %}">
+    <!-- 🔥 ENCABEZADO EDITABLE -->
+    <form method="POST" action="{% url 'envio_workspace' envio.id %}">
         {% csrf_token %}
 
         <div class="card shadow-sm mb-3">
             <div class="card-body">
 
-                <h3>📦 ENVÍO #{{ envio_id }}</h3>
+                <h3 class="mb-3">📦 ENVÍO #{{ envio.id }}</h3>
 
                 <div class="row">
 
                     <div class="col-md-4">
                         <label>Destino</label>
-                        <input type="text" name="destino" value="{{ envio.destino|default:'' }}">
+                        <input type="text" name="destino" class="form-control"
+                               value="{{ envio.destino }}">
                     </div>
 
                     <div class="col-md-4">
                         <label>Recibe</label>
-                        <input type="text" name="recibe" value="{{ envio.recibe|default:'' }}">
+                        <input type="text" name="recibe" class="form-control"
+                               value="{{ envio.recibe }}">
                     </div>
 
                     <div class="col-md-4">
                         <label>Observaciones</label>
-                        <input type="text" name="observaciones" value="{{ envio.observaciones|default:'' }}">
+                        <input type="text" name="observaciones" class="form-control"
+                               value="{{ envio.observaciones }}">
                     </div>
 
                 </div>
 
                 <div class="mt-3">
+                    
 
-                    <!-- ✔ BOTÓN FINALIZAR (POST REAL) -->
-                    <button type="submit" class="btn btn-success btn-sm">
-                        ✔ Finalizar Envío
-                    </button>
-
+                    <a href="{% url 'cerrar_envio' envio.id %}"
+                       class="btn btn-success btn-sm">
+                        ✔ Finalizar envío
+                    </a>
                 </div>
 
                 <p class="mt-2">
@@ -133,7 +136,6 @@
         </h4>
     </div>
 
-    <!-- 🔥 ID OCULTO -->
     <input type="hidden" id="envio_id" value="{{ envio.id }}">
 
 </div>
