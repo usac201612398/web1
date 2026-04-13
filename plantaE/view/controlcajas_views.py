@@ -14,30 +14,35 @@ from plantaE.forms import controlcajasForm
 
 def cerrar_envio(request, envio_id):
 
-    envio = get_object_or_404(envioccajas, id=envio_id)
-
     if request.method == "POST":
 
         destino = request.POST.get("destino")
         recibe = request.POST.get("recibe")
         observaciones = request.POST.get("observaciones")
-        
-        # 🔥 VALIDAR PRIMERO
-        if not destino or not recibe:
-            return redirect('envio_workspace', envio_id=envio.id)
 
-        envioccajas.objects.create(
+        cajas = controlcajas.objects.filter(envio=envio_id).exclude(status="Anulado")
+
+        # 🔥 1. VALIDAR CAJAS
+        if not cajas.exists():
+            messages.error(request, "No puedes finalizar un envío sin cajas.")
+            return redirect('envio_workspace', envio_id=envio_id)
+
+        # 🔥 2. VALIDAR CAMPOS
+        if not destino or not recibe:
+            messages.error(request, "Debes completar destino y quién recibe.")
+            return redirect('envio_workspace', envio_id=envio_id)
+
+        # 🔥 3. CREAR ENVÍO FINAL
+        envio = envioccajas.objects.create(
             id=envio_id,
             destino=destino,
             recibe=recibe,
-            observaciones=observaciones,
-            status="Abierto"
+            observaciones=observaciones
         )
-        
 
         return redirect('controlcajas_list')
 
-    return redirect('envio_workspace', envio_id=envio.id)
+    return redirect('envio_workspace', envio_id=envio_id)
 
 def anular_caja(request, pk):
     caja = get_object_or_404(controlcajas, pk=pk)
