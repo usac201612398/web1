@@ -14,35 +14,27 @@ from plantaE.forms import controlcajasForm
 
 def cerrar_envio(request, envio_id):
 
+    envio = get_object_or_404(envioccajas, id=envio_id)
+
     if request.method == "POST":
 
         destino = request.POST.get("destino")
         recibe = request.POST.get("recibe")
         observaciones = request.POST.get("observaciones")
 
-        cajas = controlcajas.objects.filter(envio=envio_id).exclude(status="Anulado")
-
-        # 🔥 1. VALIDAR CAJAS
-        if not cajas.exists():
-            
-            return redirect('envio_workspace', envio_id=envio_id)
-
-        # 🔥 2. VALIDAR CAMPOS
+        # 🔥 VALIDAR PRIMERO
         if not destino or not recibe:
-            
-            return redirect('envio_workspace', envio_id=envio_id)
+            return redirect('envio_workspace', envio_id=envio.id)
 
-        # 🔥 3. CREAR ENVÍO FINAL
-        envio = envioccajas.objects.create(
-            id=envio_id,
-            destino=destino,
-            recibe=recibe,
-            observaciones=observaciones
-        )
+        # 🔥 SOLO SI ES VALIDO, GUARDAR
+        envio.destino = destino
+        envio.recibe = recibe
+        envio.observaciones = observaciones
+        envio.save()
 
         return redirect('controlcajas_list')
 
-    return redirect('envio_workspace', envio_id=envio_id)
+    return redirect('envio_workspace', envio_id=envio.id)
 
 def anular_caja(request, pk):
     caja = get_object_or_404(controlcajas, pk=pk)
@@ -68,7 +60,6 @@ class ControlCajasPrintView(View):
             "cajas": cajas,
             "total": total
         })
-
 class EnvioCreateAutoView(View):
 
     def post(self, request):
@@ -76,25 +67,27 @@ class EnvioCreateAutoView(View):
         ultimo = envioccajas.objects.order_by('-id').first()
         nuevo_id = (ultimo.id + 1) if ultimo else 1
 
+        envio = envioccajas.objects.create(
+            id=nuevo_id,
+            status="Abierto"
+        )
 
         return JsonResponse({
-            "envio_id": nuevo_id,
-            "redirect": reverse('envio_workspace', args=[nuevo_id])
+            "envio_id": envio.id,
+            "redirect": reverse('envio_workspace', args=[envio.id])
         })
 
 class EnvioWorkspaceView(View):
 
     def get(self, request, envio_id):
 
-        envio = envioccajas.objects.filter(id=envio_id).first()
-
+        envio = get_object_or_404(envioccajas, id=envio_id)
         cajas = controlcajas.objects.exclude(status='Anulado').filter(envio=envio_id)
 
         total = sum([c.cajas or 0 for c in cajas])
 
         return render(request, "plantaE/controlcajas/controlcajas_workspace.html", {
-            "envio": envio,          # 🔥 objeto o None
-            "envio_id": envio_id,    # 🔥 SIEMPRE mandar este
+            "envio": envio,
             "cajas": cajas,
             "total": total
         })
@@ -181,18 +174,13 @@ class ControlCajasCreateView(CreateView):
     def form_valid(self, form):
         obj = form.save(commit=False)
 
-        envio_id = self.request.GET.get("envio_id")
-
-        # 🔥 VALIDACIÓN IMPORTANTE
-        if not envio_id:
-            return redirect('controlcajas_list')
-
-        # 🔥 ASIGNAR ENVÍO
-        obj.envio = int(envio_id)
+        if self.envio_id:
+            obj.envio = self.envio_id
 
         obj.save()
 
-        return redirect('envio_workspace', envio_id=envio_id)
+        # 🔥 IMPORTANTE: volver al workspace, no al list
+        return redirect('envio_workspace', envio_id=self.envio_id)
 
 class ControlCajasUpdateView(UpdateView):
     model = controlcajas
