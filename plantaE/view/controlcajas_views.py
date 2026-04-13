@@ -103,17 +103,21 @@ class ControlCajasCreateView(CreateView):
     template_name = 'plantaE/controlcajas/controlcajas_form.html'
     success_url = reverse_lazy('controlcajas_list')
 
+    def dispatch(self, request, *args, **kwargs):
+        self.envio_id = request.GET.get("envio_id")
+        return super().dispatch(request, *args, **kwargs)
+
     def form_valid(self, form):
         obj = form.save(commit=False)
 
-        envio_id = self.request.GET.get("envio_id")
-
-        if envio_id:
-            obj.envio = envio_id
+        if self.envio_id:
+            obj.envio = self.envio_id
 
         obj.save()
-        return super().form_valid(form)
 
+        # 🔥 IMPORTANTE: volver al workspace, no al list
+        return redirect('envio_workspace', envio_id=self.envio_id)
+        
 class ControlCajasUpdateView(UpdateView):
     model = controlcajas
     form_class = controlcajasForm
