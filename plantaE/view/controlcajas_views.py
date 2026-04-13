@@ -100,12 +100,13 @@ class ControlCajasInventarioView(View):
 class ControlCajasCreateView(CreateView):
     model = controlcajas
     form_class = controlcajasForm
+    template_name = 'plantaE/controlcajas/controlcajas_form.html'
     success_url = reverse_lazy('controlcajas_list')
 
     def form_valid(self, form):
         obj = form.save(commit=False)
 
-        envio_id = self.request.POST.get("envio_id")
+        envio_id = self.request.GET.get("envio_id")
 
         if envio_id:
             obj.envio = envio_id
