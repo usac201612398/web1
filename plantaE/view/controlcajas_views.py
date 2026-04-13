@@ -16,26 +16,30 @@ def cerrar_envio(request, envio_id):
 
     envio = get_object_or_404(envioccajas, id=envio_id)
 
-    if request.method == "POST":
+    if request.method != "POST":
+        return redirect('envio_workspace', envio_id=envio_id)
 
-        destino = request.POST.get("destino")
-        recibe = request.POST.get("recibe")
-        observaciones = request.POST.get("observaciones")
+    # 🔥 cajas activas
+    cajas = controlcajas.objects.filter(
+        envio=envio_id
+    ).exclude(status="Anulado")
 
-        # 🔥 VALIDAR PRIMERO
-        if not destino or not recibe:
-            return redirect('envio_workspace', envio_id=envio.id)
+    # ❌ validar que haya cajas
+    if not cajas.exists():
+        return redirect('envio_workspace', envio_id=envio_id)
 
-        # 🔥 SOLO SI ES VALIDO, GUARDAR
-        envio.destino = destino
-        envio.recibe = recibe
-        envio.observaciones = observaciones
-        envio.save()
+    # 🔥 actualizar cabecera
+    envio.destino = request.POST.get("destino")
+    envio.recibe = request.POST.get("recibe")
+    envio.observaciones = request.POST.get("observaciones")
+    envio.status = "Cerrado"
+    envio.save()
 
-        return redirect('controlcajas_list')
+    # 🔥 opcional: cerrar también detalle
+    controlcajas.objects.filter(envio=envio_id).update(status="Cerrado")
 
-    return redirect('envio_workspace', envio_id=envio.id)
-
+    return redirect('controlcajas_list')
+    
 def anular_caja(request, pk):
     caja = get_object_or_404(controlcajas, pk=pk)
 
