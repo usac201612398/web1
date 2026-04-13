@@ -114,6 +114,8 @@ urlpatterns = [
     path('contenedores/<int:pk>/delete/',ContenedoresDeleteView.as_view(), name='contenedores_delete'),
 
     #Urls de controlcajas
+    path('envio/create-auto/', EnvioCreateAutoView.as_view(), name='envio_create_auto'),
+    path('envio/workspace/<int:envio_id>/', EnvioWorkspaceView.as_view(), name='envio_workspace'),
     path('controlcajas/print/<int:pk>/', ControlCajasPrintView.as_view(), name='controlcajas_print'),
     path("controlcajasmanual",ControlCajasListView.as_view(),name='controlcajas_list'),
     path("controlcajasmanualinventario",ControlCajasInventarioView.as_view(),name='controlcajas_inventario'),

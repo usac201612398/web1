@@ -7,7 +7,7 @@ from django.db.models import Sum, Case, When, Value as V, F, IntegerField
 from django.db.models.functions import Trim, Abs
 
 # modelos
-from plantaE.models import controlcajas, tipoCajas
+from plantaE.models import controlcajas, tipoCajas, envioccajas
 
 # formularios
 from plantaE.forms import controlcajasForm
@@ -22,7 +22,38 @@ class ControlCajasPrintView(View):
             'plantaE/controlcajas/controlcajas_print.html',
             {'registro': registro}
         )
-        
+class EnvioCreateAutoView(View):
+
+    def post(self, request):
+
+        ultimo = envioccajas.objects.order_by('-id').first()
+        nuevo_id = (ultimo.id + 1) if ultimo else 1
+
+        envio = envioccajas.objects.create(
+            id=nuevo_id,
+            status="Abierto"
+        )
+
+        return JsonResponse({
+            "envio_id": envio.id,
+            "redirect": reverse('envio_workspace', args=[envio.id])
+        })
+
+class EnvioWorkspaceView(View):
+
+    def get(self, request, envio_id):
+
+        envio = get_object_or_404(envioccajas, id=envio_id)
+        cajas = controlcajas.objects.filter(envio=envio_id)
+
+        total = sum([c.cajas or 0 for c in cajas])
+
+        return render(request, "plantaE/envio_workspace.html", {
+            "envio": envio,
+            "cajas": cajas,
+            "total": total
+        })    
+
 class ControlCajasListView(ListView):
     model = controlcajas
     template_name = 'plantaE/controlcajas/controlcajas_list.html'
@@ -69,23 +100,18 @@ class ControlCajasInventarioView(View):
 class ControlCajasCreateView(CreateView):
     model = controlcajas
     form_class = controlcajasForm
-    template_name = 'plantaE/controlcajas/controlcajas_form.html'
     success_url = reverse_lazy('controlcajas_list')
 
-    def form_invalid(self, form):
-        return JsonResponse({'errores': form.errors}, status=400)
-
     def form_valid(self, form):
-        try:
-            self.object = form.save()
-            return super().form_valid(form)
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=400)
+        obj = form.save(commit=False)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['modo'] = 'crear'
-        return context
+        envio_id = self.request.POST.get("envio_id")
+
+        if envio_id:
+            obj.envio = envio_id
+
+        obj.save()
+        return super().form_valid(form)
 
 class ControlCajasUpdateView(UpdateView):
     model = controlcajas

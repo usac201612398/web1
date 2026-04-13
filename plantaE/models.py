@@ -282,10 +282,22 @@ class cultivoxFinca(models.Model):
 
     def __str__(self):
         return (str(self.finca)+ " | " + str(self.cultivo) + " | " + str(self.variedad))
-    
+
+class envioccajas(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    fecha = models.DateTimeField(auto_now_add=True)
+    destino = models.CharField(max_length=150, blank=True, null=True)
+    recibe = models.CharField(max_length=75, blank=True, null=True)
+    observaciones = models.CharField(max_length=200, blank=True, null=True)
+    status = models.CharField(max_length=20, default="Abierto")
+
+    def __str__(self):
+        return f"Envio {self.id} - {self.destino}"
+
 class controlcajas(models.Model):
 
     registro = models.BigAutoField(primary_key=True)
+    envio = models.BigIntegerField(blank=True, null=True, db_index=True)
     transaccion = models.BigIntegerField(blank=True, null=True)
     tipomov = models.CharField(max_length=30, blank=True, null=True)
     fecha = models.DateField(blank=True, null=True)
