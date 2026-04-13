@@ -60,7 +60,7 @@ class ControlCajasPrintView(View):
             'envio': envio,
             'cajas': cajas
         })
-        )
+        
 class EnvioCreateAutoView(View):
 
     def post(self, request):
