@@ -21,16 +21,19 @@ def cerrar_envio(request, envio_id):
         destino = request.POST.get("destino")
         recibe = request.POST.get("recibe")
         observaciones = request.POST.get("observaciones")
-
+        
         # 🔥 VALIDAR PRIMERO
         if not destino or not recibe:
             return redirect('envio_workspace', envio_id=envio.id)
 
-        # 🔥 SOLO SI ES VALIDO, GUARDAR
-        envio.destino = destino
-        envio.recibe = recibe
-        envio.observaciones = observaciones
-        envio.save()
+        envioccajas.objects.create(
+            id=envio_id,
+            destino=destino,
+            recibe=recibe,
+            observaciones=observaciones,
+            status="Abierto"
+        )
+        
 
         return redirect('controlcajas_list')
 
@@ -60,6 +63,7 @@ class ControlCajasPrintView(View):
             "cajas": cajas,
             "total": total
         })
+        
 class EnvioCreateAutoView(View):
 
     def post(self, request):
@@ -74,7 +78,7 @@ class EnvioCreateAutoView(View):
 
         return JsonResponse({
             "envio_id": envio.id,
-            "redirect": reverse('envio_workspace', args=[envio.id])
+            "redirect": reverse('envio_workspace', args=[nuevo_id])
         })
 
 class EnvioWorkspaceView(View):
