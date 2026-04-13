@@ -26,7 +26,7 @@ class EnvioCreateAutoView(View):
 
     def post(self, request):
 
-        ultimo = envioccajas.objects.order_by('-id').exclude(status=Anulado).first()
+        ultimo = envioccajas.objects.order_by('-id').exclude(status='Anulado').first()
         nuevo_id = (ultimo.id + 1) if ultimo else 1
 
         envio = envioccajas.objects.create(
