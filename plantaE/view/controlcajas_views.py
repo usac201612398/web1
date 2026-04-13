@@ -12,6 +12,21 @@ from plantaE.models import controlcajas, tipoCajas, envioccajas
 # formularios
 from plantaE.forms import controlcajasForm
 
+def cerrar_envio(request, envio_id):
+    envio = get_object_or_404(envioccajas, id=envio_id)
+
+    # 🔥 VALIDACIONES
+    if not envio.destino or not envio.recibe:
+        return redirect('envio_workspace', envio_id=envio.id)
+
+    return redirect('controlcajas_list')
+def anular_caja(request, pk):
+    caja = get_object_or_404(controlcajas, pk=pk)
+
+    caja.status = "Anulado"
+    caja.save()
+
+    return redirect('envio_workspace', envio_id=caja.envio)
 class ControlCajasPrintView(View):
 
     def get(self, request, pk):
@@ -44,7 +59,7 @@ class EnvioWorkspaceView(View):
     def get(self, request, envio_id):
 
         envio = get_object_or_404(envioccajas, id=envio_id)
-        cajas = controlcajas.objects.filter(envio=envio_id)
+        cajas = controlcajas.objects.exclude(status='Anulado').filter(envio=envio_id)
 
         total = sum([c.cajas or 0 for c in cajas])
 
