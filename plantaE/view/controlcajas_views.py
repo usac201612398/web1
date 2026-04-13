@@ -57,7 +57,7 @@ class EnvioCreateAutoView(View):
 
     def post(self, request):
 
-        ultimo = envioccajas.objects.order_by('-id').exclude(status='Anulado').first()
+        ultimo = envioccajas.objects.order_by('-id').first()
         nuevo_id = (ultimo.id + 1) if ultimo else 1
 
         envio = envioccajas.objects.create(
@@ -217,7 +217,7 @@ class ControlCajasDeleteView(View):
         print("ENVIO ANULADO:", updated_envio)
 
         return redirect('controlcajas_list')
-            
+
 class ObtenerItemsRelacionadosView(View):
 
     def get(self, request):
