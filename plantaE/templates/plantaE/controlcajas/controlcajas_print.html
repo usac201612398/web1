@@ -36,28 +36,66 @@
     </style>
 </head>
 
-<body onload="window.print()">
+<body>
 
 <div class="header">
     <h2>CONSTANCIA DE MOVIMIENTO DE CAJAS</h2>
 </div>
 
 <div class="box">
-    <div class="row"><span class="label">Registro:</span> {{ registro.registro }}</div>
-    <div class="row"><span class="label">Item SAP:</span> {{ registro.itemsapcode }}</div>
-    <div class="row"><span class="label">Tipo Caja:</span> {{ registro.tipodecaja }}</div>
-    <div class="row"><span class="label">Cantidad:</span> {{ registro.cajas }}</div>
-    <div class="row"><span class="label">Tipo Movimiento:</span> {{ registro.tipomov }}</div>
-    <div class="row"><span class="label">Lugar Sale:</span> {{ registro.lugar_sale }}</div>
-    <div class="row"><span class="label">Lugar Entra:</span> {{ registro.lugar_entra }}</div>
-    <div class="row"><span class="label">Fecha:</span> {{ registro.fecha }}</div>
+    <p><b>Registro:</b> {{ registro.registro }}</p>
+    <p><b>Item SAP:</b> {{ registro.itemsapcode }}</p>
+    <p><b>Cantidad:</b> {{ registro.cajas }}</p>
+    <p><b>Tipo Movimiento:</b> {{ registro.tipomov }}</p>
+    <p><b>Fecha:</b> {{ registro.fecha }}</p>
+</div>
+
+<hr>
+
+<!-- 🔥 QUIEN ENTREGA (FIJO) -->
+<div style="margin-top:20px;">
+    <p><b>Entrega:</b> Mynor Estrada</p>
+    <p>Encargado de recepción/entrega</p>
+</div>
+
+<!-- 🔥 QUIEN RECIBE (INPUT) -->
+<div style="margin-top:30px;">
+    <label><b>Recibe:</b></label><br>
+    <input type="text" id="recibe" placeholder="Nombre de quien recibe"
+           style="width:300px; padding:5px;">
+</div>
+
+<!-- FIRMA -->
+<div style="margin-top:30px;">
+    <label><b>Firma:</b></label><br>
+    <textarea id="firma" placeholder="Firma (nombre o firma digital)"
+              style="width:300px; height:60px;"></textarea>
 </div>
 
 <br>
 
-<div class="no-print">
-    <button onclick="window.print()">🖨️ Imprimir</button>
-</div>
+<button onclick="imprimir()">🖨️ Imprimir</button>
+
+<script>
+function imprimir() {
+    const recibe = document.getElementById("recibe").value;
+    const firma = document.getElementById("firma").value;
+
+    if (!recibe) {
+        alert("Debes ingresar quién recibe");
+        return;
+    }
+
+    // reemplazar inputs por texto antes de imprimir
+    document.getElementById("recibe").outerHTML =
+        "<p><b>Recibe:</b> " + recibe + "</p>";
+
+    document.getElementById("firma").outerHTML =
+        "<p><b>Firma:</b> " + firma + "</p>";
+
+    window.print();
+}
+</script>
 
 </body>
 </html>
