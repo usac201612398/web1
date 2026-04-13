@@ -59,7 +59,7 @@ class EnvioWorkspaceView(View):
     def get(self, request, envio_id):
 
         envio = get_object_or_404(envioccajas, id=envio_id)
-        cajas = controlcajas.objects.exclude(status='Anulado').filter(envio=envio_id)
+        cajas = controlcajas.objects.filter(envio=envio_id)
 
         total = sum([c.cajas or 0 for c in cajas])
 
@@ -67,7 +67,19 @@ class EnvioWorkspaceView(View):
             "envio": envio,
             "cajas": cajas,
             "total": total
-        })    
+        })
+
+    def post(self, request, envio_id):
+
+        envio = get_object_or_404(envioccajas, id=envio_id)
+
+        envio.destino = request.POST.get("destino")
+        envio.recibe = request.POST.get("recibe")
+        envio.observaciones = request.POST.get("observaciones")
+
+        envio.save()
+
+        return redirect('envio_workspace', envio_id=envio.id) 
 
 class ControlCajasListView(ListView):
     model = controlcajas
