@@ -132,7 +132,11 @@ class ControlCajasCreateView(CreateView):
     form_class = controlcajasForm
     template_name = 'plantaE/controlcajas/controlcajas_form.html'
     success_url = reverse_lazy('controlcajas_list')
-
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['fecha'] = timezone.now().date()
+        return initial
+        
     def dispatch(self, request, *args, **kwargs):
         self.envio_id = request.GET.get("envio_id")
         return super().dispatch(request, *args, **kwargs)
