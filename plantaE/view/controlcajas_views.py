@@ -198,24 +198,26 @@ class ControlCajasDeleteView(View):
     def post(self, request, pk):
 
         registro = get_object_or_404(controlcajas, pk=pk)
+
         envio_id = registro.envio
 
-        # 🔥 VALIDACIÓN (opcional si quieres mantenerlo)
-        if registro.tipomov != "Manual":
-            return render(request, self.template_name, {
-                'registros': registro,
-                'alert_message': "No se puede anular este movimiento.",
-                'redirect_url': reverse('envio_workspace', args=[envio_id])
-            })
+        # 🔥 DEBUG CLAVE
+        print("ENVIO ID:", envio_id)
 
-        # 🔥 1. ANULAR TODO EL DETALLE DEL ENVÍO
-        controlcajas.objects.filter(envio=envio_id).update(status="Anulado")
+        if not envio_id:
+            return redirect('controlcajas_list')
 
-        # 🔥 2. ANULAR CABECERA DEL ENVÍO
-        envioccajas.objects.filter(id=envio_id).update(status="Anulado")
+        # 🔥 1. ANULAR DETALLE
+        updated_detalle = controlcajas.objects.filter(envio=int(envio_id)).update(status="Anulado")
 
-        # 🔥 3. REDIRECCIÓN FINAL
+        # 🔥 2. ANULAR CABECERA
+        updated_envio = envioccajas.objects.filter(id=int(envio_id)).update(status="Anulado")
+
+        print("DETALLE ANULADO:", updated_detalle)
+        print("ENVIO ANULADO:", updated_envio)
+
         return redirect('controlcajas_list')
+            
 class ObtenerItemsRelacionadosView(View):
 
     def get(self, request):
