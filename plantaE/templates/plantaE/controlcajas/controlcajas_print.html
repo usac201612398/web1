@@ -1,101 +1,155 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Constancia de Movimiento</title>
+<meta charset="UTF-8">
+<title>Constancia de Movimiento</title>
 
-    <style>
-        body {
-            font-family: Arial;
-            padding: 20px;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .box {
-            border: 1px solid #000;
-            padding: 15px;
-        }
-
-        .row {
-            margin-bottom: 8px;
-        }
-
-        .label {
-            font-weight: bold;
-        }
-
-        @media print {
-            .no-print {
-                display: none;
-            }
-        }
-    </style>
-</head>
-
-<body>
-
-<div class="header">
-    <h2>CONSTANCIA DE MOVIMIENTO DE CAJAS</h2>
-</div>
-
-<div class="box">
-    <p><b>Registro:</b> {{ registro.registro }}</p>
-    <p><b>Item SAP:</b> {{ registro.itemsapcode }}</p>
-    <p><b>Cantidad:</b> {{ registro.cajas }}</p>
-    <p><b>Tipo Movimiento:</b> {{ registro.tipomov }}</p>
-    <p><b>Fecha:</b> {{ registro.fecha }}</p>
-</div>
-
-<hr>
-
-<!-- 🔥 QUIEN ENTREGA (FIJO) -->
-<div style="margin-top:20px;">
-    <p><b>Entrega:</b> Mynor Estrada</p>
-    <p>Encargado de recepción/entrega</p>
-</div>
-
-<!-- 🔥 QUIEN RECIBE (INPUT) -->
-<div style="margin-top:30px;">
-    <label><b>Recibe:</b></label><br>
-    <input type="text" id="recibe" placeholder="Nombre de quien recibe"
-           style="width:300px; padding:5px;">
-</div>
-
-<!-- FIRMA -->
-<div style="margin-top:30px;">
-    <label><b>Firma:</b></label><br>
-    <textarea id="firma" placeholder="Firma (nombre o firma digital)"
-              style="width:300px; height:60px;"></textarea>
-</div>
-
-<br>
-
-<button onclick="imprimir()">🖨️ Imprimir</button>
-
-<script>
-function imprimir() {
-    const recibe = document.getElementById("recibe").value;
-    const firma = document.getElementById("firma").value;
-
-    if (!recibe) {
-        alert("Debes ingresar quién recibe");
-        return;
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
     }
 
-    // reemplazar inputs por texto antes de imprimir
-    document.getElementById("recibe").outerHTML =
-        "<p><b>Recibe:</b> " + recibe + "</p>";
+    /* 🔥 HOJA COMPLETA */
+    .page {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
 
-    document.getElementById("firma").outerHTML =
-        "<p><b>Firma:</b> " + firma + "</p>";
+    /* 🔥 CADA MITAD */
+    .half {
+        height: 50%;
+        padding: 15px;
+        box-sizing: border-box;
+        border-bottom: 1px dashed #000;
+    }
 
-    window.print();
-}
-</script>
+    .header {
+        text-align: center;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .box {
+        border: 1px solid #000;
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    .row {
+        margin-bottom: 4px;
+    }
+
+    .label {
+        font-weight: bold;
+    }
+
+    /* 🔥 FIRMAS */
+    .firmas {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+    }
+
+    .firma-box {
+        width: 45%;
+        text-align: center;
+    }
+
+    .linea {
+        border-top: 1px solid #000;
+        margin-top: 40px;
+        margin-bottom: 5px;
+    }
+
+    .nombre {
+        font-weight: bold;
+    }
+
+    .cargo {
+        font-size: 11px;
+    }
+
+    /* 🔥 IMPRESIÓN */
+    @media print {
+        .no-print {
+            display: none;
+        }
+
+        body {
+            margin: 0;
+        }
+    }
+</style>
+</head>
+
+<body onload="window.print()">
+
+<div class="page">
+
+    <!-- ================= ORIGINAL ================= -->
+    <div class="half">
+        <div class="header">CONSTANCIA DE MOVIMIENTO DE CAJAS (ORIGINAL)</div>
+
+        <div class="box">
+            <div class="row"><span class="label">Registro:</span> {{ registro.registro }}</div>
+            <div class="row"><span class="label">Item SAP:</span> {{ registro.itemsapcode }}</div>
+            <div class="row"><span class="label">Tipo Caja:</span> {{ registro.tipodecaja }}</div>
+            <div class="row"><span class="label">Cantidad:</span> {{ registro.cajas }}</div>
+            <div class="row"><span class="label">Movimiento:</span> {{ registro.tipomov }}</div>
+            <div class="row"><span class="label">Sale:</span> {{ registro.lugar_sale }}</div>
+            <div class="row"><span class="label">Entra:</span> {{ registro.lugar_entra }}</div>
+            <div class="row"><span class="label">Fecha:</span> {{ registro.fecha }}</div>
+        </div>
+
+        <div class="firmas">
+            <div class="firma-box">
+                <div class="linea"></div>
+                <div class="nombre">Mynor Estrada</div>
+                <div class="cargo">Encargado de recepción/entrega</div>
+            </div>
+
+            <div class="firma-box">
+                <div class="linea"></div>
+                <div class="nombre">__________________</div>
+                <div class="cargo">Recibe</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= COPIA ================= -->
+    <div class="half">
+        <div class="header">CONSTANCIA DE MOVIMIENTO DE CAJAS (COPIA)</div>
+
+        <div class="box">
+            <div class="row"><span class="label">Registro:</span> {{ registro.registro }}</div>
+            <div class="row"><span class="label">Item SAP:</span> {{ registro.itemsapcode }}</div>
+            <div class="row"><span class="label">Tipo Caja:</span> {{ registro.tipodecaja }}</div>
+            <div class="row"><span class="label">Cantidad:</span> {{ registro.cajas }}</div>
+            <div class="row"><span class="label">Movimiento:</span> {{ registro.tipomov }}</div>
+            <div class="row"><span class="label">Sale:</span> {{ registro.lugar_sale }}</div>
+            <div class="row"><span class="label">Entra:</span> {{ registro.lugar_entra }}</div>
+            <div class="row"><span class="label">Fecha:</span> {{ registro.fecha }}</div>
+        </div>
+
+        <div class="firmas">
+            <div class="firma-box">
+                <div class="linea"></div>
+                <div class="nombre">Mynor Estrada</div>
+                <div class="cargo">Encargado de recepción/entrega</div>
+            </div>
+
+            <div class="firma-box">
+                <div class="linea"></div>
+                <div class="nombre">__________________</div>
+                <div class="cargo">Recibe</div>
+            </div>
+        </div>
+    </div>
+
+</div>
 
 </body>
 </html>
