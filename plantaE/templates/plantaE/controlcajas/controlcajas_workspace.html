@@ -27,8 +27,8 @@
 
 <div class="container">
 
-    <!-- 🔥 ENCABEZADO EDITABLE -->
-    <form method="POST" action="{% url 'envio_workspace' envio.id %}">
+    <!-- 🔥 FORM PRINCIPAL (EDITAR + FINALIZAR) -->
+    <form method="POST" action="{% url 'cerrar_envio' envio.id %}">
         {% csrf_token %}
 
         <div class="card shadow-sm mb-3">
@@ -59,12 +59,12 @@
                 </div>
 
                 <div class="mt-3">
-                    
 
-                    <a href="{% url 'cerrar_envio' envio.id %}"
-                       class="btn btn-success btn-sm">
-                        ✔ Finalizar envío
-                    </a>
+                    <!-- ✔ BOTÓN FINALIZAR (POST REAL) -->
+                    <button type="submit" class="btn btn-success btn-sm">
+                        ✔ Finalizar Envío
+                    </button>
+
                 </div>
 
                 <p class="mt-2">
@@ -136,6 +136,7 @@
         </h4>
     </div>
 
+    <!-- 🔥 ID OCULTO -->
     <input type="hidden" id="envio_id" value="{{ envio.id }}">
 
 </div>
