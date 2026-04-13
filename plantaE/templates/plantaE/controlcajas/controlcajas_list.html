@@ -12,7 +12,8 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 
     <style>
-        td, th {
+        td,
+        th {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -53,131 +54,132 @@
 </head>
 
 <body>
-<div class="container mt-4">
+    <div class="container mt-4">
 
-    <!-- HEADER -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h4 mb-0">📦 Cajas - Envíos</h1>
+        <!-- HEADER -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="h4 mb-0">📦 Cajas - Envíos</h1>
 
-        <div class="header-actions">
+            <div class="header-actions">
 
-            <!-- 🔥 NUEVO ENVÍO AUTOMÁTICO -->
-            <button id="nuevoEnvio" class="btn btn-success btn-sm">
-                <i class="fas fa-truck"></i> Nuevo Envío
-            </button>
+                <!-- 🔥 NUEVO ENVÍO AUTOMÁTICO -->
+                <button id="nuevoEnvio" class="btn btn-success btn-sm">
+                    <i class="fas fa-truck"></i> Nuevo Envío
+                </button>
 
-            <a href="{% url 'controlcajas_inventario' %}" class="btn btn-primary btn-sm">
-                <i class="fas fa-warehouse"></i> Inventario
-            </a>
+                <a href="{% url 'controlcajas_inventario' %}" class="btn btn-primary btn-sm">
+                    <i class="fas fa-warehouse"></i> Inventario
+                </a>
 
+            </div>
+        </div>
+
+        <!-- TABLA -->
+        <div class="table-container">
+            <table class="table table-striped table-hover" id="myTable">
+
+                <thead>
+                    <tr>
+                        <th>Llave</th>
+                        <th>ItemSAPCode</th>
+                        <th>ItemSAPName</th>
+                        <th>Cantidad</th>
+                        <th>Lugar-Sale</th>
+                        <th>Lugar-Entra</th>
+                        <th>Tipo-Mov</th>
+                        <th>Fecha</th>
+
+                        <!-- 🔥 NUEVO: ENVÍO -->
+                        <th>Envio</th>
+
+                        <th>Imprimir</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for registro in registros %}
+                    <tr>
+                        <td>{{ registro.registro }}</td>
+                        <td>{{ registro.itemsapcode }}</td>
+                        <td>{{ registro.tipodecaja }}</td>
+                        <td>{{ registro.cajas }}</td>
+                        <td>{{ registro.lugar_sale }}</td>
+                        <td>{{ registro.lugar_entra }}</td>
+                        <td>{{ registro.tipomov }}</td>
+                        <td>{{ registro.fecha }}</td>
+
+                        <!-- 🔥 ENVÍO -->
+                        <td>
+                            {% if registro.envio %}
+                            <span class="badge bg-info">#{{ registro.envio }}</span>
+                            {% else %}
+                            <span class="badge bg-secondary">Sin asignar</span>
+                            {% endif %}
+                        </td>
+
+                        <!-- PRINT -->
+                        <td class="action-icons">
+                            <a href="{% url 'envio_print' registro.envio %}" target="_blank" title="Imprimir envío">
+                                <i class="fas fa-print text-primary"></i>
+                            </a>
+                        </td>
+
+                        <!-- EDIT -->
+                        <td class="action-icons">
+                            <a href="{% url 'controlcajas_update' registro.pk %}">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        </td>
+
+                        <!-- DELETE -->
+                        <td class="action-icons">
+                            <a href="{% url 'controlcajas_delete' registro.pk %}">
+                                <i class="fas fa-trash-alt text-danger"></i>
+                            </a>
+                        </td>
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
         </div>
     </div>
 
-    <!-- TABLA -->
-    <div class="table-container">
-        <table class="table table-striped table-hover" id="myTable">
+    <!-- SCRIPTS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
-            <thead>
-            <tr>
-                <th>Llave</th>
-                <th>ItemSAPCode</th>
-                <th>ItemSAPName</th>
-                <th>Cantidad</th>
-                <th>Lugar-Sale</th>
-                <th>Lugar-Entra</th>
-                <th>Tipo-Mov</th>
-                <th>Fecha</th>
+    <script>
+        $('#myTable').DataTable({
+            scrollX: true,
+            autoWidth: false,
+            columnDefs: [
+                { width: "150px", targets: "_all" }
+            ]
+        });
+    </script>
 
-                <!-- 🔥 NUEVO: ENVÍO -->
-                <th>Envio</th>
+    <!-- 🔥 NUEVO ENVÍO AUTOMÁTICO -->
+    <script>
+        document.getElementById("nuevoEnvio").addEventListener("click", function () {
 
-                <th>Imprimir</th>
-                <th>Editar</th>
-                <th>Eliminar</th>
-            </tr>
-            </thead>
+            fetch("{% url 'envio_create_auto' %}", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}"
+                }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    window.location.href = data.redirect;
+                });
 
-            <tbody>
-            {% for registro in registros %}
-            <tr>
-                <td>{{ registro.registro }}</td>
-                <td>{{ registro.itemsapcode }}</td>
-                <td>{{ registro.tipodecaja }}</td>
-                <td>{{ registro.cajas }}</td>
-                <td>{{ registro.lugar_sale }}</td>
-                <td>{{ registro.lugar_entra }}</td>
-                <td>{{ registro.tipomov }}</td>
-                <td>{{ registro.fecha }}</td>
-
-                <!-- 🔥 ENVÍO -->
-                <td>
-                    {% if registro.envio %}
-                        <span class="badge bg-info">#{{ registro.envio }}</span>
-                    {% else %}
-                        <span class="badge bg-secondary">Sin asignar</span>
-                    {% endif %}
-                </td>
-
-                <!-- PRINT -->
-                <td class="action-icons">
-                    <a href="{% url 'controlcajas_print' registro.pk %}" target="_blank">
-                        <i class="fas fa-print text-primary"></i>
-                    </a>
-                </td>
-
-                <!-- EDIT -->
-                <td class="action-icons">
-                    <a href="{% url 'controlcajas_update' registro.pk %}">
-                        <i class="fas fa-edit"></i>
-                    </a>
-                </td>
-
-                <!-- DELETE -->
-                <td class="action-icons">
-                    <a href="{% url 'controlcajas_delete' registro.pk %}">
-                        <i class="fas fa-trash-alt text-danger"></i>
-                    </a>
-                </td>
-
-            </tr>
-            {% endfor %}
-            </tbody>
-
-        </table>
-    </div>
-</div>
-
-<!-- SCRIPTS -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-
-<script>
-$('#myTable').DataTable({
-    scrollX: true,
-    autoWidth: false,
-    columnDefs: [
-        { width: "150px", targets: "_all" }
-    ]
-});
-</script>
-
-<!-- 🔥 NUEVO ENVÍO AUTOMÁTICO -->
-<script>
-document.getElementById("nuevoEnvio").addEventListener("click", function () {
-
-    fetch("{% url 'envio_create_auto' %}", {
-        method: "POST",
-        headers: {
-            "X-CSRFToken": "{{ csrf_token }}"
-        }
-    })
-    .then(res => res.json())
-    .then(data => {
-        window.location.href = data.redirect;
-    });
-
-});
-</script>
+        });
+    </script>
 
 </body>
+
 </html>
