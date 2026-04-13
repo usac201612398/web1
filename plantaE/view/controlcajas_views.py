@@ -5,7 +5,7 @@ from django.views.generic import ListView, CreateView, UpdateView
 from django.http import JsonResponse
 from django.db.models import Sum, Case, When, Value as V, F, IntegerField
 from django.db.models.functions import Trim, Abs
-
+import timezone
 # modelos
 from plantaE.models import controlcajas, tipoCajas, envioccajas
 
@@ -136,7 +136,7 @@ class ControlCajasCreateView(CreateView):
         initial = super().get_initial()
         initial['fecha'] = timezone.now().date()
         return initial
-        
+
     def dispatch(self, request, *args, **kwargs):
         self.envio_id = request.GET.get("envio_id")
         return super().dispatch(request, *args, **kwargs)
