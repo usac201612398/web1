@@ -13,16 +13,30 @@ from plantaE.models import controlcajas, tipoCajas, envioccajas
 from plantaE.forms import controlcajasForm
 
 def cerrar_envio(request, envio_id):
-    envio = get_object_or_404(envioccajas, id=envio_id)
-    envio.destino = request.POST.get("destino")
-    envio.recibe = request.POST.get("recibe")
-    envio.observaciones = request.POST.get("observaciones")
-    envio.save()
-    # 🔥 VALIDACIONES
-    if not envio.destino or not envio.recibe:
-        return redirect('envio_workspace', envio_id=envio.id)
 
-    return redirect('controlcajas_list')
+    envio = get_object_or_404(envioccajas, id=envio_id)
+
+    if request.method == "POST":
+
+        destino = request.POST.get("destino")
+        recibe = request.POST.get("recibe")
+        observaciones = request.POST.get("observaciones")
+
+        # 🔥 VALIDAR PRIMERO
+        if not destino or not recibe:
+            return redirect('envio_workspace', envio_id=envio.id)
+
+        # 🔥 SOLO SI ES VALIDO, GUARDAR
+        envio.destino = destino
+        envio.recibe = recibe
+        envio.observaciones = observaciones
+        envio.status = "Cerrado"
+        envio.save()
+
+        return redirect('controlcajas_list')
+
+    return redirect('envio_workspace', envio_id=envio.id)
+
 def anular_caja(request, pk):
     caja = get_object_or_404(controlcajas, pk=pk)
 
