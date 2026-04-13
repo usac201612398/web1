@@ -24,12 +24,12 @@ def cerrar_envio(request, envio_id):
 
         # 🔥 1. VALIDAR CAJAS
         if not cajas.exists():
-            messages.error(request, "No puedes finalizar un envío sin cajas.")
+            
             return redirect('envio_workspace', envio_id=envio_id)
 
         # 🔥 2. VALIDAR CAMPOS
         if not destino or not recibe:
-            messages.error(request, "Debes completar destino y quién recibe.")
+            
             return redirect('envio_workspace', envio_id=envio_id)
 
         # 🔥 3. CREAR ENVÍO FINAL
