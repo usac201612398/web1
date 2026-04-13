@@ -34,26 +34,23 @@
         <div class="card shadow-sm mb-3">
             <div class="card-body">
 
-                <h3 class="mb-3">📦 ENVÍO #{{ envio.id }}</h3>
+                <h3>📦 ENVÍO #{{ envio_id }}</h3>
 
                 <div class="row">
 
                     <div class="col-md-4">
                         <label>Destino</label>
-                        <input type="text" name="destino" class="form-control"
-                               value="{{ envio.destino }}">
+                        <input type="text" name="destino" value="{{ envio.destino|default:'' }}">
                     </div>
 
                     <div class="col-md-4">
                         <label>Recibe</label>
-                        <input type="text" name="recibe" class="form-control"
-                               value="{{ envio.recibe }}">
+                        <input type="text" name="recibe" value="{{ envio.recibe|default:'' }}">
                     </div>
 
                     <div class="col-md-4">
                         <label>Observaciones</label>
-                        <input type="text" name="observaciones" class="form-control"
-                               value="{{ envio.observaciones }}">
+                        <input type="text" name="observaciones" value="{{ envio.observaciones|default:'' }}">
                     </div>
 
                 </div>

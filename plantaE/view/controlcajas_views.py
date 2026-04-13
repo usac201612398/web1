@@ -81,13 +81,15 @@ class EnvioWorkspaceView(View):
 
     def get(self, request, envio_id):
 
-        #envio = get_object_or_404(envioccajas, id=envio_id)
+        envio = envioccajas.objects.filter(id=envio_id).first()
+
         cajas = controlcajas.objects.exclude(status='Anulado').filter(envio=envio_id)
 
         total = sum([c.cajas or 0 for c in cajas])
 
         return render(request, "plantaE/controlcajas/controlcajas_workspace.html", {
-            "envio": envio_id,
+            "envio": envio,          # 🔥 objeto o None
+            "envio_id": envio_id,    # 🔥 SIEMPRE mandar este
             "cajas": cajas,
             "total": total
         })
