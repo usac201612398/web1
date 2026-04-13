@@ -55,10 +55,11 @@ class ControlCajasPrintView(View):
         ).exclude(
             status="Anulado"
         )
-
+        total = sum(c.cajas or 0 for c in cajas)
         return render(request, 'plantaE/controlcajas/controlcajas_print.html', {
             'envio': envio,
-            'cajas': cajas
+            'cajas': cajas,
+            'total': total
         })
         
 class EnvioCreateAutoView(View):
