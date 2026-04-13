@@ -48,7 +48,7 @@ class EnvioWorkspaceView(View):
 
         total = sum([c.cajas or 0 for c in cajas])
 
-        return render(request, "plantaE/controlcajas_workspace.html", {
+        return render(request, "plantaE/controlcajas/controlcajas_workspace.html", {
             "envio": envio,
             "cajas": cajas,
             "total": total
