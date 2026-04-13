@@ -14,7 +14,10 @@ from plantaE.forms import controlcajasForm
 
 def cerrar_envio(request, envio_id):
     envio = get_object_or_404(envioccajas, id=envio_id)
-
+    envio.destino = request.POST.get("destino")
+    envio.recibe = request.POST.get("recibe")
+    envio.observaciones = request.POST.get("observaciones")
+    envio.save()
     # 🔥 VALIDACIONES
     if not envio.destino or not envio.recibe:
         return redirect('envio_workspace', envio_id=envio.id)
