@@ -186,6 +186,7 @@ class ControlCajasUpdateView(UpdateView):
         context['modo'] = 'actualizar'
         return context
 
+
 class ControlCajasDeleteView(View):
 
     template_name = 'plantaE/controlcajas/controlcajas_confirm_delete.html'
@@ -197,25 +198,24 @@ class ControlCajasDeleteView(View):
     def post(self, request, pk):
 
         registro = get_object_or_404(controlcajas, pk=pk)
-
         envio_id = registro.envio
 
-        # 🔥 VALIDACIÓN
+        # 🔥 VALIDACIÓN (opcional si quieres mantenerlo)
         if registro.tipomov != "Manual":
             return render(request, self.template_name, {
                 'registros': registro,
-                'alert_message': "No se puede anular este movimiento porque no es de serie manual.",
+                'alert_message': "No se puede anular este movimiento.",
                 'redirect_url': reverse('envio_workspace', args=[envio_id])
             })
 
-        # 🔥 ANULAR DETALLE
+        # 🔥 1. ANULAR TODO EL DETALLE DEL ENVÍO
         controlcajas.objects.filter(envio=envio_id).update(status="Anulado")
 
-        # 🔥 ANULAR CABECERA
+        # 🔥 2. ANULAR CABECERA DEL ENVÍO
         envioccajas.objects.filter(id=envio_id).update(status="Anulado")
 
+        # 🔥 3. REDIRECCIÓN FINAL
         return redirect('controlcajas_list')
-
 class ObtenerItemsRelacionadosView(View):
 
     def get(self, request):
