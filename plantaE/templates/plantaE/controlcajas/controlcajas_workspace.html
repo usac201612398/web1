@@ -28,7 +28,7 @@
 <div class="container">
 
     <!-- 🔥 FORM PRINCIPAL (EDITAR + FINALIZAR) -->
-    <form method="POST" action="{% url 'cerrar_envio' envio.id %}">
+    <form method="POST" action="{% url 'cerrar_envio' envio_id %}">
         {% csrf_token %}
 
         <div class="card shadow-sm mb-3">
