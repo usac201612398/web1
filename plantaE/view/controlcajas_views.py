@@ -104,7 +104,7 @@ class ControlCajasListView(ListView):
     context_object_name = 'registros'
 
     def get_queryset(self):
-        return controlcajas.objects.exclude(tipomov="Recepción").order_by('-registro')
+        return controlcajas.objects.exclude(tipomov="Recepción",status='Anulado').order_by('-registro')
 
 class ControlCajasInventarioView(View):
 
