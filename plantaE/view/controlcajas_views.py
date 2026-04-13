@@ -63,7 +63,7 @@ class ControlCajasPrintView(View):
             "cajas": cajas,
             "total": total
         })
-        
+
 class EnvioCreateAutoView(View):
 
     def post(self, request):
@@ -71,10 +71,6 @@ class EnvioCreateAutoView(View):
         ultimo = envioccajas.objects.order_by('-id').first()
         nuevo_id = (ultimo.id + 1) if ultimo else 1
 
-        envio = envioccajas.objects.create(
-            id=nuevo_id,
-            status="Abierto"
-        )
 
         return JsonResponse({
             "envio_id": envio.id,
