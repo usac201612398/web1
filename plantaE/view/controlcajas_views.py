@@ -73,7 +73,7 @@ class EnvioCreateAutoView(View):
 
 
         return JsonResponse({
-            "envio_id": envio.id,
+            "envio_id": nuevo_id,
             "redirect": reverse('envio_workspace', args=[nuevo_id])
         })
 
