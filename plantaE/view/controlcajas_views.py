@@ -115,7 +115,7 @@ class ControlCajasListView(ListView):
         ).exclude(
             tipomov="Recepción"
         ).order_by('-registro')
-        
+
 class ControlCajasInventarioView(View):
 
     def get(self, request):
@@ -192,28 +192,34 @@ class ControlCajasDeleteView(View):
     template_name = 'plantaE/controlcajas/controlcajas_confirm_delete.html'
 
     def get(self, request, pk):
-        salidas = get_object_or_404(controlcajas, pk=pk)
-        return render(request, self.template_name, {'registros': salidas})
+        registro = get_object_or_404(controlcajas, pk=pk)
+        return render(request, self.template_name, {'registros': registro})
 
     def post(self, request, pk):
 
-        salidas = get_object_or_404(controlcajas, pk=pk)
+        registro = get_object_or_404(controlcajas, pk=pk)
 
-        if salidas.tipomov != "Manual":
+        envio_id = registro.envio
+
+        # 🔥 VALIDACIÓN
+        if registro.tipomov != "Manual":
             return render(request, self.template_name, {
-                'registros': salidas,
+                'registros': registro,
                 'alert_message': "No se puede anular este movimiento porque no es de serie manual.",
-                'redirect_url': reverse('controlcajas_list')
+                'redirect_url': reverse('envio_workspace', args=[envio_id])
             })
 
-        salidas.status = 'Anulado'
-        salidas.save()
+        # 🔥 ANULAR DETALLE
+        controlcajas.objects.filter(envio=envio_id).update(status="Anulado")
+
+        # 🔥 ANULAR CABECERA
+        envioccajas.objects.filter(id=envio_id).update(status="Anulado")
 
         return render(request, self.template_name, {
-            'alert_message': "El registro fue anulado correctamente.",
-            'redirect_url': reverse('controlcajas_list')
-        })     
-
+            'alert_message': "El envío fue anulado correctamente.",
+            'redirect_url': reverse('envio_workspace', args=[envio_id])
+        })
+        
 class ObtenerItemsRelacionadosView(View):
 
     def get(self, request):
