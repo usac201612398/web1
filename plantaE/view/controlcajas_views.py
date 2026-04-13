@@ -104,8 +104,18 @@ class ControlCajasListView(ListView):
     context_object_name = 'registros'
 
     def get_queryset(self):
-        return controlcajas.objects.exclude(tipomov="Recepción",status='Anulado').order_by('-registro')
 
+        hoy = timezone.now()
+
+        return controlcajas.objects.filter(
+            fecha__year=hoy.year,
+            fecha__month=hoy.month
+        ).exclude(
+            status="Anulado"
+        ).exclude(
+            tipomov="Recepción"
+        ).order_by('-registro')
+        
 class ControlCajasInventarioView(View):
 
     def get(self, request):
