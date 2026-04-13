@@ -181,13 +181,18 @@ class ControlCajasCreateView(CreateView):
     def form_valid(self, form):
         obj = form.save(commit=False)
 
-        if self.envio_id:
-            obj.envio = self.envio_id
+        envio_id = self.request.GET.get("envio_id")
+
+        # 🔥 VALIDACIÓN IMPORTANTE
+        if not envio_id:
+            return redirect('controlcajas_list')
+
+        # 🔥 ASIGNAR ENVÍO
+        obj.envio = int(envio_id)
 
         obj.save()
 
-        # 🔥 IMPORTANTE: volver al workspace, no al list
-        return redirect('envio_workspace', envio_id=self.envio_id)
+        return redirect('envio_workspace', envio_id=envio_id)
 
 class ControlCajasUpdateView(UpdateView):
     model = controlcajas
