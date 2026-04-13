@@ -32,11 +32,8 @@ def cerrar_envio(request, envio_id):
     envio.destino = request.POST.get("destino")
     envio.recibe = request.POST.get("recibe")
     envio.observaciones = request.POST.get("observaciones")
-    envio.status = "Cerrado"
     envio.save()
 
-    # 🔥 opcional: cerrar también detalle
-    controlcajas.objects.filter(envio=envio_id).update(status="Cerrado")
 
     return redirect('controlcajas_list')
     
