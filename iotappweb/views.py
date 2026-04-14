@@ -21,6 +21,7 @@ from django.shortcuts import get_object_or_404, redirect
 from .forms import sensordetallesForm
 from decimal import Decimal, ROUND_DOWN
 from datetime import timezone as dt_timezone
+from datetime import time as dt_time
 
 MQTT_HOST = "10.111.112.4"
 MQTT_PORT = 1883
@@ -387,8 +388,8 @@ def es_horario_valido():
     ahora = timezone.localtime().time()
 
     ventanas = [
-        (time(7, 0), time(9, 0)),    # mañana
-        (time(19, 0), time(20, 0)),  # noche
+        (dt_time(7, 0), dt_time(9, 0)),    # mañana
+        (dt_time(19, 0), dt_time(20, 0)),  # noche
     ]
 
     return any(inicio <= ahora <= fin for inicio, fin in ventanas)
