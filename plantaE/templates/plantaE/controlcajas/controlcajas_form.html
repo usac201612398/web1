@@ -245,6 +245,37 @@
 </html>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const tipo = document.getElementById("id_tipomov");
+    const sale = document.getElementById("id_lugar_sale").closest(".form-group");
+    const entra = document.getElementById("id_lugar_entra").closest(".form-group");
+
+    function toggle() {
+
+        if (tipo.value === "Recepción") {
+
+            // PLANTAE recibe
+            entra.style.display = "none";
+            sale.style.display = "block";
+
+            document.getElementById("id_lugar_entra").value = "PLANTAE";
+
+        } else if (tipo.value === "Entrega") {
+
+            // PLANTAE sale
+            sale.style.display = "none";
+            entra.style.display = "block";
+
+            document.getElementById("id_lugar_sale").value = "PLANTAE";
+        }
+    }
+
+    tipo.addEventListener("change", toggle);
+    toggle();
+});
+</script>
+<script>
     $(function () {
         $('#id_itemsapcode').change(function () {
             const codigo = $(this).val();

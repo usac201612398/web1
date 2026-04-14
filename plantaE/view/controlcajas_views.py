@@ -8,7 +8,7 @@ from django.db.models.functions import Trim, Abs
 from django.utils import timezone
 # modelos
 from plantaE.models import controlcajas, tipoCajas, envioccajas
-
+import uuid
 # formularios
 from plantaE.forms import controlcajasForm
 
@@ -40,10 +40,17 @@ def cerrar_envio(request, envio_id):
 def anular_caja(request, pk):
     caja = get_object_or_404(controlcajas, pk=pk)
 
-    caja.status = "Anulado"
-    caja.save()
+    if caja.movimiento_ref:
+        controlcajas.objects.filter(
+            movimiento_ref=caja.movimiento_ref
+        ).update(status="Anulado")
+    else:
+        # fallback por si hay datos viejos sin referencia
+        caja.status = "Anulado"
+        caja.save()
 
     return redirect('envio_workspace', envio_id=caja.envio)
+    
 class ControlCajasPrintView(View):
 
     def get(self, request, envio_id):
@@ -164,6 +171,7 @@ class ControlCajasCreateView(CreateView):
     form_class = controlcajasForm
     template_name = 'plantaE/controlcajas/controlcajas_form.html'
     success_url = reverse_lazy('controlcajas_list')
+    
     def get_initial(self):
         initial = super().get_initial()
         initial['fecha'] = timezone.now().date()
@@ -175,13 +183,76 @@ class ControlCajasCreateView(CreateView):
 
     def form_valid(self, form):
         obj = form.save(commit=False)
-
+        ref = uuid.uuid4().hex
         if self.envio_id:
             obj.envio = self.envio_id
 
-        obj.save()
+        cajas = abs(obj.cajas)
 
-        # 🔥 IMPORTANTE: volver al workspace, no al list
+        if obj.tipomov == 'Recepción':
+
+            # 🟢 entra a PLANTAE
+            controlcajas.objects.create(
+                envio=obj.envio,
+                tipomov='Recepción',
+                lugar_entra='PLANTAE',
+                lugar_sale=obj.lugar_sale,
+                cajas=cajas,
+                tipodecaja=obj.tipodecaja,
+                itemsapcode=obj.itemsapcode,
+                fecha=obj.fecha,
+                encargado=obj.encargado,
+                movimiento_ref=ref,
+                status="Activo"
+            )
+
+            # 🔴 sale del origen
+            controlcajas.objects.create(
+                envio=obj.envio,
+                tipomov='Entrega',
+                lugar_sale=obj.lugar_sale,
+                lugar_entra='PLANTAE',
+                cajas=cajas,
+                tipodecaja=obj.tipodecaja,
+                itemsapcode=obj.itemsapcode,
+                fecha=obj.fecha,
+                encargado=obj.encargado,
+                movimiento_ref=ref,
+                status="Activo"
+            )
+
+        elif obj.tipomov == 'Entrega':
+
+            # 🔴 sale de PLANTAE
+            controlcajas.objects.create(
+                envio=obj.envio,
+                tipomov='Entrega',
+                lugar_sale='PLANTAE',
+                lugar_entra=obj.lugar_entra,
+                cajas=cajas,
+                tipodecaja=obj.tipodecaja,
+                itemsapcode=obj.itemsapcode,
+                fecha=obj.fecha,
+                encargado=obj.encargado,
+                movimiento_ref=ref,
+                status="Activo"
+            )
+
+            # 🟢 entra al destino
+            controlcajas.objects.create(
+                envio=obj.envio,
+                tipomov='Recepción',
+                lugar_entra=obj.lugar_entra,
+                lugar_sale='PLANTAE',
+                cajas=cajas,
+                tipodecaja=obj.tipodecaja,
+                itemsapcode=obj.itemsapcode,
+                fecha=obj.fecha,
+                encargado=obj.encargado,
+                movimiento_ref=ref,
+                status="Activo"
+            )
+
         return redirect('envio_workspace', envio_id=self.envio_id)
 
 class ControlCajasUpdateView(UpdateView):

@@ -630,7 +630,7 @@ class controlcajasForm(forms.ModelForm):
                 cleaned_data['cajas'] = abs(cajas)
             
             # Check for 'Recepcion' (Reception)
-            elif tipomov == 'Recepcion':
+            elif tipomov == 'Recepción':
                 # If Recepcion, boxes must be positive.
                 # Use abs() to ensure the number is positive regardless of input
                 cleaned_data['cajas'] = -abs(cajas)
