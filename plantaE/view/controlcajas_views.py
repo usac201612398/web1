@@ -61,7 +61,7 @@ class ControlCajasPrintView(View):
             envio=envio_id
         ).exclude(
             status="Anulado"
-        )
+        ).filter(tipomov="Entrega")
         total = sum(c.cajas or 0 for c in cajas)
         return render(request, 'plantaE/controlcajas/controlcajas_print.html', {
             'envio': envio,
@@ -91,7 +91,7 @@ class EnvioWorkspaceView(View):
     def get(self, request, envio_id):
 
         envio = get_object_or_404(envioccajas, id=envio_id)
-        cajas = controlcajas.objects.exclude(status='Anulado').filter(envio=envio_id)
+        cajas = controlcajas.objects.exclude(status='Anulado').filter(envio=envio_id).filter(tipomov="Entrega")
 
         total = sum([c.cajas or 0 for c in cajas])
 
@@ -127,9 +127,7 @@ class ControlCajasListView(ListView):
             fecha__month=hoy.month
         ).exclude(
             status="Anulado"
-        ).exclude(
-            tipomov="Recepción"
-        ).order_by('-registro')
+        ).filter(tipomov="Entrega").order_by('-registro')
 
 class ControlCajasInventarioView(View):
 
