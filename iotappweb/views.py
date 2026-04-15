@@ -671,6 +671,8 @@ def enviar_alerta(data):
         mensaje = (
             f"🚨 NECESITA RIEGO\n"
             f"Sensor: {sensor_obj.sensor}\n"
+            
+            f"Aranet: {sensor_obj.nombrearanet}\n"
             f"Finca: {sensor_obj.finca}\n"
             f"Estructura: {sensor_obj.estructura}\n"
             f"Priva: {sensor_obj.priva}\n"
@@ -682,6 +684,7 @@ def enviar_alerta(data):
         mensaje = (
             f"💧 EXCESO DE RIEGO\n"
             f"Sensor: {sensor_obj.sensor}\n"
+            f"Aranet: {sensor_obj.nombrearanet}\n"
             f"Finca: {sensor_obj.finca}\n"
             f"Estructura: {sensor_obj.estructura}\n"
             f"Priva: {sensor_obj.priva}\n"
