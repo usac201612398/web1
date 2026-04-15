@@ -388,7 +388,7 @@ def es_horario_valido():
     ahora = timezone.localtime().time()
 
     ventanas = [
-        (dt_time(7, 0), dt_time(9, 0)),    # mañana
+        (dt_time(7, 0), dt_time(8, 0)),    # mañana
         (dt_time(19, 0), dt_time(20, 0)),  # noche
     ]
 
@@ -514,7 +514,7 @@ def aranet_resumen_json(request):
 
         # agregar finca, priva y estructura
         resultado.append({
-            "sensor": str(readings[0].sensor.sensor),
+            "sensor": str(readings[0].sensor.nombrearanet),
             "finca": readings[0].sensor.finca,
             "priva": readings[0].sensor.priva,
             "estructura": readings[0].sensor.estructura,
@@ -553,7 +553,7 @@ def aranet_clima_json(request):
         dh = calcular_dh(temp, hum)
 
         resultado.append({
-            "sensor": sensor_obj.sensor,
+            "sensor": sensor_obj.nombrearanet,
             "finca": sensor_obj.finca,
             "priva": sensor_obj.priva,
             "estructura": sensor_obj.estructura,
