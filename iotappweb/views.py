@@ -394,7 +394,7 @@ REGLAS_ALERTA = [
     {
         "inicio": dt_time(9, 0),
         "fin": dt_time(15, 0),
-        "umbral_min": 5,
+        "umbral_min": 4,
         "umbral_max": -5,
     },
     {
