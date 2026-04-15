@@ -8,10 +8,15 @@ from django.db.models.functions import Trim, Abs
 from django.utils import timezone
 # modelos
 from plantaE.models import controlcajas, tipoCajas, envioccajas
-import uuid
 # formularios
 from plantaE.forms import controlcajasForm
+from django.db import transaction
 
+def get_next_transaccion():
+    with transaction.atomic():
+        last = controlcajas.objects.select_for_update().order_by('-movimiento_ref').first()
+        return (last.movimiento_ref + 1) if last and last.movimiento_ref else 1
+        
 def cerrar_envio(request, envio_id):
 
     envio = get_object_or_404(envioccajas, id=envio_id)
@@ -181,7 +186,7 @@ class ControlCajasCreateView(CreateView):
 
     def form_valid(self, form):
         obj = form.save(commit=False)
-        ref = uuid.uuid4().hex
+        ref = get_next_transaccion()
         if self.envio_id:
             obj.envio = self.envio_id
 

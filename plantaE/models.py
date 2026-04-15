@@ -311,7 +311,7 @@ class controlcajas(models.Model):
     fechasalidafruta = models.DateField(blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     encargado = models.CharField(max_length=50, blank=True, null=True)
-    movimiento_ref = models.CharField(max_length=32,db_index=True,null=True,blank=True)
+    movimiento_ref=models.BigIntegerField(db_index=True, null=True)
 
     def __str__(self):
         return (str(self.lugar_sale)+ " | " + str(self.lugar_entra)  + " | " +str(self.tipodecaja) + " | " + str(self.fechasalidafruta))
