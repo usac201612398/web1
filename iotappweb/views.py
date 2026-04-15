@@ -384,15 +384,46 @@ def calcular_dh(temperatura, humedad):
     except:
         return None
 
-def es_horario_valido():
+REGLAS_ALERTA = [
+    {
+        "inicio": dt_time(7, 0),
+        "fin": dt_time(8, 0),
+        "umbral_min": 10,
+        "umbral_max": -5,
+    },
+    {
+        "inicio": dt_time(9, 0),
+        "fin": dt_time(15, 0),
+        "umbral_min": 5,
+        "umbral_max": -5,
+    },
+    {
+        "inicio": dt_time(19, 0),
+        "fin": dt_time(20, 0),
+        "umbral_min": 8,
+        "umbral_max": -5,
+    },
+]
+
+def obtener_regla_actual():
     ahora = timezone.localtime().time()
 
-    ventanas = [
-        (dt_time(7, 0), dt_time(8, 0)),    # mañana
-        (dt_time(19, 0), dt_time(20, 0)),  # noche
-    ]
+    for regla in REGLAS_ALERTA:
+        if regla["inicio"] <= ahora <= regla["fin"]:
+            return regla
 
-    return any(inicio <= ahora <= fin for inicio, fin in ventanas)
+    return None
+
+def puede_enviar_alerta(sensor_obj):
+    hace_30_min = timezone.now() - timedelta(minutes=30)
+
+    ultima = SensorAlert.objects.filter(
+        sensor=sensor_obj,
+        timestamp__gte=hace_30_min
+    ).exists()
+
+    return not ultima
+
 
 def login_exempt(view_func):
     setattr(view_func, 'login_exempt', True)
@@ -571,6 +602,7 @@ def aranet_resumen_page(request):
 
 def aranet_clima_page(request):
     return render(request, "iotappweb/aranet_clima.html")
+    
 def evaluar_sensor(sensor_obj):
     reading = SensorData.objects.filter(
         sensor=sensor_obj,
@@ -580,40 +612,59 @@ def evaluar_sensor(sensor_obj):
     if not reading:
         return None
 
+    regla = obtener_regla_actual()
+    if not regla:
+        return None
+
     peso_base = sensor_obj.set_point
     if peso_base == 0:
         return None
 
-    # calcular porcentaje de pérdida actual
     porcentaje_restante = (reading.value / peso_base) * 100
     porcentaje_perdida = 100 - porcentaje_restante
 
-    # 🚨 reglas simples
-    if porcentaje_perdida >= sensor_obj.umbral_min:
-        tipo = "riego"
-        print(f"🚨 Riego requerido ({porcentaje_perdida:.2f}%)")
+    en_alerta_riego = porcentaje_perdida >= regla["umbral_min"]
+    en_alerta_exceso = porcentaje_perdida <= regla["umbral_max"]
 
-    elif porcentaje_perdida <= sensor_obj.umbral_max:
-        tipo = "exceso"
-        print(f"💧 Exceso de riego ({porcentaje_perdida:.2f}%)")
+    tipo_actual = None
+    if en_alerta_riego:
+        tipo_actual = "riego"
+    elif en_alerta_exceso:
+        tipo_actual = "exceso"
 
-    else:
+    # 🚫 no hay alerta
+    if not tipo_actual:
+        if sensor_obj.alerta_activa:
+            sensor_obj.alerta_activa = False
+            sensor_obj.alerta_tipo = None
+            sensor_obj.save(update_fields=["alerta_activa", "alerta_tipo"])
         return None
 
-    return {
-        "sensor": sensor_obj,
-        "peso_actual": reading.value,
-        "peso_base": peso_base,
-        "porcentaje_perdida": porcentaje_perdida,
-        "cambio": 0,  # ya no calculamos cambio
-        "tipo": tipo
-    }
+    # 🔥 SI CAMBIÓ EL ESTADO O EL TIPO → ALERTA
+    if (
+        not sensor_obj.alerta_activa or
+        sensor_obj.alerta_tipo != tipo_actual
+    ):
+        sensor_obj.alerta_activa = True
+        sensor_obj.alerta_tipo = tipo_actual
+        sensor_obj.save(update_fields=["alerta_activa", "alerta_tipo"])
 
+        return {
+            "sensor": sensor_obj,
+            "peso_actual": reading.value,
+            "peso_base": peso_base,
+            "porcentaje_perdida": porcentaje_perdida,
+            "tipo": tipo_actual
+        }
+
+    return None
 def enviar_alerta(data):
     
-    if not es_horario_valido():
+    sensor_obj = data["sensor"]
+
+    if not puede_enviar_alerta(sensor_obj):
         return
-    
+
     if data["tipo"] == "riego":
         sensor_obj = data["sensor"]
 
@@ -644,7 +695,8 @@ def enviar_alerta(data):
         sensor=data['sensor'],
         tipo=data['tipo'],
         porcentaje_perdida=data['porcentaje_perdida'],
-        mensaje=mensaje
+        mensaje=mensaje,
+        alerta_tipo = data["tipo"]
     )
     enviar_correo(mensaje, "Alerta Sensores | " + str(sensor_obj.estructura))
     # Enviar WhatsApp

@@ -21,6 +21,8 @@ class SensorDetalles(models.Model):
     umbral_min = models.FloatField(default=9)
     umbral_max = models.FloatField(default=-9)
     status = models.CharField(max_length= 30, blank = True, null =  True)
+    alerta_activa = models.BooleanField(default=False)
+    alerta_tipo = models.CharField(max_length=10, null=True, blank=True)
     
     def __str__(self):
         return f"{self.nombrearanet} ({self.sensor})"
@@ -42,11 +44,12 @@ class SensorData(models.Model):
         return f"{self.sensor} - {self.metric} - {self.value}"
 
 class SensorAlert(models.Model):
-    sensor = models.CharField(max_length=50)
+    sensor = models.ForeignKey(SensorDetalles, on_delete=models.CASCADE)
     tipo = models.CharField(max_length=20)  # "riego" o "exceso"
     porcentaje_perdida = models.FloatField()
     timestamp = models.DateTimeField(auto_now_add=True)
     mensaje = models.TextField()
+    alerta_tipo = models.CharField(max_length=10, null=True, blank=True)
 
 
 
