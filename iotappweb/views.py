@@ -475,7 +475,7 @@ def aranet_webhook(request):
             metric = record.get("n")
             value = record.get("v")
             unit = record.get("u")
-            print("DEBUG:", current_sensor, metric, value, current_timestamp)
+            #print("DEBUG:", current_sensor, metric, value, current_timestamp)
             # Validación
             if not current_sensor or not current_timestamp or not metric or value is None:
                 continue
