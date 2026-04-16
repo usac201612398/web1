@@ -47,6 +47,7 @@ class SensorAlert(models.Model):
     sensor = models.ForeignKey(SensorDetalles, on_delete=models.CASCADE)
     tipo = models.CharField(max_length=20)  # "riego" o "exceso"
     porcentaje_perdida = models.FloatField()
+    porcentaje_critico = models.FloatField()
     timestamp = models.DateTimeField(auto_now_add=True)
     mensaje = models.TextField()
     alerta_tipo = models.CharField(max_length=10, null=True, blank=True)

@@ -394,7 +394,7 @@ REGLAS_ALERTA = [
     {
         "inicio": dt_time(9, 0),
         "fin": dt_time(15, 0),
-        "umbral_min": 5,
+        "umbral_min": 4,
         "umbral_max": -5,
     },
     {
@@ -541,7 +541,9 @@ def aranet_resumen_json(request):
             continue
 
         porcentaje_restante = (peso_actual / peso_base) * 100
-        porcentaje_perdida = 100 - porcentaje_restante
+        porcentaje_critico = 100 - porcentaje_restante
+        
+        porcentaje_perdida = (peso_base - peso_actual)*100/19
 
         # agregar finca, priva y estructura
         resultado.append({
@@ -553,6 +555,7 @@ def aranet_resumen_json(request):
             "peso_base": round(peso_base, 3),
             "porcentaje_restante": round(porcentaje_restante, 2),
             "porcentaje_perdida": round(porcentaje_perdida, 2),
+            "porcentaje_critico": round(porcentaje_critico, 2),
         })
     resultado_ordenado = sorted(
         resultado,
@@ -621,7 +624,8 @@ def evaluar_sensor(sensor_obj):
         return None
 
     porcentaje_restante = (reading.value / peso_base) * 100
-    porcentaje_perdida = 100 - porcentaje_restante
+    porcentaje_perdida = (peso_base - reading.value)*100/19 
+    porcentaje_critico = 100 - porcentaje_restante
 
     en_alerta_riego = porcentaje_perdida >= regla["umbral_min"]
     en_alerta_exceso = porcentaje_perdida <= regla["umbral_max"]
@@ -654,10 +658,12 @@ def evaluar_sensor(sensor_obj):
             "peso_actual": reading.value,
             "peso_base": peso_base,
             "porcentaje_perdida": porcentaje_perdida,
+            "porcentaje_critico": porcentaje_critico,
             "tipo": tipo_actual
         }
 
     return None
+
 def enviar_alerta(data):
     
     sensor_obj = data["sensor"]
@@ -676,7 +682,8 @@ def enviar_alerta(data):
             f"Finca: {sensor_obj.finca}\n"
             f"Estructura: {sensor_obj.estructura}\n"
             f"Priva: {sensor_obj.priva}\n"
-            f"Pérdida: {data['porcentaje_perdida']:.2f}%"
+            f"Pérdida: {data['porcentaje_perdida']:.2f}% \n"
+            f"Pérdida | Max: {data['porcentaje_critico']:.2f}%"
         )
     elif data["tipo"] == "exceso":
         sensor_obj = data["sensor"]
@@ -688,7 +695,8 @@ def enviar_alerta(data):
             f"Finca: {sensor_obj.finca}\n"
             f"Estructura: {sensor_obj.estructura}\n"
             f"Priva: {sensor_obj.priva}\n"
-            f"Pérdida: {data['porcentaje_perdida']:.2f}%"
+            f"Pérdida: {data['porcentaje_perdida']:.2f}% \n"
+            f"Pérdida | Max: {data['porcentaje_critico']:.2f}%"
         )
     else:
         return
@@ -698,6 +706,7 @@ def enviar_alerta(data):
         sensor=data['sensor'],
         tipo=data['tipo'],
         porcentaje_perdida=data['porcentaje_perdida'],
+        porcentaje_critico=data['porcentaje_critico'],
         mensaje=mensaje,
         alerta_tipo = data["tipo"]
     )
