@@ -131,7 +131,6 @@ class ControlCajasListView(ListView):
             fecha__year=hoy.year,
             fecha__month=hoy.month,
             tipomov="Entrega",
-            status__ne="Anulado",
             envio__isnull=False
         ).exclude(
             status="Anulado"
