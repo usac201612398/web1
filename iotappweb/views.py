@@ -394,7 +394,7 @@ REGLAS_ALERTA = [
     {
         "inicio": dt_time(9, 0),
         "fin": dt_time(15, 0),
-        "umbral_min": 4,
+        "umbral_min": 5,
         "umbral_max": -5,
     },
     {
@@ -475,8 +475,9 @@ def aranet_webhook(request):
             metric = record.get("n")
             value = record.get("v")
             unit = record.get("u")
-            #print("DEBUG:", current_sensor, metric, value, current_timestamp)
-            # Validación
+            if current_sensor = "aranet:501162":
+                print("DEBUG:", current_sensor, metric, value, current_timestamp)
+            #    Validación
             if not current_sensor or not current_timestamp or not metric or value is None:
                 continue
 
