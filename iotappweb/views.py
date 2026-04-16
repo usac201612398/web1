@@ -475,17 +475,18 @@ def aranet_webhook(request):
             metric = record.get("n")
             value = record.get("v")
             unit = record.get("u")
-            if current_sensor == "aranet:501162" or current_sensor == "aranet:501162:":
-                print("DEBUG:", current_sensor, metric, value, current_timestamp)
-            #    Validación
-            if not current_sensor or not current_timestamp or not metric or value is None:
+            
+            if metric is None or value is None:
                 continue
 
-            
+            if current_sensor is None or current_timestamp is None:
+                print("⚠️ Missing context → skipping", record)
+                continue
+
             sensor_obj = sensores_map.get(current_sensor)
             if not sensor_obj:
+                print("❌ Sensor no encontrado:", current_sensor)
                 continue
-            
             objects.append(
                 SensorData(
                     sensor=sensor_obj,
