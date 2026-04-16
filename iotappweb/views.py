@@ -476,7 +476,7 @@ def aranet_webhook(request):
             value = record.get("v")
             unit = record.get("u")
             if metric == "weight":
-                print current_sensor
+                print(current_sensor)
             if metric is None or value is None:
                 continue
 
