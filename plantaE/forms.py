@@ -223,11 +223,12 @@ class ccalidadForm(forms.ModelForm):
             (item['llave'] or '').strip().upper(): item['suma']
             for item in suma_por_llave
         }
-
+        if not self.instance.pk:
+            self.fields['fecha'].initial = timezone.now().date()
         # ===============================
         # 🔹 GENERAR LLAVES DESDE DETALLEREC
         # ===============================
-        datos = detallerec.objects.filter(recepcion__gte=7311)
+        datos = detallerec.objects.filter(recepcion__gte=6838)
         datos_modificados = []
 
         for item in datos:
