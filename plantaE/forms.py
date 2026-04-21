@@ -182,56 +182,107 @@ class recepcionesForm(forms.ModelForm):
 
 class ccalidadForm(forms.ModelForm):
 
-    registro = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
-    fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
-    porcentaje= forms.DecimalField(widget=forms.NumberInput(attrs={'class': 'form-control'}))  # Campo numérico
-    llave = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'form-control'}))
-    causarechazo = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'form-control'}))
+    registro = forms.IntegerField(
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'})
+    )
+    fecha = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'})
+    )
+    porcentaje = forms.DecimalField(
+        widget=forms.NumberInput(attrs={'class': 'form-control'})
+    )
+    llave = forms.ChoiceField(
+        choices=[],
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    causarechazo = forms.ChoiceField(
+        choices=[],
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
 
-    observaciones = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
-   
+    observaciones = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=False
+    )
+
     class Meta:
-    
         model = Ccalidad
-        fields = ['registro','fecha','porcentaje',  'llave', 'causarechazo','observaciones']
+        fields = ['registro', 'fecha', 'porcentaje', 'llave', 'causarechazo', 'observaciones']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['observaciones'].required = False
+
         self.fields['registro'].required = False
 
-        # === LLAVES (cargadas desde backend sin AJAX) ===
+        # ===============================
+        # 🔹 SUMA POR LLAVE (NORMALIZADA)
+        # ===============================
         suma_por_llave = Ccalidad.objects.values('llave').annotate(suma=Sum('porcentaje'))
-        suma_dict = {item['llave']: item['suma'] for item in suma_por_llave}
 
+        suma_dict = {
+            (item['llave'] or '').strip().upper(): item['suma']
+            for item in suma_por_llave
+        }
+
+        # ===============================
+        # 🔹 GENERAR LLAVES DESDE DETALLEREC
+        # ===============================
         datos = detallerec.objects.filter(recepcion__gte=2875)
         datos_modificados = []
 
         for item in datos:
             fecha = item.fechasalidafruta
-            semana = fecha.isocalendar()[1] if fecha else ''
-            if item.finca == "Productor":
-                clave = f"{semana} | {item.llave} | {item.cultivo}"
+
+            if not fecha:
+                continue
+
+            # ✅ Año + semana
+            anio, semana, _ = fecha.isocalendar()
+            semana_str = f'{anio}-W{semana:02d}'
+
+            finca = (item.finca or '').strip().upper()
+            cultivo = (item.cultivo or '').strip().upper()
+            llave_item = (item.llave or '').strip().upper()
+
+            # 🔹 lógica PRODUCTOR
+            if finca == "PRODUCTOR":
+                base = llave_item
             else:
-                clave = f"{semana} | {item.finca} | {item.cultivo}"
+                base = finca
+
+            clave = f"{semana_str} | {base} | {cultivo}"
             datos_modificados.append(clave)
 
+        # Quitar duplicados
         datos_modificados = list(set(datos_modificados))
-        datos_modificados = [
-            clave for clave in datos_modificados if suma_dict.get(clave, 0) < 1
-        ]
-        self.fields['llave'].choices = [('', '---------')] + [(clave, clave) for clave in datos_modificados]
 
-        # === CAUSAS DE RECHAZO (también desde backend sin AJAX) ===
+        # ===============================
+        # 🔹 FILTRAR SOLO < 100%
+        # ===============================
+        datos_filtrados = [
+            clave for clave in datos_modificados
+            if (suma_dict.get(clave, 0) or 0) < 0.999   # 👈 usa 99.9 si trabajas 0–100
+        ]
+
+        # ===============================
+        # 🔹 ASIGNAR AL SELECT
+        # ===============================
+        self.fields['llave'].choices = [('', '---------')] + [
+            (clave, clave) for clave in datos_filtrados
+        ]
+
+        # ===============================
+        # 🔹 CAUSAS DE RECHAZO
+        # ===============================
         causas = causasRechazo.objects.all()
         opciones_causa = [(c.causa, c.causa) for c in causas]
 
-        # Si estamos editando y la causa no está en la lista, la agregamos
         if self.instance and self.instance.pk:
-            if self.instance.causarechazo and (self.instance.causarechazo, self.instance.causarechazo) not in opciones_causa:
+            if self.instance.causarechazo and (
+                self.instance.causarechazo, self.instance.causarechazo
+            ) not in opciones_causa:
                 opciones_causa.insert(0, (self.instance.causarechazo, self.instance.causarechazo))
         else:
-            # Si estamos en creación, también incluir el valor del POST si viene
             data = kwargs.get('data')
             causa_valor = data.get('causarechazo') if data else None
             if causa_valor and (causa_valor, causa_valor) not in opciones_causa:
