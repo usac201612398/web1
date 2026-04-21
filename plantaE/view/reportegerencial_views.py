@@ -1467,7 +1467,7 @@ def poraprovechamientosger(request):
     ).annotate(
         semana=ExtractWeek('fecha'),
         anio=ExtractIsoYear('fecha')
-    ).values('finca', 'cultivo', 'orden', 'estructura', 'variedad').annotate(total_libras=Sum('libras')).order_by()
+    ).exclude(status='Anulado').values('finca', 'cultivo', 'orden', 'estructura', 'variedad').annotate(total_libras=Sum('libras')).order_by()
 
     recepciones_dict = {
         formar_clave2(r['finca'], r['cultivo'], r['orden'], r['estructura'], r['variedad']): r['total_libras'] for r in acumfrutadatos
@@ -1557,7 +1557,7 @@ def poraprovechamientosgerglobal(request):
     ).annotate(
         semana=ExtractWeek('fecha'),
         anio=ExtractIsoYear('fecha')
-    ).values('finca', 'cultivo', 'orden').annotate(total_libras=Sum('libras')).order_by()
+    ).exclude(status='Anulado').values('finca', 'cultivo', 'orden').annotate(total_libras=Sum('libras')).order_by()
 
     recepciones_dict = {
         formar_clave4(r['finca'], r['cultivo'], r['orden']): r['total_libras'] for r in acumfrutadatos
