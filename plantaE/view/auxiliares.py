@@ -354,6 +354,8 @@ def obtener_proveedor_detalle(finca, llave):
         return (llave or "").strip()
     return (finca or "").strip()
 
+def formar_clave4(finca, cultivo,orden):
+    return (finca.strip().upper(), cultivo.strip().upper(),orden.strip().upper())
 
 def graficas(request):
     data = json.loads(request.body)
