@@ -3,6 +3,7 @@ from .models import Actpeso,tipoCajas,pedidos,controlcajas,usuariosAppFruta,deta
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Fieldset, Div
 from django.db.models import Sum
+from django.utils import timezone
 
 class salidasFrutaForm(forms.ModelForm):
 
@@ -223,6 +224,7 @@ class ccalidadForm(forms.ModelForm):
             (item['llave'] or '').strip().upper(): item['suma']
             for item in suma_por_llave
         }
+        
         if not self.instance.pk:
             self.fields['fecha'].initial = timezone.now().date()
         # ===============================
