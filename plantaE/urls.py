@@ -252,6 +252,7 @@ urlpatterns = [
     path('salidasFruta/consultaaprovechamientos', views.poraprovechamientos, name='salidasFruta_aprovechamietos'),
     path('salidasFruta/consultaaprovechamientosger', views.poraprovechamientosger, name='salidasFruta_aprovechamietosger'),
     path('salidasFruta/consultaaprovechamientosempger', views.poraprovechamientosempger, name='salidasFruta_aprovechamietosempger'),
+    path('salidasFruta/consultaaprovechamientosgerglobal', views.poraprovechamientosgerglobal, name='salidasFruta_aprovechamietosempgerglobal'),
     path('salidasFruta/consultaaprovechamientosemp', views.poraprovechamientosemp, name='salidasFruta_poraprovechamietosemp'),
     path('salidasFruta/consultaaprovechamientosempgersem', views.kgm2_semanal_aprovechamiento, name='salidasFruta_aprovechamietosempgersem'),
     path("recepcionesFruta/reporteAcum/loadgrafico",views.graficas,name='load_grafico'),

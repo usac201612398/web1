@@ -346,6 +346,9 @@ def formar_clave2(finca, cultivo,orden,estructura,variedad):
 def formar_clave3(recepcion,proveedor, cultivo, fecha):
     return (recepcion.strip().upper(),proveedor.strip().upper(), cultivo.strip().upper(),fecha.strip().upper())
 
+def formar_clave4(finca, cultivo,orden):
+    return (finca.strip().upper(), cultivo.strip().upper(),orden.strip().upper())
+
 def obtener_proveedor_desde_finca_llave(finca, llave):
     if finca.strip().lower() == "productor":
         return llave.strip()
