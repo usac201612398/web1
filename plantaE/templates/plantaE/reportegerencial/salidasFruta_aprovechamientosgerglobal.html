@@ -69,10 +69,12 @@
                   <th>Finca</th>
                   <th>Cultivo</th>
                   <th>Orden</th>
-                  <th>Kilos-Totales</th>
-                  <th>Kilos-Procesados</th>
-                  <th>Kilos-Pendientes</th>
-                  <th>kgxm2</th>
+                  <th>Libras-Totales</th>
+                  <th>Libras-Procesadas</th>
+                  <th>%Pendiente</th>
+                  <th>%Aprovechamiento</th>
+                  <th>%Mediano</th>
+                  <th>%Devolución</th>
                 </tr>
               </thead>
               <tbody>
@@ -81,10 +83,13 @@
                   <td>{{ registro.proveedor }}</td>
                   <td>{{ registro.cultivo }}</td>
                   <td>{{ registro.orden }}</td>
-                  <td class="number-cell" data-value="{{ registro.kilos_totales }}">{{ registro.kilos_totales }}</td>
-                  <td class="number-cell" data-value="{{ registro.kilos_procesados}}">{{ registro.kilos_procesados}}</td>
-                  <td class="number-cell" data-value="{{ registro.kilos_pendientes }}">{{ registro.kilos_pendientes }}</td>
-                  <td class="number-cell" data-value="{{ registro.kg_m2 }}">{{ registro.kg_m2 }}%</td>
+                  <td class="number-cell" data-value="{{ registro.libras }}">{{ registro.libras }}</td>
+                  <td class="number-cell" data-value="{{ registro.procesado}}">{{ registro.procesado}}</td>
+                  <td class="number-cell" data-value="{{ registro.porcentaje_pendiente }}">{{ registro.porcentaje_pendiente }}</td>
+                  <td class="number-cell" data-value="{{ registro.aprovechamiento }}">{{ registro.aprovechamiento }}%</td>
+                  <td class="number-cell" data-value="{{ registro.mediano }}">{{ registro.mediano }}%</td>
+                  <td class="number-cell" data-value="{{ registro.devolucion }}">{{ registro.devolucion }}%</td>
+
                 </tr>
                 {% endfor %}
               </tbody>
@@ -108,10 +113,7 @@
   <!-- SCRIPTS -->
   <script src="{% static '/lib/cockies.js' %}"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    const registros = JSON.parse('{{ registros_json|escapejs }}');
-    console.log('REGISTROS:', registros);
-</script>
+
   <script>
     // CONSULTAR
     // CARGA INICIAL
