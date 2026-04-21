@@ -227,7 +227,7 @@ class ccalidadForm(forms.ModelForm):
         # ===============================
         # 🔹 GENERAR LLAVES DESDE DETALLEREC
         # ===============================
-        datos = detallerec.objects.filter(recepcion__gte=2875)
+        datos = detallerec.objects.filter(recepcion__gte=6318)
         datos_modificados = []
 
         for item in datos:
