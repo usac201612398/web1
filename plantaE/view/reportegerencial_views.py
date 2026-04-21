@@ -1477,7 +1477,7 @@ def poraprovechamientosger(request):
     detalles = AcumFrutaaux.objects.annotate(
         semana=ExtractWeek('fecha'),
         anio=ExtractIsoYear('fecha')
-    ).filter(orden__in=ordenes_abiertas)
+    ).exclude(status='Anulado').filter(orden__in=ordenes_abiertas)
 
     boleta_ids = detalles.values_list('boleta', flat=True).distinct()
     boletas = Boletas.objects.filter(boleta__in=boleta_ids)
@@ -1567,7 +1567,7 @@ def poraprovechamientosgerglobal(request):
     detalles = AcumFrutaaux.objects.annotate(
         semana=ExtractWeek('fecha'),
         anio=ExtractIsoYear('fecha')
-    ).filter(orden__in=ordenes_abiertas)
+    ).exclude(status='Anulado').filter(orden__in=ordenes_abiertas)
 
     boleta_ids = detalles.values_list('boleta', flat=True).distinct()
     boletas = Boletas.objects.filter(boleta__in=boleta_ids)
