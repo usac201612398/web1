@@ -713,7 +713,7 @@ def enviar_alerta(data):
         mensaje=mensaje,
         alerta_tipo = data["tipo"]
     )
-    enviar_correo(mensaje, "Alerta Sensores | " + str(sensor_obj.estructura))
+    #enviar_correo(mensaje, "Alerta Sensores | " + str(sensor_obj.estructura))
     # Enviar WhatsApp
     #for numero in ["+50230664716","+50240304201","+50253050677"]:
     '''
