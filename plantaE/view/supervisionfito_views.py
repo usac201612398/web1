@@ -19,7 +19,7 @@ from plantaE.models import (
 )
 
 from django.core.files.storage import FileSystemStorage
-from .utils import analyze_card
+
 
 
 #from django.views.generic import TemplateView
