@@ -175,38 +175,32 @@
 
                     </div>
                 </div>
+                <div class="navbar-item has-dropdown">
+                    <a class="navbar-link">
+                        Supervision
+                    </a>
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item" href="{% url 'reporte_semanal_view'%}">Detalle Sem (Manejo)</a>
+                        <a class="navbar-item" href="{% url 'reporte_semanal_seguimiento'%}">Acumulado Sem (Manejo)</a>
+                        <a class="navbar-item" href="{% url 'reporte_semanal_view_fito'%}">Detalle Sem (Fito)</a>
+                        <a class="navbar-item" href="{% url 'reporte_semanal_seguimiento_fito'%}">Acumulado Sem
+                            (Fito)</a>
+                    </div>
+                </div>
+
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link">
                         Supervisión
                     </a>
 
-                    <div class="navbar-dropdown">
 
-                        <!-- MANEJO -->
-                        <div class="navbar-item has-dropdown submenu">
-                            <a class="navbar-link">Manejo</a>
-                            <div class="navbar-dropdown">
-                                <a class="navbar-item" href="{% url 'reporte_semanal_view'%}">Detalle Sem</a>
-                                <a class="navbar-item" href="{% url 'reporte_semanal_seguimiento'%}">Acumulado Sem</a>
-                            </div>
-                        </div>
-
-                        <!-- FITOSANIDAD -->
-                        <div class="navbar-item has-dropdown submenu">
-                            <a class="navbar-link">Fitosanidad</a>
-                            <div class="navbar-dropdown">
-                                <a class="navbar-item" href="{% url 'reporte_semanal_view_fito'%}">Detalle Sem</a>
-                                <a class="navbar-item" href="{% url 'reporte_semanal_seguimiento_fito'%}">Acumulado
-                                    Sem</a>
-                            </div>
-                        </div>
-
-                    </div>
                 </div>
 
 
+                <div class="navbar-item has-dropdown">
+                    <a class="navbar-item" href="#">Contacto</a>
+                </div>
 
-                <a class="navbar-item" href="#">Contacto</a>
             </div>
         </div>
     </nav>
