@@ -88,7 +88,7 @@ def upload_card(request):
 
         return render(
             request,
-            "upload.html",
+            "plantaE/supervisionfito/detecciontarjetahidro.html",
             {"result": result}
         )
 
