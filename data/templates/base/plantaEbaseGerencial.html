@@ -78,6 +78,29 @@
         .navbar-dropdown .submenu.is-active>.navbar-dropdown {
             display: block;
         }
+
+        /* Asegura anclaje correcto de dropdowns */
+        .navbar-item.has-dropdown {
+            position: relative;
+        }
+
+        /* Permite que el submenú “salga” hacia la derecha sin cortarse */
+        .navbar-dropdown {
+            overflow: visible;
+        }
+
+        /* Submenú (2º nivel) */
+        .navbar-dropdown .submenu .navbar-dropdown {
+            top: 0;
+            left: 100%;
+            margin-left: 0;
+            display: none;
+        }
+
+        /* Mostrar submenú cuando el submenu está activo */
+        .navbar-dropdown .submenu.is-active>.navbar-dropdown {
+            display: block;
+        }
     </style>
 </head>
 
@@ -107,7 +130,7 @@
             <div class="navbar-start">
 
                 <a class="navbar-item" href="{% url 'plantaE_homeger'%}">Inicio</a>
-                <div class="navbar-item has-dropdown is-hoverable">
+                <div class="navbar-item has-dropdown">
                     <a class="navbar-link">
                         Cosecha
                     </a>
@@ -119,7 +142,7 @@
                     </div>
                 </div>
 
-                <div class="navbar-item has-dropdown is-hoverable">
+                <div class="navbar-item has-dropdown">
                     <a class="navbar-link">
                         Trazabilidad
                     </a>
@@ -134,7 +157,7 @@
                         <a class="navbar-item" href="{% url 'controlcajas_list'%}">Control - Cajas</a>
                     </div>
                 </div>
-                <div class="navbar-item has-dropdown is-hoverable">
+                <div class="navbar-item has-dropdown">
                     <a class="navbar-link">
                         Empacado
                     </a>
@@ -211,50 +234,74 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Manejo del menú hamburguesa en dispositivos móviles
-            const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
 
-            if ($navbarBurgers.length > 0) {
-                $navbarBurgers.forEach(el => {
-                    el.addEventListener('click', () => {
-                        const target = el.dataset.target;
-                        const $target = document.getElementById(target);
-                        el.classList.toggle('is-active');
-                        $target.classList.toggle('is-active');
-                    });
-                });
-            }
+            // --- Burger (móvil) ---
+            const burgers = Array.from(document.querySelectorAll('.navbar-burger'));
+            burgers.forEach(burger => {
+                burger.addEventListener('click', () => {
+                    const targetId = burger.dataset.target;
+                    const target = document.getElementById(targetId);
 
-            // Manejo de los submenús
-            // Dropdown principal
-            const mainDropdowns = document.querySelectorAll('.navbar > .navbar-menu .has-dropdown');
-
-            mainDropdowns.forEach(item => {
-                item.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    item.classList.toggle('is-active');
+                    burger.classList.toggle('is-active');
+                    target.classList.toggle('is-active');
                 });
             });
 
-            // Submenús (Manejo / Fitosanidad)
-            const submenus = document.querySelectorAll('.submenu');
+            const navbar = document.querySelector('.navbar');
 
-            submenus.forEach(sub => {
-                sub.addEventListener('click', (e) => {
+            // Cierra TODOS los dropdowns (incluye submenús)
+            const closeAll = () => {
+                navbar.querySelectorAll('.has-dropdown.is-active').forEach(dd => dd.classList.remove('is-active'));
+            };
+
+            // --- Dropdowns de primer nivel (Cosecha/Trazabilidad/Empacado/Supervisión) ---
+            // IMPORTANTE: Excluimos los submenus con :not(.submenu)
+            const topTriggers = navbar.querySelectorAll('.navbar-start > .navbar-item.has-dropdown:not(.submenu) > .navbar-link');
+
+            topTriggers.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
                     e.stopPropagation();
-                    sub.classList.toggle('is-active');
+
+                    const parent = link.closest('.navbar-item.has-dropdown');
+
+                    // Cierra otros dropdowns de primer nivel
+                    navbar.querySelectorAll('.navbar-start > .navbar-item.has-dropdown.is-active')
+                        .forEach(dd => { if (dd !== parent) dd.classList.remove('is-active'); });
+
+                    parent.classList.toggle('is-active');
                 });
             });
 
-            // Cierra los submenús si se hace clic fuera de ellos
-            document.addEventListener('click', () => {
-                document.querySelectorAll('.has-dropdown').forEach(item => {
-                    item.classList.remove('is-active');
+            // --- Submenús dentro de Supervisión (Manejo/Fitosanidad) ---
+            const subTriggers = navbar.querySelectorAll('.navbar-dropdown .submenu > .navbar-link');
+
+            subTriggers.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const submenu = link.closest('.submenu');
+                    const containerDropdown = submenu.closest('.navbar-dropdown');
+
+                    // Cierra submenús hermanos (solo dentro del mismo dropdown)
+                    containerDropdown.querySelectorAll('.submenu.is-active')
+                        .forEach(sm => { if (sm !== submenu) sm.classList.remove('is-active'); });
+
+                    submenu.classList.toggle('is-active');
                 });
+            });
+
+            // Click fuera: cerrar todo
+            document.addEventListener('click', () => closeAll());
+
+            // ESC: cerrar todo
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeAll();
             });
         });
-
     </script>
+
 
     {% block script %} {% endblock %}
 </body>
