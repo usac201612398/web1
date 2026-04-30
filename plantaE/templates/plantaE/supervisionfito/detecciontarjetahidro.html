@@ -1,26 +1,199 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Tarjeta Hidrosensible</title>
+    <meta charset="UTF-8">
+    <title>Análisis de Tarjeta Hidrosensible</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --primary-dark: #1b5e20;
+            --gray-bg: #f4f6f8;
+            --text: #263238;
+            --border: #d0d7de;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: var(--gray-bg);
+            color: var(--text);
+        }
+
+        .app {
+            max-width: 480px;
+            margin: auto;
+            min-height: 100vh;
+            padding: 16px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 1.3rem;
+            margin: 0;
+            color: var(--primary-dark);
+        }
+
+        header p {
+            font-size: 0.9rem;
+            color: #546e7a;
+            margin-top: 4px;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            margin-bottom: 16px;
+        }
+
+        .instructions {
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .instructions ul {
+            padding-left: 18px;
+            margin: 8px 0 0;
+        }
+
+        .upload {
+            margin-top: 16px;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            background: #fafafa;
+            cursor: pointer;
+        }
+
+        .btn {
+            width: 100%;
+            margin-top: 14px;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: var(--primary);
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .results {
+            text-align: center;
+        }
+
+        .metric {
+            margin: 12px 0;
+            padding: 12px;
+            border-radius: 8px;
+            background: #f1f8e9;
+            border: 1px solid #c5e1a5;
+        }
+
+        .metric span {
+            display: block;
+            font-size: 0.85rem;
+            color: #4e5d52;
+        }
+
+        .metric strong {
+            font-size: 1.4rem;
+            color: var(--primary-dark);
+        }
+
+        .mask {
+            margin-top: 16px;
+        }
+
+        .mask img {
+            width: 100%;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        footer {
+            margin-top: 24px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #78909c;
+        }
+    </style>
 </head>
+
 <body>
-<h2>Análisis de tarjeta hidrosensible</h2>
+<div class="app">
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <input type="file" name="image" accept="image/*" capture="environment" required>
-    <br><br>
-    <button type="submit">Analizar</button>
-</form>
+    <header>
+        <h1>Tarjeta Hidrosensible</h1>
+        <p>Análisis de cobertura de pulverización</p>
+    </header>
 
-{% if result %}
-<hr>
-<h3>Resultados</h3>
-<p><b>Cobertura:</b> {{ result.coverage }} %</p>
-<p><b>Gotas/cm²:</b> {{ result.density }}</p>
+    <div class="card instructions">
+        <b>Instrucciones</b>
+        <ul>
+            <li>Coloque la tarjeta sobre fondo oscuro</li>
+            <li>Evite sombras</li>
+            <li>La tarjeta debe ocupar casi toda la imagen</li>
+        </ul>
 
-<img src="{{ result.mask_url }}" width="300">
-{% endif %}
+        <form method="post" enctype="multipart/form-data" class="upload">
+            {% csrf_token %}
+            <input
+                type="file"
+                name="image"
+                accept="image/*"
+                capture="environment"
+                required
+            >
+            <button class="btn" type="submit">
+                Analizar tarjeta
+            </button>
+        </form>
+    </div>
+
+    {% if result %}
+    <div class="card results">
+        <h3>Resultados</h3>
+
+        <div class="metric">
+            <span>Cobertura (%)</span>
+            <strong>{{ result.coverage }}%</strong>
+        </div>
+
+        <div class="metric">
+            <span>Gotas por cm²</span>
+            <strong>{{ result.density }}</strong>
+        </div>
+
+        <div class="mask">
+            <img src="{{ result.mask_url }}" alt="Máscara de gotas">
+        </div>
+    </div>
+    {% endif %}
+
+    <footer>
+        Sistema de evaluación de pulverización
+    </footer>
+
+</div>
 </body>
 </html>
