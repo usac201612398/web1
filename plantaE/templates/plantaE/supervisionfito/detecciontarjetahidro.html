@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tarjeta Hidrosensible</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<h2>Análisis de tarjeta hidrosensible</h2>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="image" accept="image/*" capture="environment" required>
+    <br><br>
+    <button type="submit">Analizar</button>
+</form>
+
+{% if result %}
+<hr>
+<h3>Resultados</h3>
+<p><b>Cobertura:</b> {{ result.coverage }} %</p>
+<p><b>Gotas/cm²:</b> {{ result.density }}</p>
+
+<img src="{{ result.mask_url }}" width="300">
+{% endif %}
+</body>
+</html>

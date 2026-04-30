@@ -18,9 +18,82 @@ from plantaE.models import (
     usuariosAppFruta
 )
 
+from django.core.files.storage import FileSystemStorage
+from .utils import analyze_card
+
+
 #from django.views.generic import TemplateView
 
-  
+import cv2
+import numpy as np
+import os
+from django.conf import settings
+
+def analyze_card(image_path):
+    img = cv2.imread(image_path)
+    img = cv2.resize(img, (1200, 800))  # tamaño controlado
+
+    # Convertir a HSV
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
+    # Rango típico del azul de las tarjetas
+    lower_blue = np.array([90, 40, 40])
+    upper_blue = np.array([140, 255, 255])
+
+    mask = cv2.inRange(hsv, lower_blue, upper_blue)
+
+    # Limpieza morfológica
+    kernel = np.ones((3, 3), np.uint8)
+    mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+    mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
+
+    # Área total y cobertura
+    total_pixels = mask.shape[0] * mask.shape[1]
+    blue_pixels = cv2.countNonZero(mask)
+
+    coverage = round((blue_pixels / total_pixels) * 100, 2)
+
+    # Conteo de gotas
+    contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    droplets = [c for c in contours if cv2.contourArea(c) > 5]
+    droplet_count = len(droplets)
+
+    # Área real de tarjeta (cm² aprox)
+    card_width_cm = 7.6
+    card_height_cm = 2.6
+    card_area_cm2 = card_width_cm * card_height_cm
+
+    density = round(droplet_count / card_area_cm2, 2)
+
+    # Guardar imagen máscara
+    mask_path = os.path.join(settings.MEDIA_ROOT, "mask_" + os.path.basename(image_path))
+    cv2.imwrite(mask_path, mask)
+
+    return {
+        "coverage": coverage,
+        "density": density,
+        "mask_url": settings.MEDIA_URL + "mask_" + os.path.basename(image_path)
+    }
+
+def upload_card(request):
+    if request.method == "POST" and request.FILES.get("image"):
+        img = request.FILES["image"]
+
+        fs = FileSystemStorage()
+        filename = fs.save(img.name, img)
+        img_path = fs.path(filename)
+
+        result = analyze_card(img_path)
+
+        return render(
+            request,
+            "upload.html",
+            {"result": result}
+        )
+
+    return render(request, "plantaE/supervisionfito/detecciontarjetahidro.html")
+
 def supervisionfitotomatescob_create(request):
     user = request.user.username
 

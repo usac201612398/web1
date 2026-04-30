@@ -158,6 +158,7 @@ urlpatterns = [
     path('supervisionfitotomatescob/new/', views.supervisionfitotomatescob_create, name='supervisionfitotomatescob_create'),
     path('supervisionfitotomatestizon/new/', views.supervisionfitotomatestizon_create, name='supervisionfitotomatestizon_create'),
     path("supervisionfito",views.supervisionfito_list,name='supervisionfito_list'),
+    path("supervisionfito/escanerfito",views.upload_card,name='supervisionfito_escaner'),
     path("supervisionfito/<int:pk>/delete/",views.supervisionfito_delete,name='supervisionfito_delete'),
     path('supervisionfito/detalle/<str:fecha>/<str:cultivo>/<str:estructura>/<str:actividad>/<str:zona>/<str:finca>/',views.supervisionfito_detalle,name='supervisionfito_detalle'), 
     path('supervisionfito/reporte-general/',views.reporte_general_fito,name='reporte_general_supervision_fito'),
