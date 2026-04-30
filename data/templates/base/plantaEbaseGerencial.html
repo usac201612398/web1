@@ -62,6 +62,22 @@
             display: block;
             flex-direction: column;
         }
+
+        /* Submenús dentro de dropdown */
+        .navbar-dropdown .submenu {
+            position: relative;
+        }
+
+        .navbar-dropdown .submenu .navbar-dropdown {
+            top: 0;
+            left: 100%;
+            margin-left: 0;
+            display: none;
+        }
+
+        .navbar-dropdown .submenu.is-active>.navbar-dropdown {
+            display: block;
+        }
     </style>
 </head>
 
@@ -144,7 +160,7 @@
                     <div class="navbar-dropdown">
 
                         <!-- MANEJO -->
-                        <div class="navbar-item has-dropdown is-hoverable submenu">
+                        <div class="navbar-item has-dropdown submenu">
                             <a class="navbar-link">Manejo</a>
                             <div class="navbar-dropdown">
                                 <a class="navbar-item" href="{% url 'reporte_semanal_view'%}">Detalle Sem</a>
@@ -153,11 +169,12 @@
                         </div>
 
                         <!-- FITOSANIDAD -->
-                        <div class="navbar-item has-dropdown is-hoverable submenu">
+                        <div class="navbar-item has-dropdown submenu">
                             <a class="navbar-link">Fitosanidad</a>
                             <div class="navbar-dropdown">
                                 <a class="navbar-item" href="{% url 'reporte_semanal_view_fito'%}">Detalle Sem</a>
-                                <a class="navbar-item" href="{% url 'reporte_semanal_seguimiento_fito'%}">Acumulado Sem</a>
+                                <a class="navbar-item" href="{% url 'reporte_semanal_seguimiento_fito'%}">Acumulado
+                                    Sem</a>
                             </div>
                         </div>
 
@@ -209,26 +226,30 @@
             }
 
             // Manejo de los submenús
-            const dropdownItems = document.querySelectorAll('.navbar-item.has-dropdown');
+            // Dropdown principal
+            const mainDropdowns = document.querySelectorAll('.navbar > .navbar-menu .has-dropdown');
 
-            dropdownItems.forEach(item => {
+            mainDropdowns.forEach(item => {
                 item.addEventListener('click', (e) => {
-                    e.stopPropagation(); // Evita que el clic se propague a otros elementos
-                    const dropdown = item.querySelector('.navbar-dropdown');
+                    e.stopPropagation();
                     item.classList.toggle('is-active');
-                    dropdown.classList.toggle('is-active'); // Alterna la visibilidad del submenú
-                    console.log(dropdown.classList);
                 });
+            });
 
+            // Submenús (Manejo / Fitosanidad)
+            const submenus = document.querySelectorAll('.submenu');
+
+            submenus.forEach(sub => {
+                sub.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    sub.classList.toggle('is-active');
+                });
             });
 
             // Cierra los submenús si se hace clic fuera de ellos
             document.addEventListener('click', () => {
-                dropdownItems.forEach(item => {
-                    const dropdown = item.querySelector('.navbar-dropdown');
+                document.querySelectorAll('.has-dropdown').forEach(item => {
                     item.classList.remove('is-active');
-                    dropdown.classList.remove('is-active');
-
                 });
             });
         });
