@@ -45,21 +45,20 @@ def _to_base64_png(img_gray_or_bgr):
 
 def _decode_upload_to_bgr(uploaded_file):
     """
-    Convierte UploadedFile -> np.ndarray BGR sin guardar a disco.
-    Usa chunks() para no reventar memoria con archivos grandes. [1](https://docs.djangoproject.com/en/6.0/ref/files/uploads/)
+    UploadedFile -> BGR sin guardar.
+    Usa chunks() para robustez. [3](https://docs.djangoproject.com/en/6.0/ref/files/uploads/)
     """
-    # Lee bytes (chunks para robustez)
     data = bytearray()
     for chunk in uploaded_file.chunks():
         data.extend(chunk)
 
-    nparr = np.frombuffer(data, np.uint8)  # numpy.frombuffer [4](https://numpy.org/doc/stable/reference/generated/numpy.frombuffer.html)
-    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)  # cv2.imdecode desde bytes [3](https://www.geeksforgeeks.org/python/python-opencv-imdecode-function/)
+    nparr = np.frombuffer(data, np.uint8)  # [5](https://numpy.org/doc/stable/reference/generated/numpy.frombuffer.html)
+    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)  # [4](https://www.geeksforgeeks.org/python/python-opencv-imdecode-function/)
     return img
 
 def _detect_card_quad_edges(img_bgr, pad=60, canny1=50, canny2=150):
     """
-    ROI por amarillo para acotar + bordes para rectángulo.
+    ROI por amarillo para acotar + rectángulo por bordes.
     """
     hsv = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2HSV)
     y = cv2.inRange(hsv, np.array([12,50,50], np.uint8), np.array([45,255,255], np.uint8))
@@ -102,14 +101,25 @@ def _detect_card_quad_edges(img_bgr, pad=60, canny1=50, canny2=150):
     quad[:,1] += y0
     return quad
 
-def analyze_card_bytes(uploaded_file, paper_dim_mm=(30,20), px_per_mm=20, margin_mm=2.0):
+def analyze_card_bytes(
+    uploaded_file,
+    paper_dim_mm=(30,20),
+    px_per_mm=20,
+    margin_mm=2.0,
+    peak_thr=0.35,          # 0.35–0.45
+    tile_cm=0.5,            # grid 0.5×0.5 cm
+    min_peak_area_px=3      # filtro antiruido
+):
     """
-    Devuelve dict listo para el template:
+    Devuelve:
     - coverage (%)
-    - density (gotas/cm²)
-    - mask_base64 (centros/picos)
-    - stain_base64 (área húmeda)
-    - overlay_base64 (warp + centros)
+    - density (gotas/cm²) -> robusta (mediana por grid) si hay grid
+    - density_global (gotas/cm²) -> total/área
+    - density_cv (%) -> uniformidad espacial
+    - mask_base64 -> picos (centros)
+    - stain_base64 -> mancha (coverage)
+    - overlay_base64 -> warp + centros
+    - heatmap_base64 -> mapa densidad por celdas (opcional)
     """
     img = _decode_upload_to_bgr(uploaded_file)
     if img is None:
@@ -119,7 +129,7 @@ def analyze_card_bytes(uploaded_file, paper_dim_mm=(30,20), px_per_mm=20, margin
     if quad is None:
         return {"error": "No se pudo detectar la tarjeta (amarillo/bordes)."}
 
-    # Warp a 3×2 cm
+    # --- Warp a 3×2 cm ---
     L_mm, W_mm = paper_dim_mm
     Wpx = int(round(L_mm * px_per_mm))
     Hpx = int(round(W_mm * px_per_mm))
@@ -127,62 +137,127 @@ def analyze_card_bytes(uploaded_file, paper_dim_mm=(30,20), px_per_mm=20, margin
     M = cv2.getPerspectiveTransform(_order_points(quad), dst)
     warp = cv2.warpPerspective(img, M, (Wpx, Hpx), flags=cv2.INTER_LINEAR)
 
-    # 1) Mancha (coverage) con Otsu en gris (invertido)
+    # --- Mancha (coverage) con Otsu ---
     gray = cv2.cvtColor(warp, cv2.COLOR_BGR2GRAY)
     gray = cv2.GaussianBlur(gray, (3,3), 0)
     _, stain = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
 
-    # Quitar padding negro del warp (si hubiera)
+    # Quitar padding negro del warp (si lo hubiera)
     valid = (gray > 10).astype(np.uint8) * 255
     stain = cv2.bitwise_and(stain, valid)
 
-    # Margen interior (2 mm)
+    # Margen interior (mm)
     margin_px = int(round(margin_mm * px_per_mm))
     inner = np.zeros_like(stain)
     inner[margin_px:Hpx-margin_px, margin_px:Wpx-margin_px] = 255
     stain = cv2.bitwise_and(stain, inner)
 
+    # Quitar banda izquierda (artefacto típico)
+    stain[:, :int(0.03 * stain.shape[1])] = 0
+
     coverage = round(100.0 * cv2.countNonZero(stain) / (Wpx * Hpx), 2)
 
-    # 2) Centros de gotas (density) con distance transform
+    # --- Picos/centros con distance transform (para densidad) ---
+    # Esta estrategia (distancia + picos) es la típica para separar objetos tocándose. [1](https://docs.opencv.org/4.x/d2/dbd/tutorial_distance_transform.html)[2](https://docs.opencv.org/3.4/d2/dbd/tutorial_distance_transform.html)
     dist = cv2.distanceTransform(stain, cv2.DIST_L2, 5)
     dist_norm = cv2.normalize(dist, None, 0, 1.0, cv2.NORM_MINMAX)
 
-    # Picos: umbral (ajustable 0.35–0.45)
-    _, peaks = cv2.threshold(dist_norm, 0.40, 1.0, cv2.THRESH_BINARY)
+    _, peaks = cv2.threshold(dist_norm, float(peak_thr), 1.0, cv2.THRESH_BINARY)
     peaks = (peaks * 255).astype(np.uint8)
+
+    # IMPORTANTÍSIMO: asegurar que picos SOLO estén donde hay mancha
+    peaks = cv2.bitwise_and(peaks, stain)
+
+    # Dilatar un poco para consolidar marcadores
     peaks = cv2.dilate(peaks, np.ones((3,3), np.uint8), iterations=1)
 
-    # Contar componentes conectados (cada pico ~ una gota)
-    num_labels, _ = cv2.connectedComponents(peaks)
-    droplet_count = max(0, num_labels - 1)
+    # Filtrar ruido de picos con connectedComponentsWithStats
+    num, labels, stats, centroids = cv2.connectedComponentsWithStats(peaks, connectivity=8)
+    keep_ids = []
+    keep_centroids = []
+    for i in range(1, num):  # 0 es fondo
+        area = stats[i, cv2.CC_STAT_AREA]
+        if area >= min_peak_area_px:
+            keep_ids.append(i)
+            keep_centroids.append(centroids[i])
 
-    card_area_cm2 = (L_mm/10.0) * (W_mm/10.0)  # 3×2cm = 6 cm²
-    density = round(droplet_count / card_area_cm2, 2)
+    droplet_count = len(keep_ids)
 
-    # Overlay para QA
+    card_area_cm2 = (L_mm/10.0) * (W_mm/10.0)  # 6 cm²
+    density_global = round(droplet_count / card_area_cm2, 2)
+
+    # --- Grid para densidad robusta + CV (uniformidad) ---
+    heatmap_b64 = None
+    density_robust = density_global
+    density_cv = None
+
+    tile_px = int(round(tile_cm * 10.0 * px_per_mm))
+    # grid sobre el área interior (ya recortada por inner)
+    x0, y0 = margin_px, margin_px
+    x1, y1 = Wpx - margin_px, Hpx - margin_px
+    roiW = x1 - x0
+    roiH = y1 - y0
+
+    nx = roiW // tile_px
+    ny = roiH // tile_px
+
+    if nx > 0 and ny > 0:
+        density_grid = np.zeros((ny, nx), dtype=np.float32)
+        cell_area_cm2 = tile_cm * tile_cm
+
+        for (cx, cy) in keep_centroids:
+            cx = float(cx); cy = float(cy)
+            if not (x0 <= cx < x0 + nx*tile_px and y0 <= cy < y0 + ny*tile_px):
+                continue
+            i = int((cx - x0) // tile_px)
+            j = int((cy - y0) // tile_px)
+            density_grid[j, i] += 1.0
+
+        density_grid = density_grid / cell_area_cm2
+        vals = density_grid.flatten()
+
+        density_robust = round(float(np.median(vals)), 2)
+        mean = float(np.mean(vals))
+        std = float(np.std(vals))
+        density_cv = round((std/mean)*100.0, 2) if mean > 0 else None
+
+        # Heatmap simple en OpenCV (sin matplotlib, sin guardar)
+        # normaliza a 0-255 y aplica colormap
+        grid_norm = cv2.normalize(density_grid, None, 0, 255, cv2.NORM_MINMAX).astype(np.uint8)
+        heat = cv2.applyColorMap(grid_norm, cv2.COLORMAP_JET)
+        heat = cv2.resize(heat, (nx*50, ny*50), interpolation=cv2.INTER_NEAREST)  # agrandar para verse bien
+        heatmap_b64 = _to_base64_png(heat)
+
+    # --- Overlay QA ---
     overlay = warp.copy()
-    cnts, _ = cv2.findContours(peaks, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    for c in cnts:
-        M = cv2.moments(c)
-        if M["m00"] > 0:
-            cx = int(M["m10"]/M["m00"])
-            cy = int(M["m01"]/M["m00"])
-            cv2.circle(overlay, (cx, cy), 3, (0,0,255), -1)
+    for (cx, cy) in keep_centroids:
+        cv2.circle(overlay, (int(cx), int(cy)), 3, (0,0,255), -1)
 
     note = "OK"
     if coverage >= 20:
         note = "Cobertura alta: la densidad puede subestimarse por solapes; prioriza cobertura."
 
+    # máscara final de picos (solo componentes válidos)
+    peaks_clean = np.zeros_like(peaks)
+    for i in keep_ids:
+        peaks_clean[labels == i] = 255
+
     return {
         "coverage": coverage,
-        "density": density,
+
+        # Principal para UI: densidad robusta si hay grid
+        "density": density_robust,
+        "density_global": density_global,
+        "density_cv": density_cv,
         "droplet_count": droplet_count,
         "note": note,
-        "mask_base64": _to_base64_png(peaks),
+
+        "mask_base64": _to_base64_png(peaks_clean),
         "stain_base64": _to_base64_png(stain),
         "overlay_base64": _to_base64_png(overlay),
+        "heatmap_base64": heatmap_b64,
     }
+
 
 def upload_card(request):
     
