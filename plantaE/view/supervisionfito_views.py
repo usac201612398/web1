@@ -30,126 +30,21 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-# -------------------------
-# Utilidades geométricas
-# -------------------------
+# ----------------------------
+# Utilidades
+# ----------------------------
 def _order_points(pts):
-    rect = np.zeros((4, 2), dtype="float32")
+    pts = pts.astype(np.float32)
     s = pts.sum(axis=1)
-    diff = np.diff(pts, axis=1)
-    rect[0] = pts[np.argmin(s)]      # top-left
-    rect[2] = pts[np.argmax(s)]      # bottom-right
-    rect[1] = pts[np.argmin(diff)]   # top-right
-    rect[3] = pts[np.argmax(diff)]   # bottom-left
+    d = np.diff(pts, axis=1)
+    rect = np.zeros((4, 2), dtype=np.float32)
+    rect[0] = pts[np.argmin(s)]      # TL
+    rect[2] = pts[np.argmax(s)]      # BR
+    rect[1] = pts[np.argmin(d)]      # TR
+    rect[3] = pts[np.argmax(d)]      # BL
     return rect
 
-def _find_card_quad(img_bgr):
-    """
-    Detecta la tarjeta por su color amarillo en HSV y devuelve el cuadrilátero (4 puntos).
-    """
-    hsv = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2HSV)
 
-    # Amarillo típico de WSP (ajustable si hace falta)
-    lower_yellow = np.array([12, 50, 50], dtype=np.uint8)
-    upper_yellow = np.array([45, 255, 255], dtype=np.uint8)
-
-    card_mask = cv2.inRange(hsv, lower_yellow, upper_yellow)
-
-    # Cierre para rellenar huecos, apertura para limpiar ruido
-    k = cv2.getStructuringElement(cv2.MORPH_RECT, (7, 7))
-    card_mask = cv2.morphologyEx(card_mask, cv2.MORPH_CLOSE, k, iterations=2)
-    card_mask = cv2.morphologyEx(card_mask, cv2.MORPH_OPEN, k, iterations=1)
-
-    contours, _ = cv2.findContours(card_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    if not contours:
-        return None, card_mask
-
-    c = max(contours, key=cv2.contourArea)
-    if cv2.contourArea(c) < 3000:
-        return None, card_mask
-
-    peri = cv2.arcLength(c, True)
-    approx = cv2.approxPolyDP(c, 0.02 * peri, True)
-
-    if len(approx) == 4:
-        quad = _order_points(approx.reshape(4, 2).astype("float32"))
-        return quad, card_mask
-
-    # Fallback: minAreaRect
-    rect = cv2.minAreaRect(c)
-    box = cv2.boxPoints(rect)
-    quad = _order_points(box.astype("float32"))
-    return quad, card_mask
-
-def _warp_to_standard(img_bgr, quad, paper_dim_mm=(30, 20), px_per_mm=20):
-    """
-    Rectifica perspectiva a tamaño estándar en píxeles.
-    paper_dim_mm = (largo_mm, ancho_mm)  -> aquí 30x20mm (3x2cm)
-    """
-    L_mm, W_mm = paper_dim_mm
-    # Convertimos a tamaño de imagen objetivo
-    Wpx = int(round(L_mm * px_per_mm))  # eje X = largo
-    Hpx = int(round(W_mm * px_per_mm))  # eje Y = ancho
-
-    dst = np.array([[0, 0], [Wpx - 1, 0], [Wpx - 1, Hpx - 1], [0, Hpx - 1]], dtype="float32")
-    M = cv2.getPerspectiveTransform(quad, dst)
-    warp = cv2.warpPerspective(img_bgr, M, (Wpx, Hpx), flags=cv2.INTER_LINEAR)
-    return warp, (Wpx, Hpx)
-
-# -------------------------
-# Segmentación de gotas
-# -------------------------
-def _segment_droplets(warp_bgr):
-    """
-    Segmenta manchas oscuras sobre fondo amarillo.
-    Pipeline robusto: normalización + Otsu. [1](https://link.springer.com/article/10.1007/s11042-025-20697-2)
-    """
-    lab = cv2.cvtColor(warp_bgr, cv2.COLOR_BGR2LAB)
-    L, A, B = cv2.split(lab)
-
-    # CLAHE para compensar sombras/iluminación
-    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
-    L2 = clahe.apply(L)
-    L2 = cv2.medianBlur(L2, 3)
-
-    # Otsu invertido: manchas oscuras -> blanco
-    _, mask = cv2.threshold(L2, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-
-    # Apertura suave para quitar puntitos sin fusionar demasiado
-    k = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
-    mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, k, iterations=1)
-    return mask
-
-def _watershed_split(binary_mask):
-    """
-    Intenta separar manchas pegadas (solapes).
-    Ojo: cuando hay alta cobertura, el conteo es incierto por solapes. [3](https://sprayers101.com/assessing_wsp_pt3/)[4](https://upcommons.upc.edu/bitstreams/d2e74f77-44a8-4885-9e55-eb3e9d804624/download)
-    """
-    mask = (binary_mask > 0).astype(np.uint8) * 255
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
-
-    sure_bg = cv2.dilate(mask, kernel, iterations=2)
-
-    dist = cv2.distanceTransform(mask, cv2.DIST_L2, 5)
-    _, sure_fg = cv2.threshold(dist, 0.35 * dist.max(), 255, 0)
-    sure_fg = sure_fg.astype(np.uint8)
-
-    unknown = cv2.subtract(sure_bg, sure_fg)
-
-    _, markers = cv2.connectedComponents(sure_fg)
-    markers = markers + 1
-    markers[unknown == 255] = 0
-
-    img3 = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
-    markers = cv2.watershed(img3, markers)
-
-    out = np.zeros_like(mask)
-    out[markers > 1] = 255
-    return out
-
-# -------------------------
-# Métricas por grid (robustez)
-# -------------------------
 def _trimmed_mean(x, trim=0.10):
     x = np.sort(x)
     k = int(len(x) * trim)
@@ -164,22 +59,182 @@ def _cv_pct(x):
     return (s / m) * 100.0 if m > 0 else None
 
 
+# ----------------------------
+# 1) Detectar rectángulo por BORDES, partiendo de ROI por amarillo
+# ----------------------------
+def _detect_card_quad_edges(img_bgr, pad=60, canny1=50, canny2=150):
+    """
+    - Usa amarillo SOLO para acotar ROI.
+    - Dentro del ROI detecta el rectángulo por bordes (Canny + contornos).
+    Devuelve: quad (4 puntos en coordenadas globales), edges_roi, edges_roi_closed.
+    """
+    hsv = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2HSV)
+
+    # Amarillo típico WSP (solo para ROI)
+    lower_y = np.array([12, 50, 50], np.uint8)
+    upper_y = np.array([45, 255, 255], np.uint8)
+    y = cv2.inRange(hsv, lower_y, upper_y)
+
+    k = cv2.getStructuringElement(cv2.MORPH_RECT, (9, 9))
+    y = cv2.morphologyEx(y, cv2.MORPH_CLOSE, k, iterations=2)
+    y = cv2.morphologyEx(y, cv2.MORPH_OPEN, k, iterations=1)
+
+    ys, xs = np.where(y > 0)
+    if len(xs) == 0:
+        return None, None, None
+
+    x0, x1 = xs.min(), xs.max()
+    y0, y1 = ys.min(), ys.max()
+
+    x0 = max(0, x0 - pad); y0 = max(0, y0 - pad)
+    x1 = min(img_bgr.shape[1] - 1, x1 + pad)
+    y1 = min(img_bgr.shape[0] - 1, y1 + pad)
+
+    roi = img_bgr[y0:y1+1, x0:x1+1].copy()
+
+    # Bordes
+    gray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
+    gray = cv2.GaussianBlur(gray, (5, 5), 0)
+    edges = cv2.Canny(gray, canny1, canny2)
+
+    # Cerrar huecos para contorno sólido
+    ke = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
+    edges2 = cv2.dilate(edges, ke, iterations=1)
+    edges2 = cv2.morphologyEx(edges2, cv2.MORPH_CLOSE, ke, iterations=2)
+
+    contours, _ = cv2.findContours(edges2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    if not contours:
+        return None, edges, edges2
+
+    H, W = roi.shape[:2]
+    min_area = 0.10 * (H * W)
+
+    quad = None
+    for c in sorted(contours, key=cv2.contourArea, reverse=True):
+        if cv2.contourArea(c) < min_area:
+            continue
+        peri = cv2.arcLength(c, True)
+        approx = cv2.approxPolyDP(c, 0.02 * peri, True)
+        if len(approx) == 4:
+            quad = approx.reshape(4, 2).astype(np.float32)
+            break
+
+    if quad is None:
+        # Fallback: rectángulo mínimo del mayor contorno
+        c = max(contours, key=cv2.contourArea)
+        rect = cv2.minAreaRect(c)
+        quad = cv2.boxPoints(rect).astype(np.float32)
+
+    quad = _order_points(quad)
+
+    # A coords globales
+    quad[:, 0] += x0
+    quad[:, 1] += y0
+
+    return quad, edges, edges2
+
+
+# ----------------------------
+# 2) Quitar fondo: máscara del rectángulo (alpha)
+# ----------------------------
+def _cutout_rgba_from_quad(img_bgr, quad, scale=1.03):
+    """
+    Crea una máscara poligonal del rectángulo (quad) y devuelve RGBA con alpha (fondo transparente).
+    """
+    quad = quad.astype(np.float32)
+    center = quad.mean(axis=0)
+    quad_exp = (quad - center) * scale + center
+
+    mask = np.zeros(img_bgr.shape[:2], dtype=np.uint8)
+    cv2.fillConvexPoly(mask, np.round(quad_exp).astype(np.int32), 255)
+
+    b, g, r = cv2.split(img_bgr)
+    rgba = cv2.merge([b, g, r, mask])
+
+    # Recorte tight
+    ys, xs = np.where(mask > 0)
+    ymin, ymax = ys.min(), ys.max()
+    xmin, xmax = xs.min(), xs.max()
+    rgba_crop = rgba[ymin:ymax+1, xmin:xmax+1]
+    mask_crop = mask[ymin:ymax+1, xmin:xmax+1]
+
+    return rgba_crop, mask_crop, quad_exp
+
+
+# ----------------------------
+# 3) Warp / enderezado a tamaño fijo 3×2 cm
+# ----------------------------
+def _warp_card(img_bgr, quad, paper_dim_mm=(30, 20), px_per_mm=20):
+    """
+    Warp a tamaño fijo: 30×20mm por defecto (3×2cm).
+    """
+    L_mm, W_mm = paper_dim_mm
+    out_w = int(round(L_mm * px_per_mm))  # eje X = largo
+    out_h = int(round(W_mm * px_per_mm))  # eje Y = ancho
+
+    quad = _order_points(quad)
+    dst = np.array([[0, 0], [out_w - 1, 0], [out_w - 1, out_h - 1], [0, out_h - 1]], dtype=np.float32)
+
+    M = cv2.getPerspectiveTransform(quad, dst)
+    warp = cv2.warpPerspective(img_bgr, M, (out_w, out_h), flags=cv2.INTER_LINEAR)
+    return warp, (out_w, out_h)
+
+
+# ----------------------------
+# 4) Segmentación de gotas “color-aware” (robusta en campo) + Otsu
+# ----------------------------
+def _segment_droplets_coloraware(warp_bgr):
+    """
+    1) Estima el color de fondo amarillo (mediana en zonas amarillas).
+    2) Calcula distancia cromática en LAB al fondo (A,B).
+    3) Umbral Otsu en esa distancia + condición de oscuridad en L.
+    """
+    hsv = cv2.cvtColor(warp_bgr, cv2.COLOR_BGR2HSV)
+    lower_yellow = np.array([12, 40, 60], dtype=np.uint8)
+    upper_yellow = np.array([45, 255, 255], dtype=np.uint8)
+    yellow_mask = cv2.inRange(hsv, lower_yellow, upper_yellow)
+
+    # fallback si hay poca zona amarilla por reflejos
+    if cv2.countNonZero(yellow_mask) < 0.20 * (warp_bgr.shape[0] * warp_bgr.shape[1]):
+        yellow_mask[:] = 255
+
+    lab = cv2.cvtColor(warp_bgr, cv2.COLOR_BGR2LAB).astype(np.int16)
+    L = lab[:, :, 0]
+    A = lab[:, :, 1]
+    B = lab[:, :, 2]
+
+    ys = yellow_mask > 0
+    L0 = int(np.median(L[ys]))
+    A0 = int(np.median(A[ys]))
+    B0 = int(np.median(B[ys]))
+
+    d2 = (A - A0) ** 2 + (B - B0) ** 2
+    d2u8 = cv2.normalize(d2.astype(np.float32), None, 0, 255, cv2.NORM_MINMAX).astype(np.uint8)
+
+    # Otsu sobre la distancia (baseline frecuente en segmentación WSP) [2](https://link.springer.com/article/10.1007/s11042-025-20697-2)
+    _, thr = cv2.threshold(d2u8, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+
+    dark = (L < (L0 - 8)).astype(np.uint8) * 255
+    droplet_mask = cv2.bitwise_and(thr, dark)
+
+    k = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+    droplet_mask = cv2.morphologyEx(droplet_mask, cv2.MORPH_OPEN, k, iterations=1)
+
+    return droplet_mask
+
+
+# ----------------------------
+# 5) Grid robusto para densidad (0.5×0.5 cm) y margen interior (2 mm)
+# ----------------------------
 def _grid_metrics(droplet_mask, contours, px_per_mm, tile_cm=0.5, margin_mm=2.0):
-    """
-    Divide el interior en celdas (tile_cm x tile_cm) y calcula:
-    - coverage por celda
-    - densidad por celda (gotas/cm²) asignando gota por centroide
-    """
     H, W = droplet_mask.shape[:2]
     tile_mm = tile_cm * 10.0
     tile_px = int(round(tile_mm * px_per_mm))
     margin_px = int(round(margin_mm * px_per_mm))
 
-    # ROI interior
     x0, y0 = margin_px, margin_px
     x1, y1 = W - margin_px, H - margin_px
     if x1 <= x0 + tile_px or y1 <= y0 + tile_px:
-        # Si el margen “se come” la tarjeta, lo anulamos
         x0, y0, x1, y1 = 0, 0, W, H
 
     roi = droplet_mask[y0:y1, x0:x1]
@@ -198,7 +253,6 @@ def _grid_metrics(droplet_mask, contours, px_per_mm, tile_cm=0.5, margin_mm=2.0)
             tile = roi[j*tile_px:(j+1)*tile_px, i*tile_px:(i+1)*tile_px]
             coverage_grid[j, i] = 100.0 * (cv2.countNonZero(tile) / (tile_px * tile_px))
 
-    # Densidad por celda: contar gotas por centroide
     density_grid = np.zeros((ny, nx), dtype=np.float32)
     cell_area_cm2 = tile_cm * tile_cm
 
@@ -209,7 +263,6 @@ def _grid_metrics(droplet_mask, contours, px_per_mm, tile_cm=0.5, margin_mm=2.0)
         cx = M["m10"] / M["m00"]
         cy = M["m01"] / M["m00"]
 
-        # Dentro del ROI recortado a grid completo
         if not (x0 <= cx < x0 + nx * tile_px and y0 <= cy < y0 + ny * tile_px):
             continue
 
@@ -217,7 +270,6 @@ def _grid_metrics(droplet_mask, contours, px_per_mm, tile_cm=0.5, margin_mm=2.0)
         j = int((cy - y0) // tile_px)
         density_grid[j, i] += 1.0
 
-    # Convertir conteo por celda a gotas/cm²
     density_grid = density_grid / cell_area_cm2
 
     dens_vals = density_grid.flatten()
@@ -246,57 +298,55 @@ def _grid_metrics(droplet_mask, contours, px_per_mm, tile_cm=0.5, margin_mm=2.0)
     }
 
 
-# -------------------------
+# ----------------------------
 # FUNCIÓN PRINCIPAL
-# -------------------------
+# ----------------------------
 def analyze_card(
     image_path,
-    paper_dim_mm=(30, 20),   # 3 cm x 2 cm
-    px_per_mm=20,            # buena resolución para tarjetas pequeñas
-    margin_mm=2.0,           # descartar borde interno
-    tile_cm=0.5,             # micro-grid recomendado para 2x3 cm
-    min_diam_um=50,          # filtro físico de ruido
-    use_watershed=True,
+    paper_dim_mm=(30, 20),     # 3×2 cm
+    px_per_mm=20,              # 600×400 px
+    margin_mm=2.0,
+    tile_cm=0.5,
+    min_diam_um=50,            # filtro de ruido
+    rect_scale=1.03,           # expandir rectángulo un poco (plástico/borde)
     save_debug=True
 ):
     """
-    Devuelve:
-    - coverage_global (% en toda la tarjeta)
-    - density_global (gotas/cm² en toda la tarjeta) [menos robusto]
-    - density_robust (mediana por grid) [recomendado]
-    - métricas de uniformidad (CV)
-    - histograma de tamaños (mancha) y mapas de calor
+    Pipeline completo:
+    1) Detecta rectángulo por bordes
+    2) Quita fondo (RGBA) + máscara
+    3) Warp / enderezado a 3×2 cm
+    4) Segmenta gotas solo en tarjeta
+    5) Métricas (coverage, densidad global y robusta grid)
+    6) Guarda debug: overlay rect, warp, masks, overlay drops, hist, heatmaps
     """
 
     img = cv2.imread(image_path)
     if img is None:
         raise ValueError(f"No se pudo leer la imagen: {image_path}")
 
-    quad, card_mask = _find_card_quad(img)
+    quad, edges_roi, edges_roi_closed = _detect_card_quad_edges(img)
     if quad is None:
-        return {
-            "error": "No se pudo detectar la tarjeta (amarillo). Prueba con mejor luz/encuadre o ajusta HSV.",
-            "coverage": None, "density": None
-        }
+        return {"error": "No se pudo detectar el rectángulo por bordes (revisa encuadre/luz).",
+                "coverage": None, "density_global": None, "density_robust": None}
 
-    warp, (Wpx, Hpx) = _warp_to_standard(img, quad, paper_dim_mm=paper_dim_mm, px_per_mm=px_per_mm)
+    # Quitar fondo (RGBA + máscara)
+    rgba_crop, mask_crop, quad_exp = _cutout_rgba_from_quad(img, quad, scale=rect_scale)
 
-    droplet_mask = _segment_droplets(warp)
+    # Warp/enderezado usando el rectángulo expandido
+    warp, (Wpx, Hpx) = _warp_card(img, quad_exp, paper_dim_mm=paper_dim_mm, px_per_mm=px_per_mm)
 
-    if use_watershed:
-        droplet_mask = _watershed_split(droplet_mask)
+    # Segmentar gotas SOLO en warp
+    droplet_mask = _segment_droplets_coloraware(warp)
 
-    # Área real (cm²): 3x2 cm = 6 cm²
-    L_mm, W_mm = paper_dim_mm
-    card_area_cm2 = (L_mm / 10.0) * (W_mm / 10.0)
+    # Máscara interior para excluir borde (evita gotas cortadas/sombras del borde)
+    margin_px = int(round(margin_mm * px_per_mm))
+    inner = np.zeros((Hpx, Wpx), dtype=np.uint8)
+    inner[margin_px:Hpx-margin_px, margin_px:Wpx-margin_px] = 255
+    droplet_mask_in = cv2.bitwise_and(droplet_mask, inner)
 
-    # Cobertura global (% sobre toda la tarjeta ya rectificada)
-    stained_px = int(cv2.countNonZero(droplet_mask))
-    total_px = int(Wpx * Hpx)
-    coverage = round((stained_px / total_px) * 100.0, 2)
-
-    # Contornos y filtro físico por tamaño mínimo
-    contours, _ = cv2.findContours(droplet_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    # Contornos y filtro físico de tamaño mínimo
+    contours, _ = cv2.findContours(droplet_mask_in, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     mm_per_px = 1.0 / px_per_mm
     mm2_per_px = mm_per_px ** 2
@@ -313,13 +363,21 @@ def analyze_card(
             kept.append(c)
             areas_px.append(a)
 
-    droplet_count = len(kept)
-    density_global = round(droplet_count / card_area_cm2, 2)
+    # Métricas globales
+    L_mm, W_mm = paper_dim_mm
+    card_area_cm2 = (L_mm / 10.0) * (W_mm / 10.0)
 
-    # Diámetro equivalente de MANCHA en µm (para histograma)
+    coverage = round(100.0 * (cv2.countNonZero(droplet_mask_in) / (Wpx * Hpx)), 2)
+    droplet_count = len(kept)
+    density_global = round(droplet_count / card_area_cm2, 2) if card_area_cm2 > 0 else 0.0
+
+    # Métrica robusta por grid
+    grid = _grid_metrics(droplet_mask_in, kept, px_per_mm=px_per_mm, tile_cm=tile_cm, margin_mm=margin_mm)
+    density_robust = round(grid["summary"]["density_median"], 2) if grid is not None else None
+
+    # Histograma de diámetros equivalentes (MANCHA) en µm
     areas_mm2 = np.array(areas_px, dtype=np.float64) * mm2_per_px
-    diams_mm = 2.0 * np.sqrt(areas_mm2 / np.pi)
-    diams_um = diams_mm * 1000.0
+    diams_um = (2.0 * np.sqrt(areas_mm2 / np.pi) * 1000.0) if areas_mm2.size else np.array([])
 
     stats = {
         "mean_um": float(diams_um.mean()) if diams_um.size else None,
@@ -330,91 +388,109 @@ def analyze_card(
         "max_um": float(diams_um.max()) if diams_um.size else None,
     }
 
-    # Grid robusto (recomendado)
-    grid = _grid_metrics(droplet_mask, kept, px_per_mm=px_per_mm, tile_cm=tile_cm, margin_mm=margin_mm)
-    density_robust = None
-    if grid is not None:
-        density_robust = round(grid["summary"]["density_median"], 2)
-
-    # Guardar outputs
+    # ----------------------------
+    # Guardar debug
+    # ----------------------------
     base = os.path.basename(image_path)
     name, _ = os.path.splitext(base)
 
-    warp_filename = f"warp_{name}.png"
-    mask_filename = f"mask_{name}.png"
-    overlay_filename = f"overlay_{name}.png"
-    hist_filename = f"hist_{name}.png"
-    heat_density_filename = f"heat_density_{name}.png"
-    heat_coverage_filename = f"heat_coverage_{name}.png"
+    def _save(path, img_to_save):
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        cv2.imwrite(path, img_to_save)
+
+    urls = {}
 
     if save_debug:
-        cv2.imwrite(os.path.join(settings.MEDIA_ROOT, warp_filename), warp)
-        cv2.imwrite(os.path.join(settings.MEDIA_ROOT, mask_filename), droplet_mask)
+        overlay_rect = img.copy()
+        cv2.polylines(overlay_rect, [np.round(quad_exp).astype(np.int32)], True, (0, 0, 255), 3)
 
-        overlay = warp.copy()
-        cv2.drawContours(overlay, kept, -1, (0, 0, 255), 1)
-        cv2.imwrite(os.path.join(settings.MEDIA_ROOT, overlay_filename), overlay)
+        overlay_drops = warp.copy()
+        cv2.drawContours(overlay_drops, kept, -1, (0, 0, 255), 1)
 
-        # Histograma de diámetros (mancha)
+        # Nombres
+        fn_overlay_rect = f"overlay_rect_{name}.png"
+        fn_rgba_cutout  = f"cutout_{name}.png"         # RGBA
+        fn_mask_card    = f"mask_card_{name}.png"
+        fn_warp         = f"warp_{name}.png"
+        fn_mask_drops   = f"mask_drops_{name}.png"
+        fn_mask_drops_in= f"mask_drops_in_{name}.png"
+        fn_overlay_drops= f"overlay_drops_{name}.png"
+        fn_hist         = f"hist_{name}.png"
+        fn_heat_dens    = f"heat_density_{name}.png"
+        fn_heat_cov     = f"heat_coverage_{name}.png"
+
+        _save(os.path.join(settings.MEDIA_ROOT, fn_overlay_rect), overlay_rect)
+        _save(os.path.join(settings.MEDIA_ROOT, fn_mask_card), mask_crop)
+        _save(os.path.join(settings.MEDIA_ROOT, fn_warp), warp)
+        _save(os.path.join(settings.MEDIA_ROOT, fn_mask_drops), droplet_mask)
+        _save(os.path.join(settings.MEDIA_ROOT, fn_mask_drops_in), droplet_mask_in)
+        _save(os.path.join(settings.MEDIA_ROOT, fn_overlay_drops), overlay_drops)
+
+        # RGBA cutout (con alpha): cv2.imwrite sí lo guarda como PNG con 4 canales
+        _save(os.path.join(settings.MEDIA_ROOT, fn_rgba_cutout), rgba_crop)
+
+        # Histograma
         plt.figure()
         if diams_um.size:
             plt.hist(diams_um, bins=25)
-            plt.title("Histograma de diámetros equivalentes de mancha (µm)")
-            plt.xlabel("Diámetro equivalente (µm)")
+            plt.title("Diámetro equivalente de mancha (µm)")
+            plt.xlabel("µm")
             plt.ylabel("Frecuencia")
         else:
             plt.text(0.5, 0.5, "Sin gotas detectadas", ha="center", va="center")
             plt.axis("off")
         plt.tight_layout()
-        plt.savefig(os.path.join(settings.MEDIA_ROOT, hist_filename), dpi=150)
+        plt.savefig(os.path.join(settings.MEDIA_ROOT, fn_hist), dpi=150)
         plt.close()
 
-        # Heatmaps (densidad y cobertura por grid)
+        # Heatmaps
         if grid is not None:
-            # Densidad
             plt.figure()
             plt.imshow(grid["density_grid"], aspect="auto")
             plt.colorbar(label="gotas/cm²")
-            plt.title(f"Mapa de calor densidad (tile={tile_cm}cm, margen={margin_mm}mm)")
+            plt.title(f"Mapa densidad (tile={tile_cm}cm, margen={margin_mm}mm)")
             plt.tight_layout()
-            plt.savefig(os.path.join(settings.MEDIA_ROOT, heat_density_filename), dpi=150)
+            plt.savefig(os.path.join(settings.MEDIA_ROOT, fn_heat_dens), dpi=150)
             plt.close()
 
-            # Cobertura
             plt.figure()
             plt.imshow(grid["coverage_grid"], aspect="auto")
             plt.colorbar(label="% cobertura")
-            plt.title(f"Mapa de calor cobertura (tile={tile_cm}cm, margen={margin_mm}mm)")
+            plt.title(f"Mapa cobertura (tile={tile_cm}cm, margen={margin_mm}mm)")
             plt.tight_layout()
-            plt.savefig(os.path.join(settings.MEDIA_ROOT, heat_coverage_filename), dpi=150)
+            plt.savefig(os.path.join(settings.MEDIA_ROOT, fn_heat_cov), dpi=150)
             plt.close()
 
-    result = {
-        "coverage": coverage,  # % global (robusto)
+        # URLs
+        urls = {
+            "overlay_rect_url": settings.MEDIA_URL + fn_overlay_rect,
+            "cutout_rgba_url": settings.MEDIA_URL + fn_rgba_cutout,
+            "mask_card_url": settings.MEDIA_URL + fn_mask_card,
+            "warp_url": settings.MEDIA_URL + fn_warp,
+            "mask_drops_url": settings.MEDIA_URL + fn_mask_drops,
+            "mask_drops_in_url": settings.MEDIA_URL + fn_mask_drops_in,
+            "overlay_drops_url": settings.MEDIA_URL + fn_overlay_drops,
+            "hist_url": settings.MEDIA_URL + fn_hist,
+            "heat_density_url": settings.MEDIA_URL + fn_heat_dens if grid is not None else None,
+            "heat_coverage_url": settings.MEDIA_URL + fn_heat_cov if grid is not None else None,
+        }
+
+    # Nota de fiabilidad por cobertura (limitación por solapes) [3](https://sprayers101.com/assessing_wsp_pt3/)[4](https://upcommons.upc.edu/bitstreams/d2e74f77-44a8-4885-9e55-eb3e9d804624/download)
+    note = "OK"
+    if coverage >= 20:
+        note = "Cobertura alta: el conteo de gotas puede subestimar por solapes; prioriza coverage% y densidad robusta."
+
+    return {
+        "coverage": coverage,
         "droplet_count": droplet_count,
-        "density_global": density_global,       # total/área (menos robusto si hay solapes)
-        "density_robust": density_robust,       # MEDIANA por grid (recomendado)
+        "density_global": density_global,
+        "density_robust": density_robust,
         "card_area_cm2": round(card_area_cm2, 2),
-        "diameter_stats_um_stain": stats,       # tamaños de MANCHA (no gota real)
+        "diameter_stats_um_stain": stats,
         "grid_summary": grid["summary"] if grid is not None else None,
-
-        "warp_url": settings.MEDIA_URL + warp_filename if save_debug else None,
-        "mask_url": settings.MEDIA_URL + mask_filename if save_debug else None,
-        "overlay_url": settings.MEDIA_URL + overlay_filename if save_debug else None,
-        "hist_url": settings.MEDIA_URL + hist_filename if save_debug else None,
-        "heat_density_url": settings.MEDIA_URL + heat_density_filename if (save_debug and grid is not None) else None,
-        "heat_coverage_url": settings.MEDIA_URL + heat_coverage_filename if (save_debug and grid is not None) else None,
+        "note": note,
+        **urls
     }
-
-    # Recomendación automática (solo orientativa) sobre fiabilidad del conteo
-    # A coberturas altas, el conteo se vuelve sensible por solapes. [3](https://sprayers101.com/assessing_wsp_pt3/)[4](https://upcommons.upc.edu/bitstreams/d2e74f77-44a8-4885-9e55-eb3e9d804624/download)
-    if coverage is not None and coverage >= 20:
-        result["note"] = "Cobertura alta: el conteo de gotas puede estar subestimado por solapes. Prioriza coverage% y densidad robusta."
-    else:
-        result["note"] = "Cobertura moderada/baja: coverage% y densidad robusta suelen ser consistentes."
-
-    return result
-
 
 def upload_card(request):
     if request.method == "POST" and request.FILES.get("image"):
