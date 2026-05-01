@@ -25,13 +25,8 @@ from django.core.files.storage import FileSystemStorage
 import cv2
 import numpy as np
 import base64
-from io import BytesIO
-from matplotlib import pyplot as plt
 
-# ----------------------------
-# Utilidades
-# ----------------------------
-def order_points(pts):
+def _order_points(pts):
     pts = pts.astype(np.float32)
     s = pts.sum(axis=1)
     d = np.diff(pts, axis=1)
@@ -42,136 +37,158 @@ def order_points(pts):
     rect[3] = pts[np.argmax(d)]
     return rect
 
+def _to_base64_png(img_gray_or_bgr):
+    ok, buf = cv2.imencode(".png", img_gray_or_bgr)
+    if not ok:
+        return None
+    return base64.b64encode(buf).decode("utf-8")
 
-def img_to_base64_png(img_gray):
+def _decode_upload_to_bgr(uploaded_file):
     """
-    Recibe imagen uint8 (1 canal) y la devuelve como PNG base64
+    Convierte UploadedFile -> np.ndarray BGR sin guardar a disco.
+    Usa chunks() para no reventar memoria con archivos grandes. [1](https://docs.djangoproject.com/en/6.0/ref/files/uploads/)
     """
-    _, buffer = cv2.imencode(".png", img_gray)
-    return base64.b64encode(buffer).decode("utf-8")
+    # Lee bytes (chunks para robustez)
+    data = bytearray()
+    for chunk in uploaded_file.chunks():
+        data.extend(chunk)
 
+    nparr = np.frombuffer(data, np.uint8)  # numpy.frombuffer [4](https://numpy.org/doc/stable/reference/generated/numpy.frombuffer.html)
+    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)  # cv2.imdecode desde bytes [3](https://www.geeksforgeeks.org/python/python-opencv-imdecode-function/)
+    return img
 
-# ----------------------------
-# FUNCIÓN PRINCIPAL
-# ----------------------------
-def analyze_card(image_path):
+def _detect_card_quad_edges(img_bgr, pad=60, canny1=50, canny2=150):
     """
-    Devuelve:
-    {
-      coverage: float,
-      density: float,
-      mask_base64: str
-    }
+    ROI por amarillo para acotar + bordes para rectángulo.
     """
+    hsv = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2HSV)
+    y = cv2.inRange(hsv, np.array([12,50,50], np.uint8), np.array([45,255,255], np.uint8))
 
-    img = cv2.imread(image_path)
-    if img is None:
-        return {"error": "No se pudo leer la imagen"}
+    k = cv2.getStructuringElement(cv2.MORPH_RECT, (9,9))
+    y = cv2.morphologyEx(y, cv2.MORPH_CLOSE, k, iterations=2)
+    y = cv2.morphologyEx(y, cv2.MORPH_OPEN, k, iterations=1)
 
-    # ============================
-    # 1) Detectar tarjeta (por color solo para ROI)
-    # ============================
-    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-    yellow = cv2.inRange(
-        hsv,
-        np.array([12, 50, 50]),
-        np.array([45, 255, 255])
-    )
-
-    yellow = cv2.morphologyEx(
-        yellow, cv2.MORPH_CLOSE,
-        cv2.getStructuringElement(cv2.MORPH_RECT, (9, 9)), 2
-    )
-
-    ys, xs = np.where(yellow > 0)
+    ys, xs = np.where(y > 0)
     if len(xs) == 0:
-        return {"error": "No se detectó la tarjeta"}
+        return None
 
     x0, x1 = xs.min(), xs.max()
     y0, y1 = ys.min(), ys.max()
-    roi = img[y0:y1, x0:x1]
 
-    # ============================
-    # 2) Bordes para rectángulo
-    # ============================
+    x0 = max(0, x0 - pad); y0 = max(0, y0 - pad)
+    x1 = min(img_bgr.shape[1]-1, x1 + pad)
+    y1 = min(img_bgr.shape[0]-1, y1 + pad)
+
+    roi = img_bgr[y0:y1+1, x0:x1+1].copy()
+
     gray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
-    edges = cv2.Canny(gray, 50, 150)
+    gray = cv2.GaussianBlur(gray, (5,5), 0)
+    edges = cv2.Canny(gray, canny1, canny2)
 
-    contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    ke = cv2.getStructuringElement(cv2.MORPH_RECT, (5,5))
+    edges2 = cv2.dilate(edges, ke, iterations=1)
+    edges2 = cv2.morphologyEx(edges2, cv2.MORPH_CLOSE, ke, iterations=2)
+
+    contours, _ = cv2.findContours(edges2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    if not contours:
+        return None
+
     c = max(contours, key=cv2.contourArea)
-
     rect = cv2.minAreaRect(c)
-    box = cv2.boxPoints(rect)
-    box = order_points(box)
+    quad = cv2.boxPoints(rect).astype(np.float32)
+    quad = _order_points(quad)
 
-    box[:, 0] += x0
-    box[:, 1] += y0
+    quad[:,0] += x0
+    quad[:,1] += y0
+    return quad
 
-    # ============================
-    # 3) Warp a 3×2 cm (600×400 px)
-    # ============================
-    out_w, out_h = 600, 400
-    dst = np.array([[0, 0], [out_w, 0], [out_w, out_h], [0, out_h]], dtype=np.float32)
-    M = cv2.getPerspectiveTransform(box, dst)
-    warp = cv2.warpPerspective(img, M, (out_w, out_h))
+def analyze_card_bytes(uploaded_file, paper_dim_mm=(30,20), px_per_mm=20, margin_mm=2.0):
+    """
+    Devuelve dict listo para el template:
+    - coverage (%)
+    - density (gotas/cm²)
+    - mask_base64 (centros/picos)
+    - stain_base64 (área húmeda)
+    - overlay_base64 (warp + centros)
+    """
+    img = _decode_upload_to_bgr(uploaded_file)
+    if img is None:
+        return {"error": "No se pudo decodificar la imagen (bytes no válidos)."}
 
-    # ============================
-    # 4) Segmentar gotas
-    # ============================
-    lab = cv2.cvtColor(warp, cv2.COLOR_BGR2LAB).astype(np.int16)
-    L, A, B = lab[:,:,0], lab[:,:,1], lab[:,:,2]
+    quad = _detect_card_quad_edges(img)
+    if quad is None:
+        return {"error": "No se pudo detectar la tarjeta (amarillo/bordes)."}
 
-    L0, A0, B0 = np.median(L), np.median(A), np.median(B)
-    dist = (A - A0)**2 + (B - B0)**2
+    # Warp a 3×2 cm
+    L_mm, W_mm = paper_dim_mm
+    Wpx = int(round(L_mm * px_per_mm))
+    Hpx = int(round(W_mm * px_per_mm))
+    dst = np.array([[0,0],[Wpx-1,0],[Wpx-1,Hpx-1],[0,Hpx-1]], dtype=np.float32)
+    M = cv2.getPerspectiveTransform(_order_points(quad), dst)
+    warp = cv2.warpPerspective(img, M, (Wpx, Hpx), flags=cv2.INTER_LINEAR)
 
-    dist_n = cv2.normalize(dist, None, 0, 255, cv2.NORM_MINMAX).astype(np.uint8)
-    _, thr = cv2.threshold(dist_n, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    # 1) Mancha (coverage) con Otsu en gris (invertido)
+    gray = cv2.cvtColor(warp, cv2.COLOR_BGR2GRAY)
+    gray = cv2.GaussianBlur(gray, (3,3), 0)
+    _, stain = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
 
-    dark = (L < L0 - 8).astype(np.uint8) * 255
-    drops = cv2.bitwise_and(thr, dark)
+    # Quitar padding negro del warp (si hubiera)
+    valid = (gray > 10).astype(np.uint8) * 255
+    stain = cv2.bitwise_and(stain, valid)
 
-    drops = cv2.morphologyEx(
-        drops, cv2.MORPH_OPEN,
-        cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3)), 1
-    )
+    # Margen interior (2 mm)
+    margin_px = int(round(margin_mm * px_per_mm))
+    inner = np.zeros_like(stain)
+    inner[margin_px:Hpx-margin_px, margin_px:Wpx-margin_px] = 255
+    stain = cv2.bitwise_and(stain, inner)
 
-    # ============================
-    # 5) Área válida (excluir bordes)
-    # ============================
-    margin = int(2 * 20)  # 2 mm
-    valid = np.zeros_like(drops)
-    valid[margin:out_h-margin, margin:out_w-margin] = 255
-    drops = cv2.bitwise_and(drops, valid)
+    coverage = round(100.0 * cv2.countNonZero(stain) / (Wpx * Hpx), 2)
 
-    # ============================
-    # 6) Métricas
-    # ============================
-    coverage = round(100 * cv2.countNonZero(drops) / (out_w * out_h), 2)
+    # 2) Centros de gotas (density) con distance transform
+    dist = cv2.distanceTransform(stain, cv2.DIST_L2, 5)
+    dist_norm = cv2.normalize(dist, None, 0, 1.0, cv2.NORM_MINMAX)
 
-    cnts, _ = cv2.findContours(drops, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    area_cm2 = 6.0  # 3 × 2 cm
-    density = round(len(cnts) / area_cm2, 2)
+    # Picos: umbral (ajustable 0.35–0.45)
+    _, peaks = cv2.threshold(dist_norm, 0.40, 1.0, cv2.THRESH_BINARY)
+    peaks = (peaks * 255).astype(np.uint8)
+    peaks = cv2.dilate(peaks, np.ones((3,3), np.uint8), iterations=1)
 
-    # ============================
-    # 7) Máscara para UI (base64)
-    # ============================
-    mask_base64 = img_to_base64_png(drops)
+    # Contar componentes conectados (cada pico ~ una gota)
+    num_labels, _ = cv2.connectedComponents(peaks)
+    droplet_count = max(0, num_labels - 1)
+
+    card_area_cm2 = (L_mm/10.0) * (W_mm/10.0)  # 3×2cm = 6 cm²
+    density = round(droplet_count / card_area_cm2, 2)
+
+    # Overlay para QA
+    overlay = warp.copy()
+    cnts, _ = cv2.findContours(peaks, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    for c in cnts:
+        M = cv2.moments(c)
+        if M["m00"] > 0:
+            cx = int(M["m10"]/M["m00"])
+            cy = int(M["m01"]/M["m00"])
+            cv2.circle(overlay, (cx, cy), 3, (0,0,255), -1)
+
+    note = "OK"
+    if coverage >= 20:
+        note = "Cobertura alta: la densidad puede subestimarse por solapes; prioriza cobertura."
 
     return {
         "coverage": coverage,
         "density": density,
-        "mask_base64": mask_base64
+        "droplet_count": droplet_count,
+        "note": note,
+        "mask_base64": _to_base64_png(peaks),
+        "stain_base64": _to_base64_png(stain),
+        "overlay_base64": _to_base64_png(overlay),
     }
 
 def upload_card(request):
+    
+    result = None
     if request.method == "POST" and request.FILES.get("image"):
-        img = request.FILES["image"]
-
-        fs = FileSystemStorage()
-        filename = fs.save(img.name, img)
-        img_path = fs.path(filename)
-
-        result = analyze_card(img_path)
+        result = analyze_card_bytes(request.FILES["image"])
 
         return render(
             request,
