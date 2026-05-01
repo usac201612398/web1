@@ -480,17 +480,24 @@ def analyze_card(
     if coverage >= 20:
         note = "Cobertura alta: el conteo de gotas puede subestimar por solapes; prioriza coverage% y densidad robusta."
 
-    return {
+    
+    result = {
         "coverage": coverage,
-        "droplet_count": droplet_count,
+
+        # ✅ Lo que tu HTML espera
+        "density": density_robust if density_robust is not None else density_global,
+
+        # ✅ Imagen de máscara válida para mostrar
+        "mask_url": settings.MEDIA_URL + fn_mask_drops_in,
+
+        # (opcional, si quieres seguir usándolos internamente)
         "density_global": density_global,
         "density_robust": density_robust,
-        "card_area_cm2": round(card_area_cm2, 2),
-        "diameter_stats_um_stain": stats,
-        "grid_summary": grid["summary"] if grid is not None else None,
-        "note": note,
-        **urls
+
+        # resto de campos que ya tenías
     }
+
+    return result
 
 def upload_card(request):
     if request.method == "POST" and request.FILES.get("image"):
