@@ -24,480 +24,144 @@ from django.core.files.storage import FileSystemStorage
 
 import cv2
 import numpy as np
-import os
-from django.conf import settings
-import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
+import base64
+from io import BytesIO
+from matplotlib import pyplot as plt
 
 # ----------------------------
 # Utilidades
 # ----------------------------
-def _order_points(pts):
+def order_points(pts):
     pts = pts.astype(np.float32)
     s = pts.sum(axis=1)
     d = np.diff(pts, axis=1)
     rect = np.zeros((4, 2), dtype=np.float32)
-    rect[0] = pts[np.argmin(s)]      # TL
-    rect[2] = pts[np.argmax(s)]      # BR
-    rect[1] = pts[np.argmin(d)]      # TR
-    rect[3] = pts[np.argmax(d)]      # BL
+    rect[0] = pts[np.argmin(s)]
+    rect[2] = pts[np.argmax(s)]
+    rect[1] = pts[np.argmin(d)]
+    rect[3] = pts[np.argmax(d)]
     return rect
 
 
-def _trimmed_mean(x, trim=0.10):
-    x = np.sort(x)
-    k = int(len(x) * trim)
-    if len(x) < 2 * k + 1:
-        return float(np.mean(x))
-    return float(np.mean(x[k:-k]))
-
-
-def _cv_pct(x):
-    m = float(np.mean(x))
-    s = float(np.std(x))
-    return (s / m) * 100.0 if m > 0 else None
-
-
-# ----------------------------
-# 1) Detectar rectángulo por BORDES, partiendo de ROI por amarillo
-# ----------------------------
-def _detect_card_quad_edges(img_bgr, pad=60, canny1=50, canny2=150):
+def img_to_base64_png(img_gray):
     """
-    - Usa amarillo SOLO para acotar ROI.
-    - Dentro del ROI detecta el rectángulo por bordes (Canny + contornos).
-    Devuelve: quad (4 puntos en coordenadas globales), edges_roi, edges_roi_closed.
+    Recibe imagen uint8 (1 canal) y la devuelve como PNG base64
     """
-    hsv = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2HSV)
-
-    # Amarillo típico WSP (solo para ROI)
-    lower_y = np.array([12, 50, 50], np.uint8)
-    upper_y = np.array([45, 255, 255], np.uint8)
-    y = cv2.inRange(hsv, lower_y, upper_y)
-
-    k = cv2.getStructuringElement(cv2.MORPH_RECT, (9, 9))
-    y = cv2.morphologyEx(y, cv2.MORPH_CLOSE, k, iterations=2)
-    y = cv2.morphologyEx(y, cv2.MORPH_OPEN, k, iterations=1)
-
-    ys, xs = np.where(y > 0)
-    if len(xs) == 0:
-        return None, None, None
-
-    x0, x1 = xs.min(), xs.max()
-    y0, y1 = ys.min(), ys.max()
-
-    x0 = max(0, x0 - pad); y0 = max(0, y0 - pad)
-    x1 = min(img_bgr.shape[1] - 1, x1 + pad)
-    y1 = min(img_bgr.shape[0] - 1, y1 + pad)
-
-    roi = img_bgr[y0:y1+1, x0:x1+1].copy()
-
-    # Bordes
-    gray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
-    gray = cv2.GaussianBlur(gray, (5, 5), 0)
-    edges = cv2.Canny(gray, canny1, canny2)
-
-    # Cerrar huecos para contorno sólido
-    ke = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
-    edges2 = cv2.dilate(edges, ke, iterations=1)
-    edges2 = cv2.morphologyEx(edges2, cv2.MORPH_CLOSE, ke, iterations=2)
-
-    contours, _ = cv2.findContours(edges2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    if not contours:
-        return None, edges, edges2
-
-    H, W = roi.shape[:2]
-    min_area = 0.10 * (H * W)
-
-    quad = None
-    for c in sorted(contours, key=cv2.contourArea, reverse=True):
-        if cv2.contourArea(c) < min_area:
-            continue
-        peri = cv2.arcLength(c, True)
-        approx = cv2.approxPolyDP(c, 0.02 * peri, True)
-        if len(approx) == 4:
-            quad = approx.reshape(4, 2).astype(np.float32)
-            break
-
-    if quad is None:
-        # Fallback: rectángulo mínimo del mayor contorno
-        c = max(contours, key=cv2.contourArea)
-        rect = cv2.minAreaRect(c)
-        quad = cv2.boxPoints(rect).astype(np.float32)
-
-    quad = _order_points(quad)
-
-    # A coords globales
-    quad[:, 0] += x0
-    quad[:, 1] += y0
-
-    return quad, edges, edges2
-
-
-# ----------------------------
-# 2) Quitar fondo: máscara del rectángulo (alpha)
-# ----------------------------
-def _cutout_rgba_from_quad(img_bgr, quad, scale=1.03):
-    """
-    Crea una máscara poligonal del rectángulo (quad) y devuelve RGBA con alpha (fondo transparente).
-    """
-    quad = quad.astype(np.float32)
-    center = quad.mean(axis=0)
-    quad_exp = (quad - center) * scale + center
-
-    mask = np.zeros(img_bgr.shape[:2], dtype=np.uint8)
-    cv2.fillConvexPoly(mask, np.round(quad_exp).astype(np.int32), 255)
-
-    b, g, r = cv2.split(img_bgr)
-    rgba = cv2.merge([b, g, r, mask])
-
-    # Recorte tight
-    ys, xs = np.where(mask > 0)
-    ymin, ymax = ys.min(), ys.max()
-    xmin, xmax = xs.min(), xs.max()
-    rgba_crop = rgba[ymin:ymax+1, xmin:xmax+1]
-    mask_crop = mask[ymin:ymax+1, xmin:xmax+1]
-
-    return rgba_crop, mask_crop, quad_exp
-
-
-# ----------------------------
-# 3) Warp / enderezado a tamaño fijo 3×2 cm
-# ----------------------------
-def _warp_card(img_bgr, quad, paper_dim_mm=(30, 20), px_per_mm=20):
-    """
-    Warp a tamaño fijo: 30×20mm por defecto (3×2cm).
-    """
-    L_mm, W_mm = paper_dim_mm
-    out_w = int(round(L_mm * px_per_mm))  # eje X = largo
-    out_h = int(round(W_mm * px_per_mm))  # eje Y = ancho
-
-    quad = _order_points(quad)
-    dst = np.array([[0, 0], [out_w - 1, 0], [out_w - 1, out_h - 1], [0, out_h - 1]], dtype=np.float32)
-
-    M = cv2.getPerspectiveTransform(quad, dst)
-    warp = cv2.warpPerspective(img_bgr, M, (out_w, out_h), flags=cv2.INTER_LINEAR)
-    return warp, (out_w, out_h)
-
-
-# ----------------------------
-# 4) Segmentación de gotas “color-aware” (robusta en campo) + Otsu
-# ----------------------------
-def _segment_droplets_coloraware(warp_bgr):
-    """
-    1) Estima el color de fondo amarillo (mediana en zonas amarillas).
-    2) Calcula distancia cromática en LAB al fondo (A,B).
-    3) Umbral Otsu en esa distancia + condición de oscuridad en L.
-    """
-    hsv = cv2.cvtColor(warp_bgr, cv2.COLOR_BGR2HSV)
-    lower_yellow = np.array([12, 40, 60], dtype=np.uint8)
-    upper_yellow = np.array([45, 255, 255], dtype=np.uint8)
-    yellow_mask = cv2.inRange(hsv, lower_yellow, upper_yellow)
-
-    # fallback si hay poca zona amarilla por reflejos
-    if cv2.countNonZero(yellow_mask) < 0.20 * (warp_bgr.shape[0] * warp_bgr.shape[1]):
-        yellow_mask[:] = 255
-
-    lab = cv2.cvtColor(warp_bgr, cv2.COLOR_BGR2LAB).astype(np.int16)
-    L = lab[:, :, 0]
-    A = lab[:, :, 1]
-    B = lab[:, :, 2]
-
-    ys = yellow_mask > 0
-    L0 = int(np.median(L[ys]))
-    A0 = int(np.median(A[ys]))
-    B0 = int(np.median(B[ys]))
-
-    d2 = (A - A0) ** 2 + (B - B0) ** 2
-    d2u8 = cv2.normalize(d2.astype(np.float32), None, 0, 255, cv2.NORM_MINMAX).astype(np.uint8)
-
-    # Otsu sobre la distancia (baseline frecuente en segmentación WSP) [2](https://link.springer.com/article/10.1007/s11042-025-20697-2)
-    _, thr = cv2.threshold(d2u8, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-
-    dark = (L < (L0 - 8)).astype(np.uint8) * 255
-    droplet_mask = cv2.bitwise_and(thr, dark)
-
-    k = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
-    droplet_mask = cv2.morphologyEx(droplet_mask, cv2.MORPH_OPEN, k, iterations=1)
-
-    return droplet_mask
-
-
-# ----------------------------
-# 5) Grid robusto para densidad (0.5×0.5 cm) y margen interior (2 mm)
-# ----------------------------
-def _grid_metrics(droplet_mask, contours, px_per_mm, tile_cm=0.5, margin_mm=2.0):
-    H, W = droplet_mask.shape[:2]
-    tile_mm = tile_cm * 10.0
-    tile_px = int(round(tile_mm * px_per_mm))
-    margin_px = int(round(margin_mm * px_per_mm))
-
-    x0, y0 = margin_px, margin_px
-    x1, y1 = W - margin_px, H - margin_px
-    if x1 <= x0 + tile_px or y1 <= y0 + tile_px:
-        x0, y0, x1, y1 = 0, 0, W, H
-
-    roi = droplet_mask[y0:y1, x0:x1]
-    roiH, roiW = roi.shape[:2]
-
-    nx = roiW // tile_px
-    ny = roiH // tile_px
-    if nx == 0 or ny == 0:
-        return None
-
-    roi = roi[:ny * tile_px, :nx * tile_px]
-
-    coverage_grid = np.zeros((ny, nx), dtype=np.float32)
-    for j in range(ny):
-        for i in range(nx):
-            tile = roi[j*tile_px:(j+1)*tile_px, i*tile_px:(i+1)*tile_px]
-            coverage_grid[j, i] = 100.0 * (cv2.countNonZero(tile) / (tile_px * tile_px))
-
-    density_grid = np.zeros((ny, nx), dtype=np.float32)
-    cell_area_cm2 = tile_cm * tile_cm
-
-    for c in contours:
-        M = cv2.moments(c)
-        if M["m00"] == 0:
-            continue
-        cx = M["m10"] / M["m00"]
-        cy = M["m01"] / M["m00"]
-
-        if not (x0 <= cx < x0 + nx * tile_px and y0 <= cy < y0 + ny * tile_px):
-            continue
-
-        i = int((cx - x0) // tile_px)
-        j = int((cy - y0) // tile_px)
-        density_grid[j, i] += 1.0
-
-    density_grid = density_grid / cell_area_cm2
-
-    dens_vals = density_grid.flatten()
-    cov_vals = coverage_grid.flatten()
-
-    summary = {
-        "tile_cm": tile_cm,
-        "margin_mm": margin_mm,
-        "grid_shape": [int(ny), int(nx)],
-
-        "density_mean": float(np.mean(dens_vals)),
-        "density_median": float(np.median(dens_vals)),
-        "density_trimmed_mean_10pct": _trimmed_mean(dens_vals, 0.10),
-        "density_cv_pct": _cv_pct(dens_vals),
-
-        "coverage_mean": float(np.mean(cov_vals)),
-        "coverage_median": float(np.median(cov_vals)),
-        "coverage_trimmed_mean_10pct": _trimmed_mean(cov_vals, 0.10),
-        "coverage_cv_pct": _cv_pct(cov_vals),
-    }
-
-    return {
-        "density_grid": density_grid,
-        "coverage_grid": coverage_grid,
-        "summary": summary
-    }
+    _, buffer = cv2.imencode(".png", img_gray)
+    return base64.b64encode(buffer).decode("utf-8")
 
 
 # ----------------------------
 # FUNCIÓN PRINCIPAL
 # ----------------------------
-def analyze_card(
-    image_path,
-    paper_dim_mm=(30, 20),     # 3×2 cm
-    px_per_mm=20,              # 600×400 px
-    margin_mm=2.0,
-    tile_cm=0.5,
-    min_diam_um=50,            # filtro de ruido
-    rect_scale=1.03,           # expandir rectángulo un poco (plástico/borde)
-    save_debug=True
-):
+def analyze_card(image_path):
     """
-    Pipeline completo:
-    1) Detecta rectángulo por bordes
-    2) Quita fondo (RGBA) + máscara
-    3) Warp / enderezado a 3×2 cm
-    4) Segmenta gotas solo en tarjeta
-    5) Métricas (coverage, densidad global y robusta grid)
-    6) Guarda debug: overlay rect, warp, masks, overlay drops, hist, heatmaps
+    Devuelve:
+    {
+      coverage: float,
+      density: float,
+      mask_base64: str
+    }
     """
 
     img = cv2.imread(image_path)
     if img is None:
-        raise ValueError(f"No se pudo leer la imagen: {image_path}")
+        return {"error": "No se pudo leer la imagen"}
 
-    quad, edges_roi, edges_roi_closed = _detect_card_quad_edges(img)
-    if quad is None:
-        return {"error": "No se pudo detectar el rectángulo por bordes (revisa encuadre/luz).",
-                "coverage": None, "density_global": None, "density_robust": None}
+    # ============================
+    # 1) Detectar tarjeta (por color solo para ROI)
+    # ============================
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    yellow = cv2.inRange(
+        hsv,
+        np.array([12, 50, 50]),
+        np.array([45, 255, 255])
+    )
 
-    # Quitar fondo (RGBA + máscara)
-    rgba_crop, mask_crop, quad_exp = _cutout_rgba_from_quad(img, quad, scale=rect_scale)
+    yellow = cv2.morphologyEx(
+        yellow, cv2.MORPH_CLOSE,
+        cv2.getStructuringElement(cv2.MORPH_RECT, (9, 9)), 2
+    )
 
-    # Warp/enderezado usando el rectángulo expandido
-    warp, (Wpx, Hpx) = _warp_card(img, quad_exp, paper_dim_mm=paper_dim_mm, px_per_mm=px_per_mm)
+    ys, xs = np.where(yellow > 0)
+    if len(xs) == 0:
+        return {"error": "No se detectó la tarjeta"}
 
-    # Segmentar gotas SOLO en warp
-    droplet_mask = _segment_droplets_coloraware(warp)
+    x0, x1 = xs.min(), xs.max()
+    y0, y1 = ys.min(), ys.max()
+    roi = img[y0:y1, x0:x1]
 
-    # Máscara interior para excluir borde (evita gotas cortadas/sombras del borde)
-    margin_px = int(round(margin_mm * px_per_mm))
-    inner = np.zeros((Hpx, Wpx), dtype=np.uint8)
-    inner[margin_px:Hpx-margin_px, margin_px:Wpx-margin_px] = 255
-    droplet_mask_in = cv2.bitwise_and(droplet_mask, inner)
+    # ============================
+    # 2) Bordes para rectángulo
+    # ============================
+    gray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
+    edges = cv2.Canny(gray, 50, 150)
 
-    # Contornos y filtro físico de tamaño mínimo
-    contours, _ = cv2.findContours(droplet_mask_in, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    c = max(contours, key=cv2.contourArea)
 
-    mm_per_px = 1.0 / px_per_mm
-    mm2_per_px = mm_per_px ** 2
+    rect = cv2.minAreaRect(c)
+    box = cv2.boxPoints(rect)
+    box = order_points(box)
 
-    min_diam_mm = min_diam_um / 1000.0
-    min_area_mm2 = np.pi * (min_diam_mm / 2.0) ** 2
-    min_area_px = min_area_mm2 / mm2_per_px
+    box[:, 0] += x0
+    box[:, 1] += y0
 
-    kept = []
-    areas_px = []
-    for c in contours:
-        a = cv2.contourArea(c)
-        if a >= min_area_px:
-            kept.append(c)
-            areas_px.append(a)
+    # ============================
+    # 3) Warp a 3×2 cm (600×400 px)
+    # ============================
+    out_w, out_h = 600, 400
+    dst = np.array([[0, 0], [out_w, 0], [out_w, out_h], [0, out_h]], dtype=np.float32)
+    M = cv2.getPerspectiveTransform(box, dst)
+    warp = cv2.warpPerspective(img, M, (out_w, out_h))
 
-    # Métricas globales
-    L_mm, W_mm = paper_dim_mm
-    card_area_cm2 = (L_mm / 10.0) * (W_mm / 10.0)
+    # ============================
+    # 4) Segmentar gotas
+    # ============================
+    lab = cv2.cvtColor(warp, cv2.COLOR_BGR2LAB).astype(np.int16)
+    L, A, B = lab[:,:,0], lab[:,:,1], lab[:,:,2]
 
-    coverage = round(100.0 * (cv2.countNonZero(droplet_mask_in) / (Wpx * Hpx)), 2)
-    droplet_count = len(kept)
-    density_global = round(droplet_count / card_area_cm2, 2) if card_area_cm2 > 0 else 0.0
+    L0, A0, B0 = np.median(L), np.median(A), np.median(B)
+    dist = (A - A0)**2 + (B - B0)**2
 
-    # Métrica robusta por grid
-    grid = _grid_metrics(droplet_mask_in, kept, px_per_mm=px_per_mm, tile_cm=tile_cm, margin_mm=margin_mm)
-    density_robust = round(grid["summary"]["density_median"], 2) if grid is not None else None
+    dist_n = cv2.normalize(dist, None, 0, 255, cv2.NORM_MINMAX).astype(np.uint8)
+    _, thr = cv2.threshold(dist_n, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
-    # Histograma de diámetros equivalentes (MANCHA) en µm
-    areas_mm2 = np.array(areas_px, dtype=np.float64) * mm2_per_px
-    diams_um = (2.0 * np.sqrt(areas_mm2 / np.pi) * 1000.0) if areas_mm2.size else np.array([])
+    dark = (L < L0 - 8).astype(np.uint8) * 255
+    drops = cv2.bitwise_and(thr, dark)
 
-    stats = {
-        "mean_um": float(diams_um.mean()) if diams_um.size else None,
-        "median_um": float(np.median(diams_um)) if diams_um.size else None,
-        "p10_um": float(np.percentile(diams_um, 10)) if diams_um.size else None,
-        "p90_um": float(np.percentile(diams_um, 90)) if diams_um.size else None,
-        "min_um": float(diams_um.min()) if diams_um.size else None,
-        "max_um": float(diams_um.max()) if diams_um.size else None,
-    }
+    drops = cv2.morphologyEx(
+        drops, cv2.MORPH_OPEN,
+        cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3)), 1
+    )
 
-    # ----------------------------
-    # Guardar debug
-    # ----------------------------
-    base = os.path.basename(image_path)
-    name, _ = os.path.splitext(base)
+    # ============================
+    # 5) Área válida (excluir bordes)
+    # ============================
+    margin = int(2 * 20)  # 2 mm
+    valid = np.zeros_like(drops)
+    valid[margin:out_h-margin, margin:out_w-margin] = 255
+    drops = cv2.bitwise_and(drops, valid)
 
-    def _save(path, img_to_save):
-        os.makedirs(os.path.dirname(path), exist_ok=True)
-        cv2.imwrite(path, img_to_save)
+    # ============================
+    # 6) Métricas
+    # ============================
+    coverage = round(100 * cv2.countNonZero(drops) / (out_w * out_h), 2)
 
-    urls = {}
+    cnts, _ = cv2.findContours(drops, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    area_cm2 = 6.0  # 3 × 2 cm
+    density = round(len(cnts) / area_cm2, 2)
 
-    if save_debug:
-        overlay_rect = img.copy()
-        cv2.polylines(overlay_rect, [np.round(quad_exp).astype(np.int32)], True, (0, 0, 255), 3)
+    # ============================
+    # 7) Máscara para UI (base64)
+    # ============================
+    mask_base64 = img_to_base64_png(drops)
 
-        overlay_drops = warp.copy()
-        cv2.drawContours(overlay_drops, kept, -1, (0, 0, 255), 1)
-
-        # Nombres
-        fn_overlay_rect = f"overlay_rect_{name}.png"
-        fn_rgba_cutout  = f"cutout_{name}.png"         # RGBA
-        fn_mask_card    = f"mask_card_{name}.png"
-        fn_warp         = f"warp_{name}.png"
-        fn_mask_drops   = f"mask_drops_{name}.png"
-        fn_mask_drops_in= f"mask_drops_in_{name}.png"
-        fn_overlay_drops= f"overlay_drops_{name}.png"
-        fn_hist         = f"hist_{name}.png"
-        fn_heat_dens    = f"heat_density_{name}.png"
-        fn_heat_cov     = f"heat_coverage_{name}.png"
-
-        _save(os.path.join(settings.MEDIA_ROOT, fn_overlay_rect), overlay_rect)
-        _save(os.path.join(settings.MEDIA_ROOT, fn_mask_card), mask_crop)
-        _save(os.path.join(settings.MEDIA_ROOT, fn_warp), warp)
-        _save(os.path.join(settings.MEDIA_ROOT, fn_mask_drops), droplet_mask)
-        _save(os.path.join(settings.MEDIA_ROOT, fn_mask_drops_in), droplet_mask_in)
-        _save(os.path.join(settings.MEDIA_ROOT, fn_overlay_drops), overlay_drops)
-
-        # RGBA cutout (con alpha): cv2.imwrite sí lo guarda como PNG con 4 canales
-        _save(os.path.join(settings.MEDIA_ROOT, fn_rgba_cutout), rgba_crop)
-
-        # Histograma
-        plt.figure()
-        if diams_um.size:
-            plt.hist(diams_um, bins=25)
-            plt.title("Diámetro equivalente de mancha (µm)")
-            plt.xlabel("µm")
-            plt.ylabel("Frecuencia")
-        else:
-            plt.text(0.5, 0.5, "Sin gotas detectadas", ha="center", va="center")
-            plt.axis("off")
-        plt.tight_layout()
-        plt.savefig(os.path.join(settings.MEDIA_ROOT, fn_hist), dpi=150)
-        plt.close()
-
-        # Heatmaps
-        if grid is not None:
-            plt.figure()
-            plt.imshow(grid["density_grid"], aspect="auto")
-            plt.colorbar(label="gotas/cm²")
-            plt.title(f"Mapa densidad (tile={tile_cm}cm, margen={margin_mm}mm)")
-            plt.tight_layout()
-            plt.savefig(os.path.join(settings.MEDIA_ROOT, fn_heat_dens), dpi=150)
-            plt.close()
-
-            plt.figure()
-            plt.imshow(grid["coverage_grid"], aspect="auto")
-            plt.colorbar(label="% cobertura")
-            plt.title(f"Mapa cobertura (tile={tile_cm}cm, margen={margin_mm}mm)")
-            plt.tight_layout()
-            plt.savefig(os.path.join(settings.MEDIA_ROOT, fn_heat_cov), dpi=150)
-            plt.close()
-
-        # URLs
-        urls = {
-            "overlay_rect_url": settings.MEDIA_URL + fn_overlay_rect,
-            "cutout_rgba_url": settings.MEDIA_URL + fn_rgba_cutout,
-            "mask_card_url": settings.MEDIA_URL + fn_mask_card,
-            "warp_url": settings.MEDIA_URL + fn_warp,
-            "mask_drops_url": settings.MEDIA_URL + fn_mask_drops,
-            "mask_drops_in_url": settings.MEDIA_URL + fn_mask_drops_in,
-            "overlay_drops_url": settings.MEDIA_URL + fn_overlay_drops,
-            "hist_url": settings.MEDIA_URL + fn_hist,
-            "heat_density_url": settings.MEDIA_URL + fn_heat_dens if grid is not None else None,
-            "heat_coverage_url": settings.MEDIA_URL + fn_heat_cov if grid is not None else None,
-        }
-
-    # Nota de fiabilidad por cobertura (limitación por solapes) [3](https://sprayers101.com/assessing_wsp_pt3/)[4](https://upcommons.upc.edu/bitstreams/d2e74f77-44a8-4885-9e55-eb3e9d804624/download)
-    note = "OK"
-    if coverage >= 20:
-        note = "Cobertura alta: el conteo de gotas puede subestimar por solapes; prioriza coverage% y densidad robusta."
-
-    
-    result = {
+    return {
         "coverage": coverage,
-
-        # ✅ Lo que tu HTML espera
-        "density": density_robust if density_robust is not None else density_global,
-
-        # ✅ Imagen de máscara válida para mostrar
-        "mask_url": settings.MEDIA_URL + fn_mask_drops_in,
-
-        # (opcional, si quieres seguir usándolos internamente)
-        "density_global": density_global,
-        "density_robust": density_robust,
-
-        # resto de campos que ya tenías
+        "density": density,
+        "mask_base64": mask_base64
     }
-
-    return result
 
 def upload_card(request):
     if request.method == "POST" and request.FILES.get("image"):
