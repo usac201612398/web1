@@ -297,7 +297,6 @@ class envioccajas(models.Model):
 class controlcajas(models.Model):
 
     registro = models.BigAutoField(primary_key=True)
-    envio = models.BigIntegerField(blank=True, null=True, db_index=True)
     transaccion = models.BigIntegerField(blank=True, null=True)
     tipomov = models.CharField(max_length=30, blank=True, null=True)
     fecha = models.DateField(blank=True, null=True)
@@ -311,7 +310,9 @@ class controlcajas(models.Model):
     fechasalidafruta = models.DateField(blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     encargado = models.CharField(max_length=50, blank=True, null=True)
-    movimiento_ref=models.BigIntegerField(db_index=True, null=True)
+    movimiento_ref=models.CharField(max_length=30, blank=True, null=True)
+
+
 
     def __str__(self):
         return (str(self.lugar_sale)+ " | " + str(self.lugar_entra)  + " | " +str(self.tipodecaja) + " | " + str(self.fechasalidafruta))
