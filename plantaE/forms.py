@@ -341,12 +341,7 @@ class inventarioFrutaForm(forms.ModelForm):
             'pesorxcaja', 'merma', 'pesosinmerma',
             'orden','categoria','calidad1','tara'
         ]
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['fecha'].required = False
-        self.fields['categoria'].required = False
-        self.fields['calidad1'].required = False
-
+        
     def clean(self):
         cleaned_data = super().clean()
         categoria = cleaned_data.get('categoria')
