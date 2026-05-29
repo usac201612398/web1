@@ -313,7 +313,7 @@ class inventarioFrutaForm(forms.ModelForm):
     registro = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     status = forms.ChoiceField(choices=op_status, required=False, widget=forms.Select(attrs={'class': 'form-control'}))
     proveedor = forms.ChoiceField(choices=op_proveedor, widget=forms.Select(attrs={'class': 'form-control'}))
-
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
     itemsapcode = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     calidad1 = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -334,7 +334,7 @@ class inventarioFrutaForm(forms.ModelForm):
     class Meta:
         model = inventarioProdTerm
         fields = [
-            'registro', 'status', 'proveedor',
+            'registro', 'fecha','status', 'proveedor',
             'itemsapcode', 'itemsapname',
             'cajas', 'libras',
             'lbsintara', 'pesostd', 'pesostdxcaja',
@@ -413,7 +413,7 @@ class inventarioFrutaAuxForm(forms.ModelForm):
     registro = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     status = forms.ChoiceField(choices=op_status, required=False, widget=forms.Select(attrs={'class': 'form-control'}))
     proveedor = forms.ChoiceField(choices=op_proveedor, widget=forms.Select(attrs={'class': 'form-control'}))
-
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
     itemsapcode = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     itemsapname = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     calidad1 = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -430,10 +430,11 @@ class inventarioFrutaAuxForm(forms.ModelForm):
     tara = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     inventarioreg = forms.CharField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     salidacontenedores = forms.CharField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    
     class Meta:
         model = inventarioProdTermAux
         fields = [
-            'registro', 'status', 'proveedor',
+            'registro', 'fecha','status', 'proveedor',
             'itemsapcode', 'itemsapname',
             'cajas', 
             'lbsintara', 'pesostd', 'pesostdxcaja',
