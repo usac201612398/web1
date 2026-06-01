@@ -114,14 +114,14 @@ urlpatterns = [
     path('contenedores/<int:pk>/delete/',ContenedoresDeleteView.as_view(), name='contenedores_delete'),
 
     #Urls de controlcajas
-    path('envio/create-auto/', EnvioCreateAutoView.as_view(), name='envio_create_auto'),
-    path('controlcajas/anular/<int:pk>/', anular_caja, name='anular_caja'),
-    path('envio/workspace/<int:envio_id>/', EnvioWorkspaceView.as_view(), name='envio_workspace'),
-    path('envio/cerrar/<int:envio_id>/', cerrar_envio, name='cerrar_envio'),
-    path('controlcajas/print/<int:envio_id>/', ControlCajasPrintView.as_view(), name='controlcajas_print'),
+    #path('envio/create-auto/', EnvioCreateAutoView.as_view(), name='envio_create_auto'),
+    #path('controlcajas/anular/<int:pk>/', anular_caja, name='anular_caja'),
+    #path('envio/workspace/<int:envio_id>/', EnvioWorkspaceView.as_view(), name='envio_workspace'),
+    #path('envio/cerrar/<int:envio_id>/', cerrar_envio, name='cerrar_envio'),
+    #path('controlcajas/print/<int:envio_id>/', ControlCajasPrintView.as_view(), name='controlcajas_print'),
     path("controlcajasmanual",ControlCajasListView.as_view(),name='controlcajas_list'),
     path("controlcajasmanualinventario",ControlCajasInventarioView.as_view(),name='controlcajas_inventario'),
-    path('controlcajasmanual/new/', ControlCajasCreateView.as_view(), name='controlcajas_create'),
+    # path('controlcajasmanual/new/', ControlCajasCreateView.as_view(), name='controlcajas_create'),
     path('controlcajasmanual/<int:pk>/edit/', ControlCajasUpdateView.as_view(), name='controlcajas_update'),
     path('controlcajasmanual/<int:pk>/delete/', ControlCajasDeleteView.as_view(), name='controlcajas_delete'),
     #Ajax

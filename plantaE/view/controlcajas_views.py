@@ -172,7 +172,7 @@ class ControlCajasInventarioView(View):
             'plantaE/controlcajas/controlcajas_inventario.html',
             {'resumen': resumen, 'total_general': total_general}
         )
-
+'''
 class ControlCajasCreateView(CreateView):
     model = controlcajas
     form_class = controlcajasForm
@@ -261,6 +261,7 @@ class ControlCajasCreateView(CreateView):
             )
 
         return redirect('envio_workspace', envio_id=self.envio_id)
+'''
 
 class ControlCajasUpdateView(UpdateView):
     model = controlcajas
