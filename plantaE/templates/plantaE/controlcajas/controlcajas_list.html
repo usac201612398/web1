@@ -62,10 +62,7 @@
 
             <div class="header-actions">
 
-                <!-- 🔥 NUEVO ENVÍO AUTOMÁTICO -->
-                <button id="nuevoEnvio" class="btn btn-success btn-sm">
-                    <i class="fas fa-truck"></i> Nuevo Envío
-                </button>
+                
 
                 <a href="{% url 'controlcajas_inventario' %}" class="btn btn-primary btn-sm">
                     <i class="fas fa-warehouse"></i> Inventario
@@ -89,7 +86,6 @@
                         <th>Tipo-Mov</th>
                         <th>Fecha</th>
 
-                        
                         <th>Editar</th>
                         <th>Eliminar</th>
                     </tr>
@@ -144,23 +140,7 @@
         });
     </script>
 
-    <!-- 🔥 NUEVO ENVÍO AUTOMÁTICO -->
-    <script>
-        document.getElementById("nuevoEnvio").addEventListener("click", function () {
-
-            fetch("{% url 'envio_create_auto' %}", {
-                method: "POST",
-                headers: {
-                    "X-CSRFToken": "{{ csrf_token }}"
-                }
-            })
-                .then(res => res.json())
-                .then(data => {
-                    window.location.href = data.redirect;
-                });
-
-        });
-    </script>
+    
 
 </body>
 
