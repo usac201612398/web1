@@ -635,10 +635,6 @@ class controlcajasForm(forms.ModelForm):
     op_encargado = [('','-'),('Sandra Martínez','Sandra Martínez'),('Kimberly','Kimberly'),('Alfonso Samayoa','Alfonso Samayoa'),('Carlos Hernández','Carlos Hernández'),('Jhony Tecún','Jhony Tecún'),('Ariel Parada','Ariel Parada'),('Gonzalo Mayén','Gonzalo Mayén'),('Carlos Virula','Carlos Virula'),('Crishanda Solares','Crishanda Solares'),('Saul Ruano','Saul Ruano')]
     # Fields
     cajas = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
-    envio = forms.IntegerField(
-        required=False,
-        widget=forms.HiddenInput()
-    )
     lugar_entra = forms.ChoiceField(choices=l_entra, widget=forms.Select(attrs={'class': 'form-control'}))
     lugar_sale = forms.ChoiceField(choices=l_sale, widget=forms.Select(attrs={'class': 'form-control'}))
     tipomov = forms.ChoiceField(choices=op_mov, widget=forms.Select(attrs={'class': 'form-control'}))
@@ -657,7 +653,7 @@ class controlcajasForm(forms.ModelForm):
 
     class Meta:
         model = controlcajas
-        fields = ['envio','itemsapcode','tipodecaja','cajas','lugar_entra','lugar_sale','tipomov','fecha']
+        fields = ['itemsapcode','tipodecaja','cajas','lugar_entra','lugar_sale','tipomov','fecha']
 
     def __init__(self, *args, **kwargs):
         super(controlcajasForm, self).__init__(*args, **kwargs)
