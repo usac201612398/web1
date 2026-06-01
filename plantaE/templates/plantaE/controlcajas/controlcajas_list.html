@@ -89,10 +89,7 @@
                         <th>Tipo-Mov</th>
                         <th>Fecha</th>
 
-                        <!-- 🔥 NUEVO: ENVÍO -->
-                        <th>Envio</th>
-
-                        <th>Imprimir</th>
+                        
                         <th>Editar</th>
                         <th>Eliminar</th>
                     </tr>
@@ -110,22 +107,7 @@
                         <td>{{ registro.tipomov }}</td>
                         <td>{{ registro.fecha }}</td>
 
-                        <!-- 🔥 ENVÍO -->
-                        <td>
-                            {% if registro.envio %}
-                            <span class="badge bg-info">#{{ registro.envio }}</span>
-                            {% else %}
-                            <span class="badge bg-secondary">Sin asignar</span>
-                            {% endif %}
-                        </td>
-
-                        <!-- PRINT -->
-                        <td class="action-icons">
-                            <a href="{% url 'controlcajas_print' registro.envio %}" target="_blank" title="Imprimir envío">
-                                <i class="fas fa-print text-primary"></i>
-                            </a>
-                        </td>
-
+                    
                         <!-- EDIT -->
                         <td class="action-icons">
                             <a href="{% url 'controlcajas_update' registro.pk %}">
