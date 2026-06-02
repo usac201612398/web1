@@ -292,9 +292,25 @@
         estructura, zona, actividad, finca, cultivo
       }, function (data) {
 
-        let semanas = new Set();
-        data.forEach(row => semanas.add(row.semana));
-        semanas = Array.from(semanas).sort();
+        let semanas = [];
+        let semanasMap = new Map();
+
+        data.forEach(row => {
+          const key = `${row.anio}-${row.semana_num}`;   // clave única real
+          if (!semanasMap.has(key)) {
+            semanasMap.set(key, {
+              key: key,
+              anio: row.anio,
+              semana_num: row.semana_num,
+              label: `${String(row.semana_num).padStart(2, '0')}-${String(row.anio).slice(-2)}`
+            });
+          }
+        });
+
+        semanas = Array.from(semanasMap.values()).sort((a, b) => {
+          if (a.anio !== b.anio) return a.anio - b.anio;
+          return a.semana_num - b.semana_num;
+        });
 
         let header = '<th>Finca</th><th>Estructura</th><th>Cultivo</th><th>Actividad</th><th>Zona</th>';
         semanas.forEach(sem => header += `<th>${sem}</th>`);
