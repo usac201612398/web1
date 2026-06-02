@@ -292,11 +292,13 @@
         estructura, zona, actividad, finca, cultivo
       }, function (data) {
 
-        let semanas = [];
+        // =========================
+        // Construir semanas ordenadas correctamente
+        // =========================
         let semanasMap = new Map();
 
         data.forEach(row => {
-          const key = `${row.anio}-${row.semana_num}`;   // clave única real
+          const key = `${row.anio}-${row.semana_num}`;
           if (!semanasMap.has(key)) {
             semanasMap.set(key, {
               key: key,
@@ -307,35 +309,55 @@
           }
         });
 
-        semanas = Array.from(semanasMap.values()).sort((a, b) => {
+        let semanas = Array.from(semanasMap.values()).sort((a, b) => {
           if (a.anio !== b.anio) return a.anio - b.anio;
           return a.semana_num - b.semana_num;
         });
 
+        // =========================
+        // Header dinámico
+        // =========================
         let header = '<th>Finca</th><th>Estructura</th><th>Cultivo</th><th>Actividad</th><th>Zona</th>';
-        semanas.forEach(sem => header += `<th>${sem}</th>`);
+        semanas.forEach(sem => header += `<th>${sem.label}</th>`);
         $('#headerSemanas').html(header);
 
+        // =========================
+        // Agrupar datos
+        // =========================
         let body = '';
         const groupMap = {};
 
         data.forEach(row => {
           const key = `${row.estructura}|${row.zona}|${row.actividad}|${row.finca}|${row.cultivo}`;
-          if (!groupMap[key]) groupMap[key] = { ...row, semanas: {} };
-          groupMap[key].semanas[row.semana] = { letra: row.letra, color: row.color };
+          const semanaKey = `${row.anio}-${row.semana_num}`;
+
+          if (!groupMap[key]) {
+            groupMap[key] = {
+              ...row,
+              semanas: {}
+            };
+          }
+
+          groupMap[key].semanas[semanaKey] = {
+            letra: row.letra,
+            color: row.color
+          };
         });
 
+        // =========================
+        // Pintar filas
+        // =========================
         Object.values(groupMap).forEach(row => {
           body += `<tr>
         <td>${row.finca}</td>
         <td>${row.estructura}</td>
-        <td>${row.cultivo}</td>        
+        <td>${row.cultivo}</td>
         <td>${row.actividad}</td>
         <td>${row.zona}</td>`;
 
           semanas.forEach(sem => {
-            if (row.semanas[sem]) {
-              const celda = row.semanas[sem];
+            if (row.semanas[sem.key]) {
+              const celda = row.semanas[sem.key];
               body += `
             <td style="background:${celda.color};
                       color:${celda.color === 'yellow' ? 'black' : 'white'};">
@@ -352,7 +374,6 @@
         $('#bodyReporte').html(body);
       });
     }
-
     /* ================= EVENTOS ================= */
     /* Delegado → funciona para select y hidden */
     $(document).on('change', '#Area', function () {
