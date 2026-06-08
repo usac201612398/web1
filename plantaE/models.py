@@ -315,7 +315,7 @@ class controlcajas(models.Model):
 
 
     def __str__(self):
-        return (str(self.lugar_sale)+ " | " + str(self.lugar_entra)  + " | " +str(self.tipodecaja) + " | " + str(self.fechasalidafruta))
+        return (str(self.registro)+ " | " + str(self.lugar_sale)+ " | " + str(self.lugar_entra)  + " | " +str(self.tipodecaja) + " | " + str(self.fechasalidafruta))
     
 class Actpeso(models.Model):
 
