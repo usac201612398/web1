@@ -446,82 +446,14 @@ ARANET_SECRET = "rphvcx8qe3dk5dwjfcw84na5vqz34jen"
 
 @login_exempt
 @csrf_exempt
+
 def aranet_webhook(request):
-    if request.method != "POST":
-        return JsonResponse({"error": "Method Not Allowed"}, status=405)
+    print("==== REQUEST RECIBIDO ====")
+    print("METHOD:", request.method)
+    print("BODY:", request.body)
 
-    token = request.headers.get("X-Aranet-Key")
-    if token != ARANET_SECRET:
-        return JsonResponse({"error": "Unauthorized"}, status=401)
-
-    try:
-        data = json.loads(request.body)
-        objects = []
-
-        current_sensor = None
-        current_timestamp = None
-        sensores_map = {
-            s.sensor: s for s in SensorDetalles.objects.all()
-        }
-        for record in data:
-            # Actualizar contexto si viene
-            if "bn" in record:
-                current_sensor = record.get("bn").rstrip(":")
-
-            if "bt" in record:
-                bt = record.get("bt")
-                current_timestamp = datetime.fromtimestamp(bt, tz=dt_timezone.utc)
-
-            metric = record.get("n")
-            value = record.get("v")
-            unit = record.get("u")
-            
-            
-            if metric is None or value is None:
-                continue
-
-            if current_sensor is None or current_timestamp is None:
-                print("⚠️ Missing context → skipping", record)
-                continue
-
-            sensor_obj = sensores_map.get(current_sensor)
-            if not sensor_obj:
-                print("❌ Sensor no encontrado:", current_sensor)
-                continue
-            objects.append(
-                SensorData(
-                    sensor=sensor_obj,
-                    metric=metric,
-                    value=value,
-                    unit=unit,
-                    timestamp=current_timestamp
-                )
-            )
-
-        if objects:
-            SensorData.objects.bulk_create(objects, batch_size=100)
-            ahora = timezone.now()
-            hace_10_min = ahora - timedelta(minutes=10)
-            datos_recientes = [
-                obj for obj in objects
-                if obj.timestamp >= hace_10_min
-            ]
-            if len(datos_recientes) < len(objects) * 0.3:
-                print("📦 Bulk histórico detectado → no se envían alertas")
-                return JsonResponse({"status": "bulk_saved_no_alerts"})
-
-            sensores = set(obj.sensor for obj in datos_recientes)
-            for sensor in sensores:
-                resultado = evaluar_sensor(sensor)
-                if resultado:
-                    print("ALERTA ENVIADA")
-                    enviar_alerta(resultado)
-
-        return JsonResponse({"status": "ok", "saved": len(objects)})
-
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status=400)
-        
+    return JsonResponse({"status": "ok"})
+     
 def aranet_resumen_json(request):
     # Obtener todos los sensores distintos
     sensores = SensorData.objects.values_list('sensor', flat=True).distinct()
