@@ -128,19 +128,23 @@
   </section>
 
   <!-- SCRIPTS -->
+
   <script src="{% static '/lib/cockies.js' %}"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
   <script>
     const registros = JSON.parse('{{ registros_json|escapejs }}');
     console.log('REGISTROS:', registros);
   </script>
+
   <script>
     // CONSULTAR
     // CARGA INICIAL
     $(document).ready(function () {
       $.ajax({
         url: '{% url "obtener_nombre_usuario" %}',
-        data: {'category_id': 'Consulta'},
+        data: { 'category_id': 'Consulta' },
         success: function (data) {
           $('#date').val(data.fecha);
           $('#correo').val(data.username);
@@ -171,11 +175,32 @@
     });
 
     function exportarExcel() {
+
       const tabla = document.getElementById('myTable');
-      const wb = XLSX.utils.table_to_book(tabla, {
-        sheet: "Detalle Fruta"
-      });
-      XLSX.writeFile(wb, 'detalle_fruta.xlsx');
+
+      if (!tabla) {
+        console.error('No se encontró la tabla myTable');
+        return;
+      }
+
+      // Convertir tabla HTML a hoja de Excel
+      const ws = XLSX.utils.table_to_sheet(tabla);
+
+      // Crear libro
+      const wb = XLSX.utils.book_new();
+
+      // Agregar hoja
+      XLSX.utils.book_append_sheet(
+        wb,
+        ws,
+        'Detalle Fruta'
+      );
+
+      // Descargar archivo
+      XLSX.writeFile(
+        wb,
+        'detalle_fruta.xlsx'
+      );
     }
   </script>
 
