@@ -90,6 +90,8 @@
                   <th>Kilos-Totales</th>
                   <th>Kilos-Procesados</th>
                   <th>Kilos-Pendientes</th>
+                  
+                  <th>Area</th>
                   <th>kgxm2</th>
                 </tr>
               </thead>
@@ -105,6 +107,8 @@
                   <td class="number-cell" data-value="{{ registro.kilos_procesados}}">{{ registro.kilos_procesados}}
                   </td>
                   <td class="number-cell" data-value="{{ registro.kilos_pendientes }}">{{ registro.kilos_pendientes }}
+                  </td>
+                  <td class="number-cell" data-value="{{ registro.area }}">{{ registro.area }}
                   </td>
                   <td class="number-cell" data-value="{{ registro.kg_m2 }}">{{ registro.kg_m2 }}%</td>
                 </tr>
@@ -183,8 +187,58 @@
         return;
       }
 
-      // Convertir tabla HTML a hoja de Excel
-      const ws = XLSX.utils.table_to_sheet(tabla);
+      const datos = [];
+
+      // Obtener encabezados
+      const encabezados = [];
+
+      tabla.querySelectorAll('thead th').forEach(th => {
+        encabezados.push(th.textContent.trim());
+      });
+
+      datos.push(encabezados);
+
+      // Obtener filas
+      tabla.querySelectorAll('tbody tr').forEach(tr => {
+
+        const fila = [];
+
+        tr.querySelectorAll('td').forEach(td => {
+
+          // Si es una celda numérica, tomar el valor original
+          // de data-value y NO el texto formateado
+          if (td.classList.contains('number-cell')) {
+
+            const valorOriginal = td.getAttribute('data-value');
+
+            if (valorOriginal !== null && valorOriginal !== '') {
+
+              // Convertir el valor a número
+              const numero = Number(
+                String(valorOriginal)
+                  .replace(',', '.')
+              );
+
+              fila.push(
+                isNaN(numero) ? valorOriginal : numero
+              );
+
+            } else {
+              fila.push('');
+            }
+
+          } else {
+
+            // Celdas normales
+            fila.push(td.textContent.trim());
+          }
+        });
+
+        datos.push(fila);
+      });
+
+      // Crear hoja de Excel
+      const ws = XLSX.utils.aoa_to_sheet(datos);
 
       // Crear libro
       const wb = XLSX.utils.book_new();
@@ -196,7 +250,7 @@
         'Detalle Fruta'
       );
 
-      // Descargar archivo
+      // Descargar
       XLSX.writeFile(
         wb,
         'detalle_fruta.xlsx'
