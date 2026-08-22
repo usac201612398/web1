@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 {% load static %}
+
 <head>
   <meta charset="UTF-8">
   <title>Panel - totalFruta</title>
@@ -13,51 +14,66 @@
     body {
       background-color: #f9f9f9;
     }
+
     .panel-header {
       margin-bottom: 1.5rem;
     }
+
     .filters {
       background: white;
       padding: 1.5rem;
       border-radius: 6px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
+
     .data-section {
       margin-top: 2rem;
     }
+
     .box {
       border-radius: 6px;
     }
+
     .back-link {
       margin-top: 2rem;
       display: inline-block;
     }
+
     .is-small-text {
       font-size: 0.9rem;
       color: #777;
     }
+
     .table-custom-header th {
-    background: linear-gradient(to right, #6c757d, #495057);
-    color: white !important;
-    font-weight: 600;
-    text-align: center;
-    white-space: nowrap;
+      background: linear-gradient(to right, #6c757d, #495057);
+      color: white !important;
+      font-weight: 600;
+      text-align: center;
+      white-space: nowrap;
     }
   </style>
 </head>
+
 <body>
   <section class="section">
     <div class="container">
       <!-- HEADER -->
-        <section class="hero is-success is-small mb-5">
+      <section class="hero is-success is-small mb-5">
         <div class="hero-body">
-            <div class="container has-text-centered">
+          <div class="container has-text-centered">
             <h1 class="title is-3 has-text-white">Panel de Control</h1>
             <p class="subtitle is-6 has-text-white-ter">Consulta de salidas de fruta</p>
-            </div>
+          </div>
         </div>
-        </section>
-
+      </section>
+      <div class="mb-4">
+        <button class="button is-success" onclick="exportarExcel()">
+          <span class="icon">
+            <i class="fas fa-file-excel"></i>
+          </span>
+          <span>Exportar a Excel</span>
+        </button>
+      </div>
       <!-- TABLA 1 -->
       <div class="data-section">
         <div class="box">
@@ -86,8 +102,10 @@
                   <td>{{ registro.estructura }}</td>
                   <td>{{ registro.variedad }}</td>
                   <td class="number-cell" data-value="{{ registro.kilos_totales }}">{{ registro.kilos_totales }}</td>
-                  <td class="number-cell" data-value="{{ registro.kilos_procesados}}">{{ registro.kilos_procesados}}</td>
-                  <td class="number-cell" data-value="{{ registro.kilos_pendientes }}">{{ registro.kilos_pendientes }}</td>
+                  <td class="number-cell" data-value="{{ registro.kilos_procesados}}">{{ registro.kilos_procesados}}
+                  </td>
+                  <td class="number-cell" data-value="{{ registro.kilos_pendientes }}">{{ registro.kilos_pendientes }}
+                  </td>
                   <td class="number-cell" data-value="{{ registro.kg_m2 }}">{{ registro.kg_m2 }}%</td>
                 </tr>
                 {% endfor %}
@@ -97,32 +115,32 @@
         </div>
       </div>
 
-    <div class="has-text-centered mt-6">
+      <div class="has-text-centered mt-6">
         <a href="{% url 'plantaE_homeger' %}" class="button is-success is-medium is-rounded">
-            <span class="icon">
+          <span class="icon">
             <i class="fas fa-home"></i>
-            </span>
-            <span>Home</span>
+          </span>
+          <span>Home</span>
         </a>
-    </div>
-    
+      </div>
+
     </div>
   </section>
 
   <!-- SCRIPTS -->
   <script src="{% static '/lib/cockies.js' %}"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
+  <script>
     const registros = JSON.parse('{{ registros_json|escapejs }}');
     console.log('REGISTROS:', registros);
-</script>
+  </script>
   <script>
     // CONSULTAR
     // CARGA INICIAL
     $(document).ready(function () {
       $.ajax({
         url: '{% url "obtener_nombre_usuario" %}',
-        data: { 'category_id': 'Consulta' },
+        data: {'category_id': 'Consulta'},
         success: function (data) {
           $('#date').val(data.fecha);
           $('#correo').val(data.username);
@@ -151,6 +169,16 @@
     document.addEventListener('DOMContentLoaded', () => {
       formatCells('myTable');
     });
+
+    function exportarExcel() {
+      const tabla = document.getElementById('myTable');
+      const wb = XLSX.utils.table_to_book(tabla, {
+        sheet: "Detalle Fruta"
+      });
+      XLSX.writeFile(wb, 'detalle_fruta.xlsx');
+    }
   </script>
+
 </body>
+
 </html>
