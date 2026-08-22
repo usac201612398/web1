@@ -1428,7 +1428,7 @@ def poraprovechamientosempger(request):
 
         aprovechamiento_kg = datos['aprovechamiento_libras'] / 2.20462 if datos['aprovechamiento_libras'] else 0
         kg_m2 = round(aprovechamiento_kg / area_m2, 2) if area_m2 > 0 else 0
-        
+        por_apro = (aprovechamiento_kg/kilos_procesados)*100
 
         resultado.append({
             'proveedor': finca,
@@ -1438,6 +1438,8 @@ def poraprovechamientosempger(request):
             'variedad': variedad,
             'kilos_totales': kilos_recibidos,
             'kilos_procesados': kilos_procesados,
+            'aprov_kg': aprovechamiento_kg,
+            'porcentaje_apro': por_apro,
             'kilos_pendientes': kilos_pendientes,
             'kg_m2': kg_m2,
             'area':area_m2,

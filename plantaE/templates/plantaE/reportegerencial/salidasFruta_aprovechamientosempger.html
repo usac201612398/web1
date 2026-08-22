@@ -90,9 +90,10 @@
                   <th>Kilos-Totales</th>
                   <th>Kilos-Procesados</th>
                   <th>Kilos-Pendientes</th>
-                  
+                  <th>Kilos-Aprov</th>
                   <th>Area</th>
                   <th>kgxm2</th>
+                  <th>Por-Aprov</th>
                 </tr>
               </thead>
               <tbody>
@@ -108,9 +109,12 @@
                   </td>
                   <td class="number-cell" data-value="{{ registro.kilos_pendientes }}">{{ registro.kilos_pendientes }}
                   </td>
+                  <td class="number-cell" data-value="{{ registro.aprov_kg }}">{{ registro.aprov_kg }}
+                  </td>
                   <td class="number-cell" data-value="{{ registro.area }}">{{ registro.area }}
                   </td>
                   <td class="number-cell" data-value="{{ registro.kg_m2 }}">{{ registro.kg_m2 }}%</td>
+                  <td class="number-cell" data-value="{{ registro.porcentaje_apro }}">{{ registro.porcentaje_apro }}%</td>
                 </tr>
                 {% endfor %}
               </tbody>
