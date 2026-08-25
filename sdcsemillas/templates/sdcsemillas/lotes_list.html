@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
 {% load static %}
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lotes</title>
 
     <!-- CSS e íconos -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
 
     <style>
         h1 {
@@ -27,7 +29,9 @@
         }
 
         @media (max-width: 768px) {
-            th, td {
+
+            th,
+            td {
                 font-size: 13px;
             }
 
@@ -48,7 +52,8 @@
                 overflow-x: auto;
             }
 
-            .table td, .table th {
+            .table td,
+            .table th {
                 white-space: nowrap;
             }
         }
@@ -70,8 +75,21 @@
                 font-size: 1.4rem;
             }
         }
+
+        .barcode-container {
+            width: 100%;
+            overflow-x: auto;
+            padding: 15px;
+            background-color: white;
+        }
+
+        #barcode {
+            max-width: 100%;
+            height: auto;
+        }
     </style>
 </head>
+
 <body>
     <div class="container py-3">
         <!-- Banner del título -->
@@ -100,11 +118,12 @@
                         <th>Ubicación</th>
                         <th>Estructura</th>
                         <th>Cultivo</th>
-                        
+
                         <th>Género</th>
                         <th>Apodo Variedad</th>
                         <th>Status</th>
                         <th>QR</th>
+                        <th>Código 128</th>
                         <th>Editar</th>
                         <th>Anular</th>
                     </tr>
@@ -118,13 +137,21 @@
                         <td>{{ registro.ubicación }}</td>
                         <td>{{ registro.estructura }}</td>
                         <td>{{ registro.cultivo }}</td>
-                        
+
                         <td>{{ registro.genero }}</td>
                         <td>{{ registro.apodo_variedad }}</td>
                         <td>{{ registro.status }}</td>
                         <td class="text-center">
-                            <button class="btn btn-sm btn-outline-dark generate-qr-btn" data-id="{{ registro.id }}" data-bs-toggle="modal" data-bs-target="#qrModal">
+                            <button class="btn btn-sm btn-outline-dark generate-qr-btn" data-id="{{ registro.id }}"
+                                data-bs-toggle="modal" data-bs-target="#qrModal">
                                 <i class="fas fa-qrcode"></i>
+                            </button>
+                        </td>
+                        <td class="text-center">
+                            <button type="button" class="btn btn-sm btn-outline-dark generate-barcode-btn"
+                                data-lote="{{ registro.lote_code }}" data-bs-toggle="modal"
+                                data-bs-target="#barcodeModal">
+                                <i class="fas fa-barcode"></i>
                             </button>
                         </td>
                         <td class="text-center">
@@ -174,33 +201,69 @@
             </a>
         </div>
     </div>
-        <!-- Modal para mostrar QR -->
+    <!-- Modal para mostrar QR -->
     <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="qrModalLabel">Código QR del ID</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-        </div>
-        <div class="modal-body text-center">
-            <canvas id="qrCanvas"></canvas>
-            
-            <p class="mt-2" id="qrText" style="font-size: 0.9rem;"></p>
-            <a id="downloadQR" class="btn btn-outline-primary mt-3" download="codigo_qr.png">Descargar QR</a>
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="qrModalLabel">Código QR del ID</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <canvas id="qrCanvas"></canvas>
 
-        </div>
+                    <p class="mt-2" id="qrText" style="font-size: 0.9rem;"></p>
+                    <a id="downloadQR" class="btn btn-outline-primary mt-3" download="codigo_qr.png">Descargar QR</a>
+
+                </div>
+            </div>
         </div>
     </div>
+
+    <!-- Modal para mostrar el código de barras Code 128 -->
+    <div class="modal fade" id="barcodeModal" tabindex="-1" aria-labelledby="barcodeModalLabel" aria-hidden="true">
+
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="barcodeModalLabel">
+                        Código de barras del lote
+                    </h5>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar">
+                    </button>
+                </div>
+
+                <div class="modal-body text-center">
+
+                    <div class="barcode-container">
+                        <svg id="barcode"></svg>
+                    </div>
+
+                    <p class="mt-3 mb-0" id="barcodeText"></p>
+
+                    <button type="button" id="downloadBarcode" class="btn btn-outline-primary mt-3">
+
+                        <i class="fas fa-download"></i>
+                        Descargar código
+                    </button>
+
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Scripts -->
     <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.12.3/JsBarcode.all.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
     <script>
         $(document).ready(function () {
+
             var table = $('#myTable').DataTable({
                 responsive: true,
                 autoWidth: false,
@@ -229,6 +292,136 @@
                 $('#downloadQR').attr('href', dataURL);
             });
         });
+
+        let loteSeleccionado = "";
+
+        /*
+         * Se utiliza evento delegado porque DataTables puede
+         * reconstruir las filas al buscar, ordenar o paginar.
+         */
+        $('#myTable tbody').on(
+            'click',
+            '.generate-barcode-btn',
+            function () {
+
+                loteSeleccionado = String(
+                    $(this).data('lote')
+                ).trim();
+
+                if (!loteSeleccionado) {
+                    alert("El lote no tiene un código válido.");
+                    return;
+                }
+
+                try {
+                    JsBarcode("#barcode", loteSeleccionado, {
+                        format: "CODE128",
+                        lineColor: "#000000",
+                        background: "#ffffff",
+                        width: 2,
+                        height: 90,
+                        margin: 15,
+                        displayValue: true,
+                        fontSize: 20,
+                        textMargin: 8
+                    });
+
+                    $('#barcodeText').text(
+                        `Lote: ${loteSeleccionado}`
+                    );
+
+                } catch (error) {
+                    console.error(
+                        "Error generando el código de barras:",
+                        error
+                    );
+
+                    alert(
+                        "No se pudo generar el código de barras."
+                    );
+                }
+            }
+        );
+
+        $('#downloadBarcode').on('click', function () {
+
+            if (!loteSeleccionado) {
+                alert("Primero selecciona un lote.");
+                return;
+            }
+
+            const svg = document.getElementById('barcode');
+
+            if (!svg || !svg.innerHTML.trim()) {
+                alert("No existe un código para descargar.");
+                return;
+            }
+
+            const serializer = new XMLSerializer();
+            const svgData = serializer.serializeToString(svg);
+
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            const image = new Image();
+
+            const svgBlob = new Blob(
+                [svgData],
+                {
+                    type: 'image/svg+xml;charset=utf-8'
+                }
+            );
+
+            const objectURL = URL.createObjectURL(svgBlob);
+
+            image.onload = function () {
+
+                const scale = 3;
+
+                canvas.width = image.width * scale;
+                canvas.height = image.height * scale;
+
+                context.fillStyle = '#ffffff';
+                context.fillRect(
+                    0,
+                    0,
+                    canvas.width,
+                    canvas.height
+                );
+
+                context.drawImage(
+                    image,
+                    0,
+                    0,
+                    canvas.width,
+                    canvas.height
+                );
+
+                URL.revokeObjectURL(objectURL);
+
+                const enlace = document.createElement('a');
+
+                enlace.download =
+                    `CODE128_${loteSeleccionado}.png`;
+
+                enlace.href = canvas.toDataURL('image/png');
+
+                document.body.appendChild(enlace);
+                enlace.click();
+                enlace.remove();
+            };
+
+            image.onerror = function () {
+                URL.revokeObjectURL(objectURL);
+
+                alert(
+                    "No se pudo convertir el código a imagen."
+                );
+            };
+
+            image.src = objectURL;
+        });
     </script>
+
 </body>
+
 </html>
