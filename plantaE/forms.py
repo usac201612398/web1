@@ -310,9 +310,10 @@ class inventarioFrutaForm(forms.ModelForm):
     ]
     op_categoria = [('','-'),('Exportación','Exportación'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolución','Devolución')]
     op_status = [('', '-'), ('En proceso', 'En proceso'), ('Anulado', 'Anulado')]
-
+    op_status3 = [('', '-'), ('En proceso', 'En proceso'), ('Anulado', 'Anulado'), ('Cerrado', 'Cerrado')]
     registro = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control', 'readonly': 'readonly'}))
     status = forms.ChoiceField(choices=op_status, required=False, widget=forms.Select(attrs={'class': 'form-control'}))
+    status3 = forms.ChoiceField(choices=op_status3, required=False, widget=forms.Select(attrs={'class': 'form-control'}))
     proveedor = forms.ChoiceField(choices=op_proveedor, widget=forms.Select(attrs={'class': 'form-control'}))
     fecha = forms.DateField(widget=forms.DateInput(attrs={'type':'date','class': 'form-control'}))
     itemsapcode = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -335,7 +336,7 @@ class inventarioFrutaForm(forms.ModelForm):
     class Meta:
         model = inventarioProdTerm
         fields = [
-            'registro', 'fecha','status', 'proveedor',
+            'registro', 'fecha','status','status3', 'proveedor',
             'itemsapcode', 'itemsapname',
             'cajas', 'libras',
             'lbsintara', 'pesostd', 'pesostdxcaja',
