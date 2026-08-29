@@ -42,12 +42,20 @@ class ContenedoresCreateView(CreateView):
     template_name = 'plantaE/contenedores/contenedores_form.html'
     success_url = reverse_lazy('contenedores_list')
 
+
     def get_initial(self):
         initial = super().get_initial()
-        ultimo_contenedor = contenedores.objects.last()
+        ultimo_contenedor = contenedores.objects.order_by('-id').first()
 
         if ultimo_contenedor:
-            initial['viaje'] = ultimo_contenedor.viaje + 1
+            dias = timezone.now().date() - ultimo_contenedor.fecha.date()
+
+            if dias.days > 30:
+                initial['viaje'] = 1
+            else:
+                initial['viaje'] = ultimo_contenedor.viaje + 1
+        else:
+            initial['viaje'] = 1
 
         return initial
 
