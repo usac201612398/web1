@@ -305,7 +305,8 @@ class inventarioFrutaForm(forms.ModelForm):
         ('INVERNADEROS TECNOLOGICOS S.A', 'INVERNADEROS TECNOLOGICOS S.A'),
         ('HORTEX, S.A.', 'HORTEX, S.A.'),
         ('DANIEL ESTUARDO GALICIA CARRERA', 'DANIEL ESTUARDO GALICIA CARRERA'),
-        ('PRODUCTOS DEL VALLE, S.A.', 'PRODUCTOS DEL VALLE, S.A.')
+        ('PRODUCTOS DEL VALLE, S.A.', 'PRODUCTOS DEL VALLE, S.A.'),
+        ('FLE', 'FLE')
     ]
     op_categoria = [('','-'),('Exportación','Exportación'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolución','Devolución')]
     op_status = [('', '-'), ('En proceso', 'En proceso'), ('Anulado', 'Anulado')]
