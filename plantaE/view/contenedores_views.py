@@ -45,7 +45,7 @@ class ContenedoresCreateView(CreateView):
 
     def get_initial(self):
         initial = super().get_initial()
-        ultimo_contenedor = contenedores.objects.order_by('-id').first()
+        ultimo_contenedor = contenedores.objects.order_by('-registro').first()
 
         if ultimo_contenedor:
             dias = timezone.now().date() - ultimo_contenedor.fecha.date()
