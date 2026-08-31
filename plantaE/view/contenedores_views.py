@@ -48,7 +48,7 @@ class ContenedoresCreateView(CreateView):
         ultimo_contenedor = contenedores.objects.order_by('-registro').first()
 
         if ultimo_contenedor:
-            dias = timezone.now().date() - ultimo_contenedor.fecha.date()
+            dias = timezone.now().date() - ultimo_contenedor.fecha
 
             if dias.days > 30:
                 initial['viaje'] = 1
