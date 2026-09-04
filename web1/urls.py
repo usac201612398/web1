@@ -21,6 +21,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('app1/',include('app1.urls')),
+    path('mantenimiento/',include('mantenimiento.urls')),
     path('ejemplo/',include('ejemplo.urls')),
     path('plantaE/',include('plantaE.urls')),
     path('iotappweb/',include('iotappweb.urls')),

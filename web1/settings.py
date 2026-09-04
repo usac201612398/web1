@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'ejemplo',
     'iotappweb',
     'plantaE',
+    'mantenimiento',
     'ips',
     'sdcsemillas',
     'scorevalle',
