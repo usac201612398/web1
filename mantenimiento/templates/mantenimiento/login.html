@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,19 +10,12 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet"
-    >
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Font Awesome -->
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-    >
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <style>
-
         /* =========================================================
            RESET
         ========================================================= */
@@ -69,16 +63,12 @@
             padding: 30px;
 
             background:
-                radial-gradient(
-                    circle at 10% 20%,
+                radial-gradient(circle at 10% 20%,
                     rgba(37, 99, 235, 0.12),
-                    transparent 35%
-                ),
-                radial-gradient(
-                    circle at 90% 80%,
+                    transparent 35%),
+                radial-gradient(circle at 90% 80%,
                     rgba(14, 165, 233, 0.10),
-                    transparent 35%
-                ),
+                    transparent 35%),
                 #f8fafc;
         }
 
@@ -125,12 +115,10 @@
             overflow: hidden;
 
             background:
-                linear-gradient(
-                    145deg,
+                linear-gradient(145deg,
                     #0f172a 0%,
                     #172554 45%,
-                    #1d4ed8 100%
-                );
+                    #1d4ed8 100%);
         }
 
 
@@ -193,9 +181,9 @@
 
             border-radius: 14px;
 
-            background: rgba(255,255,255,0.12);
+            background: rgba(255, 255, 255, 0.12);
 
-            border: 1px solid rgba(255,255,255,0.18);
+            border: 1px solid rgba(255, 255, 255, 0.18);
 
             backdrop-filter: blur(10px);
 
@@ -240,9 +228,9 @@
 
             color: #bfdbfe;
 
-            background: rgba(255,255,255,0.08);
+            background: rgba(255, 255, 255, 0.08);
 
-            border: 1px solid rgba(255,255,255,0.10);
+            border: 1px solid rgba(255, 255, 255, 0.10);
         }
 
         .status-dot {
@@ -301,9 +289,9 @@
 
             border-radius: 12px;
 
-            background: rgba(255,255,255,0.06);
+            background: rgba(255, 255, 255, 0.06);
 
-            border: 1px solid rgba(255,255,255,0.08);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .feature i {
@@ -390,7 +378,7 @@
             position: relative;
         }
 
-        .input-wrapper > i {
+        .input-wrapper>i {
             position: absolute;
 
             left: 15px;
@@ -449,7 +437,7 @@
                 0 0 0 4px rgba(37, 99, 235, 0.10);
         }
 
-        .input-wrapper:focus-within > i {
+        .input-wrapper:focus-within>i {
             color: var(--primary);
         }
 
@@ -545,11 +533,9 @@
             border-radius: 11px;
 
             background:
-                linear-gradient(
-                    135deg,
+                linear-gradient(135deg,
                     var(--primary),
-                    #3b82f6
-                );
+                    #3b82f6);
 
             color: white;
 
@@ -570,7 +556,7 @@
             gap: 10px;
 
             box-shadow:
-                0 8px 18px rgba(37,99,235,.22);
+                0 8px 18px rgba(37, 99, 235, .22);
 
             transition: .25s;
         }
@@ -579,14 +565,12 @@
             transform: translateY(-2px);
 
             background:
-                linear-gradient(
-                    135deg,
+                linear-gradient(135deg,
                     var(--primary-dark),
-                    var(--primary)
-                );
+                    var(--primary));
 
             box-shadow:
-                0 12px 25px rgba(37,99,235,.28);
+                0 12px 25px rgba(37, 99, 235, .28);
         }
 
         .btn-login:active {
@@ -694,7 +678,6 @@
                 flex-direction: column;
             }
         }
-
     </style>
 </head>
 
@@ -854,16 +837,14 @@
 
                 <!-- FORMULARIO -->
 
-                <form action="/login-endpoint" method="POST">
+                <form method="POST">
+                    {% csrf_token %}
 
                     <!-- CORREO -->
 
                     <div class="form-group">
 
-                        <label
-                            class="form-label"
-                            for="username"
-                        >
+                        <label class="form-label" for="username">
                             Correo electrónico
                         </label>
 
@@ -871,15 +852,8 @@
 
                             <i class="fa-regular fa-envelope"></i>
 
-                            <input
-                                class="form-control"
-                                type="email"
-                                id="username"
-                                name="username"
-                                placeholder="usuario@ingenieria.usac.edu.gt"
-                                autocomplete="email"
-                                required
-                            >
+                            <input class="form-control" type="email" id="username" name="username"
+                                placeholder="usuario@popoyan.com.gt" autocomplete="email" required>
 
                         </div>
 
@@ -890,10 +864,7 @@
 
                     <div class="form-group">
 
-                        <label
-                            class="form-label"
-                            for="password"
-                        >
+                        <label class="form-label" for="password">
                             Contraseña
                         </label>
 
@@ -901,22 +872,11 @@
 
                             <i class="fa-solid fa-lock"></i>
 
-                            <input
-                                class="form-control"
-                                type="password"
-                                id="password"
-                                name="password"
-                                placeholder="Ingresa tu contraseña"
-                                autocomplete="current-password"
-                                required
-                            >
+                            <input class="form-control" type="password" id="password" name="password"
+                                placeholder="Ingresa tu contraseña" autocomplete="current-password" required>
 
-                            <button
-                                type="button"
-                                class="password-toggle"
-                                id="togglePassword"
-                                aria-label="Mostrar contraseña"
-                            >
+                            <button type="button" class="password-toggle" id="togglePassword"
+                                aria-label="Mostrar contraseña">
                                 <i class="fa-regular fa-eye"></i>
                             </button>
 
@@ -931,10 +891,7 @@
 
                         <label class="remember">
 
-                            <input
-                                type="checkbox"
-                                name="remember"
-                            >
+                            <input type="checkbox" name="remember">
 
                             <span>
                                 Mantener sesión iniciada
@@ -943,10 +900,7 @@
                         </label>
 
 
-                        <a
-                            href="#"
-                            class="forgot-password"
-                        >
+                        <a href="#" class="forgot-password">
                             ¿Olvidaste tu contraseña?
                         </a>
 
@@ -955,10 +909,7 @@
 
                     <!-- BOTÓN -->
 
-                    <button
-                        type="submit"
-                        class="btn-login"
-                    >
+                    <button type="submit" class="btn-login">
 
                         <span>
                             Ingresar al sistema
@@ -1031,4 +982,5 @@
     </script>
 
 </body>
+
 </html>
