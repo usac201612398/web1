@@ -1,141 +1,131 @@
-from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
-from .forms import LoginMantenimientoForm
 from .models import UsuarioMantenimiento
 
 
+@login_required
 def index(request):
 
     # ---------------------------------------------------------
-    # Si YA pasó el login propio de Mantenimiento,
-    # entonces sí puede entrar directamente al Home.
+    # El usuario ya fue autenticado por Microsoft / ADFS.
+    # Ahora verificamos si tiene autorización para
+    # utilizar el sistema de mantenimiento.
     # ---------------------------------------------------------
 
-    if request.session.get("mantenimiento_autenticado"):
+    try:
 
-        return redirect("home")
+        perfil = request.user.mantenimiento
 
+    except UsuarioMantenimiento.DoesNotExist:
 
-    # ---------------------------------------------------------
-    # Mostrar nuestro Login de Mantenimiento
-    # ---------------------------------------------------------
-
-    form = LoginMantenimientoForm(request.POST or None)
-
-
-    if request.method == "POST":
-
-        if form.is_valid():
-
-            username = form.cleaned_data["username"]
-            password = form.cleaned_data["password"]
-
-
-            # -------------------------------------------------
-            # Validar usuario y contraseña contra Django
-            # -------------------------------------------------
-
-            user = authenticate(
-                request,
-                username=username,
-                password=password
-            )
-
-
-            if user is None:
-
-                form.add_error(
-                    None,
-                    "Usuario o contraseña incorrectos."
+        return render(
+            request,
+            "mantenimiento/acceso_denegado.html",
+            {
+                "mensaje": (
+                    "Tu usuario está autenticado, "
+                    "pero no está registrado en el sistema "
+                    "de mantenimiento."
                 )
+            },
+            status=403
+        )
 
 
-            else:
+    # ---------------------------------------------------------
+    # Verificar si está activo
+    # ---------------------------------------------------------
 
-                # ---------------------------------------------
-                # Buscar perfil de Mantenimiento
-                # ---------------------------------------------
+    if not perfil.activo:
 
-                try:
-
-                    perfil = UsuarioMantenimiento.objects.get(
-                        user=user
-                    )
-
-                except UsuarioMantenimiento.DoesNotExist:
-
-                    form.add_error(
-                        None,
-                        "Este usuario no está registrado "
-                        "en el sistema de mantenimiento."
-                    )
-
-                else:
-
-                    # -----------------------------------------
-                    # Verificar estado
-                    # -----------------------------------------
-
-                    if not perfil.activo:
-
-                        form.add_error(
-                            None,
-                            "Este usuario se encuentra desactivado."
-                        )
-
-                    elif not perfil.puede_acceder:
-
-                        form.add_error(
-                            None,
-                            "No tienes autorización para acceder "
-                            "al sistema de mantenimiento."
-                        )
-
-                    else:
-
-                        # -------------------------------------
-                        # Usuario autorizado
-                        # -------------------------------------
-
-                        login(request, user)
-
-                        # Marcar segundo login como válido
-                        request.session[
-                            "mantenimiento_autenticado"
-                        ] = True
-
-                        return redirect("home")
+        return render(
+            request,
+            "mantenimiento/acceso_denegado.html",
+            {
+                "mensaje": (
+                    "Tu acceso al sistema de mantenimiento "
+                    "se encuentra desactivado."
+                )
+            },
+            status=403
+        )
 
 
-    return render(
-        request,
-        "mantenimiento/login.html",
-        {
-            "form": form
-        }
-    )
+    # ---------------------------------------------------------
+    # Verificar permiso
+    # ---------------------------------------------------------
+
+    if not perfil.puede_acceder:
+
+        return render(
+            request,
+            "mantenimiento/acceso_denegado.html",
+            {
+                "mensaje": (
+                    "Tu cuenta de Microsoft está autenticada, "
+                    "pero no tienes autorización para utilizar "
+                    "el sistema de mantenimiento."
+                )
+            },
+            status=403
+        )
+
+
+    # ---------------------------------------------------------
+    # Todo correcto
+    # ---------------------------------------------------------
+
+    return redirect("home")
 
 
 @login_required
 def home(request):
 
     # ---------------------------------------------------------
-    # Verificar que también haya pasado el login propio
-    # de Mantenimiento.
+    # Nunca permitir entrar al Home solamente por estar
+    # autenticado en Microsoft.
     # ---------------------------------------------------------
 
-    if not request.session.get(
-        "mantenimiento_autenticado"
-    ):
+    try:
 
-        return redirect("index")
+        perfil = request.user.mantenimiento
+
+    except UsuarioMantenimiento.DoesNotExist:
+
+        return render(
+            request,
+            "mantenimiento/acceso_denegado.html",
+            {
+                "mensaje": (
+                    "No tienes autorización para acceder "
+                    "al sistema de mantenimiento."
+                )
+            },
+            status=403
+        )
+
+
+    if not perfil.activo or not perfil.puede_acceder:
+
+        return render(
+            request,
+            "mantenimiento/acceso_denegado.html",
+            {
+                "mensaje": (
+                    "Tu acceso al sistema de mantenimiento "
+                    "está desactivado."
+                )
+            },
+            status=403
+        )
 
 
     return render(
         request,
-        "mantenimiento/home.html"
+        "mantenimiento/home.html",
+        {
+            "perfil": perfil
+        }
     )
-
 
