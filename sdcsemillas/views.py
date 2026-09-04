@@ -1284,7 +1284,7 @@ def obtener_datos_empleado_post(request):
     if request.method == "POST":
         codigo = request.POST.get('codigo_empleado', '').strip()
         try:
-            empleado = operariosApp.objects.get(codigo_empleado=codigo).exclude(status='Anulado')
+            empleado = operariosApp.objects.exclude(status='Anulado').get(codigo_empleado=codigo)
             data = {
                 'codigo_empleado': empleado.codigo_empleado,
                 'codigoevo': empleado.codigoevo,
