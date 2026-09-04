@@ -125,7 +125,7 @@ TEMPLATES = [
 ]
 
 AUTHENTICATION_BACKENDS = [
-    'djanto.contrib.auth.backends.ModelBackend',
+    "django.contrib.auth.backends.ModelBackend",
 	'django_auth_adfs.backend.AdfsAuthCodeBackend',
 ]
 
