@@ -7,6 +7,8 @@ app_main ="mantenimiento"
 
 urlpatterns = [
 
-    path('', views.index, name='index'),  # Página principal
+    path('', views.index, name='index'),  # Login
+    
+    path('home/', views.home, name='home'),  # Página principal
     
 ]
