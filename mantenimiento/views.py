@@ -12,10 +12,7 @@ def index(request):
 
     return render(
         request,
-        "mantenimiento/login.html",
-        {
-            "form": form
-        }
+        "mantenimiento/login.html"
     )
 
 
