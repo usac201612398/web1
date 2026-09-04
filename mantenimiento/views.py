@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 from .forms import LoginMantenimientoForm
@@ -7,8 +8,8 @@ from .models import UsuarioMantenimiento
 
 def index(request):
 
-    # Si ya inició sesión, no tiene sentido
-    # volver a mostrar el login.
+    # Si ya tiene una sesión de Django,
+    # no mostramos nuevamente el login.
     if request.user.is_authenticated:
         return redirect("home")
 
@@ -21,7 +22,7 @@ def index(request):
             username = form.cleaned_data["username"]
             password = form.cleaned_data["password"]
 
-            # Django comprueba usuario y contraseña
+            # Validar usuario y contraseña
             user = authenticate(
                 request,
                 username=username,
@@ -38,6 +39,7 @@ def index(request):
             else:
 
                 try:
+
                     perfil = UsuarioMantenimiento.objects.get(
                         user=user
                     )
@@ -69,7 +71,7 @@ def index(request):
 
                     else:
 
-                        # Login Django
+                        # Crear sesión de Django
                         login(request, user)
 
                         return redirect("home")
@@ -83,10 +85,11 @@ def index(request):
     )
 
 
+@login_required
 def home(request):
 
     return render(
         request,
-        "home.html"
+        "mantenimiento/home.html"
     )
 
