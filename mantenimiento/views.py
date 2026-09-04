@@ -8,11 +8,22 @@ from .models import UsuarioMantenimiento
 
 def index(request):
 
-    # Si ya inició sesión, ir directamente al Home
-    if request.user.is_authenticated:
+    # ---------------------------------------------------------
+    # Si YA pasó el login propio de Mantenimiento,
+    # entonces sí puede entrar directamente al Home.
+    # ---------------------------------------------------------
+
+    if request.session.get("mantenimiento_autenticado"):
+
         return redirect("home")
 
+
+    # ---------------------------------------------------------
+    # Mostrar nuestro Login de Mantenimiento
+    # ---------------------------------------------------------
+
     form = LoginMantenimientoForm(request.POST or None)
+
 
     if request.method == "POST":
 
@@ -21,12 +32,17 @@ def index(request):
             username = form.cleaned_data["username"]
             password = form.cleaned_data["password"]
 
-            # Validar usuario y contraseña
+
+            # -------------------------------------------------
+            # Validar usuario y contraseña contra Django
+            # -------------------------------------------------
+
             user = authenticate(
                 request,
                 username=username,
                 password=password
             )
+
 
             if user is None:
 
@@ -35,7 +51,12 @@ def index(request):
                     "Usuario o contraseña incorrectos."
                 )
 
+
             else:
+
+                # ---------------------------------------------
+                # Buscar perfil de Mantenimiento
+                # ---------------------------------------------
 
                 try:
 
@@ -52,6 +73,10 @@ def index(request):
                     )
 
                 else:
+
+                    # -----------------------------------------
+                    # Verificar estado
+                    # -----------------------------------------
 
                     if not perfil.activo:
 
@@ -70,11 +95,19 @@ def index(request):
 
                     else:
 
-                        # Crear sesión de Django
+                        # -------------------------------------
+                        # Usuario autorizado
+                        # -------------------------------------
+
                         login(request, user)
 
-                        # Ir al dashboard
+                        # Marcar segundo login como válido
+                        request.session[
+                            "mantenimiento_autenticado"
+                        ] = True
+
                         return redirect("home")
+
 
     return render(
         request,
@@ -87,6 +120,18 @@ def index(request):
 
 @login_required
 def home(request):
+
+    # ---------------------------------------------------------
+    # Verificar que también haya pasado el login propio
+    # de Mantenimiento.
+    # ---------------------------------------------------------
+
+    if not request.session.get(
+        "mantenimiento_autenticado"
+    ):
+
+        return redirect("index")
+
 
     return render(
         request,
