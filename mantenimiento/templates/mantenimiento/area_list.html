@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Áreas{% endblock %}
+{% block content %}
+<h1>Áreas</h1>
+<div class="card">
+  <a class="btn" href="{% url 'area_create' %}">+ Nueva área</a>
+</div>
+<div class="card">
+<table>
+  <tr><th>Área</th><th>Responsable</th><th>Máquinas</th><th>Estado</th><th></th></tr>
+  {% for a in areas %}
+  <tr>
+    <td><b>{{ a.nombre }}</b></td>
+    <td>{{ a.responsable|default:"—" }}</td>
+    <td>{{ a.n_maquinas }}</td>
+    <td>{% if a.activa %}<span class="badge ok">Activa</span>{% else %}<span class="badge bad">Inactiva</span>{% endif %}</td>
+    <td class="right actions">
+      <a class="btn sm sec" href="{% url 'area_update' a.pk %}">Editar</a>
+      <a class="btn sm danger" href="{% url 'area_delete' a.pk %}">Eliminar</a>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+</div>
+{% endblock %}

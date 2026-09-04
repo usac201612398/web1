@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}{{ maquina }}{% endblock %}
+{% block content %}
+<h1>{{ maquina.area.nombre }} · {{ maquina.nombre }}
+  <span class="muted" style="font-size:.85rem">{{ maquina.codigo }} · {{ maquina.controlador }} · {{ maquina.get_tipo_display }}</span></h1>
+
+<div class="card actions">
+  <a class="btn" href="{% url 'servicio_create' %}">+ Registrar servicio</a>
+  <a class="btn sec" href="{% url 'programa_create' %}?maquina={{ maquina.pk }}">+ Asignar actividad</a>
+  <a class="btn sec" href="{% url 'maquina_update' maquina.pk %}">Editar máquina</a>
+  <a class="btn sec" href="{% url 'servicio_list' %}?maquina={{ maquina.pk }}">Ver historial completo</a>
+</div>
+
+{% if maquina.notas %}<div class="card"><b>Notas:</b> {{ maquina.notas }}</div>{% endif %}
+
+<h2>Plan de mantenimiento</h2>
+<div class="card">
+<table>
+  <tr><th>Actividad</th><th>Frecuencia</th><th>Último</th><th>Próxima</th><th>Días</th><th>Estado</th><th></th></tr>
+  {% for p in programas %}
+  <tr>
+    <td>{{ p.actividad.nombre }}</td>
+    <td>{{ p.actividad.get_frecuencia_display }}</td>
+    <td>{{ p.ultima_fecha|default:"—" }}</td>
+    <td>{{ p.proxima_fecha }}</td>
+    <td>{{ p.dias_restantes }}</td>
+    <td><span class="badge {{ p.estado_css }}">{{ p.estado_label }}</span></td>
+    <td class="right actions">
+      <a class="btn sm" href="{% url 'servicio_create' %}?programa={{ p.id }}">Atender</a>
+      <a class="btn sm sec" href="{% url 'programa_update' p.pk %}">Editar</a>
+    </td>
+  </tr>
+  {% empty %}<tr><td colspan="7" class="muted">Sin actividades asignadas.</td></tr>
+  {% endfor %}
+</table>
+</div>
+
+<h2>Historial de servicios</h2>
+<div class="card">
+<table>
+  <tr><th>Fecha</th><th>Actividad</th><th>Estado</th><th>Atendió</th><th>Observaciones</th><th>Evid.</th></tr>
+  {% for s in historial %}
+  <tr>
+    <td><a href="{{ s.get_absolute_url }}">{{ s.fecha }}</a></td>
+    <td>{{ s.programa.actividad.nombre|truncatechars:60 }}</td>
+    <td>{{ s.get_estado_display }}</td>
+    <td>{{ s.atendido_por }}</td>
+    <td>{{ s.observaciones|truncatechars:60|default:"—" }}</td>
+    <td>{% if s.tiene_evidencia %}📷{% else %}—{% endif %}</td>
+  </tr>
+  {% empty %}<tr><td colspan="6" class="muted">Sin servicios registrados.</td></tr>
+  {% endfor %}
+</table>
+</div>
+{% endblock %}

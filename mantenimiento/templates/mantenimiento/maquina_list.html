@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Máquinas{% endblock %}
+{% block content %}
+<h1>Máquinas ({{ paginator.count|default:maquinas|length }})</h1>
+<div class="card">
+  <form class="filtros" method="get">
+    <div class="f"><label>Buscar</label><input class="inp" name="q" value="{{ q }}" placeholder="Priva 2, Conext, Valle…"></div>
+    <div class="f"><label>Área</label><select name="area" class="inp"><option value="">Todas</option>
+      {% for a in areas %}<option value="{{ a.id }}" {% if request.GET.area == a.id|stringformat:"s" %}selected{% endif %}>{{ a.nombre }}</option>{% endfor %}</select></div>
+    <div class="f"><label>Tipo</label><select name="tipo" class="inp"><option value="">Todos</option>
+      {% for v,l in tipos %}<option value="{{ v }}" {% if request.GET.tipo == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+    <button class="btn" type="submit">Filtrar</button>
+    <a class="btn sec" href="{% url 'maquina_create' %}">+ Nueva máquina</a>
+  </form>
+</div>
+<div class="card">
+<table>
+  <tr><th>Código</th><th>Área</th><th>Máquina</th><th>Tipo</th><th>Controlador</th><th>Estado mant.</th><th></th></tr>
+  {% for m in maquinas %}
+  <tr>
+    <td><span class="muted">{{ m.codigo }}</span></td>
+    <td>{{ m.area.nombre }}</td>
+    <td><a href="{{ m.get_absolute_url }}"><b>{{ m.nombre }}</b></a></td>
+    <td>{{ m.get_tipo_display }}</td>
+    <td>{{ m.controlador }}</td>
+    <td>{% if m.estado == "VENCIDO" %}<span class="badge bad">Vencido</span>
+        {% elif m.estado == "PROXIMO" %}<span class="badge warn">Por vencer</span>
+        {% else %}<span class="badge ok">Al día</span>{% endif %}</td>
+    <td class="right actions">
+      <a class="btn sm sec" href="{% url 'maquina_update' m.pk %}">Editar</a>
+      <a class="btn sm danger" href="{% url 'maquina_delete' m.pk %}">Eliminar</a>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+</div>
+{% if is_paginated %}<div class="card">
+  {% if page_obj.has_previous %}<a class="btn sm sec" href="?page={{ page_obj.previous_page_number }}">« Anterior</a>{% endif %}
+  <span class="muted">Página {{ page_obj.number }} de {{ paginator.num_pages }}</span>
+  {% if page_obj.has_next %}<a class="btn sm sec" href="?page={{ page_obj.next_page_number }}">Siguiente »</a>{% endif %}
+</div>{% endif %}
+{% endblock %}

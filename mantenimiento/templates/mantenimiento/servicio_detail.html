@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Servicio {{ servicio.fecha }}{% endblock %}
+{% block content %}
+<h1>Servicio del {{ servicio.fecha }}</h1>
+<div class="card">
+  <table>
+    <tr><th style="width:200px">Máquina</th><td><a href="{{ servicio.programa.maquina.get_absolute_url }}">{{ servicio.programa.maquina }}</a></td></tr>
+    <tr><th>Actividad</th><td>{{ servicio.programa.actividad.nombre }}<div class="help">{{ servicio.programa.actividad.descripcion }}</div></td></tr>
+    <tr><th>Frecuencia</th><td>{{ servicio.programa.actividad.get_frecuencia_display }}</td></tr>
+    <tr><th>Estado</th><td>{{ servicio.get_estado_display }}</td></tr>
+    <tr><th>Atendido por</th><td>{{ servicio.atendido_por }}</td></tr>
+    <tr><th>Duración</th><td>{{ servicio.duracion_min|default:"—" }} min</td></tr>
+    <tr><th>Hallazgos</th><td>{{ servicio.hallazgos|linebreaksbr|default:"—" }}</td></tr>
+    <tr><th>Observaciones</th><td>{{ servicio.observaciones|linebreaksbr|default:"—" }}</td></tr>
+    <tr><th>Requiere seguimiento</th><td>{% if servicio.requiere_seguimiento %}<span class="badge warn">Sí</span>{% else %}No{% endif %}</td></tr>
+    <tr><th>Próximo vencimiento</th><td>{{ servicio.programa.proxima_fecha }}</td></tr>
+  </table>
+</div>
+
+<h2>Evidencia</h2>
+<div class="card grid g4">
+  {% if servicio.foto_antes %}<div><b>Antes</b><br><img class="ev" src="{{ servicio.foto_antes.url }}"></div>{% endif %}
+  {% if servicio.foto_despues %}<div><b>Después</b><br><img class="ev" src="{{ servicio.foto_despues.url }}"></div>{% endif %}
+  {% for e in servicio.evidencias.all %}
+  <div><b>{{ e.get_tipo_display }}</b><br><a href="{{ e.archivo.url }}">{{ e.descripcion|default:e.archivo.name }}</a></div>
+  {% endfor %}
+  {% if not servicio.tiene_evidencia %}<p class="muted">Sin evidencia adjunta.</p>{% endif %}
+</div>
+
+<div class="card actions">
+  <a class="btn sec" href="{% url 'servicio_update' servicio.pk %}">Editar</a>
+  <a class="btn danger" href="{% url 'servicio_delete' servicio.pk %}">Eliminar</a>
+  <a class="btn sec" href="{% url 'servicio_list' %}">Volver al historial</a>
+</div>
+{% endblock %}

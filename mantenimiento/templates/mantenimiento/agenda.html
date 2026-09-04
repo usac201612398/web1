@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Agenda{% endblock %}
+{% block content %}
+<h1>Agenda de mantenimientos</h1>
+<div class="card">
+  <form class="filtros" method="get">
+    <div class="f"><label>Ventana (días)</label>
+      <select name="dias" class="inp">
+        {% for d in "7,15,30,60,90"|slice:":0" %}{% endfor %}
+        <option value="7" {% if dias == 7 %}selected{% endif %}>7</option>
+        <option value="15" {% if dias == 15 %}selected{% endif %}>15</option>
+        <option value="30" {% if dias == 30 %}selected{% endif %}>30</option>
+        <option value="60" {% if dias == 60 %}selected{% endif %}>60</option>
+        <option value="90" {% if dias == 90 %}selected{% endif %}>90</option>
+      </select></div>
+    <button class="btn" type="submit">Ver</button>
+  </form>
+</div>
+
+{% for fecha, items in agenda %}
+<div class="card">
+  <h2 style="margin-top:0">{{ fecha }} <span class="muted">({{ items|length }} actividad{{ items|length|pluralize:"es" }})</span></h2>
+  <table>
+    <tr><th>Área</th><th>Máquina</th><th>Actividad</th><th>Frecuencia</th><th>Estado</th><th></th></tr>
+    {% for p in items %}
+    <tr>
+      <td>{{ p.maquina.area.nombre }}</td>
+      <td><a href="{{ p.maquina.get_absolute_url }}">{{ p.maquina.nombre }}</a></td>
+      <td>{{ p.actividad.nombre|truncatechars:80 }}</td>
+      <td>{{ p.actividad.get_frecuencia_display }}</td>
+      <td><span class="badge {{ p.estado_css }}">{{ p.estado_label }}</span></td>
+      <td class="right"><a class="btn sm" href="{% url 'servicio_create' %}?programa={{ p.id }}">Atender</a></td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% empty %}
+<div class="card"><p class="muted">No hay actividades programadas en esta ventana.</p></div>
+{% endfor %}
+{% endblock %}

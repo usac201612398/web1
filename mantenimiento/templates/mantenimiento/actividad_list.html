@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Actividades{% endblock %}
+{% block content %}
+<h1>Actividades del plan preventivo</h1>
+<div class="card">
+  <form class="filtros" method="get">
+    <div class="f"><label>Frecuencia</label><select name="frecuencia" class="inp"><option value="">Todas</option>
+      {% for v,l in frecuencias %}<option value="{{ v }}" {% if request.GET.frecuencia == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+    <button class="btn" type="submit">Filtrar</button>
+    <a class="btn sec" href="{% url 'actividad_create' %}">+ Nueva actividad</a>
+  </form>
+</div>
+<div class="card">
+<table>
+  <tr><th>Actividad</th><th>Frecuencia</th><th>Aplica a</th><th>Evidencia</th><th>Máquinas</th><th></th></tr>
+  {% for a in actividades %}
+  <tr>
+    <td><b>{{ a.nombre }}</b>{% if a.descripcion %}<div class="help">{{ a.descripcion|truncatechars:160 }}</div>{% endif %}</td>
+    <td>{{ a.get_frecuencia_display }}</td>
+    <td>{{ a.get_aplica_a_display }}</td>
+    <td>{% if a.requiere_evidencia %}Obligatoria{% else %}Opcional{% endif %}</td>
+    <td>{{ a.n_programas }}</td>
+    <td class="right actions">
+      <a class="btn sm sec" href="{% url 'actividad_update' a.pk %}">Editar</a>
+      <a class="btn sm danger" href="{% url 'actividad_delete' a.pk %}">Eliminar</a>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Ingresar{% endblock %}
+{% block content %}
+<h1>Ingresar al sistema</h1>
+<div class="card" style="max-width:420px">
+  {% if form.errors %}<div class="err">Usuario o contraseña incorrectos.</div>{% endif %}
+  <form method="post">{% csrf_token %}
+    <div class="field"><label>Usuario</label>{{ form.username }}</div>
+    <div class="field" style="margin-top:.7rem"><label>Contraseña</label>{{ form.password }}</div>
+    <button class="btn" style="margin-top:1rem" type="submit">Entrar</button>
+  </form>
+</div>
+{% endblock %}

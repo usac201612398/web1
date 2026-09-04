@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Historial{% endblock %}
+{% block content %}
+<h1>Historial de servicios</h1>
+<div class="card">
+  <form class="filtros" method="get">
+    <div class="f"><label>Buscar</label><input class="inp" name="q" value="{{ g.q }}" placeholder="actividad, hallazgo…"></div>
+    <div class="f"><label>Área</label><select name="area" class="inp"><option value="">Todas</option>
+      {% for a in areas %}<option value="{{ a.id }}" {% if g.area == a.id|stringformat:"s" %}selected{% endif %}>{{ a.nombre }}</option>{% endfor %}</select></div>
+    <div class="f"><label>Desde</label><input class="inp" type="date" name="desde" value="{{ g.desde }}"></div>
+    <div class="f"><label>Hasta</label><input class="inp" type="date" name="hasta" value="{{ g.hasta }}"></div>
+    <button class="btn" type="submit">Filtrar</button>
+    <a class="btn sec" href="{% url 'exportar_servicios' %}">Exportar CSV</a>
+    <a class="btn" href="{% url 'servicio_create' %}">+ Registrar servicio</a>
+  </form>
+</div>
+<div class="card">
+<table>
+  <tr><th>Fecha</th><th>Área</th><th>Máquina</th><th>Actividad</th><th>Estado</th><th>Atendió</th><th>Seguim.</th><th>Evid.</th><th></th></tr>
+  {% for s in servicios %}
+  <tr>
+    <td>{{ s.fecha }}</td>
+    <td>{{ s.programa.maquina.area.nombre }}</td>
+    <td>{{ s.programa.maquina.nombre }}</td>
+    <td>{{ s.programa.actividad.nombre|truncatechars:55 }}</td>
+    <td>{{ s.get_estado_display }}</td>
+    <td>{{ s.atendido_por }}</td>
+    <td>{% if s.requiere_seguimiento %}<span class="badge warn">Sí</span>{% else %}—{% endif %}</td>
+    <td>{% if s.tiene_evidencia %}📷{% else %}—{% endif %}</td>
+    <td class="right actions">
+      <a class="btn sm sec" href="{{ s.get_absolute_url }}">Ver</a>
+      <a class="btn sm sec" href="{% url 'servicio_update' s.pk %}">Editar</a>
+    </td>
+  </tr>
+  {% empty %}<tr><td colspan="9" class="muted">Sin resultados.</td></tr>
+  {% endfor %}
+</table>
+</div>
+{% if is_paginated %}<div class="card">
+  {% if page_obj.has_previous %}<a class="btn sm sec" href="?page={{ page_obj.previous_page_number }}">« Anterior</a>{% endif %}
+  <span class="muted">Página {{ page_obj.number }} de {{ paginator.num_pages }}</span>
+  {% if page_obj.has_next %}<a class="btn sm sec" href="?page={{ page_obj.next_page_number }}">Siguiente »</a>{% endif %}
+</div>{% endif %}
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Tablero · Mantenimiento{% endblock %}
+{% block content %}
+<h1>Tablero de control <span class="muted" style="font-size:.85rem">— {{ hoy }}</span></h1>
+
+<div class="grid g4">
+  <div class="card kpi"><div class="n" style="color:var(--bad)">{{ vencidos|length }}</div><div class="l">Vencidos</div></div>
+  <div class="card kpi"><div class="n" style="color:var(--warn)">{{ proximos|length }}</div><div class="l">Por vencer</div></div>
+  <div class="card kpi"><div class="n" style="color:var(--ok)">{{ al_dia }}</div><div class="l">Al día</div></div>
+  <div class="card kpi"><div class="n">{{ cumplimiento_30d }}</div><div class="l">Servicios últimos 30 días</div></div>
+</div>
+
+<div class="card">
+  <form class="filtros" method="get">
+    <div class="f"><label>Área</label>
+      <select name="area" class="inp">
+        <option value="">Todas</option>
+        {% for a in areas %}<option value="{{ a.id }}" {% if f_area == a.id|stringformat:"s" %}selected{% endif %}>{{ a.nombre }}</option>{% endfor %}
+      </select></div>
+    <div class="f"><label>Frecuencia</label>
+      <select name="frecuencia" class="inp">
+        <option value="">Todas</option>
+        {% for v,l in frecuencias %}<option value="{{ v }}" {% if f_frecuencia == v %}selected{% endif %}>{{ l }}</option>{% endfor %}
+      </select></div>
+    <button class="btn" type="submit">Filtrar</button>
+    <a class="btn sec" href="{% url 'exportar_pendientes' %}">Exportar pendientes CSV</a>
+    <a class="btn" href="{% url 'servicio_create' %}">+ Registrar servicio</a>
+  </form>
+</div>
+
+<h2>Semáforo por área</h2>
+<div class="card">
+<table>
+  <tr><th>Área</th><th>Máquinas</th><th>Actividades</th><th>Vencidas</th><th>Por vencer</th><th>Al día</th></tr>
+  {% for r in resumen %}
+  <tr>
+    <td><b>{{ r.area.nombre }}</b></td>
+    <td>{{ r.maquinas }}</td>
+    <td>{{ r.total }}</td>
+    <td>{% if r.vencidos %}<span class="badge bad">{{ r.vencidos }}</span>{% else %}0{% endif %}</td>
+    <td>{% if r.proximos %}<span class="badge warn">{{ r.proximos }}</span>{% else %}0{% endif %}</td>
+    <td><span class="badge ok">{{ r.al_dia }}</span></td>
+  </tr>
+  {% endfor %}
+</table>
+</div>
+
+<h2>🔴 Mantenimientos vencidos</h2>
+<div class="card">
+{% if vencidos %}
+<table>
+  <tr><th>Área</th><th>Máquina</th><th>Actividad</th><th>Frecuencia</th><th>Último</th><th>Venció</th><th>Atraso</th><th></th></tr>
+  {% for p in vencidos %}
+  <tr>
+    <td>{{ p.maquina.area.nombre }}</td>
+    <td><a href="{{ p.maquina.get_absolute_url }}">{{ p.maquina.nombre }}</a> <span class="muted">{{ p.maquina.controlador }}</span></td>
+    <td>{{ p.actividad.nombre|truncatechars:70 }}</td>
+    <td>{{ p.actividad.get_frecuencia_display }}</td>
+    <td>{{ p.ultima_fecha|default:"—" }}</td>
+    <td>{{ p.proxima_fecha }}</td>
+    <td><span class="badge bad">{{ p.dias_restantes|stringformat:"d" }} d</span></td>
+    <td class="right"><a class="btn sm" href="{% url 'servicio_create' %}?programa={{ p.id }}">Atender</a></td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}<p class="muted">Sin mantenimientos vencidos. 👏</p>{% endif %}
+</div>
+
+<h2>🟠 Próximos a vencer</h2>
+<div class="card">
+{% if proximos %}
+<table>
+  <tr><th>Área</th><th>Máquina</th><th>Actividad</th><th>Frecuencia</th><th>Vence</th><th>Faltan</th><th></th></tr>
+  {% for p in proximos %}
+  <tr>
+    <td>{{ p.maquina.area.nombre }}</td>
+    <td><a href="{{ p.maquina.get_absolute_url }}">{{ p.maquina.nombre }}</a></td>
+    <td>{{ p.actividad.nombre|truncatechars:70 }}</td>
+    <td>{{ p.actividad.get_frecuencia_display }}</td>
+    <td>{{ p.proxima_fecha }}</td>
+    <td><span class="badge warn">{{ p.dias_restantes }} d</span></td>
+    <td class="right"><a class="btn sm" href="{% url 'servicio_create' %}?programa={{ p.id }}">Atender</a></td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}<p class="muted">Nada por vencer en la ventana de alerta.</p>{% endif %}
+</div>
+
+<h2>Últimos servicios registrados</h2>
+<div class="card">
+<table>
+  <tr><th>Fecha</th><th>Máquina</th><th>Actividad</th><th>Atendió</th><th>Evidencia</th></tr>
+  {% for s in ultimos %}
+  <tr>
+    <td><a href="{{ s.get_absolute_url }}">{{ s.fecha }}</a></td>
+    <td>{{ s.programa.maquina }}</td>
+    <td>{{ s.programa.actividad.nombre|truncatechars:55 }}</td>
+    <td>{{ s.atendido_por }}</td>
+    <td>{% if s.tiene_evidencia %}📷{% else %}—{% endif %}</td>
+  </tr>
+  {% empty %}<tr><td colspan="5" class="muted">Aún no hay servicios registrados.</td></tr>
+  {% endfor %}
+</table>
+</div>
+{% endblock %}
