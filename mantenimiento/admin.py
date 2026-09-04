@@ -37,3 +37,5 @@ class UsuarioMantenimientoAdmin(admin.ModelAdmin):
             or obj.user.email
             or obj.user.username
         )
+
+    usuario.short_description = "Usuario"
