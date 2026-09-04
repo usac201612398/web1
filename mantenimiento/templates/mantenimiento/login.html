@@ -3,42 +3,1032 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión</title>
+
+    <title>Maintenance Pro | Iniciar Sesión</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <style>
+
+        /* =========================================================
+           RESET
+        ========================================================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #0f172a;
+
+            --background: #f1f5f9;
+            --card: #ffffff;
+
+            --text: #0f172a;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+
+            --success: #22c55e;
+
+            --radius: 18px;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: "Inter", sans-serif;
+            background: var(--background);
+            color: var(--text);
+        }
+
+
+        /* =========================================================
+           MAIN
+        ========================================================= */
+
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+
+            background:
+                radial-gradient(
+                    circle at 10% 20%,
+                    rgba(37, 99, 235, 0.12),
+                    transparent 35%
+                ),
+                radial-gradient(
+                    circle at 90% 80%,
+                    rgba(14, 165, 233, 0.10),
+                    transparent 35%
+                ),
+                #f8fafc;
+        }
+
+
+        /* =========================================================
+           LOGIN CONTAINER
+        ========================================================= */
+
+        .login-wrapper {
+            width: 100%;
+            max-width: 1050px;
+            min-height: 620px;
+
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+
+            background: var(--card);
+
+            border-radius: var(--radius);
+
+            overflow: hidden;
+
+            box-shadow:
+                0 25px 60px rgba(15, 23, 42, 0.12),
+                0 8px 25px rgba(15, 23, 42, 0.06);
+        }
+
+
+        /* =========================================================
+           LEFT PANEL
+        ========================================================= */
+
+        .brand-panel {
+            position: relative;
+
+            padding: 55px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            color: white;
+
+            overflow: hidden;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #0f172a 0%,
+                    #172554 45%,
+                    #1d4ed8 100%
+                );
+        }
+
+
+        /* Decorative circles */
+
+        .brand-panel::before {
+            content: "";
+
+            position: absolute;
+
+            width: 350px;
+            height: 350px;
+
+            border-radius: 50%;
+
+            background: rgba(255, 255, 255, 0.04);
+
+            top: -120px;
+            right: -120px;
+        }
+
+        .brand-panel::after {
+            content: "";
+
+            position: absolute;
+
+            width: 250px;
+            height: 250px;
+
+            border-radius: 50%;
+
+            background: rgba(255, 255, 255, 0.04);
+
+            bottom: -100px;
+            left: -100px;
+        }
+
+
+        /* =========================================================
+           BRAND
+        ========================================================= */
+
+        .brand {
+            position: relative;
+            z-index: 2;
+
+            display: flex;
+            align-items: center;
+
+            gap: 14px;
+        }
+
+        .brand-icon {
+            width: 48px;
+            height: 48px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 14px;
+
+            background: rgba(255,255,255,0.12);
+
+            border: 1px solid rgba(255,255,255,0.18);
+
+            backdrop-filter: blur(10px);
+
+            font-size: 21px;
+        }
+
+        .brand-name {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-name span {
+            color: #60a5fa;
+        }
+
+
+        /* =========================================================
+           HERO
+        ========================================================= */
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+
+            max-width: 430px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            padding: 8px 13px;
+
+            margin-bottom: 24px;
+
+            border-radius: 999px;
+
+            font-size: 12px;
+            font-weight: 600;
+
+            color: #bfdbfe;
+
+            background: rgba(255,255,255,0.08);
+
+            border: 1px solid rgba(255,255,255,0.10);
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: #4ade80;
+
+            box-shadow: 0 0 10px rgba(74, 222, 128, .7);
+        }
+
+        .hero-content h1 {
+            font-size: clamp(32px, 4vw, 48px);
+
+            line-height: 1.1;
+
+            letter-spacing: -1.8px;
+
+            margin-bottom: 20px;
+        }
+
+        .hero-content h1 span {
+            color: #60a5fa;
+        }
+
+        .hero-content p {
+            color: #cbd5e1;
+
+            font-size: 15px;
+
+            line-height: 1.8;
+        }
+
+
+        /* =========================================================
+           FEATURES
+        ========================================================= */
+
+        .features {
+            position: relative;
+            z-index: 2;
+
+            display: grid;
+
+            grid-template-columns: repeat(2, 1fr);
+
+            gap: 12px;
+
+            margin-top: 40px;
+        }
+
+        .feature {
+            padding: 15px;
+
+            border-radius: 12px;
+
+            background: rgba(255,255,255,0.06);
+
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .feature i {
+            color: #60a5fa;
+
+            margin-bottom: 9px;
+
+            font-size: 15px;
+        }
+
+        .feature strong {
+            display: block;
+
+            font-size: 13px;
+
+            margin-bottom: 3px;
+        }
+
+        .feature span {
+            font-size: 11px;
+
+            color: #94a3b8;
+        }
+
+
+        /* =========================================================
+           RIGHT PANEL
+        ========================================================= */
+
+        .login-panel {
+            padding: 55px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: center;
+        }
+
+        .login-header {
+            margin-bottom: 35px;
+        }
+
+        .login-header h2 {
+            font-size: 28px;
+
+            letter-spacing: -0.8px;
+
+            margin-bottom: 9px;
+        }
+
+        .login-header p {
+            color: var(--text-light);
+
+            font-size: 14px;
+
+            line-height: 1.6;
+        }
+
+
+        /* =========================================================
+           FORM
+        ========================================================= */
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-label {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 9px;
+
+            font-size: 13px;
+
+            font-weight: 600;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper > i {
+            position: absolute;
+
+            left: 15px;
+
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            color: #94a3b8;
+
+            font-size: 15px;
+
+            pointer-events: none;
+
+            transition: .2s;
+        }
+
+        .form-control {
+            width: 100%;
+
+            height: 52px;
+
+            padding: 0 46px;
+
+            border: 1px solid var(--border);
+
+            border-radius: 11px;
+
+            outline: none;
+
+            background: #f8fafc;
+
+            color: var(--text);
+
+            font-family: inherit;
+
+            font-size: 14px;
+
+            transition: .2s;
+        }
+
+        .form-control::placeholder {
+            color: #94a3b8;
+        }
+
+        .form-control:hover {
+            border-color: #cbd5e1;
+        }
+
+        .form-control:focus {
+            background: white;
+
+            border-color: var(--primary);
+
+            box-shadow:
+                0 0 0 4px rgba(37, 99, 235, 0.10);
+        }
+
+        .input-wrapper:focus-within > i {
+            color: var(--primary);
+        }
+
+
+        /* Password */
+
+        .password-toggle {
+            position: absolute;
+
+            right: 15px;
+
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            border: none;
+
+            background: none;
+
+            cursor: pointer;
+
+            color: #94a3b8;
+
+            transition: .2s;
+        }
+
+        .password-toggle:hover {
+            color: var(--primary);
+        }
+
+
+        /* =========================================================
+           OPTIONS
+        ========================================================= */
+
+        .form-options {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 25px;
+
+            font-size: 13px;
+        }
+
+        .remember {
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            color: #64748b;
+
+            cursor: pointer;
+        }
+
+        .remember input {
+            width: 16px;
+            height: 16px;
+
+            accent-color: var(--primary);
+
+            cursor: pointer;
+        }
+
+        .forgot-password {
+            color: var(--primary);
+
+            font-weight: 600;
+
+            text-decoration: none;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+
+        /* =========================================================
+           BUTTON
+        ========================================================= */
+
+        .btn-login {
+            width: 100%;
+
+            height: 52px;
+
+            border: none;
+
+            border-radius: 11px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    #3b82f6
+                );
+
+            color: white;
+
+            font-family: inherit;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 10px;
+
+            box-shadow:
+                0 8px 18px rgba(37,99,235,.22);
+
+            transition: .25s;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary-dark),
+                    var(--primary)
+                );
+
+            box-shadow:
+                0 12px 25px rgba(37,99,235,.28);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+
+        /* =========================================================
+           REGISTER
+        ========================================================= */
+
+        .register {
+            margin-top: 25px;
+
+            text-align: center;
+
+            color: var(--text-light);
+
+            font-size: 13px;
+        }
+
+        .register a {
+            color: var(--primary);
+
+            font-weight: 700;
+
+            text-decoration: none;
+        }
+
+        .register a:hover {
+            text-decoration: underline;
+        }
+
+
+        /* =========================================================
+           SECURITY
+        ========================================================= */
+
+        .security {
+            margin-top: 35px;
+
+            padding-top: 20px;
+
+            border-top: 1px solid var(--border);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 8px;
+
+            color: #94a3b8;
+
+            font-size: 11px;
+        }
+
+        .security i {
+            color: var(--success);
+        }
+
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================= */
+
+        @media (max-width: 850px) {
+
+            .login-wrapper {
+                grid-template-columns: 1fr;
+
+                max-width: 500px;
+            }
+
+            .brand-panel {
+                display: none;
+            }
+
+            .login-panel {
+                padding: 45px 35px;
+            }
+        }
+
+
+        @media (max-width: 480px) {
+
+            .login-page {
+                padding: 15px;
+            }
+
+            .login-panel {
+                padding: 35px 25px;
+            }
+
+            .login-header h2 {
+                font-size: 25px;
+            }
+
+            .form-options {
+                align-items: flex-start;
+
+                gap: 15px;
+
+                flex-direction: column;
+            }
+        }
+
+    </style>
 </head>
+
 <body>
 
-    <!-- Contenedor principal del login -->
-    <div class="login-container">
-        
-        <h2>Iniciar Sesión</h2>
-        
-        <!-- Formulario que enviará los datos -->
-        <form action="/login-endpoint" method="POST">
-            
-            <!-- Campo para el Correo o Usuario -->
-            <div class="form-group">
-                <label for="username">Correo Electrónico:</label>
-                <input type="email" id="username" name="username" placeholder="ejemplo@ingenieria.usac.edu.gt" required>
-            </div>
+    <main class="login-page">
 
-            <!-- Campo para la Contraseña -->
-            <div class="form-group">
-                <label for="password">Contraseña:</label>
-                <input type="password" id="password" name="password" placeholder="Ingresa tu contraseña" required>
-            </div>
+        <div class="login-wrapper">
 
-            <!-- Botón para enviar el formulario -->
-            <button type="submit">Ingresar</button>
+            <!-- =====================================================
+                 PANEL IZQUIERDO
+            ====================================================== -->
 
-        </form>
+            <section class="brand-panel">
 
-        <!-- Enlaces de ayuda -->
-        <div class="login-footer">
-            <p><a href="#">¿Olvidaste tu contraseña?</a></p>
-            <p>¿No tienes cuenta? <a href="#">Regístrate aquí</a></p>
+                <div>
+
+                    <!-- LOGO -->
+
+                    <div class="brand">
+
+                        <div class="brand-icon">
+                            <i class="fa-solid fa-screwdriver-wrench"></i>
+                        </div>
+
+                        <div class="brand-name">
+                            Maintenance<span>Pro</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- HERO -->
+
+                <div class="hero-content">
+
+                    <div class="hero-badge">
+                        <span class="status-dot"></span>
+                        Plataforma operativa
+                    </div>
+
+                    <h1>
+                        Gestiona el mantenimiento
+                        <span>sin complicaciones.</span>
+                    </h1>
+
+                    <p>
+                        Centraliza órdenes de trabajo, equipos,
+                        mantenimientos preventivos y correctivos
+                        desde una sola plataforma.
+                    </p>
+
+
+                    <!-- FEATURES -->
+
+                    <div class="features">
+
+                        <div class="feature">
+
+                            <i class="fa-solid fa-clipboard-check"></i>
+
+                            <strong>
+                                Órdenes de trabajo
+                            </strong>
+
+                            <span>
+                                Control y seguimiento
+                            </span>
+
+                        </div>
+
+
+                        <div class="feature">
+
+                            <i class="fa-solid fa-gears"></i>
+
+                            <strong>
+                                Activos y equipos
+                            </strong>
+
+                            <span>
+                                Inventario centralizado
+                            </span>
+
+                        </div>
+
+
+                        <div class="feature">
+
+                            <i class="fa-solid fa-chart-line"></i>
+
+                            <strong>
+                                Indicadores
+                            </strong>
+
+                            <span>
+                                Información en tiempo real
+                            </span>
+
+                        </div>
+
+
+                        <div class="feature">
+
+                            <i class="fa-solid fa-calendar-check"></i>
+
+                            <strong>
+                                Preventivos
+                            </strong>
+
+                            <span>
+                                Planificación automática
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- FOOTER -->
+
+                <div style="
+                    position:relative;
+                    z-index:2;
+                    color:#64748b;
+                    font-size:11px;
+                ">
+                    © 2026 MaintenancePro · Sistema de Gestión de Mantenimiento
+                </div>
+
+            </section>
+
+
+            <!-- =====================================================
+                 PANEL DERECHO
+            ====================================================== -->
+
+            <section class="login-panel">
+
+                <div class="login-header">
+
+                    <h2>
+                        Bienvenido de nuevo
+                    </h2>
+
+                    <p>
+                        Ingresa tus credenciales para acceder
+                        al sistema de mantenimiento.
+                    </p>
+
+                </div>
+
+
+                <!-- FORMULARIO -->
+
+                <form action="/login-endpoint" method="POST">
+
+                    <!-- CORREO -->
+
+                    <div class="form-group">
+
+                        <label
+                            class="form-label"
+                            for="username"
+                        >
+                            Correo electrónico
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="fa-regular fa-envelope"></i>
+
+                            <input
+                                class="form-control"
+                                type="email"
+                                id="username"
+                                name="username"
+                                placeholder="usuario@ingenieria.usac.edu.gt"
+                                autocomplete="email"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- PASSWORD -->
+
+                    <div class="form-group">
+
+                        <label
+                            class="form-label"
+                            for="password"
+                        >
+                            Contraseña
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="fa-solid fa-lock"></i>
+
+                            <input
+                                class="form-control"
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Ingresa tu contraseña"
+                                autocomplete="current-password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                id="togglePassword"
+                                aria-label="Mostrar contraseña"
+                            >
+                                <i class="fa-regular fa-eye"></i>
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- OPCIONES -->
+
+                    <div class="form-options">
+
+                        <label class="remember">
+
+                            <input
+                                type="checkbox"
+                                name="remember"
+                            >
+
+                            <span>
+                                Mantener sesión iniciada
+                            </span>
+
+                        </label>
+
+
+                        <a
+                            href="#"
+                            class="forgot-password"
+                        >
+                            ¿Olvidaste tu contraseña?
+                        </a>
+
+                    </div>
+
+
+                    <!-- BOTÓN -->
+
+                    <button
+                        type="submit"
+                        class="btn-login"
+                    >
+
+                        <span>
+                            Ingresar al sistema
+                        </span>
+
+                        <i class="fa-solid fa-arrow-right"></i>
+
+                    </button>
+
+                </form>
+
+
+                <!-- REGISTRO -->
+
+                <div class="register">
+
+                    ¿No tienes una cuenta?
+
+                    <a href="#">
+                        Solicitar acceso
+                    </a>
+
+                </div>
+
+
+                <!-- SEGURIDAD -->
+
+                <div class="security">
+
+                    <i class="fa-solid fa-shield-halved"></i>
+
+                    Conexión segura y protegida
+
+                </div>
+
+            </section>
+
         </div>
 
-    </div>
+    </main>
+
+
+    <!-- =============================================================
+         JAVASCRIPT
+    ============================================================= -->
+
+    <script>
+
+        const togglePassword =
+            document.getElementById("togglePassword");
+
+        const password =
+            document.getElementById("password");
+
+        togglePassword.addEventListener("click", () => {
+
+            const isPassword =
+                password.type === "password";
+
+            password.type =
+                isPassword ? "text" : "password";
+
+            togglePassword.innerHTML =
+                isPassword
+                    ? '<i class="fa-regular fa-eye-slash"></i>'
+                    : '<i class="fa-regular fa-eye"></i>';
+
+        });
+
+    </script>
 
 </body>
 </html>
