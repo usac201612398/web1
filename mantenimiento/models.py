@@ -97,7 +97,7 @@ class DistribucionMaquinas(models.Model):
     serie = models.CharField(max_length=100, blank=True, null=True)
     fecha_compra = models.DateField(blank=True, null=True)
     centrodecosto = models.ForeignKey(
-        centrocosto,
+        centrodecosto,
         on_delete=models.PROTECT, blank=True, null=True
     )
     created_at = models.DateTimeField(auto_now_add=True)
