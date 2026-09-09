@@ -78,7 +78,7 @@ class DistribucionMaquinas(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.ubicacion.registro} |{self.ubicacion.nombre} | {self.maquina.nombre} | {self.serie}"
+        return f"{self.registro} |{self.ubicacion.nombre} | {self.maquina.nombre} | {self.serie}"
 
 class ListaMantenimientos(models.Model):
 
