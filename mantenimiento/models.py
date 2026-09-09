@@ -48,7 +48,7 @@ class Ubicacion(models.Model):
     def __str__(self):
         return f"{self.registro} | {self.nombre}"
 
-class centrocosto(models.Model):
+class centrodecosto(models.Model):
 
     ESTADOS = [
         ('', ''),
@@ -69,7 +69,7 @@ class centrocosto(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.centrocosto} | {self.nombre}"
+        return f"{self.centrodecosto} | {self.nombre}"
 
 class DistribucionMaquinas(models.Model):
 
@@ -96,7 +96,7 @@ class DistribucionMaquinas(models.Model):
     )
     serie = models.CharField(max_length=100, blank=True, null=True)
     fecha_compra = models.DateField(blank=True, null=True)
-    centrocosto = models.ForeignKey(
+    centrodecosto = models.ForeignKey(
         centrocosto,
         on_delete=models.PROTECT, blank=True, null=True
     )
