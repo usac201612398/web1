@@ -48,6 +48,29 @@ class Ubicacion(models.Model):
     def __str__(self):
         return f"{self.registro} | {self.nombre}"
 
+class centrocosto(models.Model):
+
+    ESTADOS = [
+        ('', ''),
+        ('Abierto', 'Abierto'),
+        ('Cerrado', 'Cerrado'),
+        ('Anulado', 'Anulado'),
+    ]
+
+    registro = models.BigAutoField(primary_key=True)
+    centrodecosto = models.CharField(max_length=100, blank=True, null=True)
+    nombre = models.CharField(max_length=100, blank=True, null=True)
+    status = models.CharField(
+        max_length=15,
+        choices=ESTADOS,
+        default='Abierto'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.registro} | {self.nombre}"
+
 class DistribucionMaquinas(models.Model):
 
     ESTADOS = [
