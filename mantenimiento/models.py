@@ -43,7 +43,6 @@ class Ubicacion(models.Model):
         choices=ESTADOS,
         default='Abierta'
     )
-    centrodecosto = models.CharField(max_length=100, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -73,6 +72,7 @@ class DistribucionMaquinas(models.Model):
         choices=ESTADOS,
         default='Activa'
     )
+    centrodecosto = models.CharField(max_length=100, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
