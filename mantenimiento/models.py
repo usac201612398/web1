@@ -14,8 +14,7 @@ class Maquina(models.Model):
     registro = models.BigAutoField(primary_key=True)
     nombre = models.CharField(max_length=100, blank=True, null=True)
     tipo = models.CharField(max_length=100, blank=True, null=True)
-    serie = models.CharField(max_length=100, blank=True, null=True)
-    fecha_compra = models.DateField(blank=True, null=True)
+    
     status = models.CharField(
         max_length=15,
         choices=ESTADOS,
@@ -72,6 +71,8 @@ class DistribucionMaquinas(models.Model):
         choices=ESTADOS,
         default='Activa'
     )
+    serie = models.CharField(max_length=100, blank=True, null=True)
+    fecha_compra = models.DateField(blank=True, null=True)
     centrodecosto = models.CharField(max_length=100, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
