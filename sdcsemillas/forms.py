@@ -1,6 +1,5 @@
 from django import forms
 from .models import *
-from django import forms
 
 
 class lotesForm(forms.ModelForm):
