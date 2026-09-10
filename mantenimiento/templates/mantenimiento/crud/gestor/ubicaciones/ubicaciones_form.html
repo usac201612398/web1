@@ -149,9 +149,9 @@
   <div class="container">
     <h1>
     {% if modo == "actualizar" %}
-        Actualización de Variedad
+        Actualización de Ubicación
     {% else %}
-        Nueva Variedad
+        Nueva Ubicación
     {% endif %}
     </h1>
 
@@ -175,43 +175,22 @@
 
         <div class="form-group">
             <div class="form-row">
-                <label for="variedad_code" class="form-label">Codigo Variedad</label>
-                {{ form.variedad_code }}
+                <label for="nombre" class="form-label">Nombre</label>
+                {{ form.nombre }}
             </div>
         </div>
 
         <div class="form-group">
             <div class="form-row">
-                <label for="variedad_code" class="form-label">Apodo Variedad</label>
-                {{ form.apodo_variedad }}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="cultivo" class="form-label">Cultivo</label>
-                {{ form.cultivo }}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="cod_padre" class="form-label">Código-Padre</label>
-                {{ form.cod_padre}}
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="form-row">
-                <label for="cod-madre" class="form-label">Código-Madre</label>
-                {{ form.cod_madre}}
+                <label for="status" class="form-label">Status</label>
+                {{ form.status }}
             </div>
         </div>
 
         <!-- Botones centrados en una fila -->
         <div class="form-group button-row">
             <button type="submit" class="btn btn-primary">{{ form.instance.pk|yesno:"Actualizar,Crear" }}</button>
-            <a href="{% url 'variedades_list' %}" class="btn btn-secondary">Regresar</a>
+            <a href="{% url 'ubicaciones_list' %}" class="btn btn-secondary">Regresar</a>
         </div>
     </form>
   </div>

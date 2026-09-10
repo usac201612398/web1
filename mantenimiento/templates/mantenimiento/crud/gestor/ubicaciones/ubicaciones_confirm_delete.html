@@ -93,7 +93,7 @@
 <body>
 
     <div class="confirmation-box">
-        <h1>¿Está seguro de anular el registro con ID <strong>{{ registros.id }}</strong>?</h1>
+        <h1>¿Está seguro de anular el registro con ID <strong>{{ registros.registro }}</strong>?</h1>
 
         <div class="button-group">
             <form method="post">
@@ -104,7 +104,7 @@
             </form>
 
            
-            <a href="{% url 'variedades_list' %}" class="btn btn-cancel">
+            <a href="{% url 'ubicaciones_list' %}" class="btn btn-cancel">
                 <i class="fas fa-times-circle me-2"></i> Cancelar
             </a>
         </div>
