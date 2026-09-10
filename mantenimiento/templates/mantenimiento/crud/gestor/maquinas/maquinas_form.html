@@ -1,4 +1,4 @@
-{% extends "mantenimiento/base_admin.html" %}
+{% extends "mantenimiento/crud/gestor/_bases/crud_form_base.html" %}
 
 
 {% block title %}
@@ -12,7 +12,7 @@
 {% endblock %}
 
 
-{% block page_title %}
+{% block encabezado %}
 
     {% if modo == "actualizar" %}
         Actualización de máquina
@@ -23,7 +23,7 @@
 {% endblock %}
 
 
-{% block page_subtitle %}
+{% block descripcion %}
 
     {% if modo == "actualizar" %}
         Modifica la información de la máquina.
@@ -34,236 +34,56 @@
 {% endblock %}
 
 
-{% block content %}
+{% block campos %}
 
+    <!-- NOMBRE -->
 
-<div class="admin-card">
+    <div class="form-field">
 
+        <label for="{{ form.nombre.id_for_label }}">
+            Nombre
+        </label>
 
-    <!-- ==================================================
-         FORMULARIO
-    =================================================== -->
-
-    <div class="admin-card-body">
-
-
-        {% if form.errors %}
-
-        <div class="admin-alert admin-alert-danger">
-
-            <i class="fa-solid fa-triangle-exclamation"></i>
-
-            <div>
-
-                <strong>
-                    Revisa la información ingresada.
-                </strong>
-
-
-                <ul class="mb-0 mt-2">
-
-                    {% for field in form %}
-
-                        {% for error in field.errors %}
-
-                            <li>
-                                {{ field.label }}: {{ error }}
-                            </li>
-
-                        {% endfor %}
-
-                    {% endfor %}
-
-
-                    {% for error in form.non_field_errors %}
-
-                        <li>
-                            {{ error }}
-                        </li>
-
-                    {% endfor %}
-
-                </ul>
-
-            </div>
-
-        </div>
-
-        {% endif %}
-
-
-        <form method="post">
-
-            {% csrf_token %}
-
-
-            <!-- ==================================================
-                 NOMBRE
-            =================================================== -->
-
-            <div class="admin-form-group">
-
-                <label
-                    for="{{ form.nombre.id_for_label }}"
-                    class="admin-form-label"
-                >
-
-                    Nombre de la máquina
-
-                </label>
-
-
-                {{ form.nombre }}
-
-
-                {% if form.nombre.errors %}
-
-                    <div class="text-danger small mt-1">
-
-                        {{ form.nombre.errors }}
-
-                    </div>
-
-                {% endif %}
-
-            </div>
-
-
-            <!-- ==================================================
-                 TIPO
-            =================================================== -->
-
-            <div class="admin-form-group">
-
-                <label
-                    for="{{ form.tipo.id_for_label }}"
-                    class="admin-form-label"
-                >
-
-                    Tipo de máquina
-
-                </label>
-
-
-                {{ form.tipo }}
-
-
-                {% if form.tipo.errors %}
-
-                    <div class="text-danger small mt-1">
-
-                        {{ form.tipo.errors }}
-
-                    </div>
-
-                {% endif %}
-
-            </div>
-
-
-            <!-- ==================================================
-                 STATUS
-            =================================================== -->
-
-            <div class="admin-form-group">
-
-                <label
-                    for="{{ form.status.id_for_label }}"
-                    class="admin-form-label"
-                >
-
-                    Estado
-
-                </label>
-
-
-                {{ form.status }}
-
-
-                {% if form.status.errors %}
-
-                    <div class="text-danger small mt-1">
-
-                        {{ form.status.errors }}
-
-                    </div>
-
-                {% endif %}
-
-            </div>
-
-
-            <!-- ==================================================
-                 BOTONES
-            =================================================== -->
-
-            <div
-                class="d-flex justify-content-end gap-2 mt-4 pt-3"
-                style="border-top:1px solid #edf0f4;"
-            >
-
-
-                <a
-                    href="{% url 'maquinas_list' %}"
-                    class="admin-btn admin-btn-secondary"
-                >
-
-                    <i class="fa-solid fa-arrow-left"></i>
-
-                    Regresar
-
-                </a>
-
-
-                <button
-                    type="submit"
-                    class="admin-btn admin-btn-primary"
-                >
-
-                    {% if modo == "actualizar" %}
-
-                        <i class="fa-solid fa-check"></i>
-
-                        Actualizar
-
-                    {% else %}
-
-                        <i class="fa-solid fa-plus"></i>
-
-                        Crear máquina
-
-                    {% endif %}
-
-                </button>
-
-
-            </div>
-
-
-        </form>
-
+        {{ form.nombre }}
 
     </div>
 
 
-    <!-- ==================================================
-         FOOTER
-    =================================================== -->
+    <!-- TIPO -->
 
-    <div class="admin-card-footer">
+    <div class="form-field">
 
-        <small style="color:#94a3b8;">
+        <label for="{{ form.tipo.id_for_label }}">
+            Tipo
+        </label>
 
-            <i class="fa-solid fa-circle-info"></i>
-
-            Los campos de la máquina pueden modificarse posteriormente.
-
-        </small>
+        {{ form.tipo }}
 
     </div>
 
 
-</div>
+    <!-- STATUS -->
 
+    <div class="form-field">
+
+        <label for="{{ form.status.id_for_label }}">
+            Estado
+        </label>
+
+        {{ form.status }}
+
+    </div>
+
+{% endblock %}
+
+
+{% block boton_regresar %}
+
+    <a
+        href="{% url 'maquinas_list' %}"
+        class="btn btn-secondary"
+    >
+        ← Regresar
+    </a>
 
 {% endblock %}

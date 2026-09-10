@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}
+            Formulario
+        {% endblock %}
+    </title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --secondary: #64748b;
+            --background: #f1f5f9;
+            --border: #dbe2ea;
+            --text: #1e293b;
+            --muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            font-family: Inter, -apple-system, BlinkMacSystemFont,
+                         "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+            background: linear-gradient(
+                135deg,
+                #f8fafc 0%,
+                #eef2f7 100%
+            );
+
+            color: var(--text);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 24px;
+        }
+
+        .page-wrapper {
+            width: 100%;
+            max-width: 650px;
+        }
+
+        .form-card {
+            background: #ffffff;
+
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            border-radius: 18px;
+
+            box-shadow:
+                0 10px 25px rgba(15, 23, 42, 0.06),
+                0 2px 6px rgba(15, 23, 42, 0.04);
+
+            overflow: hidden;
+        }
+
+        .form-header {
+            padding: 28px 32px 24px;
+
+            border-bottom: 1px solid #edf0f4;
+        }
+
+        .form-header-content {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-icon {
+            width: 48px;
+            height: 48px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 12px;
+
+            background: #eff6ff;
+            color: var(--primary);
+
+            font-size: 22px;
+
+            flex-shrink: 0;
+        }
+
+        .form-header h1 {
+            margin: 0;
+
+            font-size: 1.45rem;
+            font-weight: 650;
+
+            color: #0f172a;
+        }
+
+        .form-header p {
+            margin: 4px 0 0;
+
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .form-body {
+            padding: 30px 32px;
+        }
+
+        .form-field {
+            margin-bottom: 22px;
+        }
+
+        .form-field label {
+            display: block;
+
+            margin-bottom: 8px;
+
+            font-size: 0.9rem;
+            font-weight: 600;
+
+            color: #334155;
+        }
+
+        .form-control,
+        .form-select {
+            width: 100%;
+            min-height: 46px;
+
+            padding: 10px 14px;
+
+            border: 1px solid var(--border);
+            border-radius: 10px;
+
+            background-color: #ffffff;
+            color: #1e293b;
+
+            font-size: 0.95rem;
+
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease,
+                background-color 0.2s ease;
+        }
+
+        .form-control:hover,
+        .form-select:hover {
+            border-color: #b8c4d2;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--primary);
+
+            outline: none;
+
+            box-shadow:
+                0 0 0 4px rgba(37, 99, 235, 0.10);
+        }
+
+        .form-control[readonly],
+        .form-control[disabled],
+        .form-select[disabled] {
+            background-color: #f8fafc;
+            color: #64748b;
+
+            cursor: not-allowed;
+        }
+
+        .error-box {
+            display: flex;
+            gap: 12px;
+
+            padding: 14px 16px;
+            margin-bottom: 24px;
+
+            background: #fef2f2;
+
+            border: 1px solid #fecaca;
+            border-radius: 10px;
+
+            color: #991b1b;
+
+            font-size: 0.9rem;
+        }
+
+        .error-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .error-box ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        .error-box li {
+            margin-bottom: 3px;
+        }
+
+        .error-box li:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-divider {
+            height: 1px;
+
+            background: #edf0f4;
+
+            margin: 28px 0 22px;
+        }
+
+        .button-row {
+            display: flex;
+
+            justify-content: flex-end;
+            align-items: center;
+
+            gap: 12px;
+        }
+
+        .btn {
+            min-height: 44px;
+
+            padding: 9px 20px;
+
+            border-radius: 9px;
+
+            font-size: 0.92rem;
+            font-weight: 600;
+
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 8px;
+
+            transition:
+                transform 0.15s ease,
+                box-shadow 0.15s ease,
+                background-color 0.15s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+
+            box-shadow:
+                0 3px 8px rgba(37, 99, 235, 0.20);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
+
+            box-shadow:
+                0 5px 12px rgba(37, 99, 235, 0.25);
+        }
+
+        .btn-secondary {
+            background-color: #ffffff;
+
+            border: 1px solid #d5dde7;
+
+            color: #475569;
+        }
+
+        .btn-secondary:hover {
+            background-color: #f8fafc;
+
+            border-color: #c5cfdb;
+
+            color: #334155;
+        }
+
+        .form-footer {
+            padding: 16px 32px;
+
+            background: #f8fafc;
+
+            border-top: 1px solid #edf0f4;
+
+            color: #94a3b8;
+
+            font-size: 0.78rem;
+        }
+
+        @media (max-width: 576px) {
+
+            body {
+                padding: 12px;
+
+                align-items: flex-start;
+            }
+
+            .page-wrapper {
+                margin-top: 10px;
+            }
+
+            .form-card {
+                border-radius: 14px;
+            }
+
+            .form-header {
+                padding: 22px 20px;
+            }
+
+            .form-header-content {
+                gap: 12px;
+            }
+
+            .header-icon {
+                width: 42px;
+                height: 42px;
+
+                border-radius: 10px;
+
+                font-size: 19px;
+            }
+
+            .form-header h1 {
+                font-size: 1.2rem;
+            }
+
+            .form-header p {
+                font-size: 0.82rem;
+            }
+
+            .form-body {
+                padding: 24px 20px;
+            }
+
+            .form-field {
+                margin-bottom: 18px;
+            }
+
+            .form-control,
+            .form-select {
+                min-height: 48px;
+            }
+
+            .button-row {
+                display: grid;
+
+                grid-template-columns: 1fr 1fr;
+
+                gap: 10px;
+            }
+
+            .button-row .btn {
+                width: 100%;
+
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+
+            .form-footer {
+                padding: 14px 20px;
+            }
+        }
+
+        @media (max-width: 360px) {
+
+            .button-row {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="page-wrapper">
+
+    <div class="form-card">
+
+        <div class="form-header">
+
+            <div class="form-header-content">
+
+                <div class="header-icon">
+
+                    {% if modo == "actualizar" %}
+                        ✎
+                    {% else %}
+                        +
+                    {% endif %}
+
+                </div>
+
+                <div>
+
+                    <h1>
+                        {% block encabezado %}
+                            Formulario
+                        {% endblock %}
+                    </h1>
+
+                    <p>
+                        {% block descripcion %}
+                            Completa la información.
+                        {% endblock %}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="form-body">
+
+            <form method="post">
+
+                {% csrf_token %}
+
+
+                {% if form.errors %}
+
+                    <div class="error-box">
+
+                        <div class="error-icon">
+                            ⚠
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Revisa la información ingresada.
+                            </strong>
+
+                            <ul>
+
+                                {% for field in form %}
+
+                                    {% for error in field.errors %}
+
+                                        <li>
+                                            {{ error }}
+                                        </li>
+
+                                    {% endfor %}
+
+                                {% endfor %}
+
+                            </ul>
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+
+                {% block campos %}
+                {% endblock %}
+
+
+                <div class="form-divider"></div>
+
+
+                <div class="button-row">
+
+                    {% block boton_regresar %}
+                    {% endblock %}
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+
+                        {% if modo == "actualizar" %}
+                            ✓ Actualizar
+                        {% else %}
+                            + Crear
+                        {% endif %}
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+        <div class="form-footer">
+
+            Los campos marcados son obligatorios.
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+</html>
