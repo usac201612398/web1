@@ -126,4 +126,27 @@ urlpatterns = [
         name="listamantenimientos_delete"
     ),
 
+    path(
+    "crud/gestor/distribucionmaquinas/",
+    views.distribucionmaquinas_list,
+    name="distribucionmaquinas_list"
+    ),
+
+    path(
+    "crud/gestor/distribucionmaquinas/new/",
+    views.distribucionmaquinas_create,
+    name="distribucionmaquinas_create"
+    ),
+
+    path(
+    "crud/gestor/distribucionmaquinas/int:pk/edit/",
+    views.distribucionmaquinas_update,
+    name="distribucionmaquinas_update"
+    ),
+
+    path(
+    "crud/gestor/distribucionmaquinas/int:pk/delete/",
+    views.distribucionmaquinas_delete,
+    name="distribucionmaquinas_delete"
+    ),
 ]

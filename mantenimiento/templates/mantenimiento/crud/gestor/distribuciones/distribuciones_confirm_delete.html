@@ -1,0 +1,49 @@
+{% extends "mantenimiento/crud_delete_base.html" %}
+
+
+{% block title %}
+
+    Confirmar anulación de las especificaciones de la máquina
+
+{% endblock %}
+
+
+{% block encabezado %}
+
+    Confirmar anulación de las especificaciones de la máquina
+
+{% endblock %}
+
+
+{% block descripcion %}
+
+    Revisa la información de las especificaciones de la máquina antes de continuar.
+
+{% endblock %}
+
+
+{% block pregunta %}
+
+    ¿Está seguro de que desea anular las especificaciones de la máquina
+
+    <strong>
+        {{ registros.registro }}
+    </strong>?
+
+{% endblock %}
+
+
+{% block boton_cancelar %}
+
+    <a
+        href="{% url 'distribucionmaquinas_list' %}"
+        class="btn btn-secondary"
+    >
+
+        <i class="fas fa-arrow-left"></i>
+
+        Regresar
+
+    </a>
+
+{% endblock %}

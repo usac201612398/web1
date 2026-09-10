@@ -527,3 +527,123 @@ def listamantenimientos_delete(request, pk):
             'registros': registro
         }
     )
+
+def distribucionmaquinas_list(request):
+    registros = DistribucionMaquinas.objects.select_related(
+        'ubicacion',
+        'maquina',
+        'centrodecosto'
+    ).all()
+
+    return render(
+        request,
+        'mantenimiento/crud/gestor/distribucionmaquinas/distribucionmaquinas_list.html',
+        {
+            'registros': registros
+        }
+    )
+
+def distribucionmaquinas_create(request):
+    if request.method == 'POST':
+
+        form = distribucionMaquinasForm(request.POST)
+
+        if form.is_valid():
+
+            form.save()
+
+            messages.success(
+                request,
+                "Distribución de máquina creada correctamente."
+            )
+
+            return redirect('distribucionmaquinas_list')
+
+    else:
+
+        form = distribucionMaquinasForm()
+
+
+    return render(
+        request,
+        'mantenimiento/crud/gestor/distribucionmaquinas/distribucionmaquinas_form.html',
+        {
+            'form': form,
+            'modo': 'crear'
+        }
+    )
+
+def distribucionmaquinas_update(request, pk):
+    registro = get_object_or_404(
+        DistribucionMaquinas,
+        pk=pk
+    )
+
+
+    if request.method == 'POST':
+
+        form = distribucionMaquinasForm(
+            request.POST,
+            instance=registro
+        )
+
+        if form.is_valid():
+
+            form.save()
+
+            messages.success(
+                request,
+                "Distribución de máquina actualizada correctamente."
+            )
+
+            return redirect('distribucionmaquinas_list')
+
+    else:
+
+        form = distribucionMaquinasForm(
+            instance=registro
+        )
+
+
+    return render(
+        request,
+        'mantenimiento/crud/gestor/distribucionmaquinas/distribucionmaquinas_form.html',
+        {
+            'form': form,
+            'modo': 'actualizar'
+        }
+    )
+
+def distribucionmaquinas_delete(request, pk):
+    registro = get_object_or_404(
+        DistribucionMaquinas,
+        pk=pk
+    )
+
+
+    if request.method == 'POST':
+
+        registro.status = 'Anulada'
+
+        registro.save(
+            update_fields=[
+                'status',
+                'updated_at'
+            ]
+        )
+
+        messages.success(
+            request,
+            "Distribución de máquina anulada correctamente."
+        )
+
+        return redirect('distribucionmaquinas_list')
+
+
+    return render(
+        request,
+        'mantenimiento/crud/gestor/distribucionmaquinas/distribucionmaquinas_confirm_delete.html',
+        {
+            'registros': registro
+        }
+    )

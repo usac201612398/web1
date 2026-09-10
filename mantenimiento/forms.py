@@ -206,6 +206,10 @@ class personalForm(forms.ModelForm):
             'status'
         ]
 
+# ==========================================================
+# Mantenimientos
+# ==========================================================
+
 class listaMantenimientosForm(forms.ModelForm):
     ESTADOS = [
         ('', ''),
@@ -266,4 +270,103 @@ class listaMantenimientosForm(forms.ModelForm):
             'maquina',
             'periodo',
             'status'
+        ]
+
+# ==========================================================
+# Distribucion METADATA
+# ==========================================================
+
+class distribucionMaquinasForm(forms.ModelForm):
+    ESTADOS = [
+        ('', ''),
+        ('Activa', 'Activa'),
+        ('Inactiva', 'Inactiva'),
+        ('Anulada', 'Anulada'),
+    ]
+
+
+    ubicacion = forms.ModelChoiceField(
+        queryset=Ubicacion.objects.filter(
+            status='Abierta'
+        ).order_by('nombre'),
+        empty_label='Seleccione una ubicación',
+        widget=forms.Select(
+            attrs={
+                'class': 'form-select'
+            }
+        )
+    )
+
+
+    maquina = forms.ModelChoiceField(
+        queryset=Maquina.objects.filter(
+            status='Activa'
+        ).order_by('nombre'),
+        empty_label='Seleccione una máquina',
+        widget=forms.Select(
+            attrs={
+                'class': 'form-select'
+            }
+        )
+    )
+
+
+    status = forms.ChoiceField(
+        choices=ESTADOS,
+        initial='Activa',
+        widget=forms.Select(
+            attrs={
+                'class': 'form-select'
+            }
+        )
+    )
+
+
+    serie = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Ingrese el número de serie'
+            }
+        )
+    )
+
+
+    fecha_compra = forms.DateField(
+        required=False,
+        widget=forms.DateInput(
+            attrs={
+                'class': 'form-control',
+                'type': 'date'
+            }
+        )
+    )
+
+
+    centrodecosto = forms.ModelChoiceField(
+        queryset=centrodecosto.objects.filter(
+            status='Abierto'
+        ).order_by('centrodecosto'),
+        required=False,
+        empty_label='Seleccione un centro de costo',
+        widget=forms.Select(
+            attrs={
+                'class': 'form-select'
+            }
+        )
+    )
+
+
+    class Meta:
+
+        model = DistribucionMaquinas
+
+        fields = [
+            'ubicacion',
+            'maquina',
+            'status',
+            'serie',
+            'fecha_compra',
+            'centrodecosto',
         ]
