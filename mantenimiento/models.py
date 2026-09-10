@@ -12,7 +12,7 @@ class Maquina(models.Model):
     ]
 
     registro = models.BigAutoField(primary_key=True)
-    nombre = models.CharField(max_length=100, blank=True, null=True)
+    nombre = models.CharField(max_length=100)
     tipo = models.CharField(max_length=100, blank=True, null=True)
     
     status = models.CharField(
@@ -36,7 +36,7 @@ class Ubicacion(models.Model):
     ]
 
     registro = models.BigAutoField(primary_key=True)
-    nombre = models.CharField(max_length=100, blank=True, null=True)
+    nombre = models.CharField(max_length=100)
     status = models.CharField(
         max_length=15,
         choices=ESTADOS,
@@ -58,8 +58,8 @@ class centrodecosto(models.Model):
     ]
 
     registro = models.BigAutoField(primary_key=True)
-    centrodecosto = models.CharField(max_length=100, blank=True, null=True)
-    nombre = models.CharField(max_length=100, blank=True, null=True)
+    centrodecosto = models.CharField(max_length=100)
+    nombre = models.CharField(max_length=100)
     status = models.CharField(
         max_length=15,
         choices=ESTADOS,
