@@ -69,5 +69,33 @@ urlpatterns = [
         views.centrodecosto_delete,
         name="centrodecosto_delete"
     ),
-    
+
+    # ======================================================
+    # USUARIOS
+    # ======================================================
+
+    path(
+        "crud/gestor/personal/",
+        views.personal_list,
+        name="personal_list"
+    ),
+
+    path(
+        "crud/gestor/personal/new/",
+        views.personal_create,
+        name="personal_create"
+    ),
+
+    path(
+        "crud/gestor/personal/<int:pk>/edit/",
+        views.personal_update,
+        name="personal_update"
+    ),
+
+    path(
+        "crud/gestor/personal/<int:pk>/delete/",
+        views.personal_delete,
+        name="personal_delete"
+    ),
+
 ]

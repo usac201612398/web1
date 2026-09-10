@@ -123,4 +123,85 @@ class centrodecostoForm(forms.ModelForm):
             'nombre',
             'status'
         ]
-        
+
+# ==========================================================
+# Personal
+# ==========================================================
+
+class personalForm(forms.ModelForm):
+
+    ROLES = [
+        ('', ''),
+        ('Cliente', 'Cliente'),
+        ('Responsable', 'Responsable'),
+        ('Gestor', 'Gestor'),
+        ('Admin', 'Administrador'),
+    ]
+
+    ESTADOS = [
+        ('', ''),
+        ('Activo', 'Activo'),
+        ('Inactivo', 'Inactivo'),
+        ('Anulado', 'Anulado'),
+    ]
+
+    correo = forms.EmailField(
+        widget=forms.EmailInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'correo@ejemplo.com'
+            }
+        )
+    )
+
+    nombre = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Nombre completo'
+            }
+        )
+    )
+
+    codigoevo = forms.IntegerField(
+        required=False,
+        widget=forms.NumberInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Código EVO'
+            }
+        )
+    )
+
+    rol = forms.ChoiceField(
+        required=False,
+        choices=ROLES,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-select'
+            }
+        )
+    )
+
+    status = forms.ChoiceField(
+        choices=ESTADOS,
+        initial='Activo',
+        widget=forms.Select(
+            attrs={
+                'class': 'form-select'
+            }
+        )
+    )
+
+    class Meta:
+
+        model = Usuarios
+
+        fields = [
+            'correo',
+            'nombre',
+            'codigoevo',
+            'rol',
+            'status'
+        ]

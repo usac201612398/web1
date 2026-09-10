@@ -1,0 +1,403 @@
+{% extends "mantenimiento/base_admin.html" %}
+
+
+{% block title %}
+    Personal | Administración
+{% endblock %}
+
+
+{% block page_title %}
+    Personal
+{% endblock %}
+
+
+{% block page_subtitle %}
+    Administra los usuarios y personal registrados en el sistema.
+{% endblock %}
+
+
+{% block header_actions %}
+
+    <a
+        href="{% url 'personal_create' %}"
+        class="admin-btn admin-btn-primary"
+    >
+
+        <i class="fa-solid fa-plus"></i>
+
+        Nuevo personal
+
+    </a>
+
+
+    <a
+        href="{% url 'exportar_excel_generico' 'Usuarios' %}"
+        class="admin-btn admin-btn-secondary"
+    >
+
+        <i class="fa-solid fa-file-excel"></i>
+
+        Exportar
+
+    </a>
+
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="admin-card">
+
+
+    <!-- ==================================================
+         CABECERA
+    =================================================== -->
+
+    <div class="admin-card-header">
+
+        <div class="admin-card-title">
+
+            <i class="fa-solid fa-users"></i>
+
+            <span>
+                Listado de personal
+            </span>
+
+        </div>
+
+
+        <span class="admin-count">
+
+            {{ registros|length }} registros
+
+        </span>
+
+    </div>
+
+
+    <!-- ==================================================
+         TABLA
+    =================================================== -->
+
+    <div class="admin-table-container">
+
+        <table
+            id="myTable"
+            class="admin-table"
+        >
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        ID
+                    </th>
+
+                    <th>
+                        Nombre
+                    </th>
+
+                    <th>
+                        Correo
+                    </th>
+
+                    <th>
+                        Código EVO
+                    </th>
+
+                    <th>
+                        Rol
+                    </th>
+
+                    <th>
+                        Estado
+                    </th>
+
+                    <th class="text-center">
+                        Acciones
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for registro in registros %}
+
+                <tr>
+
+
+                    <!-- ID -->
+
+                    <td>
+
+                        <span class="admin-id">
+
+                            {{ registro.registro }}
+
+                        </span>
+
+                    </td>
+
+
+                    <!-- NOMBRE -->
+
+                    <td>
+
+                        <div class="admin-main-field">
+
+                            <span class="admin-field-icon">
+
+                                <i class="fa-solid fa-user"></i>
+
+                            </span>
+
+
+                            <span>
+
+                                {{ registro.nombre|default:"Sin nombre" }}
+
+                            </span>
+
+                        </div>
+
+                    </td>
+
+
+                    <!-- CORREO -->
+
+                    <td>
+
+                        {{ registro.correo }}
+
+                    </td>
+
+
+                    <!-- CODIGO EVO -->
+
+                    <td>
+
+                        {{ registro.codigoevo|default:"—" }}
+
+                    </td>
+
+
+                    <!-- ROL -->
+
+                    <td>
+
+                        {% if registro.rol == "Admin" %}
+
+                            <span class="admin-status status-active">
+                                Administrador
+                            </span>
+
+                        {% elif registro.rol == "Gestor" %}
+
+                            <span class="admin-status status-warning">
+                                Gestor
+                            </span>
+
+                        {% elif registro.rol == "Responsable" %}
+
+                            <span class="admin-status status-default">
+                                Responsable
+                            </span>
+
+                        {% elif registro.rol == "Cliente" %}
+
+                            <span class="admin-status status-default">
+                                Cliente
+                            </span>
+
+                        {% else %}
+
+                            <span class="admin-status status-default">
+                                {{ registro.rol|default:"Sin rol" }}
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- STATUS -->
+
+                    <td>
+
+                        {% if registro.status == "Activo" %}
+
+                            <span class="admin-status status-active">
+                                Activo
+                            </span>
+
+                        {% elif registro.status == "Inactivo" %}
+
+                            <span class="admin-status status-warning">
+                                Inactivo
+                            </span>
+
+                        {% elif registro.status == "Anulado" %}
+
+                            <span class="admin-status status-inactive">
+                                Anulado
+                            </span>
+
+                        {% else %}
+
+                            <span class="admin-status status-default">
+                                {{ registro.status }}
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- ACCIONES -->
+
+                    <td>
+
+                        <div class="admin-actions">
+
+
+                            <!-- EDITAR -->
+
+                            <a
+                                href="{% url 'personal_update' registro.pk %}"
+                                class="admin-action admin-action-edit"
+                                title="Editar personal"
+                                aria-label="Editar personal"
+                            >
+
+                                <i class="fa-solid fa-pen"></i>
+
+                            </a>
+
+
+                            <!-- ANULAR -->
+
+                            {% if registro.status != "Anulado" %}
+
+                            <a
+                                href="{% url 'personal_delete' registro.pk %}"
+                                class="admin-action admin-action-delete"
+                                title="Anular personal"
+                                aria-label="Anular personal"
+                            >
+
+                                <i class="fa-solid fa-ban"></i>
+
+                            </a>
+
+                            {% endif %}
+
+
+                        </div>
+
+                    </td>
+
+
+                </tr>
+
+
+                {% empty %}
+
+                <tr>
+
+                    <td
+                        colspan="7"
+                        class="text-center py-5"
+                    >
+
+                        <div style="color:#94a3b8;">
+
+                            <i
+                                class="fa-solid fa-users"
+                                style="font-size:32px;"
+                            ></i>
+
+
+                            <div class="mt-2">
+
+                                No hay personal registrado.
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- ==================================================
+         FOOTER
+    =================================================== -->
+
+    <div class="admin-card-footer">
+
+        <small style="color:#94a3b8;">
+
+            <i class="fa-solid fa-circle-info"></i>
+
+            Utiliza las acciones para editar o anular un registro.
+
+        </small>
+
+    </div>
+
+
+</div>
+
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+
+    $(document).ready(function () {
+
+        $('#myTable').DataTable({
+
+            responsive: false,
+
+            autoWidth: false,
+
+            pageLength: 10,
+
+            lengthMenu: [
+                [10, 25, 50, 100],
+                [10, 25, 50, 100]
+            ],
+
+            order: [
+                [0, 'asc']
+            ],
+
+            language: {
+                url:
+                    "//cdn.datatables.net/plug-ins/1.13.8/i18n/es-ES.json"
+            }
+
+        });
+
+    });
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "mantenimiento/base_delete.html" %}
+
+
+{% block title %}
+    Anular personal
+{% endblock %}
+
+
+{% block delete_title %}
+    Confirmar anulación
+{% endblock %}
+
+
+{% block delete_subtitle %}
+    Revisa la información antes de continuar.
+{% endblock %}
+
+
+{% block delete_message %}
+
+    ¿Está seguro de que desea anular este registro de personal?
+
+{% endblock %}
+
+
+{% block delete_record %}
+
+    Registro:
+    <strong>{{ registros.registro }}</strong>
+
+{% endblock %}
+
+
+{% block delete_url %}
+    {% url 'personal_list' %}
+{% endblock %}

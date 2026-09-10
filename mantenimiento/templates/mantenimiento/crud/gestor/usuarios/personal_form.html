@@ -1,0 +1,95 @@
+{% extends "mantenimiento/base_form.html" %}
+
+
+{% block title %}
+
+    {% if modo == "actualizar" %}
+        Actualización de personal
+    {% else %}
+        Nuevo personal
+    {% endif %}
+
+{% endblock %}
+
+
+{% block form_title %}
+
+    {% if modo == "actualizar" %}
+        Actualización de personal
+    {% else %}
+        Nuevo personal
+    {% endif %}
+
+{% endblock %}
+
+
+{% block form_subtitle %}
+
+    {% if modo == "actualizar" %}
+        Modifica la información del personal.
+    {% else %}
+        Completa la información para registrar nuevo personal.
+    {% endif %}
+
+{% endblock %}
+
+
+{% block form_fields %}
+
+
+<div class="form-field">
+
+    <label for="{{ form.nombre.id_for_label }}">
+        Nombre
+    </label>
+
+    {{ form.nombre }}
+
+</div>
+
+
+<div class="form-field">
+
+    <label for="{{ form.correo.id_for_label }}">
+        Correo electrónico
+    </label>
+
+    {{ form.correo }}
+
+</div>
+
+
+<div class="form-field">
+
+    <label for="{{ form.codigoevo.id_for_label }}">
+        Código EVO
+    </label>
+
+    {{ form.codigoevo }}
+
+</div>
+
+
+<div class="form-field">
+
+    <label for="{{ form.rol.id_for_label }}">
+        Rol
+    </label>
+
+    {{ form.rol }}
+
+</div>
+
+
+<div class="form-field">
+
+    <label for="{{ form.status.id_for_label }}">
+        Estado
+    </label>
+
+    {{ form.status }}
+
+</div>
+
+
+{% endblock %}
