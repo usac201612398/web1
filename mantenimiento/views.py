@@ -537,7 +537,7 @@ def distribucionmaquinas_list(request):
 
     return render(
         request,
-        'mantenimiento/crud/gestor/distribucionmaquinas/distribucionmaquinas_list.html',
+        'mantenimiento/crud/gestor/distribuciones/distribucionmaquinas_list.html',
         {
             'registros': registros
         }
@@ -566,7 +566,7 @@ def distribucionmaquinas_create(request):
 
     return render(
         request,
-        'mantenimiento/crud/gestor/distribucionmaquinas/distribucionmaquinas_form.html',
+        'mantenimiento/crud/gestor/distribuciones/distribucionmaquinas_form.html',
         {
             'form': form,
             'modo': 'crear'
@@ -607,7 +607,7 @@ def distribucionmaquinas_update(request, pk):
 
     return render(
         request,
-        'mantenimiento/crud/gestor/distribucionmaquinas/distribucionmaquinas_form.html',
+        'mantenimiento/crud/gestor/distribuciones/distribucionmaquinas_form.html',
         {
             'form': form,
             'modo': 'actualizar'
@@ -642,7 +642,7 @@ def distribucionmaquinas_delete(request, pk):
 
     return render(
         request,
-        'mantenimiento/crud/gestor/distribucionmaquinas/distribucionmaquinas_confirm_delete.html',
+        'mantenimiento/crud/gestor/distribuciones/distribucionmaquinas_confirm_delete.html',
         {
             'registros': registro
         }
