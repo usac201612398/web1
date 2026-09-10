@@ -169,7 +169,7 @@ class personalForm(forms.ModelForm):
         widget=forms.NumberInput(
             attrs={
                 'class': 'form-control',
-                'placeholder': 'Código EVO'
+                'placeholder': 'Ingrese su código de evolution'
             }
         )
     )
