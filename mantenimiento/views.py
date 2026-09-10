@@ -7,7 +7,6 @@ from django.views.generic import (
 )
 from .models import *
 from .forms import *
-
 def index(request):
     return render(request, 'mantenimiento/home.html')
 
