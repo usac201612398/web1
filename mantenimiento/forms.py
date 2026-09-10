@@ -11,8 +11,8 @@ class ubicacionesForm(forms.ModelForm):
     ]
     
     nombre = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
-    status = forms.ChoiceField(choices=ESTADOS,initial="Activa",widget=forms.Select(attrs={'class': 'my-input'}))
-    
+    status = forms.ChoiceField(choices=ESTADOS,initial="Activa",widget=forms.Select(attrs={'class': 'form-control'}))
+
     class Meta:
     
         model = Ubicacion
