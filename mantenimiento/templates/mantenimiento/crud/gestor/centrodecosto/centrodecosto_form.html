@@ -1,0 +1,89 @@
+{% extends "mantenimiento/crud_form_base.html" %}
+
+
+{% block title %}
+
+    {% if modo == "actualizar" %}
+        Actualización de máquina
+    {% else %}
+        Nueva máquina
+    {% endif %}
+
+{% endblock %}
+
+
+{% block encabezado %}
+
+    {% if modo == "actualizar" %}
+        Actualización de centro de costo
+    {% else %}
+        Nuevo centro de costo
+    {% endif %}
+
+{% endblock %}
+
+
+{% block descripcion %}
+
+    {% if modo == "actualizar" %}
+        Modifica la información del centro de costo.
+    {% else %}
+        Completa la información para registrar un centro de costo.
+    {% endif %}
+
+{% endblock %}
+
+
+{% block campos %}
+
+    <!-- CENTRO DE COSTO -->
+
+    <div class="form-field">
+
+        <label for="{{ form.nombre.id_for_label }}">
+            Centro de Costo
+        </label>
+
+        {{ form.centrodecosto }}
+
+    </div>
+
+
+    <!-- NOMBRE -->
+
+    <div class="form-field">
+
+        <label for="{{ form.tipo.id_for_label }}">
+            Nombre
+        </label>
+
+        {{ form.nombre }}
+
+    </div>
+
+
+    <!-- STATUS -->
+
+    <div class="form-field">
+
+        <label for="{{ form.status.id_for_label }}">
+            Estado
+        </label>
+
+        {{ form.status }}
+
+    </div>
+
+{% endblock %}
+
+
+{% block boton_regresar %}
+
+    <a
+        href="{% url 'centrodecosto_list' %}"
+        class="btn btn-secondary"
+    >
+        ← Regresar
+    </a>
+
+{% endblock %}

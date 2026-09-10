@@ -72,3 +72,55 @@ class MaquinaForm(forms.ModelForm):
             'tipo',
             'status',
         ]
+
+# ==========================================================
+# Centro de costo
+# ==========================================================
+
+class centrodecostoForm(forms.ModelForm):
+
+    ESTADOS = [
+        ('', ''),
+        ('Abierto', 'Abierto'),
+        ('Cerrado', 'Cerrado'),
+        ('Anulado', 'Anulado'),
+    ]
+
+    centrodecosto = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Ingrese el código del centro de costo'
+            }
+        )
+    )
+
+    nombre = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Ingrese el nombre'
+            }
+        )
+    )
+
+    status = forms.ChoiceField(
+        choices=ESTADOS,
+        initial="Abierto",
+        widget=forms.Select(
+            attrs={
+                'class': 'form-select'
+            }
+        )
+    )
+
+    class Meta:
+
+        model = centrodecosto
+
+        fields = [
+            'centrodecosto',
+            'nombre',
+            'status'
+        ]
+        

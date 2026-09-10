@@ -1,0 +1,49 @@
+{% extends "mantenimiento/crud_delete_base.html" %}
+
+
+{% block title %}
+
+    Confirmar anulación de centro de costo
+
+{% endblock %}
+
+
+{% block encabezado %}
+
+    Confirmar anulación del centro de costo
+
+{% endblock %}
+
+
+{% block descripcion %}
+
+    Revisa la información del centro de costo antes de continuar.
+
+{% endblock %}
+
+
+{% block pregunta %}
+
+    ¿Está seguro de que desea anular el centro de costo
+
+    <strong>
+        {{ registros.nombre }}
+    </strong>?
+
+{% endblock %}
+
+
+{% block boton_cancelar %}
+
+    <a
+        href="{% url 'centrodecosto_list' %}"
+        class="btn btn-secondary"
+    >
+
+        <i class="fas fa-arrow-left"></i>
+
+        Regresar
+
+    </a>
+
+{% endblock %}
