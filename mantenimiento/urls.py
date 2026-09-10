@@ -139,13 +139,13 @@ urlpatterns = [
     ),
 
     path(
-    "crud/gestor/distribucionmaquinas/int:pk/edit/",
-    views.distribucionmaquinas_update,
-    name="distribucionmaquinas_update"
+        'crud/gestor/distribucionmaquinas/<int:pk>/edit/',
+        views.distribucionmaquinas_update,
+        name='distribucionmaquinas_update'
     ),
 
     path(
-    "crud/gestor/distribucionmaquinas/int:pk/delete/",
+    "crud/gestor/distribucionmaquinas/<int:pk>/delete/",
     views.distribucionmaquinas_delete,
     name="distribucionmaquinas_delete"
     ),
