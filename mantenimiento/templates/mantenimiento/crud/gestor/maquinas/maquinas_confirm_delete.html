@@ -1,0 +1,182 @@
+{% extends "mantenimiento/base_admin.html" %}
+
+
+{% block title %}
+    Anular máquina | Administración
+{% endblock %}
+
+
+{% block page_title %}
+    Anular máquina
+{% endblock %}
+
+
+{% block page_subtitle %}
+    Confirma la anulación de la máquina seleccionada.
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="admin-card">
+
+
+    <div class="admin-card-body text-center">
+
+
+        <!-- ICONO -->
+
+        <div
+            class="mx-auto mb-4"
+            style="
+                width:64px;
+                height:64px;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                border-radius:50%;
+                background:#fef2f2;
+                color:#dc2626;
+                font-size:26px;
+            "
+        >
+
+            <i class="fa-solid fa-ban"></i>
+
+        </div>
+
+
+        <!-- TITULO -->
+
+        <h2
+            style="
+                font-size:1.25rem;
+                font-weight:700;
+                color:#1e293b;
+            "
+        >
+
+            ¿Anular esta máquina?
+
+        </h2>
+
+
+        <!-- DESCRIPCIÓN -->
+
+        <p
+            style="
+                max-width:550px;
+                margin:10px auto 20px;
+                color:#64748b;
+                font-size:0.9rem;
+            "
+        >
+
+            La máquina no será eliminada de la base de datos.
+            Su estado cambiará a <strong>Anulada</strong>.
+
+        </p>
+
+
+        <!-- INFORMACIÓN -->
+
+        <div
+            class="mx-auto mb-4"
+            style="
+                max-width:500px;
+                padding:16px;
+                background:#f8fafc;
+                border:1px solid #e2e8f0;
+                border-radius:10px;
+                text-align:left;
+            "
+        >
+
+            <div class="mb-2">
+
+                <small style="color:#94a3b8;">
+                    ID
+                </small>
+
+                <div style="font-weight:600;">
+                    {{ registro.registro }}
+                </div>
+
+            </div>
+
+
+            <div class="mb-2">
+
+                <small style="color:#94a3b8;">
+                    Máquina
+                </small>
+
+                <div style="font-weight:600;">
+                    {{ registro.nombre|default:"Sin nombre" }}
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <small style="color:#94a3b8;">
+                    Tipo
+                </small>
+
+                <div style="font-weight:600;">
+                    {{ registro.tipo|default:"Sin tipo" }}
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- FORMULARIO -->
+
+        <form method="post">
+
+            {% csrf_token %}
+
+
+            <div class="d-flex justify-content-center gap-2">
+
+
+                <a
+                    href="{% url 'maquinas_list' %}"
+                    class="admin-btn admin-btn-secondary"
+                >
+
+                    <i class="fa-solid fa-arrow-left"></i>
+
+                    Cancelar
+
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="admin-btn admin-btn-danger"
+                >
+
+                    <i class="fa-solid fa-ban"></i>
+
+                    Sí, anular máquina
+
+                </button>
+
+
+            </div>
+
+        </form>
+
+
+    </div>
+
+
+</div>
+
+
+{% endblock %}
