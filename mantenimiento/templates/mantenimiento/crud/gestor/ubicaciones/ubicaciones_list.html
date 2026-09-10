@@ -76,15 +76,15 @@
     <div class="container py-3">
         <!-- Banner título -->
         <div class="page-header-box text-white text-center py-3 mb-4">
-            <h1 class="m-0">Panel de Variedades</h1>
+            <h1 class="m-0">Administrar - Ubicaciones</h1>
         </div>
 
         <!-- Botones -->
         <div class="d-flex justify-content-between flex-wrap mb-3">
-            <a href="{% url 'variedades_create' %}" class="btn btn-outline-secondary">
+            <a href="{% url 'ubicaciones_create' %}" class="btn btn-outline-secondary">
                 <i class="fas fa-plus"></i> Agregar
             </a>
-            <a href="{% url 'exportar_excel_generico' 'variedades' %}" class="btn btn-outline-secondary">
+            <a href="{% url 'exportar_excel_generico' 'Ubicacion' %}" class="btn btn-outline-secondary">
                 <i class="fas fa-file-excel"></i> Exportar
             </a>
         </div>
@@ -95,11 +95,8 @@
                 <thead class="table-custom-header">
                     <tr>
                         <th>Id</th>
-                        <th>Código Variedad</th>
-                        <th>Apodo Variedad</th>
-                        <th>Cultivo</th>
-                        <th>Código Padre</th>
-                        <th>Código Madre</th>
+                        <th>Ubicación</th>
+                        <th>Status</th>
                         <th>Editar</th>
                         <th>Anular</th>
                     </tr>
@@ -107,19 +104,16 @@
                 <tbody>
                     {% for registro in registros %}
                     <tr>
-                        <td><a href="{% url 'variedades_detail' registro.pk %}">{{ registro.id }}</a></td>
-                        <td>{{ registro.variedad_code }}</td>
-                        <td>{{ registro.apodo_variedad }}</td>
-                        <td>{{ registro.cultivo }}</td>
-                        <td>{{ registro.cod_padre }}</td>
-                        <td>{{ registro.cod_madre }}</td>
+                        <td>{{ registro.id }}</td>
+                        <td>{{ registro.nombre }}</td>
+                        <td>{{ registro.status }}</td>
                         <td class="text-center">
-                            <a href="{% url 'variedades_update' registro.pk %}" class="text-warning">
+                            <a href="{% url 'Ubicacion_update' registro.pk %}" class="text-warning">
                                 <i class="fas fa-edit"></i>
                             </a>
                         </td>
                         <td class="text-center">
-                            <a href="{% url 'variedades_delete' registro.pk %}" class="text-danger">
+                            <a href="{% url 'Ubicacion_delete' registro.pk %}" class="text-danger">
                                 <i class="fas fa-trash-alt"></i>
                             </a>
                         </td>
@@ -131,7 +125,7 @@
 
         <!-- Botón Home -->
         <div class="text-center mt-4">
-            <a href="{% url 'sdcsemillas_home' %}" class="btn btn-secondary">
+            <a href="{% url 'tablero' %}" class="btn btn-secondary">
                 <i class="fas fa-home"></i> Home
             </a>
         </div>
