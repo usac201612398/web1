@@ -412,3 +412,118 @@ def personal_delete(request, pk):
             'registros': registro
         }
     )
+
+
+def listamantenimientos_list(request):
+    registros = ListaMantenimientos.objects.select_related(
+        'maquina'
+    ).all()
+
+    return render(
+        request,
+        'mantenimiento/crud/gestor/listamantenimientos/listamantenimientos_list.html',
+        {
+            'registros': registros
+        }
+    )
+
+def listamantenimientos_create(request):
+    if request.method == 'POST':
+
+        form = listaMantenimientosForm(request.POST)
+
+        if form.is_valid():
+
+            form.save()
+
+            messages.success(
+                request,
+                "Mantenimiento creado correctamente."
+            )
+
+            return redirect('listamantenimientos_list')
+
+    else:
+
+        form = listaMantenimientosForm()
+
+
+    return render(
+        request,
+        'mantenimiento/crud/gestor/listamantenimientos/listamantenimientos_form.html',
+        {
+            'form': form,
+            'modo': 'crear'
+        }
+    )
+
+def listamantenimientos_update(request, pk):
+    registro = get_object_or_404(
+        ListaMantenimientos,
+        pk=pk
+    )
+
+
+    if request.method == 'POST':
+
+        form = listaMantenimientosForm(
+            request.POST,
+            instance=registro
+        )
+
+        if form.is_valid():
+
+            form.save()
+
+            messages.success(
+                request,
+                "Mantenimiento actualizado correctamente."
+            )
+
+            return redirect('listamantenimientos_list')
+
+    else:
+
+        form = listaMantenimientosForm(
+            instance=registro
+        )
+
+
+    return render(
+        request,
+        'mantenimiento/crud/gestor/listamantenimientos/listamantenimientos_form.html',
+        {
+            'form': form,
+            'modo': 'actualizar'
+        }
+    )
+
+def listamantenimientos_delete(request, pk):
+    registro = get_object_or_404(
+        ListaMantenimientos,
+        pk=pk
+    )
+
+    if request.method == 'POST':
+
+        registro.status = 'Anulada'
+
+        registro.save(
+            update_fields=['status', 'updated_at']
+        )
+
+        messages.success(
+            request,
+            "Mantenimiento anulado correctamente."
+        )
+
+        return redirect('listamantenimientos_list')
+
+
+    return render(
+        request,
+        'mantenimiento/crud/gestor/listamantenimientos/listamantenimientos_confirm_delete.html',
+        {
+            'registros': registro
+        }
+    )

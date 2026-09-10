@@ -205,3 +205,65 @@ class personalForm(forms.ModelForm):
             'rol',
             'status'
         ]
+
+class listaMantenimientosForm(forms.ModelForm):
+    ESTADOS = [
+        ('', ''),
+        ('Vigente', 'Vigente'),
+        ('No vigente', 'No vigente'),
+        ('Anulada', 'Anulada'),
+    ]
+
+    descripcion = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Ingrese la descripción del mantenimiento'
+            }
+        )
+    )
+
+    maquina = forms.ModelChoiceField(
+        queryset=Maquina.objects.filter(
+            status='Activa'
+        ).order_by('nombre'),
+        empty_label='Seleccione una máquina',
+        widget=forms.Select(
+            attrs={
+                'class': 'form-select'
+            }
+        )
+    )
+
+    periodo = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Ej. Mensual, Trimestral, Anual'
+            }
+        )
+    )
+
+    status = forms.ChoiceField(
+        choices=ESTADOS,
+        initial='Vigente',
+        widget=forms.Select(
+            attrs={
+                'class': 'form-select'
+            }
+        )
+    )
+
+
+    class Meta:
+
+        model = ListaMantenimientos
+
+        fields = [
+            'descripcion',
+            'maquina',
+            'periodo',
+            'status'
+        ]

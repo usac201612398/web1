@@ -98,4 +98,32 @@ urlpatterns = [
         name="personal_delete"
     ),
 
+    # ======================================================
+    # CATALOGO DE MANTENIMIENTOS
+    # ======================================================
+
+    path(
+        "crud/gestor/listamantenimientos/",
+        views.listamantenimientos_list,
+        name="listamantenimientos_list"
+    ),
+
+    path(
+        "crud/gestor/listamantenimientos/new/",
+        views.listamantenimientos_create,
+        name="listamantenimientos_create"
+    ),
+
+    path(
+        "crud/gestor/listamantenimientos/<int:pk>/edit/",
+        views.listamantenimientos_update,
+        name="listamantenimientos_update"
+    ),
+
+    path(
+        "crud/gestor/listamantenimientos/<int:pk>/delete/",
+        views.listamantenimientos_delete,
+        name="listamantenimientos_delete"
+    ),
+
 ]

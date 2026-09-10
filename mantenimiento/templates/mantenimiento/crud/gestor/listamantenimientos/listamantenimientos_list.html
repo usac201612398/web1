@@ -1,0 +1,358 @@
+{% extends "mantenimiento/base_admin.html" %}
+
+{% block title %}
+Lista de mantenimientos | Administración
+{% endblock %}
+
+{% block page_title %}
+Lista de mantenimientos
+{% endblock %}
+
+{% block page_subtitle %}
+Administra los mantenimientos registrados para las máquinas.
+{% endblock %}
+
+{% block header_actions %}
+
+<a href="{% url 'listamantenimientos_create' %}" class="admin-btn admin-btn-primary">
+
+    <i class="fa-solid fa-plus"></i>
+
+    Nuevo mantenimiento
+
+</a>
+
+
+<a href="{% url 'exportar_excel_generico' 'ListaMantenimientos' %}" class="admin-btn admin-btn-secondary">
+
+    <i class="fa-solid fa-file-excel"></i>
+
+    Exportar
+
+</a>
+
+
+<a href="{% url 'exportar_excel_generico' 'Usuarios' %}" class="admin-btn admin-btn-secondary">
+
+    <i class="fa-solid fa-file-excel"></i>
+
+    Exportar
+
+</a>
+
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="admin-card">
+    <!-- ==================================================
+     CABECERA
+=================================================== -->
+
+    <div class="admin-card-header">
+
+        <div class="admin-card-title">
+
+            <i class="fa-solid fa-screwdriver-wrench"></i>
+
+            <span>
+                Listado de mantenimientos
+            </span>
+
+        </div>
+
+
+        <span class="admin-count">
+
+            {{ registros|length }} registros
+
+        </span>
+
+    </div>
+
+
+    <!-- ==================================================
+     TABLA
+=================================================== -->
+
+    <div class="admin-table-container">
+
+        <table id="myTable" class="admin-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        ID
+                    </th>
+
+                    <th>
+                        Descripción
+                    </th>
+
+                    <th>
+                        Máquina
+                    </th>
+
+                    <th>
+                        Periodo
+                    </th>
+
+                    <th>
+                        Estado
+                    </th>
+
+                    <th class="text-center">
+                        Acciones
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for registro in registros %}
+
+                <tr>
+
+
+                    <!-- ID -->
+
+                    <td>
+
+                        <span class="admin-id">
+
+                            {{ registro.registro }}
+
+                        </span>
+
+                    </td>
+
+
+                    <!-- DESCRIPCIÓN -->
+
+                    <td>
+
+                        <div class="admin-main-field">
+
+                            <span class="admin-field-icon">
+
+                                <i class="fa-solid fa-screwdriver-wrench"></i>
+
+                            </span>
+
+
+                            <span>
+
+                                {{ registro.descripcion|default:"Sin descripción" }}
+
+                            </span>
+
+                        </div>
+
+                    </td>
+
+
+                    <!-- MÁQUINA -->
+
+                    <td>
+
+                        <div class="admin-main-field">
+
+                            <span class="admin-field-icon">
+
+                                <i class="fa-solid fa-gears"></i>
+
+                            </span>
+
+
+                            <span>
+
+                                {{ registro.maquina.nombre|default:"Sin máquina" }}
+
+                            </span>
+
+                        </div>
+
+                    </td>
+
+
+                    <!-- PERIODO -->
+
+                    <td>
+
+                        {{ registro.periodo|default:"—" }}
+
+                    </td>
+
+
+                    <!-- STATUS -->
+
+                    <td>
+
+                        {% if registro.status == "Vigente" %}
+
+                        <span class="admin-status status-active">
+                            Vigente
+                        </span>
+
+                        {% elif registro.status == "No vigente" %}
+
+                        <span class="admin-status status-warning">
+                            No vigente
+                        </span>
+
+                        {% elif registro.status == "Anulada" %}
+
+                        <span class="admin-status status-inactive">
+                            Anulada
+                        </span>
+
+                        {% else %}
+
+                        <span class="admin-status status-default">
+                            {{ registro.status }}
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- ACCIONES -->
+
+                    <td>
+
+                        <div class="admin-actions">
+
+
+                            <!-- EDITAR -->
+
+                            <a href="{% url 'listamantenimientos_update' registro.pk %}"
+                                class="admin-action admin-action-edit" title="Editar mantenimiento"
+                                aria-label="Editar mantenimiento">
+
+                                <i class="fa-solid fa-pen"></i>
+
+                            </a>
+
+
+                            <!-- ANULAR -->
+
+                            {% if registro.status != "Anulada" %}
+
+                            <a href="{% url 'listamantenimientos_delete' registro.pk %}"
+                                class="admin-action admin-action-delete" title="Anular mantenimiento"
+                                aria-label="Anular mantenimiento">
+
+                                <i class="fa-solid fa-ban"></i>
+
+                            </a>
+
+                            {% endif %}
+
+
+                        </div>
+
+                    </td>
+
+
+                </tr>
+
+
+                {% empty %}
+
+                <tr>
+
+                    <td colspan="6" class="text-center py-5">
+
+                        <div style="color:#94a3b8;">
+
+                            <i class="fa-solid fa-screwdriver-wrench" style="
+                                font-size:32px;
+                            "></i>
+
+
+                            <div class="mt-2">
+
+                                No hay mantenimientos registrados.
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- ==================================================
+     FOOTER
+=================================================== -->
+
+    <div class="admin-card-footer">
+
+        <small style="color:#94a3b8;">
+
+            <i class="fa-solid fa-circle-info"></i>
+
+            Utiliza las acciones para editar o anular un mantenimiento.
+
+        </small>
+
+    </div>
+
+</div>
+
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+
+    $(document).ready(function () {
+
+        $('#myTable').DataTable({
+
+            responsive: false,
+
+            autoWidth: false,
+
+            pageLength: 10,
+
+            lengthMenu: [
+                [10, 25, 50, 100],
+                [10, 25, 50, 100]
+            ],
+
+            order: [
+                [0, 'asc']
+            ],
+
+            language: {
+                url:
+                    "//cdn.datatables.net/plug-ins/1.13.8/i18n/es-ES.json"
+            }
+
+        });
+
+    });
+
+</script>
+
+{% endblock %}

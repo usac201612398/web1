@@ -1,0 +1,96 @@
+{% extends "mantenimiento/crud_form_base.html" %}
+
+
+{% block title %}
+
+    {% if modo == "actualizar" %}
+        Actualización de lista de mantenimiento
+    {% else %}
+        Nuevo elemento de lista de mantenimiento
+    {% endif %}
+
+{% endblock %}
+
+
+{% block form_title %}
+
+    {% if modo == "actualizar" %}
+        Actualización de lista de mantenimiento
+    {% else %}
+        Nuevo elemento de lista de mantenimiento
+    {% endif %}
+
+{% endblock %}
+
+
+{% block form_subtitle %}
+
+    {% if modo == "actualizar" %}
+        Modifica la información de la lista de mantenimiento.
+    {% else %}
+        Completa la información para registrar nuevo elemento a la lista de mantenimiento.
+    {% endif %}
+
+{% endblock %}
+
+
+{% block campos %}
+
+
+<div class="form-field">
+
+    <label for="{{ form.maquina.id_for_label }}">
+        Máquina
+    </label>
+
+    {{ form.maquina}}
+
+</div>
+
+
+<div class="form-field">
+
+    <label for="{{ form.descripcion_for_label }}">
+        Descripción
+    </label>
+
+    {{ form.descripcion }}
+
+</div>
+
+
+<div class="form-field">
+
+    <label for="{{ form.periodo.id_for_label }}">
+        Periodo
+    </label>
+
+    {{ form.codigoevo }}
+
+</div>
+
+
+
+<div class="form-field">
+
+    <label for="{{ form.status.id_for_label }}">
+        Estado
+    </label>
+
+    {{ form.status }}
+
+</div>
+
+
+{% endblock %}
+
+{% block boton_regresar %}
+
+    <a
+        href="{% url 'listamantenimientos_list' %}"
+        class="btn btn-secondary"
+    >
+        ← Regresar
+    </a>
+
+{% endblock %}
