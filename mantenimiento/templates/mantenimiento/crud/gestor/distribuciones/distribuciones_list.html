@@ -1,22 +1,19 @@
 {% extends "mantenimiento/base_admin.html" %}
 
-
 {% block title %}
-Centros de costo | Administración
+Distribución de máquinas | Administración
 {% endblock %}
-
 
 {% block page_title %}
-Centros de costo
+Distribución de máquinas
 {% endblock %}
-
 
 {% block page_subtitle %}
-Administra los centros de costo registrados en el sistema.
+Administra la asignación de máquinas a ubicaciones y centros de costo.
 {% endblock %}
 
-
 {% block header_actions %}
+
 
 <a href="{% url 'distribucionmaquinas_create' %}" class="admin-btn admin-btn-primary">
 
