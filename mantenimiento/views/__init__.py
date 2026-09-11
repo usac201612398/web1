@@ -1,8 +1,8 @@
 from .home import *
 
-from .ubicaciones import *
-from .maquinas import *
-from .centrodecosto import *
-from .personal import *
-from .listamantenimientos import *
-from .distribucionmaquinas import *
+from .catalogos.ubicaciones import *
+from .catalogos.maquinas import *
+from .catalogos.centrodecosto import *
+from .catalogos.personal import *
+from .catalogos.listamantenimientos import *
+from .catalogos.distribucionmaquinas import *
