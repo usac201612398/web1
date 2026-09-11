@@ -1,18 +1,33 @@
-from django.contrib import admin
 from django.urls import path
-from mantenimiento import views
-#from app1.views import *
+from . import views
 
-app_main ="mantenimiento"
+app_name = "mantenimiento"
 
 urlpatterns = [
 
     path("", views.index, name="tablero"),
 
-    path("crud/gestor/ubicacion/",views.ubicaciones_list,name='ubicaciones_list'),
-    path('crud/gestor/ubicacion/new/', views.ubicaciones_create, name='ubicaciones_create'),
-    path('crud/gestor/ubicacion/<int:pk>/edit/', views.ubicaciones_update, name='ubicaciones_update'),
-    path('crud/gestor/ubicacion/<int:pk>/delete/', views.ubicaciones_delete, name='ubicaciones_delete'),
+    # ======================================================
+    # UBICACIONES
+    # ======================================================
+    path(
+        "crud/gestor/ubicacion/",
+        views.ubicaciones_list,
+        name='ubicaciones_list'
+    ),
+
+    path('crud/gestor/ubicacion/new/', 
+        views.ubicaciones_create, 
+        name='ubicaciones_create'
+    ),
+    path('crud/gestor/ubicacion/<int:pk>/edit/',
+        views.ubicaciones_update, 
+        name='ubicaciones_update'
+    ),
+    path('crud/gestor/ubicacion/<int:pk>/delete/',
+        views.ubicaciones_delete, 
+        name='ubicaciones_delete'
+    ),
 
     # ======================================================
     # MAQUINAS
@@ -126,16 +141,20 @@ urlpatterns = [
         name="listamantenimientos_delete"
     ),
 
+    # ======================================================
+    # CATALOGO DE DISTRIBUCION DE MAQUINAS
+    # ======================================================
+
     path(
-    "crud/gestor/distribucionmaquinas/",
-    views.distribucionmaquinas_list,
-    name="distribucionmaquinas_list"
+        "crud/gestor/distribucionmaquinas/",
+        views.distribucionmaquinas_list,
+        name="distribucionmaquinas_list"
     ),
 
     path(
-    "crud/gestor/distribucionmaquinas/new/",
-    views.distribucionmaquinas_create,
-    name="distribucionmaquinas_create"
+        "crud/gestor/distribucionmaquinas/new/",
+        views.distribucionmaquinas_create,
+        name="distribucionmaquinas_create"
     ),
 
     path(
@@ -145,8 +164,8 @@ urlpatterns = [
     ),
 
     path(
-    "crud/gestor/distribucionmaquinas/<int:pk>/delete/",
-    views.distribucionmaquinas_delete,
-    name="distribucionmaquinas_delete"
+        "crud/gestor/distribucionmaquinas/<int:pk>/delete/",
+        views.distribucionmaquinas_delete,
+        name="distribucionmaquinas_delete"
     ),
 ]

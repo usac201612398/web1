@@ -1,6 +1,9 @@
 from django import forms
 from .models import *
 
+# ==========================================================
+# UBICACIONES
+# ==========================================================
 
 class ubicacionesForm(forms.ModelForm):
 
@@ -27,7 +30,6 @@ class ubicacionesForm(forms.ModelForm):
     class Meta:
         model = Ubicacion
         fields = ['nombre', 'status']
-
 
 # ==========================================================
 # MAQUINA
@@ -74,7 +76,7 @@ class MaquinaForm(forms.ModelForm):
         ]
 
 # ==========================================================
-# Centro de costo
+# CENTRO DE COSTO
 # ==========================================================
 
 class centrodecostoForm(forms.ModelForm):
@@ -125,7 +127,7 @@ class centrodecostoForm(forms.ModelForm):
         ]
 
 # ==========================================================
-# Personal
+# USUARIOS
 # ==========================================================
 
 class personalForm(forms.ModelForm):
@@ -207,7 +209,7 @@ class personalForm(forms.ModelForm):
         ]
 
 # ==========================================================
-# Mantenimientos
+# LISTA DE ELEMENTOS DE MANTENIMIENTO
 # ==========================================================
 
 class listaMantenimientosForm(forms.ModelForm):
@@ -260,7 +262,6 @@ class listaMantenimientosForm(forms.ModelForm):
         )
     )
 
-
     class Meta:
 
         model = ListaMantenimientos
@@ -273,17 +274,17 @@ class listaMantenimientosForm(forms.ModelForm):
         ]
 
 # ==========================================================
-# Distribucion METADATA
+# DISTRIBUCION DE MAQUINAS - METADATA
 # ==========================================================
 
 class distribucionMaquinasForm(forms.ModelForm):
+
     ESTADOS = [
         ('', ''),
         ('Activa', 'Activa'),
         ('Inactiva', 'Inactiva'),
         ('Anulada', 'Anulada'),
     ]
-
 
     ubicacion = forms.ModelChoiceField(
         queryset=Ubicacion.objects.filter(
@@ -297,7 +298,6 @@ class distribucionMaquinasForm(forms.ModelForm):
         )
     )
 
-
     maquina = forms.ModelChoiceField(
         queryset=Maquina.objects.filter(
             status='Activa'
@@ -310,7 +310,6 @@ class distribucionMaquinasForm(forms.ModelForm):
         )
     )
 
-
     status = forms.ChoiceField(
         choices=ESTADOS,
         initial='Activa',
@@ -320,7 +319,6 @@ class distribucionMaquinasForm(forms.ModelForm):
             }
         )
     )
-
 
     serie = forms.CharField(
         required=False,
@@ -332,7 +330,6 @@ class distribucionMaquinasForm(forms.ModelForm):
         )
     )
 
-
     fecha_compra = forms.DateField(
         required=False,
         widget=forms.DateInput(
@@ -342,7 +339,6 @@ class distribucionMaquinasForm(forms.ModelForm):
             }
         )
     )
-
 
     centrodecosto = forms.ModelChoiceField(
         queryset=centrodecosto.objects.filter(
@@ -356,7 +352,6 @@ class distribucionMaquinasForm(forms.ModelForm):
             }
         )
     )
-
 
     class Meta:
 
