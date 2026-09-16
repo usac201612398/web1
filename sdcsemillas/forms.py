@@ -108,7 +108,7 @@ class PackingListForm(forms.ModelForm):
     class Meta:
         model = PackingList
         fields = [
-            'lote_code', 'fecha', 'ubicación', 'estructura','apodo_variedad', 
+            'lote_code', 'fecha', 'ubicacion', 'estructura','apodo_variedad', 
             'cultivo', 'variedad_code', 'net_weight','gross_weight',
             'harvest_code', 'bolsa','caja','observaciones','status', 'genero'
         ]
