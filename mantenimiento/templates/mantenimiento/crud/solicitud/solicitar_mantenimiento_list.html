@@ -2,44 +2,35 @@
 
 
 {% block title %}
-    Solicitudes de Mantenimiento | Panel de Gestión
+Solicitudes de Mantenimiento | Panel de Gestión
 {% endblock %}
 
 
 {% block page_title %}
-    Solicitar mantenimiento
+Solicitar mantenimiento
 {% endblock %}
 
 
 {% block page_subtitle %}
-    Administra las solicitudes de mantenimiento registrados en el sistema.
+Administra las solicitudes de mantenimiento registrados en el sistema.
 {% endblock %}
 
 
 {% block header_actions %}
 
-    <a
-        href="{% url 'solicitar_mantenimiento_create' %}"
-        class="admin-btn admin-btn-primary"
-    >
+<a href="{% url 'solicitar_mantenimiento_create' %}" class="admin-btn admin-btn-primary">
+    <i class="fa-solid fa-plus"></i>
 
-        <i class="fa-solid fa-plus"></i>
-
-        Nueva solicitud de mantenimiento
-
-    </a>
+    Nueva solicitud
+</a>
 
 
-    <a
-        href="{% url 'exportar_excel_generico' 'SolicitarOperacion' %}"
-        class="admin-btn admin-btn-secondary"
-    >
+<a href="{% url 'exportar_excel_generico' 'SolicitarOperacion' %}" class="admin-btn admin-btn-secondary">
+    <i class="fa-solid fa-file-excel"></i>
 
-        <i class="fa-solid fa-file-excel"></i>
+    Exportar
+</a>
 
-        Exportar
-
-    </a>
 
 {% endblock %}
 
@@ -49,17 +40,16 @@
 
 <div class="admin-card">
 
-
     <!-- CABECERA -->
 
     <div class="admin-card-header">
 
         <div class="admin-card-title">
 
-            <i class="fa-solid fa-building"></i>
+            <i class="fa-solid fa-screwdriver-wrench"></i>
 
             <span>
-                Listado de solicitudes realizadas
+                Solicitudes de mantenimiento
             </span>
 
         </div>
@@ -78,10 +68,7 @@
 
     <div class="admin-table-container">
 
-        <table
-            id="myTable"
-            class="admin-table"
-        >
+        <table id="myTable" class="admin-table" style="width:100%;">
 
             <thead>
 
@@ -92,7 +79,7 @@
                     </th>
 
                     <th>
-                        Fecha-Solicitud
+                        Fecha
                     </th>
 
                     <th>
@@ -119,8 +106,12 @@
                         Estado
                     </th>
 
-                    <th class="text-center">
+                    <th>
                         Observaciones
+                    </th>
+
+                    <th class="text-center">
+                        Acciones
                     </th>
 
                 </tr>
@@ -134,102 +125,184 @@
 
                 <tr>
 
-                    <!-- REGISTRO -->
+                    <!-- ID -->
 
                     <td>
 
                         <span class="admin-id">
-
-                            {{ registro.registro }}
-
+                            #{{ registro.registro }}
                         </span>
 
                     </td>
 
 
                     <!-- FECHA -->
-                
+
                     <td>
 
-                        {{ registro.fecha_solicitud|default:"—" }}
+                        {% if registro.fecha_solicitud %}
+
+                        {{ registro.fecha_solicitud|date:"d/m/Y" }}
+
+                        {% else %}
+
+                        —
+
+                        {% endif %}
 
                     </td>
 
-                    <!-- UBICACION -->
-                
+
+                    <!-- UBICACIÓN -->
+
                     <td>
 
-                        {{ registro.ubicación|default:"—" }}
+                        {% if registro.ubicacion %}
+
+                        <strong>
+                            {{ registro.ubicacion.nombre }}
+                        </strong>
+
+                        {% else %}
+
+                        —
+
+                        {% endif %}
 
                     </td>
 
-                    <!-- MAQUINA -->
-                
+
+                    <!-- MÁQUINA -->
+
                     <td>
 
-                        {{ registro.maquina|default:"—" }}
+                        {% if registro.maquina %}
+
+                        <strong>
+                            {{ registro.maquina.nombre }}
+                        </strong>
+
+                        {% else %}
+
+                        —
+
+                        {% endif %}
 
                     </td>
+
 
                     <!-- MANTENIMIENTO -->
-                
+
                     <td>
 
-                        {{ registro.mantenimiento|default:"—" }}
+                        {% if registro.mantenimiento %}
+
+                        {{ registro.mantenimiento.descripcion }}
+
+                        {% else %}
+
+                        —
+
+                        {% endif %}
 
                     </td>
 
-                    <!-- MANTENIMIENTO -->
-                
-                    <td>
-
-                        {{ registro.mantenimiento|default:"—" }}
-
-                    </td>
 
                     <!-- SOLICITA -->
-                
+
                     <td>
 
-                        {{ registro.solicita|default:"—" }}
+                        {% if registro.solicita %}
+
+                        {{ registro.solicita }}
+
+                        {% else %}
+
+                        —
+
+                        {% endif %}
 
                     </td>
+
 
                     <!-- ATIENDE -->
-                
+
                     <td>
 
-                        {{ registro.atiende |default:"—" }}
+                        {% if registro.atiende %}
+
+                        {{ registro.atiende }}
+
+                        {% else %}
+
+                        <span style="color:#94a3b8;">
+                            Pendiente
+                        </span>
+
+                        {% endif %}
 
                     </td>
 
-                    <!-- STATUS -->
+
+                    <!-- ESTADO -->
 
                     <td>
 
                         {% if registro.status == "Activa" %}
 
-                            <span class="admin-status status-active">
-                                Activa
-                            </span>
+                        <span class="admin-status status-active">
+
+                            <i class="fa-solid fa-circle"></i>
+
+                            Activa
+
+                        </span>
+
 
                         {% elif registro.status == "Atendida" %}
 
-                            <span class="admin-status status-warning">
-                                Atendida
-                            </span>
+                        <span class="admin-status status-warning">
+
+                            <i class="fa-solid fa-check"></i>
+
+                            Atendida
+
+                        </span>
+
+
+                        {% elif registro.status == "Vencida" %}
+
+                        <span class="admin-status" style="
+                                background:#fff7ed;
+                                color:#c2410c;
+                                border:1px solid #fed7aa;
+                            ">
+
+                            <i class="fa-solid fa-clock"></i>
+
+                            Vencida
+
+                        </span>
+
 
                         {% elif registro.status == "Anulada" %}
 
-                            <span class="admin-status status-inactive">
-                                Anulada
-                            </span>
+                        <span class="admin-status status-inactive">
+
+                            <i class="fa-solid fa-ban"></i>
+
+                            Anulada
+
+                        </span>
+
 
                         {% else %}
 
-                            <span class="admin-status status-default">
-                                {{ registro.status }}
-                            </span>
+                        <span class="admin-status status-default">
+
+                            {{ registro.status|default:"Sin estado" }}
+
+                        </span>
 
                         {% endif %}
 
@@ -240,17 +313,34 @@
 
                     <td>
 
-                        <div class="admin-actions">
+                        {% if registro.observaciones %}
 
+                        <span title="{{ registro.observaciones }}">
+                            {{ registro.observaciones|truncatechars:60 }}
+                        </span>
+
+                        {% else %}
+
+                        <span style="color:#94a3b8;">
+                            —
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- ACCIONES -->
+
+                    <td>
+
+                        <div class="admin-actions">
 
                             <!-- EDITAR -->
 
-                            <a
-                                href="{% url 'solicitar_mantenimiento_update' registro.pk %}"
-                                class="admin-action admin-action-edit"
-                                title="Editar solicitud"
-                                aria-label="Editar solicitud"
-                            >
+                            <a href="{% url 'solicitar_mantenimiento_update' registro.pk %}"
+                                class="admin-action admin-action-edit" title="Editar solicitud"
+                                aria-label="Editar solicitud">
 
                                 <i class="fa-solid fa-pen"></i>
 
@@ -259,14 +349,11 @@
 
                             <!-- ANULAR -->
 
-                            {% if registro.status != "Anulado" %}
+                            {% if registro.status != "Anulada" %}
 
-                            <a
-                                href="{% url 'solicitar_mantenimiento_delete' registro.pk %}"
-                                class="admin-action admin-action-delete"
-                                title="Anular solicitud"
-                                aria-label="Anular solicitud"
-                            >
+                            <a href="{% url 'solicitar_mantenimiento_delete' registro.pk %}"
+                                class="admin-action admin-action-delete" title="Anular solicitud"
+                                aria-label="Anular solicitud">
 
                                 <i class="fa-solid fa-ban"></i>
 
@@ -274,11 +361,9 @@
 
                             {% endif %}
 
-
                         </div>
 
                     </td>
-
 
                 </tr>
 
@@ -287,22 +372,28 @@
 
                 <tr>
 
-                    <td
-                        colspan="5"
-                        class="text-center py-5"
-                    >
+                    <td colspan="10" class="text-center py-5">
 
                         <div style="color:#94a3b8;">
 
-                            <i
-                                class="fa-solid fa-building"
-                                style="font-size:32px;"
-                            ></i>
+                            <i class="fa-solid fa-screwdriver-wrench" style="font-size:32px;"></i>
 
 
                             <div class="mt-2">
 
-                                No hay solicitudes registradas.
+                                No hay solicitudes de mantenimiento registradas.
+
+                            </div>
+
+
+                            <div style="
+                                font-size:13px;
+                                margin-top:5px;
+                            ">
+
+                                Utiliza el botón
+                                <strong>Nueva solicitud</strong>
+                                para registrar una.
 
                             </div>
 
@@ -329,7 +420,8 @@
 
             <i class="fa-solid fa-circle-info"></i>
 
-            Utiliza las acciones para editar o anular una solicitud.
+            Las solicitudes activas pueden ser editadas o anuladas
+            desde las acciones disponibles.
 
         </small>
 
