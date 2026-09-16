@@ -456,7 +456,7 @@ def packinglist_list(request):
     salidas = PackingList.objects.all()
     return render(request, 'sdcsemillas/packinglist_list.html', {'registros': salidas})
 
-def  lotes_create(request):
+def packinglist_create(request):
     if request.method == 'POST':
         form = PackingListForm(request.POST)
         if form.is_valid():
@@ -473,7 +473,7 @@ def  lotes_create(request):
         form = PackingListForm()
     return render(request, 'sdcsemillas/packinglist_form.html', {'form': form,'modo':'crear'})
 
-def lotes_update(request, pk):
+def packinglist_update(request, pk):
     salidas = get_object_or_404(PackingList, pk=pk)
     if request.method == 'POST':
         form = PackingListForm(request.POST, instance=salidas)
