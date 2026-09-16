@@ -79,7 +79,7 @@ class PackingListForm(forms.ModelForm):
     op_cultivo = [('', '-'), ('Chile', 'Chile'), ('Tomate', 'Tomate')]
     op_status = [('', '-'), ('En proceso', 'En proceso'), ('Finalizado', 'Finalizado'), ('Anulado', 'Anulado')]
     
-    lote_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    codigo_lote = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','type': 'date'}))
     ubicacion = forms.ChoiceField(choices=op_ubicacion, widget=forms.Select(attrs={'class': 'form-control'}))
     estructura = forms.ChoiceField(choices=op_estructura, widget=forms.Select(attrs={'class': 'form-control'}))
@@ -108,7 +108,7 @@ class PackingListForm(forms.ModelForm):
     class Meta:
         model = PackingList
         fields = [
-            'lote_code', 'fecha', 'ubicacion', 'estructura','apodo_variedad', 
+            'codigo_lote', 'fecha', 'ubicacion', 'estructura','apodo_variedad', 
             'cultivo', 'variedad_code', 'net_weight','gross_weight',
             'harvest_code', 'bolsa','caja','observaciones','status', 'genero'
         ]
