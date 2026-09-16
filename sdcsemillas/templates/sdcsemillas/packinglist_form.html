@@ -204,7 +204,7 @@
                     {{ form.fecha }}
                 </div>
             </div>
-            
+
             <div class="form-group">
                 <div class="form-row">
                     <label for="ubicacion" class="form-label">Ubicación</label>
@@ -221,14 +221,14 @@
 
             <div class="form-group">
                 <div class="form-row">
-                    <label for="variedad_code" class="form-label">Variedad-Code</label>
+                    <label for="variedad_code" class="form-label">Código-Variedad</label>
                     {{ form.variedad_code }}
                 </div>
             </div>
 
             <div class="form-group">
                 <div class="form-row">
-                    <label for="apodo_variedad" class="form-label">Variedad</label>
+                    <label for="apodo_variedad" class="form-label">Nombre-Variedad</label>
                     {{ form.apodo_variedad }}
                 </div>
             </div>
@@ -246,7 +246,7 @@
                     {{ form.genero }}
                 </div>
             </div>
-            
+
             <div class="form-group">
                 <div class="form-row">
                     <label for="harvest_code" class="form-label">Harvest-Code</label>
@@ -403,7 +403,7 @@
                 document.getElementById("id_variedad_code").value = data.codigo_variedad;
                 document.getElementById("id_apodo_variedad").value = data.apodo_variedad;
                 document.getElementById("id_cultivo").value = data.tipo_cultivo;
-                document.getElementById("id_genero").value = data.genero;                
+                document.getElementById("id_genero").value = data.genero;
                 document.getElementById("id_harvest_code").value = data.contrato;
                 bootstrap.Modal.getInstance(document.getElementById("modalLotes")).hide();
             })
