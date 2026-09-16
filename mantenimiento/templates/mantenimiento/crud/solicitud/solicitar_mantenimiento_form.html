@@ -3,21 +3,21 @@
 
 {% block title %}
 
-    Solicitar mantenimiento
+Solicitar mantenimiento
 
 {% endblock %}
 
 
 {% block encabezado %}
 
-    Solicitar mantenimiento
+Solicitar mantenimiento
 
 {% endblock %}
 
 
 {% block descripcion %}
 
-    Registra una nueva solicitud de mantenimiento para una máquina.
+Registra una nueva solicitud de mantenimiento para una máquina.
 
 {% endblock %}
 
@@ -25,167 +25,178 @@
 {% block campos %}
 
 
-    <!-- UBICACIÓN -->
+<!-- UBICACIÓN -->
 
-    <div class="form-field">
+<div class="form-field">
 
-        <label for="{{ form.ubicacion.id_for_label }}">
-            Ubicación
-        </label>
+    <label for="{{ form.ubicacion.id_for_label }}">
+        Ubicación
+    </label>
 
-        {{ form.ubicacion }}
+    {{ form.ubicacion }}
 
+</div>
+
+
+<!-- MÁQUINA -->
+
+<div class="form-field">
+
+    <label for="{{ form.maquina.id_for_label }}">
+        Máquina
+    </label>
+
+    {{ form.maquina }}
+
+    <div id="maquina-help" class="form-help">
+        Selecciona primero una ubicación.
     </div>
 
+</div>
 
-    <!-- MÁQUINA -->
 
-    <div class="form-field">
+<!-- MANTENIMIENTO -->
 
-        <label for="{{ form.maquina.id_for_label }}">
-            Máquina
-        </label>
+<div class="form-field">
 
-        {{ form.maquina }}
+    <label>
+        Mantenimiento
+    </label>
 
-        <div
-            id="maquina-help"
-            class="form-help"
-        >
-            Selecciona primero una ubicación.
+    <div class="maintenance-selector">
+
+        {{ form.mantenimiento }}
+
+        <div id="mantenimiento-seleccionado" class="selected-maintenance empty">
+            Selecciona una máquina para elegir
+            el mantenimiento.
         </div>
 
+        <button type="button" id="btn-mantenimiento" class="btn btn-secondary maintenance-button" disabled>
+            🔍 Buscar mantenimiento
+        </button>
+
     </div>
 
+</div>
 
-    <!-- MANTENIMIENTO -->
+<!-- SOLICITA -->
+<div class="form-field">
+    <label for="{{ form.solicita.id_for_label }}">
+        <i class="fa-solid fa-user"></i>
+        Solicita
+    </label>
 
-    <div class="form-field">
+    {{ form.solicita }}
 
-        <label>
-            Mantenimiento
-        </label>
+    {% if form.solicita.errors %}
 
-        <div class="maintenance-selector">
+    <div class="text-danger mt-1">
+        {{ form.solicita.errors }}
+    </div>
 
-            {{ form.mantenimiento }}
+    {% endif %}
 
-            <div
-                id="mantenimiento-seleccionado"
-                class="selected-maintenance empty"
-            >
-                Selecciona una máquina para elegir
-                el mantenimiento.
+</div>
+<!-- ATIENDE -->
+<div class="form-field">
+    <label for="{{ form.atiende.id_for_label }}">
+        <i class="fa-solid fa-user-gear"></i>
+        Atiende
+    </label>
+
+    {{ form.atiende }}
+
+    <div class="form-help">
+
+        <i class="fa-solid fa-circle-info"></i>
+
+        Puedes dejarlo sin asignar si todavía no existe
+        un responsable.
+
+    </div>
+
+    {% if form.atiende.errors %}
+
+    <div class="text-danger mt-1">
+        {{ form.atiende.errors }}
+    </div>
+
+    {% endif %}
+
+</div>
+<!-- FECHA -->
+
+<div class="form-field">
+
+    <label for="{{ form.fecha_solicitud.id_for_label }}">
+        Fecha de solicitud
+    </label>
+
+    {{ form.fecha_solicitud }}
+
+</div>
+
+
+<!-- OBSERVACIONES -->
+
+<div class="form-field">
+
+    <label for="{{ form.observaciones.id_for_label }}">
+        Observaciones
+    </label>
+
+    {{ form.observaciones }}
+
+    <div class="character-counter">
+        Máximo 100 caracteres.
+    </div>
+
+</div>
+
+
+<!-- MODAL -->
+
+<div class="modal fade" id="mantenimientoModal" tabindex="-1" aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content maintenance-modal">
+
+            <div class="modal-header">
+
+                <div>
+
+                    <h5 class="modal-title">
+                        Seleccionar mantenimiento
+                    </h5>
+
+                    <small id="modal-maquina" class="text-muted">
+                    </small>
+
+                </div>
+
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
             </div>
 
-            <button
-                type="button"
-                id="btn-mantenimiento"
-                class="btn btn-secondary maintenance-button"
-                disabled
-            >
-                🔍 Buscar mantenimiento
-            </button>
 
-        </div>
+            <div class="modal-body">
 
-    </div>
+                <div class="search-wrapper">
 
+                    <span>🔎</span>
 
-    <!-- FECHA -->
-
-    <div class="form-field">
-
-        <label for="{{ form.fecha_solicitud.id_for_label }}">
-            Fecha de solicitud
-        </label>
-
-        {{ form.fecha_solicitud }}
-
-    </div>
-
-
-    <!-- OBSERVACIONES -->
-
-    <div class="form-field">
-
-        <label for="{{ form.observaciones.id_for_label }}">
-            Observaciones
-        </label>
-
-        {{ form.observaciones }}
-
-        <div class="character-counter">
-            Máximo 100 caracteres.
-        </div>
-
-    </div>
-
-
-    <!-- MODAL -->
-
-    <div
-        class="modal fade"
-        id="mantenimientoModal"
-        tabindex="-1"
-        aria-hidden="true"
-    >
-
-        <div class="modal-dialog modal-dialog-centered">
-
-            <div class="modal-content maintenance-modal">
-
-                <div class="modal-header">
-
-                    <div>
-
-                        <h5 class="modal-title">
-                            Seleccionar mantenimiento
-                        </h5>
-
-                        <small
-                            id="modal-maquina"
-                            class="text-muted"
-                        >
-                        </small>
-
-                    </div>
-
-                    <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                    ></button>
+                    <input type="search" id="buscar-mantenimiento" class="form-control"
+                        placeholder="Buscar mantenimiento..." autocomplete="off">
 
                 </div>
 
 
-                <div class="modal-body">
+                <div id="lista-mantenimientos" class="maintenance-list">
 
-                    <div class="search-wrapper">
-
-                        <span>🔎</span>
-
-                        <input
-                            type="search"
-                            id="buscar-mantenimiento"
-                            class="form-control"
-                            placeholder="Buscar mantenimiento..."
-                            autocomplete="off"
-                        >
-
-                    </div>
-
-
-                    <div
-                        id="lista-mantenimientos"
-                        class="maintenance-list"
-                    >
-
-                        <div class="loading-message">
-                            Selecciona una máquina.
-                        </div>
-
+                    <div class="loading-message">
+                        Selecciona una máquina.
                     </div>
 
                 </div>
@@ -196,239 +207,239 @@
 
     </div>
 
+</div>
 
-    <style>
 
-        .form-help {
-            margin-top: 6px;
-            color: #94a3b8;
-            font-size: 0.78rem;
-        }
+<style>
+    .form-help {
+        margin-top: 6px;
+        color: #94a3b8;
+        font-size: 0.78rem;
+    }
 
-        .maintenance-selector {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+    .maintenance-selector {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
 
-        .selected-maintenance {
-            min-height: 48px;
+    .selected-maintenance {
+        min-height: 48px;
 
-            display: flex;
-            align-items: center;
+        display: flex;
+        align-items: center;
 
-            padding: 11px 14px;
+        padding: 11px 14px;
 
-            border: 1px solid #dbe2ea;
-            border-radius: 10px;
+        border: 1px solid #dbe2ea;
+        border-radius: 10px;
 
-            background: #f8fafc;
+        background: #f8fafc;
 
-            color: #64748b;
+        color: #64748b;
 
-            font-size: 0.9rem;
-        }
+        font-size: 0.9rem;
+    }
 
-        .selected-maintenance.selected {
-            background: #eff6ff;
-            border-color: #bfdbfe;
-            color: #1e40af;
-            font-weight: 600;
-        }
+    .selected-maintenance.selected {
+        background: #eff6ff;
+        border-color: #bfdbfe;
+        color: #1e40af;
+        font-weight: 600;
+    }
 
-        .maintenance-button {
-            width: 100%;
-        }
+    .maintenance-button {
+        width: 100%;
+    }
+
+    .maintenance-modal {
+        border: 0;
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+    .maintenance-modal .modal-header {
+        padding: 20px;
+        border-bottom: 1px solid #edf0f4;
+    }
+
+    .maintenance-modal .modal-body {
+        padding: 18px;
+    }
+
+    .search-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        padding: 4px 10px;
+
+        border: 1px solid #dbe2ea;
+        border-radius: 10px;
+
+        margin-bottom: 16px;
+    }
+
+    .search-wrapper .form-control {
+        border: 0;
+        box-shadow: none;
+        min-height: 40px;
+        padding-left: 4px;
+    }
+
+    .maintenance-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        max-height: 55vh;
+        overflow-y: auto;
+    }
+
+    .maintenance-item {
+        padding: 14px;
+
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+
+        background: white;
+
+        cursor: pointer;
+
+        transition:
+            background-color .15s ease,
+            border-color .15s ease,
+            transform .15s ease;
+    }
+
+    .maintenance-item:hover {
+        background: #f8fafc;
+        border-color: #93c5fd;
+        transform: translateY(-1px);
+    }
+
+    .maintenance-description {
+        color: #1e293b;
+        font-size: .92rem;
+        font-weight: 600;
+    }
+
+    .maintenance-select {
+        margin-top: 8px;
+        width: 100%;
+    }
+
+    .loading-message,
+    .empty-message {
+        padding: 30px 15px;
+        text-align: center;
+        color: #94a3b8;
+        font-size: .9rem;
+    }
+
+    .character-counter {
+        margin-top: 5px;
+        color: #94a3b8;
+        font-size: .75rem;
+    }
+
+    @media (max-width: 576px) {
 
         .maintenance-modal {
-            border: 0;
-            border-radius: 16px;
-            overflow: hidden;
+            border-radius: 14px;
         }
 
         .maintenance-modal .modal-header {
-            padding: 20px;
-            border-bottom: 1px solid #edf0f4;
+            padding: 16px;
         }
 
         .maintenance-modal .modal-body {
-            padding: 18px;
-        }
-
-        .search-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-
-            padding: 4px 10px;
-
-            border: 1px solid #dbe2ea;
-            border-radius: 10px;
-
-            margin-bottom: 16px;
-        }
-
-        .search-wrapper .form-control {
-            border: 0;
-            box-shadow: none;
-            min-height: 40px;
-            padding-left: 4px;
+            padding: 14px;
         }
 
         .maintenance-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-
-            max-height: 55vh;
-            overflow-y: auto;
+            max-height: 60vh;
         }
 
-        .maintenance-item {
-            padding: 14px;
-
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-
-            background: white;
-
-            cursor: pointer;
-
-            transition:
-                background-color .15s ease,
-                border-color .15s ease,
-                transform .15s ease;
-        }
-
-        .maintenance-item:hover {
-            background: #f8fafc;
-            border-color: #93c5fd;
-            transform: translateY(-1px);
-        }
-
-        .maintenance-description {
-            color: #1e293b;
-            font-size: .92rem;
-            font-weight: 600;
-        }
-
-        .maintenance-select {
-            margin-top: 8px;
-            width: 100%;
-        }
-
-        .loading-message,
-        .empty-message {
-            padding: 30px 15px;
-            text-align: center;
-            color: #94a3b8;
-            font-size: .9rem;
-        }
-
-        .character-counter {
-            margin-top: 5px;
-            color: #94a3b8;
-            font-size: .75rem;
-        }
-
-        @media (max-width: 576px) {
-
-            .maintenance-modal {
-                border-radius: 14px;
-            }
-
-            .maintenance-modal .modal-header {
-                padding: 16px;
-            }
-
-            .maintenance-modal .modal-body {
-                padding: 14px;
-            }
-
-            .maintenance-list {
-                max-height: 60vh;
-            }
-
-        }
-
-    </style>
+    }
+</style>
 
 
-    <script>
+<script>
 
-        document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function () {
 
-            const ubicacionSelect =
-                document.getElementById('{{ form.ubicacion.id_for_label }}');
+        const ubicacionSelect =
+            document.getElementById('{{ form.ubicacion.id_for_label }}');
 
-            const maquinaSelect =
-                document.getElementById('{{ form.maquina.id_for_label }}');
+        const maquinaSelect =
+            document.getElementById('{{ form.maquina.id_for_label }}');
 
-            const mantenimientoInput =
-                document.getElementById('{{ form.mantenimiento.id_for_label }}');
+        const mantenimientoInput =
+            document.getElementById('{{ form.mantenimiento.id_for_label }}');
 
-            const mantenimientoSeleccionado =
-                document.getElementById('mantenimiento-seleccionado');
+        const mantenimientoSeleccionado =
+            document.getElementById('mantenimiento-seleccionado');
 
-            const btnMantenimiento =
-                document.getElementById('btn-mantenimiento');
+        const btnMantenimiento =
+            document.getElementById('btn-mantenimiento');
 
-            const listaMantenimientos =
-                document.getElementById('lista-mantenimientos');
+        const listaMantenimientos =
+            document.getElementById('lista-mantenimientos');
 
-            const buscarMantenimiento =
-                document.getElementById('buscar-mantenimiento');
+        const buscarMantenimiento =
+            document.getElementById('buscar-mantenimiento');
 
-            const modalElement =
-                document.getElementById('mantenimientoModal');
+        const modalElement =
+            document.getElementById('mantenimientoModal');
 
-            const modal =
-                new bootstrap.Modal(modalElement);
+        const modal =
+            new bootstrap.Modal(modalElement);
 
-            const modalMaquina =
-                document.getElementById('modal-maquina');
-
-
-            let mantenimientos = [];
+        const modalMaquina =
+            document.getElementById('modal-maquina');
 
 
-            /*
-             * UBICACIÓN → MÁQUINAS
-             */
+        let mantenimientos = [];
 
-            ubicacionSelect.addEventListener(
-                'change',
-                function () {
 
-                    const ubicacionId = this.value;
+        /*
+         * UBICACIÓN → MÁQUINAS
+         */
+
+        ubicacionSelect.addEventListener(
+            'change',
+            function () {
+
+                const ubicacionId = this.value;
+
+                maquinaSelect.innerHTML =
+                    '<option value="">Cargando máquinas...</option>';
+
+                maquinaSelect.disabled = true;
+
+                mantenimientoInput.value = '';
+
+                mantenimientoSeleccionado.textContent =
+                    'Selecciona una máquina para elegir el mantenimiento.';
+
+                mantenimientoSeleccionado.classList.remove('selected');
+
+                btnMantenimiento.disabled = true;
+
+
+                if (!ubicacionId) {
 
                     maquinaSelect.innerHTML =
-                        '<option value="">Cargando máquinas...</option>';
+                        '<option value="">Selecciona una ubicación primero</option>';
 
-                    maquinaSelect.disabled = true;
-
-                    mantenimientoInput.value = '';
-
-                    mantenimientoSeleccionado.textContent =
-                        'Selecciona una máquina para elegir el mantenimiento.';
-
-                    mantenimientoSeleccionado.classList.remove('selected');
-
-                    btnMantenimiento.disabled = true;
+                    return;
+                }
 
 
-                    if (!ubicacionId) {
-
-                        maquinaSelect.innerHTML =
-                            '<option value="">Selecciona una ubicación primero</option>';
-
-                        return;
-                    }
-
-
-                    fetch(
-                        `{% url 'maquinas_por_ubicacion' %}?ubicacion=${ubicacionId}`
-                    )
+                fetch(
+                    `{% url 'maquinas_por_ubicacion' %}?ubicacion=${ubicacionId}`
+                )
 
                     .then(response => response.json())
 
@@ -458,8 +469,8 @@
                                 maquina.nombre +
                                 (
                                     maquina.serie
-                                    ? ' | Serie: ' + maquina.serie
-                                    : ''
+                                        ? ' | Serie: ' + maquina.serie
+                                        : ''
                                 );
 
                             maquinaSelect.appendChild(option);
@@ -478,75 +489,75 @@
 
                     });
 
+            }
+        );
+
+
+        /*
+         * MÁQUINA → HABILITAR MANTENIMIENTOS
+         */
+
+        maquinaSelect.addEventListener(
+            'change',
+            function () {
+
+                const maquinaId = this.value;
+
+                mantenimientoInput.value = '';
+
+                mantenimientoSeleccionado.textContent =
+                    'Selecciona un mantenimiento.';
+
+                mantenimientoSeleccionado.classList.remove('selected');
+
+                btnMantenimiento.disabled =
+                    !maquinaId;
+
+            }
+        );
+
+
+        /*
+         * ABRIR MODAL
+         */
+
+        btnMantenimiento.addEventListener(
+            'click',
+            function () {
+
+                const maquinaId =
+                    maquinaSelect.value;
+
+                if (!maquinaId) {
+                    return;
                 }
-            );
 
 
-            /*
-             * MÁQUINA → HABILITAR MANTENIMIENTOS
-             */
-
-            maquinaSelect.addEventListener(
-                'change',
-                function () {
-
-                    const maquinaId = this.value;
-
-                    mantenimientoInput.value = '';
-
-                    mantenimientoSeleccionado.textContent =
-                        'Selecciona un mantenimiento.';
-
-                    mantenimientoSeleccionado.classList.remove('selected');
-
-                    btnMantenimiento.disabled =
-                        !maquinaId;
-
-                }
-            );
+                const maquinaTexto =
+                    maquinaSelect.options[
+                        maquinaSelect.selectedIndex
+                    ].text;
 
 
-            /*
-             * ABRIR MODAL
-             */
-
-            btnMantenimiento.addEventListener(
-                'click',
-                function () {
-
-                    const maquinaId =
-                        maquinaSelect.value;
-
-                    if (!maquinaId) {
-                        return;
-                    }
+                modalMaquina.textContent =
+                    maquinaTexto;
 
 
-                    const maquinaTexto =
-                        maquinaSelect.options[
-                            maquinaSelect.selectedIndex
-                        ].text;
+                listaMantenimientos.innerHTML =
+                    '<div class="loading-message">' +
+                    'Cargando mantenimientos...' +
+                    '</div>';
 
 
-                    modalMaquina.textContent =
-                        maquinaTexto;
+                buscarMantenimiento.value = '';
 
 
-                    listaMantenimientos.innerHTML =
-                        '<div class="loading-message">' +
-                        'Cargando mantenimientos...' +
-                        '</div>';
+                modal.show();
 
 
-                    buscarMantenimiento.value = '';
-
-
-                    modal.show();
-
-
-                    fetch(
-                        `{% url 'mantenimientos_por_maquina' %}?maquina=${maquinaId}`
-                    )
+                fetch(
+                    `{% url 'mantenimientos_por_maquina' %}?maquina=${maquinaId}`
+                )
 
                     .then(response => response.json())
 
@@ -570,126 +581,126 @@
 
                     });
 
-                }
-            );
+            }
+        );
 
 
-            /*
-             * MOSTRAR MANTENIMIENTOS
-             */
+        /*
+         * MOSTRAR MANTENIMIENTOS
+         */
 
-            function mostrarMantenimientos(lista) {
+        function mostrarMantenimientos(lista) {
 
-                listaMantenimientos.innerHTML = '';
-
-
-                if (lista.length === 0) {
-
-                    listaMantenimientos.innerHTML =
-                        '<div class="empty-message">' +
-                        'No hay mantenimientos disponibles para esta máquina.' +
-                        '</div>';
-
-                    return;
-                }
+            listaMantenimientos.innerHTML = '';
 
 
-                lista.forEach(function (mantenimiento) {
+            if (lista.length === 0) {
 
-                    const item =
-                        document.createElement('div');
+                listaMantenimientos.innerHTML =
+                    '<div class="empty-message">' +
+                    'No hay mantenimientos disponibles para esta máquina.' +
+                    '</div>';
 
-                    item.className =
-                        'maintenance-item';
-
-
-                    const descripcion =
-                        document.createElement('div');
-
-                    descripcion.className =
-                        'maintenance-description';
-
-                    descripcion.textContent =
-                        mantenimiento.descripcion;
+                return;
+            }
 
 
-                    const button =
-                        document.createElement('button');
+            lista.forEach(function (mantenimiento) {
 
-                    button.type = 'button';
+                const item =
+                    document.createElement('div');
 
-                    button.className =
-                        'btn btn-primary maintenance-select';
-
-                    button.textContent =
-                        'Seleccionar';
+                item.className =
+                    'maintenance-item';
 
 
-                    button.addEventListener(
-                        'click',
-                        function () {
+                const descripcion =
+                    document.createElement('div');
 
-                            mantenimientoInput.value =
-                                mantenimiento.id;
+                descripcion.className =
+                    'maintenance-description';
 
-
-                            mantenimientoSeleccionado.textContent =
-                                mantenimiento.descripcion;
-
-                            mantenimientoSeleccionado.classList.add(
-                                'selected'
-                            );
+                descripcion.textContent =
+                    mantenimiento.descripcion;
 
 
-                            modal.hide();
+                const button =
+                    document.createElement('button');
+
+                button.type = 'button';
+
+                button.className =
+                    'btn btn-primary maintenance-select';
+
+                button.textContent =
+                    'Seleccionar';
+
+
+                button.addEventListener(
+                    'click',
+                    function () {
+
+                        mantenimientoInput.value =
+                            mantenimiento.id;
+
+
+                        mantenimientoSeleccionado.textContent =
+                            mantenimiento.descripcion;
+
+                        mantenimientoSeleccionado.classList.add(
+                            'selected'
+                        );
+
+
+                        modal.hide();
+
+                    }
+                );
+
+
+                item.appendChild(descripcion);
+
+                item.appendChild(button);
+
+                listaMantenimientos.appendChild(item);
+
+            });
+
+        }
+
+
+        /*
+         * BUSCADOR
+         */
+
+        buscarMantenimiento.addEventListener(
+            'input',
+            function () {
+
+                const texto =
+                    this.value.toLowerCase().trim();
+
+
+                const filtrados =
+                    mantenimientos.filter(
+                        function (mantenimiento) {
+
+                            return mantenimiento.descripcion
+                                .toLowerCase()
+                                .includes(texto);
 
                         }
                     );
 
 
-                    item.appendChild(descripcion);
-
-                    item.appendChild(button);
-
-                    listaMantenimientos.appendChild(item);
-
-                });
+                mostrarMantenimientos(filtrados);
 
             }
+        );
 
+    });
 
-            /*
-             * BUSCADOR
-             */
-
-            buscarMantenimiento.addEventListener(
-                'input',
-                function () {
-
-                    const texto =
-                        this.value.toLowerCase().trim();
-
-
-                    const filtrados =
-                        mantenimientos.filter(
-                            function (mantenimiento) {
-
-                                return mantenimiento.descripcion
-                                    .toLowerCase()
-                                    .includes(texto);
-
-                            }
-                        );
-
-
-                    mostrarMantenimientos(filtrados);
-
-                }
-            );
-
-        });
-
-    </script>
+</script>
 
 
 {% endblock %}
@@ -697,11 +708,8 @@
 
 {% block boton_regresar %}
 
-    <a
-        href="{% url 'solicitar_mantenimiento_list' %}"
-        class="btn btn-secondary"
-    >
-        ← Regresar
-    </a>
+<a href="{% url 'solicitar_mantenimiento_list' %}" class="btn btn-secondary">
+    ← Regresar
+</a>
 
 {% endblock %}

@@ -373,17 +373,21 @@ class distribucionMaquinasForm(forms.ModelForm):
 class SolicitarOperacionForm(forms.ModelForm):
 
     class Meta:
+
         model = SolicitarOperacion
 
         fields = [
             'ubicacion',
             'maquina',
             'mantenimiento',
+            'solicita',
+            'atiende',
             'fecha_solicitud',
             'observaciones',
         ]
 
         widgets = {
+
             'ubicacion': forms.Select(
                 attrs={
                     'class': 'form-select',
@@ -398,6 +402,18 @@ class SolicitarOperacionForm(forms.ModelForm):
 
             'mantenimiento': forms.HiddenInput(),
 
+            'solicita': forms.Select(
+                attrs={
+                    'class': 'form-select',
+                }
+            ),
+
+            'atiende': forms.Select(
+                attrs={
+                    'class': 'form-select',
+                }
+            ),
+
             'fecha_solicitud': forms.DateInput(
                 attrs={
                     'class': 'form-control',
@@ -410,28 +426,74 @@ class SolicitarOperacionForm(forms.ModelForm):
                     'class': 'form-control',
                     'rows': 4,
                     'maxlength': 100,
-                    'placeholder': 'Describe algún detalle de la solicitud...'
+                    'placeholder': (
+                        'Describe algún detalle de la solicitud...'
+                    ),
                 }
             ),
         }
+
 
     def __init__(self, *args, **kwargs):
 
         super().__init__(*args, **kwargs)
 
-        self.fields['ubicacion'].empty_label = 'Selecciona una ubicación'
-        self.fields['maquina'].empty_label = 'Selecciona una máquina'
 
-        # Inicialmente no mostramos máquinas.
+        # ==================================================
+        # USUARIOS
+        # ==================================================
+
+        self.fields['solicita'].queryset = (
+            Usuarios.objects
+            .order_by('nombre')
+        )
+
+        self.fields['solicita'].empty_label = (
+            'Selecciona quién solicita'
+        )
+
+
+        self.fields['atiende'].queryset = (
+            Usuarios.objects
+            .order_by('nombre')
+        )
+
+        self.fields['atiende'].empty_label = (
+            'Pendiente / Sin asignar'
+        )
+
+        self.fields['atiende'].required = False
+
+
+        # ==================================================
+        # UBICACIÓN
+        # ==================================================
+
+        self.fields['ubicacion'].empty_label = (
+            'Selecciona una ubicación'
+        )
+
+
+        # ==================================================
+        # MÁQUINA
+        # ==================================================
+
+        self.fields['maquina'].empty_label = (
+            'Selecciona una máquina'
+        )
+
         self.fields['maquina'].queryset = (
             self.fields['maquina'].queryset.none()
         )
 
+
+        # ==================================================
+        # CARGAR MÁQUINAS SEGÚN UBICACIÓN
+        # ==================================================
+
         if self.data.get('ubicacion'):
 
             ubicacion_id = self.data.get('ubicacion')
-
-            from .models import Maquina
 
             self.fields['maquina'].queryset = (
                 Maquina.objects
@@ -443,12 +505,20 @@ class SolicitarOperacionForm(forms.ModelForm):
                 .order_by('nombre')
             )
 
+
+        # ==================================================
+        # EDICIÓN
+        # ==================================================
+
         elif self.instance.pk:
 
             self.fields['maquina'].queryset = (
                 Maquina.objects
-                .filter(pk=self.instance.maquina_id)
+                .filter(
+                    pk=self.instance.maquina_id
+                )
             )
+
 
     def clean(self):
 
@@ -458,20 +528,34 @@ class SolicitarOperacionForm(forms.ModelForm):
         maquina = cleaned_data.get('maquina')
         mantenimiento = cleaned_data.get('mantenimiento')
 
+
+        # ==================================================
+        # VALIDAR UBICACIÓN + MÁQUINA
+        # ==================================================
+
         if ubicacion and maquina:
 
-            existe = DistribucionMaquinas.objects.filter(
-                ubicacion=ubicacion,
-                maquina=maquina,
-                status='Activa'
-            ).exists()
+            existe = (
+                DistribucionMaquinas.objects
+                .filter(
+                    ubicacion=ubicacion,
+                    maquina=maquina,
+                    status='Activa'
+                )
+                .exists()
+            )
 
             if not existe:
 
                 raise forms.ValidationError(
-                    'La máquina seleccionada no está activa en la '
-                    'ubicación seleccionada.'
+                    'La máquina seleccionada no está activa '
+                    'en la ubicación seleccionada.'
                 )
+
+
+        # ==================================================
+        # VALIDAR MANTENIMIENTO + MÁQUINA
+        # ==================================================
 
         if mantenimiento and maquina:
 
@@ -479,7 +563,9 @@ class SolicitarOperacionForm(forms.ModelForm):
 
                 self.add_error(
                     'mantenimiento',
-                    'El mantenimiento no pertenece a la máquina seleccionada.'
+                    'El mantenimiento no pertenece a '
+                    'la máquina seleccionada.'
                 )
+
 
         return cleaned_data
