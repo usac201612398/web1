@@ -15,7 +15,6 @@ Solicitar mantenimiento
 Administra las solicitudes de mantenimiento registrados en el sistema.
 {% endblock %}
 
-
 {% block header_actions %}
 
 <a href="{% url 'solicitar_mantenimiento_create' %}" class="admin-btn admin-btn-primary">
@@ -39,7 +38,6 @@ Administra las solicitudes de mantenimiento registrados en el sistema.
 
 
 <div class="admin-card">
-
     <!-- CABECERA -->
 
     <div class="admin-card-header">
@@ -74,41 +72,23 @@ Administra las solicitudes de mantenimiento registrados en el sistema.
 
                 <tr>
 
-                    <th>
-                        ID
-                    </th>
+                    <th>ID</th>
 
-                    <th>
-                        Fecha
-                    </th>
+                    <th>Fecha</th>
 
-                    <th>
-                        Ubicación
-                    </th>
+                    <th>Ubicación</th>
 
-                    <th>
-                        Máquina
-                    </th>
+                    <th>Máquina</th>
 
-                    <th>
-                        Mantenimiento
-                    </th>
+                    <th>Mantenimiento</th>
 
-                    <th>
-                        Solicita
-                    </th>
+                    <th>Solicita</th>
 
-                    <th>
-                        Atiende
-                    </th>
+                    <th>Atiende</th>
 
-                    <th>
-                        Estado
-                    </th>
+                    <th>Estado</th>
 
-                    <th>
-                        Observaciones
-                    </th>
+                    <th>Observaciones</th>
 
                     <th class="text-center">
                         Acciones
@@ -124,6 +104,7 @@ Administra las solicitudes de mantenimiento registrados en el sistema.
                 {% for registro in registros %}
 
                 <tr>
+
 
                     <!-- ID -->
 
@@ -336,6 +317,7 @@ Administra las solicitudes de mantenimiento registrados en el sistema.
 
                         <div class="admin-actions">
 
+
                             <!-- EDITAR -->
 
                             <a href="{% url 'solicitar_mantenimiento_update' registro.pk %}"
@@ -361,45 +343,11 @@ Administra las solicitudes de mantenimiento registrados en el sistema.
 
                             {% endif %}
 
-                        </div>
-
-                    </td>
-
-                </tr>
-
-
-                {% empty %}
-
-                <tr>
-
-                    <td colspan="10" class="text-center py-5">
-
-                        <div style="color:#94a3b8;">
-
-                            <i class="fa-solid fa-screwdriver-wrench" style="font-size:32px;"></i>
-
-
-                            <div class="mt-2">
-
-                                No hay solicitudes de mantenimiento registradas.
-
-                            </div>
-
-
-                            <div style="
-                                font-size:13px;
-                                margin-top:5px;
-                            ">
-
-                                Utiliza el botón
-                                <strong>Nueva solicitud</strong>
-                                para registrar una.
-
-                            </div>
 
                         </div>
 
                     </td>
+
 
                 </tr>
 
@@ -426,7 +374,6 @@ Administra las solicitudes de mantenimiento registrados en el sistema.
         </small>
 
     </div>
-
 
 </div>
 
@@ -457,9 +404,16 @@ Administra las solicitudes de mantenimiento registrados en el sistema.
                 [0, 'asc']
             ],
 
+            columnDefs: [ { targets: 9, orderable: false, searchable: false } ],
+
             language: {
-                url:
-                    "//cdn.datatables.net/plug-ins/1.13.8/i18n/es-ES.json"
+                emptyTable: "No hay solicitudes de mantenimiento registradas.",
+                zeroRecords: "No se encontraron solicitudes.", 
+                info: "Mostrando _START_ a _END_ de _TOTAL_ solicitudes",
+                infoEmpty: "Mostrando 0 solicitudes",
+                lengthMenu: "Mostrar _MENU_ solicitudes",
+                search: "Buscar:",
+                paginate: { first: "Primero", last: "Último", next: "Siguiente", previous: "Anterior" }
             }
 
         });
