@@ -58,7 +58,7 @@ class centrodecosto(models.Model):
     ]
 
     registro = models.BigAutoField(primary_key=True)
-    centrodecosto = models.CharField(max_length=100)
+    centrodecosto = models.CharField(max_length=100, blank=True, null=True)
     nombre = models.CharField(max_length=100)
     status = models.CharField(
         max_length=15,
