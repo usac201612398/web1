@@ -67,6 +67,52 @@ class lotesForm(forms.ModelForm):
         self.fields['variedad_code'].choices = [('', '-')] + [(v.variedad_code, v.variedad_code) for v in variedades_qs]
         self.fields['apodo_variedad'].choices = [('', '-')] + [(v.apodo_variedad, v.apodo_variedad) for v in variedades_qs]
 
+#PackingList
+class PackingListForm(forms.ModelForm):
+
+    op_ubicacion = [('', '-'), ('SL', 'SL'), ('CIP', 'CIP'), ('Cecilio', 'Cecilio'), ('Bella Vista', 'Bella Vista')]
+    op_modulo = [('', '-')] + [(f'Modulo {i}', f'Modulo {i}') for i in range(1, 12)]
+    op_invernadero = [('', '-')] + [(f'Invernadero {i}', f'Invernadero {i}') for i in range(1, 12)]
+    op_malla = [('', '-'), ('Casa Malla', 'Casa Malla')]
+    op_genero = [('', '-'), ('Madre', 'Madre'), ('Padre', 'Padre')]
+    op_estructura = op_invernadero + op_modulo + op_malla
+    op_cultivo = [('', '-'), ('Chile', 'Chile'), ('Tomate', 'Tomate')]
+    op_status = [('', '-'), ('En proceso', 'En proceso'), ('Finalizado', 'Finalizado'), ('Anulado', 'Anulado')]
+    
+    lote_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','type': 'date'}))
+    ubicacion = forms.ChoiceField(choices=op_ubicacion, widget=forms.Select(attrs={'class': 'form-control'}))
+    estructura = forms.ChoiceField(choices=op_estructura, widget=forms.Select(attrs={'class': 'form-control'}))
+    apodo_variedad = forms.ChoiceField(
+        choices=[],
+        required=False,
+        widget=forms.Select(attrs={'class': 'form-control', 'id': 'id_apodo_variedad'})
+    )
+    cultivo = forms.ChoiceField(choices=op_cultivo, widget=forms.Select(attrs={'class': 'form-control'}))
+    variedad_code = forms.ChoiceField(
+        choices=[],
+        widget=forms.Select(attrs={'class': 'form-control', 'id': 'id_variedad_code'})
+    )
+    net_weight = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
+    gross_weight = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    harvest_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
+    bolsa = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
+    caja = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
+    observaciones = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
+    )
+    status = forms.ChoiceField(choices=op_status, widget=forms.Select(attrs={'class': 'form-control'}))
+    genero = forms.ChoiceField(choices=op_genero, widget=forms.Select(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = PackingList
+        fields = [
+            'lote_code', 'fecha', 'ubicación', 'estructura','apodo_variedad', 
+            'cultivo', 'variedad_code', 'net_weight','gross_weight',
+            'harvest_code', 'bolsa','caja','observaciones','status', 'genero'
+        ]
+
 class variedadesForm(forms.ModelForm):
 
     op_cultivo = [('','-'),('Chile','Chile'),('Tomate','Tomate')]

@@ -450,6 +450,52 @@ def exportar_excel_generico(request, nombre_modelo):
     return response
 
 # Create your views here.
+
+def packinglist_list(request):
+    #today = timezone.localtime(timezone.now()).date()
+    salidas = PackingList.objects.all()
+    return render(request, 'sdcsemillas/packinglist_list.html', {'registros': salidas})
+
+def  lotes_create(request):
+    if request.method == 'POST':
+        form = PackingListForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+            except Exception as e:
+                # Manejar excepciones específicas (por ejemplo, UniqueConstraintError)
+                return JsonResponse({'error': str(e)}, status=400)
+            return redirect('packinglist_list')
+        else:
+             # Imprimir errores para depuración
+            return JsonResponse({'errores': form.errors}, status=400)
+    else:
+        form = PackingListForm()
+    return render(request, 'sdcsemillas/packinglist_form.html', {'form': form,'modo':'crear'})
+
+def lotes_update(request, pk):
+    salidas = get_object_or_404(PackingList, pk=pk)
+    if request.method == 'POST':
+        form = PackingListForm(request.POST, instance=salidas)
+        if form.is_valid():
+            form.save()
+            return redirect('lotes_list')
+    else:
+        form = PackingListForm(instance=salidas)
+    return render(request, 'sdcsemillas/packinglist_form.html', {'form': form,'modo':'actualizar'})
+
+def packinglist_delete(request, pk):
+
+    salidas = get_object_or_404(PackingList, pk=pk)
+
+    if request.method == 'POST':
+        salidas.status = 'Anulado'
+        salidas.save()
+        messages.success(request, "Linea anulada correctamente.")
+        return redirect('packinglist_list')
+    
+    return render(request, 'sdcsemillas/packinglist_confirm_delete.html', {'registros': salidas})
+
 def lotes_list(request):
     #today = timezone.localtime(timezone.now()).date()
     salidas = lotes.objects.all()
@@ -879,7 +925,6 @@ def obtener_datos_lote(request):
                 'codigo_variedad': variedad.variedad_code,
                 'pl': lote.lote_code,
                 'contrato': lote.harvest_code,
-                'apodo_variedad': lote.apodo_variedad,
                 'apodo_variedad': lote.apodo_variedad,
                 'tipo_cultivo': lote.cultivo,
                 'ubicacion_lote': lote.ubicación,

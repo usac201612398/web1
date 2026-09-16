@@ -1,7 +1,30 @@
 from django.db import models
 
 # Create your models here.
-# Lotes
+
+#Packinglist
+class PackingList(models.Model):
+    #op_status = [('Pendiente','-'),('En proceso','En proceso'),('Cerrado','Cerrado')]
+    id = models.BigAutoField(primary_key=True)
+    codigo_lote = models.BigIntegerField(blank=True, null=True)
+    fecha = models.DateField(blank=True, null=True)
+    ubicacion = models.CharField(max_length= 50, blank = True, null =  True)
+    estructura = models.CharField(max_length= 50, blank = True, null =  True)
+    variedad_code = models.CharField(max_length= 50, blank = True, null =  True)
+    apodo_variedad = models.CharField(max_length= 50, blank = True, null =  True)
+    cultivo = models.CharField(max_length= 20, blank = True, null =  True)
+    net_weight = models.FloatField(blank = True, null = True)
+    gross_weight = models.FloatField(blank = True, null = True)
+    harvest_code = models.CharField(max_length= 50, blank = True, null =  True)
+    bolsa = models.IntegerField(blank = True, null = True)
+    caja = models.IntegerField(blank = True, null = True)
+    created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
+    observaciones = models.CharField(max_length= 75, blank = True, null =  True)
+    status = models.CharField(max_length= 30, blank = True, null =  True)
+    genero = models.CharField(max_length= 50, blank = True, null =  True)
+    envio = models.BigIntegerField(blank=True, null=True)
+
 class usuariosApp(models.Model):
     
     correo = models.CharField(primary_key=True,max_length=75, blank=True)
@@ -25,7 +48,8 @@ class operariosApp(models.Model):
     
     def __str__(self):
         return (str(self.codigo_empleado) + " | " + self.nombre_operario)
-    
+
+# Lotes
 class lotes(models.Model):
     #op_status = [('Pendiente','-'),('En proceso','En proceso'),('Cerrado','Cerrado')]
     id = models.BigAutoField(primary_key=True)
