@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.utils import timezone
 
-from .models import (
+from ..models import (
     Maquina,
     Ubicacion,
     centrodecosto,
