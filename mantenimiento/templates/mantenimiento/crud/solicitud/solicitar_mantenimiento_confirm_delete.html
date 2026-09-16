@@ -1,0 +1,49 @@
+{% extends "mantenimiento/crud_delete_base.html" %}
+
+
+{% block title %}
+
+    Confirmar anulación de solicitud de mantenimiento
+
+{% endblock %}
+
+
+{% block encabezado %}
+
+    Confirmar anulación de solicitud de mantenimiento
+
+{% endblock %}
+
+
+{% block descripcion %}
+
+    Revisa la información de solicitud de mantenimiento antes de continuar.
+
+{% endblock %}
+
+
+{% block pregunta %}
+
+    ¿Está seguro de que desea anular la solicitud de mantenimiento
+
+    <strong>
+        {{ registros.registro }}
+    </strong>?
+
+{% endblock %}
+
+
+{% block boton_cancelar %}
+
+    <a
+        href="{% url 'solicitar_mantimiento_list' %}"
+        class="btn btn-secondary"
+    >
+
+        <i class="fas fa-arrow-left"></i>
+
+        Regresar
+
+    </a>
+
+{% endblock %}

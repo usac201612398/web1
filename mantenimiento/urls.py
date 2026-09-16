@@ -168,4 +168,44 @@ urlpatterns = [
         views.distribucionmaquinas_delete,
         name="distribucionmaquinas_delete"
     ),
+
+    # ======================================================
+    # SOLICITAR NUEVOS MANTENIMIENTOS
+    # ======================================================
+
+    path(
+        'crud/solicitud/solicitar-mantenimiento/nuevo/',
+        views.solicitar_mantenimiento_create,
+        name='solicitar_mantenimiento_create'
+    ),
+
+    path(
+        "crud/solicitud/solicitar-mantenimiento/",
+        views.solicitar_mantenimiento_list,
+        name="solicitar_mantenimiento_list"
+    ),
+
+    path(
+        'crud/solicitud/solicitar-mantenimiento/<int:pk>/edit/',
+        views.solicitar_mantenimiento_update,
+        name='solicitar_mantenimiento_update'
+    ),
+
+    path(
+        "crud/solicitud/solicitar-mantenimiento/<int:pk>/delete/",
+        views.solicitar_mantenimiento_delete,
+        name="solicitar_mantenimiento_delete"
+    ),
+
+    path(
+        'ajax/maquinas-por-ubicacion/',
+        views.maquinas_por_ubicacion,
+        name='maquinas_por_ubicacion'
+    ),
+
+    path(
+        'ajax/mantenimientos-por-maquina/',
+        views.mantenimientos_por_maquina,
+        name='mantenimientos_por_maquina'
+    ),
 ]

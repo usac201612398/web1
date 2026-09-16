@@ -365,3 +365,121 @@ class distribucionMaquinasForm(forms.ModelForm):
             'fecha_compra',
             'centrodecosto',
         ]
+
+# ==========================================================
+# SOLICITAR MANTENIMIENTO FORM
+# ==========================================================
+
+class SolicitarOperacionForm(forms.ModelForm):
+
+    class Meta:
+        model = SolicitarOperacion
+
+        fields = [
+            'ubicacion',
+            'maquina',
+            'mantenimiento',
+            'fecha_solicitud',
+            'observaciones',
+        ]
+
+        widgets = {
+            'ubicacion': forms.Select(
+                attrs={
+                    'class': 'form-select',
+                }
+            ),
+
+            'maquina': forms.Select(
+                attrs={
+                    'class': 'form-select',
+                }
+            ),
+
+            'mantenimiento': forms.HiddenInput(),
+
+            'fecha_solicitud': forms.DateInput(
+                attrs={
+                    'class': 'form-control',
+                    'type': 'date',
+                }
+            ),
+
+            'observaciones': forms.Textarea(
+                attrs={
+                    'class': 'form-control',
+                    'rows': 4,
+                    'maxlength': 100,
+                    'placeholder': 'Describe algún detalle de la solicitud...'
+                }
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        self.fields['ubicacion'].empty_label = 'Selecciona una ubicación'
+        self.fields['maquina'].empty_label = 'Selecciona una máquina'
+
+        # Inicialmente no mostramos máquinas.
+        self.fields['maquina'].queryset = (
+            self.fields['maquina'].queryset.none()
+        )
+
+        if self.data.get('ubicacion'):
+
+            ubicacion_id = self.data.get('ubicacion')
+
+            from .models import Maquina
+
+            self.fields['maquina'].queryset = (
+                Maquina.objects
+                .filter(
+                    distribucionmaquinas__ubicacion_id=ubicacion_id,
+                    distribucionmaquinas__status='Activa'
+                )
+                .distinct()
+                .order_by('nombre')
+            )
+
+        elif self.instance.pk:
+
+            self.fields['maquina'].queryset = (
+                Maquina.objects
+                .filter(pk=self.instance.maquina_id)
+            )
+
+    def clean(self):
+
+        cleaned_data = super().clean()
+
+        ubicacion = cleaned_data.get('ubicacion')
+        maquina = cleaned_data.get('maquina')
+        mantenimiento = cleaned_data.get('mantenimiento')
+
+        if ubicacion and maquina:
+
+            existe = DistribucionMaquinas.objects.filter(
+                ubicacion=ubicacion,
+                maquina=maquina,
+                status='Activa'
+            ).exists()
+
+            if not existe:
+
+                raise forms.ValidationError(
+                    'La máquina seleccionada no está activa en la '
+                    'ubicación seleccionada.'
+                )
+
+        if mantenimiento and maquina:
+
+            if mantenimiento.maquina_id != maquina.id:
+
+                self.add_error(
+                    'mantenimiento',
+                    'El mantenimiento no pertenece a la máquina seleccionada.'
+                )
+
+        return cleaned_data

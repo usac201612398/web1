@@ -227,8 +227,6 @@ class SolicitarOperacion(models.Model):
         default='Activa'
     )
 
-    solicitud =  models.BooleanField(default=True) 
-
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -307,6 +305,9 @@ class MantenimientoRealizado(models.Model):
             ('Preventivo', 'Preventivo'),
             ('Supervisor', 'Supervisor'),
             ('Emergencia', 'Emergencia'),
+            ('Correctivo', 'Correctivo'),
+            ('Sin solicitud', 'Sin solicitud'),
+            ('Asignado', 'Asignado'),
         ]
     )
     status = models.CharField(

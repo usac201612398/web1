@@ -6,3 +6,4 @@ from .catalogos.centrodecosto import *
 from .catalogos.personal import *
 from .catalogos.listamantenimientos import *
 from .catalogos.distribucionmaquinas import *
+from .solicitud.solicitud import *
