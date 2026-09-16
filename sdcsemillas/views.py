@@ -922,10 +922,10 @@ def obtener_datos_lote(request):
 
             data = {
                 'codigo_lote': lote.id,
-                'codigo_variedad': variedad.variedad_code,
+                'codigo_variedad': lote.variedad_code,
                 'pl': lote.lote_code,
                 'contrato': lote.harvest_code,
-                'apodo_variedad': variedad.apodo_variedad,
+                'apodo_variedad': lote.apodo_variedad,
                 'tipo_cultivo': lote.cultivo,
                 'ubicacion_lote': lote.ubicación,
                 'estructura': lote.estructura,

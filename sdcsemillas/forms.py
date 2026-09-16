@@ -79,20 +79,13 @@ class PackingListForm(forms.ModelForm):
     op_cultivo = [('', '-'), ('Chile', 'Chile'), ('Tomate', 'Tomate')]
     op_status = [('', '-'), ('En proceso', 'En proceso'), ('Finalizado', 'Finalizado'), ('Anulado', 'Anulado')]
     
-    codigo_lote = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    codigo_lote = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','type': 'date'}))
-    ubicacion = forms.ChoiceField(choices=op_ubicacion, widget=forms.Select(attrs={'class': 'form-control'}))
-    estructura = forms.ChoiceField(choices=op_estructura, widget=forms.Select(attrs={'class': 'form-control'}))
-    apodo_variedad = forms.ChoiceField(
-        choices=[],
-        required=False,
-        widget=forms.Select(attrs={'class': 'form-control', 'id': 'id_apodo_variedad'})
-    )
+    ubicacion = forms.ChoiceField(choices=op_ubicacion, widget=forms.Select(attrs={'class': 'form-control','readonly': 'readonly'}))
+    estructura = forms.ChoiceField(choices=op_estructura, widget=forms.Select(attrs={'class': 'form-control','readonly': 'readonly'}))
+    apodo_variedad = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     cultivo = forms.ChoiceField(choices=op_cultivo, widget=forms.Select(attrs={'class': 'form-control'}))
-    variedad_code = forms.ChoiceField(
-        choices=[],
-        widget=forms.Select(attrs={'class': 'form-control', 'id': 'id_variedad_code'})
-    )
+    variedad_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly','readonly': 'readonly'}))
     net_weight = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'})) 
     gross_weight = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     harvest_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))  
