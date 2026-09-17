@@ -25,6 +25,13 @@ class PackingList(models.Model):
     genero = models.CharField(max_length= 50, blank = True, null =  True)
     envio = models.BigIntegerField(blank=True, null=True)
 
+class PackingListCounter(models.Model):
+    id = models.PositiveSmallIntegerField(primary_key=True, default=1, editable=False)
+    ultimo_envio = models.BigIntegerField(default=0)
+
+    def __str__(self):
+        return f"Último envío: {self.ultimo_envio}"
+        
 class usuariosApp(models.Model):
     
     correo = models.CharField(primary_key=True,max_length=75, blank=True)
