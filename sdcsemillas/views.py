@@ -458,7 +458,7 @@ def exportar_excel_generico(request, nombre_modelo):
 def packinglist_list(request):
 
     salidas = PackingList.objects.filter(
-        status='Pendiente'
+        status='En proceso'
     ).order_by('id')
 
     return render(

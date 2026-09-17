@@ -77,7 +77,7 @@ class PackingListForm(forms.ModelForm):
     op_genero = [('', '-'), ('Madre', 'Madre'), ('Padre', 'Padre')]
     op_estructura = op_invernadero + op_modulo + op_malla
     op_cultivo = [('', '-'), ('Chile', 'Chile'), ('Tomate', 'Tomate')]
-    op_status = [('', '-'), ('En proceso', 'En proceso'), ('Finalizado', 'Finalizado'), ('Anulado', 'Anulado')]
+    op_status = [('', '-'), ('En proceso', 'En proceso'), ('Finalizado', 'Finalizado'),('Enviado', 'Enviado'), ('Anulado', 'Anulado')]
     
     codigo_lote = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','readonly': 'readonly'}))
     fecha = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control','type': 'date'}))
@@ -95,7 +95,7 @@ class PackingListForm(forms.ModelForm):
         required=False,
         widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
     )
-    status = forms.ChoiceField(choices=op_status, widget=forms.Select(attrs={'class': 'form-control'}))
+    status = forms.ChoiceField(choices=op_status, initial='En proceso', widget=forms.Select(attrs={'class': 'form-control'}))
     genero = forms.ChoiceField(choices=op_genero, widget=forms.Select(attrs={'class': 'form-control'}))
 
     class Meta:
