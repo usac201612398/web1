@@ -18,11 +18,13 @@ urlpatterns = [
     path('lotes/<int:pk>/edit/', views.lotes_update, name='lotes_update'),
     path('lotes/<int:pk>/delete/', views.lotes_delete, name='lotes_delete'),
 
-    path("lotes/packinglist/",views.packinglist_list,name='packinglist_list'),
-    path('lotes/packinglist/new/', views.packinglist_create, name='packinglist_create'),
-    path('lotes/packinglist/<int:pk>/edit/', views.packinglist_update, name='packinglist_update'),
-    path('lotes/packinglist/<int:pk>/delete/', views.packinglist_delete, name='packinglist_delete'),
-
+    path("packinglist/",views.packinglist_list,name='packinglist_list'),
+    path('packinglist/new/', views.packinglist_create, name='packinglist_create'),
+    path('packinglist/<int:pk>/edit/', views.packinglist_update, name='packinglist_update'),
+    path('packinglist/<int:pk>/delete/', views.packinglist_delete, name='packinglist_delete'),
+    path('packinglist/generar-envio/',views.packinglist_generar_envio,name='packinglist_generar_envio'),
+    path('packinglist/imprimir/<int:envio>/',views.packinglist_imprimir,name='packinglist_imprimir'),
+    
     path("monitorear",views.consulta_list,name='consultas_list'),
     path('reporte-lote/<int:lote_id>/', views.lotesreporte_list2, name='reporte_lote'),
 

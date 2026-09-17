@@ -62,18 +62,35 @@
 
         <!-- Botones superiores -->
         <div class="d-flex justify-content-between flex-wrap mb-3">
-            <a href="{% url 'packinglist_create' %}" class="btn btn-outline-success mb-2">
-                <i class="fas fa-plus"></i> Agregar
-            </a>
+
+            <div>
+                <a href="{% url 'packinglist_create' %}" class="btn btn-outline-success mb-2">
+                    <i class="fas fa-plus"></i>
+                    Agregar
+                </a>
+
+                <button type="button" id="btnGenerarPacking" class="btn btn-primary mb-2">
+                    <i class="fas fa-print"></i>
+                    Generar Packing List
+                </button>
+            </div>
+
             <a href="{% url 'exportar_excel_generico' 'PackingList' %}" class="btn btn-outline-success mb-2">
-                <i class="fas fa-file-excel"></i> Exportar
+                <i class="fas fa-file-excel"></i>
+                Exportar
             </a>
+
         </div>
+
+
         <!-- Tabla escritorio -->
         <div class="table-responsive d-none d-md-block">
             <table id="myTable" class="table table-striped table-bordered table-hover">
                 <thead class="table-custom-header">
                     <tr>
+                        <th>
+                            <input type="checkbox" id="checkTodos">
+                        </th>
                         <th>Id</th>
                         <th>Codigo-Lote</th>
                         <th>Fecha</th>
@@ -98,6 +115,9 @@
                 <tbody>
                     {% for registro in registros %}
                     <tr>
+                        <td class="text-center">
+                            <input type="checkbox" class="registro-check" value="{{ registro.id }}">
+                        </td>
                         <td>{{ registro.id }}</a></td>
                         <td>{{ registro.codigo_lote }}</td>
                         <td>{{ registro.fecha }}</td>
@@ -106,8 +126,8 @@
                         <td>{{ registro.variedad_code }}</td>
                         <td>{{ registro.apodo_variedad }}</td>
                         <td>{{ registro.cultivo }}</td>
-                        <td>{{ registro.net_weight }}</td>
                         <td>{{ registro.gross_weight }}</td>
+                        <td>{{ registro.net_weight }}</td>
                         <td>{{ registro.harvest_code }}</td>
                         <td>{{ registro.bolsa }}</td>
                         <td>{{ registro.caja }}</td>
@@ -116,8 +136,7 @@
                         <td>{{ registro.genero}}</td>
                         <td class="text-center">
                             <button type="button" class="btn btn-sm btn-outline-dark generate-barcode-btn"
-                                data-lote="{{ registro.id }}" data-bs-toggle="modal"
-                                data-bs-target="#barcodeModal">
+                                data-lote="{{ registro.id }}" data-bs-toggle="modal" data-bs-target="#barcodeModal">
                                 <i class="fas fa-barcode"></i>
                             </button>
                         </td>
@@ -365,7 +384,122 @@
 
             image.src = objectURL;
         });
-    
+
+        $('#checkTodos').on('change', function () {
+
+            const checked = $(this).prop('checked');
+
+            $('.registro-check').prop('checked', checked);
+
+        });
+
+        $('#btnGenerarPacking').on('click', function () {
+
+            const seleccionados = $('.registro-check:checked')
+                .map(function () {
+                    return $(this).val();
+                })
+                .get();
+
+            if (seleccionados.length === 0) {
+
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Sin registros',
+                    text: 'Debe seleccionar al menos un registro.'
+                });
+
+                return;
+            }
+
+            Swal.fire({
+                title: 'Generar Packing List',
+                text: `Se procesarán ${seleccionados.length} registros.`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Generar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+
+                if (!result.isConfirmed) {
+                    return;
+                }
+
+                $.ajax({
+
+                    url: "{% url 'packinglist_generar_envio' %}",
+
+                    type: "POST",
+
+                    data: {
+                        registros: JSON.stringify(seleccionados),
+
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+
+                    success: function (response) {
+
+                        if (!response.success) {
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: response.message
+                            });
+
+                            return;
+                        }
+
+                        /*
+                         * Abrimos el HTML del Packing List
+                         */
+                        const ventana = window.open(
+                            response.print_url,
+                            '_blank'
+                        );
+
+                        /*
+                         * Eliminamos las filas del panel
+                         */
+                        seleccionados.forEach(function (id) {
+
+                            const fila = $(
+                                `.registro-check[value="${id}"]`
+                            ).closest('tr');
+
+                            fila.remove();
+
+                        });
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Packing List generado',
+                            html:
+                                `Envío No. <strong>${response.envio}</strong> generado correctamente.`,
+                            timer: 1800,
+                            showConfirmButton: false
+                        });
+
+                    },
+
+                    error: function (xhr) {
+
+                        console.error(xhr);
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'No se pudo generar el Packing List.'
+                        });
+
+                    }
+
+                });
+
+            });
+
+        });
+
     </script>
 
 </body>

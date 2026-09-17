@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="es">
+
+{% load static %}
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>
+        Packing List {{ envio }}
+    </title>
+
+    <style>
+        @page {
+            size: letter;
+            margin: 8mm;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 10px;
+            color: #000;
+        }
+
+        .documento {
+            width: 100%;
+        }
+
+        .encabezado {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .logo {
+            width: 260px;
+        }
+
+        .titulo {
+            flex: 1;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .datos {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .seccion-titulo {
+            font-weight: bold;
+            text-decoration: underline;
+            margin-bottom: 3px;
+        }
+
+        .empresa {
+            font-weight: bold;
+        }
+
+        .campo {
+            margin-bottom: 2px;
+        }
+
+        .campo strong {
+            font-weight: bold;
+        }
+
+        .species {
+            border-top: 1px solid #000;
+            border-bottom: 1px solid #000;
+            padding: 5px 0;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .tabla {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .tabla th {
+            border: 1px solid #000;
+            padding: 4px 3px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 9px;
+        }
+
+        .tabla td {
+            border: 1px solid #000;
+            padding: 3px;
+            text-align: center;
+            font-size: 9px;
+        }
+
+        .tabla .izquierda {
+            text-align: left;
+        }
+
+        .totales {
+            width: 40%;
+            margin-left: auto;
+            margin-top: 10px;
+            border-collapse: collapse;
+        }
+
+        .totales td {
+            padding: 3px;
+        }
+
+        .totales .label {
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .totales .valor {
+            text-align: right;
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #00a651;
+            font-weight: bold;
+            font-size: 11px;
+        }
+
+        .no-print {
+            margin-bottom: 15px;
+        }
+
+        @media print {
+
+            .no-print {
+                display: none !important;
+            }
+
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="documento">
+
+        <!-- BOTÓN SOLO PARA PANTALLA -->
+
+        <div class="no-print">
+
+            <button onclick="window.print()">
+                🖨 Imprimir
+            </button>
+
+            <button onclick="window.close()">
+                Cerrar
+            </button>
+
+        </div>
+
+
+        <!-- HEADER -->
+
+        <div class="encabezado">
+
+            <img src="{% static 'img/logo_semillas.png' %}" class="logo">
+
+            <div class="titulo">
+                PACKING LIST
+            </div>
+
+        </div>
+
+
+        <!-- DATOS -->
+
+        <div class="datos">
+
+            <!-- EXPORTER -->
+
+            <div>
+
+                <div class="seccion-titulo">
+                    EXPORTER
+                </div>
+
+                <div class="empresa">
+                    SEMILLAS DEL CAMPO, S.A.
+                </div>
+
+                <div>
+                    11 Avenida 37-80, Zona 11
+                </div>
+
+                <div>
+                    Colonia Las Charcas
+                </div>
+
+                <div>
+                    Guatemala, Guatemala C.A.
+                </div>
+
+                <br>
+
+                <div>
+                    Tel.: (502) 2327-3333
+                </div>
+
+            </div>
+
+
+            <!-- BUYER -->
+
+            <div>
+
+                <div class="seccion-titulo">
+                    BUYER
+                </div>
+
+                <div class="empresa">
+                    HM. CLAUSE INC
+                </div>
+
+                <div>
+                    555 Condon Avenue
+                </div>
+
+                <div>
+                    Modesto, CA 95357
+                </div>
+
+                <div>
+                    USA
+                </div>
+
+            </div>
+
+
+            <!-- SHIP TO -->
+
+            <div>
+
+                <div class="seccion-titulo">
+                    SHIP TO:
+                </div>
+
+                <div class="empresa">
+                    ROHLIG USA, LLC - San Francisco
+                </div>
+
+                <div>
+                    1111 BAYSHORE DRIVE, SUITE 230
+                </div>
+
+                <div>
+                    SAN BRUNO CA 94066
+                </div>
+
+                <br>
+
+                <div class="campo">
+                    <strong>Date:</strong>
+                    {% now "d/m/Y" %}
+                </div>
+
+                <div class="campo">
+                    <strong>Packing List:</strong>
+                    {{ envio }}
+                </div>
+
+                <div class="campo">
+                    <strong>Invoice No:</strong>
+                    {{ envio }}
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ESPECIE -->
+
+        <div class="species">
+
+            Species:
+            PEPPER SEED
+
+        </div>
+
+
+        <!-- TABLA -->
+
+        <table class="tabla">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Variety No.
+                    </th>
+
+                    <th>
+                        Species
+                    </th>
+
+                    <th>
+                        Harvest Code
+                    </th>
+
+                    <th>
+                        Item Number
+                    </th>
+
+                    <th>
+                        Number of Bag
+                    </th>
+
+                    <th>
+                        Net Weight<br>(KG)
+                    </th>
+
+                    <th>
+                        Gross Weight<br>(KG)
+                    </th>
+
+                    <th>
+                        Caja
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for registro in registros %}
+
+                <tr>
+
+                    <td>
+                        {{ registro.variedad_code }}
+                    </td>
+
+                    <td>
+                        {{ registro.cultivo }}
+                    </td>
+
+                    <td>
+                        {{ registro.harvest_code }}
+                    </td>
+
+                    <td>
+                        {{ registro.codigo_lote }}
+                    </td>
+
+                    <td>
+                        {{ registro.bolsa }}
+                    </td>
+
+                    <td>
+                        Caja {{ registro.caja }}
+                    </td>
+
+                    <td>
+                        {{ registro.net_weight|floatformat:3 }}
+                    </td>
+
+                    <td>
+                        {{ registro.gross_weight|floatformat:3 }}
+                    </td>
+
+                    <td>
+
+                        {{ registro.caja }}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+
+        <!-- TOTALES -->
+
+        <table class="totales">
+
+            <tr>
+
+                <td class="label">
+                    TOTAL BAG:
+                </td>
+
+                <td class="valor">
+                    {{ total_bolsas }}
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td class="label">
+                    TOTAL BOX:
+                </td>
+
+                <td class="valor">
+                    {{ total_cajas }}
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td class="label">
+                    Net Weight (KG):
+                </td>
+
+                <td class="valor">
+                    {{ total_net|floatformat:3 }}
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td class="label">
+                    Gross Weight (KG):
+                </td>
+
+                <td class="valor">
+                    {{ total_gross|floatformat:3 }}
+                </td>
+
+            </tr>
+
+        </table>
+
+
+        <!-- FOOTER -->
+
+        <div class="footer">
+
+            SEMILLAS DEL CAMPO, SOCIEDAD ANONIMA
+
+            <br>
+
+            11 Avenida 37-80, Zona 11 Colonia Las Charcas -
+            PBX (502) 2327-3333
+
+            <br>
+
+            Guatemala, Guatemala.
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

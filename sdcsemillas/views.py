@@ -15,7 +15,11 @@ from django.db.models import Sum, Avg, Min
 from datetime import timedelta,date
 from datetime import datetime
 from django.core.serializers.json import DjangoJSONEncoder
-
+from django.db import transaction
+from django.views.decorators.http import require_POST
+from django.urls import reverse
+from .models import PackingList, PackingListCounter
+from django.db.models import Count
 def sdcsemillashomepage(request):
     return render(request,'sdcsemillas/sdcsemillas_home.html')
 
@@ -452,9 +456,16 @@ def exportar_excel_generico(request, nombre_modelo):
 # Create your views here.
 
 def packinglist_list(request):
-    #today = timezone.localtime(timezone.now()).date()
-    salidas = PackingList.objects.all()
-    return render(request, 'sdcsemillas/packinglist_list.html', {'registros': salidas})
+
+    salidas = PackingList.objects.filter(
+        status='Pendiente'
+    ).order_by('id')
+
+    return render(
+        request,
+        'sdcsemillas/packinglist_list.html',
+        {'registros': salidas}
+    )
 
 def packinglist_create(request):
     if request.method == 'POST':
@@ -495,6 +506,149 @@ def packinglist_delete(request, pk):
         return redirect('packinglist_list')
     
     return render(request, 'sdcsemillas/packinglist_confirm_delete.html', {'registros': salidas})
+
+
+@require_POST
+def packinglist_generar_envio(request):
+
+    try:
+
+        registros_ids = json.loads(
+            request.POST.get('registros', '[]')
+        )
+
+    except json.JSONDecodeError:
+
+        return JsonResponse({
+            'success': False,
+            'message': 'Los registros seleccionados no son válidos.'
+        })
+
+    if not registros_ids:
+
+        return JsonResponse({
+            'success': False,
+            'message': 'No se seleccionaron registros.'
+        })
+
+    with transaction.atomic():
+
+        # -----------------------------------------
+        # BLOQUEAR CONTADOR
+        # -----------------------------------------
+
+        contador, created = (
+            PackingListCounter.objects
+            .select_for_update()
+            .get_or_create(
+                id=1,
+                defaults={'ultimo_envio': 0}
+            )
+        )
+
+        contador.ultimo_envio += 1
+        envio = contador.ultimo_envio
+
+        contador.save(
+            update_fields=['ultimo_envio']
+        )
+
+        # -----------------------------------------
+        # BUSCAR REGISTROS PENDIENTES
+        # -----------------------------------------
+
+        registros = list(
+            PackingList.objects
+            .select_for_update()
+            .filter(
+                id__in=registros_ids,
+                status='Pendiente'
+            )
+            .order_by('id')
+        )
+
+        if not registros:
+
+            return JsonResponse({
+                'success': False,
+                'message': (
+                    'Los registros seleccionados ya fueron '
+                    'procesados o no están pendientes.'
+                )
+            })
+
+        # -----------------------------------------
+        # ASIGNAR ENVÍO
+        # -----------------------------------------
+
+        PackingList.objects.filter(
+            id__in=[registro.id for registro in registros]
+        ).update(
+            envio=envio,
+            status='Cerrado'
+        )
+
+    # -----------------------------------------
+    # RESPUESTA
+    # -----------------------------------------
+
+    return JsonResponse({
+        'success': True,
+        'envio': envio,
+        'cantidad': len(registros),
+        'print_url': reverse(
+            'packinglist_imprimir',
+            args=[envio]
+        )
+    })
+
+from django.db.models import Sum, Count
+from django.shortcuts import get_object_or_404, render
+
+
+def packinglist_imprimir(request, envio):
+
+    registros = (
+        PackingList.objects
+        .filter(envio=envio)
+        .order_by('caja', 'bolsa', 'id')
+    )
+
+    if not registros.exists():
+
+        return render(
+            request,
+            'sdcsemillas/packinglist_no_encontrado.html'
+        )
+
+    totales = registros.aggregate(
+        total_net=Sum('net_weight'),
+        total_gross=Sum('gross_weight'),
+        total_bolsas=Count('id'),
+    )
+
+    total_cajas = (
+        registros
+        .values('caja')
+        .distinct()
+        .count()
+    )
+
+    contexto = {
+        'registros': registros,
+        'envio': envio,
+
+        'total_net': totales['total_net'] or 0,
+        'total_gross': totales['total_gross'] or 0,
+        'total_bolsas': totales['total_bolsas'] or 0,
+        'total_cajas': total_cajas,
+    }
+
+    return render(
+        request,
+        'sdcsemillas/packinglist_print.html',
+        contexto
+    )
 
 def lotes_list(request):
     #today = timezone.localtime(timezone.now()).date()
