@@ -648,80 +648,86 @@
                     // SUCCESS
                     // =========================================
 
-                    success:
-                        function (response) {
+                    success: function (response) {
+
+                        console.log(
+                            "RESPUESTA COMPLETA DE DJANGO:",
+                            response
+                        );
 
 
-                            // ---------------------------------
-                            // VALIDAR RESPUESTA
-                            // ---------------------------------
-
-                            if (
-                                !response.success
-                            ) {
-
-                                alert(
-                                    response.message ||
-                                    "No se pudo generar el Packing List."
-                                );
-
-
-                                boton.prop(
-                                    'disabled',
-                                    false
-                                );
-
-
-                                boton.html(
-                                    '<i class="fas fa-print"></i> Generar Packing List'
-                                );
-
-
-                                return;
-                            }
-
-
-                            // ---------------------------------
-                            // INFORMAR
-                            // ---------------------------------
+                        if (!response.success) {
 
                             alert(
-
-                                `Packing List generado correctamente.\n\n` +
-
-                                `Número de envío: ${response.envio}\n` +
-
-                                `Registros procesados: ${response.cantidad}`
-
+                                response.message ||
+                                "Django indicó que hubo un error."
                             );
 
-
-                            // ---------------------------------
-                            // ABRIR PACKING LIST
-                            // ---------------------------------
-
-                            window.open(
-                                response.print_url,
-                                '_blank'
+                            boton.prop(
+                                'disabled',
+                                false
                             );
 
+                            boton.html(
+                                '<i class="fas fa-print"></i> Generar Packing List'
+                            );
 
-                            // ---------------------------------
-                            // ACTUALIZAR PANEL
-                            // ---------------------------------
+                            return;
+                        }
 
-                            /*
-                             * Al recargar la página Django volverá
-                             * a consultar solamente los registros
-                             * Pendientes.
-                             *
-                             * Los que acabamos de cerrar ya no
-                             * aparecerán.
-                             */
 
-                            location.reload();
+                        console.log(
+                            "ENVIO:",
+                            response.envio
+                        );
 
-                        },
+
+                        console.log(
+                            "CANTIDAD:",
+                            response.cantidad
+                        );
+
+
+                        console.log(
+                            "PRINT URL:",
+                            response.print_url
+                        );
+
+
+                        // ---------------------------------------------
+                        // MOSTRAR DATOS
+                        // ---------------------------------------------
+
+                        alert(
+
+                            "Packing List generado.\n\n" +
+
+                            "Envío: " +
+                            response.envio +
+                            "\n\n" +
+
+                            "Cantidad: " +
+                            response.cantidad +
+                            "\n\n" +
+
+                            "URL:\n" +
+                            response.print_url
+
+                        );
+
+
+                        // ---------------------------------------------
+                        // IR DIRECTAMENTE AL HTML
+                        // ---------------------------------------------
+
+                        if (response.print_url) {
+
+                            window.location.href =
+                                response.print_url;
+
+                        }
+
+                    },
 
 
                     // =========================================

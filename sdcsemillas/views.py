@@ -524,6 +524,7 @@ def packinglist_generar_envio(request):
             'message': 'Los registros seleccionados no son válidos.'
         })
 
+
     if not registros_ids:
 
         return JsonResponse({
@@ -531,75 +532,127 @@ def packinglist_generar_envio(request):
             'message': 'No se seleccionaron registros.'
         })
 
+
     with transaction.atomic():
 
-        # -----------------------------------------
-        # BLOQUEAR CONTADOR
-        # -----------------------------------------
-
-        contador, created = (
-            PackingListCounter.objects
-            .select_for_update()
-            .get_or_create(
-                id=1,
-                defaults={'ultimo_envio': 0}
-            )
-        )
-
-        contador.ultimo_envio += 1
-        envio = contador.ultimo_envio
-
-        contador.save(
-            update_fields=['ultimo_envio']
-        )
-
-        # -----------------------------------------
-        # BUSCAR REGISTROS PENDIENTES
-        # -----------------------------------------
+        # =============================================
+        # BUSCAR REGISTROS SELECCIONADOS
+        # =============================================
 
         registros = list(
             PackingList.objects
             .select_for_update()
             .filter(
-                id__in=registros_ids,
-                status='En proceso'
+                id__in=registros_ids
             )
             .order_by('id')
         )
+
 
         if not registros:
 
             return JsonResponse({
                 'success': False,
                 'message': (
-                    'Los registros seleccionados ya fueron '
-                    'procesados o no están pendientes.'
+                    'No se encontraron los registros '
+                    'seleccionados.'
                 )
             })
 
-        # -----------------------------------------
-        # ASIGNAR ENVÍO
-        # -----------------------------------------
+
+        # =============================================
+        # CONTADOR
+        # =============================================
+
+        contador, created = (
+            PackingListCounter.objects
+            .select_for_update()
+            .get_or_create(
+                id=1,
+                defaults={
+                    'ultimo_envio': 0
+                }
+            )
+        )
+
+
+        contador.ultimo_envio += 1
+
+        envio = contador.ultimo_envio
+
+
+        contador.save(
+            update_fields=['ultimo_envio']
+        )
+
+
+        # =============================================
+        # CERRAR REGISTROS
+        # =============================================
 
         PackingList.objects.filter(
-            id__in=[registro.id for registro in registros]
+            id__in=[
+                registro.id
+                for registro in registros
+            ]
         ).update(
             envio=envio,
             status='Cerrado'
         )
 
-    # -----------------------------------------
-    # RESPUESTA
-    # -----------------------------------------
+
+    # =============================================
+    # URL DEL PACKING LIST
+    # =============================================
+
+    print_url = reverse(
+        'packinglist_imprimir',
+        args=[envio]
+    )
+
+
+    print(
+        "===================================="
+    )
+
+    print(
+        "PACKING LIST GENERADO"
+    )
+
+    print(
+        "ENVIO:",
+        envio
+    )
+
+    print(
+        "REGISTROS:",
+        registros_ids
+    )
+
+    print(
+        "PRINT URL:",
+        print_url
+    )
+
+    print(
+        "===================================="
+    )
+
+
+    # =============================================
+    # RESPUESTA AJAX
+    # =============================================
 
     return JsonResponse({
+
         'success': True,
+
         'envio': envio,
+
         'cantidad': len(registros),
-        'print_url': reverse(
-            'packinglist_imprimir',
-            args=[envio]
-        )
+
+        'print_url': print_url
+
     })
 
 def packinglist_imprimir(request, envio):
