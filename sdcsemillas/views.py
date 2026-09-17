@@ -664,11 +664,21 @@ def packinglist_imprimir(request, envio):
     )
 
     if not registros.exists():
-
         return render(
             request,
             'sdcsemillas/packinglist_no_encontrado.html'
         )
+
+    primer_registro = registros.first()
+
+    cultivo = (primer_registro.cultivo or '').strip().upper()
+
+    if cultivo == 'CHILE':
+        species = 'PEPPER SEED'
+    elif cultivo == 'TOMATE':
+        species = 'TOMATO SEED'
+    else:
+        species = f'{primer_registro.cultivo} SEED'
 
     totales = registros.aggregate(
         total_net=Sum('net_weight'),
@@ -686,6 +696,8 @@ def packinglist_imprimir(request, envio):
     contexto = {
         'registros': registros,
         'envio': envio,
+
+        'species': species,
 
         'total_net': totales['total_net'] or 0,
         'total_gross': totales['total_gross'] or 0,
