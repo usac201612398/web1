@@ -24,6 +24,9 @@ urlpatterns = [
     path('packinglist/<int:pk>/delete/', views.packinglist_delete, name='packinglist_delete'),
     path('packinglist/generar-envio/',views.packinglist_generar_envio,name='packinglist_generar_envio'),
     path('packinglist/imprimir/<int:envio>/',views.packinglist_imprimir,name='packinglist_imprimir'),
+    path('packinglist/consultar/',views.packinglist_consultar,name='packinglist_consultar'),
+    path('packinglist/scanner/',views.packinglist_scanner,name='packinglist_scanner'),
+    path('packinglist/registro/<int:pk>/',views.packinglist_registro_info,name='packinglist_registro_info'),
     
     path("monitorear",views.consulta_list,name='consultas_list'),
     path('reporte-lote/<int:lote_id>/', views.lotesreporte_list2, name='reporte_lote'),

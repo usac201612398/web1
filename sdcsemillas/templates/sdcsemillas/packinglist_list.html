@@ -73,6 +73,13 @@
                     <i class="fas fa-print"></i>
                     Generar Packing List
                 </button>
+                <a href="{% url 'packinglist_scanner' %}" class="btn btn-dark mb-2">
+
+                    <i class="fas fa-camera"></i>
+
+                    Escanear Packing List
+
+                </a>
             </div>
 
             <a href="{% url 'exportar_excel_generico' 'PackingList' %}" class="btn btn-outline-success mb-2">

@@ -20,6 +20,7 @@ from django.views.decorators.http import require_POST
 from django.urls import reverse
 from .models import PackingList, PackingListCounter
 from django.db.models import Count
+from django.views.decorators.http import require_GET
 def sdcsemillashomepage(request):
     return render(request,'sdcsemillas/sdcsemillas_home.html')
 
@@ -711,6 +712,124 @@ def packinglist_imprimir(request, envio):
         contexto
     )
 
+
+@require_GET
+def packinglist_consultar(request):
+
+    registro_id = request.GET.get('id')
+
+    if not registro_id:
+
+        return JsonResponse({
+            'success': False,
+            'message': 'No se recibió ningún código.'
+        })
+
+
+    try:
+
+        registro = PackingList.objects.get(
+            id=int(registro_id)
+        )
+
+    except (ValueError, PackingList.DoesNotExist):
+
+        return JsonResponse({
+            'success': False,
+            'message': 'No existe un registro con ese código.'
+        })
+
+
+    return JsonResponse({
+
+        'success': True,
+
+        'registro': {
+
+            'id': registro.id,
+
+            'codigo_lote': registro.codigo_lote,
+
+            'fecha': (
+                registro.fecha.strftime('%d/%m/%Y')
+                if registro.fecha
+                else ''
+            ),
+
+            'ubicacion': registro.ubicacion,
+
+            'estructura': registro.estructura,
+
+            'variedad_code': registro.variedad_code,
+
+            'apodo_variedad': registro.apodo_variedad,
+
+            'cultivo': registro.cultivo,
+
+            'net_weight': registro.net_weight,
+
+            'gross_weight': registro.gross_weight,
+
+            'harvest_code': registro.harvest_code,
+
+            'bolsa': registro.bolsa,
+
+            'caja': registro.caja,
+
+            'observaciones': registro.observaciones,
+
+            'status': registro.status,
+
+            'genero': registro.genero,
+
+            'envio': registro.envio,
+
+        }
+
+    })
+
+def packinglist_scanner(request):
+    return render(
+        request,
+        'sdcsemillas/packinglist_scanner.html'
+    )
+    
+@require_GET
+def packinglist_registro_info(request, pk):
+
+    try:
+        registro = PackingList.objects.get(pk=pk)
+
+    except PackingList.DoesNotExist:
+
+        return JsonResponse({
+            'success': False,
+            'message': 'No existe un registro con ese código.'
+        }, status=404)
+
+    return JsonResponse({
+        'success': True,
+
+        'registro': {
+            'id': registro.id,
+            'codigo_lote': registro.codigo_lote,
+            'fecha': registro.fecha.strftime('%d/%m/%Y') if registro.fecha else '',
+            'ubicacion': registro.ubicacion,
+            'estructura': registro.estructura,
+            'variedad_code': registro.variedad_code,
+            'apodo_variedad': registro.apodo_variedad,
+            'cultivo': registro.cultivo,
+            'net_weight': registro.net_weight,
+            'gross_weight': registro.gross_weight,
+            'harvest_code': registro.harvest_code,
+            'bolsa': registro.bolsa,
+            'caja': registro.caja,
+            'observaciones': registro.observaciones,
+            'status': registro.status,
+            'genero': registro.genero,
+            'envio': registro.envio,
+        }
+    })
 def lotes_list(request):
     #today = timezone.localtime(timezone.now()).date()
     salidas = lotes.objects.all()
