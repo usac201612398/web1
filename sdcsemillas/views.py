@@ -21,6 +21,8 @@ from django.urls import reverse
 from .models import PackingList, PackingListCounter
 from django.db.models import Count
 from django.views.decorators.http import require_GET
+from django.urls import reverse
+
 def sdcsemillashomepage(request):
     return render(request,'sdcsemillas/sdcsemillas_home.html')
 
@@ -662,7 +664,15 @@ def packinglist_generar_envio(request):
 
         'cantidad': len(registros),
 
-        'print_url': print_url
+        'print_url': reverse(
+            'packinglist_imprimir',
+            args=[envio]
+        ),
+
+        'public_url': reverse(
+            'packinglist_publico',
+            args=[str(public_access.token)]
+        )
 
     })
 

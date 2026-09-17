@@ -707,18 +707,15 @@
 
                         alert(
 
-                            "Packing List generado.\n\n" +
+                            `Packing List generado correctamente.\n\n` +
 
-                            "Envío: " +
-                            response.envio +
-                            "\n\n" +
+                            `Número de envío: ${response.envio}\n` +
 
-                            "Cantidad: " +
-                            response.cantidad +
-                            "\n\n" +
+                            `Registros procesados: ${response.cantidad}\n\n` +
 
-                            "URL:\n" +
-                            response.print_url
+                            `Link público:\n` +
+
+                            `${window.location.origin}${response.public_url}`
 
                         );
 
