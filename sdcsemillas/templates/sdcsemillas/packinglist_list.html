@@ -239,30 +239,51 @@
     <script type="text/javascript" src="{% static '/lib/cockies.js' %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.12.3/JsBarcode.all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+
     <script>
+
         $(document).ready(function () {
 
+            // =====================================================
+            // DATATABLE
+            // =====================================================
+
             var table = $('#myTable').DataTable({
+
                 responsive: true,
+
                 autoWidth: false,
+
                 language: {
                     url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
                 }
+
             });
 
             $('#myTable').on('init.dt', function () {
-                table.columns.adjust();
-            });
 
+                table.columns.adjust();
+
+            });
 
         });
 
+
+        // =====================================================
+        // VARIABLE PARA CÓDIGO DE BARRAS
+        // =====================================================
+
         let loteSeleccionado = "";
 
+
+        // =====================================================
+        // GENERAR CÓDIGO DE BARRAS
+        // =====================================================
         /*
-         * Se utiliza evento delegado porque DataTables puede
+         * Usamos evento delegado porque DataTables puede
          * reconstruir las filas al buscar, ordenar o paginar.
          */
+
         $('#myTable tbody').on(
             'click',
             '.generate-barcode-btn',
@@ -272,233 +293,483 @@
                     $(this).data('lote')
                 ).trim();
 
+
                 if (!loteSeleccionado) {
-                    alert("El lote no tiene un código válido.");
+
+                    alert(
+                        "El lote no tiene un código válido."
+                    );
+
                     return;
                 }
 
+
                 try {
-                    JsBarcode("#barcode", loteSeleccionado, {
-                        format: "CODE128",
-                        lineColor: "#000000",
-                        background: "#ffffff",
-                        width: 2,
-                        height: 90,
-                        margin: 15,
-                        displayValue: true,
-                        fontSize: 20,
-                        textMargin: 8
-                    });
+
+                    JsBarcode(
+                        "#barcode",
+                        loteSeleccionado,
+                        {
+
+                            format: "CODE128",
+
+                            lineColor: "#000000",
+
+                            background: "#ffffff",
+
+                            width: 2,
+
+                            height: 90,
+
+                            margin: 15,
+
+                            displayValue: true,
+
+                            fontSize: 20,
+
+                            textMargin: 8
+
+                        }
+                    );
+
 
                     $('#barcodeText').text(
                         `Lote: ${loteSeleccionado}`
                     );
 
+
                 } catch (error) {
+
                     console.error(
                         "Error generando el código de barras:",
                         error
                     );
 
+
                     alert(
                         "No se pudo generar el código de barras."
                     );
+
                 }
+
             }
         );
 
-        $('#downloadBarcode').on('click', function () {
 
-            if (!loteSeleccionado) {
-                alert("Primero selecciona un lote.");
-                return;
-            }
+        // =====================================================
+        // DESCARGAR CÓDIGO DE BARRAS
+        // =====================================================
 
-            const svg = document.getElementById('barcode');
+        $('#downloadBarcode').on(
+            'click',
+            function () {
 
-            if (!svg || !svg.innerHTML.trim()) {
-                alert("No existe un código para descargar.");
-                return;
-            }
+                if (!loteSeleccionado) {
 
-            const serializer = new XMLSerializer();
-            const svgData = serializer.serializeToString(svg);
+                    alert(
+                        "Primero selecciona un lote."
+                    );
 
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            const image = new Image();
-
-            const svgBlob = new Blob(
-                [svgData],
-                {
-                    type: 'image/svg+xml;charset=utf-8'
-                }
-            );
-
-            const objectURL = URL.createObjectURL(svgBlob);
-
-            image.onload = function () {
-
-                const scale = 3;
-
-                canvas.width = image.width * scale;
-                canvas.height = image.height * scale;
-
-                context.fillStyle = '#ffffff';
-                context.fillRect(
-                    0,
-                    0,
-                    canvas.width,
-                    canvas.height
-                );
-
-                context.drawImage(
-                    image,
-                    0,
-                    0,
-                    canvas.width,
-                    canvas.height
-                );
-
-                URL.revokeObjectURL(objectURL);
-
-                const enlace = document.createElement('a');
-
-                enlace.download =
-                    `CODE128_${loteSeleccionado}.png`;
-
-                enlace.href = canvas.toDataURL('image/png');
-
-                document.body.appendChild(enlace);
-                enlace.click();
-                enlace.remove();
-            };
-
-            image.onerror = function () {
-                URL.revokeObjectURL(objectURL);
-
-                alert(
-                    "No se pudo convertir el código a imagen."
-                );
-            };
-
-            image.src = objectURL;
-        });
-
-        $('#checkTodos').on('change', function () {
-
-            const checked = $(this).prop('checked');
-
-            $('.registro-check').prop('checked', checked);
-
-        });
-
-        $('#btnGenerarPacking').on('click', function () {
-
-            const seleccionados = $('.registro-check:checked')
-                .map(function () {
-                    return $(this).val();
-                })
-                .get();
-
-            if (seleccionados.length === 0) {
-
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Sin registros',
-                    text: 'Debe seleccionar al menos un registro.'
-                });
-
-                return;
-            }
-
-            Swal.fire({
-                title: 'Generar Packing List',
-                text: `Se procesarán ${seleccionados.length} registros.`,
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'Generar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-
-                if (!result.isConfirmed) {
                     return;
                 }
 
-                $.ajax({
 
-                    url: "{% url 'packinglist_generar_envio' %}",
+                const svg =
+                    document.getElementById('barcode');
 
-                    type: "POST",
 
-                    data: {
-                        registros: JSON.stringify(seleccionados),
+                if (
+                    !svg ||
+                    !svg.innerHTML.trim()
+                ) {
 
-                        csrfmiddlewaretoken: '{{ csrf_token }}'
-                    },
+                    alert(
+                        "No existe un código para descargar."
+                    );
 
-                    success: function (response) {
+                    return;
+                }
 
-                        if (!response.success) {
 
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: response.message
-                            });
+                const serializer =
+                    new XMLSerializer();
 
-                            return;
+
+                const svgData =
+                    serializer.serializeToString(svg);
+
+
+                const canvas =
+                    document.createElement('canvas');
+
+
+                const context =
+                    canvas.getContext('2d');
+
+
+                const image =
+                    new Image();
+
+
+                const svgBlob =
+                    new Blob(
+                        [svgData],
+                        {
+                            type:
+                                'image/svg+xml;charset=utf-8'
                         }
+                    );
 
-                        /*
-                         * Abrimos el HTML del Packing List
-                         */
-                        const ventana = window.open(
-                            response.print_url,
-                            '_blank'
+
+                const objectURL =
+                    URL.createObjectURL(svgBlob);
+
+
+                image.onload = function () {
+
+                    const scale = 3;
+
+
+                    canvas.width =
+                        image.width * scale;
+
+
+                    canvas.height =
+                        image.height * scale;
+
+
+                    context.fillStyle =
+                        '#ffffff';
+
+
+                    context.fillRect(
+                        0,
+                        0,
+                        canvas.width,
+                        canvas.height
+                    );
+
+
+                    context.drawImage(
+                        image,
+                        0,
+                        0,
+                        canvas.width,
+                        canvas.height
+                    );
+
+
+                    URL.revokeObjectURL(
+                        objectURL
+                    );
+
+
+                    const enlace =
+                        document.createElement('a');
+
+
+                    enlace.download =
+                        `CODE128_${loteSeleccionado}.png`;
+
+
+                    enlace.href =
+                        canvas.toDataURL(
+                            'image/png'
                         );
 
-                        /*
-                         * Eliminamos las filas del panel
-                         */
-                        seleccionados.forEach(function (id) {
 
-                            const fila = $(
-                                `.registro-check[value="${id}"]`
-                            ).closest('tr');
+                    document.body.appendChild(
+                        enlace
+                    );
 
-                            fila.remove();
 
-                        });
+                    enlace.click();
 
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Packing List generado',
-                            html:
-                                `Envío No. <strong>${response.envio}</strong> generado correctamente.`,
-                            timer: 1800,
-                            showConfirmButton: false
-                        });
+
+                    enlace.remove();
+
+                };
+
+
+                image.onerror = function () {
+
+                    URL.revokeObjectURL(
+                        objectURL
+                    );
+
+
+                    alert(
+                        "No se pudo convertir el código a imagen."
+                    );
+
+                };
+
+
+                image.src = objectURL;
+
+            }
+        );
+
+
+        // =====================================================
+        // SELECCIONAR / DESELECCIONAR TODOS
+        // =====================================================
+
+        $('#checkTodos').on(
+            'change',
+            function () {
+
+                const checked =
+                    $(this).prop('checked');
+
+
+                $('.registro-check').prop(
+                    'checked',
+                    checked
+                );
+
+            }
+        );
+
+
+        // =====================================================
+        // GENERAR PACKING LIST
+        // =====================================================
+
+        $('#btnGenerarPacking').on(
+            'click',
+            function () {
+
+
+                // ---------------------------------------------
+                // OBTENER REGISTROS SELECCIONADOS
+                // ---------------------------------------------
+
+                const seleccionados =
+                    $('.registro-check:checked')
+                        .map(function () {
+
+                            return $(this).val();
+
+                        })
+                        .get();
+
+
+                // ---------------------------------------------
+                // VALIDAR
+                // ---------------------------------------------
+
+                if (
+                    seleccionados.length === 0
+                ) {
+
+                    alert(
+                        "Debe seleccionar al menos un registro."
+                    );
+
+                    return;
+                }
+
+
+                // ---------------------------------------------
+                // CONFIRMAR
+                // ---------------------------------------------
+
+                const confirmar =
+                    confirm(
+
+                        `Se procesarán ${seleccionados.length} registros.\n\n` +
+
+                        `Los registros pasarán a estado "Cerrado" ` +
+
+                        `y se les asignará un número de envío.\n\n` +
+
+                        `¿Desea continuar?`
+
+                    );
+
+
+                if (!confirmar) {
+
+                    return;
+
+                }
+
+
+                // ---------------------------------------------
+                // DESHABILITAR BOTÓN
+                // ---------------------------------------------
+                /*
+                 * Evita que el usuario haga doble clic y genere
+                 * dos números de envío.
+                 */
+
+                const boton =
+                    $(this);
+
+
+                boton.prop(
+                    'disabled',
+                    true
+                );
+
+
+                boton.html(
+                    '<i class="fas fa-spinner fa-spin"></i> Procesando...'
+                );
+
+
+                // ---------------------------------------------
+                // AJAX
+                // ---------------------------------------------
+
+                $.ajax({
+
+                    url:
+                        "{% url 'packinglist_generar_envio' %}",
+
+                    type:
+                        "POST",
+
+                    data: {
+
+                        registros:
+                            JSON.stringify(
+                                seleccionados
+                            ),
+
+                        csrfmiddlewaretoken:
+                            '{{ csrf_token }}'
 
                     },
 
-                    error: function (xhr) {
 
-                        console.error(xhr);
+                    // =========================================
+                    // SUCCESS
+                    // =========================================
 
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'No se pudo generar el Packing List.'
-                        });
+                    success:
+                        function (response) {
 
-                    }
+
+                            // ---------------------------------
+                            // VALIDAR RESPUESTA
+                            // ---------------------------------
+
+                            if (
+                                !response.success
+                            ) {
+
+                                alert(
+                                    response.message ||
+                                    "No se pudo generar el Packing List."
+                                );
+
+
+                                boton.prop(
+                                    'disabled',
+                                    false
+                                );
+
+
+                                boton.html(
+                                    '<i class="fas fa-print"></i> Generar Packing List'
+                                );
+
+
+                                return;
+                            }
+
+
+                            // ---------------------------------
+                            // INFORMAR
+                            // ---------------------------------
+
+                            alert(
+
+                                `Packing List generado correctamente.\n\n` +
+
+                                `Número de envío: ${response.envio}\n` +
+
+                                `Registros procesados: ${response.cantidad}`
+
+                            );
+
+
+                            // ---------------------------------
+                            // ABRIR PACKING LIST
+                            // ---------------------------------
+
+                            window.open(
+                                response.print_url,
+                                '_blank'
+                            );
+
+
+                            // ---------------------------------
+                            // ACTUALIZAR PANEL
+                            // ---------------------------------
+
+                            /*
+                             * Al recargar la página Django volverá
+                             * a consultar solamente los registros
+                             * Pendientes.
+                             *
+                             * Los que acabamos de cerrar ya no
+                             * aparecerán.
+                             */
+
+                            location.reload();
+
+                        },
+
+
+                    // =========================================
+                    // ERROR
+                    // =========================================
+
+                    error:
+                        function (xhr) {
+
+
+                            console.error(
+                                "Error AJAX:",
+                                xhr.responseText
+                            );
+
+
+                            alert(
+
+                                "Ocurrió un error al generar " +
+                                "el Packing List.\n\n" +
+
+                                "Revise la consola del navegador " +
+                                "o el servidor Django."
+
+                            );
+
+
+                            // ---------------------------------
+                            // RESTAURAR BOTÓN
+                            // ---------------------------------
+
+                            boton.prop(
+                                'disabled',
+                                false
+                            );
+
+
+                            boton.html(
+                                '<i class="fas fa-print"></i> Generar Packing List'
+                            );
+
+                        }
 
                 });
 
-            });
+            }
 
-        });
+        );
 
     </script>
 
