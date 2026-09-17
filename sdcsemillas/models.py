@@ -6,7 +6,7 @@ from django.db import models
 class PackingList(models.Model):
     #op_status = [('Pendiente','-'),('En proceso','En proceso'),('Cerrado','Cerrado')]
     id = models.BigAutoField(primary_key=True)
-    codigo_lote = models.BigIntegerField(blank=True, null=True)
+    codigo_lote = models.CharField(max_length= 50, blank = True, null =  True)
     fecha = models.DateField(blank=True, null=True)
     ubicacion = models.CharField(max_length= 50, blank = True, null =  True)
     estructura = models.CharField(max_length= 50, blank = True, null =  True)
@@ -31,7 +31,7 @@ class PackingListCounter(models.Model):
 
     def __str__(self):
         return f"Último envío: {self.ultimo_envio}"
-        
+
 class usuariosApp(models.Model):
     
     correo = models.CharField(primary_key=True,max_length=75, blank=True)
