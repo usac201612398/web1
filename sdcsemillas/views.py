@@ -562,7 +562,7 @@ def packinglist_generar_envio(request):
             .select_for_update()
             .filter(
                 id__in=registros_ids,
-                status='Pendiente'
+                status='En proceso'
             )
             .order_by('id')
         )
@@ -601,10 +601,6 @@ def packinglist_generar_envio(request):
             args=[envio]
         )
     })
-
-from django.db.models import Sum, Count
-from django.shortcuts import get_object_or_404, render
-
 
 def packinglist_imprimir(request, envio):
 
