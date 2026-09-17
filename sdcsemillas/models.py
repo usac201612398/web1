@@ -1,6 +1,30 @@
 from django.db import models
-
+import uuid
 # Create your models here.
+
+class PackingListPublicAccess(models.Model):
+
+    envio = models.BigIntegerField(
+        unique=True
+    )
+
+    token = models.UUIDField(
+        default=uuid.uuid4,
+        unique=True,
+        editable=False
+    )
+
+    activo = models.BooleanField(
+        default=True
+    )
+
+    creado = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return f"Envío {self.envio}"
+
 
 #Packinglist
 class PackingList(models.Model):
