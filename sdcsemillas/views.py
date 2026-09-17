@@ -600,6 +600,16 @@ def packinglist_generar_envio(request):
             envio=envio,
             status='Cerrado'
         )
+        # -----------------------------------------
+        # CREAR ACCESO PÚBLICO
+        # -----------------------------------------
+
+        public_access, created = (
+            PackingListPublicAccess.objects
+            .get_or_create(
+                envio=envio
+            )
+        )
 
 
     # =============================================
@@ -793,7 +803,7 @@ def packinglist_scanner(request):
         request,
         'sdcsemillas/packinglist_scanner.html'
     )
-    
+
 @require_GET
 def packinglist_registro_info(request, pk):
 
@@ -830,6 +840,73 @@ def packinglist_registro_info(request, pk):
             'envio': registro.envio,
         }
     })
+
+def packinglist_publico(request, token):
+
+    acceso = get_object_or_404(
+        PackingListPublicAccess,
+        token=token,
+        activo=True
+    )
+
+    registros = (
+        PackingList.objects
+        .filter(
+            envio=acceso.envio
+        )
+        .order_by(
+            'caja',
+            'bolsa',
+            'id'
+        )
+    )
+
+    if not registros.exists():
+
+        return render(
+            request,
+            'sdcsemillas/packinglist_no_encontrado.html'
+        )
+
+    totales = registros.aggregate(
+        total_net=Sum('net_weight'),
+        total_gross=Sum('gross_weight'),
+        total_bolsas=Count('id'),
+    )
+
+    total_cajas = (
+        registros
+        .values('caja')
+        .distinct()
+        .count()
+    )
+
+    contexto = {
+
+        'registros': registros,
+
+        'envio': acceso.envio,
+
+        'total_net':
+            totales['total_net'] or 0,
+
+        'total_gross':
+            totales['total_gross'] or 0,
+
+        'total_bolsas':
+            totales['total_bolsas'] or 0,
+
+        'total_cajas':
+            total_cajas,
+
+    }
+
+    return render(
+        request,
+        'sdcsemillas/packinglist_publico.html',
+        contexto
+    )
+
 def lotes_list(request):
     #today = timezone.localtime(timezone.now()).date()
     salidas = lotes.objects.all()

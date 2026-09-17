@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>
+        Packing List {{ envio }}
+    </title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+
+        .contenedor {
+            max-width: 1000px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .info {
+            display: grid;
+            grid-template-columns:
+                repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .dato {
+            padding: 10px;
+            background: #f1f1f1;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background: #495057;
+            color: white;
+        }
+
+        .totales {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .logo {
+            max-width: 250px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="contenedor">
+
+    <div style="text-align:center;">
+
+        <img
+            src="/static/img/logo.jpg"
+            class="logo"
+        >
+
+    </div>
+
+    <h1>
+        PACKING LIST
+    </h1>
+
+    <div class="info">
+
+        <div class="dato">
+            <strong>Envío:</strong>
+            {{ envio }}
+        </div>
+
+        <div class="dato">
+            <strong>Fecha:</strong>
+            {% now "d/m/Y" %}
+        </div>
+
+        <div class="dato">
+            <strong>Especie:</strong>
+
+            {% if registros.0.cultivo == "Chile" %}
+                PEPPER SEED
+            {% elif registros.0.cultivo == "TOMATE" %}
+                TOMATO SEED
+            {% else %}
+                {{ registros.0.cultivo }}
+            {% endif %}
+
+        </div>
+
+        <div class="dato">
+            <strong>Total cajas:</strong>
+            {{ total_cajas }}
+        </div>
+
+    </div>
+
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>
+                    Caja
+                </th>
+
+                <th>
+                    Bolsa
+                </th>
+
+                <th>
+                    Variety No.
+                </th>
+
+                <th>
+                    Harvest Code
+                </th>
+
+                <th>
+                    Item Number
+                </th>
+
+                <th>
+                    Net KG
+                </th>
+
+                <th>
+                    Gross KG
+                </th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for registro in registros %}
+
+            <tr>
+
+                <td>
+                    {{ registro.caja }}
+                </td>
+
+                <td>
+                    {{ registro.bolsa }}
+                </td>
+
+                <td>
+                    {{ registro.variedad_code }}
+                </td>
+
+                <td>
+                    {{ registro.harvest_code }}
+                </td>
+
+                <td>
+                    {{ registro.codigo_lote }}
+                </td>
+
+                <td>
+                    {{ registro.net_weight|floatformat:3 }}
+                </td>
+
+                <td>
+                    {{ registro.gross_weight|floatformat:3 }}
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+
+    <div class="totales">
+
+        <strong>
+            Total Bags:
+        </strong>
+
+        {{ total_bolsas }}
+
+        <br>
+
+        <strong>
+            Total Boxes:
+        </strong>
+
+        {{ total_cajas }}
+
+        <br>
+
+        <strong>
+            Net Weight:
+        </strong>
+
+        {{ total_net|floatformat:3 }} KG
+
+        <br>
+
+        <strong>
+            Gross Weight:
+        </strong>
+
+        {{ total_gross|floatformat:3 }} KG
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

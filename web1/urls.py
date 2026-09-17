@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from sdcsemillas import views
 
 urlpatterns = [
     path('app1/',include('app1.urls')),
@@ -27,6 +28,11 @@ urlpatterns = [
     path('iotappweb/',include('iotappweb.urls')),
     path('ips/',include('ips.urls')),
     path('sdcsemillas/', include('sdcsemillas.urls')),
+    path(
+        'packing/<uuid:token>/',
+        views.packinglist_publico,
+        name='packinglist_publico'
+    ),
     path('scoresdc/',include('scorevalle.urls')),
     path('admin/', admin.site.urls),
     path('oauth2/', include('django_auth_adfs.urls')),    

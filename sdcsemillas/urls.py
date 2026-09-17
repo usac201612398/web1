@@ -6,7 +6,7 @@ from . import views
 app_main = 'sdcsemillas'
 
 urlpatterns = [
-
+    
     path('', views.sdcsemillashomepage, name='sdcsemillas_home'),  # Página principal
     path('lotes-en-proceso/', views.buscar_lotes, name='lotes_en_proceso'),
     path('lotes-en-proceso/madres', views.buscar_lotes_auxs, name='lotes_en_proceso_madres'),
@@ -27,7 +27,11 @@ urlpatterns = [
     path('packinglist/consultar/',views.packinglist_consultar,name='packinglist_consultar'),
     path('packinglist/scanner/',views.packinglist_scanner,name='packinglist_scanner'),
     path('packinglist/registro/<int:pk>/',views.packinglist_registro_info,name='packinglist_registro_info'),
-    
+    path(
+        'packing/<uuid:token>/',
+        views.packinglist_publico,
+        name='packinglist_publico'
+    ),
     path("monitorear",views.consulta_list,name='consultas_list'),
     path('reporte-lote/<int:lote_id>/', views.lotesreporte_list2, name='reporte_lote'),
 
