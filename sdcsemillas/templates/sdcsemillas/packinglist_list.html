@@ -683,56 +683,79 @@
                         }
 
 
-                        console.log(
-                            "ENVIO:",
-                            response.envio
+                        const publicUrl = response.public_url
+                            ? new URL(
+                                response.public_url,
+                                window.location.origin
+                            ).href
+                            : "";
+
+
+                        $('#resultadoEnvio').val(
+                            response.envio || ""
                         );
 
-
-                        console.log(
-                            "CANTIDAD:",
-                            response.cantidad
+                        $('#resultadoCantidad').val(
+                            response.cantidad || 0
                         );
 
-
-                        console.log(
-                            "PRINT URL:",
-                            response.print_url
+                        $('#resultadoPublicUrl').val(
+                            publicUrl
                         );
 
-
-                        // ---------------------------------------------
-                        // MOSTRAR DATOS
-                        // ---------------------------------------------
-
-                        alert(
-
-                            `Packing List generado correctamente.\n\n` +
-
-                            `Número de envío: ${response.envio}\n` +
-
-                            `Registros procesados: ${response.cantidad}\n\n` +
-
-                            `Link público:\n` +
-
-                            `${window.location.origin}${response.public_url}`
-
-                        );
+                        $('#mensajeCopiado').addClass('d-none');
 
 
-                        // ---------------------------------------------
-                        // IR DIRECTAMENTE AL HTML
-                        // ---------------------------------------------
+                        if (publicUrl) {
 
-                        if (response.print_url) {
+                            $('#btnAbrirPublicUrl')
+                                .attr('href', publicUrl)
+                                .removeClass('disabled');
 
-                            window.location.href =
-                                response.print_url;
+                        } else {
+
+                            $('#btnAbrirPublicUrl')
+                                .attr('href', '#')
+                                .addClass('disabled');
 
                         }
 
-                    },
 
+                        if (response.print_url) {
+
+                            $('#btnAbrirPacking')
+                                .attr('href', response.print_url)
+                                .removeClass('disabled');
+
+                        } else {
+
+                            $('#btnAbrirPacking')
+                                .attr('href', '#')
+                                .addClass('disabled');
+
+                        }
+
+
+                        const packingModal =
+                            bootstrap.Modal.getOrCreateInstance(
+                                document.getElementById(
+                                    'packingResultModal'
+                                )
+                            );
+
+                        packingModal.show();
+
+
+                        boton.prop(
+                            'disabled',
+                            false
+                        );
+
+                        boton.html(
+                            '<i class="fas fa-print"></i> Generar Packing List'
+                        );
+
+                    },
 
                     // =========================================
                     // ERROR
@@ -780,6 +803,97 @@
             }
 
         );
+        // =====================================================
+        // COPIAR URL PÚBLICA
+        // =====================================================
+
+        $('#btnCopiarPublicUrl').on('click', async function () {
+
+            const inputUrl =
+                document.getElementById('resultadoPublicUrl');
+
+            const publicUrl =
+                inputUrl.value.trim();
+
+
+            if (!publicUrl) {
+
+                alert(
+                    "No existe una URL pública para copiar."
+                );
+
+                return;
+            }
+
+
+            try {
+
+                // Método moderno. Requiere HTTPS o localhost.
+                await navigator.clipboard.writeText(
+                    publicUrl
+                );
+
+                $('#mensajeCopiado')
+                    .removeClass('d-none');
+
+                $(this).html(
+                    '<i class="fas fa-check"></i> Copiado'
+                );
+
+
+                setTimeout(() => {
+
+                    $('#mensajeCopiado')
+                        .addClass('d-none');
+
+                    $('#btnCopiarPublicUrl').html(
+                        '<i class="fas fa-copy"></i> Copiar'
+                    );
+
+                }, 2000);
+
+            } catch (error) {
+
+                console.warn(
+                    "No se pudo usar navigator.clipboard:",
+                    error
+                );
+
+
+                // Alternativa para navegadores antiguos
+                inputUrl.focus();
+                inputUrl.select();
+                inputUrl.setSelectionRange(
+                    0,
+                    inputUrl.value.length
+                );
+
+
+                const copiado =
+                    document.execCommand('copy');
+
+
+                if (copiado) {
+
+                    $('#mensajeCopiado')
+                        .removeClass('d-none');
+
+                    $(this).html(
+                        '<i class="fas fa-check"></i> Copiado'
+                    );
+
+                } else {
+
+                    alert(
+                        "No se pudo copiar automáticamente. " +
+                        "Seleccione la URL y cópiela manualmente."
+                    );
+
+                }
+
+            }
+
+        });
 
     </script>
 
