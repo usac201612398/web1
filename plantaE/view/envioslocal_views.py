@@ -20,6 +20,7 @@ class EnviosLocalListView(ListView):
 
         inicio_mes_actual = today.replace(day=1)
         inicio_mes_anterior = inicio_mes_actual - relativedelta(months=1)
+        inicio_mes_anterior = inicio_mes_anterior - relativedelta(months=1)
 
         return enviosrec.objects.filter(
             fecha__gte=inicio_mes_anterior,
