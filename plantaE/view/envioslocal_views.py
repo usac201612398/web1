@@ -8,6 +8,7 @@ from django.urls import reverse_lazy
 from plantaE.forms import enviosForm
 # modelos
 from plantaE.models import enviosrec, inventarioProdTerm, controlcajas
+from dateutil.relativedelta import relativedelta
 
 class EnviosLocalListView(ListView):
     model = enviosrec
@@ -16,10 +17,16 @@ class EnviosLocalListView(ListView):
 
     def get_queryset(self):
         today = timezone.localtime(timezone.now()).date()
+
+        inicio_mes_actual = today.replace(day=1)
+        inicio_mes_anterior = inicio_mes_actual - relativedelta(months=1)
+
         return enviosrec.objects.filter(
-            fecha__year=today.year,
-            fecha__month=today.month
-        ).exclude(status="Anulado").order_by('-envio')
+            fecha__gte=inicio_mes_anterior,
+            fecha__lt=inicio_mes_actual + relativedelta(months=1)
+        ).exclude(
+            status="Anulado"
+        ).order_by('-envio')
 
 class EnviosLocalDetailView(DetailView):
     model = enviosrec
