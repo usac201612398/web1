@@ -1717,7 +1717,216 @@ def poraprovechamientosemp(request):
 
         aprovechamiento_estandar_kg = (
             aprovechamiento_estandar_libras /
-            LIBRAS
+            LIBRAS_POR_KILO
+        )
+
+        merma_kg = (
+            merma_libras /
+            LIBRAS_POR_KILO
+        )
+
+        otras_calidades_kg = (
+            otras_calidades_libras /
+            LIBRAS_POR_KILO
+        )
+
+        # ========================================================
+        # ÁREA Y KG/M²
+        # ========================================================
+
+        clave_area = (
+            orden,
+            cultivo,
+            estructura,
+            variedad
+        )
+
+        area_m2 = float(
+            areas_sumadas.get(
+                clave_area,
+                0
+            )
+        )
+
+        if area_m2 > 0:
+
+            kg_m2 = (
+                aprovechamiento_estandar_kg /
+                area_m2
+            )
+
+        else:
+
+            kg_m2 = 0
+
+        # ========================================================
+        # PORCENTAJE DE MERMA
+        #
+        # Igual que el resumen del Excel:
+        #
+        # merma / libras reales totales
+        # ========================================================
+
+        if aprovechamiento_real_libras > 0:
+
+            porcentaje_merma = (
+                merma_libras /
+                aprovechamiento_real_libras
+            ) * 100
+
+        else:
+
+            porcentaje_merma = 0
+
+        resultado.append({
+            'proveedor': finca,
+            'cultivo': cultivo,
+            'orden': orden,
+            'estructura': estructura,
+            'variedad': variedad,
+
+            'kilos_totales': round(
+                kilos_recibidos,
+                2
+            ),
+
+            'kilos_procesados': round(
+                kilos_procesados,
+                2
+            ),
+
+            'kilos_pendientes': round(
+                kilos_pendientes,
+                2
+            ),
+
+            'aprovechamiento_real_libras': round(
+                aprovechamiento_real_libras,
+                2
+            ),
+
+            'aprovechamiento_estandar_libras': round(
+                aprovechamiento_estandar_libras,
+                2
+            ),
+
+            'aprovechamiento_real_kg': round(
+                aprovechamiento_real_kg,
+                2
+            ),
+
+            'aprovechamiento_estandar_kg': round(
+                aprovechamiento_estandar_kg,
+                2
+            ),
+
+            'merma_libras': round(
+                merma_libras,
+                2
+            ),
+
+            'merma_kg': round(
+                merma_kg,
+                2
+            ),
+
+            'porcentaje_merma': round(
+                porcentaje_merma,
+                2
+            ),
+
+            'otras_calidades_libras': round(
+                otras_calidades_libras,
+                2
+            ),
+
+            'otras_calidades_kg': round(
+                otras_calidades_kg,
+                2
+            ),
+
+            'kg_m2': round(
+                kg_m2,
+                2
+            ),
+
+            'area': round(
+                area_m2,
+                2
+            ),
+
+            # Compatibilidad con tu HTML/JavaScript actual.
+            'libras': round(
+                procesado_libras,
+                2
+            ),
+        })
+
+    # ============================================================
+    # 14. ORDENAR RESULTADOS
+    # ============================================================
+
+    resultado.sort(
+        key=lambda registro: (
+            registro['orden'] or '',
+            registro['cultivo'] or '',
+            registro['estructura'] or '',
+            registro['variedad'] or ''
+        )
+    )
+
+    # ============================================================
+    # 15. CONVERSIÓN A JSON
+    # ============================================================
+
+    registros_json = json.dumps(
+        resultado,
+        default=str
+    )
+
+    # ============================================================
+    # 16. TABLA DE PANDAS
+    # ============================================================
+
+    if resultado:
+
+        df = pd.DataFrame(resultado)
+
+        tabla_html = df.to_html(
+            classes=(
+                'table is-striped '
+                'is-fullwidth is-hoverable'
+            ),
+            index=False
+        )
+
+    else:
+
+        tabla_html = (
+            '<div class="notification is-info">'
+            'No se encontraron registros para las órdenes abiertas.'
+            '</div>'
+        )
+
+    # ============================================================
+    # 17. ENVIAR AL TEMPLATE
+    # ============================================================
+
+    return render(
+        request,
+        'plantaE/reportegerencial/'
+        'salidasFruta_aprovechamientosemp.html',
+        {
+            'registros': resultado,
+            'tabla_html': tabla_html,
+            'registros_json': registros_json,
+
+            # Útil para detectar productos sin peso estándar.
+            'items_sin_peso_estandar': sorted(
+                items_sin_peso_estandar
+            ),
+        }
+    )
 
 def poraprovechamientosempger(request):
     hoy = timezone.now().date()
