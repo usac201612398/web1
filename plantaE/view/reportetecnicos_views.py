@@ -822,7 +822,13 @@ def reporte_tabla_pivote_produccionsem(request):
     fecha_limite = datetime.date(2025, 9, 28)
 
     finca_usuario = datos[0]['finca']
-    inventario_datos = AcumFruta.objects.filter(finca=finca_usuario,fecha__gt=fecha_limite).annotate(
+    inventario_datos = AcumFruta.objects.filter(finca=finca_usuario,fecha__gt=fecha_limite,
+    cultivo__in=[
+        'GRAPE',
+        'GRAPE ORGANICO',
+        'MEDLEY',
+        'CHERRY'
+    ]).annotate(
         semana=ExtractWeek('fecha'),
         anio=ExtractIsoYear('fecha')
     ).values('orden', 'estructura', 'variedad', 'cultivo', 'semana', 'anio').annotate(
