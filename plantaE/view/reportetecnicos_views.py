@@ -820,7 +820,9 @@ def reporte_tabla_pivote_produccionsem(request):
 
     # Definir fecha límite: 31 de octubre de 2025
     fecha_limite = datetime.date(2025, 9, 28)
+    ordenes_abiertas = datosProduccion.objects.filter(status='Abierta').values('orden')
 
+    ordenes_abiertas = [item['orden'] for item in ordenes_abiertas]
     finca_usuario = datos[0]['finca']
     inventario_datos = AcumFruta.objects.filter(finca=finca_usuario,fecha__gt=fecha_limite,
     cultivo__in=[
@@ -828,7 +830,7 @@ def reporte_tabla_pivote_produccionsem(request):
         'GRAPE ORGANICO',
         'MEDLEY',
         'CHERRY'
-    ]).annotate(
+    ],orden__in=ordenes_abiertas).annotate(
         semana=ExtractWeek('fecha'),
         anio=ExtractIsoYear('fecha')
     ).values('orden', 'estructura', 'variedad', 'cultivo', 'semana', 'anio').annotate(
