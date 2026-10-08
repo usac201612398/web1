@@ -1242,89 +1242,318 @@ def reporte_tabla_pivote(request):
         'request': request
     })
 
-
 def poraprovechamientosemp(request):
     hoy = timezone.now().date()
     nombre_usuario = request.user.username
-    datos = usuariosAppFruta.objects.filter(correo=nombre_usuario).values('finca', 'encargado')
 
-    fecha_max = AcumFruta.objects.aggregate(max_fecha=Max('fecha'))['max_fecha']
+    datos_usuario = usuariosAppFruta.objects.filter(
+        correo=nombre_usuario
+    ).values(
+        'finca',
+        'encargado'
+    ).first()
+
+    if not datos_usuario:
+        return render(
+            request,
+            'plantaE/reportegerencial/salidasFruta_aprovechamientosemp.html',
+            {
+                'registros': [],
+                'tabla_html': (
+                    "<p class='text-danger'>"
+                    "El usuario no tiene una finca asignada."
+                    "</p>"
+                ),
+                'registros_json': '[]',
+            }
+        )
+
+    finca_usuario = datos_usuario['finca']
+
+    fecha_max = AcumFruta.objects.aggregate(
+        max_fecha=Max('fecha')
+    )['max_fecha']
+
     if not fecha_max:
         fecha_max = hoy
 
-    ordenes_abiertas = datosProduccion.objects.filter(status='Abierta').values_list('orden', flat=True)
+    # Solo órdenes abiertas de la finca del usuario
+    ordenes_abiertas = datosProduccion.objects.filter(
+        status__iexact='Abierta',
+        finca=finca_usuario
+    ).values_list(
+        'orden',
+        flat=True
+    )
 
-    # Total de libras por variedad desde AcumFruta
-    acumfrutadatos = AcumFruta.objects.filter(orden__in=ordenes_abiertas,correo=nombre_usuario).annotate(
-        semana=ExtractWeek('fecha'),
-        anio=ExtractIsoYear('fecha')
-    ).values('finca', 'cultivo', 'orden', 'estructura', 'variedad'
-    ).annotate(total_libras=Sum('libras')).exclude(status="Anulado").order_by()
+    # Total recibido desde AcumFruta
+    acumfrutadatos = AcumFruta.objects.filter(
+        orden__in=ordenes_abiertas,
+        correo=nombre_usuario
+    ).exclude(
+        status='Anulado'
+    ).values(
+        'finca',
+        'cultivo',
+        'orden',
+        'estructura',
+        'variedad'
+    ).annotate(
+        total_libras=Sum('libras')
+    ).order_by()
 
     recepciones_dict = {
-        formar_clave2(r['finca'], r['cultivo'], r['orden'], r['estructura'], r['variedad']): r['total_libras']
-        for r in acumfrutadatos
+        formar_clave2(
+            registro['finca'],
+            registro['cultivo'],
+            registro['orden'],
+            registro['estructura'],
+            registro['variedad']
+        ): registro['total_libras'] or 0
+        for registro in acumfrutadatos
     }
 
-    # Detalles por calidad
-    detalles = AcumFrutaaux.objects.annotate(
-        semana=ExtractWeek('fecha'),
-        anio=ExtractIsoYear('fecha')
-    ).filter(orden__in=ordenes_abiertas,correo=nombre_usuario).exclude(status="Anulado")
+    # Detalles distribuidos por boleta
+    detalles = AcumFrutaaux.objects.filter(
+        orden__in=ordenes_abiertas,
+        correo=nombre_usuario
+    ).exclude(
+        status='Anulado'
+    )
 
-    boleta_ids = detalles.values_list('boleta', flat=True).distinct()
-    boletas = Boletas.objects.filter(boleta__in=boleta_ids)
-    boletas_dict = {b.boleta: b for b in boletas}
+    # ---------------------------------------
+    # Cargar las boletas necesarias
+    # ---------------------------------------
+
+    boleta_ids = detalles.values_list(
+        'boleta',
+        flat=True
+    ).distinct()
+
+    boletas = Boletas.objects.filter(
+        boleta__in=boleta_ids
+    )
+
+    boletas_dict = {
+        boleta.boleta: boleta
+        for boleta in boletas
+    }
+
+    # ---------------------------------------
+    # Obtener los códigos SAP de las boletas
+    # ---------------------------------------
+
+    codigos_sap = {
+        boleta.itemsapcode
+        for boleta in boletas
+        if boleta.itemsapcode
+    }
+
+    # Obtener pesos estándar solamente para Exportación.
+    #
+    # La llave será:
+    # (itemsapcode, cultivo)
+    #
+    # Se incluye cultivo para evitar problemas si el mismo código
+    # apareciera asociado a diferentes cultivos.
+    productos_exportacion = productoTerm.objects.filter(
+        itemsapcode__in=codigos_sap,
+        categoria__iexact='Exportación'
+    ).values(
+        'itemsapcode',
+        'cultivo',
+        'pesostdxcaja'
+    )
+
+    pesos_estandar_dict = {
+        (
+            (producto['itemsapcode'] or '').strip(),
+            (producto['cultivo'] or '').strip().lower()
+        ): producto['pesostdxcaja'] or 0
+        for producto in productos_exportacion
+    }
 
     agrupados = defaultdict(lambda: {
         'aprovechamiento_libras': 0,
         'total_distribuido_libras': 0,
+        'exportacion_libras': 0,
+        'cajas_exportacion': 0,
+        'boletas_sin_peso_estandar': set(),
     })
+
+    # ---------------------------------------
+    # Procesar los detalles
+    # ---------------------------------------
 
     for detalle in detalles:
         boleta = boletas_dict.get(detalle.boleta)
+
         if not boleta:
             continue
 
-        clave = formar_clave2(detalle.finca, detalle.cultivo, detalle.orden, detalle.estructura, detalle.variedad)
+        clave = formar_clave2(
+            detalle.finca,
+            detalle.cultivo,
+            detalle.orden,
+            detalle.estructura,
+            detalle.variedad
+        )
+
         calidad = (boleta.calidad or '').strip().lower()
-        libras = detalle.libras or 0
+        categoria = (boleta.categoria or '').strip().lower()
 
+        cajas_boleta = boleta.cajas or 0
+        codigo_sap = (boleta.itemsapcode or '').strip()
+        cultivo_boleta = (boleta.cultivo or detalle.cultivo or '').strip().lower()
+
+        # Por defecto se conservan las libras del detalle
+        libras_calculadas = detalle.libras or 0
+
+        # Para Exportación:
+        # cajas de la boleta × peso estándar por caja
+        if categoria == 'exportación':
+            clave_producto = (
+                codigo_sap,
+                cultivo_boleta
+            )
+
+            peso_estandar = pesos_estandar_dict.get(
+                clave_producto,
+                0
+            )
+
+            if peso_estandar > 0:
+                libras_calculadas = cajas_boleta * peso_estandar
+
+                agrupados[clave]['exportacion_libras'] += (
+                    libras_calculadas
+                )
+
+                agrupados[clave]['cajas_exportacion'] += (
+                    cajas_boleta
+                )
+            else:
+                # No se usa boleta.libras porque podría ocultar
+                # una configuración faltante del producto.
+                libras_calculadas = 0
+
+                agrupados[clave]['boletas_sin_peso_estandar'].add(
+                    boleta.boleta
+                )
+
+        # Aprovechamiento por calidad
         if 'aprovechamiento' in calidad:
-            agrupados[clave]['aprovechamiento_libras'] += libras
+            agrupados[clave]['aprovechamiento_libras'] += (
+                libras_calculadas
+            )
 
-        agrupados[clave]['total_distribuido_libras'] += libras
+        # Total procesado/distribuido
+        agrupados[clave]['total_distribuido_libras'] += (
+            libras_calculadas
+        )
 
-    
-    
-    areas_sumadas_qs = detallesEstructuras.objects.values('orden', 'cultivo','estructura','variedad').annotate(total_area=Sum('area'))
-    areas_sumadas = {(a['orden'], a['cultivo'], a['estructura'], a['variedad']): a['total_area'] for a in areas_sumadas_qs}
+    # ---------------------------------------
+    # Obtener áreas
+    # ---------------------------------------
 
+    areas_sumadas_qs = detallesEstructuras.objects.filter(
+        orden__in=ordenes_abiertas
+    ).values(
+        'orden',
+        'cultivo',
+        'estructura',
+        'variedad'
+    ).annotate(
+        total_area=Sum('area')
+    )
 
+    areas_sumadas = {
+        (
+            area['orden'],
+            area['cultivo'],
+            area['estructura'],
+            area['variedad']
+        ): area['total_area'] or 0
+        for area in areas_sumadas_qs
+    }
 
+    # ---------------------------------------
     # Armar resultado final
+    # ---------------------------------------
+
     resultado = []
-    for clave, datos in agrupados.items():
+
+    for clave, datos_agrupados in agrupados.items():
         finca, cultivo, orden, estructura, variedad = clave
-        recepcion_libras = recepciones_dict.get(clave, 0)
-        procesado_libras = datos['total_distribuido_libras']
+
+        recepcion_libras = recepciones_dict.get(clave, 0) or 0
+
+        procesado_libras = (
+            datos_agrupados['total_distribuido_libras'] or 0
+        )
+
+        aprovechamiento_libras = (
+            datos_agrupados['aprovechamiento_libras'] or 0
+        )
+
+        exportacion_libras = (
+            datos_agrupados['exportacion_libras'] or 0
+        )
+
         pendiente_libras = recepcion_libras - procesado_libras
+
         if pendiente_libras < 0:
             pendiente_libras = 0
 
-        # Convertir libras a kilos
-        kilos_recibidos = round(recepcion_libras / 2.20462, 2)
-        kilos_procesados = round(procesado_libras / 2.20462, 2)
-        kilos_pendientes = round(pendiente_libras / 2.20462, 2)
+        # Conversiones a kilogramos
+        kilos_recibidos = round(
+            recepcion_libras / 2.20462,
+            2
+        )
 
-        # Calcular kg/m² con libras de aprovechamiento
-        
-        clave_area = (orden, cultivo, estructura, variedad)
-        area_m2 = areas_sumadas.get(clave_area, 0)
+        kilos_procesados = round(
+            procesado_libras / 2.20462,
+            2
+        )
 
-        aprovechamiento_kg = datos['aprovechamiento_libras'] / 2.20462 if datos['aprovechamiento_libras'] else 0
-        kg_m2 = round(aprovechamiento_kg / area_m2, 2) if area_m2 > 0 else 0
-        
+        kilos_pendientes = round(
+            pendiente_libras / 2.20462,
+            2
+        )
+
+        aprovechamiento_kg = round(
+            aprovechamiento_libras / 2.20462,
+            2
+        )
+
+        exportacion_kg = round(
+            exportacion_libras / 2.20462,
+            2
+        )
+
+        # Área
+        clave_area = (
+            orden,
+            cultivo,
+            estructura,
+            variedad
+        )
+
+        area_m2 = areas_sumadas.get(
+            clave_area,
+            0
+        ) or 0
+
+        kg_m2 = round(
+            aprovechamiento_kg / area_m2,
+            2
+        ) if area_m2 > 0 else 0
+
+        # Porcentaje de aprovechamiento empacado
+        porcentaje_aprovechamiento = round(
+            (aprovechamiento_libras / recepcion_libras) * 100,
+            2
+        ) if recepcion_libras > 0 else 0
 
         resultado.append({
             'proveedor': finca,
@@ -1332,24 +1561,76 @@ def poraprovechamientosemp(request):
             'orden': orden,
             'estructura': estructura,
             'variedad': variedad,
+
             'kilos_totales': kilos_recibidos,
             'kilos_procesados': kilos_procesados,
             'kilos_pendientes': kilos_pendientes,
+
+            'aprovechamiento_libras': round(
+                aprovechamiento_libras,
+                2
+            ),
+
+            'aprovechamiento_kg': aprovechamiento_kg,
+
+            'porcentaje_aprovechamiento': (
+                porcentaje_aprovechamiento
+            ),
+
+            'cajas_exportacion': (
+                datos_agrupados['cajas_exportacion']
+            ),
+
+            'exportacion_libras': round(
+                exportacion_libras,
+                2
+            ),
+
+            'exportacion_kg': exportacion_kg,
+
             'kg_m2': kg_m2,
-            'area':area_m2,
-            'libras':procesado_libras
+            'area': area_m2,
+            'libras': round(procesado_libras, 2),
+
+            'boletas_sin_peso_estandar': ', '.join(
+                str(boleta)
+                for boleta
+                in sorted(
+                    datos_agrupados['boletas_sin_peso_estandar']
+                )
+            ),
         })
 
-    registros_json = json.dumps(resultado, default=str)
-    df = pd.DataFrame(resultado)
-    tabla_html = df.to_html(classes="table table-striped", index=False)
+    registros_json = json.dumps(
+        resultado,
+        default=str
+    )
 
-    return render(request, 'plantaE/reportegerencial/salidasFruta_aprovechamientosemp.html', {
-        'registros': resultado,
-        'tabla_html': tabla_html,
-        'registros_json': registros_json,
-    })
+    if resultado:
+        df = pd.DataFrame(resultado)
 
+        tabla_html = df.to_html(
+            classes='table table-striped',
+            index=False,
+            na_rep=''
+        )
+    else:
+        tabla_html = (
+            "<p class='text-danger'>"
+            "No hay datos disponibles para mostrar."
+            "</p>"
+        )
+
+    return render(
+        request,
+        'plantaE/reportegerencial/'
+        'salidasFruta_aprovechamientosemp.html',
+        {
+            'registros': resultado,
+            'tabla_html': tabla_html,
+            'registros_json': registros_json,
+        }
+    )
 def poraprovechamientosempger(request):
     hoy = timezone.now().date()
 
