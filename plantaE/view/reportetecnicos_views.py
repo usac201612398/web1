@@ -823,14 +823,16 @@ def reporte_tabla_pivote_produccionsem(request):
     ordenes_abiertas = datosProduccion.objects.filter(status='Abierta').values('orden')
 
     ordenes_abiertas = [item['orden'] for item in ordenes_abiertas]
+
     finca_usuario = datos[0]['finca']
     inventario_datos = AcumFruta.objects.filter(finca=finca_usuario,fecha__gt=fecha_limite,
+    orden__in=ordenes_abiertas,
     cultivo__in=[
         'GRAPE',
         'GRAPE ORGANICO',
         'MEDLEY',
         'CHERRY'
-    ],orden__in=ordenes_abiertas).annotate(
+    ]).annotate(
         semana=ExtractWeek('fecha'),
         anio=ExtractIsoYear('fecha')
     ).values('orden', 'estructura', 'variedad', 'cultivo', 'semana', 'anio').annotate(
