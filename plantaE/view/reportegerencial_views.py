@@ -1242,6 +1242,7 @@ def reporte_tabla_pivote(request):
         'request': request
     })
 
+
 def poraprovechamientosemp(request):
     hoy = timezone.now().date()
     nombre_usuario = request.user.username
