@@ -1241,10 +1241,12 @@ def reporte_tabla_pivote(request):
         'filtros_completos': filtros_completos,
         'request': request
     })
+
 from collections import defaultdict
 
 from django.db.models import Max, Sum
 from django.utils import timezone
+from django.shortcuts import render
 
 import json
 import pandas as pd
@@ -1252,11 +1254,13 @@ import pandas as pd
 
 def poraprovechamientosemp(request):
 
+    LIBRAS_POR_KILO = 2.20462
+
     hoy = timezone.now().date()
     nombre_usuario = request.user.username
 
     # ============================================================
-    # 1. OBTENER DATOS DEL USUARIO
+    # 1. DATOS DEL USUARIO
     # ============================================================
 
     datos_usuario = (
@@ -1267,16 +1271,14 @@ def poraprovechamientosemp(request):
     )
 
     if not datos_usuario:
-        resultado = []
-
         return render(
             request,
             'plantaE/reportegerencial/'
             'salidasFruta_aprovechamientosemp.html',
             {
-                'registros': resultado,
+                'registros': [],
                 'tabla_html': (
-                    '<div class="alert alert-warning">'
+                    '<div class="notification is-warning">'
                     'El usuario no tiene una finca asignada.'
                     '</div>'
                 ),
@@ -1298,13 +1300,13 @@ def poraprovechamientosemp(request):
         fecha_max = hoy
 
     # ============================================================
-    # 3. ÓRDENES ABIERTAS
+    # 3. ÓRDENES ABIERTAS DE LA FINCA
     # ============================================================
 
     ordenes_abiertas = (
         datosProduccion.objects
         .filter(
-            status='Abierta',
+            status__iexact='Abierta',
             finca=finca_usuario
         )
         .values_list('orden', flat=True)
@@ -1320,7 +1322,7 @@ def poraprovechamientosemp(request):
             orden__in=ordenes_abiertas,
             correo=nombre_usuario
         )
-        .exclude(status='Anulado')
+        .exclude(status__iexact='Anulado')
         .values(
             'finca',
             'cultivo',
@@ -1346,69 +1348,77 @@ def poraprovechamientosemp(request):
     }
 
     # ============================================================
-    # 5. DETALLES DE ACUMFRUTAAUX
+    # 5. DETALLES QUE SE MOSTRARÁN EN EL REPORTE
+    #
+    # Aquí sí se filtra por el correo del usuario, porque estos
+    # son los registros que pertenecen a su reporte.
     # ============================================================
 
-    detalles = list(
+    detalles_reporte = list(
         AcumFrutaaux.objects
         .filter(
             orden__in=ordenes_abiertas,
             correo=nombre_usuario
         )
-        .exclude(status='Anulado')
+        .exclude(status__iexact='Anulado')
     )
 
-    # Números de boleta encontrados en AcumFrutaaux
+    # Boletas presentes en los detalles del reporte.
     boleta_ids = {
         detalle.boleta
-        for detalle in detalles
+        for detalle in detalles_reporte
         if detalle.boleta is not None
     }
 
     # ============================================================
-    # 6. TOTAL DE LIBRAS REALES POR BOLETA EN ACUMFRUTAAUX
-    #
-    # Este será el denominador para distribuir proporcionalmente
-    # el peso estándar de cada boleta.
-    # ============================================================
-
-    total_real_por_boleta = defaultdict(float)
-
-    for detalle in detalles:
-
-        if detalle.boleta is None:
-            continue
-
-        libras_reales = float(detalle.libras or 0)
-
-        total_real_por_boleta[
-            detalle.boleta
-        ] += libras_reales
-
-    # ============================================================
-    # 7. OBTENER TODAS LAS LÍNEAS DE BOLETAS
+    # 6. TOTAL REAL COMPLETO POR BOLETA
     #
     # IMPORTANTE:
-    # No se debe usar:
+    # Aquí NO se filtra por correo.
     #
-    # boletas_dict = {b.boleta: b for b in boletas}
+    # Una boleta puede contener registros de CM4, CM5, CM7, CM8
+    # u otros correos. Todos deben participar en el denominador.
+    # ============================================================
+
+    totales_reales_qs = (
+        AcumFrutaaux.objects
+        .filter(boleta__in=boleta_ids)
+        .exclude(status__iexact='Anulado')
+        .values('boleta')
+        .annotate(
+            total_real=Sum('libras')
+        )
+    )
+
+    total_real_por_boleta = {
+        registro['boleta']: float(
+            registro['total_real'] or 0
+        )
+        for registro in totales_reales_qs
+    }
+
+    # ============================================================
+    # 7. TODAS LAS LÍNEAS DE BOLETAS
     #
-    # porque una boleta puede tener varias líneas y el diccionario
-    # conservaría solamente la última.
+    # Una boleta puede tener varias líneas. Por ello no usamos:
+    #
+    # {boleta: objeto}
+    #
+    # porque sobrescribiría las líneas anteriores.
     # ============================================================
 
     lineas_boletas = list(
         Boletas.objects
         .filter(boleta__in=boleta_ids)
-        .exclude(status='Anulado')
+        .exclude(status__iexact='Anulado')
     )
 
     # ============================================================
-    # 8. OBTENER LOS ITEM CODES DE APROVECHAMIENTO
+    # 8. CÓDIGOS DE PRODUCTO UTILIZADOS
     # ============================================================
 
     item_codes = {
-        linea.itemsapcode
+        str(linea.itemsapcode).strip()
         for linea in lineas_boletas
         if linea.itemsapcode
         and 'aprovechamiento' in (
@@ -1420,7 +1430,7 @@ def poraprovechamientosemp(request):
     # 9. PESO ESTÁNDAR POR ITEM
     # ============================================================
 
-    productos = (
+    productos_qs = (
         productoTerm.objects
         .filter(itemsapcode__in=item_codes)
         .values(
@@ -1429,27 +1439,33 @@ def poraprovechamientosemp(request):
         )
     )
 
-    pesos_estandar_por_item = {
-        producto['itemsapcode']: float(
+    pesos_estandar_por_item = {}
+
+    for producto in productos_qs:
+
+        codigo = str(
+            producto['itemsapcode']
+        ).strip()
+
+        pesos_estandar_por_item[codigo] = float(
             producto['pesostdxcaja'] or 0
         )
-        for producto in productos
-    }
 
     # ============================================================
-    # 10. PESO ESTÁNDAR TOTAL POR BOLETA
+    # 10. ESTÁNDAR TOTAL POR BOLETA
     #
-    # Para cada línea de Aprovechamiento:
-    #
+    # estándar de la línea =
     # cajas de Boletas × pesostdxcaja de productoTerm
     #
-    # Si la misma boleta tiene varias líneas, todas se suman
-    # una sola vez.
+    # Si una boleta tiene varias líneas de Aprovechamiento,
+    # se suman una sola vez.
     # ============================================================
 
     estandar_total_por_boleta = defaultdict(float)
-
     boletas_aprovechamiento = set()
+
+    # Datos de diagnóstico para verificar items no encontrados.
+    items_sin_peso_estandar = set()
 
     for linea in lineas_boletas:
 
@@ -1460,23 +1476,38 @@ def poraprovechamientosemp(request):
         if 'aprovechamiento' not in calidad:
             continue
 
-        cajas = float(linea.cajas or 0)
+        numero_boleta = linea.boleta
 
-        peso_estandar_caja = pesos_estandar_por_item.get(
-            linea.itemsapcode,
-            0
+        codigo_item = str(
+            linea.itemsapcode or ''
+        ).strip()
+
+        cajas = float(
+            linea.cajas or 0
         )
+
+        peso_estandar_caja = (
+            pesos_estandar_por_item.get(
+                codigo_item,
+                0
+            )
+        )
+
+        if codigo_item and peso_estandar_caja == 0:
+            items_sin_peso_estandar.add(
+                codigo_item
+            )
 
         libras_estandar_linea = (
             cajas * peso_estandar_caja
         )
 
         estandar_total_por_boleta[
-            linea.boleta
+            numero_boleta
         ] += libras_estandar_linea
 
         boletas_aprovechamiento.add(
-            linea.boleta
+            numero_boleta
         )
 
     # ============================================================
@@ -1487,10 +1518,11 @@ def poraprovechamientosemp(request):
         'aprovechamiento_real_libras': 0,
         'aprovechamiento_estandar_libras': 0,
         'merma_libras': 0,
+        'otras_calidades_libras': 0,
         'total_distribuido_libras': 0,
     })
 
-    for detalle in detalles:
+    for detalle in detalles_reporte:
 
         clave = formar_clave2(
             detalle.finca,
@@ -1500,14 +1532,14 @@ def poraprovechamientosemp(request):
             detalle.variedad
         )
 
-        libras_reales = float(
+        numero_boleta = detalle.boleta
+
+        libras_reales_detalle = float(
             detalle.libras or 0
         )
 
-        numero_boleta = detalle.boleta
-
         # ========================================================
-        # SI LA BOLETA ES DE APROVECHAMIENTO
+        # APROVECHAMIENTO
         # ========================================================
 
         if numero_boleta in boletas_aprovechamiento:
@@ -1526,35 +1558,36 @@ def poraprovechamientosemp(request):
                 )
             )
 
-            # Calcular la proporción de este detalle respecto
-            # al total real de la misma boleta.
             if total_real_boleta > 0:
 
                 proporcion = (
-                    libras_reales /
+                    libras_reales_detalle /
                     total_real_boleta
                 )
 
             else:
+
                 proporcion = 0
 
-            # Asignar proporcionalmente el estándar total.
             libras_estandar_asignadas = (
                 total_estandar_boleta *
                 proporcion
             )
 
-            # Merma:
-            # libras reales recibidas menos libras estándar
-            # empacadas.
+            # Merma conforme al cálculo del Excel:
+            #
+            # libras reales - peso estándar distribuido
+            #
+            # Una merma positiva significa que se utilizaron más
+            # libras reales que las libras estándar empacadas.
             merma_libras = (
-                libras_reales -
+                libras_reales_detalle -
                 libras_estandar_asignadas
             )
 
             agrupados[clave][
                 'aprovechamiento_real_libras'
-            ] += libras_reales
+            ] += libras_reales_detalle
 
             agrupados[clave][
                 'aprovechamiento_estandar_libras'
@@ -1564,24 +1597,30 @@ def poraprovechamientosemp(request):
                 'merma_libras'
             ] += merma_libras
 
-            # Para Aprovechamiento se utiliza el peso estándar
-            # distribuido, no las libras reales del detalle.
+            # Igual que la columna "Total" del Excel:
+            # Aprovechamiento utiliza PesoEstandar.
             agrupados[clave][
                 'total_distribuido_libras'
             ] += libras_estandar_asignadas
 
         # ========================================================
-        # PARA LAS DEMÁS CALIDADES TODO QUEDA NORMAL
+        # DEVOLUCIÓN Y LAS DEMÁS CALIDADES
+        #
+        # Se mantienen utilizando las libras reales.
         # ========================================================
 
         else:
 
             agrupados[clave][
+                'otras_calidades_libras'
+            ] += libras_reales_detalle
+
+            agrupados[clave][
                 'total_distribuido_libras'
-            ] += libras_reales
+            ] += libras_reales_detalle
 
     # ============================================================
-    # 12. ÁREA TOTAL
+    # 12. ÁREAS
     # ============================================================
 
     areas_sumadas_qs = (
@@ -1618,7 +1657,10 @@ def poraprovechamientosemp(request):
         finca, cultivo, orden, estructura, variedad = clave
 
         recepcion_libras = float(
-            recepciones_dict.get(clave, 0)
+            recepciones_dict.get(
+                clave,
+                0
+            )
         )
 
         procesado_libras = float(
@@ -1645,191 +1687,38 @@ def poraprovechamientosemp(request):
             valores['merma_libras']
         )
 
+        otras_calidades_libras = float(
+            valores['otras_calidades_libras']
+        )
+
         # ========================================================
-        # CONVERTIR LIBRAS A KILOS
+        # CONVERSIÓN A KILOS
         # ========================================================
 
         kilos_recibidos = (
-            recepcion_libras / 2.20462
+            recepcion_libras /
+            LIBRAS_POR_KILO
         )
 
         kilos_procesados = (
-            procesado_libras / 2.20462
+            procesado_libras /
+            LIBRAS_POR_KILO
         )
 
         kilos_pendientes = (
-            pendiente_libras / 2.20462
+            pendiente_libras /
+            LIBRAS_POR_KILO
         )
 
         aprovechamiento_real_kg = (
             aprovechamiento_real_libras /
-            2.20462
+            LIBRAS_POR_KILO
         )
 
         aprovechamiento_estandar_kg = (
             aprovechamiento_estandar_libras /
-            2.20462
-        )
+            LIBRAS
 
-        merma_kg = (
-            merma_libras / 2.20462
-        )
-
-        # ========================================================
-        # ÁREA Y KG/M²
-        # ========================================================
-
-        clave_area = (
-            orden,
-            cultivo,
-            estructura,
-            variedad
-        )
-
-        area_m2 = float(
-            areas_sumadas.get(
-                clave_area,
-                0
-            )
-        )
-
-        # El aprovechamiento empacado debe utilizar el
-        # peso estándar proporcional.
-        if area_m2 > 0:
-
-            kg_m2 = (
-                aprovechamiento_estandar_kg /
-                area_m2
-            )
-
-        else:
-            kg_m2 = 0
-
-        # ========================================================
-        # PORCENTAJE DE MERMA
-        #
-        # Se calcula respecto a las libras reales recibidas
-        # que fueron clasificadas como Aprovechamiento.
-        # ========================================================
-
-        if aprovechamiento_real_libras > 0:
-
-            porcentaje_merma = (
-                merma_libras /
-                aprovechamiento_real_libras
-            ) * 100
-
-        else:
-            porcentaje_merma = 0
-
-        resultado.append({
-            'proveedor': finca,
-            'cultivo': cultivo,
-            'orden': orden,
-            'estructura': estructura,
-            'variedad': variedad,
-
-            'kilos_totales': round(
-                kilos_recibidos,
-                2
-            ),
-
-            'kilos_procesados': round(
-                kilos_procesados,
-                2
-            ),
-
-            'kilos_pendientes': round(
-                kilos_pendientes,
-                2
-            ),
-
-            'aprovechamiento_real_libras': round(
-                aprovechamiento_real_libras,
-                2
-            ),
-
-            'aprovechamiento_estandar_libras': round(
-                aprovechamiento_estandar_libras,
-                2
-            ),
-
-            'aprovechamiento_real_kg': round(
-                aprovechamiento_real_kg,
-                2
-            ),
-
-            'aprovechamiento_estandar_kg': round(
-                aprovechamiento_estandar_kg,
-                2
-            ),
-
-            'merma_libras': round(
-                merma_libras,
-                2
-            ),
-
-            'merma_kg': round(
-                merma_kg,
-                2
-            ),
-
-            'porcentaje_merma': round(
-                porcentaje_merma,
-                2
-            ),
-
-            'kg_m2': round(
-                kg_m2,
-                2
-            ),
-
-            'area': round(
-                area_m2,
-                2
-            ),
-
-            # Se mantiene el nombre por compatibilidad
-            # con el JavaScript que ya tengas.
-            'libras': round(
-                procesado_libras,
-                2
-            ),
-        })
-
-    # ============================================================
-    # 14. JSON Y TABLA HTML
-    # ============================================================
-
-    registros_json = json.dumps(
-        resultado,
-        default=str
-    )
-
-    df = pd.DataFrame(resultado)
-
-    tabla_html = df.to_html(
-        classes=(
-            'table table-striped '
-            'table-bordered table-hover'
-        ),
-        index=False
-    )
-
-    # ============================================================
-    # 15. ENVIAR AL TEMPLATE
-    # ============================================================
-
-    return render(
-        request,
-        'plantaE/reportegerencial/'
-        'salidasFruta_aprovechamientosemp.html',
-        {
-            'registros': resultado,
-            'tabla_html': tabla_html,
-            'registros_json': registros_json,
-        }
-    )
 def poraprovechamientosempger(request):
     hoy = timezone.now().date()
 
