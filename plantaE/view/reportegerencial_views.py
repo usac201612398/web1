@@ -2982,59 +2982,299 @@ def poraprovechamientosgerglobal(request):
     })
 
 def kgm2_semanal_aprovechamiento(request):
-    ordenes_abiertas = datosProduccion.objects.filter(
-        status='Abierta'
-    ).values_list('orden', flat=True)
 
-    # 🔹 Boletas que sean exactamente "Aprovechamiento"
-    boletas_aprovechamiento = Boletas.objects.filter(
-        calidad__iexact='Aprovechamiento'
-    ).values_list('boleta', flat=True)
+    # ==========================================================
+    # ÓRDENES ABIERTAS
+    # ==========================================================
 
-    # 🔹 Detalles filtrados SOLO por esas boletas
-    detalles = AcumFrutaaux.objects.annotate(
-        semana=ExtractWeek('fecha'),
-        anio=ExtractIsoYear('fecha')
-    ).filter(
-        orden__in=ordenes_abiertas,
-        boleta__in=boletas_aprovechamiento
-    ).exclude(status="Anulado")
+    ordenes_abiertas = set(
+        datosProduccion.objects.filter(
+            status='Abierta'
+        ).values_list(
+            'orden',
+            flat=True
+        )
+    )
 
-    # 🔹 Áreas por estructura
-    areas_qs = detallesEstructuras.objects.values(
-        'orden', 'cultivo', 'estructura', 'variedad'
-    ).annotate(total_area=Sum('area'))
+    # ==========================================================
+    # DETALLES DE ÓRDENES ABIERTAS
+    # ==========================================================
 
-    areas = {
-        (a['orden'], a['cultivo'], a['estructura'], a['variedad']): a['total_area']
-        for a in areas_qs
+    detalles = list(
+        AcumFrutaaux.objects
+        .filter(
+            orden__in=ordenes_abiertas
+        )
+        .exclude(
+            status__iexact='Anulado'
+        )
+        .annotate(
+            semana=ExtractWeek('fecha'),
+            anio=ExtractIsoYear('fecha')
+        )
+    )
+
+    # ==========================================================
+    # IDENTIFICAR BOLETAS USADAS
+    # ==========================================================
+
+    boleta_ids = {
+        detalle.boleta
+        for detalle in detalles
+        if detalle.boleta is not None
     }
 
-    # 🔹 Agrupar libras por semana
+    # ==========================================================
+    # CARGAR TODAS LAS LÍNEAS DE LAS BOLETAS
+    #
+    # Una boleta puede contener varias líneas, cajas o productos.
+    # ==========================================================
+
+    lineas_boletas = list(
+        Boletas.objects
+        .filter(
+            boleta__in=boleta_ids
+        )
+        .exclude(
+            status__iexact='Anulado'
+        )
+    )
+
+    # ==========================================================
+    # CÓDIGOS DE PRODUCTOS UTILIZADOS
+    # ==========================================================
+
+    itemsapcodes = {
+        linea.itemsapcode
+        for linea in lineas_boletas
+        if linea.itemsapcode
+    }
+
+    # ==========================================================
+    # PESO ESTÁNDAR POR CAJA
+    # ==========================================================
+
+    productos = productoTerm.objects.filter(
+        itemsapcode__in=itemsapcodes
+    ).values(
+        'itemsapcode',
+        'pesostdxcaja'
+    )
+
+    pesos_estandar_por_item = {
+        producto['itemsapcode']: float(
+            producto['pesostdxcaja'] or 0
+        )
+        for producto in productos
+    }
+
+    # ==========================================================
+    # CALIDAD Y ESTÁNDAR TOTAL POR BOLETA
+    #
+    # estándar total = cajas × peso estándar por caja
+    # ==========================================================
+
+    calidades_por_boleta = defaultdict(set)
+    estandar_total_por_boleta = defaultdict(float)
+
+    for linea in lineas_boletas:
+
+        numero_boleta = linea.boleta
+        calidad = (linea.calidad or '').strip().lower()
+
+        calidades_por_boleta[numero_boleta].add(calidad)
+
+        if 'aprovechamiento' in calidad:
+
+            cajas = float(
+                linea.cajas or 0
+            )
+
+            peso_estandar_caja = pesos_estandar_por_item.get(
+                linea.itemsapcode,
+                0
+            )
+
+            estandar_linea = (
+                cajas * peso_estandar_caja
+            )
+
+            estandar_total_por_boleta[numero_boleta] += (
+                estandar_linea
+            )
+
+    # ==========================================================
+    # TOTAL REAL COMPLETO DE CADA BOLETA
+    #
+    # Se utiliza para determinar qué proporción corresponde
+    # a cada recepción o detalle.
+    # ==========================================================
+
+    totales_reales_qs = (
+        AcumFrutaaux.objects
+        .filter(
+            boleta__in=boleta_ids,
+            orden__in=ordenes_abiertas
+        )
+        .exclude(
+            status__iexact='Anulado'
+        )
+        .values(
+            'boleta'
+        )
+        .annotate(
+            total_real_libras=Sum('libras')
+        )
+    )
+
+    total_real_por_boleta = {
+        registro['boleta']: float(
+            registro['total_real_libras'] or 0
+        )
+        for registro in totales_reales_qs
+    }
+
+    # ==========================================================
+    # ÁREAS POR ESTRUCTURA Y VARIEDAD
+    # ==========================================================
+
+    areas_qs = (
+        detallesEstructuras.objects
+        .filter(
+            orden__in=ordenes_abiertas
+        )
+        .values(
+            'orden',
+            'cultivo',
+            'estructura',
+            'variedad'
+        )
+        .annotate(
+            total_area=Sum('area')
+        )
+    )
+
+    areas = {
+        (
+            registro['orden'],
+            registro['cultivo'],
+            registro['estructura'],
+            registro['variedad']
+        ): float(registro['total_area'] or 0)
+        for registro in areas_qs
+    }
+
+    # ==========================================================
+    # AGRUPAR EL ESTÁNDAR ASIGNADO POR SEMANA
+    # ==========================================================
+
     agrupados = defaultdict(float)
 
-    for d in detalles:
-        clave = (
-            d.finca,
-            d.cultivo,
-            d.orden,
-            d.estructura,
-            d.variedad,
-            d.anio,
-            d.semana
+    for detalle in detalles:
+
+        numero_boleta = detalle.boleta
+
+        if numero_boleta is None:
+            continue
+
+        calidades = calidades_por_boleta.get(
+            numero_boleta,
+            set()
         )
 
-        agrupados[clave] += d.libras or 0
+        es_aprovechamiento = any(
+            'aprovechamiento' in calidad
+            for calidad in calidades
+        )
 
-    # 🔹 Construir resultado final
+        if not es_aprovechamiento:
+            continue
+
+        libras_reales_detalle = float(
+            detalle.libras or 0
+        )
+
+        total_real_boleta = total_real_por_boleta.get(
+            numero_boleta,
+            0
+        )
+
+        total_estandar_boleta = estandar_total_por_boleta.get(
+            numero_boleta,
+            0
+        )
+
+        if total_real_boleta <= 0:
+            continue
+
+        # Participación de este detalle dentro de la boleta
+        proporcion_detalle = (
+            libras_reales_detalle /
+            total_real_boleta
+        )
+
+        # Estándar de la boleta asignado proporcionalmente
+        estandar_asignado_libras = (
+            total_estandar_boleta *
+            proporcion_detalle
+        )
+
+        clave = (
+            detalle.finca,
+            detalle.cultivo,
+            detalle.orden,
+            detalle.estructura,
+            detalle.variedad,
+            detalle.anio,
+            detalle.semana
+        )
+
+        agrupados[clave] += (
+            estandar_asignado_libras
+        )
+
+    # ==========================================================
+    # CONSTRUIR RESULTADO SEMANAL
+    # ==========================================================
+
     resultado = []
 
-    for clave, libras in agrupados.items():
-        finca, cultivo, orden, estructura, variedad, anio, semana = clave
+    for clave, estandar_libras in agrupados.items():
 
-        area = areas.get((orden, cultivo, estructura, variedad), 0)
-        kg = libras / 2.20462
-        kg_m2 = round(kg / area, 2) if area > 0 else 0
+        (
+            finca,
+            cultivo,
+            orden,
+            estructura,
+            variedad,
+            anio,
+            semana
+        ) = clave
+
+        clave_area = (
+            orden,
+            cultivo,
+            estructura,
+            variedad
+        )
+
+        area_m2 = float(
+            areas.get(clave_area, 0)
+        )
+
+        # Convertir estándar de libras a kilogramos
+        estandar_kg = (
+            estandar_libras / 2.20462
+            if estandar_libras
+            else 0
+        )
+
+        # Rendimiento estándar semanal
+        kg_m2_estandar = (
+            estandar_kg / area_m2
+            if area_m2 > 0
+            else 0
+        )
 
         resultado.append({
             'finca': finca,
@@ -3044,46 +3284,102 @@ def kgm2_semanal_aprovechamiento(request):
             'variedad': variedad,
             'anio': anio,
             'semana': semana,
-            'kg_m2': kg_m2,
-            'area_m2': area
+
+            # Este valor ya es estándar
+            'kg_m2': round(
+                kg_m2_estandar,
+                2
+            ),
+
+            'area_m2': round(
+                area_m2,
+                2
+            ),
+
+            # Se incluyen para poder verificar el cálculo
+            'estandar_kg': round(
+                estandar_kg,
+                2
+            ),
+
+            'estandar_libras': round(
+                estandar_libras,
+                2
+            ),
         })
 
-    # 🔹 Tabla pivote
+    # ==========================================================
+    # CREAR TABLA PIVOTE
+    # ==========================================================
+
     df = pd.DataFrame(resultado)
 
     if not df.empty:
+
         tabla_pivote = pd.pivot_table(
             df,
             values='kg_m2',
-            index=['finca', 'cultivo', 'orden', 'estructura', 'variedad'],
-            columns=['anio', 'semana'],
+            index=[
+                'finca',
+                'cultivo',
+                'orden',
+                'estructura',
+                'variedad'
+            ],
+            columns=[
+                'anio',
+                'semana'
+            ],
             aggfunc='sum',
             fill_value=0
         )
 
+        # Encabezados: Semana-Año
         tabla_pivote.columns = [
-            f"{sem}-{anio}" for anio, sem in tabla_pivote.columns
+            f"{int(semana):02d}-{int(anio)}"
+            for anio, semana in tabla_pivote.columns
         ]
 
         tabla_pivote = (
             tabla_pivote
             .sort_index(axis=1)
-            .replace(0, "")
+            .round(2)
+            .replace(0, '')
             .reset_index()
         )
 
         tabla_html = tabla_pivote.to_html(
-            table_id="tabla-pivote",
-            index=False
+            table_id='tabla-pivote',
+            classes=(
+                'table is-striped is-hoverable '
+                'is-fullwidth is-narrow'
+            ),
+            index=False,
+            border=0
         )
+
     else:
-        tabla_html = "<p>No hay datos</p>"
+
+        tabla_html = (
+            '<p class="has-text-centered has-text-grey">'
+            'No hay datos de aprovechamiento estándar.'
+            '</p>'
+        )
+
+    # ==========================================================
+    # RENDERIZAR
+    # ==========================================================
 
     return render(
         request,
-        'plantaE/reportegerencial/salidasFruta_aprovechamientosempgersem.html',
+        'plantaE/reportegerencial/'
+        'salidasFruta_aprovechamientosempgersem.html',
         {
             'tabla_html': tabla_html,
-            'registros_json': json.dumps(resultado, default=str),
+            'registros_json': json.dumps(
+                resultado,
+                default=str
+            ),
         }
     )
+    
