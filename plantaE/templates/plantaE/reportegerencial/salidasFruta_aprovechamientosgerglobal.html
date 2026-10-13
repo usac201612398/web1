@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 {% load static %}
+
 <head>
   <meta charset="UTF-8">
   <title>Panel - totalFruta</title>
@@ -11,59 +12,175 @@
 
   <style>
     body {
-      background-color: #f9f9f9;
+      background: #f4f6f9;
+      min-height: 100vh;
     }
-    .panel-header {
-      margin-bottom: 1.5rem;
+
+    /* HEADER */
+
+    .hero {
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, .08);
     }
-    .filters {
-      background: white;
-      padding: 1.5rem;
-      border-radius: 6px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+
+    .hero-body {
+      padding: 2rem;
     }
-    .data-section {
-      margin-top: 2rem;
-    }
+
+    /* CAJAS */
+
     .box {
-      border-radius: 6px;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, .08);
     }
-    .back-link {
-      margin-top: 2rem;
-      display: inline-block;
+
+    /* TABLA */
+
+    .table-container {
+      max-height: 75vh;
+      overflow: auto;
+      border-radius: 10px;
     }
-    .is-small-text {
-      font-size: 0.9rem;
-      color: #777;
+
+    .table {
+      font-size: .88rem;
     }
+
+    .table thead th {
+      text-align: center !important;
+      vertical-align: middle;
+    }
+
+    .table td {
+      vertical-align: middle;
+    }
+
+    .table tbody tr:hover {
+      background: #f8f9fa !important;
+    }
+
     .table-custom-header th {
-    background: linear-gradient(to right, #6c757d, #495057);
-    color: white !important;
-    font-weight: 600;
-    text-align: center;
-    white-space: nowrap;
+      background: #495057;
+      color: white !important;
+      font-weight: 600;
+      white-space: nowrap;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    /* NÚMEROS */
+
+    .number-cell {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* COLUMNAS IMPORTANTES */
+
+    .table td:nth-child(1),
+    .table td:nth-child(2),
+    .table td:nth-child(3) {
+      font-weight: 500;
+    }
+
+    /* PORCENTAJES */
+
+    .aprovechamiento {
+      color: #198754;
+      font-weight: 600;
+    }
+
+    .merma {
+      color: #dc3545;
+      font-weight: 600;
+    }
+
+    .mediano {
+      color: #fd7e14;
+      font-weight: 600;
+    }
+
+    .devolucion {
+      color: #0d6efd;
+      font-weight: 600;
+    }
+
+    .pendiente {
+      color: #6c757d;
+      font-weight: 600;
+    }
+
+    /* TITULO */
+
+    .table-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1rem;
+    }
+
+    .table-title i {
+      color: #198754;
+    }
+
+    /* BOTONES */
+
+    .button.is-success {
+      box-shadow: 0 2px 8px rgba(25, 135, 84, .25);
     }
   </style>
 </head>
+
 <body>
   <section class="section">
     <div class="container">
       <!-- HEADER -->
-        <section class="hero is-success is-small mb-5">
+      <section class="hero is-dark mb-5">
         <div class="hero-body">
-            <div class="container has-text-centered">
-            <h1 class="title is-3 has-text-white">Panel de Control</h1>
-            <p class="subtitle is-6 has-text-white-ter">Consulta de salidas de fruta</p>
-            </div>
+          <div class="container has-text-centered">
+
+            <h1 class="title is-3 has-text-white">
+              Indicadores Globales de Aprovechamiento
+            </h1>
+
+            <p class="subtitle is-6 has-text-grey-light">
+              Resumen por finca, cultivo y orden
+            </p>
+
+          </div>
         </div>
-        </section>
+      </section>
 
       <!-- TABLA 1 -->
       <div class="data-section">
         <div class="box">
-          <h2 class="title is-5">Detalle por variedad</h2>
+          <div class="table-title">
+
+            <i class="fas fa-table"></i>
+
+            <h2 class="title is-5 mb-0">
+              Detalle Global
+            </h2>
+
+          </div>
+          <div class="field mb-4">
+
+            <div class="control has-icons-left">
+
+              <input class="input" type="text" id="searchInput" placeholder="Buscar finca, cultivo u orden...">
+
+              <span class="icon is-small is-left">
+                <i class="fas fa-search"></i>
+              </span>
+
+            </div>
+
+          </div>
           <div class="table-container">
-            <table class="table is-striped is-fullwidth is-hoverable" id="myTable">
+            <table class="table is-striped is-hoverable is-fullwidth is-narrow" id="myTable">
               <thead class="table-custom-header">
                 <tr>
                   <th>Finca</th>
@@ -73,6 +190,7 @@
                   <th>Libras-Procesadas</th>
                   <th>%Pendiente</th>
                   <th>%Aprovechamiento</th>
+                  <th>% Merma</th>
                   <th>%Mediano</th>
                   <th>%Devolución</th>
                 </tr>
@@ -85,8 +203,13 @@
                   <td>{{ registro.orden }}</td>
                   <td class="number-cell" data-value="{{ registro.libras }}">{{ registro.libras }}</td>
                   <td class="number-cell" data-value="{{ registro.procesado}}">{{ registro.procesado}}</td>
-                  <td class="number-cell" data-value="{{ registro.porcentaje_pendiente }}">{{ registro.porcentaje_pendiente }}</td>
-                  <td class="number-cell" data-value="{{ registro.aprovechamiento }}">{{ registro.aprovechamiento }}%</td>
+                  <td class="number-cell" data-value="{{ registro.porcentaje_pendiente }}">{{
+                    registro.porcentaje_pendiente }}</td>
+                  <td class="number-cell" data-value="{{ registro.aprovechamiento }}">{{ registro.aprovechamiento }}%
+                  </td>
+                  <td class="number-cell merma" data-value="{{ registro.merma }}">
+                    {{ registro.merma }}%
+                  </td>
                   <td class="number-cell" data-value="{{ registro.mediano }}">{{ registro.mediano }}%</td>
                   <td class="number-cell" data-value="{{ registro.devolucion }}">{{ registro.devolucion }}%</td>
 
@@ -98,15 +221,15 @@
         </div>
       </div>
 
-    <div class="has-text-centered mt-6">
+      <div class="has-text-centered mt-6">
         <a href="{% url 'plantaE_homeger' %}" class="button is-success is-medium is-rounded">
-            <span class="icon">
+          <span class="icon">
             <i class="fas fa-home"></i>
-            </span>
-            <span>Home</span>
+          </span>
+          <span>Home</span>
         </a>
-    </div>
-    
+      </div>
+
     </div>
   </section>
 
@@ -149,6 +272,34 @@
     document.addEventListener('DOMContentLoaded', () => {
       formatCells('myTable');
     });
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+      const searchInput = document.getElementById('searchInput');
+      const table = document.getElementById('myTable');
+      const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+      searchInput.addEventListener('keyup', function () {
+
+        const filtro = this.value.toLowerCase();
+
+        for (let i = 0; i < rows.length; i++) {
+
+          const textoFila =
+            rows[i].textContent.toLowerCase();
+
+          rows[i].style.display =
+            textoFila.includes(filtro)
+              ? ''
+              : 'none';
+
+        }
+
+      });
+
+    });
+    
   </script>
 </body>
+
 </html>

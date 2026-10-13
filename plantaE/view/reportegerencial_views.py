@@ -2893,94 +2893,488 @@ def poraprovechamientosger(request):
         }
     )
 
-
 def poraprovechamientosgerglobal(request):
-    hoy = timezone.now().date()
-    # Obtener fecha máxima en detallerecaux
-    fecha_max = AcumFruta.objects.aggregate(max_fecha=Max('fecha'))['max_fecha']
-    if not fecha_max:
-        fecha_max = hoy  # fallback si no hay registros
-    ordenes_abiertas = datosProduccion.objects.filter(status='Abierta').values_list('orden', flat=True)
 
-    # Filtrar las libras totales por variedad desde AcumFruta
-    acumfrutadatos = AcumFruta.objects.filter(orden__in=ordenes_abiertas
-    ).annotate(
-        semana=ExtractWeek('fecha'),
-        anio=ExtractIsoYear('fecha')
-    ).exclude(status='Anulado').values('finca', 'cultivo', 'orden').annotate(total_libras=Sum('libras')).order_by()
+    hoy = timezone.now().date()
+
+    fecha_max = AcumFruta.objects.aggregate(
+        max_fecha=Max('fecha')
+    )['max_fecha']
+
+    if not fecha_max:
+        fecha_max = hoy
+
+    # ==========================================================
+    # ÓRDENES ABIERTAS
+    # ==========================================================
+
+    ordenes_abiertas = set(
+        datosProduccion.objects.filter(
+            status='Abierta'
+        ).values_list(
+            'orden',
+            flat=True
+        )
+    )
+
+    # ==========================================================
+    # LIBRAS RECIBIDAS AGRUPADAS POR FINCA, CULTIVO Y ORDEN
+    # ==========================================================
+
+    acumfrutadatos = (
+        AcumFruta.objects
+        .filter(
+            orden__in=ordenes_abiertas
+        )
+        .exclude(
+            status__iexact='Anulado'
+        )
+        .values(
+            'finca',
+            'cultivo',
+            'orden'
+        )
+        .annotate(
+            total_libras=Sum('libras')
+        )
+        .order_by()
+    )
 
     recepciones_dict = {
-        formar_clave4(r['finca'], r['cultivo'], r['orden']): r['total_libras'] for r in acumfrutadatos
+        formar_clave4(
+            registro['finca'],
+            registro['cultivo'],
+            registro['orden']
+        ): float(registro['total_libras'] or 0)
+        for registro in acumfrutadatos
     }
 
-    # Filtrar distribuciones desde AcumFrutaaux
-    detalles = AcumFrutaaux.objects.annotate(
-        semana=ExtractWeek('fecha'),
-        anio=ExtractIsoYear('fecha')
-    ).exclude(status='Anulado').filter(orden__in=ordenes_abiertas)
+    # ==========================================================
+    # DETALLES DISTRIBUIDOS
+    # ==========================================================
 
-    boleta_ids = detalles.values_list('boleta', flat=True).distinct()
-    boletas = Boletas.objects.filter(boleta__in=boleta_ids)
-    boletas_dict = {b.boleta: b for b in boletas}
+    detalles = list(
+        AcumFrutaaux.objects
+        .filter(
+            orden__in=ordenes_abiertas
+        )
+        .exclude(
+            status__iexact='Anulado'
+        )
+    )
 
-    # Agrupar las libras por boleta
-    agrupados = defaultdict(lambda: {'aprovechamiento': 0, 'devolución': 0, 'mediano': 0, 'total': 0})
+    # ==========================================================
+    # BOLETAS UTILIZADAS
+    # ==========================================================
 
-    for detalle in detalles:
-        boleta = boletas_dict.get(detalle.boleta)
-        if not boleta:
-            continue
-        
-        clave = formar_clave4(detalle.finca, detalle.cultivo, detalle.orden)
-        calidad = (boleta.calidad or '').strip().lower()
-        libras = detalle.libras or 0
+    boleta_ids = {
+        detalle.boleta
+        for detalle in detalles
+        if detalle.boleta is not None
+    }
+
+    # Una misma boleta puede tener varias líneas,
+    # productos o cantidades de cajas.
+    lineas_boletas = list(
+        Boletas.objects
+        .filter(
+            boleta__in=boleta_ids
+        )
+        .exclude(
+            status__iexact='Anulado'
+        )
+    )
+
+    # ==========================================================
+    # PESOS ESTÁNDAR POR PRODUCTO
+    # ==========================================================
+
+    itemsapcodes = {
+        linea.itemsapcode
+        for linea in lineas_boletas
+        if linea.itemsapcode
+    }
+
+    productos = productoTerm.objects.filter(
+        itemsapcode__in=itemsapcodes
+    ).values(
+        'itemsapcode',
+        'pesostdxcaja'
+    )
+
+    pesos_estandar_por_item = {
+        producto['itemsapcode']: float(
+            producto['pesostdxcaja'] or 0
+        )
+        for producto in productos
+    }
+
+    # ==========================================================
+    # CALIDAD Y PESO ESTÁNDAR TOTAL POR BOLETA
+    #
+    # Estándar = cajas × peso estándar por caja
+    # ==========================================================
+
+    calidades_por_boleta = defaultdict(set)
+    estandar_total_por_boleta = defaultdict(float)
+
+    for linea in lineas_boletas:
+
+        numero_boleta = linea.boleta
+        calidad = (linea.calidad or '').strip().lower()
+
+        calidades_por_boleta[numero_boleta].add(calidad)
 
         if 'aprovechamiento' in calidad:
-            agrupados[clave]['aprovechamiento'] += libras
-        elif 'devolución' in calidad:
-            agrupados[clave]['devolución'] += libras
-        elif 'mediano' in calidad:
-            agrupados[clave]['mediano'] += libras
 
-        agrupados[clave]['total'] += libras
+            cajas = float(linea.cajas or 0)
 
-    # Calcular los porcentajes de calidad
+            peso_estandar_caja = pesos_estandar_por_item.get(
+                linea.itemsapcode,
+                0
+            )
+
+            estandar_linea = (
+                cajas * peso_estandar_caja
+            )
+
+            estandar_total_por_boleta[numero_boleta] += (
+                estandar_linea
+            )
+
+    # ==========================================================
+    # TOTAL REAL COMPLETO POR BOLETA
+    #
+    # Sirve para conocer qué proporción del estándar le
+    # corresponde a cada registro de AcumFrutaaux.
+    # ==========================================================
+
+    totales_reales_boleta_qs = (
+        AcumFrutaaux.objects
+        .filter(
+            boleta__in=boleta_ids,
+            orden__in=ordenes_abiertas
+        )
+        .exclude(
+            status__iexact='Anulado'
+        )
+        .values(
+            'boleta'
+        )
+        .annotate(
+            total_real_libras=Sum('libras')
+        )
+    )
+
+    total_real_por_boleta = {
+        registro['boleta']: float(
+            registro['total_real_libras'] or 0
+        )
+        for registro in totales_reales_boleta_qs
+    }
+
+    # ==========================================================
+    # AGRUPACIÓN GLOBAL POR FINCA, CULTIVO Y ORDEN
+    # ==========================================================
+
+    agrupados = defaultdict(
+        lambda: {
+            'aprovechamiento': 0.0,
+            'merma': 0.0,
+            'devolución': 0.0,
+            'mediano': 0.0,
+            'total': 0.0,
+        }
+    )
+
+    for detalle in detalles:
+
+        numero_boleta = detalle.boleta
+
+        if numero_boleta is None:
+            continue
+
+        clave = formar_clave4(
+            detalle.finca,
+            detalle.cultivo,
+            detalle.orden
+        )
+
+        libras_reales_detalle = float(
+            detalle.libras or 0
+        )
+
+        calidades = calidades_por_boleta.get(
+            numero_boleta,
+            set()
+        )
+
+        es_aprovechamiento = any(
+            'aprovechamiento' in calidad
+            for calidad in calidades
+        )
+
+        es_devolucion = any(
+            'devolución' in calidad or
+            'devolucion' in calidad
+            for calidad in calidades
+        )
+
+        es_mediano = any(
+            'mediano' in calidad
+            for calidad in calidades
+        )
+
+        # ======================================================
+        # APROVECHAMIENTO ESTÁNDAR Y MERMA
+        # ======================================================
+
+        if es_aprovechamiento:
+
+            total_real_boleta = total_real_por_boleta.get(
+                numero_boleta,
+                0
+            )
+
+            total_estandar_boleta = estandar_total_por_boleta.get(
+                numero_boleta,
+                0
+            )
+
+            if total_real_boleta > 0:
+
+                proporcion_detalle = (
+                    libras_reales_detalle /
+                    total_real_boleta
+                )
+
+                aprovechamiento_estandar = (
+                    total_estandar_boleta *
+                    proporcion_detalle
+                )
+
+                # Evita aprovechamiento superior al peso real.
+                aprovechamiento_estandar = min(
+                    aprovechamiento_estandar,
+                    libras_reales_detalle
+                )
+
+                merma_estandar = (
+                    libras_reales_detalle -
+                    aprovechamiento_estandar
+                )
+
+            else:
+
+                aprovechamiento_estandar = 0
+                merma_estandar = libras_reales_detalle
+
+            agrupados[clave]['aprovechamiento'] += (
+                aprovechamiento_estandar
+            )
+
+            agrupados[clave]['merma'] += (
+                merma_estandar
+            )
+
+            agrupados[clave]['total'] += (
+                libras_reales_detalle
+            )
+
+        # ======================================================
+        # DEVOLUCIÓN REAL
+        # ======================================================
+
+        elif es_devolucion:
+
+            agrupados[clave]['devolución'] += (
+                libras_reales_detalle
+            )
+
+            agrupados[clave]['total'] += (
+                libras_reales_detalle
+            )
+
+        # ======================================================
+        # MEDIANO REAL
+        # ======================================================
+
+        elif es_mediano:
+
+            agrupados[clave]['mediano'] += (
+                libras_reales_detalle
+            )
+
+            agrupados[clave]['total'] += (
+                libras_reales_detalle
+            )
+
+        # Si existe una calidad no contemplada, se suma como
+        # procesada, aunque no pertenece a estas categorías.
+        else:
+
+            agrupados[clave]['total'] += (
+                libras_reales_detalle
+            )
+
+    # ==========================================================
+    # RESULTADO FINAL
+    # ==========================================================
+
     resultado = []
-    for (finca, cultivo, orden), datos in agrupados.items():
-        total_distribuido = datos['total'] or 0
-        recepcion_libras = recepciones_dict.get((finca, cultivo, orden), 0)
-        pendiente = recepcion_libras - total_distribuido
+
+    for clave, datos in agrupados.items():
+
+        finca, cultivo, orden = clave
+
+        if orden not in ordenes_abiertas:
+            continue
+
+        recepcion_libras = float(
+            recepciones_dict.get(clave, 0)
+        )
+
+        total_distribuido = float(
+            datos['total'] or 0
+        )
+
+        pendiente = (
+            recepcion_libras -
+            total_distribuido
+        )
+
         if pendiente < 0:
             pendiente = 0
-        porcentaje_pendiente = round(pendiente * 100 / recepcion_libras, 2) if recepcion_libras else 0
 
-        # Calcular porcentaje de devolución
-        #porcentaje_devolucion = round(datos['devolución'] * 100 / recepcion_libras, 2) if recepcion_libras else 0
+        porcentaje_pendiente = (
+            pendiente * 100 / recepcion_libras
+            if recepcion_libras > 0
+            else 0
+        )
+
+        porcentaje_aprovechamiento = (
+            datos['aprovechamiento'] *
+            100 /
+            total_distribuido
+            if total_distribuido > 0
+            else 0
+        )
+
+        porcentaje_merma = (
+            datos['merma'] *
+            100 /
+            total_distribuido
+            if total_distribuido > 0
+            else 0
+        )
+
+        porcentaje_mediano = (
+            datos['mediano'] *
+            100 /
+            total_distribuido
+            if total_distribuido > 0
+            else 0
+        )
+
+        porcentaje_devolucion = (
+            datos['devolución'] *
+            100 /
+            total_distribuido
+            if total_distribuido > 0
+            else 0
+        )
 
         resultado.append({
             'proveedor': finca,
             'cultivo': cultivo,
             'orden': orden,
-            'libras': round(recepcion_libras, 2),
-            'aprovechamiento': round(datos['aprovechamiento'] * 100 / total_distribuido, 2) if total_distribuido else 0,
-            'mediano': round(datos['mediano'] * 100 / total_distribuido, 2) if total_distribuido else 0,
-            'devolucion': round(datos['devolución'] * 100 / total_distribuido, 2) if total_distribuido else 0,
-            'procesado': total_distribuido,
-            'porcentaje_pendiente': porcentaje_pendiente,
+
+            'libras': round(
+                recepcion_libras,
+                2
+            ),
+
+            # Peso estándar / total procesado
+            'aprovechamiento': round(
+                porcentaje_aprovechamiento,
+                2
+            ),
+
+            # Peso real de aprovechamiento menos estándar
+            'merma': round(
+                porcentaje_merma,
+                2
+            ),
+
+            'mediano': round(
+                porcentaje_mediano,
+                2
+            ),
+
+            'devolucion': round(
+                porcentaje_devolucion,
+                2
+            ),
+
+            'procesado': round(
+                total_distribuido,
+                2
+            ),
+
+            'porcentaje_pendiente': round(
+                porcentaje_pendiente,
+                2
+            ),
+
+            # Valores en libras para revisar el cálculo.
+            'aprovechamiento_libras': round(
+                datos['aprovechamiento'],
+                2
+            ),
+
+            'merma_libras': round(
+                datos['merma'],
+                2
+            ),
+
+            'mediano_libras': round(
+                datos['mediano'],
+                2
+            ),
+
+            'devolucion_libras': round(
+                datos['devolución'],
+                2
+            ),
         })
 
-    registros_json = json.dumps(resultado, default=str)
+    # ==========================================================
+    # JSON Y TABLA HTML
+    # ==========================================================
 
-    # Convertir los resultados en una tabla HTML
+    registros_json = json.dumps(
+        resultado,
+        default=str
+    )
+
     df = pd.DataFrame(resultado)
-    tabla_html = df.to_html(classes="table table-striped", index=False)
 
-    return render(request, 'plantaE/reportegerencial/salidasFruta_aprovechamientosgerglobal.html', {
-        'registros': resultado,
-        'tabla_html': tabla_html,
-        'registros_json': registros_json,
-    })
+    tabla_html = df.to_html(
+        classes='table table-striped',
+        index=False
+    )
 
+    return render(
+        request,
+        'plantaE/reportegerencial/'
+        'salidasFruta_aprovechamientosgerglobal.html',
+        {
+            'registros': resultado,
+            'tabla_html': tabla_html,
+            'registros_json': registros_json,
+        }
+    )
+    
 def kgm2_semanal_aprovechamiento(request):
 
     # ==========================================================
@@ -3382,4 +3776,3 @@ def kgm2_semanal_aprovechamiento(request):
             ),
         }
     )
-    
