@@ -2036,147 +2036,23 @@ def poraprovechamientosempger(request):
         'registros_json': registros_json,
     })
 
-def poraprovechamientosger(request):
-
-    hoy = timezone.now().date()
-
-    fecha_max = AcumFruta.objects.aggregate(
-        max_fecha=Max('fecha')
-    )['max_fecha']
-
-    if not fecha_max:
-        fecha_max = hoy
-
-    # ÓRDENES ABIERTAS
-    ordenes_abiertas = set(
-        datosProduccion.objects.filter(
-            status='Abierta'
-        ).values_list('orden', flat=True)
-    )
-
-    # RECEPCIÓN
-    acumfrutadatos = (
-        AcumFruta.objects
-        .filter(orden__in=ordenes_abiertas)
-        .annotate(
-            semana=ExtractWeek('fecha'),
-            anio=ExtractIsoYear('fecha')
-        )
-        .exclude(status='Anulado')
-        .values(
-            'finca',
-            'cultivo',
-            'orden',
-            'estructura',
-            'variedad'
-        )
-        .annotate(
-            total_libras=Sum('libras')
-        )
-        .order_by()
-    )
-
-    recepciones_dict = {
-        formar_clave2(
-            r['finca'],
-            r['cultivo'],
-            r['orden'],
-            r['estructura'],
-            r['variedad']
-        ): r['total_libras']
-        for r in acumfrutadatos
-    }
-
-    # DISTRIBUCIÓN
-    detalles = (
-        AcumFrutaaux.objects
-        .filter(orden__in=ordenes_abiertas)
-        .annotate(
-            semana=ExtractWeek('fecha'),
-            anio=ExtractIsoYear('fecha')
-        )
-        .exclude(status='Anulado')
-    )
-
-    boleta_ids = detalles.values_list(
-        'boleta',
-        flat=True
-    ).distinct()
-
-    boletas = Boletas.objects.filter(
-        boleta__in=boleta_ids
-    )
-
-    boletas_dict = {
-        b.boleta: b
-        for b in boletas
-    }
-
-    agrupados = defaultdict(
-        lambda: {
-            'aprovechamiento': 0,
-            'devolución': 0,
-            'mediano': 0,
-            'total': 0
-        }
-    )
-
-    for detalle in detalles:
-
-        boleta = boletas_dict.get(detalle.boleta)
-
-        if not boleta:
-            continue
-
-        clave = formar_clave2(
-            detalle.finca,
-            detalle.cultivo,
-            detalle.orden,
-            detalle.estructura,
-            detalle.variedad
-        )
-
-        calidad = (boleta.calidad or '').strip().lower()
-        libras = detalle.libras or 0
-
-        if 'aprovechamiento' in calidad:
-            agrupados[clave]['aprovechamiento'] += libras
-
-        elif 'devolución' in calidad:
-            agrupados[clave]['devolución'] += libras
-
-        elif 'mediano' in calidad:
-            agrupados[clave]['mediano'] += libras
-
-        agrupados[clave]['total'] += libras
-
-    resultado = []
-
-    for (finca, cultivo, orden, estructura, variedad), datos in agrupados.items():
-
-        # SEGURIDAD EXTRA:
-        # si por alguna razón llega una orden cerrada, no se muestra.
-        if orden not in ordenes_abiertas:
-            continue
-
-        total_distribuido = datos['total'] or 0
-
-        recepcion_libras = recepciones_dict.get(
-            (finca, cultivo, orden, estructura, variedad),
-            0
-        )
-
-        pendiente = recepcion_libras - total_distribuido
-
-        if pendiente < 0:
-            pendiente = 0
-
-        porcentaje_pendiente = (
-            round(
-                pendiente * 100 / recepcion_libras,
+                100 /
+                total_distribuido,
                 2
             )
-            if recepcion_libras else 0
+            if total_distribuido
+            else 0
+        )
+
+        porcentaje_devolucion = (
+            round(
+                datos['devolución'] *
+                100 /
+                total_distribuido,
+                2
+            )
+            if total_distribuido
+            else 0
         )
 
         resultado.append({
@@ -2185,26 +2061,28 @@ def poraprovechamientosger(request):
             'orden': orden,
             'estructura': estructura,
             'variedad': variedad,
-            'libras': round(recepcion_libras, 2),
 
-            'aprovechamiento': round(
-                datos['aprovechamiento'] * 100 / total_distribuido,
+            'libras': round(
+                recepcion_libras,
                 2
-            ) if total_distribuido else 0,
+            ),
 
-            'mediano': round(
-                datos['mediano'] * 100 / total_distribuido,
+            'aprovechamiento': porcentaje_aprovechamiento,
+            'merma': porcentaje_merma,
+            'mediano': porcentaje_mediano,
+            'devolucion': porcentaje_devolucion,
+
+            'procesado': round(
+                total_distribuido,
                 2
-            ) if total_distribuido else 0,
+            ),
 
-            'devolucion': round(
-                datos['devolución'] * 100 / total_distribuido,
-                2
-            ) if total_distribuido else 0,
-
-            'procesado': total_distribuido,
             'porcentaje_pendiente': porcentaje_pendiente,
         })
+
+    # ============================================================
+    # JSON Y TABLA HTML
+    # ============================================================
 
     registros_json = json.dumps(
         resultado,
@@ -2214,20 +2092,25 @@ def poraprovechamientosger(request):
     df = pd.DataFrame(resultado)
 
     tabla_html = df.to_html(
-        classes="table table-striped",
+        classes='table table-striped',
         index=False
     )
 
+    # ============================================================
+    # RENDERIZAR
+    # ============================================================
+
     return render(
         request,
-        'plantaE/reportegerencial/salidasFruta_aprovechamientosger.html',
+        'plantaE/reportegerencial/'
+        'salidasFruta_aprovechamientosger.html',
         {
             'registros': resultado,
             'tabla_html': tabla_html,
             'registros_json': registros_json,
         }
     )
-
+    
 def poraprovechamientosgerglobal(request):
     hoy = timezone.now().date()
     # Obtener fecha máxima en detallerecaux
