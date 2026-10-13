@@ -728,6 +728,13 @@ def recepciones_reportecurva2(request):
 
 def reporte_tabla_pivote2(request):
 
+    LIBRAS_POR_KILO = 2.20462
+    nombre_usuario = request.user.username
+
+    # ============================================================
+    # 1. FILTROS RECIBIDOS
+    # ============================================================
+
     filtros_get = {
         'finca': request.GET.get('finca'),
         'orden': request.GET.get('orden'),
@@ -736,83 +743,536 @@ def reporte_tabla_pivote2(request):
         'cultivo': request.GET.get('cultivo'),
     }
 
-    nombre_usuario = request.user.username
-    ordenes_abiertas = datosProduccion.objects.filter(status='Abierta').values_list('orden', flat=True)
-    
-    qs = AcumFruta.objects.filter(correo=nombre_usuario,orden__in=ordenes_abiertas).exclude(finca="CIP").exclude(libras__isnull=True).exclude(status="Anulado")
+    # ============================================================
+    # 2. ÓRDENES ABIERTAS
+    # ============================================================
 
-    for campo, valor in filtros_get.items():
-        if valor:
-            qs = qs.filter(**{campo: valor})
-
-    data = qs.values('fecha', 'finca', 'orden','cultivo', 'estructura').annotate(
-        total_libras=Sum('libras')
+    ordenes_abiertas = list(
+        datosProduccion.objects
+        .filter(status__iexact='Abierta')
+        .values_list('orden', flat=True)
     )
 
-    if data:
-        df = pd.DataFrame(data)
-        df['fecha'] = pd.to_datetime(df['fecha'])
-        iso = df['fecha'].dt.isocalendar()
-        df['semana'] = iso['year'].astype(str) + '-W' + iso['week'].astype(str).str.zfill(2)
-        df['kg'] = df['total_libras'] / 2.20462  # convertir a kilogramos
+    # ============================================================
+    # 3. DETALLES DE DISTRIBUCIÓN DEL USUARIO
+    #
+    # Se parte de AcumFrutaaux porque aquí se encuentran las
+    # distribuciones por boleta, estructura y variedad.
+    # ============================================================
 
-        # Crear tabla pivote: kilos por semana
-        pivot = pd.pivot_table(
+    detalles_qs = (
+        AcumFrutaaux.objects
+        .filter(
+            correo=nombre_usuario,
+            orden__in=ordenes_abiertas
+        )
+        .exclude(finca='CIP')
+        .exclude(libras__isnull=True)
+        .exclude(status__iexact='Anulado')
+    )
+
+    # Aplicar los filtros seleccionados.
+
+    for campo, valor in filtros_get.items():
+
+        if valor:
+
+            detalles_qs = detalles_qs.filter(
+                **{campo: valor}
+            )
+
+    detalles = list(detalles_qs)
+
+    # ============================================================
+    # 4. BOLETAS PRESENTES EN LOS DETALLES
+    # ============================================================
+
+    boleta_ids = {
+        detalle.boleta
+        for detalle in detalles
+        if detalle.boleta is not None
+    }
+
+    # ============================================================
+    # 5. TOTAL REAL COMPLETO POR BOLETA
+    #
+    # No se filtra por correo porque una boleta puede estar
+    # distribuida entre varias estructuras o usuarios.
+    # ============================================================
+
+    totales_reales_qs = (
+        AcumFrutaaux.objects
+        .filter(boleta__in=boleta_ids)
+        .exclude(status__iexact='Anulado')
+        .values('boleta')
+        .annotate(
+            total_real=Sum('libras')
+        )
+    )
+
+    total_real_por_boleta = {
+        registro['boleta']: float(
+            registro['total_real'] or 0
+        )
+        for registro in totales_reales_qs
+    }
+
+    # ============================================================
+    # 6. LÍNEAS DE BOLETAS
+    #
+    # Una boleta puede tener varias líneas, por lo que no se debe
+    # utilizar un diccionario {boleta: objeto}.
+    # ============================================================
+
+    lineas_boletas = list(
+        Boletas.objects
+        .filter(boleta__in=boleta_ids)
+        .exclude(status__iexact='Anulado')
+    )
+
+    # ============================================================
+    # 7. CÓDIGOS DE PRODUCTOS DE APROVECHAMIENTO
+    # ============================================================
+
+    item_codes = {
+        str(linea.itemsapcode).strip()
+        for linea in lineas_boletas
+        if linea.itemsapcode
+        and 'aprovechamiento' in (
+            linea.calidad or ''
+        ).strip().lower()
+    }
+
+    # ============================================================
+    # 8. PESO ESTÁNDAR POR PRODUCTO
+    # ============================================================
+
+    productos_qs = (
+        productoTerm.objects
+        .filter(itemsapcode__in=item_codes)
+        .values(
+            'itemsapcode',
+            'pesostdxcaja'
+        )
+    )
+
+    pesos_estandar_por_item = {
+        str(
+            producto['itemsapcode']
+        ).strip(): float(
+            producto['pesostdxcaja'] or 0
+        )
+        for producto in productos_qs
+    }
+
+    # ============================================================
+    # 9. ESTÁNDAR TOTAL POR BOLETA
+    #
+    # estándar = cajas * peso estándar por caja
+    # ============================================================
+
+    estandar_total_por_boleta = defaultdict(float)
+    boletas_aprovechamiento = set()
+    items_sin_peso_estandar = set()
+
+    for linea in lineas_boletas:
+
+        calidad = (
+            linea.calidad or ''
+        ).strip().lower()
+
+        if 'aprovechamiento' not in calidad:
+            continue
+
+        codigo_item = str(
+            linea.itemsapcode or ''
+        ).strip()
+
+        cajas = float(
+            linea.cajas or 0
+        )
+
+        peso_estandar_caja = float(
+            pesos_estandar_por_item.get(
+                codigo_item,
+                0
+            )
+        )
+
+        if codigo_item and peso_estandar_caja == 0:
+
+            items_sin_peso_estandar.add(
+                codigo_item
+            )
+
+        libras_estandar_linea = (
+            cajas * peso_estandar_caja
+        )
+
+        estandar_total_por_boleta[
+            linea.boleta
+        ] += libras_estandar_linea
+
+        boletas_aprovechamiento.add(
+            linea.boleta
+        )
+
+    # ============================================================
+    # 10. DISTRIBUIR EL APROVECHAMIENTO POR ESTRUCTURA Y SEMANA
+    #
+    # La semana se obtiene de la fecha de AcumFrutaaux.
+    # Por tanto, representa la semana de procesamiento/distribución.
+    # ============================================================
+
+    filas_aprovechamiento = []
+
+    for detalle in detalles:
+
+        numero_boleta = detalle.boleta
+
+        if numero_boleta not in boletas_aprovechamiento:
+            continue
+
+        total_real_boleta = float(
+            total_real_por_boleta.get(
+                numero_boleta,
+                0
+            )
+        )
+
+        total_estandar_boleta = float(
+            estandar_total_por_boleta.get(
+                numero_boleta,
+                0
+            )
+        )
+
+        libras_reales_detalle = float(
+            detalle.libras or 0
+        )
+
+        if total_real_boleta > 0:
+
+            proporcion = (
+                libras_reales_detalle
+                / total_real_boleta
+            )
+
+        else:
+
+            proporcion = 0
+
+        libras_aprovechamiento = (
+            total_estandar_boleta
+            * proporcion
+        )
+
+        fecha_detalle = pd.to_datetime(
+            detalle.fecha
+        )
+
+        semana_iso = fecha_detalle.isocalendar()
+
+        semana = (
+            str(semana_iso.year)
+            + '-W'
+            + str(semana_iso.week).zfill(2)
+        )
+
+        filas_aprovechamiento.append({
+            'fecha': detalle.fecha,
+            'semana': semana,
+            'finca': detalle.finca,
+            'orden': detalle.orden,
+            'cultivo': detalle.cultivo,
+            'estructura': detalle.estructura,
+            'variedad': detalle.variedad,
+            'libras_aprovechamiento': (
+                libras_aprovechamiento
+            ),
+            'kg_aprovechamiento': (
+                libras_aprovechamiento
+                / LIBRAS_POR_KILO
+            ),
+        })
+
+    # ============================================================
+    # 11. CREAR TABLA PIVOTE
+    # ============================================================
+
+    if filas_aprovechamiento:
+
+        df = pd.DataFrame(
+            filas_aprovechamiento
+        )
+
+        # Agrupar kilos de aprovechamiento por semana.
+
+        pivot_kg = pd.pivot_table(
             df,
-            values='kg',
-            index=['finca', 'orden','cultivo', 'estructura'],
+            values='kg_aprovechamiento',
+            index=[
+                'finca',
+                'orden',
+                'cultivo',
+                'estructura',
+                'variedad'
+            ],
             columns='semana',
             aggfunc='sum',
             fill_value=0
         ).round(2)
 
-        # Obtener áreas por finca-orden-estructura
-        areas_qs = detallesEstructuras.objects.values('finca', 'orden','cultivo', 'estructura').annotate(
-            area_total=Sum('area')
+        pivot_kg = pivot_kg.reset_index()
+
+        # ========================================================
+        # 12. ÁREAS
+        #
+        # Se incluye variedad para evitar mezclar áreas de
+        # distintas variedades en la misma estructura.
+        # ========================================================
+
+        areas_qs = (
+            detallesEstructuras.objects
+            .values(
+                'finca',
+                'orden',
+                'cultivo',
+                'estructura',
+                'variedad'
+            )
+            .annotate(
+                area_total=Sum('area')
+            )
         )
-        df_areas = pd.DataFrame(list(areas_qs))
 
-        # Unir pivot con áreas
-        pivot = pivot.reset_index()
-        df_merge = pd.merge(pivot, df_areas, on=['finca', 'orden', 'cultivo','estructura'], how='left')
+        df_areas = pd.DataFrame(
+            list(areas_qs)
+        )
 
-        # Calcular rendimiento (kg/m²) por semana
-        semanas = [col for col in df_merge.columns if col.startswith('20')]
+        # ========================================================
+        # 13. UNIR KILOS DE APROVECHAMIENTO CON ÁREAS
+        # ========================================================
+
+        columnas_clave = [
+            'finca',
+            'orden',
+            'cultivo',
+            'estructura',
+            'variedad'
+        ]
+
+        if not df_areas.empty:
+
+            df_merge = pd.merge(
+                pivot_kg,
+                df_areas,
+                on=columnas_clave,
+                how='left'
+            )
+
+        else:
+
+            df_merge = pivot_kg.copy()
+            df_merge['area_total'] = 0
+
+        # Evitar errores con áreas nulas.
+
+        df_merge['area_total'] = pd.to_numeric(
+            df_merge['area_total'],
+            errors='coerce'
+        ).fillna(0)
+
+        # ========================================================
+        # 14. IDENTIFICAR COLUMNAS DE SEMANA
+        # ========================================================
+
+        semanas = [
+            columna
+            for columna in pivot_kg.columns
+            if str(columna).startswith('20')
+        ]
+
+        # ========================================================
+        # 15. TOTAL DE KILOS DE APROVECHAMIENTO
+        #
+        # Se calcula antes de dividir las semanas entre el área.
+        # ========================================================
+
+        df_merge['total_kilos_aprovechamiento'] = (
+            df_merge[semanas]
+            .sum(axis=1)
+            .round(2)
+        )
+
+        # ========================================================
+        # 16. KG DE APROVECHAMIENTO POR M² POR SEMANA
+        # ========================================================
+
         for semana in semanas:
-            df_merge[semana] = df_merge[semana] / df_merge['area_total']
-         
-        df_merge[semanas] = df_merge[semanas].round(2)
 
-        # Agregar columna total kilos por fila (sumar las semanas en kg)
-        # Para total kilos, sumamos las semanas en el pivot original
-        df_merge['total_kilos'] = pivot[semanas].sum(axis=1).round(2)
+            df_merge[semana] = df_merge.apply(
+                lambda fila: (
+                    fila[semana]
+                    / fila['area_total']
+                )
+                if fila['area_total'] > 0
+                else 0,
+                axis=1
+            )
 
-        # Agregar columna total kg/m² (sumar las semanas ya divididas por área)
-        df_merge['total_kg_m2'] = df_merge[semanas].sum(axis=1).round(2)
-        # Convertir resultado final a tabla HTML
-        tabla_html = df_merge.to_html(
-            classes='table table-striped table-bordered table-sm table-hover',
-            index=False,
-            table_id='tabla-pivote'
+        df_merge[semanas] = (
+            df_merge[semanas]
+            .round(2)
         )
-    else:
-        tabla_html = "<p>No hay datos para los filtros aplicados.</p>"
 
-    # Filtros disponibles
+        # ========================================================
+        # 17. TOTAL KG/M²
+        #
+        # Es equivalente a:
+        #
+        # total kilos aprovechamiento / área total
+        # ========================================================
+
+        df_merge['total_kg_m2'] = df_merge.apply(
+            lambda fila: (
+                fila['total_kilos_aprovechamiento']
+                / fila['area_total']
+            )
+            if fila['area_total'] > 0
+            else 0,
+            axis=1
+        ).round(2)
+
+        # ========================================================
+        # 18. RENOMBRAR COLUMNAS FIJAS
+        # ========================================================
+
+        df_merge = df_merge.rename(
+            columns={
+                'finca': 'Finca',
+                'orden': 'Orden',
+                'cultivo': 'Cultivo',
+                'estructura': 'Estructura',
+                'variedad': 'Variedad',
+                'area_total': 'Área m²',
+                'total_kilos_aprovechamiento': (
+                    'Total kg aprovechamiento'
+                ),
+                'total_kg_m2': (
+                    'Total kg aprovechamiento/m²'
+                ),
+            }
+        )
+
+        # ========================================================
+        # 19. GENERAR TABLA HTML
+        # ========================================================
+
+        tabla_html = df_merge.to_html(
+            classes=(
+                'table table-striped '
+                'table-bordered table-sm table-hover'
+            ),
+            index=False,
+            table_id='tabla-pivote',
+            na_rep='0'
+        )
+
+    else:
+
+        tabla_html = (
+            '<p>'
+            'No hay datos de aprovechamiento para los '
+            'filtros aplicados.'
+            '</p>'
+        )
+
+    # ============================================================
+    # 20. FILTROS DISPONIBLES
+    # ============================================================
+
+    filtros_base = (
+        AcumFruta.objects
+        .filter(
+            correo=nombre_usuario,
+            orden__in=ordenes_abiertas
+        )
+        .exclude(finca='CIP')
+        .exclude(status__iexact='Anulado')
+    )
+
     filtros_completos = [
-        ('Finca', 'finca', AcumFruta.objects.filter(correo=nombre_usuario,orden__in=ordenes_abiertas).exclude(finca__isnull=True).exclude(finca='').values_list('finca', flat=True).distinct()),
-        ('Orden', 'orden', AcumFruta.objects.filter(correo=nombre_usuario,orden__in=ordenes_abiertas).exclude(orden__isnull=True).exclude(orden='').values_list('orden', flat=True).distinct()),
-        ('Variedad', 'variedad', AcumFruta.objects.filter(correo=nombre_usuario,orden__in=ordenes_abiertas).exclude(variedad__isnull=True).exclude(variedad='').values_list('variedad', flat=True).distinct()),
-        ('Cultivo', 'cultivo', AcumFruta.objects.filter(correo=nombre_usuario,orden__in=ordenes_abiertas).exclude(cultivo__isnull=True).exclude(cultivo='').values_list('cultivo', flat=True).distinct()),
-        ('Estructura', 'estructura', AcumFruta.objects.filter(correo=nombre_usuario,orden__in=ordenes_abiertas).exclude(estructura__isnull=True).exclude(estructura='').values_list('estructura', flat=True).distinct()),
+        (
+            'Finca',
+            'finca',
+            filtros_base
+            .exclude(finca__isnull=True)
+            .exclude(finca='')
+            .values_list('finca', flat=True)
+            .distinct()
+            .order_by('finca')
+        ),
+        (
+            'Orden',
+            'orden',
+            filtros_base
+            .exclude(orden__isnull=True)
+            .exclude(orden='')
+            .values_list('orden', flat=True)
+            .distinct()
+            .order_by('orden')
+        ),
+        (
+            'Variedad',
+            'variedad',
+            filtros_base
+            .exclude(variedad__isnull=True)
+            .exclude(variedad='')
+            .values_list('variedad', flat=True)
+            .distinct()
+            .order_by('variedad')
+        ),
+        (
+            'Cultivo',
+            'cultivo',
+            filtros_base
+            .exclude(cultivo__isnull=True)
+            .exclude(cultivo='')
+            .values_list('cultivo', flat=True)
+            .distinct()
+            .order_by('cultivo')
+        ),
+        (
+            'Estructura',
+            'estructura',
+            filtros_base
+            .exclude(estructura__isnull=True)
+            .exclude(estructura='')
+            .values_list('estructura', flat=True)
+            .distinct()
+            .order_by('estructura')
+        ),
     ]
 
-    return render(request, 'plantaE/reportetecnicos/reporte_tabla_pivote2.html', {
-        'tabla_html': tabla_html,
-        'filtros_completos': filtros_completos,
-        'request': request
-    })
+    # ============================================================
+    # 21. ENVIAR AL TEMPLATE
+    # ============================================================
 
+    return render(
+        request,
+        'plantaE/reportetecnicos/'
+        'reporte_tabla_pivote2.html',
+        {
+            'tabla_html': tabla_html,
+            'filtros_completos': filtros_completos,
+            'request': request,
+            'items_sin_peso_estandar': sorted(
+                items_sin_peso_estandar
+            ),
+        }
+    )
+    
 def reporte_tabla_pivote_produccionsem(request):
 
     nombre_usuario = request.user.username
