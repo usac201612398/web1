@@ -60,7 +60,7 @@ def boletas_constanciarecepcion(request):
             'mediano': mediano,
             'devolucion': devolucion,
             'planta': "SDC - Nueva Santa Rosa",
-            'vector1': vector1,Max
+            'vector1': vector1,
             'vector2': vector2,
             'fechahoy': fechahoy,
             'causas': causasrechazo
