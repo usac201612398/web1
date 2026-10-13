@@ -153,6 +153,16 @@
       <div class="data-section">
         <div class="box">
           <h2 class="title is-5">Detalle por variedad</h2>
+          <div class="field mb-4">
+            <div class="control has-icons-left">
+              <input class="input" type="text" id="searchInput"
+                placeholder="Buscar por finca, orden, estructura, variedad o cultivo...">
+
+              <span class="icon is-small is-left">
+                <i class="fas fa-search"></i>
+              </span>
+            </div>
+          </div>
           <div class="table-container">
             <table class="table is-striped is-fullwidth is-hoverable" id="myTable">
               <thead class="table-custom-header">
@@ -247,6 +257,32 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       formatCells('myTable');
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+      const searchInput = document.getElementById('searchInput');
+      const table = document.getElementById('myTable');
+      const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+      searchInput.addEventListener('keyup', function () {
+
+        const filtro = this.value.toLowerCase();
+
+        for (let i = 0; i < rows.length; i++) {
+
+          const textoFila = rows[i].textContent.toLowerCase();
+
+          if (textoFila.includes(filtro)) {
+            rows[i].style.display = '';
+          } else {
+            rows[i].style.display = 'none';
+          }
+
+        }
+
+      });
+
     });
   </script>
 </body>
