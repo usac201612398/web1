@@ -2075,7 +2075,7 @@ def poraprovechamientosger(request):
         )
         .exclude(
             status__iexact='Anulado'
-        )
+        ).exclude(finca = 'CIP')
         .annotate(
             semana=ExtractWeek('fecha'),
             anio=ExtractIsoYear('fecha')
@@ -2115,7 +2115,7 @@ def poraprovechamientosger(request):
         )
         .exclude(
             status__iexact='Anulado'
-        )
+        ).exclude(finca='CIP')
         .annotate(
             semana=ExtractWeek('fecha'),
             anio=ExtractIsoYear('fecha')
