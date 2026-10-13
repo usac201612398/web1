@@ -100,16 +100,6 @@
       color: #198754;
     }
 
-    /* FILTRO */
-
-    #searchInput {
-      border-radius: 8px;
-    }
-
-    .field {
-      display: flex;
-      justify-content: flex-end;
-    }
 
     /* BOTONES */
 
@@ -150,18 +140,7 @@
           </div>
         </div>
       </section>
-      <div class="field mb-4">
-        <div class="control has-icons-left">
 
-          <input class="input" type="text" id="searchInput"
-            placeholder="Buscar finca, orden, estructura, variedad o cultivo...">
-
-          <span class="icon is-small is-left">
-            <i class="fas fa-search"></i>
-          </span>
-
-        </div>
-      </div>
       <div class="mb-4">
         <button class="button is-success" onclick="exportarExcel()">
           <span class="icon">
@@ -181,6 +160,18 @@
               Detalle por Variedad
             </h2>
 
+          </div>
+          <div class="field mb-4">
+            <div class="control has-icons-left">
+
+              <input class="input" type="text" id="searchInput"
+                placeholder="Buscar finca, orden, estructura, variedad o cultivo...">
+
+              <span class="icon is-small is-left">
+                <i class="fas fa-search"></i>
+              </span>
+
+            </div>
           </div>
           <div class="table-container">
             <table class="table is-striped is-hoverable is-fullwidth is-narrow" id="myTable">
