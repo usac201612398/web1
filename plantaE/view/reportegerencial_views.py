@@ -1220,6 +1220,7 @@ def reporte_tabla_pivote(request):
         # Agregar columna total kg/m² (sumar las semanas ya divididas por área)
         df_merge['total_kg_m2'] = df_merge[semanas].sum(axis=1).round(2)
         # Convertir resultado final a tabla HTML
+        df_merge = df_merge.replace(0, '')
         tabla_html = df_merge.to_html(
             classes='table table-striped table-bordered table-sm table-hover',
             index=False,
