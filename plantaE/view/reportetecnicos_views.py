@@ -987,11 +987,15 @@ def reporte_tabla_pivote2(request):
             'cultivo': detalle.cultivo,
             'estructura': detalle.estructura,
             'variedad': detalle.variedad,
+
+            # Solo aprovechamiento estándar.
+            # No incluye merma, mediano ni devolución.
             'libras_aprovechamiento': (
-                libras_estandar_asignadas
+                libras_aprovechamiento
             ),
+
             'kg_aprovechamiento': (
-                libras_estandar_asignadas
+                libras_aprovechamiento
                 / LIBRAS_POR_KILO
             ),
         })
