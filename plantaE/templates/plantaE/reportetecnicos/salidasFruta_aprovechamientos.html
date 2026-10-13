@@ -77,6 +77,7 @@
                   <th>%Aprovechamiento</th>
                   <th>%Mediano</th>
                   <th>%Devolución</th>
+                  <th>%Merma</th>
                 </tr>
               </thead>
               <tbody>
@@ -93,7 +94,7 @@
                   <td class="number-cell" data-value="{{ registro.aprovechamiento }}">{{ registro.aprovechamiento }}%</td>
                   <td class="number-cell" data-value="{{ registro.mediano }}">{{ registro.mediano }}%</td>
                   <td class="number-cell" data-value="{{ registro.devolucion }}">{{ registro.devolucion }}%</td>
-
+                  <td class="number-cell" data-value="{{ registro.merma_libras }}">{{ registro.porcentaje_merma }}%</td>
                 </tr>
                 {% endfor %}
               </tbody>

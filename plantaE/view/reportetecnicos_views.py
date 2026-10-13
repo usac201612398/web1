@@ -1017,68 +1017,532 @@ def aprovechamientos(request):
     })
 
 def poraprovechamientos(request):
-    hoy = timezone.now().date()
-    nombre_usuario=request.user.username
-    # Obtener fecha máxima en detallerecaux
-    fecha_max = AcumFruta.objects.filter(correo=nombre_usuario).aggregate(max_fecha=Max('fecha'))['max_fecha']
-    if not fecha_max:
-        fecha_max = hoy  # fallback si no hay registros
-    ordenes_abiertas = datosProduccion.objects.filter(status='Abierta').values_list('orden', flat=True)
 
-    # Filtrar las libras totales por variedad desde AcumFruta
-    acumfrutadatos = AcumFruta.objects.filter(correo=nombre_usuario,orden__in=ordenes_abiertas
-    ).annotate(
-        semana=ExtractWeek('fecha'),
-        anio=ExtractIsoYear('fecha')
-    ).values('finca', 'cultivo', 'orden', 'estructura', 'variedad').annotate(total_libras=Sum('libras')).order_by()
+    hoy = timezone.now().date()
+    nombre_usuario = request.user.username
+
+    # ============================================================
+    # 1. FECHA MÁXIMA
+    # ============================================================
+
+    fecha_max = (
+        AcumFruta.objects
+        .filter(correo=nombre_usuario)
+        .aggregate(max_fecha=Max('fecha'))
+        .get('max_fecha')
+    )
+
+    if not fecha_max:
+        fecha_max = hoy
+
+    # ============================================================
+    # 2. ÓRDENES ABIERTAS
+    # ============================================================
+
+    ordenes_abiertas = list(
+        datosProduccion.objects
+        .filter(status__iexact='Abierta')
+        .values_list('orden', flat=True)
+    )
+
+    # ============================================================
+    # 3. LIBRAS RECIBIDAS DESDE ACUMFRUTA
+    # ============================================================
+
+    acumfrutadatos = (
+        AcumFruta.objects
+        .filter(
+            correo=nombre_usuario,
+            orden__in=ordenes_abiertas
+        )
+        .exclude(status__iexact='Anulado')
+        .values(
+            'finca',
+            'cultivo',
+            'orden',
+            'estructura',
+            'variedad'
+        )
+        .annotate(
+            total_libras=Sum('libras')
+        )
+        .order_by()
+    )
 
     recepciones_dict = {
-        formar_clave2(r['finca'], r['cultivo'], r['orden'], r['estructura'], r['variedad']): r['total_libras'] for r in acumfrutadatos
+        formar_clave2(
+            registro['finca'],
+            registro['cultivo'],
+            registro['orden'],
+            registro['estructura'],
+            registro['variedad']
+        ): float(registro['total_libras'] or 0)
+        for registro in acumfrutadatos
     }
 
-    # Filtrar distribuciones desde AcumFrutaaux
-    detalles = AcumFrutaaux.objects.annotate(
-        semana=ExtractWeek('fecha'),
-        anio=ExtractIsoYear('fecha')
-    ).filter(correo=nombre_usuario,orden__in=ordenes_abiertas)
+    # ============================================================
+    # 4. DETALLES DEL USUARIO
+    #
+    # Aquí se conserva el filtro por correo porque cada usuario
+    # está vinculado a determinadas estructuras.
+    # ============================================================
 
-    boleta_ids = detalles.values_list('boleta', flat=True).distinct()
-    boletas = Boletas.objects.filter(boleta__in=boleta_ids)
-    boletas_dict = {b.boleta: b for b in boletas}
+    detalles = list(
+        AcumFrutaaux.objects
+        .filter(
+            correo=nombre_usuario,
+            orden__in=ordenes_abiertas
+        )
+        .exclude(status__iexact='Anulado')
+    )
 
-    # Agrupar las libras por boleta
-    agrupados = defaultdict(lambda: {'aprovechamiento': 0, 'devolución': 0, 'mediano': 0, 'total': 0})
+    # ============================================================
+    # 5. BOLETAS UTILIZADAS EN EL REPORTE
+    # ============================================================
 
-    for detalle in detalles:
-        boleta = boletas_dict.get(detalle.boleta)
-        if not boleta:
-            continue
-        
-        clave = formar_clave2(detalle.finca, detalle.cultivo, detalle.orden, detalle.estructura, detalle.variedad)
-        calidad = (boleta.calidad or '').strip().lower()
-        libras = detalle.libras or 0
+    boleta_ids = {
+        detalle.boleta
+        for detalle in detalles
+        if detalle.boleta is not None
+    }
+
+    # ============================================================
+    # 6. TOTAL REAL COMPLETO POR BOLETA
+    #
+    # No se filtra por correo porque el denominador debe incluir
+    # todas las estructuras/correos asociados a la misma boleta.
+    # ============================================================
+
+    totales_reales_qs = (
+        AcumFrutaaux.objects
+        .filter(boleta__in=boleta_ids)
+        .exclude(status__iexact='Anulado')
+        .values('boleta')
+        .annotate(
+            total_real=Sum('libras')
+        )
+    )
+
+    total_real_por_boleta = {
+        registro['boleta']: float(
+            registro['total_real'] or 0
+        )
+        for registro in totales_reales_qs
+    }
+
+    # ============================================================
+    # 7. TODAS LAS LÍNEAS DE BOLETAS
+    #
+    # No utilizamos un diccionario del tipo:
+    #
+    # {boleta: objeto}
+    #
+    # porque una boleta puede tener varias líneas y se perderían
+    # las anteriores al sobrescribirse.
+    # ============================================================
+
+    lineas_boletas = list(
+        Boletas.objects
+        .filter(boleta__in=boleta_ids)
+        .exclude(status__iexact='Anulado')
+    )
+
+    # ============================================================
+    # 8. CALIDADES PRESENTES POR BOLETA
+    # ============================================================
+
+    calidades_por_boleta = defaultdict(set)
+
+    for linea in lineas_boletas:
+
+        calidad = (
+            linea.calidad or ''
+        ).strip().lower()
+
+        calidades_por_boleta[
+            linea.boleta
+        ].add(calidad)
+
+    # ============================================================
+    # 9. ITEMS DE APROVECHAMIENTO
+    # ============================================================
+
+    item_codes = {
+        str(linea.itemsapcode).strip()
+        for linea in lineas_boletas
+        if linea.itemsapcode
+        and 'aprovechamiento' in (
+            linea.calidad or ''
+        ).strip().lower()
+    }
+
+    # ============================================================
+    # 10. PESOS ESTÁNDAR POR ITEM
+    # ============================================================
+
+    productos_qs = (
+        productoTerm.objects
+        .filter(itemsapcode__in=item_codes)
+        .values(
+            'itemsapcode',
+            'pesostdxcaja'
+        )
+    )
+
+    pesos_estandar_por_item = {}
+
+    for producto in productos_qs:
+
+        codigo_item = str(
+            producto['itemsapcode']
+        ).strip()
+
+        pesos_estandar_por_item[codigo_item] = float(
+            producto['pesostdxcaja'] or 0
+        )
+
+    # ============================================================
+    # 11. ESTÁNDAR TOTAL POR BOLETA
+    #
+    # Peso estándar de una línea:
+    #
+    # cajas × pesostdxcaja
+    #
+    # Si hay varias líneas de aprovechamiento en una boleta,
+    # se suman todas.
+    # ============================================================
+
+    estandar_total_por_boleta = defaultdict(float)
+    boletas_aprovechamiento = set()
+    boletas_devolucion = set()
+    boletas_mediano = set()
+
+    items_sin_peso_estandar = set()
+
+    for linea in lineas_boletas:
+
+        numero_boleta = linea.boleta
+
+        calidad = (
+            linea.calidad or ''
+        ).strip().lower()
+
+        # --------------------------------------------------------
+        # Aprovechamiento
+        # --------------------------------------------------------
 
         if 'aprovechamiento' in calidad:
-            agrupados[clave]['aprovechamiento'] += libras
-        elif 'devolución' in calidad:
-            agrupados[clave]['devolución'] += libras
-        elif 'mediano' in calidad:
-            agrupados[clave]['mediano'] += libras
 
-        agrupados[clave]['total'] += libras
+            codigo_item = str(
+                linea.itemsapcode or ''
+            ).strip()
 
-    # Calcular los porcentajes de calidad
+            cajas = float(
+                linea.cajas or 0
+            )
+
+            peso_estandar_caja = float(
+                pesos_estandar_por_item.get(
+                    codigo_item,
+                    0
+                )
+            )
+
+            if codigo_item and peso_estandar_caja == 0:
+
+                items_sin_peso_estandar.add(
+                    codigo_item
+                )
+
+            libras_estandar_linea = (
+                cajas * peso_estandar_caja
+            )
+
+            estandar_total_por_boleta[
+                numero_boleta
+            ] += libras_estandar_linea
+
+            boletas_aprovechamiento.add(
+                numero_boleta
+            )
+
+        # --------------------------------------------------------
+        # Devolución
+        # --------------------------------------------------------
+
+        if 'devolución' in calidad or 'devolucion' in calidad:
+
+            boletas_devolucion.add(
+                numero_boleta
+            )
+
+        # --------------------------------------------------------
+        # Mediano
+        # --------------------------------------------------------
+
+        if 'mediano' in calidad:
+
+            boletas_mediano.add(
+                numero_boleta
+            )
+
+    # ============================================================
+    # 12. AGRUPAR RESULTADOS
+    # ============================================================
+
+    agrupados = defaultdict(lambda: {
+        'aprovechamiento_real': 0.0,
+        'aprovechamiento_estandar': 0.0,
+        'merma': 0.0,
+        'devolucion': 0.0,
+        'mediano': 0.0,
+        'otras_calidades': 0.0,
+        'total_procesado': 0.0,
+    })
+
+    for detalle in detalles:
+
+        clave = formar_clave2(
+            detalle.finca,
+            detalle.cultivo,
+            detalle.orden,
+            detalle.estructura,
+            detalle.variedad
+        )
+
+        numero_boleta = detalle.boleta
+
+        libras_reales_detalle = float(
+            detalle.libras or 0
+        )
+
+        # ========================================================
+        # APROVECHAMIENTO
+        #
+        # El peso estándar completo de la boleta se distribuye
+        # proporcionalmente según las libras reales de cada
+        # estructura.
+        # ========================================================
+
+        if numero_boleta in boletas_aprovechamiento:
+
+            total_real_boleta = float(
+                total_real_por_boleta.get(
+                    numero_boleta,
+                    0
+                )
+            )
+
+            total_estandar_boleta = float(
+                estandar_total_por_boleta.get(
+                    numero_boleta,
+                    0
+                )
+            )
+
+            if total_real_boleta > 0:
+
+                proporcion = (
+                    libras_reales_detalle /
+                    total_real_boleta
+                )
+
+            else:
+
+                proporcion = 0
+
+            libras_estandar_asignadas = (
+                total_estandar_boleta *
+                proporcion
+            )
+
+            # Merma igual que en el programa anterior:
+            #
+            # libras reales - libras estándar distribuidas
+
+            merma_libras = (
+                libras_reales_detalle -
+                libras_estandar_asignadas
+            )
+
+            agrupados[clave][
+                'aprovechamiento_real'
+            ] += libras_reales_detalle
+
+            agrupados[clave][
+                'aprovechamiento_estandar'
+            ] += libras_estandar_asignadas
+
+            agrupados[clave][
+                'merma'
+            ] += merma_libras
+
+            # Para procesado se utiliza el peso estándar, igual
+            # que en la columna Total del programa anterior.
+
+            agrupados[clave][
+                'total_procesado'
+            ] += libras_estandar_asignadas
+
+        # ========================================================
+        # DEVOLUCIÓN
+        # ========================================================
+
+        elif numero_boleta in boletas_devolucion:
+
+            agrupados[clave][
+                'devolucion'
+            ] += libras_reales_detalle
+
+            agrupados[clave][
+                'total_procesado'
+            ] += libras_reales_detalle
+
+        # ========================================================
+        # MEDIANO
+        # ========================================================
+
+        elif numero_boleta in boletas_mediano:
+
+            agrupados[clave][
+                'mediano'
+            ] += libras_reales_detalle
+
+            agrupados[clave][
+                'total_procesado'
+            ] += libras_reales_detalle
+
+        # ========================================================
+        # OTRAS CALIDADES
+        # ========================================================
+
+        else:
+
+            agrupados[clave][
+                'otras_calidades'
+            ] += libras_reales_detalle
+
+            agrupados[clave][
+                'total_procesado'
+            ] += libras_reales_detalle
+
+    # ============================================================
+    # 13. CALCULAR RESULTADO FINAL
+    # ============================================================
+
     resultado = []
-    for (finca, cultivo, orden, estructura, variedad), datos in agrupados.items():
-        total_distribuido = datos['total'] or 0
-        recepcion_libras = recepciones_dict.get((finca, cultivo, orden, estructura, variedad), 0)
-        pendiente = recepcion_libras - total_distribuido
+
+    for clave, datos in agrupados.items():
+
+        finca, cultivo, orden, estructura, variedad = clave
+
+        recepcion_libras = float(
+            recepciones_dict.get(
+                clave,
+                0
+            )
+        )
+
+        total_procesado = float(
+            datos['total_procesado']
+        )
+
+        aprovechamiento_real = float(
+            datos['aprovechamiento_real']
+        )
+
+        aprovechamiento_estandar = float(
+            datos['aprovechamiento_estandar']
+        )
+
+        merma_libras = float(
+            datos['merma']
+        )
+
+        mediano_libras = float(
+            datos['mediano']
+        )
+
+        devolucion_libras = float(
+            datos['devolucion']
+        )
+
+        # ========================================================
+        # PENDIENTE
+        # ========================================================
+
+        pendiente = (
+            recepcion_libras -
+            total_procesado
+        )
+
         if pendiente < 0:
             pendiente = 0
-        porcentaje_pendiente = round(pendiente * 100 / recepcion_libras, 2) if recepcion_libras else 0
 
-        # Calcular porcentaje de devolución
-        #porcentaje_devolucion = round(datos['devolución'] * 100 / recepcion_libras, 2) if recepcion_libras else 0
+        if recepcion_libras > 0:
+
+            porcentaje_pendiente = (
+                pendiente *
+                100 /
+                recepcion_libras
+            )
+
+        else:
+
+            porcentaje_pendiente = 0
+
+        # ========================================================
+        # PORCENTAJES DE CALIDADES
+        #
+        # Aprovechamiento utiliza el peso estándar asignado,
+        # porque también es el que participa en total_procesado.
+        # ========================================================
+
+        if total_procesado > 0:
+
+            porcentaje_aprovechamiento = (
+                aprovechamiento_estandar *
+                100 /
+                total_procesado
+            )
+
+            porcentaje_mediano = (
+                mediano_libras *
+                100 /
+                total_procesado
+            )
+
+            porcentaje_devolucion = (
+                devolucion_libras *
+                100 /
+                total_procesado
+            )
+
+        else:
+
+            porcentaje_aprovechamiento = 0
+            porcentaje_mediano = 0
+            porcentaje_devolucion = 0
+
+        # ========================================================
+        # PORCENTAJE DE MERMA
+        #
+        # Igual que el programa anterior:
+        #
+        # merma / libras reales de aprovechamiento
+        # ========================================================
+
+        if aprovechamiento_real > 0:
+
+            porcentaje_merma = (
+                merma_libras *
+                100 /
+                aprovechamiento_real
+            )
+
+        else:
+
+            porcentaje_merma = 0
 
         resultado.append({
             'proveedor': finca,
@@ -1086,22 +1550,121 @@ def poraprovechamientos(request):
             'orden': orden,
             'estructura': estructura,
             'variedad': variedad,
-            'libras': round(recepcion_libras, 2),
-            'aprovechamiento': round(datos['aprovechamiento'] * 100 / total_distribuido, 2) if total_distribuido else 0,
-            'mediano': round(datos['mediano'] * 100 / total_distribuido, 2) if total_distribuido else 0,
-            'devolucion': round(datos['devolución'] * 100 / total_distribuido, 2) if total_distribuido else 0,
-            'procesado': total_distribuido,
-            'porcentaje_pendiente': porcentaje_pendiente,
+
+            # Libras recibidas
+            'libras': round(
+                recepcion_libras,
+                2
+            ),
+
+            # Libras procesadas utilizando estándar para
+            # aprovechamiento
+            'procesado': round(
+                total_procesado,
+                2
+            ),
+
+            'porcentaje_pendiente': round(
+                porcentaje_pendiente,
+                2
+            ),
+
+            'aprovechamiento': round(
+                porcentaje_aprovechamiento,
+                2
+            ),
+
+            'mediano': round(
+                porcentaje_mediano,
+                2
+            ),
+
+            'devolucion': round(
+                porcentaje_devolucion,
+                2
+            ),
+
+            # Nuevos campos de merma
+            'aprovechamiento_real_libras': round(
+                aprovechamiento_real,
+                2
+            ),
+
+            'aprovechamiento_estandar_libras': round(
+                aprovechamiento_estandar,
+                2
+            ),
+
+            'merma_libras': round(
+                merma_libras,
+                2
+            ),
+
+            'porcentaje_merma': round(
+                porcentaje_merma,
+                2
+            ),
         })
 
-    registros_json = json.dumps(resultado, default=str)
+    # ============================================================
+    # 14. ORDENAR RESULTADOS
+    # ============================================================
 
-    # Convertir los resultados en una tabla HTML
-    df = pd.DataFrame(resultado)
-    tabla_html = df.to_html(classes="table table-striped", index=False)
+    resultado.sort(
+        key=lambda registro: (
+            registro['orden'] or '',
+            registro['cultivo'] or '',
+            registro['estructura'] or '',
+            registro['variedad'] or ''
+        )
+    )
 
-    return render(request, 'plantaE/reportetecnicos/salidasFruta_aprovechamientos.html', {
-        'registros': resultado,
-        'tabla_html': tabla_html,
-        'registros_json': registros_json,
-    })
+    # ============================================================
+    # 15. CONVERTIR A JSON
+    # ============================================================
+
+    registros_json = json.dumps(
+        resultado,
+        default=str
+    )
+
+    # ============================================================
+    # 16. TABLA HTML
+    # ============================================================
+
+    if resultado:
+
+        df = pd.DataFrame(resultado)
+
+        tabla_html = df.to_html(
+            classes='table table-striped',
+            index=False
+        )
+
+    else:
+
+        tabla_html = (
+            '<div class="notification is-info">'
+            'No se encontraron registros para las órdenes abiertas.'
+            '</div>'
+        )
+
+    # ============================================================
+    # 17. ENVIAR AL TEMPLATE
+    # ============================================================
+
+    return render(
+        request,
+        'plantaE/reportetecnicos/'
+        'salidasFruta_aprovechamientos.html',
+        {
+            'registros': resultado,
+            'tabla_html': tabla_html,
+            'registros_json': registros_json,
+
+            # Para detectar productos sin peso estándar
+            'items_sin_peso_estandar': sorted(
+                items_sin_peso_estandar
+            ),
+        }
+    )
