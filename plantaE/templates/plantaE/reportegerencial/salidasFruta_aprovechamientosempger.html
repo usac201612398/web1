@@ -107,6 +107,11 @@
       border-radius: 8px;
     }
 
+    .field {
+      display: flex;
+      justify-content: flex-end;
+    }
+
     /* BOTONES */
 
     .button.is-success {
@@ -213,7 +218,7 @@
                   </td>
                   <td class="number-cell" data-value="{{ registro.area }}">{{ registro.area }}
                   </td>
-                  <td class="number-cell" data-value="{{ registro.kg_m2 }}">{{ registro.kg_m2 }}%</td>
+                  <td class="number-cell" data-value="{{ registro.kg_m2 }}">{{ registro.kg_m2 }}</td>
                   <td class="number-cell" data-value="{{ registro.porcentaje_apro }}">{{ registro.porcentaje_apro }}%
                   </td>
                 </tr>
