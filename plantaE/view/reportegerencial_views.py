@@ -1184,7 +1184,7 @@ def reporte_tabla_pivote(request):
         df['fecha'] = pd.to_datetime(df['fecha'])
         iso = df['fecha'].dt.isocalendar()
         df['semana'] = iso['year'].astype(str) + '-W' + iso['week'].astype(str).str.zfill(2)
-        df['kg'] = df['total_libras'] / 2.20462  # convertir a kilogramos
+        df['kg'] = df['total_libras'] / 2.2026432  # convertir a kilogramos
 
         # Crear tabla pivote: kilos por semana
         pivot = pd.pivot_table(
@@ -1242,16 +1242,6 @@ def reporte_tabla_pivote(request):
         'filtros_completos': filtros_completos,
         'request': request
     })
-
-from collections import defaultdict
-
-from django.db.models import Max, Sum
-from django.utils import timezone
-from django.shortcuts import render
-
-import json
-import pandas as pd
-
 
 def poraprovechamientosemp(request):
 
