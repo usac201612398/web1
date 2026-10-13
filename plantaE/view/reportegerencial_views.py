@@ -1254,7 +1254,7 @@ import pandas as pd
 
 def poraprovechamientosemp(request):
 
-    LIBRAS_POR_KILO = 2.20462
+    LIBRAS_POR_KILO = 2.2026432
 
     hoy = timezone.now().date()
     nombre_usuario = request.user.username
