@@ -974,9 +974,9 @@ def reporte_tabla_pivote2(request):
         semana_iso = fecha_detalle.isocalendar()
 
         semana = (
-            str(semana_iso.year)
+            str(semana_iso[0])
             + '-W'
-            + str(semana_iso.week).zfill(2)
+            + str(semana_iso[1]).zfill(2)
         )
 
         filas_aprovechamiento.append({
@@ -1272,7 +1272,7 @@ def reporte_tabla_pivote2(request):
             ),
         }
     )
-    
+
 def reporte_tabla_pivote_produccionsem(request):
 
     nombre_usuario = request.user.username
