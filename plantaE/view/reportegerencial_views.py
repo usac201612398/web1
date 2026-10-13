@@ -2928,7 +2928,7 @@ def poraprovechamientosgerglobal(request):
         )
         .exclude(
             status__iexact='Anulado'
-        )
+        ).exclude(finca='CIP')
         .values(
             'finca',
             'cultivo',
@@ -2960,7 +2960,7 @@ def poraprovechamientosgerglobal(request):
         )
         .exclude(
             status__iexact='Anulado'
-        )
+        ).exclude(finca = 'CIP')
     )
 
     # ==========================================================
@@ -3374,7 +3374,7 @@ def poraprovechamientosgerglobal(request):
             'registros_json': registros_json,
         }
     )
-    
+
 def kgm2_semanal_aprovechamiento(request):
 
     # ==========================================================
