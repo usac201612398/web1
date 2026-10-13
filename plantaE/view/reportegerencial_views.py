@@ -1184,7 +1184,7 @@ def reporte_tabla_pivote(request):
         df['fecha'] = pd.to_datetime(df['fecha'])
         iso = df['fecha'].dt.isocalendar()
         df['semana'] = iso['year'].astype(str) + '-W' + iso['week'].astype(str).str.zfill(2)
-        df['kg'] = df['total_libras'] / 2.2026432  # convertir a kilogramos
+        df['kg'] = df['total_libras'] / 2.20462  # convertir a kilogramos
 
         # Crear tabla pivote: kilos por semana
         pivot = pd.pivot_table(
@@ -1246,7 +1246,7 @@ def reporte_tabla_pivote(request):
 
 def poraprovechamientosemp(request):
 
-    LIBRAS_POR_KILO = 2.2026432
+    LIBRAS_POR_KILO = 2.20462
 
     hoy = timezone.now().date()
     nombre_usuario = request.user.username

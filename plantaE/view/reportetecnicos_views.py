@@ -728,7 +728,7 @@ def recepciones_reportecurva2(request):
 
 def reporte_tabla_pivote2(request):
 
-    LIBRAS_POR_KILO = 2.2026432
+    LIBRAS_POR_KILO = 2.20462
     nombre_usuario = request.user.username
 
     # ============================================================
