@@ -1015,7 +1015,6 @@ def aprovechamientos(request):
         'registros_json': registros_json,
         'detalle_debug': detalle_debug_json
     })
-
 def poraprovechamientos(request):
 
     hoy = timezone.now().date()
@@ -1083,8 +1082,8 @@ def poraprovechamientos(request):
     # ============================================================
     # 4. DETALLES DEL USUARIO
     #
-    # Aquí se conserva el filtro por correo porque cada usuario
-    # está vinculado a determinadas estructuras.
+    # Se conserva correo=nombre_usuario porque el usuario está
+    # vinculado a sus estructuras.
     # ============================================================
 
     detalles = list(
@@ -1097,7 +1096,7 @@ def poraprovechamientos(request):
     )
 
     # ============================================================
-    # 5. BOLETAS UTILIZADAS EN EL REPORTE
+    # 5. BOLETAS DEL REPORTE
     # ============================================================
 
     boleta_ids = {
@@ -1109,8 +1108,9 @@ def poraprovechamientos(request):
     # ============================================================
     # 6. TOTAL REAL COMPLETO POR BOLETA
     #
-    # No se filtra por correo porque el denominador debe incluir
-    # todas las estructuras/correos asociados a la misma boleta.
+    # No se filtra por correo porque una boleta puede tener varias
+    # estructuras y correos. Este total será el denominador para
+    # distribuir proporcionalmente el peso estándar.
     # ============================================================
 
     totales_reales_qs = (
@@ -1133,12 +1133,8 @@ def poraprovechamientos(request):
     # ============================================================
     # 7. TODAS LAS LÍNEAS DE BOLETAS
     #
-    # No utilizamos un diccionario del tipo:
-    #
-    # {boleta: objeto}
-    #
-    # porque una boleta puede tener varias líneas y se perderían
-    # las anteriores al sobrescribirse.
+    # Una boleta puede tener varias líneas. No se utiliza un
+    # diccionario {boleta: objeto}, porque sobrescribiría líneas.
     # ============================================================
 
     lineas_boletas = list(
@@ -1148,23 +1144,7 @@ def poraprovechamientos(request):
     )
 
     # ============================================================
-    # 8. CALIDADES PRESENTES POR BOLETA
-    # ============================================================
-
-    calidades_por_boleta = defaultdict(set)
-
-    for linea in lineas_boletas:
-
-        calidad = (
-            linea.calidad or ''
-        ).strip().lower()
-
-        calidades_por_boleta[
-            linea.boleta
-        ].add(calidad)
-
-    # ============================================================
-    # 9. ITEMS DE APROVECHAMIENTO
+    # 8. ITEMS UTILIZADOS EN APROVECHAMIENTO
     # ============================================================
 
     item_codes = {
@@ -1177,7 +1157,7 @@ def poraprovechamientos(request):
     }
 
     # ============================================================
-    # 10. PESOS ESTÁNDAR POR ITEM
+    # 9. PESOS ESTÁNDAR POR ITEM
     # ============================================================
 
     productos_qs = (
@@ -1202,20 +1182,14 @@ def poraprovechamientos(request):
         )
 
     # ============================================================
-    # 11. ESTÁNDAR TOTAL POR BOLETA
-    #
-    # Peso estándar de una línea:
-    #
-    # cajas × pesostdxcaja
-    #
-    # Si hay varias líneas de aprovechamiento en una boleta,
-    # se suman todas.
+    # 10. CLASIFICAR BOLETAS Y CALCULAR ESTÁNDAR
     # ============================================================
 
     estandar_total_por_boleta = defaultdict(float)
+
     boletas_aprovechamiento = set()
-    boletas_devolucion = set()
     boletas_mediano = set()
+    boletas_devolucion = set()
 
     items_sin_peso_estandar = set()
 
@@ -1228,7 +1202,7 @@ def poraprovechamientos(request):
         ).strip().lower()
 
         # --------------------------------------------------------
-        # Aprovechamiento
+        # APROVECHAMIENTO
         # --------------------------------------------------------
 
         if 'aprovechamiento' in calidad:
@@ -1267,35 +1241,39 @@ def poraprovechamientos(request):
             )
 
         # --------------------------------------------------------
-        # Devolución
+        # MEDIANO
         # --------------------------------------------------------
 
-        if 'devolución' in calidad or 'devolucion' in calidad:
-
-            boletas_devolucion.add(
-                numero_boleta
-            )
-
-        # --------------------------------------------------------
-        # Mediano
-        # --------------------------------------------------------
-
-        if 'mediano' in calidad:
+        elif 'mediano' in calidad:
 
             boletas_mediano.add(
                 numero_boleta
             )
 
+        # --------------------------------------------------------
+        # DEVOLUCIÓN
+        # Se contemplan ambas formas: con y sin tilde.
+        # --------------------------------------------------------
+
+        elif (
+            'devolución' in calidad
+            or 'devolucion' in calidad
+        ):
+
+            boletas_devolucion.add(
+                numero_boleta
+            )
+
     # ============================================================
-    # 12. AGRUPAR RESULTADOS
+    # 11. AGRUPAR RESULTADOS POR ESTRUCTURA Y VARIEDAD
     # ============================================================
 
     agrupados = defaultdict(lambda: {
         'aprovechamiento_real': 0.0,
         'aprovechamiento_estandar': 0.0,
         'merma': 0.0,
-        'devolucion': 0.0,
         'mediano': 0.0,
+        'devolucion': 0.0,
         'otras_calidades': 0.0,
         'total_procesado': 0.0,
     })
@@ -1318,10 +1296,6 @@ def poraprovechamientos(request):
 
         # ========================================================
         # APROVECHAMIENTO
-        #
-        # El peso estándar completo de la boleta se distribuye
-        # proporcionalmente según las libras reales de cada
-        # estructura.
         # ========================================================
 
         if numero_boleta in boletas_aprovechamiento:
@@ -1343,8 +1317,8 @@ def poraprovechamientos(request):
             if total_real_boleta > 0:
 
                 proporcion = (
-                    libras_reales_detalle /
-                    total_real_boleta
+                    libras_reales_detalle
+                    / total_real_boleta
                 )
 
             else:
@@ -1352,17 +1326,19 @@ def poraprovechamientos(request):
                 proporcion = 0
 
             libras_estandar_asignadas = (
-                total_estandar_boleta *
-                proporcion
+                total_estandar_boleta
+                * proporcion
             )
 
-            # Merma igual que en el programa anterior:
+            # Merma:
             #
-            # libras reales - libras estándar distribuidas
+            # libras reales utilizadas
+            # menos
+            # libras estándar producidas
 
             merma_libras = (
-                libras_reales_detalle -
-                libras_estandar_asignadas
+                libras_reales_detalle
+                - libras_estandar_asignadas
             )
 
             agrupados[clave][
@@ -1377,26 +1353,12 @@ def poraprovechamientos(request):
                 'merma'
             ] += merma_libras
 
-            # Para procesado se utiliza el peso estándar, igual
-            # que en la columna Total del programa anterior.
+            # Libras procesadas mantiene la lógica del reporte
+            # anterior: utiliza el estándar de aprovechamiento.
 
             agrupados[clave][
                 'total_procesado'
             ] += libras_estandar_asignadas
-
-        # ========================================================
-        # DEVOLUCIÓN
-        # ========================================================
-
-        elif numero_boleta in boletas_devolucion:
-
-            agrupados[clave][
-                'devolucion'
-            ] += libras_reales_detalle
-
-            agrupados[clave][
-                'total_procesado'
-            ] += libras_reales_detalle
 
         # ========================================================
         # MEDIANO
@@ -1406,6 +1368,20 @@ def poraprovechamientos(request):
 
             agrupados[clave][
                 'mediano'
+            ] += libras_reales_detalle
+
+            agrupados[clave][
+                'total_procesado'
+            ] += libras_reales_detalle
+
+        # ========================================================
+        # DEVOLUCIÓN
+        # ========================================================
+
+        elif numero_boleta in boletas_devolucion:
+
+            agrupados[clave][
+                'devolucion'
             ] += libras_reales_detalle
 
             agrupados[clave][
@@ -1427,7 +1403,7 @@ def poraprovechamientos(request):
             ] += libras_reales_detalle
 
     # ============================================================
-    # 13. CALCULAR RESULTADO FINAL
+    # 12. ARMAR RESULTADO FINAL
     # ============================================================
 
     resultado = []
@@ -1441,10 +1417,6 @@ def poraprovechamientos(request):
                 clave,
                 0
             )
-        )
-
-        total_procesado = float(
-            datos['total_procesado']
         )
 
         aprovechamiento_real = float(
@@ -1467,24 +1439,35 @@ def poraprovechamientos(request):
             datos['devolucion']
         )
 
-        # ========================================================
-        # PENDIENTE
-        # ========================================================
-
-        pendiente = (
-            recepcion_libras -
-            total_procesado
+        otras_calidades_libras = float(
+            datos['otras_calidades']
         )
 
-        if pendiente < 0:
-            pendiente = 0
+        total_procesado = float(
+            datos['total_procesado']
+        )
+
+        # ========================================================
+        # PENDIENTE
+        #
+        # Conserva la lógica anterior:
+        # recepción menos libras procesadas.
+        # ========================================================
+
+        pendiente_libras = (
+            recepcion_libras
+            - total_procesado
+        )
+
+        if pendiente_libras < 0:
+            pendiente_libras = 0
 
         if recepcion_libras > 0:
 
             porcentaje_pendiente = (
-                pendiente *
-                100 /
-                recepcion_libras
+                pendiente_libras
+                * 100
+                / recepcion_libras
             )
 
         else:
@@ -1492,30 +1475,46 @@ def poraprovechamientos(request):
             porcentaje_pendiente = 0
 
         # ========================================================
-        # PORCENTAJES DE CALIDADES
+        # TOTAL PARA PORCENTAJES DE CALIDAD
         #
-        # Aprovechamiento utiliza el peso estándar asignado,
-        # porque también es el que participa en total_procesado.
+        # Las cuatro categorías utilizan el mismo denominador:
+        #
+        # aprovechamiento + mediano + devolución + merma
+        #
+        # De esa manera suman 100%.
         # ========================================================
 
-        if total_procesado > 0:
+        total_calidades = (
+            aprovechamiento_estandar
+            + mediano_libras
+            + devolucion_libras
+            + merma_libras
+        )
+
+        if total_calidades > 0:
 
             porcentaje_aprovechamiento = (
-                aprovechamiento_estandar *
-                100 /
-                total_procesado
+                aprovechamiento_estandar
+                * 100
+                / total_calidades
             )
 
             porcentaje_mediano = (
-                mediano_libras *
-                100 /
-                total_procesado
+                mediano_libras
+                * 100
+                / total_calidades
             )
 
             porcentaje_devolucion = (
-                devolucion_libras *
-                100 /
-                total_procesado
+                devolucion_libras
+                * 100
+                / total_calidades
+            )
+
+            porcentaje_merma = (
+                merma_libras
+                * 100
+                / total_calidades
             )
 
         else:
@@ -1523,26 +1522,15 @@ def poraprovechamientos(request):
             porcentaje_aprovechamiento = 0
             porcentaje_mediano = 0
             porcentaje_devolucion = 0
-
-        # ========================================================
-        # PORCENTAJE DE MERMA
-        #
-        # Igual que el programa anterior:
-        #
-        # merma / libras reales de aprovechamiento
-        # ========================================================
-
-        if aprovechamiento_real > 0:
-
-            porcentaje_merma = (
-                merma_libras *
-                100 /
-                aprovechamiento_real
-            )
-
-        else:
-
             porcentaje_merma = 0
+
+        # Solo para verificar el redondeo mostrado en pantalla.
+        suma_porcentajes = (
+            porcentaje_aprovechamiento
+            + porcentaje_mediano
+            + porcentaje_devolucion
+            + porcentaje_merma
+        )
 
         resultado.append({
             'proveedor': finca,
@@ -1557,18 +1545,25 @@ def poraprovechamientos(request):
                 2
             ),
 
-            # Libras procesadas utilizando estándar para
-            # aprovechamiento
+            # Libras procesadas
             'procesado': round(
                 total_procesado,
                 2
             ),
 
+            # Libras pendientes
+            'pendiente_libras': round(
+                pendiente_libras,
+                2
+            ),
+
+            # Porcentaje pendiente
             'porcentaje_pendiente': round(
                 porcentaje_pendiente,
                 2
             ),
 
+            # Porcentajes que suman 100%
             'aprovechamiento': round(
                 porcentaje_aprovechamiento,
                 2
@@ -1584,7 +1579,13 @@ def poraprovechamientos(request):
                 2
             ),
 
-            # Nuevos campos de merma
+            'porcentaje_merma': round(
+                porcentaje_merma,
+                2
+            ),
+
+            # Valores en libras para diagnóstico o para añadirlos
+            # posteriormente al HTML.
             'aprovechamiento_real_libras': round(
                 aprovechamiento_real,
                 2
@@ -1595,19 +1596,35 @@ def poraprovechamientos(request):
                 2
             ),
 
+            'mediano_libras': round(
+                mediano_libras,
+                2
+            ),
+
+            'devolucion_libras': round(
+                devolucion_libras,
+                2
+            ),
+
             'merma_libras': round(
                 merma_libras,
                 2
             ),
 
-            'porcentaje_merma': round(
-                porcentaje_merma,
+            'otras_calidades_libras': round(
+                otras_calidades_libras,
+                2
+            ),
+
+            # Puede dar 99.99 o 100.01 únicamente por redondeo.
+            'suma_porcentajes': round(
+                suma_porcentajes,
                 2
             ),
         })
 
     # ============================================================
-    # 14. ORDENAR RESULTADOS
+    # 13. ORDENAR RESULTADOS
     # ============================================================
 
     resultado.sort(
@@ -1620,7 +1637,7 @@ def poraprovechamientos(request):
     )
 
     # ============================================================
-    # 15. CONVERTIR A JSON
+    # 14. CONVERTIR A JSON
     # ============================================================
 
     registros_json = json.dumps(
@@ -1629,7 +1646,7 @@ def poraprovechamientos(request):
     )
 
     # ============================================================
-    # 16. TABLA HTML
+    # 15. CREAR TABLA HTML DE PANDAS
     # ============================================================
 
     if resultado:
@@ -1637,7 +1654,10 @@ def poraprovechamientos(request):
         df = pd.DataFrame(resultado)
 
         tabla_html = df.to_html(
-            classes='table table-striped',
+            classes=(
+                'table is-striped '
+                'is-fullwidth is-hoverable'
+            ),
             index=False
         )
 
@@ -1650,7 +1670,7 @@ def poraprovechamientos(request):
         )
 
     # ============================================================
-    # 17. ENVIAR AL TEMPLATE
+    # 16. ENVIAR AL TEMPLATE
     # ============================================================
 
     return render(
@@ -1662,7 +1682,7 @@ def poraprovechamientos(request):
             'tabla_html': tabla_html,
             'registros_json': registros_json,
 
-            # Para detectar productos sin peso estándar
+            # Para identificar productos sin pesostdxcaja.
             'items_sin_peso_estandar': sorted(
                 items_sin_peso_estandar
             ),
