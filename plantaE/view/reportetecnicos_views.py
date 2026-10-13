@@ -988,10 +988,10 @@ def reporte_tabla_pivote2(request):
             'estructura': detalle.estructura,
             'variedad': detalle.variedad,
             'libras_aprovechamiento': (
-                libras_aprovechamiento
+                libras_estandar_asignadas
             ),
             'kg_aprovechamiento': (
-                libras_aprovechamiento
+                libras_estandar_asignadas
                 / LIBRAS_POR_KILO
             ),
         })
