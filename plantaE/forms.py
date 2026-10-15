@@ -309,6 +309,7 @@ class inventarioFrutaForm(forms.ModelForm):
         ('PRODUCTOS DEL VALLE, S.A.', 'PRODUCTOS DEL VALLE, S.A.'),
         ('FLE', 'FLE')
     ]
+    
     op_categoria = [('','-'),('Exportación','Exportación'),('Carreta','Carreta'),('Cenma','Cenma'),('Devolución','Devolución')]
     op_status = [('', '-'), ('En proceso', 'En proceso'), ('Anulado', 'Anulado')]
     op_status3 = [('', '-'), ('En proceso', 'En proceso'), ('Anulado', 'Anulado'), ('Cerrado', 'Cerrado')]
