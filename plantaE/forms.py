@@ -299,6 +299,7 @@ class inventarioFrutaForm(forms.ModelForm):
     op_proveedor = [
         ('', '-'),
         ('FINCA LA PASTORIA, S.A.', 'FINCA LA PASTORIA, S.A.'),
+        ('DELICIAS HIDROPONICAS, S.A.', 'DELICIAS HIDROPONICAS, S.A.'),
         ('INVERSIONES LA PASTORIA, S.A.', 'INVERSIONES LA PASTORIA, S.A.'),
         ('SDC', 'SDC'),
         ('AGROINDUSTRIAS SAN RAFAEL, S.A.', 'AGROINDUSTRIAS SAN RAFAEL, S.A.'),
