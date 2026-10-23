@@ -363,15 +363,15 @@ def packinglist_delete(request, pk):
     )
 
     # Verificar si alguno tiene boleta asignada
-    tiene_boletas = relacionados2.filter(boleta__isnull=False).exclude(boleta=0).exists()
-
+    #tiene_boletas = relacionados2.filter(boleta__isnull=False).exclude(boleta=0).exists()
+    '''
     if tiene_boletas:
         return render(request, 'plantaE/cargacontenedor/inventarioProd_packinglist_confirm_delete.html', {
             'registros': salidas,
             'alert_message': "No se puede anular esta paleta porque tiene boletas asignadas.",
             'redirect_url': reverse('inventarioProd_packinglist_detail')
         })
-
+    '''
     if request.method == 'POST':
         # Paso 1: Anular el contenedor
         salidas.status = 'Anulado'
