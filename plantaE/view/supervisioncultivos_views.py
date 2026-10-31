@@ -8,6 +8,7 @@ from django.db.models import Avg, Max, Count
 from django.db.models.functions import ExtractWeek, ExtractYear
 from collections import defaultdict
 import datetime
+from datetime import date
 import json
 from django.db import transaction
 from .auxiliares import *
