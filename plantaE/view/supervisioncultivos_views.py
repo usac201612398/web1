@@ -190,7 +190,9 @@ def reporte_general(request):
 
     # ===============================
     # QUERY BASE n jnd  Queryset base
-    qs = supervisionproduccion.objects.exclude(status='Anulado')
+    qs = supervisionproduccion.objects.exclude(status='Anulado').filter(
+        fecha__gt=date(2026, 10, 1)
+    )
     # Filtrar por área si no es ALL
     if area != 'ALL':
         qs = qs.filter(finca=area)  # Aquí se filtra por finca
@@ -276,7 +278,9 @@ def reporte_semanal_supervision(request):
     # ===============================
     # QUERY BASE
     # ===============================
-    qs = supervisionproduccion.objects.exclude(status='Anulado')
+    qs = supervisionproduccion.objects.exclude(status='Anulado').filter(
+        fecha__gt=date(2026, 10, 1)
+    )
 
     # Filtrar por área si no es ALL
     if area != 'ALL':
@@ -374,7 +378,9 @@ def reporte_seguimiento_api(request):
     ).annotate(
         semana=ExtractWeek('fecha'),
         anio=ExtractYear('fecha')  # <-- Extraemos el año
-    ).exclude(status='Anulado')
+    ).exclude(status='Anulado').filter(
+        fecha__gt=date(2026, 10, 1)
+    )
 
     # Filtrar por semana y año si se proporcionan
     if semana:
@@ -453,7 +459,9 @@ def supervisionproduccion_detalle(request, fecha, cultivo, estructura, zona,finc
         estructura=estructura,
         zona=zona,
         finca=finca
-    ).exclude(status='Anulado').order_by('muestra', 'actividad')
+    ).exclude(status='Anulado').order_by('muestra', 'actividad').filter(
+        fecha__gt=date(2026, 10, 1)
+    )
 
     muestras = defaultdict(list)
     for r in registros:
