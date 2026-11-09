@@ -23,7 +23,7 @@ def procesarinvprodcontenv2(request):
     data = json.loads(request.body)
     mensaje = data['array']
     contenedor_ = data['contenedor']
-    today = timezone.now().date()
+    today = timezone.localtime(timezone.now()).date()
 
     # Obtener siguiente palet disponible
     consulta = salidacontenedores.objects.exclude(Q(status='Cerrado') | Q(status='Anulado')).filter(contenedor=contenedor_).order_by('-registro').first()
