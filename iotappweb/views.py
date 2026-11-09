@@ -23,6 +23,11 @@ from decimal import Decimal, ROUND_DOWN
 from datetime import timezone as dt_timezone
 from datetime import time as dt_time
 
+import logging
+
+from django.utils.timezone import get_current_timezone
+from .services import evaluar_sensor, enviar_alerta
+
 MQTT_HOST = "10.111.112.4"
 MQTT_PORT = 1883
 MQTT_USER = "sdc-iot"       
@@ -58,7 +63,7 @@ def publicar_mqtt(accion, topic):
 
     return retorno
 
-def enviarinstruccion(request):
+def envjsoniarinstruccion(request):
     """
     Vista unificada para:
     - Riego on/off/auto
@@ -446,48 +451,122 @@ ARANET_SECRET = "rphvcx8qe3dk5dwjfcw84na5vqz34jen"
 
 @login_exempt
 @csrf_exempt
+
+logger = logging.getLogger(__name__)
+
+def normalizar_sensor(sensor):
+    """
+    Normaliza el identificador del sensor para evitar diferencias por:
+    - espacios
+    - mayúsculas/minúsculas
+    - dos puntos finales
+    """
+    if sensor is None:
+        return None
+
+    return str(sensor).strip().rstrip(":").lower()
+
+
 def aranet_webhook(request):
     if request.method != "POST":
-        return JsonResponse({"error": "Method Not Allowed"}, status=405)
+        return JsonResponse(
+            {"error": "Method Not Allowed"},
+            status=405
+        )
 
     token = request.headers.get("X-Aranet-Key")
+
     if token != ARANET_SECRET:
-        return JsonResponse({"error": "Unauthorized"}, status=401)
+        return JsonResponse(
+            {"error": "Unauthorized"},
+            status=401
+        )
 
     try:
         data = json.loads(request.body)
+
+        if not isinstance(data, list):
+            logger.warning(
+                "Aranet webhook: se esperaba una lista, pero se recibio %s",
+                type(data).__name__
+            )
+
+            return JsonResponse(
+                {"error": "El cuerpo JSON debe ser una lista"},
+                status=400
+            )
+
         objects = []
 
         current_sensor = None
         current_timestamp = None
-        sensores_map = {
-            s.sensor: s for s in SensorDetalles.objects.all()
-        }
-        for record in data:
-            # Actualizar contexto si viene
-            if "bn" in record:
-                current_sensor = record.get("bn").rstrip(":")
 
+        # Mapa normalizado:
+        # "aranet:100259" -> instancia de SensorDetalles
+        sensores_map = {}
+
+        for sensor_db in SensorDetalles.objects.all():
+            sensor_key = normalizar_sensor(sensor_db.sensor)
+
+            if sensor_key:
+                sensores_map[sensor_key] = sensor_db
+
+        # Para no imprimir el mismo sensor desconocido muchas veces
+        sensores_no_encontrados = set()
+
+        registros_omitidos = 0
+
+        for record in data:
+            if not isinstance(record, dict):
+                registros_omitidos += 1
+                continue
+
+            # bn establece el contexto del sensor para los registros siguientes
+            if "bn" in record:
+                current_sensor = normalizar_sensor(record.get("bn"))
+
+            # bt establece el timestamp base
             if "bt" in record:
                 bt = record.get("bt")
-                current_timestamp = datetime.fromtimestamp(bt, tz=dt_timezone.utc)
+
+                try:
+                    current_timestamp = datetime.fromtimestamp(
+                        float(bt),
+                        tz=dt_timezone.utc
+                    )
+                except (TypeError, ValueError, OverflowError):
+                    logger.warning(
+                        "Aranet webhook: timestamp invalido: %r",
+                        bt
+                    )
+                    current_timestamp = None
 
             metric = record.get("n")
             value = record.get("v")
             unit = record.get("u")
-            
-            
+
             if metric is None or value is None:
+                registros_omitidos += 1
                 continue
 
             if current_sensor is None or current_timestamp is None:
-                print("⚠️ Missing context → skipping", record)
+                logger.warning(
+                    "Aranet webhook: registro sin contexto. "
+                    "sensor=%r timestamp=%r registro=%r",
+                    current_sensor,
+                    current_timestamp,
+                    record
+                )
+                registros_omitidos += 1
                 continue
 
             sensor_obj = sensores_map.get(current_sensor)
-            if not sensor_obj:
-                print("❌ Sensor no encontrado:", current_sensor)
+
+            if sensor_obj is None:
+                sensores_no_encontrados.add(current_sensor)
+                registros_omitidos += 1
                 continue
+
             objects.append(
                 SensorData(
                     sensor=sensor_obj,
@@ -498,30 +577,102 @@ def aranet_webhook(request):
                 )
             )
 
+        # Registrar una sola vez cada sensor no encontrado
+        for sensor_no_encontrado in sorted(sensores_no_encontrados):
+            logger.warning(
+                "Aranet webhook: sensor no encontrado: %s",
+                sensor_no_encontrado
+            )
+
         if objects:
-            SensorData.objects.bulk_create(objects, batch_size=100)
+            SensorData.objects.bulk_create(
+                objects,
+                batch_size=100
+            )
+
             ahora = timezone.now()
             hace_10_min = ahora - timedelta(minutes=10)
+
             datos_recientes = [
-                obj for obj in objects
+                obj
+                for obj in objects
                 if obj.timestamp >= hace_10_min
             ]
-            if len(datos_recientes) < len(objects) * 0.3:
-                print("📦 Bulk histórico detectado → no se envían alertas")
-                return JsonResponse({"status": "bulk_saved_no_alerts"})
 
-            sensores = set(obj.sensor for obj in datos_recientes)
-            for sensor in sensores:
-                resultado = evaluar_sensor(sensor)
-                if resultado:
-                    print("ALERTA ENVIADA")
-                    enviar_alerta(resultado)
+            # Evita división o comparación confusa cuando no hay objetos
+            porcentaje_recientes = (
+                len(datos_recientes) / len(objects)
+                if objects
+                else 0
+            )
 
-        return JsonResponse({"status": "ok", "saved": len(objects)})
+            if porcentaje_recientes < 0.30:
+                logger.info(
+                    "Aranet webhook: bulk historico detectado. "
+                    "guardados=%s recientes=%s",
+                    len(objects),
+                    len(datos_recientes)
+                )
 
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status=400)
-        
+                return JsonResponse({
+                    "status": "bulk_saved_no_alerts",
+                    "saved": len(objects),
+                    "skipped": registros_omitidos,
+                    "unknown_sensors": sorted(sensores_no_encontrados)
+                })
+
+            # Usar IDs evita posibles problemas si el modelo no es hashable
+            sensores_por_id = {
+                obj.sensor_id: obj.sensor
+                for obj in datos_recientes
+            }
+
+            for sensor in sensores_por_id.values():
+                try:
+                    resultado = evaluar_sensor(sensor)
+
+                    if resultado:
+                        enviar_alerta(resultado)
+
+                        logger.info(
+                            "Aranet webhook: alerta enviada para sensor=%s",
+                            sensor.sensor
+                        )
+
+                except Exception:
+                    logger.exception(
+                        "Aranet webhook: error evaluando sensor=%s",
+                        sensor.sensor
+                    )
+
+        return JsonResponse({
+            "status": "ok",
+            "saved": len(objects),
+            "skipped": registros_omitidos,
+            "unknown_sensors": sorted(sensores_no_encontrados)
+        })
+
+    except json.JSONDecodeError as exc:
+        logger.warning(
+            "Aranet webhook: JSON invalido: %s",
+            exc
+        )
+
+        return JsonResponse(
+            {"error": "JSON invalido"},
+            status=400
+        )
+
+    except Exception as exc:
+        logger.exception(
+            "Aranet webhook: error procesando solicitud"
+        )
+
+        return JsonResponse(
+            {"error": str(exc)},
+            status=400
+        )
+              
 def aranet_resumen_json(request):
     # Obtener todos los sensores distintos
     sensores = SensorData.objects.values_list('sensor', flat=True).distinct()
